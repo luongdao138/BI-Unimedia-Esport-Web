@@ -351,13 +351,13 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
   },
   wrapChatContainer: {
-    display: 'flex', 
-    flexDirection: 'column', 
-    position: 'relative'
+    display: 'flex',
+    flexDirection: 'column',
+    position: 'relative',
   },
   [theme.breakpoints.down(769)]: {
     wrapChatContainer: {
-      width: '100%'
+      width: '100%',
     },
   },
 }))

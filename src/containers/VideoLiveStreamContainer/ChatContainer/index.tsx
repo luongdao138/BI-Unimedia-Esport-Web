@@ -273,18 +273,18 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
     console.log('🚀 ~ subscribeAction ~ 1234', savedMess)
     if (!createdMessage.delete_flag) {
       // if (isViewingStream) {
-        // render new messages with savedMess
-        const isMessageInBottom = checkMessIsInBottom()
-        // console.log("🚀 ~ onCreateMess ~ abc", abc)
-        setStateMessages([...savedMess, createdMessage])
-        if(isMessageInBottom) {
-          scrollToCurrentMess()
-        } 
+      // render new messages with savedMess
+      const isMessageInBottom = checkMessIsInBottom()
+      // console.log("🚀 ~ onCreateMess ~ abc", abc)
+      setStateMessages([...savedMess, createdMessage])
+      if (isMessageInBottom) {
+        scrollToCurrentMess()
+      }
 
-        // render new users donate
-        if (isPremiumChat(createdMessage, false)) {
-          setMessagesDonate([...savedDonateMess, createdMessage])
-        }
+      // render new users donate
+      if (isPremiumChat(createdMessage, false)) {
+        setMessagesDonate([...savedDonateMess, createdMessage])
+      }
       // }
       // save mess for local
       setSavedMess((messages) => [...messages, createdMessage])
@@ -382,7 +382,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
   //     setStateMessages(newMess.filter((item) => +item.video_time <= +playedSecond))
   //     // if(isMessageInBottom) {
   //     //   scrollToCurrentMess()
-  //     // } 
+  //     // }
   //     const newMessDonate = [...savedDonateMess]
   //     // render user donate icon by time of local
   //     setMessagesDonate(newMessDonate.filter((item) => +item.display_avatar_time <= +playedSecond))
@@ -404,10 +404,10 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
     // }, 2000)
   }, [])
 
-  const filterMessagesDonate = (messages: any, compare_second ?: any) => {
-    const foundMessages = messages.filter(item => {
+  const filterMessagesDonate = (messages: any, compare_second?: any) => {
+    const foundMessages = messages.filter((item) => {
       return isPremiumChat(item, true, compare_second)
-    });
+    })
     return foundMessages
   }
 
@@ -602,12 +602,12 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
     }
   }
 
-  // useEffect(() => { 
+  // useEffect(() => {
   //   console.log('🚀 ~ 0000', isMessInBottom)
   //   if (isMessInBottom) {
   //     scrollToCurrentMess()
   //   }
-    
+
   // }, [isMessInBottom])
 
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment

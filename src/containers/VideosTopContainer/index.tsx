@@ -30,17 +30,6 @@ export const TabsVideo = {
 }
 
 const VideosTop: React.FC = () => {
-  const dataBanner = [
-    // { id: 0, url: '/images/banners/banner_01.png', target: 'image_01' },
-    // { id: 1, url: '/images/banners/banner_02.png', target: 'image_02' },
-    // { id: 2, url: '/images/banners/banner_03.png', target: 'image_03' },
-    { id: 3, image: '/images/banners/banner_04.png', target: 'image_04' },
-    { id: 4, image: '/images/banners/banner_05.png', target: 'image_05' },
-    { id: 5, image: 'https://i.pinimg.com/564x/16/c7/44/16c744a2c5187694bfb9f2d220dc4f16.jpg', target: 'image_06' },
-    { id: 6, image: 'https://i.pinimg.com/236x/c4/7e/52/c47e523f07996bd610f1e1ecfa842ebb.jpg', target: 'image_07' },
-    { id: 7, image: 'https://i.pinimg.com/564x/09/b5/27/09b52762cc9d8aee221ebb6a062dee98.jpg', target: 'image_08' },
-    { id: 8, image: 'https://i.pinimg.com/564x/b1/1e/0c/b11e0cbe33201bac50a28b214bb459bf.jpg', target: 'image_09' },
-  ]
   const { t } = useTranslation('common')
   const classes = useStyles()
   const [tab, setTab] = useState(0)
@@ -85,11 +74,19 @@ const VideosTop: React.FC = () => {
       </Box>
     )
   }
+  //   const dt = [{ "id": 1, "title": "banner 1", "image": "https://3.bp.blogspot.com/-VbzRbUQEvLw/VsaD4AS4O9I/AAAAAAAAACA/mGU1pPx3BAI/s1600/giai-ma-cac-con-so-trong-chiem-tinh-phuong-tay%2B%25281%2529.jpg", "url": "https://exelab.jp/", "target": "_blank" },
+  //   { "id": 4, "title": "banner 4", "image": "https://png.pngtree.com/png-clipart/20200309/ourlarge/pngtree-gold-number-2-png-image_2158838.jpg", "url": "https://exelab.jp/", "target": "_blank" },
+  //   { "id": 5, "title": "banner 5", "image": "https://tarotvnnews.com/wp-content/uploads/2019/03/than-so-hoc-so-3-va-y-nghia.jpg", "url": "https://exelab.jp/", "target": "_blank" },
+  //   { "id": 6, "title": "banner 6", "image": "https://tarotvnnews.com/wp-content/uploads/2019/03/than-so-hoc-so-4-va-y-nghia.jpg", "url": "https://exelab.jp/", "target": "_blank" },
+  //   { "id": 17, "title": "banner 7", "image": "https://gombattrangdoanquang.com/wp-content/uploads/2021/01/so-5-la-bieu-tuong-cho-quyen-luc.jpg", "url": "https://exelab.jp/", "target": "_blank" },
+  //   { "id": 3, "title": "banner 3", "image": "https://alokiddy.com.vn/Uploads/images/BAI%20TEST%20DINH%20KY/FLYERS/tranh-06.jpg", "url": "https://exelab.jp/", "target": "_blank" },
+  // ]
   return (
     <Box className={classes.root}>
       <Box className={classes.container}>
         {/* //listBanner */}
-        <Box className={classes.bannerContainer}>{listBanner.length > 0 && <BannerCarousel data={dataBanner} />}</Box>
+        <Box className={classes.bannerContainer}>{listBanner.length > 0 && <BannerCarousel data={listBanner} />}</Box>
+        {/* <Box className={classes.bannerContainer}>{dt.length > 0 && <BannerCarousel data={dt} />}</Box> */}
       </Box>
       <Grid container direction="column">
         {getTabs()}
