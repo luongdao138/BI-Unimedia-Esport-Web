@@ -40,6 +40,21 @@ i18n
             return 'チーム'
           }
           return 'ユーザー'
+        } else if (format === 'arena_rule') {
+          switch (value) {
+            case 'single': {
+              return 'トーナメント'
+            }
+            case 'battle_royale': {
+              return 'バトルロイヤル'
+            }
+            case 'score_attack': {
+              return 'スコアアタック'
+            }
+            case 'time_attack': {
+              return 'タイムアタック'
+            }
+          }
         }
         return value
       },

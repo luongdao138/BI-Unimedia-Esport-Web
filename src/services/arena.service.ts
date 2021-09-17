@@ -105,7 +105,7 @@ export type ResultsResponse = {
 }
 
 export type TournamentStatus = 'ready' | 'recruiting' | 'recruitment_closed' | 'ready_to_start' | 'in_progress' | 'completed' | 'cancelled'
-export type TournamentRule = 'single' | 'double' | 'battle_royale'
+export type TournamentRule = 'single' | 'double' | 'battle_royale' | 'score_attack' | 'time_attack'
 export type ArenaRole = 'admin' | 'participant' | 'interested' | 'co_organizer'
 export type TournamentDetail = {
   id: string
@@ -115,7 +115,7 @@ export type TournamentDetail = {
     overview: string
     notes: string
     rule: TournamentRule
-    sort_by: string
+    sort_by: 'by_asc' | 'by_desc'
     max_participants: number
     status: TournamentStatus
     is_freezed: boolean

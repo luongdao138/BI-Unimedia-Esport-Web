@@ -496,6 +496,14 @@ export default {
     },
   },
   arena: {
+    rules: {
+      rule: '{{rule, arena_rule}}',
+      single: 'トーナメント',
+      battle_royale: 'バトルロイヤル',
+      score_attack: 'スコアアタック',
+      time_attack: 'タイムアタック',
+    },
+    not_entered: '未入力',
     match_not_yet: 'まだ作成されていません',
     third_place: '（3位決定戦あり）',
     no_third_place: '（3位決定戦なし）',
@@ -654,6 +662,15 @@ export default {
     please_enter: '入力してください',
     holding_format: '開催形式',
     sorting_method: 'ソート方法',
+    sort_info_title: '昇順・降順について',
+    /* eslint-disable no-irregular-whitespace */
+    sort_info_content: `
+昇順　入力値（スコアやタイム等）が小さい順に順位を決定します。
+　　　例：入力値と順位の関係は下記のようになります。
+　　　100→1位、200→2位、300→3位
+降順　入力値（スコアやタイム等）が大きい順に順位を決定します。
+　　　例：入力値と順位の関係は下記のようになります。
+　　　300→1位、200→2位、100→3位`,
     has_third_place: '3位決定戦あり',
     participation: '参加形式',
     participation_term: '参加条件・ルール',
