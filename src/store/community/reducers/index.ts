@@ -14,6 +14,7 @@ import {
   CommentsResponse,
   TopicSearchItem,
   TopicDetailList,
+  CommentDetail,
 } from '@services/community.service'
 
 type StateType = {
@@ -32,6 +33,7 @@ type StateType = {
   communityMembersMeta?: PageMeta
   create_Topic?: TopicParams
   topicDetail: TopicDetail | null
+  commentDetail?: CommentDetail
   commentsList?: CommentsResponse[]
   commentsListMeta?: PageMeta
   topicSearchList?: TopicSearchItem[]
@@ -130,6 +132,9 @@ export default createReducer(initialState, (builder) => {
   })
   builder.addCase(COMMUNITY_ACTION_TYPE.RESET_COMMUNITY_MEMBERS, (state) => {
     state.communityMembers = undefined
+  })
+  builder.addCase(actions.getTopicComment.fulfilled, (state, action) => {
+    state.commentDetail = action.payload.data
   })
   builder.addCase(actions.getCommentsList.fulfilled, (state, action) => {
     state.commentsList = action.payload.data

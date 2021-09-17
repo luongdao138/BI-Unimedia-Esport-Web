@@ -291,6 +291,21 @@ export const deleteTopic = createAsyncThunk<void, services.TopicDeleteParams>(
   }
 )
 
+export const getTopicComment = createAsyncThunk<services.CommentDetailResponse, services.CommentDetailParams>(
+  COMMUNITY_ACTION_TYPE.GET_TOPIC_COMMENT,
+  async (params, { rejectWithValue }) => {
+    try {
+      const res = await services.getTopicComment(params)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
 export const createTopicComment = createAsyncThunk<void, services.CommentCreateParams>(
   COMMUNITY_ACTION_TYPE.CREATE_TOPIC_COMMENT,
   async (params, { rejectWithValue }) => {

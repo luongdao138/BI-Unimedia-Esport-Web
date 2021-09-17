@@ -174,7 +174,7 @@ const TopicDetailContainer: React.FC = () => {
 
         {!isNotMember && (
           <Box className={classes.inputContainer}>
-            <CommentInput reply_param={reply} handleReply={setReply} setPage={setPage} />
+            <CommentInput reply_param={reply} setPage={setPage} />
           </Box>
         )}
 

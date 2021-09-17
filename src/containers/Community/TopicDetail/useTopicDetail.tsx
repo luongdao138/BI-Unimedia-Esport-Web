@@ -6,6 +6,8 @@ import {
   CommentsListParams,
   PageMeta,
   TopicDeleteParams,
+  CommentDetailParams,
+  CommentDetail,
 } from '@services/community.service'
 import community from '@store/community'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
@@ -21,16 +23,20 @@ const { selectors, actions } = community
 const getTopicDetailMeta = createMetaSelector(actions.getTopicDetail)
 const getCreateCommentMeta = createMetaSelector(actions.createTopicComment)
 const getDeleteTopicMeta = createMetaSelector(actions.deleteTopic)
+const getTopicCommentMeta = createMetaSelector(actions.getTopicComment)
 const getCommentsListMeta = createMetaSelector(actions.getCommentsList)
 
 const useTopicDetail = (): {
   topic: TopicDetail
+  commentDetail: CommentDetail
   getTopicDetail: (TopicDetailParams) => void
+  getCommentDetail: (CommentDetailParams) => void
   getCommentsList: (CommentsListParams) => void
   deleteTopic: (TopicDetailParams) => void
   resetMeta: () => void
   topicDetailMeta: Meta
   deleteTopicMeta: Meta
+  commentDetailMeta: Meta
   createComment: (params: CommentCreateParams) => void
   createCommentMeta: Meta
   deleteComment: (hash_key: string) => void
@@ -43,8 +49,11 @@ const useTopicDetail = (): {
   const router = useRouter()
   const topic = useAppSelector(selectors.getTopicDetail)
   const getTopicDetail = (param: TopicDetailParams) => dispatch(actions.getTopicDetail(param))
+  const getCommentDetail = (param: CommentDetailParams) => dispatch(actions.getTopicComment(param))
   const topicDetailMeta = useAppSelector(getTopicDetailMeta)
   const deleteTopicMeta = useAppSelector(getDeleteTopicMeta)
+  const commentDetailMeta = useAppSelector(getTopicCommentMeta)
+  const commentDetail = useAppSelector(selectors.getCommentDetail)
   const resetTopicMeta = () => dispatch(actions.clearTopicDetail())
   const createComment = (params: CommentCreateParams) => dispatch(actions.createTopicComment(params))
   const createCommentMeta = useAppSelector(getCreateCommentMeta)
@@ -73,14 +82,17 @@ const useTopicDetail = (): {
 
   return {
     getTopicDetail,
+    getCommentDetail,
     topicDetailMeta,
     topic,
+    commentDetail,
     deleteTopic,
     deleteTopicMeta,
     createComment,
     deleteComment,
     resetMeta,
     getCommentsList,
+    commentDetailMeta,
     commentsList,
     commentsListMeta,
     commentsListPageMeta,

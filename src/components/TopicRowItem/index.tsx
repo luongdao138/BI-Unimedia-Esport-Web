@@ -21,6 +21,7 @@ export interface TopicRowItemProps {
 }
 
 const Highlight = ({ search = '', children = '', isSearched = false, contentRect = undefined, isTitle = false }) => {
+  const classes = useStyles()
   if (search && isSearched) {
     let parts
     const keyword = new RegExp(`(${_.escapeRegExp(search)})`, 'i')
@@ -34,12 +35,24 @@ const Highlight = ({ search = '', children = '', isSearched = false, contentRect
       const range = _.toLower(content).lastIndexOf(_.toLower(search))
       const divisor = isJapanese ? TOPIC_ROW_ITEM_DIVISOR.JAPANESE : TOPIC_ROW_ITEM_DIVISOR.NORMAL
       if (range > contentRect.width / divisor) {
-        content = '...'.concat(content.slice(range - contentRect.width / (divisor * 2)))
+        content = ''.concat(content.slice(range - TOPIC_ROW_ITEM_DIVISOR.CHARACTER_BEFORE_KEYWORD))
       }
 
       parts = String(content).split(keyword)
     }
-    return <>{parts.map((part, index) => (keyword.test(part) ? <mark key={index}>{part}</mark> : part))}</>
+    return (
+      <>
+        {parts.map((part, index) =>
+          keyword.test(part) ? (
+            <Box key={index} className={classes.keyword}>
+              {part}
+            </Box>
+          ) : (
+            part
+          )
+        )}
+      </>
+    )
   }
   return <>{children}</>
 }
@@ -132,6 +145,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: Colors.white_opacity[70],
     fontSize: 14,
     wordBreak: 'break-all',
+  },
+  keyword: {
+    color: Colors.white,
+    display: 'inline',
+    fontWeight: 'bold',
   },
   mail: {
     color: Colors.white_opacity[30],
