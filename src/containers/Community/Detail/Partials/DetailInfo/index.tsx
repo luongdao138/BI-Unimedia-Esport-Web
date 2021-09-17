@@ -310,7 +310,7 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
   const getContent = () => {
     switch (tab) {
       case TABS.INFO:
-        return <InfoContainer data={data} />
+        return <InfoContainer isOfficial={isOfficial} data={data} />
       case TABS.TOPIC_LIST:
         return !!topicList && showTopicListAndSearchTab && <TopicListContainer />
       case TABS.SEARCH:

@@ -439,10 +439,36 @@ export type CommentCreateParams = {
   attachments: string
 }
 
+export type CommentDetailParams = {
+  topic_hash: string
+  comment_no: string
+}
+
 export type CommentsAttachmentResponse = {
   id: number
   assets_url: string
   comment_id: number
+}
+
+export type CommentDetail = {
+  id: string
+  type: string
+  attributes: {
+    id: number
+    comment_no: number
+    deleted_at: string | null
+    created_at: string
+    content: string
+    is_mine: true
+    attachments: CommentsAttachmentResponse[] | null
+    owner_nickname: string
+    user_code: string
+    owner_profile: string
+  }
+}
+
+export type CommentDetailResponse = {
+  data: CommentDetail
 }
 
 export type CommentsResponse = {
@@ -455,7 +481,7 @@ export type CommentsResponse = {
     deleted_at: string
     content: string
     is_mine: true
-    attachments: CommentsAttachmentResponse[]
+    attachments: CommentsAttachmentResponse[] | null
     owner_nickname: string
     user_code: string
     owner_profile: string
@@ -582,6 +608,11 @@ export const getTopicList = async (params: TopicListParams): Promise<TopicListRe
 
 export const createTopicComment = async (params: CommentCreateParams): Promise<void> => {
   const { data } = await api.post<void>(URI.TOPIC_COMMENT_CREATE, params)
+  return data
+}
+
+export const getTopicComment = async (params: CommentDetailParams): Promise<CommentDetailResponse> => {
+  const { data } = await api.get<CommentDetailResponse>(URI.TOPIC_COMMENT_DETAILS.replace(/:id/gi, params.comment_no), { params })
   return data
 }
 
