@@ -19,8 +19,8 @@ import { useAppSelector } from '@store/hooks'
 
 export interface ParticipantsProps {
   open: boolean
-  handleClose: () => void
   data: LobbyDetail
+  handleClose: () => void
 }
 
 const Participants: React.FC<ParticipantsProps> = ({ open, data, handleClose }) => {
@@ -31,66 +31,68 @@ const Participants: React.FC<ParticipantsProps> = ({ open, data, handleClose }) 
   const [hasMore, setHasMore] = useState(true)
   const windowHeight = use100vh()
   const isAuth = useAppSelector(getIsAuthenticated)
-
+  const { userProfile } = useGetProfile()
   const {
     participants,
+    participantsMeta,
+    participantsPageMeta,
     getParticipants,
     resetParticipants,
     resetMeta,
-    participantsPageMeta,
-    participantsMeta,
     follow,
     unFollow,
     unBlock,
   } = useLobbyActions()
 
-  const { userProfile } = useGetProfile()
-
-  const page = participantsPageMeta
+  const currentPage = _.get(participantsPageMeta, 'current_page', 1)
+  const totalPage = _.get(participantsPageMeta, 'total_pages', 1)
+  const [isInitialPageLoad, setInitialPageLoad] = useState(false)
 
   useEffect(() => {
     if (open) {
+      setInitialPageLoad(true)
       getParticipants({ page: 1, hash_key: hash_key })
+    }
+
+    return () => {
+      if (open) {
+        resetParticipants()
+        resetMeta()
+        setHasMore(true)
+        setInitialPageLoad(false)
+      }
     }
   }, [open])
 
+  useEffect(() => {
+    if (isInitialPageLoad && !participantsMeta.pending) {
+      setInitialPageLoad(false)
+    }
+  }, [isInitialPageLoad, participantsMeta.pending])
+
   const fetchMoreData = () => {
-    if (page.current_page >= page.total_pages) {
+    if (currentPage >= totalPage) {
       setHasMore(false)
       return
     }
-    getParticipants({ page: Number(page.current_page) + 1, hash_key: hash_key })
+    getParticipants({ page: Number(currentPage) + 1, hash_key: hash_key })
   }
 
-  const onFollow = (userCode: string) => {
-    follow(userCode)
-  }
-  const onUnFollow = (userCode: string) => {
-    unFollow(userCode)
-  }
-  const onUnBlock = (userCode: string) => {
-    unBlock(userCode)
-  }
+  const onFollow = (userCode: string) => follow(userCode)
 
-  const goToProfile = (userCode: string) => {
-    onClose()
-    router.push(`${ESRoutes.PROFILE}/${userCode}`)
-  }
+  const onUnFollow = (userCode: string) => unFollow(userCode)
 
-  const onClose = () => {
-    handleClose()
-    resetParticipants()
-    resetMeta()
-    setHasMore(true)
-  }
+  const onUnBlock = (userCode: string) => unBlock(userCode)
+
+  const goToProfile = (userCode: string) => router.push(`${ESRoutes.PROFILE}/${userCode}`)
 
   return (
-    <ESModal open={open} handleClose={onClose}>
+    <ESModal open={open}>
       <Container className={classes.container} maxWidth="md">
         <div id="scrollableDiv" style={{ height: windowHeight }} className={`${classes.scroll} ${classes.list}`}>
           <Box className={classes.topContainer}>
             <Box className={classes.header} display="flex" flexDirection="row" alignItems="center">
-              <IconButton className={classes.iconButtonBg} onClick={onClose}>
+              <IconButton className={classes.iconButtonBg} onClick={handleClose}>
                 <Icon className="fa fa-arrow-left" fontSize="small" />
               </IconButton>
               <Box pl={2}>
@@ -138,6 +140,11 @@ const Participants: React.FC<ParticipantsProps> = ({ open, data, handleClose }) 
               </Box>
             </Box>
           </Box>
+          {isInitialPageLoad && participantsMeta.pending && (
+            <div className={classes.loaderCenter}>
+              <ESLoader />
+            </div>
+          )}
           {_.isArray(participants) && !_.isEmpty(participants) && open ? (
             <InfiniteScroll
               dataLength={participants.length}

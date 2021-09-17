@@ -36,9 +36,11 @@ const SubActionButtons: React.FC<Props> = ({ lobby, openChat, openMemberList }) 
 
       return (
         <Box className={classes.actionButton}>
-          <ESButton variant="outlined" fullWidth onClick={openMemberList}>
-            {buttonText}
-          </ESButton>
+          <LoginRequired>
+            <ESButton variant="outlined" fullWidth onClick={openMemberList}>
+              {buttonText}
+            </ESButton>
+          </LoginRequired>
         </Box>
       )
     }

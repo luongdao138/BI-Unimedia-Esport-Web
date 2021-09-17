@@ -29,10 +29,12 @@ const LobbyDetailBody: React.FC = () => {
   const classes = useStyles()
   const { unjoin, entry } = useLobbyActions()
   const confirm = useConfirm()
-
   const { handleBack, lobby } = useLobbyDetail()
   const { status, title, cover_image_url } = _.get(lobby, 'attributes', { status: -1, title: '', cover_image_url: null })
+  const isFreezed = _.get(lobby, 'attributes.is_freezed', false)
+  const isOwner = _.get(lobby, 'attributes.is_owner', false)
   const isEditable = status !== LOBBY_STATUS.CANCELLED
+  const isConfirmable = (status === LOBBY_STATUS.RECRUITING || status === LOBBY_STATUS.ENTRY_CLOSED) && isOwner && !isFreezed
 
   const hashKey = _.get(lobby, 'attributes.hash_key', null)
 
@@ -86,7 +88,7 @@ const LobbyDetailBody: React.FC = () => {
         </Box>
         <DetailInfo toEdit={toEdit} detail={lobby} extended />
         <Participants open={openList} data={lobby} handleClose={() => setList(false)} />
-        <ConfirmParticipants open={openConfirmList} lobby={lobby} handleClose={() => setConfirmList(false)} />
+        {isConfirmable && <ConfirmParticipants open={openConfirmList} lobby={lobby} handleClose={() => setConfirmList(false)} />}
       </>
     )
   }
