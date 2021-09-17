@@ -83,7 +83,9 @@ const ArenaHome: React.FC<ArenaHomeProps> = ({ filter }) => {
   }, [router.query])
 
   const onFilter = (filter: TournamentFilterOption) => {
-    router.push(`${ESRoutes.ARENA}?filter=${filter}`, undefined, { shallow: true })
+    if (!meta.pending) {
+      router.push(`${ESRoutes.ARENA}?filter=${filter}`, undefined, { shallow: true })
+    }
     return null
   }
 
