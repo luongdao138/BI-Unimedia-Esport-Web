@@ -46,17 +46,10 @@ type CommunityHeaderProps = {
   menuParams?: MenuParams
   handleReply?: (params: { hash_key: string; comment_no: number }) => void
   setOpenDelete?: Dispatch<SetStateAction<boolean>>
-  setSelectedCommentHashKey?: Dispatch<SetStateAction<string>>
+  setSelectedCommentNo?: Dispatch<SetStateAction<number>>
   onReport?: (comment: ReportData) => void
 }
-const Comment: React.FC<CommunityHeaderProps> = ({
-  comment,
-  menuParams,
-  handleReply,
-  setOpenDelete,
-  setSelectedCommentHashKey,
-  onReport,
-}) => {
+const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleReply, setOpenDelete, setSelectedCommentNo, onReport }) => {
   const classes = useStyles({ currentReplyNumberRectLeft })
   const { query } = useRouter()
   const { topic_hash_key } = query
@@ -96,7 +89,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({
   const replyData = commentDetail?.attributes
 
   const handleDeleteOpen = () => {
-    setSelectedCommentHashKey(hash_key)
+    setSelectedCommentNo(commentData.comment_no)
     setOpenDelete(true)
   }
   const handleReport = () => {
@@ -299,7 +292,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({
     )
   }
 
-  return commentData.deleted_at ? deletedComment(commentData.comment_no) : notDeletedComment()
+  return commentData.deleted_at !== null ? deletedComment(commentData.comment_no) : notDeletedComment()
 }
 
 const useStyles = makeStyles((theme) => ({

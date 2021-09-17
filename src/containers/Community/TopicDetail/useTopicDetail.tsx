@@ -8,6 +8,7 @@ import {
   TopicDeleteParams,
   CommentDetailParams,
   CommentDetail,
+  DeleteCommentParams,
 } from '@services/community.service'
 import community from '@store/community'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
@@ -40,7 +41,7 @@ const useTopicDetail = (): {
   commentDetailMeta: Meta
   createComment: (params: CommentCreateParams) => void
   createCommentMeta: Meta
-  deleteComment: (hash_key: string) => void
+  deleteComment: (params: DeleteCommentParams) => void
   commentsListMeta: Meta
   commentsListPageMeta: PageMeta
   commentsList: CommentsResponse[]
@@ -61,7 +62,7 @@ const useTopicDetail = (): {
   const createCommentMeta = useAppSelector(getCreateCommentMeta)
   const resetMeta = () => dispatch(clearMetaData(actions.getCommentsList.typePrefix))
 
-  const deleteComment = async (params) => {
+  const deleteComment = async (params: DeleteCommentParams) => {
     const resultAction = await dispatch(actions.deleteTopicComment(params))
     if (actions.deleteTopicComment.fulfilled.match(resultAction)) {
       dispatch(commonActions.addToast(t('common:topic_comment.delete.success_toast')))

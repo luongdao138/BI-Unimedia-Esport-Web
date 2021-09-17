@@ -323,7 +323,7 @@ export const createTopicComment = createAsyncThunk<void, services.CommentCreateP
   }
 )
 
-export const deleteTopicComment = createAsyncThunk<void, string>(
+export const deleteTopicComment = createAsyncThunk<void, services.DeleteCommentParams>(
   COMMUNITY_ACTION_TYPE.DELETE_TOPIC_COMMENT,
   async (params, { rejectWithValue }) => {
     try {

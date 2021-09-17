@@ -511,6 +511,11 @@ export type CommentsListParams = {
   comment_hash_key?: string
 }
 
+export type DeleteCommentParams = {
+  topic_hash: string
+  comment_no: number
+}
+
 export const communitySearch = async (params: CommunitySearchParams): Promise<CommunitySearchResponse> => {
   const { data } = await api.get<CommunitySearchResponse>(URI.COMMUNITY_SEARCH, { params })
   return data
@@ -616,8 +621,8 @@ export const getTopicComment = async (params: CommentDetailParams): Promise<Comm
   return data
 }
 
-export const deleteTopicComment = async (hash_key: string): Promise<void> => {
-  const { data } = await api.delete<void>(URI.TOPIC_COMMENT_DELETE.replace(/:id/gi, hash_key))
+export const deleteTopicComment = async (params: DeleteCommentParams): Promise<void> => {
+  const { data } = await api.delete<void>(URI.TOPIC_COMMENT_DELETE.replace(/:id/gi, String(params.comment_no)), { params })
   return data
 }
 
