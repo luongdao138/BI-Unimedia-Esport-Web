@@ -115,17 +115,17 @@ const Comment: React.FC<CommunityHeaderProps> = ({
     )
   }
 
-  const reply_regex = /(>>[0-9]+)+/g
+  const reply_regex = /(>>[0-9]+)/g
 
   const newLineText = (text) => {
-    if (commentData?.deleted_at) {
-      return <Typography className={classes.content}>{t('common:topic_comment.has_deleted_comment')}</Typography>
-    }
     return _.map(_.split(text, '\n'), (str, i) => (
       <Typography key={i} className={classes.content}>
-        {_.map(_.split(str, reply_regex), (content, index) => {
-          return content.match(reply_regex) ? renderPopover(content, index) : content
-        })}
+        {_.map(
+          _.filter(_.split(str, reply_regex), (el) => !_.isEmpty(el)),
+          (content, index) => {
+            return content.match(reply_regex) ? renderPopover(content, index) : content
+          }
+        )}
       </Typography>
     ))
   }
@@ -136,6 +136,37 @@ const Comment: React.FC<CommunityHeaderProps> = ({
         <Link id={index} onClick={(e) => handleClickReply(e, content)} className={classes.reply}>
           <Typography className={classes.replied_id}>{content}</Typography>
         </Link>
+      </>
+    )
+  }
+
+  const popoverContent = () => {
+    return (
+      <>
+        <Box display="flex" alignItems="flex-start" justifyContent="space-between" mb={1}>
+          <Box className={classes.userInfoContainerMain}>
+            <Typography className={classes.number}>{replyData.comment_no}</Typography>
+            <Box ml={1}>
+              <ESAvatar className={classes.avatar} alt={replyData.owner_nickname} src={replyData.owner_profile} />
+            </Box>
+            <Box className={classes.userInfoBox} ml={1}>
+              <Typography className={classes.username}>{replyData.owner_nickname}</Typography>
+              <Typography className={classes.userCode}>{'@' + replyData.user_code}</Typography>
+            </Box>
+          </Box>
+          <Box display="flex" alignItems="center">
+            <Typography className={classes.date}>{CommonHelper.staticSmartTime(replyData.created_at)}</Typography>
+            <IconButton className={classes.closeMainComment} onClick={handleCloseReply}>
+              <IconClose fontSize="small" className={classes.closeMainCommentIcon} />
+            </IconButton>
+          </Box>
+        </Box>
+        <Box mb={3}>
+          <Typography className={classes.content}>{replyData.content}</Typography>
+          {replyData.attachments &&
+            replyData.attachments[0]?.assets_url &&
+            renderClickableImage(replyData.attachments[0]?.assets_url, true)}
+        </Box>
       </>
     )
   }
@@ -176,7 +207,9 @@ const Comment: React.FC<CommunityHeaderProps> = ({
             </Box>
           </Box>
           <Box className={classes.contentContainer}>{newLineText(commentData.content)}</Box>
-          {commentData.attachments[0]?.assets_url && renderClickableImage(commentData.attachments[0]?.assets_url)}
+          {commentData.attachments &&
+            commentData.attachments[0]?.assets_url &&
+            renderClickableImage(commentData.attachments[0]?.assets_url)}
           {!isOwner && (
             <Box style={{ display: 'flex', justifyContent: 'flex-end' }}>
               <IconButton className={classes.shareButton} onClick={handleCommentReply}>
@@ -199,32 +232,9 @@ const Comment: React.FC<CommunityHeaderProps> = ({
             horizontal: 'right',
           }}
         >
-          {!_.isEmpty(commentDetail) && commentDetailMeta.loaded && (
-            <>
-              <Box display="flex" alignItems="flex-start" justifyContent="space-between" mb={1}>
-                <Box className={classes.userInfoContainerMain}>
-                  <Typography className={classes.number}>{replyData?.comment_no}</Typography>
-                  <Box ml={1}>
-                    <ESAvatar className={classes.avatar} alt={replyData?.owner_nickname} src={replyData?.owner_profile} />
-                  </Box>
-                  <Box className={classes.userInfoBox} ml={1}>
-                    <Typography className={classes.username}>{replyData?.owner_nickname}</Typography>
-                    <Typography className={classes.userCode}>{'@' + replyData?.user_code}</Typography>
-                  </Box>
-                </Box>
-                <Box display="flex" alignItems="center">
-                  <Typography className={classes.date}>{CommonHelper.staticSmartTime(replyData?.created_at)}</Typography>
-                  <IconButton className={classes.closeMainComment} onClick={handleCloseReply}>
-                    <IconClose fontSize="small" className={classes.closeMainCommentIcon} />
-                  </IconButton>
-                </Box>
-              </Box>
-              <Box mb={3}>
-                <Typography className={classes.content}>{replyData?.content}</Typography>
-                {replyData?.attachments[0]?.assets_url && renderClickableImage(replyData?.attachments[0]?.assets_url, true)}
-              </Box>
-            </>
-          )}
+          {!_.isEmpty(commentDetail) &&
+            commentDetailMeta.loaded &&
+            (replyData.deleted_at ? deletedComment(replyData.comment_no, true) : popoverContent())}
           {commentDetailMeta.error && (
             <Box my={1} display="flex" justifyContent="space-between">
               Not found
@@ -243,23 +253,29 @@ const Comment: React.FC<CommunityHeaderProps> = ({
     )
   }
 
-  const deletedComment = () => {
+  const deletedComment = (comment_no, isReply = false) => {
     return (
       <>
-        <Box className={classes.containerDeleted}>
+        <Box className={classes.containerDeleted} borderTop={!isReply && '2px solid rgba(255,255,255,0.1)'}>
           <Box flex={1}>
-            <Typography className={classes.number}>{commentData.comment_no}</Typography>
+            <Typography className={classes.number}>{comment_no}</Typography>
           </Box>
           <Box display="flex" justifyContent="center" flex={8} textAlign="center">
-            {newLineText(commentData.content)}
+            <Typography className={classes.content}>{t('common:topic_comment.has_deleted_comment')}</Typography>
           </Box>
-          <Box flex={1} />
+          <Box flex={1}>
+            {isReply && (
+              <IconButton className={classes.closeMainComment} onClick={handleCloseReply}>
+                <IconClose fontSize="small" className={classes.closeMainCommentIcon} />
+              </IconButton>
+            )}
+          </Box>
         </Box>
       </>
     )
   }
 
-  return commentData.deleted_at ? deletedComment() : notDeletedComment()
+  return commentData.deleted_at ? deletedComment(commentData.comment_no) : notDeletedComment()
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -298,7 +314,6 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    borderTop: '2px solid rgba(255,255,255,0.1)',
     padding: `${theme.spacing(2)}px ${theme.spacing(2)}px ${theme.spacing(2)}px`,
   },
   userContainer: {
