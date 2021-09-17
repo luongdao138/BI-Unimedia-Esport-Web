@@ -43,7 +43,7 @@ const VideosTop: React.FC = () => {
   }
   const { t } = useTranslation('common')
   const theme = useTheme()
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
+  const isMobile = useMediaQuery(theme.breakpoints.down(769))
   const dispatch = useAppDispatch()
   const router = useRouter()
   const video_id = router.query?.vid // uuid video
@@ -208,7 +208,7 @@ const VideosTop: React.FC = () => {
   }
 
   const sideChatContainer = () => (
-    <Box style={{ display: 'flex', flexDirection: 'column', position: 'relative' }}>
+    <Box className={classes.wrapChatContainer}>
       <ChatContainer
         myPoint={myPoint}
         key_video_id={detailVideoResult?.key_video_id}
@@ -307,7 +307,7 @@ const VideosTop: React.FC = () => {
 }
 export default VideosTop
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: '#212121',
     display: 'flex',
@@ -349,5 +349,15 @@ const useStyles = makeStyles(() => ({
   },
   mobileChatContainer: {
     width: '100%',
+  },
+  wrapChatContainer: {
+    display: 'flex', 
+    flexDirection: 'column', 
+    position: 'relative'
+  },
+  [theme.breakpoints.down(769)]: {
+    wrapChatContainer: {
+      width: '100%'
+    },
   },
 }))

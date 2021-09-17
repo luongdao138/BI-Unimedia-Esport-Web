@@ -316,7 +316,7 @@ const useStyles = makeStyles((theme) => ({
       width: 240,
     },
   },
-  [theme.breakpoints.down(768)]: {
+  [theme.breakpoints.down(769)]: {
     container: {
       width: '100%',
     },
