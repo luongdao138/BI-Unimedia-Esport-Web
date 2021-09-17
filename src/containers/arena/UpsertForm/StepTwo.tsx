@@ -1,4 +1,4 @@
-import { Box, makeStyles } from '@material-ui/core'
+import { Box, makeStyles, Typography } from '@material-ui/core'
 import { TournamentHelper } from '@utils/helpers/TournamentHelper'
 import { PARTICIPATION_TYPES, RULES, SORTING_METHOD } from '@constants/tournament.constants'
 import { FormType } from './FormModel/FormType'
@@ -9,7 +9,10 @@ import ESCheckbox from '@components/Checkbox'
 import ESSelect from '@components/Select'
 import ESLabel from '@components/Label'
 import i18n from '@locales/i18n'
-import { useEffect } from 'react'
+import React, { useEffect } from 'react'
+import Icon from '@material-ui/core/Icon'
+import { Colors } from '@theme/colors'
+import { UseSortInfoDialog } from '@containers/arena/UpsertForm/Partials/useSortInfoDialog'
 
 type Props = {
   formik: FormikProps<FormType>
@@ -18,6 +21,12 @@ type Props = {
 
 const StepTwo: React.FC<Props> = ({ formik, editables }) => {
   const classes = useStyles()
+  const confirmFreeze = UseSortInfoDialog()
+  const handleSortInfo = () => {
+    confirmFreeze().then(() => {
+      return
+    })
+  }
 
   useEffect(() => {
     if (formik.values.stepTwo.rule !== 'single') {
@@ -49,23 +58,28 @@ const StepTwo: React.FC<Props> = ({ formik, editables }) => {
         </ESSelect>
       </Box>
       {(formik.values.stepTwo.rule === 'score_attack' || formik.values.stepTwo.rule === 'time_attack') && (
-        <ESSelect
-          className={classes.selectWidth}
-          name="stepTwo.sort"
-          value={formik.values.stepTwo.sort}
-          // onChange={formik.handleChange}
-          label={i18n.t('common:tournament_create.sorting_method')}
-          required={true}
-          size="small"
-        >
-          {SORTING_METHOD.map((sorting_method, index) => (
-            <option key={index} value={sorting_method.value}>
-              {sorting_method.label}
-            </option>
-          ))}
-        </ESSelect>
+        <Box className={classes.sortWrap}>
+          <ESSelect
+            className={classes.selectWidth}
+            name="stepTwo.sort"
+            value={formik.values.stepTwo.sort}
+            onChange={formik.handleChange}
+            label={i18n.t('common:tournament_create.sorting_method')}
+            required={true}
+            size="small"
+          >
+            {SORTING_METHOD.map((sorting_method, index) => (
+              <option key={index} value={sorting_method.value}>
+                {sorting_method.label}
+              </option>
+            ))}
+          </ESSelect>
+          <Typography className={classes.sortInfo} variant="body2" onClick={handleSortInfo}>
+            <Icon className={`fa fa-info-circle ${classes.iconMargin}`} fontSize="small" />{' '}
+            {i18n.t('common:tournament_create.sort_info_title')}
+          </Typography>
+        </Box>
       )}
-      <Box></Box>
       <Box pb={4}>
         {formik.values.stepTwo.rule === 'single' && (
           <ESCheckbox
@@ -173,7 +187,23 @@ const StepTwo: React.FC<Props> = ({ formik, editables }) => {
   )
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
+  sortWrap: {
+    display: 'inline-flex',
+  },
+  sortInfo: {
+    marginTop: 10,
+    marginLeft: -70,
+    color: Colors.secondary,
+    cursor: 'pointer',
+    '&::after': {
+      marginTop: 10,
+      marginLeft: -70,
+    },
+  },
+  iconMargin: {
+    marginRight: theme.spacing(1 / 2),
+  },
   selectWidth: {
     width: 200,
   },
