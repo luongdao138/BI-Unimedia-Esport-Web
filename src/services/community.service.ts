@@ -169,6 +169,21 @@ export type CommunityMember = {
   }
 }
 
+export type MemberParams = {
+  approveParams: number[]
+  cancelParams: number[]
+  changeRoleToOrganizer: {
+    member_ids: number[]
+    member_role: number
+  }
+  changeRoleToMember: {
+    member_ids: number[]
+    member_role: number
+  }
+  removeParams: number[]
+  hash_key: string
+}
+
 export type CommunityMembersResponse = {
   data: CommunityMember[]
   meta: PageMeta
