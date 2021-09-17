@@ -63,6 +63,11 @@ const useStyles = makeStyles((theme) => ({
     position: 'absolute',
     right: 0,
     borderLeft: '1px solid #4c4c4c',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingRight: theme.spacing(1.5),
+    paddingLeft: theme.spacing(1.5),
   },
   textContent: {
     paddingLeft: theme.spacing(1),

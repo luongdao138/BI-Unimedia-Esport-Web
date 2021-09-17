@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import { makeStyles } from '@material-ui/core/styles'
-import { Box, Container, Icon, Typography } from '@material-ui/core'
+import { Box, Icon, Typography } from '@material-ui/core'
 import BRListItem from '@containers/arena/battle_royale/Partials/BRListItem'
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
@@ -14,6 +14,7 @@ import { useRandomizeDialog } from '../Partials/RandomizeDialog'
 import { useFreezeDialog } from '../Partials/FreezeDialog'
 import ESLoader from '@components/FullScreenLoader'
 import useModeratorActions from '@containers/arena/hooks/useModeratorActions'
+import useBattleRoyaleScore from '@containers/arena/hooks/useBattleRoyaleScore'
 import HeaderWithButton from '@components/HeaderWithButton'
 import ButtonPrimary from '@components/ButtonPrimary'
 import ButtonPrimaryOutlined from '@components/ButtonPrimaryOutlined'
@@ -21,6 +22,9 @@ import { use100vh } from 'react-div-100vh'
 import { Colors } from '@theme/colors'
 import { ParticipantsResponse } from '@services/arena.service'
 import Avatar from '@components/Avatar'
+import BRScoreInput from '../Partials/BRScoreInput'
+import BRList from '../Partials/BRList'
+import useAddToast from '@utils/hooks/useAddToast'
 
 const participantDefault: ParticipantsResponse = {
   id: undefined,
@@ -37,16 +41,9 @@ const ArenaBattlesEdit: React.FC = () => {
   const router = useRouter()
   const { tournament, meta: detailMeta } = useTournamentDetail()
   const { participants, brMeta: participantsMeta, getBattleRoyaleParticipants, resetMeta } = useParticipants()
-  const {
-    freeze,
-    randomize,
-    setParticipants,
-    randomizeMeta,
-    freezeMeta,
-    setParticipantsMeta,
-    setBattleRoyaleScores,
-    setBattleRoyaleScoresMeta,
-  } = useModeratorActions()
+  const { freeze, randomize, setParticipants, randomizeMeta, freezeMeta, setParticipantsMeta } = useModeratorActions()
+  const { setBattleRoyaleScores, setBattleRoyaleScoresMeta, resetBattleRoyaleScoresMeta } = useBattleRoyaleScore()
+  const { addToast } = useAddToast()
 
   const [showParticipants, setShowParticipants] = useState<{ pid: number | undefined; open: boolean }>({ pid: undefined, open: false })
   const [selecteds, setSelecteds] = useState<ParticipantsResponse[]>([])
@@ -169,15 +166,24 @@ const ArenaBattlesEdit: React.FC = () => {
     })
     setSelecteds(newSelecteds)
   }
+  useEffect(() => {
+    if (setBattleRoyaleScoresMeta.loaded) {
+      resetBattleRoyaleScoresMeta()
+      addToast('結果を反映しました')
+    }
+  }, [setBattleRoyaleScoresMeta.loaded])
+
+  const handleSubmitScore = () => setBattleRoyaleScores({ hash_key: tournament.attributes.hash_key, participants: selecteds })
+
   return (
     <>
       {detailMeta.loaded && participantsMeta.loaded && data && (
         <div style={{ height: `calc(${height}px - 60px)`, overflowY: 'auto', paddingBottom: 60 }} className={classes.scroll}>
           <HeaderWithButton title={tournament.attributes.title} />
-          <Box display="flex" flexDirection="column" alignItems="center" mt={2}>
-            <Typography variant="body2">{t('common:tournament.confirm_brackets')}</Typography>
+          <Box pt={3} pb={3} textAlign="center">
+            <Typography>順位を入力してください</Typography>
           </Box>
-          <Container maxWidth="lg" className={classes.listContainer}>
+          <BRList headers={['プレイヤー', '順位']} className={classes.listContainer}>
             {selecteds.map((v, i) => (
               <BRListItem
                 key={i}
@@ -191,10 +197,10 @@ const ArenaBattlesEdit: React.FC = () => {
                   }
                 }}
               >
-                <input value={v.attributes.position || ''} onChange={(e) => setScores(Number(e.target.value), v.id)} />
+                <BRScoreInput value={v.attributes.position || ''} onChange={(score) => setScores(Number(score), v.id)} />
               </BRListItem>
             ))}
-          </Container>
+          </BRList>
           {tournament.attributes.is_freezed ? null : (
             <Box className={classes.actionButtonContainer}>
               <Box className={classes.actionButton}>
@@ -211,8 +217,8 @@ const ArenaBattlesEdit: React.FC = () => {
           )}
           <Box className={classes.actionButtonContainer}>
             <Box className={classes.actionButton}>
-              <ButtonPrimary onClick={() => setBattleRoyaleScores({ hash_key: tournament.attributes.hash_key, participants: selecteds })}>
-                SET SCORE
+              <ButtonPrimary onClick={handleSubmitScore} style={{ width: 280 }}>
+                結果を反映する
               </ButtonPrimary>
             </Box>
           </Box>
@@ -253,6 +259,8 @@ const useStyles = makeStyles((theme) => ({
   },
   listContainer: {
     paddingBottom: 80,
+    paddingLeft: theme.spacing(3),
+    paddingRight: theme.spacing(10),
   },
   root: {
     backgroundColor: '#212121',

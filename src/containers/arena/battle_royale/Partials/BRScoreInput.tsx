@@ -3,8 +3,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
 
 interface BRScoreInputProps {
-  index: string
-  score?: string | null
+  value: string | number | null
   editable?: boolean
   onChange?: (score: string) => void
   onClick?: () => void
@@ -17,44 +16,21 @@ const BRScoreInput: React.FC<BRScoreInputProps> = (props: BRScoreInputProps) => 
   }
   return (
     <div className={classes.scoreWrap}>
-      <ESInput placeholder="未入力" value={props.score} onChange={handleChange} />
+      <ESInput placeholder="未入力" value={props.value} onChange={handleChange} />
     </div>
   )
 }
 
 const useStyles = makeStyles(() => ({
   scoreWrap: {
-    width: 158,
-    transform: 'translate(0,-50%)',
+    width: '100%',
+    '& .MuiOutlinedInput-inputMarginDense': {
+      paddingTop: 6,
+      paddingBottom: 6,
+      backgroundColor: Colors.white_opacity['10'],
+    },
     '& .MuiOutlinedInput-root': {
       borderRadius: 5,
-    },
-    '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
-      borderWidth: 0,
-    },
-    '& .PrivateNotchedOutline-root-23': {
-      borderWidth: '0',
-    },
-    '& .MuiInputBase-input::placeholder': {
-      textAlign: 'center',
-      fontSize: 20,
-      color: Colors.white_opacity[30],
-    },
-    '& .MuiInputBase-input': {
-      textAlign: 'center',
-      fontSize: 20,
-      color: Colors.white,
-      fontWeight: 'bolder',
-    },
-    '& .MuiOutlinedInput-input': {
-      padding: '19.5px 4px',
-    },
-    '& .MuiOutlinedInput-inputMarginDense': {
-      paddingTop: 4.5,
-      paddingBottom: 4.5,
-    },
-    '& .Mui-disabled': {
-      backgroundColor: Colors.black,
     },
   },
 }))

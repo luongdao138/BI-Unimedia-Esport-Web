@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
 import * as actions from '@store/arena/actions'
 import { createMetaSelector } from '@store/metadata/selectors'
-import { FreezeMatchParams, SetBattleRoyaleScoresParams, SetParticipantParams, SetParticipantsParams } from '@services/arena.service'
+import { FreezeMatchParams, SetParticipantParams, SetParticipantsParams } from '@services/arena.service'
 import { Meta } from '@store/metadata/actions/types'
 import { clearMetaData } from '@store/metadata/actions'
 import * as commonActions from '@store/common/actions'
@@ -11,17 +11,14 @@ import { useRouter } from 'next/router'
 
 const _setParticipantMeta = createMetaSelector(actions.setParticipant)
 const _setParticipantsMeta = createMetaSelector(actions.setParticipants)
-const _setBattleRoyaleScores = createMetaSelector(actions.setBattleRoyaleScores)
 const _randomizeMeta = createMetaSelector(actions.randomizeTournament)
 const _freezeMeta = createMetaSelector(actions.freezeTournament)
 
 const useModeratorActions = (): {
   setParticipant: (params: SetParticipantParams) => void
   setParticipants: (params: SetParticipantsParams, cb?: () => void) => void
-  setBattleRoyaleScores: (params: SetBattleRoyaleScoresParams) => void
   randomize: (params: string) => void
   freeze: (params: FreezeMatchParams) => void
-  setBattleRoyaleScoresMeta: Meta
   setParticipantMeta: Meta
   setParticipantsMeta: Meta
   randomizeMeta: Meta
@@ -45,11 +42,8 @@ const useModeratorActions = (): {
   const randomize = (param: string) => dispatch(actions.randomizeTournament(param))
   const freeze = (params) => dispatch(actions.freezeTournament(params))
 
-  const setBattleRoyaleScores = (params: SetBattleRoyaleScoresParams) => dispatch(actions.setBattleRoyaleScores(params))
-
   const setParticipantMeta = useAppSelector(_setParticipantMeta)
   const setParticipantsMeta = useAppSelector(_setParticipantsMeta)
-  const setBattleRoyaleScoresMeta = useAppSelector(_setBattleRoyaleScores)
   const randomizeMeta = useAppSelector(_randomizeMeta)
   const freezeMeta = useAppSelector(_freezeMeta)
 
@@ -87,8 +81,6 @@ const useModeratorActions = (): {
     setParticipants,
     setParticipantMeta,
     setParticipantsMeta,
-    setBattleRoyaleScores,
-    setBattleRoyaleScoresMeta,
     randomize,
     freeze,
     randomizeMeta,

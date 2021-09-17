@@ -448,7 +448,7 @@ export const teamMemberFollowStageChanged = createAction<{ userId: number; state
   TOURNAMENT_ACTION_TYPE.TEAM_MEMBER_FOLLOW_STATE_CHANGED
 )
 
-export const setBattleRoyaleScores = createAsyncThunk<void, services.BattleRoyaleScoresParams>(
+export const setBattleRoyaleScores = createAsyncThunk<void, services.SetBattleRoyaleScoresParams>(
   types.SET_BATTLE_ROYALE_SCORES,
   async (param, { rejectWithValue }) => {
     try {

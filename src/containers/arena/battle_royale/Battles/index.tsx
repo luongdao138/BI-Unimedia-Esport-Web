@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import { Container } from '@material-ui/core'
 import useTournamentDetail from '@containers/arena/hooks/useTournamentDetail'
 import HeaderWithButton from '@components/HeaderWithButton'
+import Avatar from '@components/Avatar'
 import ESLoader from '@components/FullScreenLoader'
 import useParticipants from '@containers/arena/Detail/Participants/useParticipants'
 import { ROLE } from '@constants/tournament.constants'
@@ -31,7 +32,12 @@ const ArenaBattles: React.FC = () => {
       {detailMeta.loaded && <HeaderWithButton title={tournament.attributes.title} />}
       <Container maxWidth="lg" className={classes.listContainer}>
         {participants.map((v, i) => (
-          <BRListItem key={i} index={`${i + 1}`} avatar={v.attributes.avatar_url} label={v.attributes.name} editable={false} />
+          <BRListItem
+            key={i}
+            avatar={<Avatar alt={v.attributes.name || ''} src={v.attributes.avatar_url || ''} size={26} />}
+            text={v.attributes.name}
+            textSecondary={v.attributes.user?.user_code || ''}
+          ></BRListItem>
         ))}
       </Container>
       <ESLoader open={detailMeta.pending || participantsMeta.pending} />
