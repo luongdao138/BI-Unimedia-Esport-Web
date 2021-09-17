@@ -220,7 +220,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
 
     const abc = await API.graphql(
       graphqlOperation(createUser, {
-        input: {
+        input: { 
           // id:userProfile?.id,
           uuid: userProfile?.attributes?.uuid,
           avatar: userProfile?.attributes?.avatar_url,
@@ -471,12 +471,13 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
       // )
 
       const currentUser = checkedAllUsers.find((user) => user.uuid === userProfile?.attributes?.uuid)
+      // console.log("🚀 ~ checkUserExist ~ currentUser", currentUser)
       if (currentUser) {
-        // console.log('Tồn tại currentUser ', currentUser)
+        console.log('Tồn tại currentUser ', currentUser)
         setChatUser(currentUser)
         setSuccessFlagGetAddUSer(true)
       } else {
-        // console.log('tồn tại checkedAllUsers nhưng  userProfile chưa có trong listUser của DynamoDB nên cần tạo mới', userProfile)
+        console.log('tồn tại checkedAllUsers nhưng  userProfile chưa có trong listUser của DynamoDB nên cần tạo mới', userProfile)
         handleCreateUserDB()
       }
     }
