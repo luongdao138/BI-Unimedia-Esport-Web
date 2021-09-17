@@ -134,6 +134,11 @@ const InidividualEntryEditModal: React.FC<EntryEditModalProps> = ({
     }
   }
 
+  const handleReturn = () => {
+    if (editMode) setEditMode(false)
+    else onClose()
+  }
+
   return (
     <FocusContextProvider>
       <FocusContext.Consumer>
@@ -144,7 +149,7 @@ const InidividualEntryEditModal: React.FC<EntryEditModalProps> = ({
               returnText={editMode ? t('common:tournament.update_entry_info') : t('common:arena.entry_information')}
               actionButtonText={editMode ? t('common:arena.update_with_content') : t('common:tournament.update_entry_info')}
               actionButtonDisabled={!isValid}
-              onReturnClicked={onClose}
+              onReturnClicked={handleReturn}
               onActionButtonClicked={onSubmit}
               hideFooter={!me || !isRecruiting}
               hideFooterOnMobile={isFocused}
