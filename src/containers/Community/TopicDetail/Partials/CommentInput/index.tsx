@@ -61,7 +61,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ reply_param, setPage }) => {
     return true
   }
 
-  const send = async () => {
+  const send = () => {
     if (_.isEmpty(checkNgWord(inputText.trim()))) {
       const data = {
         topic_hash: String(topic_hash_key),
@@ -70,7 +70,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ reply_param, setPage }) => {
         attachments: imageURL,
       }
       if (!createCommentMeta.pending) {
-        await createComment(data)
+        createComment(data)
         setPage(1)
       }
 

@@ -136,6 +136,9 @@ export default createReducer(initialState, (builder) => {
   builder.addCase(actions.getTopicComment.fulfilled, (state, action) => {
     state.commentDetail = action.payload.data
   })
+  builder.addCase(COMMUNITY_ACTION_TYPE.RESET_COMMENT_DETAIL, (state) => {
+    state.commentDetail = undefined
+  })
   builder.addCase(actions.getCommentsList.fulfilled, (state, action) => {
     state.commentsList = action.payload.data
     state.commentsListMeta = action.payload.meta

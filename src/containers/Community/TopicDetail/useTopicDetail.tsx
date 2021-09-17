@@ -33,6 +33,7 @@ const useTopicDetail = (): {
   getCommentDetail: (CommentDetailParams) => void
   getCommentsList: (CommentsListParams) => void
   deleteTopic: (TopicDetailParams) => void
+  resetCommentDetail: () => void
   resetMeta: () => void
   topicDetailMeta: Meta
   deleteTopicMeta: Meta
@@ -54,6 +55,7 @@ const useTopicDetail = (): {
   const deleteTopicMeta = useAppSelector(getDeleteTopicMeta)
   const commentDetailMeta = useAppSelector(getTopicCommentMeta)
   const commentDetail = useAppSelector(selectors.getCommentDetail)
+  const resetCommentDetail = () => dispatch(actions.resetCommentDetail())
   const resetTopicMeta = () => dispatch(actions.clearTopicDetail())
   const createComment = (params: CommentCreateParams) => dispatch(actions.createTopicComment(params))
   const createCommentMeta = useAppSelector(getCreateCommentMeta)
@@ -91,6 +93,7 @@ const useTopicDetail = (): {
     createComment,
     deleteComment,
     resetMeta,
+    resetCommentDetail,
     getCommentsList,
     commentDetailMeta,
     commentsList,
