@@ -18,6 +18,7 @@ import useFollowList from './useFollowList'
 import _ from 'lodash'
 import ESLoader from '@components/Loader'
 import { MEMBER_ROLE } from '@constants/community.constants'
+import useCommunityDetail from '../../useCommunityDetail'
 
 type Props = {
   community: CommunityDetail
@@ -51,7 +52,9 @@ const FollowList: React.FC<Props> = ({ community }) => {
     changeMemberRole,
     removeMember,
     sendToast,
+    resetMeta,
   } = useFollowList()
+  const { getCommunityDetail } = useCommunityDetail()
   const [hasChanged, setHasChanged] = useState(false)
   const [groupedMembers, setGroupedMembers] = useState<GroupedMembers[]>([])
   const [initialValue, setInitialValue] = useState<GroupedMembers[]>([])
@@ -84,6 +87,7 @@ const FollowList: React.FC<Props> = ({ community }) => {
 
   const handleClose = () => {
     setOpen(false)
+    getCommunityDetail(hash_key)
   }
 
   useEffect(() => {
@@ -91,6 +95,7 @@ const FollowList: React.FC<Props> = ({ community }) => {
       getMembers({ hash_key: hash_key, role: CommunityMemberRole.all, page: 1 })
     } else {
       resetMembers()
+      resetMeta()
     }
   }, [open])
 

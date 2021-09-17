@@ -86,10 +86,15 @@ const InfoContainer: React.FC = () => {
     return event
   }
 
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    handleSearch()
+  }
+
   return (
     <Box ml={2}>
       <Box mt={3} mb={1}>
-        <form onSubmit={handleSearch} className={classes.searchContainer}>
+        <form method="post" onSubmit={handleSubmit} className={classes.searchContainer}>
           <OutlinedInput
             autoComplete="off"
             onChange={onChange}
@@ -133,6 +138,7 @@ const InfoContainer: React.FC = () => {
                     comment_count={attr.comment_count}
                     keyword={value}
                     isSearched={isSearched}
+                    isOnlyTitle={isOnlyTitle}
                   />
                 )
               })}

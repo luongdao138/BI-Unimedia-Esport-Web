@@ -15,6 +15,7 @@ import { CommonHelper } from '@utils/helpers/CommonHelper'
 import router, { useRouter } from 'next/router'
 import { Close as IconClose } from '@material-ui/icons'
 import { ESRoutes } from '@constants/route.constants'
+import Linkify from 'react-linkify'
 import _ from 'lodash'
 import useTopicHelper from '../../useTopicHelper'
 import useTopicDetail from '../../useTopicDetail'
@@ -45,17 +46,10 @@ type CommunityHeaderProps = {
   menuParams?: MenuParams
   handleReply?: (params: { hash_key: string; comment_no: number }) => void
   setOpenDelete?: Dispatch<SetStateAction<boolean>>
-  setSelectedCommentHashKey?: Dispatch<SetStateAction<string>>
+  setSelectedCommentNo?: Dispatch<SetStateAction<number>>
   onReport?: (comment: ReportData) => void
 }
-const Comment: React.FC<CommunityHeaderProps> = ({
-  comment,
-  menuParams,
-  handleReply,
-  setOpenDelete,
-  setSelectedCommentHashKey,
-  onReport,
-}) => {
+const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleReply, setOpenDelete, setSelectedCommentNo, onReport }) => {
   const classes = useStyles({ currentReplyNumberRectLeft })
   const { query } = useRouter()
   const { topic_hash_key } = query
@@ -63,7 +57,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({
   const [replyAnchorEl, setReplyAnchorEl] = useState(null)
   const { isOwner } = useTopicHelper(comment.attributes.user_code)
   const { isModerator, isPublic, isNotMember, isTopicOwner } = menuParams
-  const { getCommentDetail, commentDetail, commentDetailMeta } = useTopicDetail()
+  const { getCommentDetail, commentDetail, commentDetailMeta, resetCommentDetail } = useTopicDetail()
 
   const handleClickReply = (event, content) => {
     getCommentDetail({ topic_hash: topic_hash_key, comment_no: content.slice(2) })
@@ -73,6 +67,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({
 
   const handleCloseReply = () => {
     setReplyAnchorEl(null)
+    resetCommentDetail()
   }
 
   const commentData = comment.attributes
@@ -94,7 +89,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({
   const replyData = commentDetail?.attributes
 
   const handleDeleteOpen = () => {
-    setSelectedCommentHashKey(hash_key)
+    setSelectedCommentNo(commentData.comment_no)
     setOpenDelete(true)
   }
   const handleReport = () => {
@@ -117,25 +112,29 @@ const Comment: React.FC<CommunityHeaderProps> = ({
 
   const reply_regex = /(>>[0-9]+)/g
 
-  const newLineText = (text) => {
+  const newLineText = (text, isReply = false) => {
     return _.map(_.split(text, '\n'), (str, i) => (
       <Typography key={i} className={classes.content}>
         {_.map(
           _.filter(_.split(str, reply_regex), (el) => !_.isEmpty(el)),
           (content, index) => {
-            return content.match(reply_regex) ? renderPopover(content, index) : content
+            return content.match(reply_regex) ? renderPopover(content, index, isReply) : content
           }
         )}
       </Typography>
     ))
   }
 
-  const renderPopover = (content, index) => {
+  const renderPopover = (content, index, isReply = false) => {
     return (
       <>
-        <Link id={index} onClick={(e) => handleClickReply(e, content)} className={classes.reply}>
+        {isReply ? (
           <Typography className={classes.replied_id}>{content}</Typography>
-        </Link>
+        ) : (
+          <Link id={index} onClick={(e) => handleClickReply(e, content)} className={classes.reply}>
+            <Typography className={classes.replied_id}>{content}</Typography>
+          </Link>
+        )}
       </>
     )
   }
@@ -162,7 +161,17 @@ const Comment: React.FC<CommunityHeaderProps> = ({
           </Box>
         </Box>
         <Box mb={3}>
-          <Typography className={classes.content}>{replyData.content}</Typography>
+          <Typography className={classes.content}>
+            <Linkify
+              componentDecorator={(decoratedHref, decoratedText, key) => (
+                <a target="_blank" rel="noopener noreferrer" href={decoratedHref} key={key} className={classes.linkify}>
+                  {decoratedText}
+                </a>
+              )}
+            >
+              <Typography>{newLineText(replyData.content, true)}</Typography>
+            </Linkify>
+          </Typography>
           {replyData.attachments &&
             replyData.attachments[0]?.assets_url &&
             renderClickableImage(replyData.attachments[0]?.assets_url, true)}
@@ -208,7 +217,17 @@ const Comment: React.FC<CommunityHeaderProps> = ({
           </Box>
           <Box className={classes.contentContainer}>
             {newLineText(commentData.content)}
-            <Box className={classes.popcontent}>asdaasd</Box>
+            {/* TODO Just for test */}
+            {/* <Box className={classes.popcontent}>asdaasd</Box> */}
+            <Linkify
+              componentDecorator={(decoratedHref, decoratedText, key) => (
+                <a target="_blank" rel="noopener noreferrer" href={decoratedHref} key={key} className={classes.linkify}>
+                  {decoratedText}
+                </a>
+              )}
+            >
+              <Typography>{newLineText(commentData.content)}</Typography>
+            </Linkify>
           </Box>
           {commentData.attachments &&
             commentData.attachments[0]?.assets_url &&
@@ -276,7 +295,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({
     )
   }
 
-  return commentData.deleted_at ? deletedComment(commentData.comment_no) : notDeletedComment()
+  return commentData.deleted_at !== null ? deletedComment(commentData.comment_no) : notDeletedComment()
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -299,6 +318,11 @@ const useStyles = makeStyles((theme) => ({
     color: Colors.primary,
     textDecoration: 'underline',
     display: 'inline',
+  },
+  linkify: {
+    color: Colors.white,
+    textDecoration: 'underline',
+    wordBreak: 'break-all',
   },
   container: {
     display: 'flex',

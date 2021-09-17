@@ -141,13 +141,16 @@ export default createReducer(initialState, (builder) => {
   builder.addCase(actions.getTopicComment.fulfilled, (state, action) => {
     state.commentDetail = action.payload.data
   })
+  builder.addCase(COMMUNITY_ACTION_TYPE.RESET_COMMENT_DETAIL, (state) => {
+    state.commentDetail = undefined
+  })
   builder.addCase(actions.getCommentsList.fulfilled, (state, action) => {
     state.commentsList = action.payload.data
     state.commentsListMeta = action.payload.meta
   })
   builder.addCase(actions.deleteTopicComment.fulfilled, (state, action) => {
     state.commentsList = _.map(state.commentsList, (comment) => {
-      return comment.attributes.hash_key === action.meta.arg
+      return comment.attributes.comment_no === action.meta.arg.comment_no
         ? { ...comment, attributes: { ...comment.attributes, deleted_at: 'date' } }
         : comment
     })

@@ -8,6 +8,7 @@ import {
   TopicDeleteParams,
   CommentDetailParams,
   CommentDetail,
+  DeleteCommentParams,
 } from '@services/community.service'
 import community from '@store/community'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
@@ -33,13 +34,14 @@ const useTopicDetail = (): {
   getCommentDetail: (CommentDetailParams) => void
   getCommentsList: (CommentsListParams) => void
   deleteTopic: (TopicDetailParams) => void
+  resetCommentDetail: () => void
   resetMeta: () => void
   topicDetailMeta: Meta
   deleteTopicMeta: Meta
   commentDetailMeta: Meta
   createComment: (params: CommentCreateParams) => void
   createCommentMeta: Meta
-  deleteComment: (hash_key: string) => void
+  deleteComment: (params: DeleteCommentParams) => void
   commentsListMeta: Meta
   commentsListPageMeta: PageMeta
   commentsList: CommentsResponse[]
@@ -54,12 +56,13 @@ const useTopicDetail = (): {
   const deleteTopicMeta = useAppSelector(getDeleteTopicMeta)
   const commentDetailMeta = useAppSelector(getTopicCommentMeta)
   const commentDetail = useAppSelector(selectors.getCommentDetail)
+  const resetCommentDetail = () => dispatch(actions.resetCommentDetail())
   const resetTopicMeta = () => dispatch(actions.clearTopicDetail())
   const createComment = (params: CommentCreateParams) => dispatch(actions.createTopicComment(params))
   const createCommentMeta = useAppSelector(getCreateCommentMeta)
   const resetMeta = () => dispatch(clearMetaData(actions.getCommentsList.typePrefix))
 
-  const deleteComment = async (params) => {
+  const deleteComment = async (params: DeleteCommentParams) => {
     const resultAction = await dispatch(actions.deleteTopicComment(params))
     if (actions.deleteTopicComment.fulfilled.match(resultAction)) {
       dispatch(commonActions.addToast(t('common:topic_comment.delete.success_toast')))
@@ -91,6 +94,7 @@ const useTopicDetail = (): {
     createComment,
     deleteComment,
     resetMeta,
+    resetCommentDetail,
     getCommentsList,
     commentDetailMeta,
     commentsList,

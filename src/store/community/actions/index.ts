@@ -307,6 +307,8 @@ export const getTopicComment = createAsyncThunk<services.CommentDetailResponse, 
   }
 )
 
+export const resetCommentDetail = createAction(COMMUNITY_ACTION_TYPE.RESET_COMMENT_DETAIL)
+
 export const createTopicComment = createAsyncThunk<void, services.CommentCreateParams>(
   COMMUNITY_ACTION_TYPE.CREATE_TOPIC_COMMENT,
   async (params, { rejectWithValue }) => {
@@ -322,7 +324,7 @@ export const createTopicComment = createAsyncThunk<void, services.CommentCreateP
   }
 )
 
-export const deleteTopicComment = createAsyncThunk<void, string>(
+export const deleteTopicComment = createAsyncThunk<void, services.DeleteCommentParams>(
   COMMUNITY_ACTION_TYPE.DELETE_TOPIC_COMMENT,
   async (params, { rejectWithValue }) => {
     try {

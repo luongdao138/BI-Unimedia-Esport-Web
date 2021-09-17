@@ -1,4 +1,4 @@
-import { Box, Typography, Icon, IconButton, ButtonBase } from '@material-ui/core'
+import { Box, Typography, Icon, ButtonBase } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import ESAvatar from '@components/Avatar'
 import { Colors } from '@theme/colors'
@@ -19,6 +19,7 @@ import router from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
 import useTopicHelper from '../../useTopicHelper'
 import useCommunityHelper from '@containers/Community/hooks/useCommunityHelper'
+import { FormatHelper } from '@utils/helpers/FormatHelper'
 
 type CommunityHeaderProps = {
   user_avatar?: string
@@ -59,6 +60,7 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({
       date: CommonHelper.staticSmartTime(topicData?.created_at),
       image: !!topicData?.attachments && topicData.attachments[0]?.assets_url,
       hash_key: topicData?.hash_key,
+      avatar_image: topicData?.owner_profile,
     },
   }
 
@@ -119,32 +121,15 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({
             <Typography className={classes.content}>{isConfirm ? content : topicData.content}</Typography>
           </Box>
           {(isConfirm ? image : !!topicData?.attachments && topicData.attachments[0]?.assets_url) && renderClickableImage()}
-          {topicData?.like_count || topicData?.like_count == 0 ? (
-            <Box display="flex" justifyContent="space-between" mt={2}>
-              <Box display="flex" justifyContent="flex-end">
-                <Box className={classes.numberBox}>
-                  <Icon className="fas fa-comment-alt" fontSize="small" />
-                </Box>
-                <Box className={classes.numberBox} mr={1} ml={1}>
-                  <Typography className={classes.count}>{topicData?.comment_count}</Typography>
-                </Box>
+          {topicData && (
+            <Box display="flex" justifyContent="flex-end" mt={2}>
+              <Box className={classes.numberBox}>
+                <Icon className="fas fa-comment-alt" fontSize="small" />
               </Box>
-              <Box display="flex" justifyContent="flex-end">
-                <Box className={classes.numberBox}>
-                  <Icon className="fas fa-comment-alt" fontSize="small" />
-                </Box>
-                <Box className={classes.numberBox} mr={1} ml={1}>
-                  <Typography className={classes.count}>{topicData?.comment_count}</Typography>
-                </Box>
-                <Box className={classes.numberBox}>
-                  <IconButton className={classes.replyButton}>
-                    <Icon className="fas fa-share" fontSize="small" style={{ transform: 'scaleX(-1)' }} />
-                  </IconButton>
-                </Box>
+              <Box className={classes.numberBox} mr={1} ml={1}>
+                <Typography className={classes.count}>{FormatHelper.kFormatter(topicData?.comment_count)}</Typography>
               </Box>
             </Box>
-          ) : (
-            <></>
           )}
         </Box>
       </Box>

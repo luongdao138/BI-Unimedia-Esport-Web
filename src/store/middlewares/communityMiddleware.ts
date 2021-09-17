@@ -24,6 +24,7 @@ import {
   searchTopic,
   unfollowCommunityPending,
   followCommunity,
+  getCommentsList,
 } from '@store/community/actions/index'
 import i18n from '@locales/i18n'
 import { addToast } from '@store/common/actions'
@@ -54,8 +55,20 @@ const messages = {
   [`${followCommunity.rejected}`]: i18n.t('common:common.failed_to_get_data'),
 }
 
+const fetchCommentsList = (store: StoreType) => {
+  const hashKey = store.getState().community.topicDetail?.attributes?.hash_key
+  hashKey && store.dispatch(getCommentsList({ hash_key: hashKey, page: 1 }))
+}
+
+const actions = {
+  [`${createTopicComment.fulfilled}`]: fetchCommentsList,
+}
+
 export const communityMiddleware: Middleware = (store: StoreType) => (next: AppDispatch) => <A extends Action>(action: A): A => {
   const message = messages[action.type]
+  const communityAction = actions[action.type]
+
+  if (communityAction) communityAction(store)
 
   if (message && !_.isEmpty(message)) store.dispatch(addToast(message))
 

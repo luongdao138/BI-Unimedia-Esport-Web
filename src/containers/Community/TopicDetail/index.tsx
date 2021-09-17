@@ -56,11 +56,11 @@ const TopicDetailContainer: React.FC = () => {
   }
 
   const [openDelete, setOpenDelete] = useState(false)
-  const [selectedCommentHashKey, setSelectedCommentHashKey] = useState('')
+  const [selectedCommentNo, setSelectedCommentNo] = useState()
   const [reportData, setReportData] = useState<ReportData | null>(null)
 
   const handleDeleteComment = () => {
-    deleteComment(selectedCommentHashKey)
+    deleteComment({ comment_no: selectedCommentNo, topic_hash: String(topic_hash_key) })
     setOpenDelete(false)
   }
 
@@ -142,7 +142,7 @@ const TopicDetailContainer: React.FC = () => {
                   menuParams={menuParams}
                   handleReply={setReply}
                   setOpenDelete={setOpenDelete}
-                  setSelectedCommentHashKey={setSelectedCommentHashKey}
+                  setSelectedCommentNo={setSelectedCommentNo}
                   onReport={handleReportComment}
                 />
               )
@@ -179,23 +179,23 @@ const TopicDetailContainer: React.FC = () => {
         )}
 
         {isAuthenticated && reportData && (
-          <>
-            <DiscardDialog
-              title={t('common:topic_comment.delete.title')}
-              open={openDelete}
-              onClose={() => setOpenDelete(false)}
-              onSubmit={handleDeleteComment}
-              description={t('common:topic_comment.delete.description')}
-              confirmTitle={t('common:topic_comment.delete.submit')}
-            />
-            <ESReport
-              reportType={REPORT_TYPE.TOPIC_COMMENT}
-              target_id={reportData.attributes.hash_key}
-              data={reportData}
-              open={reportData !== null}
-              handleClose={() => setReportData(null)}
-            />
-          </>
+          <ESReport
+            reportType={REPORT_TYPE.TOPIC_COMMENT}
+            target_id={reportData.attributes.hash_key}
+            data={reportData}
+            open={reportData !== null}
+            handleClose={() => setReportData(null)}
+          />
+        )}
+        {isAuthenticated && (
+          <DiscardDialog
+            title={t('common:topic_comment.delete.title')}
+            open={openDelete}
+            onClose={() => setOpenDelete(false)}
+            onSubmit={handleDeleteComment}
+            description={t('common:topic_comment.delete.description')}
+            confirmTitle={t('common:topic_comment.delete.submit')}
+          />
         )}
       </Box>
     </>
