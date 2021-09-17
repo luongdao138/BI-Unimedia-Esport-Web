@@ -503,6 +503,7 @@ export default {
       score_attack: 'スコアアタック',
       time_attack: 'タイムアタック',
     },
+    not_entered: '未入力',
     match_not_yet: 'まだ作成されていません',
     third_place: '（3位決定戦あり）',
     no_third_place: '（3位決定戦なし）',
