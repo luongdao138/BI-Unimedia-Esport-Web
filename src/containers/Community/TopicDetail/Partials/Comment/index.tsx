@@ -210,13 +210,11 @@ const Comment: React.FC<CommunityHeaderProps> = ({
           {commentData.attachments &&
             commentData.attachments[0]?.assets_url &&
             renderClickableImage(commentData.attachments[0]?.assets_url)}
-          {!isOwner && (
-            <Box style={{ display: 'flex', justifyContent: 'flex-end' }}>
-              <IconButton className={classes.shareButton} onClick={handleCommentReply}>
-                <Icon className="fas fa-share" fontSize="small" style={{ transform: 'scaleX(-1)' }} />
-              </IconButton>
-            </Box>
-          )}
+          <Box style={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <IconButton className={classes.shareButton} onClick={handleCommentReply}>
+              <Icon className="fas fa-share" fontSize="small" style={{ transform: 'scaleX(-1)' }} />
+            </IconButton>
+          </Box>
         </Box>
         <Popover
           open={Boolean(replyAnchorEl)}
