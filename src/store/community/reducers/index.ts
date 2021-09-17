@@ -142,7 +142,7 @@ export default createReducer(initialState, (builder) => {
   })
   builder.addCase(actions.deleteTopicComment.fulfilled, (state, action) => {
     state.commentsList = _.map(state.commentsList, (comment) => {
-      return comment.attributes.hash_key === action.meta.arg
+      return comment.attributes.comment_no === action.meta.arg.comment_no
         ? { ...comment, attributes: { ...comment.attributes, deleted_at: 'date' } }
         : comment
     })
