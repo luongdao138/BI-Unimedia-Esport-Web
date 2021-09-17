@@ -172,6 +172,7 @@ export default createReducer(initialState, (builder) => {
   })
   builder.addCase(actions.clearRecommendedUsers, (state) => {
     state.recommendedUsers = []
+    state.recommendedUsersMeta = undefined
   })
   builder.addCase(actions.clearTournamentResult, (state) => {
     state.searchTournaments = []
