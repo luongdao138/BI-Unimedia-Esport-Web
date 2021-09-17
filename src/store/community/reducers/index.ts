@@ -56,7 +56,7 @@ export default createReducer(initialState, (builder) => {
   builder.addCase(actions.communitySearch.fulfilled, (state, action) => {
     let searchCommunity = action.payload.data
     if (action.payload.meta != undefined && action.payload.meta.current_page > 1) {
-      searchCommunity = state.searchCommunity.concat(action.payload.data)
+      searchCommunity = _.unionBy(state.searchCommunity, action.payload.data, 'attributes.hash_key')
     }
     state.searchCommunity = searchCommunity
     state.searchCommunityMeta = action.payload.meta
@@ -68,7 +68,7 @@ export default createReducer(initialState, (builder) => {
   builder.addCase(actions.getCommunityList.fulfilled, (state, action) => {
     let tmpCommunitiesList = action.payload.data
     if (action.payload.meta != undefined && action.payload.meta.current_page > 1) {
-      tmpCommunitiesList = state.communitiesList.concat(action.payload.data)
+      tmpCommunitiesList = _.unionBy(state.communitiesList, action.payload.data, 'attributes.hash_key')
     }
     state.communitiesList = tmpCommunitiesList
     state.communitiesListMeta = action.payload.meta
@@ -77,11 +77,15 @@ export default createReducer(initialState, (builder) => {
     state.communitiesList = []
     state.communitiesListMeta = undefined
   })
+  builder.addCase(actions.clearTopicListData, (state) => {
+    state.topicList = []
+    state.topicListMeta = undefined
+  })
 
   builder.addCase(actions.getCommunityListByUser.fulfilled, (state, action) => {
     let tmpCommunitiesList = action.payload.data
     if (action.payload.meta != undefined && action.payload.meta.current_page > 1) {
-      tmpCommunitiesList = state.communitiesListByUser.concat(action.payload.data)
+      tmpCommunitiesList = _.unionBy(state.communitiesListByUser, action.payload.data, 'attributes.hash_key')
     }
     state.communitiesListByUser = tmpCommunitiesList
     state.communitiesListByUserMeta = action.payload.meta
@@ -94,6 +98,7 @@ export default createReducer(initialState, (builder) => {
   builder.addCase(actions.getTopicFollowers.fulfilled, (state, action) => {
     let tmpTopicFollowersList = action.payload.data
     if (action.payload.meta != undefined && action.payload.meta.current_page > 1) {
+      //Unused reducer     ref: Home Page
       tmpTopicFollowersList = state.topicFollowersList.concat(action.payload.data)
     }
     state.topicFollowersList = tmpTopicFollowersList
@@ -108,7 +113,7 @@ export default createReducer(initialState, (builder) => {
   builder.addCase(actions.getCommunityMembers.fulfilled, (state, action) => {
     let tmpCommunityMembers = action.payload.data
     if (action.payload.meta != undefined && action.payload.meta.current_page > 1) {
-      tmpCommunityMembers = state.communityMembers.concat(action.payload.data)
+      tmpCommunityMembers = _.unionBy(state.communityMembers, action.payload.data, 'id')
     }
     state.communityMembers = tmpCommunityMembers
     state.communityMembersMeta = action.payload.meta

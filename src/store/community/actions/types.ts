@@ -26,6 +26,7 @@ export enum COMMUNITY_ACTION_TYPE {
   CLOSE_COMMUNITY = 'community/close',
   RESET_COMMUNITY_MEMBERS = 'community/resetMembers',
   GET_TOPIC_LIST = 'topic/list',
+  CLEAR_TOPIC_LIST = 'topic/clearList',
   FOLLOW_COMMUNITY = 'community/join',
   UNFOLLOW_COMMUNITY = 'community/leave',
   UNFOLLOW_COMMUNITY_PENDING = 'community/leave/pending',

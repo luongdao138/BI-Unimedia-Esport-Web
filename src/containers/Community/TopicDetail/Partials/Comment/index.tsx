@@ -206,7 +206,10 @@ const Comment: React.FC<CommunityHeaderProps> = ({
               )}
             </Box>
           </Box>
-          <Box className={classes.contentContainer}>{newLineText(commentData.content)}</Box>
+          <Box className={classes.contentContainer}>
+            {newLineText(commentData.content)}
+            <Box className={classes.popcontent}>asdaasd</Box>
+          </Box>
           {commentData.attachments &&
             commentData.attachments[0]?.assets_url &&
             renderClickableImage(commentData.attachments[0]?.assets_url)}
@@ -374,6 +377,23 @@ const useStyles = makeStyles((theme) => ({
   contentContainer: {
     display: 'flex',
     flexDirection: 'column',
+    position: 'relative',
+  },
+  popcontent: {
+    position: 'absolute',
+    width: 'calc(100% + 32px)',
+    background: 'green',
+    border: '2px solid blue',
+    borderRadius: 4,
+    padding: 24,
+    top: '-90%',
+    left: -16,
+    visibility: 'hidden',
+    opacity: 0,
+    '& .show': {
+      visibility: 'visible',
+      opacity: 1,
+    },
   },
   imageBox: {
     display: 'flex',
