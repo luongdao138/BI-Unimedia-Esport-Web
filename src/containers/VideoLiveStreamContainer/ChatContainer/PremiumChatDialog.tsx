@@ -306,7 +306,12 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: '4px',
   },
   ...purchasePoints,
-  [theme.breakpoints.down(768)]: {
+  [theme.breakpoints.down(769)]: {
+    purchaseDialogContainer: {
+      width: 475,
+    },
+  },
+  [theme.breakpoints.down(476)]: {
     purchaseDialogContainer: {
       width: 318,
     },

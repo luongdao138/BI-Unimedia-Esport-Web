@@ -114,7 +114,6 @@ export const purchasePoints = {
     displayTime: 3600,
   },
 }
-// NEXT_PUBLIC_API=http://172.16.110.93:3002
 type MessageValidationType = {
   message: string
 }
@@ -143,7 +142,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
   const [successFlagGetAddUSer, setSuccessFlagGetAddUSer] = useState(false)
   const [messagesDonate, setMessagesDonate] = useState([])
   const [displaySeeMore, setDisplaySeeMore] = useState(false)
-  const [isMessInBottom, setIsMessInBottom] = useState(false)
+  // const [isMessInBottom, setIsMessInBottom] = useState(false)
 
   const getChatData = () =>
     Array(30)
@@ -170,13 +169,13 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
   // console.log('userProfile', JSON.stringify(userProfile));
   const initialFruits: APIt.Message[] = []
   const [stateMessages, setStateMessages] = useState(initialFruits)
-  console.log('🚀 ~ stateMessages', stateMessages)
+  // console.log('🚀 ~ stateMessages', stateMessages)
   const [chatUser, setChatUser] = useState<any>([])
   const theme = useTheme()
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
+  const isMobile = useMediaQuery(theme.breakpoints.down(769))
   const { checkNgWord } = useCheckNgWord()
   const [savedMess, setSavedMess] = useState([])
-  console.log('🚀 ~ savedMess', savedMess)
+  // console.log('🚀 ~ savedMess', savedMess)
   const [savedDonateMess, setSavedDonateMess] = useState([])
 
   const { userResult, streamingSecond, playedSecond, isViewingStream } = useDetailVideo()
@@ -273,16 +272,20 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
   const onCreateMess = (createdMessage) => {
     console.log('🚀 ~ subscribeAction ~ 1234', savedMess)
     if (!createdMessage.delete_flag) {
-      if (isViewingStream) {
+      // if (isViewingStream) {
         // render new messages with savedMess
+        const isMessageInBottom = checkMessIsInBottom()
+        // console.log("🚀 ~ onCreateMess ~ abc", abc)
         setStateMessages([...savedMess, createdMessage])
-        scrollToCurrentMess()
+        if(isMessageInBottom) {
+          scrollToCurrentMess()
+        } 
 
         // render new users donate
         if (isPremiumChat(createdMessage, false)) {
           setMessagesDonate([...savedDonateMess, createdMessage])
         }
-      }
+      // }
       // save mess for local
       setSavedMess((messages) => [...messages, createdMessage])
       // save donated messages for local (not check display time)
@@ -371,17 +374,21 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
     }
   }, [streamingSecond])
 
-  useEffect(() => {
-    if (!isViewingStream) {
-      const newMess = [...savedMess]
-      // render messages by time of local
-      setStateMessages(newMess.filter((item) => +item.video_time <= +playedSecond))
-      const newMessDonate = [...savedDonateMess]
-      // render user donate icon by time of local
-      setMessagesDonate(newMessDonate.filter((item) => +item.display_avatar_time <= +playedSecond))
-      scrollToCurrentMess()
-    }
-  }, [playedSecond])
+  // useEffect(() => {
+  //   if (!isViewingStream) {
+  //     const newMess = [...savedMess]
+  //     // const isMessageInBottom = checkMessIsInBottom()
+  //     // render messages by time of local
+  //     setStateMessages(newMess.filter((item) => +item.video_time <= +playedSecond))
+  //     // if(isMessageInBottom) {
+  //     //   scrollToCurrentMess()
+  //     // } 
+  //     const newMessDonate = [...savedDonateMess]
+  //     // render user donate icon by time of local
+  //     setMessagesDonate(newMessDonate.filter((item) => +item.display_avatar_time <= +playedSecond))
+  //     // scrollToCurrentMess()
+  //   }
+  // }, [playedSecond])
 
   useEffect(() => {
     getListUser()
@@ -397,12 +404,12 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
     // }, 2000)
   }, [])
 
-  // const filterMessagesDonate = (messages: any, compare_second ?: any) => {
-  //   const foundMessages = messages.filter(item => {
-  //     return isPremiumChat(item, true, compare_second)
-  //   });
-  //   return foundMessages
-  // }
+  const filterMessagesDonate = (messages: any, compare_second ?: any) => {
+    const foundMessages = messages.filter(item => {
+      return isPremiumChat(item, true, compare_second)
+    });
+    return foundMessages
+  }
 
   const getUsersDonate = async () => {
     try {
@@ -419,7 +426,9 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
       console.log('getUsersDonate Results; ', messagesResults)
       console.log('streamingSecond', streamingSecond)
       const transformMess = messagesResults.data.listMessages.items.filter((item) => item.parent && +item.point > 300)
-      // setMessagesDonate(filterMessagesDonate(transformMess, streamingSecond))
+      // comment if no get in initial
+      setMessagesDonate(filterMessagesDonate(transformMess, streamingSecond))
+      // save mess for use in local
       setSavedDonateMess(transformMess)
     } catch (error) {
       console.error(error)
@@ -437,7 +446,8 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
       const messagesResults: any = await API.graphql(graphqlOperation(listMessages, listQV))
       console.log('getMessages Results; ', messagesResults)
       const transformMess = messagesResults.data.listMessages.items.filter((item) => item.parent)
-      // setStateMessages(transformMess)
+      // comment if no get in initial
+      setStateMessages(transformMess)
       // save mess for use in local
       setSavedMess(transformMess)
       subscribeAction()
@@ -592,6 +602,14 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
     }
   }
 
+  // useEffect(() => { 
+  //   console.log('🚀 ~ 0000', isMessInBottom)
+  //   if (isMessInBottom) {
+  //     scrollToCurrentMess()
+  //   }
+    
+  // }, [isMessInBottom])
+
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   //@ts-ignore
   const checkMessIsInBottom = () => {
@@ -605,14 +623,18 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
     console.log('🚀 ~ 1111 ~ scrollTop', mess_container.scrollTop)
     console.log('🚀 ~ Mess Is InBottom: ', !(mess_container.scrollTop + mess_container.offsetHeight < mess_container.scrollHeight))
     if (mess_container.scrollTop + mess_container.offsetHeight < mess_container.scrollHeight) {
-      setIsMessInBottom(false)
+      // setIsMessInBottom(false)
       setDisplaySeeMore(true)
+      return false
     } else {
       // if scrollbar is in container bottom and not scrollbar (as max height is smaller than height of container)
-      if (mess_container.offsetHeight < mess_container.scrollHeight) {
-        setIsMessInBottom(true)
-        setDisplaySeeMore(false)
-      }
+      // setIsMessInBottom(true)
+      setDisplaySeeMore(false)
+      // if (mess_container.offsetHeight < mess_container.scrollHeight) {
+      //   setIsMessInBottom(true)
+      //   setDisplaySeeMore(false)
+      // }
+      return true
     }
     // }
   }
@@ -650,7 +672,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
     console.log('🚀 ~ 222222 ~ offsetHeight', mess_container.offsetHeight)
     console.log('🚀 ~ 222222 ~ scrollTop', mess_container.scrollTop)
 
-    console.log('🚀 ~ 222222 ~ isMessInBottom', isMessInBottom)
+    // console.log('🚀 ~ 222222 ~ isMessInBottom', isMessInBottom)
 
     mess_container.scrollTo({ top: mess_container.scrollHeight, behavior: 'smooth' })
     // if(isMessInBottom) {
@@ -663,13 +685,6 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
     // }
     // mess_container.scrollTop = current_mess.offsetTop - (414 - 42);
   }
-
-  useEffect(() => {
-    console.log('🚀 ~ isMessInBottom', isMessInBottom)
-    if (isMessInBottom) {
-      scrollToCurrentMess()
-    }
-  }, [isMessInBottom])
 
   const handleSubmitChatContent = async () => {
     // checkMessIsInBottom()
