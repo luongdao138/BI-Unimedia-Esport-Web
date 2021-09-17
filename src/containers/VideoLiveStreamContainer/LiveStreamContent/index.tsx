@@ -44,14 +44,26 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
   const isLoadingVideoDetail = meta?.pending
   const [like, setLike] = useState(!isLoadingVideoDetail ? userResult.like : 0)
   const [unlike, setUnlike] = useState(!isLoadingVideoDetail ? userResult.unlike : 0)
-  const [likeCount, setLikeCount] = useState(detailVideoResult?.like_count)
-  const [unlikeCount, setUnlikeCount] = useState(detailVideoResult?.unlike_count)
+  const [likeCount, setLikeCount] = useState(
+    !isLoadingVideoDetail && detailVideoResult?.like_count !== undefined ? detailVideoResult?.like_count : 0
+  )
+  const [unlikeCount, setUnlikeCount] = useState(
+    !isLoadingVideoDetail && detailVideoResult?.unlike_count !== undefined ? detailVideoResult?.unlike_count : 0
+  )
   const [subscribe, setSubscribe] = useState(userResult?.follow !== null ? userResult.follow : 0)
 
   const isSubscribed = () => subscribe
 
-  const classes = useStyles({ isSubscribed: isSubscribed() })
+  // eslint-disable-next-line no-console
+  console.log(
+    'detail video result - userResult - like count - unlike count >>>>>>>>>> ',
+    detailVideoResult,
+    userResult,
+    likeCount,
+    unlikeCount
+  )
 
+  const classes = useStyles({ isSubscribed: isSubscribed() })
   const followParams = {
     video_id: props?.video_id,
     channel_id: detailVideoResult?.channel_id,
@@ -77,22 +89,28 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
   const toggleLikeVideo = () => {
     if (like === 0) {
       setLike(1)
+      setLikeCount(likeCount + 1)
       if (unlike === 1) {
         setUnlike(0)
+        setUnlikeCount(unlikeCount > 0 ? unlikeCount - 1 : 0)
       }
     } else {
       setLike(0)
+      setLikeCount(likeCount > 0 ? likeCount - 1 : 0)
     }
   }
 
   const toggleUnLikeVideo = () => {
     if (unlike === 0) {
       setUnlike(1)
+      setUnlikeCount(unlikeCount + 1)
       if (like === 1) {
         setLike(0)
+        setLikeCount(likeCount > 0 ? likeCount - 1 : 0)
       }
     } else {
       setUnlike(0)
+      setUnlikeCount(unlikeCount > 0 ? unlikeCount - 1 : 0)
     }
   }
   const handleReactionVideo = () => {
@@ -108,13 +126,13 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
     handleSubscribe()
   }, [subscribe])
 
-  useEffect(() => {
-    setLike(userResult?.like)
-    setUnlike(userResult?.unlike)
-    setLikeCount(detailVideoResult?.like_count)
-    setUnlikeCount(detailVideoResult?.unlike_count)
-    setSubscribe(userResult?.follow)
-  }, [userResult, detailVideoResult])
+  // useEffect(() => {
+  //   setLike(userResult?.like)
+  //   setUnlike(userResult?.unlike)
+  //   setLikeCount(detailVideoResult?.like_count)
+  //   setUnlikeCount(detailVideoResult?.unlike_count)
+  //   setSubscribe(userResult?.follow)
+  // }, [userResult, detailVideoResult])
 
   const registerChannelButton = () => (
     <ButtonBase onClick={toggleSubscribeClick} className={classes.register_channel_btn}>
@@ -221,6 +239,7 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
       </>
     )
   }
+
   const renderPreloadVideoInfo = () => {
     return (
       <>
@@ -287,7 +306,7 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
           )}
 
           <Box className={classes.wrap_interactive_info}>
-            {!detailVideoResult ? (
+            {!detailVideoResult && isLoadingVideoDetail ? (
               <>{renderPreloadButtonReaction()}</>
             ) : (
               detailVideoResult !== '' && (
@@ -336,7 +355,7 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
               src={userProfile ? userProfile?.attributes?.avatar_url : '/images/avatar.png'}
             />
             <Box className={classes.streamer_data}>
-              <Box className={classes.streamer_name}>{t('live_stream_screen.streamer_name')}</Box>
+              {userProfile?.attributes?.nickname && <Box className={classes.streamer_name}>{userProfile?.attributes?.nickname}</Box>}
               <Box className={classes.registration}>
                 <Typography className={classes.register_person_label}>{t('live_stream_screen.register_person_label')}</Typography>
                 <Typography className={classes.register_person_number}>

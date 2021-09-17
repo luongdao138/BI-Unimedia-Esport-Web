@@ -51,12 +51,12 @@ const RelatedVideos: React.FC<RelatedVideosProps> = ({ video_id }) => {
     return (
       <>
         {downMd ? (
-          <Box className={classes.xsItemContainer} key={index}>
-            <VideoPreviewItem data={item} key={item.id} />
+          <Box className={classes.xsItemContainer} key={item?.id || index}>
+            <VideoPreviewItem data={item} />
           </Box>
         ) : (
-          <Grid item xs={6} lg={6} xl={4} className={classes.itemContainer} key={index}>
-            <VideoPreviewItem data={item} key={item.id} />
+          <Grid item xs={6} lg={6} xl={4} className={classes.itemContainer} key={item?.id || index}>
+            <VideoPreviewItem data={item} />
           </Grid>
         )}
       </>
@@ -67,21 +67,19 @@ const RelatedVideos: React.FC<RelatedVideosProps> = ({ video_id }) => {
     const arrayPreLoad = Array(6)
       .fill('')
       .map((_, i) => ({ i }))
-    return arrayPreLoad.map(() => (
-      <>
-        {downMd ? (
-          <Box className={classes.xsItemContainer}>
-            <Box className={classes.wrapPreLoadContainer}>
-              <PreloadPreviewItem />
-            </Box>
-          </Box>
-        ) : (
-          <Grid item xs={6} className={classes.itemContainer}>
+    return arrayPreLoad.map((_item: any, index: number) =>
+      downMd ? (
+        <Box className={classes.xsItemContainer} key={index}>
+          <Box className={classes.wrapPreLoadContainer}>
             <PreloadPreviewItem />
-          </Grid>
-        )}
-      </>
-    ))
+          </Box>
+        </Box>
+      ) : (
+        <Grid item xs={6} className={classes.itemContainer} key={index}>
+          <PreloadPreviewItem />
+        </Grid>
+      )
+    )
   }
 
   return (

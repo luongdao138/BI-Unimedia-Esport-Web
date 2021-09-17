@@ -22,6 +22,8 @@ import { useRouter } from 'next/router'
 import usePurchaseTicketSuperChat from './usePurchaseTicket'
 import useDetailVideo from './useDetailVideo'
 import moment from 'moment'
+import ESLoader from '@components/Loader'
+import PreloadChatContainer from './PreloadContainer/PreloadChatContainer'
 
 enum TABS {
   PROGRAM_INFO = 1,
@@ -41,6 +43,7 @@ const VideosTop: React.FC = () => {
     PURCHASE_TICKET: 1,
     PURCHASE_SUPER_CHAT: 2,
   }
+  const classes = useStyles()
   const { t } = useTranslation('common')
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down(769))
@@ -66,14 +69,11 @@ const VideosTop: React.FC = () => {
 
   const { getVideoDetail, detailVideoResult, userResult } = useDetailVideo()
 
-  // const isPending = meta.pending || meta_my_points.pending
+  // const isPending = (meta.pending || meta_my_points.pending) && detailVideoResult != null
+  const isLoadingData = !detailVideoResult || !myPointsData || !userResult
 
   const ticket_points = 100
 
-  const params = {
-    page: 1,
-    limit: 10,
-  }
   const super_chat_params = {
     point: donatedPoints,
     type: PURCHASE_TYPE.PURCHASE_SUPER_CHAT,
@@ -84,12 +84,26 @@ const VideosTop: React.FC = () => {
     type: PURCHASE_TYPE.PURCHASE_SUPER_CHAT,
     video_id,
   }
+  useEffect(() => {
+    getMyPointData({ page: 1, limit: 10 })
+  }, [])
 
   useEffect(() => {
-    getMyPointData(params)
-    getVideoDetail({ video_id: `${video_id}` })
+    if (video_id) {
+      getVideoDetail({ video_id: `${video_id}` })
+    }
   }, [video_id])
-  const classes = useStyles()
+
+  useEffect(() => {
+    if (dataPurchaseTicketSuperChat?.code === 200) {
+      handleClose()
+      dispatch(addToast(i18n.t('common:donate_points.purchase_ticket_success')))
+    }
+  }, [dataPurchaseTicketSuperChat])
+
+  useEffect(() => {
+    setTab(isMobile ? TABS.COMMENT : TABS.PROGRAM_INFO)
+  }, [isMobile])
 
   const confirmDonatePoint = (donated_point, comment) => {
     // reset donate point
@@ -122,13 +136,6 @@ const VideosTop: React.FC = () => {
     // }
   }
 
-  useEffect(() => {
-    if (dataPurchaseTicketSuperChat?.code === 200) {
-      handleClose()
-      dispatch(addToast(i18n.t('common:donate_points.purchase_ticket_success')))
-    }
-  }, [dataPurchaseTicketSuperChat])
-
   const handlePurchaseTicket = () => {
     setPurchaseType(PURCHASE_TYPE.PURCHASE_TICKET)
     if (myPoint >= ticket_points) {
@@ -147,9 +154,6 @@ const VideosTop: React.FC = () => {
     }
   }
 
-  useEffect(() => {
-    setTab(isMobile ? TABS.COMMENT : TABS.PROGRAM_INFO)
-  }, [isMobile])
   const getTabs = () => {
     return (
       <Grid item xs={12}>
@@ -263,19 +267,38 @@ const VideosTop: React.FC = () => {
     <Box className={classes.root}>
       {/* {isPending && <ESLoader open={meta_my_points.pending} />} */}
       <Box className={classes.container}>
-        <LiveStreamContent
-          video_id={video_id}
-          userHasViewingTicket={userHasViewingTicket()}
-          videoType={getVideoType()}
-          freeToWatch={isVideoFreeToWatch()}
-          ticketAvailableForSale={isTicketAvailableForSale()}
-          softKeyboardIsShown={softKeyboardIsShown}
-          ticketPrice={detailVideoResult?.ticket_price}
-        />
-        <Grid container direction="row" className={classes.tabContainer}>
-          {getTabs()}
-          {getContent()}
-        </Grid>
+        {isLoadingData ? (
+          <Box
+            style={{
+              backgroundColor: '#6a6a6c',
+              width: '100%',
+              height: '100%',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              textAlign: 'center',
+              borderRadius: 8,
+            }}
+          >
+            <ESLoader />
+          </Box>
+        ) : (
+          <>
+            <LiveStreamContent
+              video_id={video_id}
+              userHasViewingTicket={userHasViewingTicket()}
+              videoType={getVideoType()}
+              freeToWatch={isVideoFreeToWatch()}
+              ticketAvailableForSale={isTicketAvailableForSale()}
+              softKeyboardIsShown={softKeyboardIsShown}
+              ticketPrice={detailVideoResult?.ticket_price}
+            />
+            <Grid container direction="row" className={classes.tabContainer}>
+              {getTabs()}
+              {getContent()}
+            </Grid>
+          </>
+        )}
         {showPurchaseTicketModal && (
           <PurchaseTicketSuperChat
             myPoints={myPoint}
@@ -286,7 +309,24 @@ const VideosTop: React.FC = () => {
           />
         )}
       </Box>
-      {!isMobile && sideChatContainer()}
+      {isLoadingData ? (
+        <Box
+          style={{
+            display: 'flex',
+            marginLeft: 24,
+            marginRight: 24,
+            backgroundColor: 'transparent',
+            height: '100%',
+            width: 482,
+            flexDirection: 'column',
+            borderRadius: 8,
+          }}
+        >
+          <PreloadChatContainer />
+        </Box>
+      ) : (
+        !isMobile && sideChatContainer()
+      )}
       <DonatePointsConfirmModal
         showConfirmModal={showConfirmModal}
         handleClose={handleClose}

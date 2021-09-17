@@ -11,6 +11,7 @@ import { PreloadChannel, PreloadPreviewItem } from '../PreloadContainer'
 import useLiveStreamDetail from '../useLiveStreamDetail'
 import { LIMIT_ITEM, TypeVideoArchived } from '@services/liveStreamDetail.service'
 import ESLoader from '@components/Loader'
+import useDetailVideo from '../useDetailVideo'
 
 interface dataItem {
   id: number
@@ -25,8 +26,11 @@ const DistributorInfo: React.FC<DistributorInfoProps> = ({ video_id }) => {
   const theme = useTheme()
   const downMd = useMediaQuery(theme.breakpoints.down(769))
   const isLoading = false
+  const { detailVideoResult } = useDetailVideo()
   const { meta_archived_video_stream, archivedVideoStreamData, getArchivedVideoStream, resetArchivedVideoStream } = useLiveStreamDetail()
   const isLoadingData = meta_archived_video_stream?.pending
+
+  const getChannelDescriptionText = detailVideoResult?.channel_description
 
   const [descriptionCollapse, setDescriptionCollapse] = useState(true)
   const [page, setPage] = useState<number>(1)
@@ -101,33 +105,23 @@ const DistributorInfo: React.FC<DistributorInfoProps> = ({ video_id }) => {
     const arrayPreLoad = Array(6)
       .fill('')
       .map((_, i) => ({ i }))
-    return arrayPreLoad.map(() => (
-      <>
-        {downMd ? (
-          <Box className={classes.xsItemContainer}>
-            <Box className={classes.wrapPreLoadContainer}>
-              <PreloadPreviewItem />
-            </Box>
-          </Box>
-        ) : (
-          <Grid item xs={6} className={classes.itemContainer}>
+    return arrayPreLoad.map((_item: any, index: number) =>
+      downMd ? (
+        <Box className={classes.xsItemContainer} key={index}>
+          <Box className={classes.wrapPreLoadContainer}>
             <PreloadPreviewItem />
-          </Grid>
-        )}
-      </>
-    ))
+          </Box>
+        </Box>
+      ) : (
+        <Grid item xs={6} className={classes.itemContainer} key={index}>
+          <PreloadPreviewItem />
+        </Grid>
+      )
+    )
   }
 
-  const getChannelDescriptionText = () =>
-    '配信者のプロフィールがここに表示されます。配信者のプロフィールがここに表示されます。\n' +
-    '配信者のプロフィールがここに表示されます。配信者のプロフィールがここに表示されます。\n' +
-    '配信者のプロフィールがここに表示されます。配信者のプロフィールがここに表示されます。\n' +
-    '配信者のプロフィールがここに表示されます。配信者のプロフィールがここに表示されます。\n' +
-    '配信者のプロフィールがここに表示されます。配信者のプロフィールがここに表示されます。\n' +
-    '配信者のプロフィールがここに表示されます。配信者のプロフィールがここに表示されます。'
-
   const getDescriptionTruncated = () => {
-    return descriptionCollapse ? `${getChannelDescriptionText().substring(0, downMd ? 70 : 200)}...` : getChannelDescriptionText()
+    return descriptionCollapse ? `${getChannelDescriptionText.substring(0, downMd ? 70 : 200)}...` : getChannelDescriptionText
   }
 
   const collapseButton = () => (
@@ -149,7 +143,7 @@ const DistributorInfo: React.FC<DistributorInfoProps> = ({ video_id }) => {
     return (
       <Box className={classes.channelDescription}>
         <Typography className={classes.content}>{getDescriptionTruncated()}</Typography>
-        {getChannelDescriptionText().length > 200 && collapseButton()}
+        {getChannelDescriptionText.length > 200 && collapseButton()}
       </Box>
     )
   }
@@ -171,12 +165,13 @@ const DistributorInfo: React.FC<DistributorInfoProps> = ({ video_id }) => {
   return (
     <Box className={classes.container}>
       <Box className={classes.titleContainer}>
-        {getChannelDescriptionText().length > 0 && !isLoading ? (
+        {getChannelDescriptionText.length > 0 && !isLoading ? (
           <>
             <Box className={classes.channelContainer}>
               <ESAvatar className={classes.avatar} src={'/images/avatar.png'} />
               <Box className={classes.textContainer}>
-                <Typography className={classes.title}>{'配信者の名前がはいります'}</Typography>
+                {/* <Typography className={classes.title}>{'配信者の名前がはいります'}</Typography> */}
+                {detailVideoResult?.channel_name && <Typography className={classes.title}>{detailVideoResult?.channel_name}</Typography>}
                 {channelDescription()}
               </Box>
             </Box>

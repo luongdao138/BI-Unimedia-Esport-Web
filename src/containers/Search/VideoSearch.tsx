@@ -10,9 +10,8 @@ import ESLoader from '@components/Loader'
 import { TypeVideo } from '@services/videoTop.services'
 import InfiniteScroll from 'react-infinite-scroll-component'
 
-const LIMIT = 15
+const LIMIT = 9
 const VideoSearchContainer: React.FC = () => {
-  const page = 1
   const classes = useStyles()
   const { searchKeyword } = useSearch()
   const { t } = useTranslation(['common'])
@@ -20,20 +19,31 @@ const VideoSearchContainer: React.FC = () => {
   const downMd = useMediaQuery(theme.breakpoints.down(769))
   const [keyword, setKeyword] = useState<string>('')
   const { searchVideosSelector, videoSearch, resetMeta, resetSearchVideo, meta, totalResult } = useSearchVideoResult()
+  const [page, setPage] = useState<number>(1)
+  const [hasMore, setHasMore] = useState(true)
 
   useEffect(() => {
     setKeyword(searchKeyword)
-    videoSearch({ page: 1, keyword: searchKeyword, limit: LIMIT })
+    videoSearch({ page: page, keyword: searchKeyword, limit: LIMIT })
 
     return () => {
+      setPage(1)
       resetSearchVideo()
       resetMeta()
     }
   }, [searchKeyword])
 
-  const loadMore = () => {
-    if (searchVideosSelector?.length > 0 && searchVideosSelector?.length <= LIMIT) {
-      videoSearch({ page: page + 1, limit: LIMIT, keyword: keyword })
+  useEffect(() => {
+    if (page > 1) videoSearch({ page: page, limit: LIMIT, keyword: keyword })
+  }, [page])
+
+  const handleLoadMore = async () => {
+    if (searchVideosSelector.length > 0 && searchVideosSelector.length < LIMIT * page) {
+      setHasMore(false)
+      return
+    }
+    if (searchVideosSelector.length > 0 && searchVideosSelector.length == LIMIT * page) {
+      await setPage(page + 1)
     }
   }
 
@@ -65,8 +75,8 @@ const VideoSearchContainer: React.FC = () => {
         <InfiniteScroll
           className={classes.scrollContainer}
           dataLength={searchVideosSelector?.length}
-          next={loadMore}
-          hasMore={true}
+          next={handleLoadMore}
+          hasMore={hasMore}
           loader={null}
           scrollThreshold={0.8}
           style={{ overflow: 'hidden' }}
