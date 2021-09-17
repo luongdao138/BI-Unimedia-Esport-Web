@@ -33,9 +33,13 @@ export const getUser = /* GraphQL */ `
       updatedAt
     }
   }
-`
+`;
 export const listUsers = /* GraphQL */ `
-  query ListUsers($filter: ModelUserFilterInput, $limit: Int, $nextToken: String) {
+  query ListUsers(
+    $filter: ModelUserFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
     listUsers(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
@@ -52,7 +56,7 @@ export const listUsers = /* GraphQL */ `
       nextToken
     }
   }
-`
+`;
 export const getMessage = /* GraphQL */ `
   query GetMessage($id: ID!) {
     getMessage(id: $id) {
@@ -84,9 +88,13 @@ export const getMessage = /* GraphQL */ `
       updatedAt
     }
   }
-`
+`;
 export const listMessages = /* GraphQL */ `
-  query ListMessages($filter: ModelMessageFilterInput, $limit: Int, $nextToken: String) {
+  query ListMessages(
+    $filter: ModelMessageFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
     listMessages(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
@@ -116,4 +124,4 @@ export const listMessages = /* GraphQL */ `
       nextToken
     }
   }
-`
+`;
