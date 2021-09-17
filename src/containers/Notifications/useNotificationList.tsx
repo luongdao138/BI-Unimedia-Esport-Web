@@ -22,7 +22,10 @@ const useNotificationList = () => {
 
   const fetchNotifications = (param: NotificationListParams) => dispatch(actions.getNotifications(param))
   const clearNotificationBadge = () => dispatch(actions.clearNotificationBadge())
-  const resetMeta = () => dispatch(clearMetaData(actions.getNotifications.typePrefix))
+  const resetMeta = () => {
+    dispatch(clearMetaData(actions.getNotifications.typePrefix))
+    dispatch(actions.clearNotificationList())
+  }
 
   return {
     notifications,
