@@ -122,7 +122,7 @@ export default createReducer(initialState, (builder) => {
   builder.addCase(actions.getSuggestedTeamMembers.fulfilled, (state, action) => {
     let _suggestedTeamMembers = action.payload.data
     if (action.payload.links != undefined && action.payload.links.meta.current_page > 1) {
-      _suggestedTeamMembers = state.suggestedTeamMembers.concat(action.payload.data)
+      _suggestedTeamMembers = _.unionBy(state.suggestedTeamMembers, action.payload.data, 'id')
     }
 
     state.suggestedTeamMembers = _suggestedTeamMembers
