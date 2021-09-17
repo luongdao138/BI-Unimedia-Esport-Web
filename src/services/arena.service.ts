@@ -115,7 +115,7 @@ export type TournamentDetail = {
     overview: string
     notes: string
     rule: TournamentRule
-    sort: string
+    sort_by: string
     max_participants: number
     status: TournamentStatus
     is_freezed: boolean
@@ -319,6 +319,10 @@ export type ParticipantsResponse = {
         }
       }
     }
+    user?: {
+      user_code: string
+    }
+    position: number | null
   }
 }
 
@@ -559,6 +563,12 @@ export type TournamentTeamDetailResponse = {
 
 export type UpdateTournamentResponse = void
 
+export type BattleRoyaleScoreRecord = Record<number, number>
+export type SetBattleRoyaleScoresParams = {
+  participants: ParticipantsResponse[]
+  hash_key: string
+}
+
 export const tournamentSearch = async (params: TournamentSearchParams): Promise<TournamentSearchResponse> => {
   const { data } = await api.post<TournamentSearchResponse>(URI.TOURNAMENTS_SEARCH, params)
   return data
@@ -706,4 +716,13 @@ export const getTournamentTeamDetail = async (teamId: number): Promise<Tournamen
 
 export const updateTournamentTeamDetail = async (params: UpdateTournamentTeamParams): Promise<void> => {
   await api.post<TournamentTeamDetailResponse>(URI.TOURNAMENT_TEAMS.replace(/:id/gi, `${params.id}`), params.data)
+}
+
+export const setBattleRoyalScores = async ({ hash_key, participants }: SetBattleRoyaleScoresParams) => {
+  const scores = {}
+  for (const p of participants) {
+    scores[p.id] = p.attributes.position
+  }
+  const { data } = await api.post(URI.BATTLE_ROYALE_SET_SCORES.replace(/:id/gi, `${hash_key}`), { scores })
+  return data
 }

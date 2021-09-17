@@ -66,6 +66,7 @@ export const URI = {
   TOURNAMENTS_SET_SCORE: '/v2/tournaments/:id/set_score',
   TOURNAMENT_PARTICIPANT_NAME: '/v2/tournaments/:id/participant_name',
   TOURNAMENT_TEAMS: '/v2/tournament_teams/:id',
+  BATTLE_ROYALE_SET_SCORES: '/v2/tournaments/:id/set_scores',
   JOIN_TOURNAMENT: '/v2/tournaments/:id/join',
   LEAVE_TOURNAMENT: '/v2/tournaments/:id/leave',
   CLOSE_TOURNAMENT: '/v2/tournaments/:id/close_recruitment',

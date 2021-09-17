@@ -447,3 +447,18 @@ export const updateTournamentTeamDetail = createAsyncThunk<void, services.Update
 export const teamMemberFollowStageChanged = createAction<{ userId: number; state: number }>(
   TOURNAMENT_ACTION_TYPE.TEAM_MEMBER_FOLLOW_STATE_CHANGED
 )
+
+export const setBattleRoyaleScores = createAsyncThunk<void, services.BattleRoyaleScoresParams>(
+  types.SET_BATTLE_ROYALE_SCORES,
+  async (param, { rejectWithValue }) => {
+    try {
+      const res = await services.setBattleRoyalScores(param)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)

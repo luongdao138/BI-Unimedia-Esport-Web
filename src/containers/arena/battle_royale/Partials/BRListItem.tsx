@@ -1,54 +1,33 @@
-import { Typography, Box } from '@material-ui/core'
+import { cloneElement, memo } from 'react'
+import { Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
-import ESInput from '@components/Input'
-import Avatar from '@components/Avatar'
-import { useState } from 'react'
+
 import { useTranslation } from 'react-i18next'
 
 interface BRListItemProps {
-  index: string
-  avatar: string | null
-  label?: string
-  score?: string | null
-  editable?: boolean
+  avatar: JSX.Element
+  text?: string
+  textSecondary?: string
   onChange?: (score: string) => void
   onClick?: () => void
   clickable?: boolean
+  children?: JSX.Element
 }
 
 const BRListItem: React.FC<BRListItemProps> = (props: BRListItemProps) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
-  const [editable, setEditable] = useState(props.editable)
-  const handleChange = (e) => {
-    props.onChange(e.target.value.replace(/[^0-9.]/g, ''))
-  }
+  const avatarClone = cloneElement(props.avatar, { onClick: () => props.onClick(), className: classes.pointer })
   return (
-    <div className={classes.match} onClick={props.onClick}>
-      <div className={`${classes.matchContent} ${props.clickable ? classes.pointer : ''}`}>
-        <div className={classes.matchHeader}>{props.index}</div>
-        <div className={classes.participantWrapper}>
-          <div className={classes.participant}>
-            <Avatar className={classes.avatar} alt={props.label || ''} src={props.avatar} size={26} />
-            <Box color={props.label ? Colors.white : Colors.grey[400]}>
-              <Typography className={classes.label} noWrap={true}>
-                {props.label || t('common:common.not_sure')}
-              </Typography>
-            </Box>
-          </div>
-          <div className={classes.scoreWrap} onClick={() => setEditable(true)}>
-            <ESInput
-              onBlur={() => {
-                setEditable(false)
-              }}
-              disabled={!editable}
-              placeholder="0000"
-              onChange={handleChange}
-              value={props.score}
-            />
-          </div>
+    <div className={classes.root}>
+      <div className={classes.contentWrapper}>
+        {avatarClone}
+        <div className={classes.textContent}>
+          <Typography className={classes.text}>{props.text || t('common:common.not_sure')}</Typography>
+          {props.textSecondary && <Typography className={classes.textSecondary}>{props.textSecondary}</Typography>}
         </div>
+        <div className={classes.rightContent}>{props.children}</div>
       </div>
     </div>
   )
@@ -59,93 +38,62 @@ BRListItem.defaultProps = {
 }
 
 const useStyles = makeStyles((theme) => ({
-  match: {
+  root: {
+    minHeight: 64,
+    backgroundColor: theme.palette.common.black,
+    borderRadius: theme.spacing(0.5),
+    border: '1px solid #4c4c4c',
+    marginBottom: theme.spacing(1),
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
-    padding: '8px 0',
-    flexGrow: 1,
-    position: 'relative',
   },
-  matchContent: {
-    position: 'relative',
-    backgroundColor: Colors.black_opacity['30'],
-    borderRadius: theme.spacing(0.5),
-    border: '1px solid #4c4c4c',
-  },
-  matchHeader: {
-    paddingLeft: theme.spacing(1.5),
-    borderTopLeftRadius: 3,
-    borderTopRightRadius: 3,
-    height: 18,
-    backgroundColor: Colors.black,
-    width: '100%',
-    overflow: 'hidden',
-    lineHeight: 1.7,
-    color: Colors.white_opacity[70],
-  },
-  participantWrapper: {
+  contentWrapper: {
     display: 'flex',
-    height: 42,
-    paddingLeft: 12,
-    paddingRight: 32,
-    paddingTop: 8,
-    paddingBottom: 8,
-    position: 'relative',
-    borderTop: '1px solid #4c4c4c',
-
-    color: Colors.white,
-  },
-  participant: {
-    display: 'flex',
+    flexDirection: 'row',
     alignItems: 'center',
+    paddingLeft: theme.spacing(2.5),
+    position: 'relative',
+    color: Colors.white,
+    paddingRight: 200,
   },
-  scoreWrap: {
+  rightContent: {
+    width: 200,
+    height: 50,
     position: 'absolute',
-    right: 8,
-    top: '50%',
-    width: 55,
-    transform: 'translate(0,-50%)',
-    '& .MuiOutlinedInput-root': {
-      borderRadius: 0,
-    },
-    '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
-      borderWidth: 0,
-    },
-    '& .PrivateNotchedOutline-root-23': {
-      borderWidth: '0',
-    },
-    '& .MuiInputBase-input': {
-      fontSize: 20,
-      textAlign: 'right',
-      color: Colors.white_opacity[70],
-    },
-    '& .MuiOutlinedInput-input': {
-      padding: '19.5px 4px',
-    },
-    '& .MuiOutlinedInput-inputMarginDense': {
-      paddingTop: 4.5,
-      paddingBottom: 4.5,
-    },
-    '& .Mui-disabled': {
-      backgroundColor: Colors.black,
-    },
+    right: 0,
+    borderLeft: '1px solid #4c4c4c',
   },
-  avatar: {
-    height: 26,
-    width: 26,
-    marginRight: 8,
+  textContent: {
+    paddingLeft: theme.spacing(1),
+    flex: 'auto',
   },
-  label: {
+  text: {
     fontSize: 12,
-    fontWeight: 'bold',
-    textAlign: 'start',
+  },
+  textSecondary: {
+    fontSize: 10,
   },
   pointer: {
     cursor: 'pointer',
   },
+  [theme.breakpoints.down('xs')]: {
+    contentWrapper: {
+      flexDirection: 'column',
+      justifyContent: 'center',
+      paddingLeft: theme.spacing(1),
+      paddingRight: 180,
+      paddingTop: 8,
+      paddingBottom: 8,
+    },
+    textContent: {
+      padding: 'unset',
+      textAlign: 'center',
+    },
+    rightContent: {
+      width: 180,
+    },
+  },
 }))
 
-BRListItem.defaultProps = { editable: false }
-
-export default BRListItem
+export default memo(BRListItem)

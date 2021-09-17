@@ -20,10 +20,11 @@ import ButtonPrimaryOutlined from '@components/ButtonPrimaryOutlined'
 import { use100vh } from 'react-div-100vh'
 import { Colors } from '@theme/colors'
 import { ParticipantsResponse } from '@services/arena.service'
+import Avatar from '@components/Avatar'
 
-const participantDefault = {
+const participantDefault: ParticipantsResponse = {
   id: undefined,
-  attributes: { avatar_url: null, name: '' },
+  attributes: { avatar_url: null, name: '', position: null },
 }
 
 const getDefaultParticipants = (length: number) => Array.from({ length: length }, (_, i) => i).map((_) => participantDefault)
@@ -36,12 +37,21 @@ const ArenaBattlesEdit: React.FC = () => {
   const router = useRouter()
   const { tournament, meta: detailMeta } = useTournamentDetail()
   const { participants, brMeta: participantsMeta, getBattleRoyaleParticipants, resetMeta } = useParticipants()
-  const { freeze, randomize, setParticipants, randomizeMeta, freezeMeta, setParticipantsMeta } = useModeratorActions()
+  const {
+    freeze,
+    randomize,
+    setParticipants,
+    randomizeMeta,
+    freezeMeta,
+    setParticipantsMeta,
+    setBattleRoyaleScores,
+    setBattleRoyaleScoresMeta,
+  } = useModeratorActions()
 
-  const [data, setData] = useState<ReturnType<typeof TournamentHelper.getDetailData> | undefined>(undefined)
   const [showParticipants, setShowParticipants] = useState<{ pid: number | undefined; open: boolean }>({ pid: undefined, open: false })
   const [selecteds, setSelecteds] = useState<ParticipantsResponse[]>([])
   const [clickIndex, setClickIndex] = useState<number>(0)
+  const data = tournament ? TournamentHelper.getDetailData(tournament) : undefined
   const confirmFreeze = useFreezeDialog(data?.isTeam)
   const confirmRandomize = useRandomizeDialog(data?.isTeam)
   const height = use100vh()
@@ -66,15 +76,7 @@ const ArenaBattlesEdit: React.FC = () => {
     }))
   }
 
-  useEffect(() => {
-    if (detailMeta.loaded) {
-      const tempData = TournamentHelper.getDetailData(tournament)
-      setData(tempData)
-    }
-    return () => {
-      resetMeta()
-    }
-  }, [detailMeta])
+  useEffect(() => () => resetMeta(), [])
 
   useEffect(() => {
     if (participantsMeta.loaded) {
@@ -89,6 +91,12 @@ const ArenaBattlesEdit: React.FC = () => {
   }, [participantsMeta])
 
   useEffect(() => {
+    if (setBattleRoyaleScoresMeta.loaded) {
+      setSelecteds(participants)
+    }
+  }, [setBattleRoyaleScoresMeta.loaded, setBattleRoyaleScoresMeta.error])
+
+  useEffect(() => {
     if (router.query.hash_key && detailMeta.loaded) {
       getBattleRoyaleParticipants({ page: 1, hash_key: router.query.hash_key, role: ROLE.PARTICIPANT })
     }
@@ -97,10 +105,6 @@ const ArenaBattlesEdit: React.FC = () => {
       resetMeta()
     }
   }, [router.query.hash_key, detailMeta.loaded])
-
-  // useEffect(() => {
-  //   setShowFreeze(false)
-  // }, [freezeMeta.loaded])
 
   useEffect(() => {
     if (randomizeMeta.loaded) {
@@ -116,6 +120,7 @@ const ArenaBattlesEdit: React.FC = () => {
           attributes: {
             avatar_url: participant.attributes.avatar_url,
             name: participant.attributes.name,
+            position: null,
           },
         }
       }
@@ -148,6 +153,22 @@ const ArenaBattlesEdit: React.FC = () => {
     const selectedLength = getParticipantIds(selecteds).length
     setFreezable(selectedLength === data?.maxCapacity)
   }, [selecteds])
+
+  const setScores = (value: number, id: number) => {
+    const newSelecteds = selecteds.map((v) => {
+      if (v.id == id) {
+        return {
+          ...v,
+          attributes: {
+            ...v.attributes,
+            position: value,
+          },
+        }
+      }
+      return v
+    })
+    setSelecteds(newSelecteds)
+  }
   return (
     <>
       {detailMeta.loaded && participantsMeta.loaded && data && (
@@ -160,21 +181,21 @@ const ArenaBattlesEdit: React.FC = () => {
             {selecteds.map((v, i) => (
               <BRListItem
                 key={i}
-                index={`${i + 1}`}
-                avatar={v.attributes.avatar_url}
-                label={v.attributes.name}
-                editable={false}
-                clickable={!!data.memberSelectable}
+                avatar={<Avatar alt={v.attributes.name || ''} src={v.attributes.avatar_url || ''} size={26} />}
+                text={v.attributes.name}
+                textSecondary={v.attributes.user?.user_code || ''}
                 onClick={() => {
                   if (data?.memberSelectable) {
                     setShowParticipants({ open: true, pid: Number(v.id) })
                     setClickIndex(i)
                   }
                 }}
-              />
+              >
+                <input value={v.attributes.position || ''} onChange={(e) => setScores(Number(e.target.value), v.id)} />
+              </BRListItem>
             ))}
           </Container>
-          {data.is_freezed ? null : (
+          {tournament.attributes.is_freezed ? null : (
             <Box className={classes.actionButtonContainer}>
               <Box className={classes.actionButton}>
                 <ButtonPrimaryOutlined onClick={handleRandomize} leadingIcon={<Icon className="fas fa-random" fontSize="small" />}>
@@ -188,6 +209,13 @@ const ArenaBattlesEdit: React.FC = () => {
               </Box>
             </Box>
           )}
+          <Box className={classes.actionButtonContainer}>
+            <Box className={classes.actionButton}>
+              <ButtonPrimary onClick={() => setBattleRoyaleScores({ hash_key: tournament.attributes.hash_key, participants: selecteds })}>
+                SET SCORE
+              </ButtonPrimary>
+            </Box>
+          </Box>
           <InterestedList
             pid={showParticipants.pid}
             tournament={tournament}
@@ -282,6 +310,8 @@ const useStyles = makeStyles((theme) => ({
     },
     listContainer: {
       paddingBottom: 120,
+      paddingLeft: theme.spacing(2),
+      paddingRight: theme.spacing(2),
     },
   },
 }))
