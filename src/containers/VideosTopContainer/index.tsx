@@ -12,6 +12,9 @@ import ScheduleVideos from './ScheduleVideos'
 import VideosList from './VideosList'
 import BannerCarousel from './BannerCarousel'
 import useListVideoAll from './VideosList/useListVideoAll'
+import useMediaQuery from '@material-ui/core/useMediaQuery'
+import { useTheme } from '@material-ui/core/styles'
+import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
 
 enum TABS {
   VIDEOS_LIST = 0,
@@ -35,6 +38,10 @@ const VideosTop: React.FC = () => {
   const [tab, setTab] = useState(0)
   const [follow, setFollow] = useState(0)
   const { bannerTop, listBanner } = useListVideoAll()
+  const theme = useTheme()
+  const isWideScreen = useMediaQuery(theme.breakpoints.up(1920))
+  const { width: listDisplayWidth } = useWindowDimensions(244)
+
   useEffect(() => {
     setTab(0)
     bannerTop()
@@ -53,18 +60,30 @@ const VideosTop: React.FC = () => {
       </Grid>
     )
   }
+
+  const calculateVideoItemStyle = (): any => {
+    if (!isWideScreen) {
+      return {}
+    }
+    const numOfDisplayItem = Math.floor(listDisplayWidth / 465)
+    const calcWidth = Math.floor(listDisplayWidth / numOfDisplayItem)
+    return {
+      maxWidth: Math.max(450, calcWidth),
+    }
+  }
+
   const getContent = () => {
     switch (tab) {
       case TABS.VIDEOS_LIST:
-        return <VideosList setTab={setTab} />
+        return <VideosList setTab={setTab} videoItemStyle={calculateVideoItemStyle()} />
       case TABS.LIVE_VIDEOS:
-        return <LiveStreamVideos follow={follow} setFollow={setFollow} />
+        return <LiveStreamVideos follow={follow} setFollow={setFollow} videoItemStyle={calculateVideoItemStyle()} />
       case TABS.SCHEDULE_VIDEOS:
-        return <ScheduleVideos follow={follow} setFollow={setFollow} />
+        return <ScheduleVideos follow={follow} setFollow={setFollow} videoItemStyle={calculateVideoItemStyle()} />
       case TABS.ARCHIVED_VIDEOS:
-        return <ArchivedVideos follow={follow} setFollow={setFollow} />
+        return <ArchivedVideos follow={follow} setFollow={setFollow} videoItemStyle={calculateVideoItemStyle()} />
       case TABS.FAVORITE_VIDEOS:
-        return <FavoriteVideos setTab={setTab} setFollow={setFollow} />
+        return <FavoriteVideos setTab={setTab} setFollow={setFollow} videoItemStyle={calculateVideoItemStyle()} />
       default:
         break
     }
@@ -100,9 +119,6 @@ export default VideosTop
 const useStyles = makeStyles((theme) => ({
   tabsContainer: {
     paddingRight: 122,
-  },
-  tabMin: {
-    minWidth: 0,
   },
   tabContent: {
     padding: '0 122px 0 24px',
@@ -167,12 +183,12 @@ const useStyles = makeStyles((theme) => ({
     tabContent: {
       paddingRight: 0,
     },
-    tabMin: {
-      padding: '6px 0',
-      marginRight: '12px',
-    },
   },
   [theme.breakpoints.down(415)]: {
+    tabMin: {
+      minWidth: 56,
+      marginRight: '12px',
+    },
     bannerContainer: {
       marginTop: 0,
     },

@@ -13,8 +13,9 @@ import PreLoadContainer from '../PreLoadContainer'
 type FavoriteVideosProps = {
   setTab: (value: number) => void
   setFollow?: (value: number) => void
+  videoItemStyle?: any
 }
-const FavoriteVideos: React.FC<FavoriteVideosProps> = ({ setTab, setFollow }) => {
+const FavoriteVideos: React.FC<FavoriteVideosProps> = ({ setTab, setFollow, videoItemStyle }) => {
   const theme = useTheme()
   const downMd = useMediaQuery(theme.breakpoints.down(769))
   const classes = useStyles()
@@ -28,7 +29,7 @@ const FavoriteVideos: React.FC<FavoriteVideosProps> = ({ setTab, setFollow }) =>
             <VideoPreviewItem data={item} key={item.id} />
           </Box>
         ) : (
-          <Grid item xs={6} className={classes.itemContainer} key={index}>
+          <Grid item xs={6} className={classes.itemContainer} key={index} style={videoItemStyle}>
             <VideoPreviewItem data={item} key={item.id} />
           </Grid>
         )}
@@ -66,7 +67,7 @@ const FavoriteVideos: React.FC<FavoriteVideosProps> = ({ setTab, setFollow }) =>
             </Box>
           </Box>
         ) : (
-          <Grid item xs={6} className={classes.itemContainer}>
+          <Grid item xs={6} className={classes.itemContainer} style={videoItemStyle}>
             <PreLoadContainer />
           </Grid>
         )}
@@ -225,7 +226,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   [theme.breakpoints.up(1920)]: {
     itemContainer: {
       flexGrow: '0',
-      maxWidth: '25%',
+      maxWidth: '465px',
       flexBasis: '25%',
     },
   },
