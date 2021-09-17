@@ -7,6 +7,7 @@ import { createMetaSelector } from '@store/metadata/selectors'
 import { Meta } from '@store/metadata/actions/types'
 import useArenaHelper from '@containers/arena/hooks/useArenaHelper'
 import { ArenaWinners, TournamentDetail } from '@services/arena.service'
+import { clearMetaData } from '@store/metadata/actions'
 
 const getWinnersMeta = createMetaSelector(actions.getArenaWinners)
 const getArenaMeta = createMetaSelector(actions.getTournamentDetail)
@@ -21,6 +22,7 @@ const useWinners = (
   fetchWinners: () => void
   toDetail: () => void
   handleBack: () => void
+  resetMeta: () => void
 } => {
   const router = useRouter()
   const dispatch = useAppDispatch()
@@ -51,6 +53,11 @@ const useWinners = (
 
   const handleBack = () => router.back()
 
+  const resetMeta = () => {
+    dispatch(clearMetaData(actions.getArenaWinners.typePrefix))
+    dispatch(clearMetaData(actions.getTournamentDetail.typePrefix))
+  }
+
   return {
     arenaWinners,
     winnersMeta,
@@ -59,6 +66,7 @@ const useWinners = (
     fetchWinners,
     toDetail,
     handleBack,
+    resetMeta,
   }
 }
 
