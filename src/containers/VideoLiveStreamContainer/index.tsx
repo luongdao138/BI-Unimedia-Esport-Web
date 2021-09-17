@@ -195,7 +195,7 @@ const VideosTop: React.FC = () => {
         height: 50,
         marginLeft: theme.spacing(5),
         marginRight: theme.spacing(5),
-        marginTop: theme.spacing(5),
+        marginTop: 50,
       }}
       onClick={onClick}
     >

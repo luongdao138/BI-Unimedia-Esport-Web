@@ -16,8 +16,10 @@ import useSearch from '@containers/Search/useSearch'
 
 type VideoListProps = {
   setTab: (value: number) => void
+  videoItemStyle: any
 }
-const VideosList: React.FC<VideoListProps> = ({ setTab }) => {
+
+const VideosList: React.FC<VideoListProps> = ({ setTab, videoItemStyle }) => {
   const router = useRouter()
   const theme = useTheme()
   const downMd = useMediaQuery(theme.breakpoints.down(769))
@@ -38,7 +40,7 @@ const VideosList: React.FC<VideoListProps> = ({ setTab }) => {
             <VideoPreviewItem data={item} key={item.id} />
           </Box>
         ) : (
-          <Grid item xs={6} className={classes.itemContainer} key={index}>
+          <Grid item xs={6} className={classes.itemContainer} key={index} style={videoItemStyle}>
             <VideoPreviewItem data={item} key={item.id} />
           </Grid>
         )}
@@ -100,7 +102,7 @@ const VideosList: React.FC<VideoListProps> = ({ setTab }) => {
             </Box>
           </Box>
         ) : (
-          <Grid item xs={6} className={classes.itemContainer}>
+          <Grid item xs={6} className={classes.itemContainer} style={videoItemStyle}>
             <PreLoadContainer />
           </Grid>
         )}
@@ -286,7 +288,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   [theme.breakpoints.up(1920)]: {
     itemContainer: {
       flexGrow: '0',
-      maxWidth: '25%',
+      maxWidth: '465px',
       flexBasis: '25%',
     },
   },
