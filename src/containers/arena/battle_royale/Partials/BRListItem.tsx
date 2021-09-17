@@ -13,6 +13,7 @@ interface BRListItemProps {
   onClick?: () => void
   clickable?: boolean
   children?: JSX.Element
+  highlight?: boolean
 }
 
 const BRListItem: React.FC<BRListItemProps> = (props: BRListItemProps) => {
@@ -20,11 +21,13 @@ const BRListItem: React.FC<BRListItemProps> = (props: BRListItemProps) => {
   const classes = useStyles()
   const avatarClone = cloneElement(props.avatar, { onClick: () => props.onClick(), className: classes.pointer })
   return (
-    <div className={classes.root}>
+    <div className={`${classes.root} ${props.highlight ? 'highlight' : ''}`}>
       <div className={classes.contentWrapper}>
         {avatarClone}
         <div className={classes.textContent}>
-          <Typography className={classes.text}>{props.text || t('common:common.not_sure')}</Typography>
+          <Typography className={`${classes.text} ${props.highlight ? 'highlight' : ''}`}>
+            {props.text || t('common:common.not_sure')}
+          </Typography>
           {props.textSecondary && <Typography className={classes.textSecondary}>{props.textSecondary}</Typography>}
         </div>
         <div className={classes.rightContent}>{props.children}</div>
@@ -34,7 +37,7 @@ const BRListItem: React.FC<BRListItemProps> = (props: BRListItemProps) => {
 }
 
 BRListItem.defaultProps = {
-  clickable: false,
+  highlight: false,
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -47,6 +50,9 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
+    '&.highlight': {
+      border: `1px solid ${Colors.yellow}`,
+    },
   },
   contentWrapper: {
     display: 'flex',
@@ -75,6 +81,9 @@ const useStyles = makeStyles((theme) => ({
   },
   text: {
     fontSize: 12,
+    '&.highlight': {
+      color: Colors.yellow,
+    },
   },
   textSecondary: {
     fontSize: 10,

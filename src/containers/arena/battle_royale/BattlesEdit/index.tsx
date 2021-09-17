@@ -196,6 +196,7 @@ const ArenaBattlesEdit: React.FC = () => {
                     setClickIndex(i)
                   }
                 }}
+                highlight={v.highlight}
               >
                 <BRScoreInput value={v.attributes.position || ''} onChange={(score) => setScores(Number(score), v.id)} />
               </BRListItem>

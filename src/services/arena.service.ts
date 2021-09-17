@@ -165,7 +165,7 @@ export type TournamentDetail = {
     interested_count: number
     participant_count: number
     my_role: null | ArenaRole
-    my_info: { team_id: number }[] | any
+    my_info: { team_id: number }[] | { id: number; user_id: number; role: string; position: number; is_leader: boolean; name: string }[]
     my_position: null | string
     hash_key: string
     is_entered?: boolean
@@ -324,6 +324,7 @@ export type ParticipantsResponse = {
     }
     position: number | null
   }
+  highlight?: boolean
 }
 
 export interface TeamMemberBase {

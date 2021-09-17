@@ -10,7 +10,7 @@ const getBRMeta = createMetaSelector(actions.getBattleRoyaleParticipants)
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const useParticipants = () => {
   const dispatch = useAppDispatch()
-  const participants = useAppSelector(selectors.getParticipants)
+  const participants = useAppSelector(selectors.getBattleRoyaleParticipants)
   const page = useAppSelector(selectors.getParticipantsMeta)
   const meta = useAppSelector(getMeta)
   const brMeta = useAppSelector(getBRMeta)

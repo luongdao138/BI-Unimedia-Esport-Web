@@ -14,6 +14,20 @@ export const getTournamentFollowersMeta = createSelector(getRoot, (state) => sta
 export const getTournamentResults = createSelector(getRoot, (state) => state.tournamentResults)
 export const getTournamentDetail = createSelector(getRoot, (state) => state.tournamentDetail)
 export const getParticipants = createSelector(getRoot, (state) => state.tournamentParticipants)
+export const getBattleRoyaleParticipants = createSelector(getRoot, (state) => {
+  const isTeam = state.tournamentDetail?.attributes.participant_type > 1
+  const ids = isTeam
+    ? (state.tournamentDetail?.attributes.my_info || []).map((a) => a.team_id)
+    : (state.tournamentDetail?.attributes.my_info || []).map((a) => a.id)
+  const participants = state.tournamentParticipants.map((participant) => {
+    return {
+      ...participant,
+      highlight: ids.includes(Number(participant.id)),
+    }
+  })
+  return participants
+})
+
 export const getParticipantsMeta = createSelector(getRoot, (state) => state.participantsMeta)
 export const getSuggestedTeamMembers = createSelector(getRoot, (state) => state.suggestedTeamMembers)
 export const getSuggestedTeamMembersMeta = createSelector(getRoot, (state) => state.suggestedTeamMembersMeta)
