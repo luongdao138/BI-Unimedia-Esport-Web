@@ -7,6 +7,7 @@ const useUploadImage = (): {
   uploadArenaTeamImage: (file: File, blob: any, id: number, isCreate: boolean, onSuccess: (imageUrl: string) => void) => void
   uploadArenaCoverImage: (file: File, blob: any, id: number, isCreate: boolean, onSuccess: (imageUrl: string) => void) => void
   uploadArenaSummaryImage: (file: File, blob: any, id: number, isCreate: boolean, onSuccess: (imageUrl: string) => void) => void
+  uploadCommentImage: (file: File, blob: any, id: number, isCreate: boolean, onSuccess: (imageUrl: string) => void) => void
   isUploading: boolean
   hasError: boolean
 } => {
@@ -58,6 +59,21 @@ const useUploadImage = (): {
     )
   }
 
+  const uploadCommentImage = async (file, blob, id, isCreate, onSuccess) => {
+    await uploadImage(
+      file,
+      blob,
+      {
+        type: UPLOADER_TYPE.TOURNAMENT,
+        fileName: file.name,
+        contentType: file.type,
+        room: id,
+        action_type: isCreate ? ACTION_TYPE.CREATE : ACTION_TYPE.UPDATE,
+      },
+      onSuccess
+    )
+  }
+
   const uploadImage = async (file, blob, params, onSuccess) => {
     setIsUploading(true)
 
@@ -79,6 +95,7 @@ const useUploadImage = (): {
     uploadArenaTeamImage,
     uploadArenaCoverImage,
     uploadArenaSummaryImage,
+    uploadCommentImage,
   }
 }
 

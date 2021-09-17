@@ -362,7 +362,6 @@ const useStyles = makeStyles((theme) => ({
     wordBreak: 'break-all',
   },
   topicAvatar: {
-    zIndex: 2,
     width: theme.spacing(5),
     height: theme.spacing(5),
   },
