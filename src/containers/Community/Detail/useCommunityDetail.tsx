@@ -10,9 +10,9 @@ import { clearMetaData } from '@store/metadata/actions'
 
 const { selectors, actions } = community
 const getCommunityDetailMeta = createMetaSelector(actions.getCommunityDetail)
-const getFollowCommmutyMeta = createMetaSelector(actions.followCommunity)
-const getUnfollowCommmutyMeta = createMetaSelector(actions.unfollowCommunity)
-const getUnfollowCommmutyMetaPending = createMetaSelector(actions.unfollowCommunityPending)
+const getFollowCommunityMeta = createMetaSelector(actions.followCommunity)
+const getUnfollowCommunityMeta = createMetaSelector(actions.unfollowCommunity)
+const getUnfollowCommunityMetaPending = createMetaSelector(actions.unfollowCommunityPending)
 const getTopicListMeta = createMetaSelector(actions.getTopicList)
 
 const useCommunityDetail = (): {
@@ -43,9 +43,9 @@ const useCommunityDetail = (): {
   const meta = useAppSelector(getCommunityDetailMeta)
   const topicListMeta = useAppSelector(getTopicListMeta)
   const topicListPageMeta = useAppSelector(selectors.getTopicListMeta)
-  const followCommunityMeta = useAppSelector(getFollowCommmutyMeta)
-  const unfollowCommunityMeta = useAppSelector(getUnfollowCommmutyMeta)
-  const unfollowCommunityPendingMeta = useAppSelector(getUnfollowCommmutyMetaPending)
+  const followCommunityMeta = useAppSelector(getFollowCommunityMeta)
+  const unfollowCommunityMeta = useAppSelector(getUnfollowCommunityMeta)
+  const unfollowCommunityPendingMeta = useAppSelector(getUnfollowCommunityMetaPending)
 
   const handleBack = () => back()
   const getCommunityDetail = (hash_key: string) => dispatch(actions.getCommunityDetail(hash_key))
@@ -54,13 +54,15 @@ const useCommunityDetail = (): {
   const unfollowCommunityPending = (hash_key: string) => dispatch(actions.unfollowCommunityPending(hash_key))
   const getTopicList = (params: TopicListParams) => dispatch(actions.getTopicList(params))
 
-  const resetCommunityDetailMeta = () => dispatch(clearMetaData(actions.getCommunityDetail.typePrefix))
-  const clearTopicListData = () => dispatch(actions.clearTopicListData())
-
   useEffect(() => {
     return () => {
-      resetCommunityDetailMeta()
-      clearTopicListData()
+      dispatch(actions.clearCommunityDetail())
+      dispatch(actions.clearTopicListData())
+      dispatch(clearMetaData(actions.getCommunityDetail.typePrefix))
+      dispatch(clearMetaData(actions.followCommunity.typePrefix))
+      dispatch(clearMetaData(actions.unfollowCommunity.typePrefix))
+      dispatch(clearMetaData(actions.unfollowCommunityPending.typePrefix))
+      dispatch(clearMetaData(actions.getTopicList.typePrefix))
     }
   }, [])
 

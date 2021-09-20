@@ -97,6 +97,8 @@ export const getTopicFollowers = createAsyncThunk<services.TopicFollowersRespons
 export const clearCommunityData = createAction(COMMUNITY_ACTION_TYPE.CLEAR_COMMUNITY_LIST)
 export const clearCommunityDataByUser = createAction(COMMUNITY_ACTION_TYPE.CLEAR_COMMUNITY_LIST_BY_USER)
 export const clearTopicListData = createAction(COMMUNITY_ACTION_TYPE.CLEAR_TOPIC_LIST)
+export const clearCommunityDetail = createAction(COMMUNITY_ACTION_TYPE.CLEAR_COMMUNITY_DETAIL)
+export const clearSearchTopic = createAction(COMMUNITY_ACTION_TYPE.CLEAR_SEARCH_TOPIC)
 
 export const getCommunityDetail = createAsyncThunk<services.CommunityDetailResponse, string>(
   COMMUNITY_ACTION_TYPE.GET_COMMUNITY_DETAIL,
@@ -306,7 +308,7 @@ export const closeCommunity = createAsyncThunk<void, string>(COMMUNITY_ACTION_TY
   }
 })
 
-export const createTopic = createAsyncThunk<services.CreateTopicResponse, services.TopicParams>(
+export const createTopic = createAsyncThunk<services.TopicDetailResponse, services.TopicParams>(
   COMMUNITY_ACTION_TYPE.CREATE_TOPIC,
   async (params, { rejectWithValue }) => {
     try {

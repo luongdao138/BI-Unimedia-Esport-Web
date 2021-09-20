@@ -84,6 +84,7 @@ const useCommunityCreate = (): {
   useEffect(() => {
     if (router.asPath.endsWith('/edit') && router.query.hash_key) {
       setIsEdit(true)
+      dispatch(actions.getCommunityDetail(String(router.query.hash_key)))
     }
   }, [router])
 

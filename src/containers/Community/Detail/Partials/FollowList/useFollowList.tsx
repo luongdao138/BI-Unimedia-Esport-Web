@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
 import { CommunityMember, CommunityMembersParams, MemberParams, PageMeta } from '@services/community.service'
 import community from '@store/community'
@@ -19,12 +20,23 @@ const useFollowList = (): {
 } => {
   const dispatch = useAppDispatch()
   const membersList = useAppSelector(selectors.getCommunityMembers)
-  const getMembers = (params) => dispatch(actions.getCommunityMembers(params))
   const pages = useAppSelector(selectors.getCommunityMembersMeta)
   const membersMeta = useAppSelector(getMeta)
-  const resetMeta = () => dispatch(clearMetaData(actions.getCommunityMembers.typePrefix))
+  const getMembers = (params: CommunityMembersParams) => dispatch(actions.getCommunityMembers(params))
   const resetMembers = () => dispatch(actions.resetCommunityMembers())
   const submitMembers = (params) => dispatch(actions.memberSubmit(params))
+  const resetMeta = () => dispatch(clearMetaData(actions.getCommunityMembers.typePrefix))
+
+  useEffect(() => {
+    return () => {
+      dispatch(clearMetaData(actions.approveCommunityMembers.typePrefix))
+      dispatch(clearMetaData(actions.cancelCommunityMembers.typePrefix))
+      dispatch(clearMetaData(actions.changeCommunityMemberRole.typePrefix))
+      dispatch(clearMetaData(actions.removeCommunityMember.typePrefix))
+      resetMembers()
+      resetMeta()
+    }
+  }, [])
 
   return {
     membersList,
