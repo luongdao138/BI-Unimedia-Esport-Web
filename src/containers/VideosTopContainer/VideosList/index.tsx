@@ -34,23 +34,23 @@ const VideosList: React.FC<VideoListProps> = ({ setTab, videoItemStyle }) => {
 
   const renderLiveItem = (item: TypeVideo, index: number) => {
     return (
-      <>
+      <React.Fragment key={item?.id || index}>
         {downMd ? (
-          <Box className={classes.xsItemContainer} key={item?.id || index}>
+          <Box className={classes.xsItemContainer}>
             <VideoPreviewItem data={item} />
           </Box>
         ) : (
-          <Grid item xs={6} className={classes.itemContainer} key={item?.id || index} style={videoItemStyle}>
+          <Grid item xs={6} className={classes.itemContainer} style={videoItemStyle}>
             <VideoPreviewItem data={item} />
           </Grid>
         )}
-      </>
+      </React.Fragment>
     )
   }
 
   const renderPopularItem = (item: CategoryPopularData, index: number) => {
     return (
-      <>
+      <React.Fragment key={item?.id || index}>
         <Box className={classes.titleContainer} key={index}>
           <TitleSeeMore
             titleText={item.name}
@@ -71,7 +71,7 @@ const VideosList: React.FC<VideoListProps> = ({ setTab, videoItemStyle }) => {
           </Grid>
         </Box>
         <Box paddingTop={3} />
-      </>
+      </React.Fragment>
     )
   }
 

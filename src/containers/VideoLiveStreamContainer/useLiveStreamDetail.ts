@@ -39,11 +39,7 @@ const useLiveStreamDetail = () => {
 
   const meta_follow_channel = useAppSelector(_followChannelMeta)
   const userFollowChannel = async (params: FollowChannelParams) => {
-    const followParams = {
-      channel_id: params?.channel_id,
-      follow: params?.follow,
-    }
-    const result = await dispatch(actions.followChannelAction(followParams))
+    const result = await dispatch(actions.followChannelAction({ channel_id: params?.channel_id, follow: params?.follow }))
     if (actions.followChannelAction.fulfilled.match(result)) {
       getVideoDetail({ video_id: `${params?.video_id}` })
     }

@@ -60,7 +60,7 @@ const DistributorInfo: React.FC<DistributorInfoProps> = ({ video_id }) => {
     if (page > 1) getArchivedVideoStream({ video_id: video_id, page: page, limit: LIMIT_ITEM })
   }, [page])
 
-  const getDistributorSocialInfo = () => [
+  const getDistributorSocialInfo = [
     {
       id: 0,
       type: 'twitter',
@@ -75,30 +75,30 @@ const DistributorInfo: React.FC<DistributorInfoProps> = ({ video_id }) => {
     },
   ]
 
-  const getSocialIcon = (type) => {
-    switch (type) {
+  const getSocialIcon = (item: dataItem) => {
+    switch (item?.type) {
       case 'twitter':
-        return <SocialDistributionCircle onlyIcon={true} className={classes.socialIcon} social={type} />
+        return <SocialDistributionCircle onlyIcon={true} className={classes.socialIcon} social={item?.type} key={item?.id} />
       case 'instagram':
-        return <SocialDistributionCircle onlyIcon={true} className={classes.socialIcon} social={type} />
+        return <SocialDistributionCircle onlyIcon={true} className={classes.socialIcon} social={item?.type} key={item?.id} />
       default:
-        return <SocialDistributionCircle onlyIcon={true} className={classes.socialIcon} social={type} />
+        return <SocialDistributionCircle onlyIcon={true} className={classes.socialIcon} social={item?.type} key={item?.id} />
     }
   }
 
   const renderArchiveVideo = (item: TypeVideoArchived, index: number) => {
     return (
-      <>
+      <React.Fragment key={item?.id || index}>
         {downMd ? (
-          <Box className={classes.xsItemContainer} key={index}>
-            <VideoPreviewItem data={item} key={item.id} />
+          <Box className={classes.xsItemContainer} key={item?.id || index}>
+            <VideoPreviewItem data={item} />
           </Box>
         ) : (
-          <Grid item xs={6} lg={6} xl={4} className={classes.itemContainer} key={index}>
-            <VideoPreviewItem data={item} key={item.id} />
+          <Grid item xs={6} lg={6} xl={4} className={classes.itemContainer} key={item?.id || index}>
+            <VideoPreviewItem data={item} />
           </Grid>
         )}
-      </>
+      </React.Fragment>
     )
   }
   const renderPreLoadArchiveVideoItem = () => {
@@ -124,14 +124,13 @@ const DistributorInfo: React.FC<DistributorInfoProps> = ({ video_id }) => {
     return descriptionCollapse ? `${getChannelDescriptionText.substring(0, downMd ? 70 : 200)}...` : getChannelDescriptionText
   }
 
+  const toggleDescriptionViewMore = () => {
+    setDescriptionCollapse(!descriptionCollapse)
+  }
+
   const collapseButton = () => (
     <Box className={classes.seeMoreContainer}>
-      <Box
-        onClick={() => {
-          setDescriptionCollapse(!descriptionCollapse)
-        }}
-        className={classes.seeMore}
-      >
+      <Box onClick={toggleDescriptionViewMore} className={classes.seeMore}>
         <Typography className={classes.seeMoreTitle}>
           {descriptionCollapse ? i18n.t('common:live_stream_screen.view_more') : i18n.t('common:live_stream_screen.view_less')}
         </Typography>
@@ -139,10 +138,13 @@ const DistributorInfo: React.FC<DistributorInfoProps> = ({ video_id }) => {
       </Box>
     </Box>
   )
+
   const channelDescription = () => {
     return (
       <Box className={classes.channelDescription}>
-        <Typography className={classes.content}>{getDescriptionTruncated()}</Typography>
+        <Typography className={classes.content}>
+          {getChannelDescriptionText?.length < 200 ? getChannelDescriptionText : getDescriptionTruncated()}
+        </Typography>
         {getChannelDescriptionText.length > 200 && collapseButton()}
       </Box>
     )
@@ -176,8 +178,8 @@ const DistributorInfo: React.FC<DistributorInfoProps> = ({ video_id }) => {
               </Box>
             </Box>
             <Box className={classes.socialMediaContainer}>
-              {getDistributorSocialInfo().map((item: dataItem) => {
-                return getSocialIcon(item.type)
+              {getDistributorSocialInfo.map((item: dataItem) => {
+                return getSocialIcon(item)
               })}
             </Box>
           </>
@@ -241,9 +243,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   titleContainer: {
     display: 'flex',
     width: '100%',
-    justifyContent: 'center',
+    // justifyContent: 'center',
     flexDirection: 'row',
-    marginTop: 54,
+    marginTop: 24,
   },
   wrapTitleContainer: {
     display: 'flex',

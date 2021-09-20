@@ -27,17 +27,17 @@ const ArchivedVideos: React.FC<Props> = ({ follow, setFollow, videoItemStyle }) 
 
   const renderLiveItem = (item: TypeVideo, index: number) => {
     return (
-      <>
+      <React.Fragment key={item?.id || index}>
         {downMd ? (
-          <Box className={classes.xsItemContainer} key={index}>
-            <VideoPreviewItem data={item} key={item.id} />
+          <Box className={classes.xsItemContainer}>
+            <VideoPreviewItem data={item} />
           </Box>
         ) : (
-          <Grid item xs={6} className={classes.itemContainer} key={index} style={videoItemStyle}>
-            <VideoPreviewItem data={item} key={item.id} />
+          <Grid item xs={6} className={classes.itemContainer} style={videoItemStyle}>
+            <VideoPreviewItem data={item} />
           </Grid>
         )}
-      </>
+      </React.Fragment>
     )
   }
 
@@ -70,21 +70,19 @@ const ArchivedVideos: React.FC<Props> = ({ follow, setFollow, videoItemStyle }) 
     const arrayPreLoad = Array(9)
       .fill('')
       .map((_, i) => ({ i }))
-    return arrayPreLoad.map(() => (
-      <>
-        {downMd ? (
-          <Box className={classes.xsItemContainer}>
-            <Box className={classes.wrapPreLoadContainer}>
-              <PreLoadContainer />
-            </Box>
-          </Box>
-        ) : (
-          <Grid item xs={6} className={classes.itemContainer} style={videoItemStyle}>
+    return arrayPreLoad.map((_item: any, index: number) =>
+      downMd ? (
+        <Box className={classes.xsItemContainer} key={index}>
+          <Box className={classes.wrapPreLoadContainer}>
             <PreLoadContainer />
-          </Grid>
-        )}
-      </>
-    ))
+          </Box>
+        </Box>
+      ) : (
+        <Grid item xs={6} className={classes.itemContainer} style={videoItemStyle} key={index}>
+          <PreLoadContainer />
+        </Grid>
+      )
+    )
   }
 
   return (
