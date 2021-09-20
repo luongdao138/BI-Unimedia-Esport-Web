@@ -27,6 +27,7 @@ import DetailInfoButtons from '../../../Partials/DetailInfoButtons'
 import { MEMBER_ROLE, JOIN_CONDITION, TABS } from '@constants/community.constants'
 import { TwitterShareButton } from 'react-share'
 import _ from 'lodash'
+import { useClearMeta } from './../../useCommunityDetail'
 
 const ROLE_TYPES = {
   IS_ADMIN: 'setIsAdmin',
@@ -45,6 +46,8 @@ type Props = {
 const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListAndSearchTab }) => {
   const dispatch = useAppDispatch()
   const { t } = useTranslation(['common'])
+
+  useClearMeta()
 
   const classes = useStyles()
   const [openReport, setOpenReport] = useState(false)

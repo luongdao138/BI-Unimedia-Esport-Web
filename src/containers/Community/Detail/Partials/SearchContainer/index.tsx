@@ -73,7 +73,7 @@ const InfoContainer: React.FC = () => {
 
   useEffect(() => {
     if (topicList) {
-      setCount(pages.total_pages)
+      setCount(pages?.total_pages)
     }
   }, [pages])
 
