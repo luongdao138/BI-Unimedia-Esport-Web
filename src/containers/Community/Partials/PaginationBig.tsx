@@ -84,7 +84,7 @@ const PaginationBig: React.FC<Props> = ({ page, pageNumber, setPage, disabled })
               onClick={() => {
                 setPage(button.number)
               }}
-              disabled={disabled}
+              disabled={disabled || button.number === null}
             >
               <Typography className={classes.pageText}>{button.number === null ? '...' : button.number}</Typography>
             </ButtonBase>
