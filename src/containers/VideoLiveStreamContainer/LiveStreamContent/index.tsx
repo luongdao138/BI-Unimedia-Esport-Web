@@ -198,7 +198,11 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
       //   thumbnail={'/images/live_stream/exelab_thumb.png'}
       //   statusVideo={props.videoType}
       // />
-      <VideoPlayer src={detailVideoResult?.archived_url} thumbnail={'/images/live_stream/exelab_thumb.png'} statusVideo={props.videoType} />
+      <VideoPlayer
+        src={detailVideoResult?.archived_url}
+        thumbnail={'/images/live_stream/exelab_thumb.png'}
+        statusVideo={showOverlayOnMediaPlayer() ? true : null}
+      />
     )
   }
 

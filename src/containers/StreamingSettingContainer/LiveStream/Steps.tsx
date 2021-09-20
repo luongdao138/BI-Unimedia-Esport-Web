@@ -97,12 +97,12 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik }) => {
   // }
 
   const checkStatusRecord = (data) => {
-    if (!data?.data?.created_at) {
-      // onReNewUrlAndKey(TYPE_SECRET_KEY.URL, TYPE_SECRET_KEY.GET, false)
-      setShowReNew(false)
-    } else {
-      setShowReNew(true)
-    }
+    // if (!data?.data?.created_at) {
+    //   // onReNewUrlAndKey(TYPE_SECRET_KEY.URL, TYPE_SECRET_KEY.GET, false)
+    //   setShowReNew(false)
+    // } else {
+    //   setShowReNew(true)
+    // }
     checkStatus(data?.data)
   }
 
@@ -110,6 +110,8 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik }) => {
     //check live stream isn't it? 1 - live
     const status = data?.status === 1 ? true : false
     setIsLive(status)
+    //if live, disable btn re-new
+    setShowReNew(data?.status === 1 ? false : true)
     // setStatus(data?.status)
   }
 
