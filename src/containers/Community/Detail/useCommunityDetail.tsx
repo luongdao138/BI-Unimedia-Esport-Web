@@ -54,18 +54,6 @@ const useCommunityDetail = (): {
   const unfollowCommunityPending = (hash_key: string) => dispatch(actions.unfollowCommunityPending(hash_key))
   const getTopicList = (params: TopicListParams) => dispatch(actions.getTopicList(params))
 
-  useEffect(() => {
-    return () => {
-      dispatch(actions.clearCommunityDetail())
-      dispatch(actions.clearTopicListData())
-      dispatch(clearMetaData(actions.getCommunityDetail.typePrefix))
-      dispatch(clearMetaData(actions.followCommunity.typePrefix))
-      dispatch(clearMetaData(actions.unfollowCommunity.typePrefix))
-      dispatch(clearMetaData(actions.unfollowCommunityPending.typePrefix))
-      dispatch(clearMetaData(actions.getTopicList.typePrefix))
-    }
-  }, [])
-
   return {
     handleBack,
     isAuthenticated,
@@ -83,6 +71,22 @@ const useCommunityDetail = (): {
     topicListMeta,
     topicListPageMeta,
   }
+}
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export const useClearMeta = () => {
+  const dispatch = useAppDispatch()
+
+  useEffect(() => {
+    return () => {
+      dispatch(actions.clearCommunityDetail())
+      dispatch(actions.clearTopicListData())
+      dispatch(clearMetaData(actions.getCommunityDetail.typePrefix))
+      dispatch(clearMetaData(actions.followCommunity.typePrefix))
+      dispatch(clearMetaData(actions.unfollowCommunity.typePrefix))
+      dispatch(clearMetaData(actions.unfollowCommunityPending.typePrefix))
+      dispatch(clearMetaData(actions.getTopicList.typePrefix))
+    }
+  }, [])
 }
 
 export default useCommunityDetail

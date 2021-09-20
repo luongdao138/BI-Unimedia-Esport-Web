@@ -85,9 +85,10 @@ const PaginationBig: React.FC<Props> = ({ page, pageNumber, setPage, disabled })
           <Icon className={`${classes.icons} fas fa-angle-double-left`} />
         </ButtonBase>
 
-        {_.map(buttons, (button) => {
+        {_.map(buttons, (button, i) => {
           return (
             <ButtonBase
+              key={i}
               className={`${classes.pageButton} ${page === button.number && classes.activeButton}`}
               onClick={() => {
                 setPage(button.number)
