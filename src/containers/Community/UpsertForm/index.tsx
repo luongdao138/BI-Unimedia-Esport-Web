@@ -154,7 +154,12 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
   const renderEditButton = () => {
     return (
       <Box display="flex" flexDirection="column" alignItems="center" className={classes.editButtonContainer}>
-        <ButtonPrimary onClick={handleSetConfirm} round className={`${classes.footerButton} ${classes.confirmButton}`} disabled={hasError}>
+        <ButtonPrimary
+          onClick={handleSetConfirm}
+          round
+          className={`${classes.footerButton} ${classes.confirmButton}`}
+          disabled={!isChanged() || hasError}
+        >
           {i18n.t('common:community_create.edit.check_edited_content')}
         </ButtonPrimary>
         <CancelDialog communityName={communityName} />
@@ -162,11 +167,15 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
     )
   }
 
+  const isChanged = () => {
+    return !_.isEqual(formik.values, initialValues)
+  }
+
   const handleBack = () => {
     if (isConfirm) {
       setIsConfirm(false)
       setIsAlreadyUsedTitle(false)
-    } else _.isEqual(formik.values, initialValues) ? handleReturn() : setIsDiscard(true)
+    } else isChanged ? setIsDiscard(true) : handleReturn()
   }
 
   const handleSetConfirm = () => {
