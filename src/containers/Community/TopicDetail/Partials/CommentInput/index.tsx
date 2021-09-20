@@ -6,7 +6,6 @@ import React, { useEffect, useState, Dispatch, SetStateAction } from 'react'
 import useUploadImage from '@utils/hooks/useUploadImage'
 import { useTranslation } from 'react-i18next'
 import ImageUploader from '../ImageUploader'
-import ESLoader from '@components/Loader'
 import { useRouter } from 'next/router'
 import _ from 'lodash'
 import useCheckNgWord from '@utils/hooks/useCheckNgWord'
@@ -27,7 +26,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ reply_param, setPage }) => {
   const dispatch = useAppDispatch()
   const { checkNgWord } = useCheckNgWord()
   const { createComment, createCommentMeta, getCommentsList } = useTopicDetail()
-  const { uploadArenaCoverImage } = useUploadImage()
+  const { uploadCommentImage } = useUploadImage()
   const [isUploading, setUploading] = useState(false)
   const [imageURL, setImageURL] = useState('')
   const [inputText, setInputText] = useState('')
@@ -41,14 +40,10 @@ const Comment: React.FC<CommunityHeaderProps> = ({ reply_param, setPage }) => {
   const handleUpload = (file: File) => {
     setUploading(true)
 
-    uploadArenaCoverImage(file, undefined, 1, true, (imageUrl) => {
+    uploadCommentImage(file, undefined, 1, true, (imageUrl) => {
       setUploading(false)
       setImageURL(imageUrl)
     })
-  }
-
-  const closeImage = () => {
-    setImageURL('')
   }
 
   const isInputEmpty = (text: string) => {
@@ -61,7 +56,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ reply_param, setPage }) => {
     return true
   }
 
-  const send = async () => {
+  const send = () => {
     if (_.isEmpty(checkNgWord(inputText.trim()))) {
       const data = {
         topic_hash: String(topic_hash_key),
@@ -70,7 +65,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ reply_param, setPage }) => {
         attachments: imageURL,
       }
       if (!createCommentMeta.pending) {
-        await createComment(data)
+        createComment(data)
         setPage(1)
       }
 
@@ -90,7 +85,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ reply_param, setPage }) => {
     <>
       <Box className={classes.root}>
         <Box className={classes.toolbarCont}>
-          <ImageUploader src={imageURL} onChange={handleUpload} isUploading={isUploading} />
+          <ImageUploader src={imageURL} setSrc={setImageURL} onChange={handleUpload} isUploading={isUploading} />
         </Box>
         <Box className={classes.inputCont}>
           <InputBase
@@ -110,22 +105,6 @@ const Comment: React.FC<CommunityHeaderProps> = ({ reply_param, setPage }) => {
           </Box>
         </Box>
       </Box>
-      {imageURL && (
-        <Box className={classes.imageContainer}>
-          <Box position="absolute" top={0} right={0}>
-            <IconButton className={classes.removeIconButton} disableRipple onClick={closeImage}>
-              <Icon className={`${classes.removeIcon} fas fa-times`} />
-            </IconButton>
-          </Box>
-
-          <img src={imageURL} className={classes.coverImg} />
-        </Box>
-      )}
-      {isUploading ? (
-        <Box className={classes.loader}>
-          <ESLoader />
-        </Box>
-      ) : null}
     </>
   )
 }

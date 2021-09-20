@@ -76,6 +76,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     background: Colors.black,
     borderTop: `1px solid`,
     borderTopColor: Colors.text['300'],
+    zIndex: 33,
   },
   nextBtnHolder: {
     display: 'flex',

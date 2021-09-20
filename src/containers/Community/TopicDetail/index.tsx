@@ -3,8 +3,8 @@ import TopicDetailHeader from '@containers/Community/TopicDetail/Partials/TopicD
 import Comment, { ReportData } from '@containers/Community/TopicDetail/Partials/Comment'
 import MainTopic from '@containers/Community/TopicDetail/Partials/MainTopic'
 import { Box, useMediaQuery, useTheme, makeStyles, Theme } from '@material-ui/core'
-import Pagination from '@material-ui/lab/Pagination'
-import PaginationMobile from '../Partials/PaginationMobile'
+import PaginationSmall from '../Partials/PaginationSmall'
+import PaginationBig from '../Partials/PaginationBig'
 import CommentInput from './Partials/CommentInput'
 import useTopicDetail from './useTopicDetail'
 import { Colors } from '@theme/colors'
@@ -56,11 +56,11 @@ const TopicDetailContainer: React.FC = () => {
   }
 
   const [openDelete, setOpenDelete] = useState(false)
-  const [selectedCommentHashKey, setSelectedCommentHashKey] = useState('')
+  const [selectedCommentNo, setSelectedCommentNo] = useState()
   const [reportData, setReportData] = useState<ReportData | null>(null)
 
   const handleDeleteComment = () => {
-    deleteComment(selectedCommentHashKey)
+    deleteComment({ comment_no: selectedCommentNo, topic_hash: String(topic_hash_key) })
     setOpenDelete(false)
   }
 
@@ -88,11 +88,6 @@ const TopicDetailContainer: React.FC = () => {
       setCount(commentsListPageMeta?.total_pages)
     }
   }, [commentsListMeta])
-
-  const handleChange = (event, value) => {
-    setPage(value)
-    return event
-  }
 
   useEffect(() => {
     if (communityDetail && !isAutomatic && isNotMember) {
@@ -142,34 +137,19 @@ const TopicDetailContainer: React.FC = () => {
                   menuParams={menuParams}
                   handleReply={setReply}
                   setOpenDelete={setOpenDelete}
-                  setSelectedCommentHashKey={setSelectedCommentHashKey}
+                  setSelectedCommentNo={setSelectedCommentNo}
                   onReport={handleReportComment}
                 />
               )
             })
           )}
-        </Box>
-
-        <Box display="flex" justifyContent="center" my={2}>
-          {commentsListMeta.pending ? (
-            <></>
-          ) : isMobile ? (
-            <PaginationMobile page={page} pageNumber={count} setPage={setPage} />
-          ) : (
-            <Pagination
-              className={classes.pagination}
-              count={count}
-              page={page}
-              onChange={handleChange}
-              variant="outlined"
-              shape="rounded"
-              color="primary"
-              hideNextButton
-              hidePrevButton
-              showFirstButton
-              showLastButton
-            />
-          )}
+          <Box display="flex" justifyContent="center" my={2}>
+            {isMobile ? (
+              <PaginationSmall page={page} pageNumber={count} setPage={setPage} disabled={commentsListMeta.pending} />
+            ) : (
+              <PaginationBig page={page} pageNumber={count} setPage={setPage} disabled={commentsListMeta.pending} />
+            )}
+          </Box>
         </Box>
 
         {!isNotMember && (
@@ -177,25 +157,24 @@ const TopicDetailContainer: React.FC = () => {
             <CommentInput reply_param={reply} setPage={setPage} />
           </Box>
         )}
-
         {isAuthenticated && reportData && (
-          <>
-            <DiscardDialog
-              title={t('common:topic_comment.delete.title')}
-              open={openDelete}
-              onClose={() => setOpenDelete(false)}
-              onSubmit={handleDeleteComment}
-              description={t('common:topic_comment.delete.description')}
-              confirmTitle={t('common:topic_comment.delete.submit')}
-            />
-            <ESReport
-              reportType={REPORT_TYPE.TOPIC_COMMENT}
-              target_id={reportData.attributes.hash_key}
-              data={reportData}
-              open={reportData !== null}
-              handleClose={() => setReportData(null)}
-            />
-          </>
+          <ESReport
+            reportType={REPORT_TYPE.TOPIC_COMMENT}
+            target_id={reportData.attributes.hash_key}
+            data={reportData}
+            open={reportData !== null}
+            handleClose={() => setReportData(null)}
+          />
+        )}
+        {isAuthenticated && (
+          <DiscardDialog
+            title={t('common:topic_comment.delete.title')}
+            open={openDelete}
+            onClose={() => setOpenDelete(false)}
+            onSubmit={handleDeleteComment}
+            description={t('common:topic_comment.delete.description')}
+            confirmTitle={t('common:topic_comment.delete.submit')}
+          />
         )}
       </Box>
     </>

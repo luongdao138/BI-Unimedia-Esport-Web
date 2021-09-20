@@ -18,6 +18,7 @@ export interface TopicRowItemProps {
   handleClick?: () => void
   keyword?: string
   isSearched?: boolean
+  isOnlyTitle?: boolean
 }
 
 const Highlight = ({ search = '', children = '', isSearched = false, contentRect = undefined, isTitle = false }) => {
@@ -66,6 +67,7 @@ const TopicRowItem: React.FC<TopicRowItemProps> = ({
   handleClick,
   keyword,
   isSearched,
+  isOnlyTitle = false,
 }) => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
@@ -78,9 +80,13 @@ const TopicRowItem: React.FC<TopicRowItemProps> = ({
       return t('common:topic_comment.has_deleted_last_comment')
     }
     return lastCommentData?.content ? (
-      <Highlight search={keyword} isSearched={isSearched} contentRect={contentRect}>
-        {lastCommentData.content}
-      </Highlight>
+      isOnlyTitle ? (
+        lastCommentData.content
+      ) : (
+        <Highlight search={keyword} isSearched={isSearched} contentRect={contentRect}>
+          {lastCommentData.content}
+        </Highlight>
+      )
     ) : comment_count === 0 ? (
       ''
     ) : (
