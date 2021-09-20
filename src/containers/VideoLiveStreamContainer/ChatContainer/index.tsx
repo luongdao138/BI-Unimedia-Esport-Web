@@ -31,6 +31,7 @@ import { useFormik } from 'formik'
 import DonateMessage from './DonateMessage'
 import Avatar from '@components/Avatar/'
 import ESInput from '@components/Input'
+import { STATUS_VIDEO } from '@services/videoTop.services'
 
 type ChatContainerProps = {
   onPressDonate?: (donatedPoint: number, purchaseComment: string) => void
@@ -41,6 +42,8 @@ type ChatContainerProps = {
   handleKeyboardVisibleState: any
   donateConfirmModalIsShown: () => boolean
   openPurchasePointModal?: (point: any) => void
+  videoType?: number
+  freeToWatch?: boolean
 }
 
 export const purchasePoints = {
@@ -133,6 +136,8 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
   handleKeyboardVisibleState,
   donateConfirmModalIsShown,
   openPurchasePointModal,
+  videoType,
+  freeToWatch,
 }) => {
   // const { t } = useTranslation('common')
   // const [messageText, setMessageText] = useState<string>('')
@@ -846,9 +851,16 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
   //       user_avatar: '/images/dataVideoFake/fake_avatar.png',
   //     }))
 
+  const chatNotAvailableMessage = () => {
+    if (videoType === STATUS_VIDEO.SCHEDULE && (freeToWatch || userHasViewingTicket)) {
+      return i18n.t('common:live_stream_screen.chat_will_available_on_time')
+    }
+    return i18n.t('common:live_stream_screen.chat_purchase_ticket_note')
+  }
+
   const userDoesNotHaveViewingTicketView = () => (
     <Box className={classes.chatPurchaseTicketBox}>
-      <Typography className={classes.chatPurchaseTicketNote}>{i18n.t('common:live_stream_screen.chat_purchase_ticket_note')}</Typography>
+      <Typography className={classes.chatPurchaseTicketNote}>{chatNotAvailableMessage()}</Typography>
     </Box>
   )
 
@@ -890,14 +902,18 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
     </Box>
   )
 
+  const displayChatContent = () => {
+    return videoType !== STATUS_VIDEO.SCHEDULE && (freeToWatch || userHasViewingTicket)
+  }
+
   return (
     <Box className={classes.container}>
       {!isMobile && (
         <Box className={classes.chatHeader}>
-          <Typography className={classes.headerTitle}>{'チャット'}</Typography>
+          <Typography className={classes.headerTitle}>{i18n.t('common:live_stream_screen.chat_header')}</Typography>
         </Box>
       )}
-      {userHasViewingTicket ? chatContent() : userDoesNotHaveViewingTicketView()}
+      {displayChatContent() ? chatContent() : userDoesNotHaveViewingTicketView()}
       {/*<Box pt={22 / 8} pb={4} maxWidth={280} className={classes.buttonContainer} onClick={onPressDonate}>*/}
       {/*  <ButtonPrimary type="submit" round fullWidth>*/}
       {/*    {'Donate Points'}*/}
