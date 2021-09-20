@@ -65,7 +65,7 @@ const fetchCommentsList = (store: StoreType) => {
 }
 
 const fetchMembers = (store: StoreType) => {
-  const hashKey = store.getState().community.community_detail?.attributes?.hash_key
+  const hashKey = store.getState().community.communityDetail?.attributes?.hash_key
   if (hashKey) {
     store.dispatch(resetCommunityMembers())
     store.dispatch(getCommunityMembers({ hash_key: hashKey, role: CommunityMemberRole.all, page: 1 }))
