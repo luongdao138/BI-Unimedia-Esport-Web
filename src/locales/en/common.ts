@@ -1071,6 +1071,7 @@ export default {
     deleted_message: '削除済み',
     not_begin_sell_ticket: '本配信のチケット販売はまだ開始されていません',
     show_more_mess: '新しいコメントを見る ',
+    chat_will_available_on_time: 'Liveチャットはライブ配信中のみ有効です',
   },
   video_search: {
     video_results: '動画「:key」 の検索結果',

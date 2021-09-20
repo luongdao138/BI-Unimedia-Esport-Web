@@ -24,6 +24,7 @@ import useDetailVideo from './useDetailVideo'
 import moment from 'moment'
 import ESLoader from '@components/Loader'
 import PreloadChatContainer from './PreloadContainer/PreloadChatContainer'
+import { STATUS_VIDEO } from '@services/videoTop.services'
 
 enum TABS {
   PROGRAM_INFO = 1,
@@ -157,7 +158,7 @@ const VideosTop: React.FC = () => {
         <ESTabs value={tab} onChange={(_, v) => setTab(v)} className={classes.tabs}>
           {isMobile && <ESTab label={t('live_stream_screen.comment')} value={TABS.COMMENT} className={classes.singleTab} />}
           <ESTab label={t('live_stream_screen.program_info')} value={TABS.PROGRAM_INFO} className={classes.singleTab} />
-          {userHasViewingTicket() && (
+          {!isScheduleAndNotHaveTicket() && (
             <ESTab label={t('live_stream_screen.distributor_info')} value={TABS.DISTRIBUTOR_INFO} className={classes.singleTab} />
           )}
           <ESTab label={t('live_stream_screen.related_videos')} value={TABS.RELATED_VIDEOS} className={classes.singleTab} />
@@ -168,7 +169,11 @@ const VideosTop: React.FC = () => {
   const getContent = () => {
     switch (tab) {
       case TABS.PROGRAM_INFO:
-        return userHasViewingTicket() ? <ProgramInfo video_id={video_id} /> : <ProgramInfoNoViewingTicket />
+        return !isScheduleAndNotHaveTicket() ? (
+          <ProgramInfo video_id={video_id} />
+        ) : (
+          <ProgramInfoNoViewingTicket videoInfo={detailVideoResult} />
+        )
       case TABS.DISTRIBUTOR_INFO:
         return <DistributorInfo video_id={video_id} />
       case TABS.RELATED_VIDEOS:
@@ -219,6 +224,8 @@ const VideosTop: React.FC = () => {
         // key_video_id="5eafa95943a1b5c118be607d42742a48"
         onPressDonate={confirmDonatePoint}
         userHasViewingTicket={userHasViewingTicket()}
+        videoType={getVideoType()}
+        freeToWatch={isVideoFreeToWatch()}
         handleKeyboardVisibleState={changeSoftKeyboardVisibleState}
         donateConfirmModalIsShown={modalIsShown}
         openPurchasePointModal={(donate_point) => {
@@ -245,12 +252,12 @@ const VideosTop: React.FC = () => {
     const current = moment().valueOf()
     if (detailVideoResult?.sell_ticket_start_time && detailVideoResult?.use_ticket === 1) {
       const available = moment(detailVideoResult?.sell_ticket_start_time).valueOf()
-      return available > current
+      return available <= current
     }
-    return false
+    return true
   }
   const userHasViewingTicket = () => (userResult?.buy_ticket === 0 ? false : true)
-
+  const isScheduleAndNotHaveTicket = () => getVideoType() === STATUS_VIDEO.SCHEDULE && userResult?.buy_ticket === 0
   // const getVideoType = () => 1
   // const isVideoFreeToWatch = () => false
   // const isTicketAvailableForSale = () => {
@@ -276,7 +283,7 @@ const VideosTop: React.FC = () => {
         {isLoadingData ? (
           <Box
             style={{
-              backgroundColor: '#6a6a6c',
+              backgroundColor: '#6A6A6C',
               width: '100%',
               height: '100%',
               display: 'flex',

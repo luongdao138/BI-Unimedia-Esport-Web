@@ -3,6 +3,7 @@ import { makeStyles, Theme } from '@material-ui/core'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { FormatHelper } from '@utils/helpers/FormatHelper'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
 
 interface InfoSectionProps {
   title?: string
@@ -10,7 +11,11 @@ interface InfoSectionProps {
   content?: string
 }
 
-const ProgramInfoNoViewingTicket: React.FC = () => {
+interface ProgramInfoProps {
+  videoInfo?: any
+}
+
+const ProgramInfoNoViewingTicket: React.FC<ProgramInfoProps> = ({ videoInfo }) => {
   const { t } = useTranslation('common')
   const classes = useStyles()
   const InfoSection = (props: InfoSectionProps) => {
@@ -28,29 +33,28 @@ const ProgramInfoNoViewingTicket: React.FC = () => {
   return (
     <Box className={classes.container}>
       <Box className={classes.infoFirstRow}>
-        <InfoSection title={t('live_stream_screen.delivery_start_date_and_time')} content={'2021年7月31日 18時00分～19時30分'} />
+        <InfoSection
+          title={t('live_stream_screen.delivery_start_date_and_time')}
+          content={CommonHelper.formatDateTimeJP(videoInfo?.stream_schedule_start_time)}
+        />
         <InfoSection
           title={t('live_stream_screen.ticket_sales_date_and_time')}
           containerClass={classes.infoRowRightItem}
-          content={'2021年6月30日 18時00分～アーカイブ公開期間の前日'}
+          content={CommonHelper.formatDateTimeJP(videoInfo?.sell_ticket_start_time)}
         />
       </Box>
       <Box className={classes.infoSecondRow}>
-        <InfoSection title={t('live_stream_screen.archive_publication_period')} content={'配信終了後から30日後の23時59分まで'} />
+        <InfoSection
+          title={t('live_stream_screen.archive_publication_period')}
+          content={CommonHelper.formatDateTimeJP(videoInfo?.archived_end_time)}
+        />
         <InfoSection
           title={t('live_stream_screen.point_required_for_viewing')}
           containerClass={classes.infoRowRightItem}
-          content={`${FormatHelper.currencyFormat('2500')} eXeポイント`}
+          content={`${FormatHelper.currencyFormat(videoInfo?.ticket_price)} eXeポイント`}
         />
       </Box>
-      <InfoSection
-        title={t('live_stream_screen.explanation')}
-        containerClass={classes.infoLastItem}
-        content={
-          'ここに番組説明が入りまここに番組説明が入りますここに番組説明が入りますここに番組説明が入りますここに番組説明が入りますす。' +
-          'ここに番組説明が入りますここに番組説明が入りますここに番組説明が入りますここに番組説明が入りますここに番組説明が入りますここに'
-        }
-      />
+      <InfoSection title={t('live_stream_screen.explanation')} containerClass={classes.infoLastItem} content={videoInfo?.description} />
     </Box>
   )
 }
