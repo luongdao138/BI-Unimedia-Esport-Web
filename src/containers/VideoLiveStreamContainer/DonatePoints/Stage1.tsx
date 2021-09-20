@@ -10,12 +10,7 @@ interface StepOneProps {
   lackedPoint?: number
 }
 
-const StepOne: React.FC<StepOneProps> = ({
-  onClickPurchaseLackedPoint,
-  onClickPurchaseNewPoints,
-  myPoints,
-  lackedPoint,
-}) => {
+const StepOne: React.FC<StepOneProps> = ({ onClickPurchaseLackedPoint, onClickPurchaseNewPoints, myPoints, lackedPoint }) => {
   const classes = useStyles()
 
   return (
@@ -25,10 +20,10 @@ const StepOne: React.FC<StepOneProps> = ({
         <PointCardItem titleText={i18n.t('common:donate_points.missing_points')} points={lackedPoint} pointText={'eXePoint'} />
       </Box>
       <Box className={classes.buttonRootContainer}>
-        <Box 
-          className={`${classes.buttonContainer} ${+lackedPoint <= 0 ? classes.disable_btn : ''}`} 
+        <Box
+          className={`${classes.buttonContainer} ${+lackedPoint <= 0 ? classes.disable_btn : ''}`}
           onClick={() => {
-            if(+lackedPoint > 0) {
+            if (+lackedPoint > 0) {
               onClickPurchaseLackedPoint()
             }
           }}
@@ -60,7 +55,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: 60,
   },
   buttonContainer: {
-    cursor: "pointer",
+    cursor: 'pointer',
     display: 'flex',
     backgroundColor: '#4D4D4D',
     borderRadius: 4,
@@ -95,10 +90,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   disable_btn: {
-    cursor: "not-allowed", 
+    cursor: 'not-allowed',
     '& p': {
-      color: '#ffffff4d'
-    }
+      color: '#ffffff4d',
+    },
   },
 }))
 export default StepOne

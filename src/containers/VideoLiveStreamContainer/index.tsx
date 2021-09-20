@@ -345,7 +345,7 @@ const VideosTop: React.FC = () => {
           myPoint={myPoint}
           lackedPoint={purchaseType === PURCHASE_TYPE.PURCHASE_SUPER_CHAT ? lackedPoint : ticket_points}
           showModalPurchasePoint={showModalPurchasePoint}
-          setShowModalPurchasePoint={value => setShowModalPurchasePoint(value)}
+          setShowModalPurchasePoint={(value) => setShowModalPurchasePoint(value)}
         />
       )}
     </Box>
