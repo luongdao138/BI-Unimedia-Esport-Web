@@ -85,8 +85,8 @@ const useCommunityCreate = (): {
 
   useEffect(() => {
     if (router.asPath.endsWith('/edit') && router.query.community_id) {
-      // TODO dispatch get Community detail
       setIsEdit(true)
+      dispatch(actions.getCommunityDetail(String(router.query.community_id)))
     }
   }, [router])
 

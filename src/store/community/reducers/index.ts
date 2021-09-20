@@ -27,7 +27,7 @@ type StateType = {
   communitiesListByUserMeta?: PageMeta
   topicFollowersList: FollowersTopicResponse[] | null
   topicFollowersListMeta?: PageMeta
-  community_detail?: CommunityDetail
+  communityDetail?: CommunityDetail
   community_features: CommunityFeature[]
   communityMembers?: CommunityMember[]
   communityMembersMeta?: PageMeta
@@ -50,6 +50,7 @@ const initialState: StateType = {
   topicList: [],
   topicDetail: null,
   commentsList: [],
+  communityDetail: undefined,
 }
 
 export default createReducer(initialState, (builder) => {
@@ -64,6 +65,9 @@ export default createReducer(initialState, (builder) => {
   builder.addCase(actions.getTopicList.fulfilled, (state, action) => {
     state.topicList = action.payload.data
     state.topicListMeta = action.payload.meta
+  })
+  builder.addCase(actions.createTopic.fulfilled, (state, action) => {
+    state.topicDetail = action.payload.data
   })
   builder.addCase(actions.getCommunityList.fulfilled, (state, action) => {
     let tmpCommunitiesList = action.payload.data
@@ -81,7 +85,6 @@ export default createReducer(initialState, (builder) => {
     state.topicList = []
     state.topicListMeta = undefined
   })
-
   builder.addCase(actions.getCommunityListByUser.fulfilled, (state, action) => {
     let tmpCommunitiesList = action.payload.data
     if (action.payload.meta != undefined && action.payload.meta.current_page > 1) {
@@ -94,7 +97,9 @@ export default createReducer(initialState, (builder) => {
     state.communitiesListByUser = []
     state.communitiesListByUserMeta = undefined
   })
-
+  builder.addCase(actions.clearCommunityDetail, (state) => {
+    state.communityDetail = undefined
+  })
   builder.addCase(actions.getTopicFollowers.fulfilled, (state, action) => {
     let tmpTopicFollowersList = action.payload.data
     if (action.payload.meta != undefined && action.payload.meta.current_page > 1) {
@@ -105,7 +110,7 @@ export default createReducer(initialState, (builder) => {
     state.topicFollowersListMeta = action.payload.meta
   })
   builder.addCase(actions.getCommunityDetail.fulfilled, (state, action) => {
-    state.community_detail = action.payload.data
+    state.communityDetail = action.payload.data
   })
   builder.addCase(actions.getCommunityFeatures.fulfilled, (state, action) => {
     state.community_features = action.payload.data
@@ -121,19 +126,23 @@ export default createReducer(initialState, (builder) => {
   builder.addCase(actions.getTopicDetail.fulfilled, (state, action) => {
     state.topicDetail = action.payload.data
   })
-  builder.addCase(COMMUNITY_ACTION_TYPE.CLEAR_TOPIC_DETAIL, (state) => {
-    state.topicDetail = undefined
+  builder.addCase(actions.clearTopicDetail, (state) => {
+    state.topicDetail = null
   })
   builder.addCase(actions.searchTopic.fulfilled, (state, action) => {
     state.topicSearchList = action.payload.data
     state.topicSearchListMeta = action.payload.meta
   })
+  builder.addCase(actions.clearSearchTopic, (state) => {
+    state.topicSearchList = []
+    state.topicSearchListMeta = undefined
+  })
   builder.addCase(actions.followCommunity.fulfilled, (state, action) => {
-    state.community_detail = action.payload.data
+    state.communityDetail = action.payload.data
   })
   builder.addCase(actions.unfollowCommunity.fulfilled, (state) => {
-    state.community_detail.attributes.member_count -= 1
-    state.community_detail.attributes.my_role = null
+    state.communityDetail.attributes.member_count -= 1
+    state.communityDetail.attributes.my_role = null
   })
   builder.addCase(COMMUNITY_ACTION_TYPE.RESET_COMMUNITY_MEMBERS, (state) => {
     state.communityMembers = undefined

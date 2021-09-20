@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
 import {
   CommunityMember,
@@ -31,16 +32,29 @@ const useFollowList = (): {
 } => {
   const dispatch = useAppDispatch()
   const membersList = useAppSelector(selectors.getCommunityMembers)
-  const getMembers = (params) => dispatch(actions.getCommunityMembers(params))
   const pages = useAppSelector(selectors.getCommunityMembersMeta)
   const membersMeta = useAppSelector(getMeta)
-  const resetMeta = () => dispatch(clearMetaData(actions.getCommunityMembers.typePrefix))
+
+  const getMembers = (params: CommunityMembersParams) => dispatch(actions.getCommunityMembers(params))
+  const approveMembers = (params: CommunityMembersApproveCancelParams) => dispatch(actions.approveCommunityMembers(params))
+  const cancelMembers = (params: CommunityMembersApproveCancelParams) => dispatch(actions.cancelCommunityMembers(params))
+  const changeMemberRole = (params: CommunityMemberChangeRoleParams) => dispatch(actions.changeCommunityMemberRole(params))
+  const removeMember = (params: CommunityMemberRemoveParams) => dispatch(actions.removeCommunityMember(params))
+  const sendToast = (params: string) => dispatch(addToast(params))
+
   const resetMembers = () => dispatch(actions.resetCommunityMembers())
-  const approveMembers = (params) => dispatch(actions.approveCommunityMembers(params))
-  const cancelMembers = (params) => dispatch(actions.cancelCommunityMembers(params))
-  const changeMemberRole = (params) => dispatch(actions.changeCommunityMemberRole(params))
-  const removeMember = (params) => dispatch(actions.removeCommunityMember(params))
-  const sendToast = (params) => dispatch(addToast(params))
+  const resetMeta = () => dispatch(clearMetaData(actions.getCommunityMembers.typePrefix))
+
+  useEffect(() => {
+    return () => {
+      dispatch(clearMetaData(actions.approveCommunityMembers.typePrefix))
+      dispatch(clearMetaData(actions.cancelCommunityMembers.typePrefix))
+      dispatch(clearMetaData(actions.changeCommunityMemberRole.typePrefix))
+      dispatch(clearMetaData(actions.removeCommunityMember.typePrefix))
+      resetMembers()
+      resetMeta()
+    }
+  }, [])
 
   return {
     membersList,

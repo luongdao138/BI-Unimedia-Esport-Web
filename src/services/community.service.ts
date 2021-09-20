@@ -345,38 +345,6 @@ export type TopicParams = {
   attachments?: string
 }
 
-export type CreateTopicResponse = {
-  data: {
-    id: number
-    type: string
-    attributes: {
-      hash_key: string
-      community_id: 2
-      content: string
-      created_at: string
-      last_comment_date: string
-      like_count: number
-      topic_title: string
-      community_name: string
-      community_cover: any
-      comment_count: number
-      unseen_count: number
-      is_liked: boolean
-      topic_owner: string
-      owner_name: string
-      game_title: any
-      last_comment: {
-        data: any
-      }
-      is_mine: boolean
-      sequence_no: any
-      member_role: string
-      is_new: boolean
-      can_remove: boolean
-    }
-  }
-}
-
 export type TopicListParams = {
   page: number
   filter: string
@@ -591,8 +559,8 @@ export const closeCommunity = async (hash_key: string): Promise<void> => {
   return data
 }
 
-export const createTopic = async (params: TopicParams): Promise<CreateTopicResponse> => {
-  const { data } = await api.post<CreateTopicResponse>(URI.TOPIC_CREATE, params)
+export const createTopic = async (params: TopicParams): Promise<TopicDetailResponse> => {
+  const { data } = await api.post<TopicDetailResponse>(URI.TOPIC_CREATE, params)
   return data
 }
 
