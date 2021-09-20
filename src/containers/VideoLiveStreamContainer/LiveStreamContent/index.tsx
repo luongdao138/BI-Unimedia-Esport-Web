@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { Box, ButtonBase, Icon, makeStyles, Typography, useMediaQuery, useTheme } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
 import ESChip from '@components/Chip'
@@ -6,7 +7,7 @@ import ESAvatar from '@components/Avatar'
 import { useAppSelector } from '@store/hooks'
 import { Colors } from '@theme/colors'
 import { FormatHelper } from '@utils/helpers/FormatHelper'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import ESMenuItem from '@components/Menu/MenuItem'
 import { VIDEO_TYPE } from '@containers/VideoLiveStreamContainer'
 import OverlayContent from '@containers/VideoLiveStreamContainer/LiveStreamContent/OverlayContent'
@@ -18,6 +19,7 @@ import useDetailVideo from '../useDetailVideo'
 import PreloadButtonReaction from '../PreloadContainer/PreloadButtonReaction'
 import PreloadVideoInfo from '../PreloadContainer/PreloadVideoInfo'
 import { STATUS_VIDEO } from '@services/videoTop.services'
+import _ from 'lodash'
 
 interface LiveStreamContentProps {
   videoType?: VIDEO_TYPE
@@ -39,8 +41,8 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
   const downMd = useMediaQuery(theme.breakpoints.down(769))
   const { detailVideoResult, meta, userResult } = useDetailVideo()
-  const { meta_reaction_video_stream, userReactionVideoStream, userFollowChannel, meta_follow_channel } = useLiveStreamDetail()
-  const isLoadingReaction = meta_reaction_video_stream?.pending
+  const { userReactionVideoStream, userFollowChannel } = useLiveStreamDetail()
+  // const isLoadingReaction = meta_reaction_video_stream?.pending
   const isLoadingVideoDetail = meta?.pending
   const [like, setLike] = useState(!isLoadingVideoDetail ? userResult.like : 0)
   const [unlike, setUnlike] = useState(!isLoadingVideoDetail ? userResult.unlike : 0)
@@ -54,38 +56,50 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
 
   const isSubscribed = () => subscribe
 
-  // eslint-disable-next-line no-console
-  console.log(
-    'detail video result - userResult - like count - unlike count >>>>>>>>>> ',
-    detailVideoResult,
-    userResult,
-    likeCount,
-    unlikeCount
-  )
-
   const classes = useStyles({ isSubscribed: isSubscribed() })
-  const followParams = {
-    video_id: props?.video_id,
-    channel_id: detailVideoResult?.channel_id,
-    follow: subscribe,
-  }
+
   const toggleSubscribeClick = () => {
     if (subscribe === 0) {
       setSubscribe(1)
+      console.log('enter Subscribe')
+      debouncedhandleSubscribe(1)
     } else {
       setSubscribe(0)
+      console.log('enter unSubscribe')
+      debouncedhandleSubscribe(0)
     }
   }
-  const handleSubscribe = () => {
-    if (!meta_follow_channel?.pending) {
-      userFollowChannel(followParams)
-    }
-  }
-  const paramsReaction = {
-    video_id: props?.video_id,
-    like: like,
-    unlike: unlike,
-  }
+
+  // const handleSubscribe = () => {
+  //   if (!meta_follow_channel?.pending) {
+  //     userFollowChannel(followParams)
+  //   }
+  // }
+
+  const debouncedhandleSubscribe = useCallback(
+    _.debounce((followValue: any) => {
+      console.log('debounced HandleReactionVideo')
+      userFollowChannel({
+        video_id: props?.video_id,
+        channel_id: detailVideoResult?.channel_id,
+        follow: followValue,
+      })
+    }, 700),
+    []
+  )
+
+  const debouncedHandleReactionVideo = useCallback(
+    _.debounce((likeValue: any, unlikeValue: any) => {
+      console.log('debounced HandleReactionVideo')
+      userReactionVideoStream({
+        video_id: props?.video_id,
+        like: likeValue,
+        unlike: unlikeValue,
+      })
+    }, 700),
+    []
+  )
+
   const toggleLikeVideo = () => {
     if (like === 0) {
       setLike(1)
@@ -94,9 +108,13 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
         setUnlike(0)
         setUnlikeCount(unlikeCount > 0 ? unlikeCount - 1 : 0)
       }
+      console.log('enter like')
+      debouncedHandleReactionVideo(1, 0)
     } else {
       setLike(0)
       setLikeCount(likeCount > 0 ? likeCount - 1 : 0)
+      console.log('enter like')
+      debouncedHandleReactionVideo(0, unlike)
     }
   }
 
@@ -108,31 +126,36 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
         setLike(0)
         setLikeCount(likeCount > 0 ? likeCount - 1 : 0)
       }
+      console.log('enter unlike')
+      debouncedHandleReactionVideo(0, 1)
     } else {
       setUnlike(0)
       setUnlikeCount(unlikeCount > 0 ? unlikeCount - 1 : 0)
-    }
-  }
-  const handleReactionVideo = () => {
-    if (!isLoadingReaction) {
-      userReactionVideoStream(paramsReaction)
-    }
-  }
-  useEffect(() => {
-    handleReactionVideo()
-  }, [like, unlike])
 
-  useEffect(() => {
-    handleSubscribe()
-  }, [subscribe])
+      console.log('enter unlike')
+      debouncedHandleReactionVideo(like, 0)
+    }
+  }
 
   // useEffect(() => {
-  //   setLike(userResult?.like)
-  //   setUnlike(userResult?.unlike)
-  //   setLikeCount(detailVideoResult?.like_count)
-  //   setUnlikeCount(detailVideoResult?.unlike_count)
-  //   setSubscribe(userResult?.follow)
-  // }, [userResult, detailVideoResult])
+  //   handleReactionVideo()
+  // }, [like, unlike])
+
+  // useEffect(() => {
+  //   handleSubscribe()
+  // }, [subscribe])
+
+  useEffect(() => {
+    if (userResult) {
+      setLike(userResult?.like)
+      setUnlike(userResult?.unlike)
+      setSubscribe(userResult?.follow)
+    }
+    if (detailVideoResult) {
+      setLikeCount(detailVideoResult?.like_count)
+      setUnlikeCount(detailVideoResult?.unlike_count)
+    }
+  }, [userResult, detailVideoResult])
 
   const registerChannelButton = () => (
     <ButtonBase onClick={toggleSubscribeClick} className={classes.register_channel_btn}>

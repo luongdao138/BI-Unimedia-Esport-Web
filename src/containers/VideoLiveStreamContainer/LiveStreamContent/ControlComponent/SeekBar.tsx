@@ -22,7 +22,7 @@ const SeekBar: React.FC<Props> = ({ currentTime, durationsPlayer, videoRef }) =>
   // const { changePlayedSecond, playedSecond, streamingSecond, changeIsViewingStream, isViewingStream } = useDetailVideo()
 
   useEffect(() => {
-    console.log(' 🚀 🚀 🚀 🚀 🚀 🚀 🚀  ', currentTime, durationsPlayer)
+    // console.log(' 🚀 🚀 🚀 🚀 🚀 🚀 🚀  ', currentTime, durationsPlayer)
     // setCurrentTime(videoRef.current.getCurrentTime()) //
     setTimePlayed((currentTime / durationsPlayer) * 100)
   }, [currentTime, durationsPlayer])
