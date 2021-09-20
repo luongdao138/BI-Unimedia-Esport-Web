@@ -82,7 +82,7 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
         join_condition: Number(values.stepOne.join_condition),
       }
       if (isEdit) {
-        update({ hash_key: String(router.query.community_id), data })
+        update({ hash_key: String(router.query.hash_key), data })
       } else {
         submit(data)
       }
