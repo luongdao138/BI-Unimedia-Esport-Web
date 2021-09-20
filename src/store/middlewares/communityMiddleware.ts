@@ -25,12 +25,16 @@ import {
   unfollowCommunityPending,
   followCommunity,
   getCommentsList,
+  memberSubmitFulfilled,
+  resetCommunityMembers,
 } from '@store/community/actions/index'
 import i18n from '@locales/i18n'
 import { addToast } from '@store/common/actions'
+import { CommunityMemberRole } from '@services/community.service'
 
 const messages = {
   [`${unfollowCommunity.fulfilled}`]: i18n.t('common:community.toast_unfollowed'),
+  [`${memberSubmitFulfilled}`]: i18n.t('common:community.change_applying_members_toast'),
   [`${getTopicList.rejected}`]: i18n.t('common:common.failed_to_get_data'),
   [`${getCommunityList.rejected}`]: i18n.t('common:common.failed_to_get_data'),
   [`${getCommunityListPublic.rejected}`]: i18n.t('common:common.failed_to_get_data'),
@@ -60,8 +64,17 @@ const fetchCommentsList = (store: StoreType) => {
   hashKey && store.dispatch(getCommentsList({ hash_key: hashKey, page: 1 }))
 }
 
+const fetchMembers = (store: StoreType) => {
+  const hashKey = store.getState().community.communityDetail?.attributes?.hash_key
+  if (hashKey) {
+    store.dispatch(resetCommunityMembers())
+    store.dispatch(getCommunityMembers({ hash_key: hashKey, role: CommunityMemberRole.all, page: 1 }))
+  }
+}
+
 const actions = {
   [`${createTopicComment.fulfilled}`]: fetchCommentsList,
+  [`${memberSubmitFulfilled}`]: fetchMembers,
 }
 
 export const communityMiddleware: Middleware = (store: StoreType) => (next: AppDispatch) => <A extends Action>(action: A): A => {

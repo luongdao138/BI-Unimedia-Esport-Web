@@ -82,12 +82,14 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
         join_condition: Number(values.stepOne.join_condition),
       }
       if (isEdit) {
-        update({ hash_key: String(router.query.community_id), data })
+        update({ hash_key: String(router.query.hash_key), data })
       } else {
         submit(data)
       }
     },
   })
+
+  const isChanged = !_.isEqual(formik.values, initialValues)
 
   useEffect(() => {
     if (community) {
@@ -154,7 +156,12 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
   const renderEditButton = () => {
     return (
       <Box display="flex" flexDirection="column" alignItems="center" className={classes.editButtonContainer}>
-        <ButtonPrimary onClick={handleSetConfirm} round className={`${classes.footerButton} ${classes.confirmButton}`} disabled={hasError}>
+        <ButtonPrimary
+          onClick={handleSetConfirm}
+          round
+          className={`${classes.footerButton} ${classes.confirmButton}`}
+          disabled={!isChanged || hasError}
+        >
           {i18n.t('common:community_create.edit.check_edited_content')}
         </ButtonPrimary>
         <CancelDialog communityName={communityName} />
@@ -166,7 +173,7 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
     if (isConfirm) {
       setIsConfirm(false)
       setIsAlreadyUsedTitle(false)
-    } else _.isEqual(formik.values, initialValues) ? handleReturn() : setIsDiscard(true)
+    } else isChanged ? setIsDiscard(true) : handleReturn()
   }
 
   const handleSetConfirm = () => {

@@ -52,7 +52,7 @@ const InfoContainer: React.FC<{ isOfficial: boolean; data: CommunityDetail['attr
             </a>
           )}
         >
-          <Typography>{newLineText(data.description)}</Typography>
+          {newLineText(data.description)}
         </Linkify>
       </Box>
 

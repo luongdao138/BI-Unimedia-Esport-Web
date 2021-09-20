@@ -1,6 +1,8 @@
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit'
 import * as services from '@services/community.service'
 import { COMMUNITY_ACTION_TYPE } from './types'
+import { AppDispatch } from '@store/store'
+import _ from 'lodash'
 
 export const getTopicList = createAsyncThunk<services.TopicListResponse, services.TopicListParams>(
   COMMUNITY_ACTION_TYPE.GET_TOPIC_LIST,
@@ -174,6 +176,50 @@ export const getCommunityMembers = createAsyncThunk<services.CommunityMembersRes
     }
   }
 )
+
+export const memberSubmit = (payload: services.MemberParams) => {
+  return (dispatch: AppDispatch): void => {
+    Promise.resolve()
+      .then(() => {
+        if (!_.isEmpty(payload.approveParams)) {
+          return dispatch(approveCommunityMembers({ data: { member_ids: payload.approveParams }, hash_key: payload.hash_key }))
+        }
+      })
+      .then(() => {
+        if (!_.isEmpty(payload.cancelParams)) {
+          return dispatch(cancelCommunityMembers({ data: { member_ids: payload.approveParams }, hash_key: payload.hash_key }))
+        }
+      })
+      .then(() => {
+        if (!_.isEmpty(payload.changeRoleToOrganizer.member_ids)) {
+          return dispatch(
+            changeCommunityMemberRole({
+              data: { member_ids: payload.changeRoleToOrganizer.member_ids, member_role: payload.changeRoleToOrganizer.member_role },
+              hash_key: payload.hash_key,
+            })
+          )
+        }
+      })
+      .then(() => {
+        if (!_.isEmpty(payload.changeRoleToMember.member_ids)) {
+          return dispatch(
+            changeCommunityMemberRole({
+              data: { member_ids: payload.changeRoleToMember.member_ids, member_role: payload.changeRoleToMember.member_role },
+              hash_key: payload.hash_key,
+            })
+          )
+        }
+      })
+      .then(() => {
+        if (!_.isEmpty(payload.removeParams)) {
+          return dispatch(removeCommunityMember({ data: { member_ids: payload.removeParams }, hash_key: payload.hash_key }))
+        }
+      })
+      .then(() => dispatch(memberSubmitFulfilled()))
+  }
+}
+
+export const memberSubmitFulfilled = createAction(COMMUNITY_ACTION_TYPE.MEMBERS_SUBMIT_FULFILLED)
 
 export const approveCommunityMembers = createAsyncThunk<void, services.CommunityMembersApproveCancelParams>(
   COMMUNITY_ACTION_TYPE.APPROVE_COMMUNITY_MEMBERS,

@@ -18,6 +18,7 @@ export enum COMMUNITY_ACTION_TYPE {
   CREATE_TOPIC_COMMENT = 'topic/comment/create',
   GET_TOPIC_COMMENT = 'topic/comment/detail',
   RESET_COMMENT_DETAIL = 'topic/comment/resetDetail',
+  MEMBERS_SUBMIT_FULFILLED = 'members/fulfilled',
   DELETE_TOPIC_COMMENT = 'topic/comment/delete',
   SEARCH_TOPIC = 'topic/search',
   CLEAR_SEARCH_TOPIC = 'topic/clearSearch',
