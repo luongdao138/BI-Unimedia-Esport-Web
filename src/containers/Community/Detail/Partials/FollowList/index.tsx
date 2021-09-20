@@ -56,47 +56,57 @@ const FollowList: React.FC<Props> = ({ community }) => {
   const hash_key = community.attributes.hash_key
   const [open, setOpen] = useState(false)
   const { isModerator } = useCommunityHelper(community)
-  const {
-    getMembers,
-    membersList,
-    pages,
-    resetMembers,
-    membersMeta,
-    submitMembers,
-    // sendToast,
-    resetMeta,
-  } = useFollowList()
+  const { getMembers, membersList, pages, resetMembers, membersMeta, submitMembers, resetMeta } = useFollowList()
   const { getCommunityDetail } = useCommunityDetail()
   const [hasChanged, setHasChanged] = useState(false)
   const [submitParams, setSubmitParams] = useState<MemberParams | null>(initialValue)
   const [changedGroupedMembers, setChangedGroupedMembers] = useState<GroupedMembers[]>(null)
   const [groupedMembers, setGroupedMembers] = useState<GroupedMembers[]>([])
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
+  useEffect(() => {
+    if (isSubmitting) {
+      submitMembers(submitParams)
+      setSubmitParams({ ...initialValue, hash_key: hash_key })
+      setIsSubmitting(false)
+    }
+  }, [isSubmitting])
 
   const approve = (data: CommunityMember, index) => {
     index == 0
-      ? setSubmitParams({ ...submitParams, approveParams: [...submitParams?.approveParams, data.attributes.id] })
-      : setSubmitParams({
-          ...submitParams,
-          changeRoleToMember: {
-            member_ids: [...submitParams?.changeRoleToMember.member_ids, data.attributes.id],
-            member_role: MEMBER_ROLE.MEMBER,
-          },
+      ? setSubmitParams((prev) => {
+          return { ...prev, approveParams: [...prev?.approveParams, data.attributes.id] }
+        })
+      : setSubmitParams((prev) => {
+          return {
+            ...prev,
+            changeRoleToMember: {
+              member_ids: [...prev?.changeRoleToMember.member_ids, data.attributes.id],
+              member_role: MEMBER_ROLE.MEMBER,
+            },
+          }
         })
   }
   const cancel = (data: CommunityMember) => {
-    setSubmitParams({ ...submitParams, cancelParams: [...submitParams?.cancelParams, data.attributes.id] })
+    setSubmitParams((prev) => {
+      return { ...prev, cancelParams: [...prev?.cancelParams, data.attributes.id] }
+    })
   }
   const changeRole = (data: CommunityMember) => {
-    setSubmitParams({
-      ...submitParams,
-      changeRoleToOrganizer: {
-        member_ids: [...submitParams?.changeRoleToOrganizer.member_ids, data.attributes.id],
-        member_role: MEMBER_ROLE.CO_ORGANIZER,
-      },
+    setSubmitParams((prev) => {
+      return {
+        ...prev,
+        changeRoleToOrganizer: {
+          member_ids: [...prev?.changeRoleToOrganizer.member_ids, data.attributes.id],
+          member_role: MEMBER_ROLE.CO_ORGANIZER,
+        },
+      }
     })
   }
   const remove = (data: CommunityMember) => {
-    setSubmitParams({ ...submitParams, removeParams: [...submitParams?.removeParams, data.attributes.id] })
+    setSubmitParams((prev) => {
+      return { ...prev, removeParams: [...prev?.removeParams, data.attributes.id] }
+    })
   }
   const actionHandler = {
     [MEMBER_ROLE.MEMBER]: approve,
@@ -138,7 +148,7 @@ const FollowList: React.FC<Props> = ({ community }) => {
 
   useEffect(() => {
     if (open) {
-      setSubmitParams(initialValue)
+      setSubmitParams({ ...initialValue, hash_key: hash_key })
       getMembers({ hash_key: hash_key, role: CommunityMemberRole.all, page: 1 })
     } else {
       resetMembers()
@@ -155,17 +165,17 @@ const FollowList: React.FC<Props> = ({ community }) => {
     }
   }
 
-  const handleSubmit = async () => {
-    _.map(groupedMembers, (member, i) => {
-      member &&
-        _.map(_.differenceWith(changedGroupedMembers[i].value, groupedMembers[i].value, _.isEqual), (m) => {
-          const handler = actionHandler[m.attributes.member_role]
-          if (handler) {
-            handler(m, i)
-          }
-        })
+  const handleSubmit = () => {
+    _.map(groupedMembers, (__, i) => {
+      _.map(_.differenceWith(changedGroupedMembers[i].value, groupedMembers[i].value, _.isEqual), (m) => {
+        const handler = actionHandler[m.attributes.member_role]
+        if (handler) {
+          handler(m, i)
+        }
+      })
     })
-    submitMembers(submitParams)
+    setIsSubmitting(true)
+    setHasChanged(false)
   }
 
   const handleSelectedValue = async (isApplying: boolean, id: number, value: number) => {

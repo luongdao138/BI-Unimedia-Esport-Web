@@ -3,7 +3,6 @@ import { CommunityMember, CommunityMembersParams, MemberParams, PageMeta } from 
 import community from '@store/community'
 import { createMetaSelector } from '@store/metadata/selectors'
 import { Meta } from '@store/metadata/actions/types'
-import { addToast } from '@store/common/actions'
 import { clearMetaData } from '@store/metadata/actions'
 
 const { actions, selectors } = community
@@ -16,7 +15,6 @@ const useFollowList = (): {
   membersMeta: Meta
   resetMembers: () => void
   resetMeta: () => void
-  sendToast: (params: string) => void
   submitMembers: (params: MemberParams) => void
 } => {
   const dispatch = useAppDispatch()
@@ -26,7 +24,6 @@ const useFollowList = (): {
   const membersMeta = useAppSelector(getMeta)
   const resetMeta = () => dispatch(clearMetaData(actions.getCommunityMembers.typePrefix))
   const resetMembers = () => dispatch(actions.resetCommunityMembers())
-  const sendToast = (params) => dispatch(addToast(params))
   const submitMembers = (params) => dispatch(actions.memberSubmit(params))
 
   return {
@@ -36,7 +33,6 @@ const useFollowList = (): {
     membersMeta,
     resetMeta,
     resetMembers,
-    sendToast,
     submitMembers,
   }
 }

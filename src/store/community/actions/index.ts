@@ -176,35 +176,47 @@ export const getCommunityMembers = createAsyncThunk<services.CommunityMembersRes
 )
 
 export const memberSubmit = (payload: services.MemberParams) => {
-  return (dispatch: AppDispatch) => {
-    Promise.resolve(() => {
-      if (!_.isEmpty(payload.approveParams)) {
-        dispatch(approveCommunityMembers({ data: { member_ids: payload.approveParams }, hash_key: payload.hash_key }))
-      }
-    })
+  return (dispatch: AppDispatch): void => {
+    Promise.resolve()
       .then(() => {
-        if (!_.isEmpty(payload.cancelParams)) {
-          // dispatch(cancelCommunityMembers({data: {member_ids: payload.approveParams}, hash_key: payload.hash_key}))
+        if (!_.isEmpty(payload.approveParams)) {
+          return dispatch(approveCommunityMembers({ data: { member_ids: payload.approveParams }, hash_key: payload.hash_key }))
         }
       })
       .then(() => {
         if (!_.isEmpty(payload.cancelParams)) {
-          // dispatch(changeCommunityMemberRole({data: {member_ids: payload.changeRoleToOrganizer.member_ids, member_role: payload.changeRoleToOrganizer.member_role}, hash_key: payload.hash_key}))
+          return dispatch(cancelCommunityMembers({ data: { member_ids: payload.approveParams }, hash_key: payload.hash_key }))
         }
       })
       .then(() => {
-        if (!_.isEmpty(payload.cancelParams)) {
-          // dispatch(changeCommunityMemberRole({data: {member_ids: payload.changeRoleToMember.member_ids, member_role: payload.changeRoleToMember.member_role}, hash_key: payload.hash_key}))
+        if (!_.isEmpty(payload.changeRoleToOrganizer.member_ids)) {
+          return dispatch(
+            changeCommunityMemberRole({
+              data: { member_ids: payload.changeRoleToOrganizer.member_ids, member_role: payload.changeRoleToOrganizer.member_role },
+              hash_key: payload.hash_key,
+            })
+          )
         }
       })
       .then(() => {
-        if (!_.isEmpty(payload.cancelParams)) {
-          // dispatch(removeCommunityMember({data: {member_ids: payload.removeParams}, hash_key: payload.hash_key}))
+        if (!_.isEmpty(payload.changeRoleToMember.member_ids)) {
+          return dispatch(
+            changeCommunityMemberRole({
+              data: { member_ids: payload.changeRoleToMember.member_ids, member_role: payload.changeRoleToMember.member_role },
+              hash_key: payload.hash_key,
+            })
+          )
+        }
+      })
+      .then(() => {
+        if (!_.isEmpty(payload.removeParams)) {
+          return dispatch(removeCommunityMember({ data: { member_ids: payload.removeParams }, hash_key: payload.hash_key }))
         }
       })
       .then(() => dispatch(memberSubmitFulfilled()))
   }
 }
+
 export const memberSubmitFulfilled = createAction(COMMUNITY_ACTION_TYPE.MEMBERS_SUBMIT_FULFILLED)
 
 export const confirmMembers = createAsyncThunk<void, services.CommunityMembersApproveCancelParams>(
