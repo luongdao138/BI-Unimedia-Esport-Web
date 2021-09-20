@@ -6,7 +6,7 @@ type Props = {
   page: number
   pageNumber: number
   setPage: Dispatch<SetStateAction<number>>
-  disabled: boolean
+  disabled?: boolean
 }
 
 const PaginationSmall: React.FC<Props> = ({ page, pageNumber, setPage, disabled }) => {

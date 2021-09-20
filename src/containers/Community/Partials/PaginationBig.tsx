@@ -5,9 +5,9 @@ import _ from 'lodash'
 import { useState, useEffect } from 'react'
 
 type Props = {
-  page?: number
-  pageNumber?: number
-  setPage?: Dispatch<SetStateAction<number>>
+  page: number
+  pageNumber: number
+  setPage: Dispatch<SetStateAction<number>>
   disabled?: boolean
 }
 
