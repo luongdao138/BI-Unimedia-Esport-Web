@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Box, List, ListItem as MuiListItem, ListItemIcon, ListItemText, Typography } from '@material-ui/core'
 import Link from 'next/link'
 import { makeStyles, withStyles } from '@material-ui/core/styles'
@@ -20,6 +20,7 @@ import SideFooter from './SideFooter'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import { useTheme } from '@material-ui/core/styles'
 import AppDialog from './AppDialog'
+import usePointsManage from '@containers/PointManage/usePointsManage'
 
 const SideMenu: React.FC = () => {
   const [modal, setModal] = useState(false)
@@ -31,8 +32,21 @@ const SideMenu: React.FC = () => {
   const { selectors } = userProfileStore
   const isAuthenticated = useAppSelector(getIsAuthenticated)
   const userProfile = useAppSelector(selectors.getUserProfile)
+  const { getMyPointData, myPointsData } = usePointsManage()
+  const totalMyPoints = myPointsData?.total_point
+
   const theme = useTheme()
   const downSm = useMediaQuery(theme.breakpoints.down('sm'))
+
+  useEffect(() => {
+    if (isAuthenticated && !myPointsData) {
+      const params = {
+        page: 1,
+        limit: 10,
+      }
+      getMyPointData(params)
+    }
+  }, [])
   const isSelected = (routeName: string): boolean => {
     return router.pathname && router.pathname.startsWith(routeName)
   }
@@ -68,6 +82,18 @@ const SideMenu: React.FC = () => {
             )}
           </Box>
         </Box>
+        {isAuthenticated && (
+          <Box className={classes.wrap_point}>
+            <Box className={classes.text_point}>{t('common:common.eXe_points')}</Box>
+            <Box className={classes.point}>{totalMyPoints ?? 0}</Box>
+            <Box className={classes.link_point}>
+              {/* redirect to point management */}
+              <Link href={ESRoutes.USER_POINT_MANAGEMENT}>
+                <a>{t('common:common.eXe_point_management')}</a>
+              </Link>
+            </Box>
+          </Box>
+        )}
 
         <Box className={`${classes.menuWrap}`}>
           <List component="nav" aria-labelledby="nested-list-subheader" className={classes.root}>
@@ -272,10 +298,31 @@ const useStyles = makeStyles((theme) => ({
       visibility: 'visible',
     },
     '&::-webkit-scrollbar-thumb': {
-      backgroundColor: '#222',
+      backgroundColor: '#222222',
       borderRadius: 6,
       opacity: 1,
       visibility: 'visible',
+    },
+  },
+  wrap_point: {
+    borderTop: `1px solid ${Colors.white_opacity[30]}`,
+    borderBottom: `1px solid ${Colors.white_opacity[30]}`,
+    padding: '15px 5px',
+    marginBottom: '17px',
+  },
+  text_point: {
+    fontSize: '12px',
+    color: Colors.white_opacity[70],
+  },
+  point: {
+    fontSize: '20px',
+    color: Colors.primary,
+    padding: '10px 0px',
+  },
+  link_point: {
+    fontSize: '9px',
+    '& a': {
+      color: Colors.white_opacity[70],
     },
   },
 }))

@@ -1,4 +1,4 @@
-import { Box, makeStyles, Theme, Typography } from '@material-ui/core'
+import { Box, makeStyles, Theme, Typography, useTheme } from '@material-ui/core'
 import { Pagination } from '@material-ui/lab'
 import React, { FC, useEffect, useState } from 'react'
 import { Colors } from '@theme/colors'
@@ -7,6 +7,7 @@ import MyPointsCard from '../MyPointsCard'
 import usePointsManage from '../usePointsManage'
 import ESLoader from '@components/FullScreenLoader'
 import i18n from '@locales/i18n'
+import useMediaQuery from '@material-ui/core/useMediaQuery'
 
 const PointManagementTab: FC = () => {
   const classes = useStyles()
@@ -15,6 +16,8 @@ const PointManagementTab: FC = () => {
   const listMyPointsData = myPointsData?.aggregate_points
   const totalPages = Math.ceil(myPointsData?.total / 10)
   const isLoading = meta_my_points.pending
+  const theme = useTheme()
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down(475))
 
   const limit = 10
   const [page, setPage] = useState<number>(1)
@@ -56,6 +59,8 @@ const PointManagementTab: FC = () => {
                   shape="rounded"
                   className={classes.paginationStyle}
                   onChange={onChangePage}
+                  siblingCount={1}
+                  size={isSmallScreen ? 'small' : 'medium'}
                 />
               </Box>
             )}
@@ -126,6 +131,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   [theme.breakpoints.down(375)]: {
     wrapContent: {
       paddingBottom: 0,
+    },
+    paginationStyle: {
+      '& .MuiPaginationItem-root': {
+        minWidth: '22px',
+        minHeight: '22px',
+      },
     },
   },
 }))
