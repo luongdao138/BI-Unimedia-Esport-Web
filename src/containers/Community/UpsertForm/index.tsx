@@ -89,6 +89,8 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
     },
   })
 
+  const isChanged = !_.isEqual(formik.values, initialValues)
+
   useEffect(() => {
     if (community) {
       formik.validateForm()
@@ -158,17 +160,13 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
           onClick={handleSetConfirm}
           round
           className={`${classes.footerButton} ${classes.confirmButton}`}
-          disabled={!isChanged() || hasError}
+          disabled={!isChanged || hasError}
         >
           {i18n.t('common:community_create.edit.check_edited_content')}
         </ButtonPrimary>
         <CancelDialog communityName={communityName} />
       </Box>
     )
-  }
-
-  const isChanged = () => {
-    return !_.isEqual(formik.values, initialValues)
   }
 
   const handleBack = () => {
