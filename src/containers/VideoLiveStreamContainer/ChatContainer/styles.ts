@@ -158,8 +158,8 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'row',
     width: '100%',
     '& .MuiFormControl-root': {
-      flex: 1
-    }
+      flex: 1,
+    },
   },
   input: () => ({
     height: 42,
@@ -268,12 +268,12 @@ const useStyles = makeStyles((theme) => ({
     opacity: 0,
     visibility: 'hidden',
     transition: 'all 0.5s',
-    top: 8
+    top: 8,
   },
   dialogMessShow: {
     opacity: 1,
     visibility: 'visible',
-    width: "100%", 
+    width: '100%',
   },
   messContentOuter: {
     flex: 1,

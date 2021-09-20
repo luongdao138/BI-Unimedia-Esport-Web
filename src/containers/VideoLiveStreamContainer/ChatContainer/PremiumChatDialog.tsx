@@ -44,9 +44,9 @@ const PremiumChatBox: React.FC<PremiumChatBoxProps> = ({
       .required(i18n.t('common:live_stream_screen.chat_premium_text_validate_msg_empty'))
       .max(
         purchasePoints[purchaseValueSelected].maxLengthInput,
-        `${i18n.t('common:live_stream_screen.premium_message_too_long_pre')}${
-          purchasePoints[purchaseValueSelected].maxLengthInput
-        }${i18n.t('common:live_stream_screen.premium_message_too_long_post')}`
+        `${i18n.t('common:live_stream_screen.premium_message_too_long_pre')}${purchasePoints[purchaseValueSelected].maxLengthInput}${i18n.t(
+          'common:live_stream_screen.premium_message_too_long_post'
+        )}`
       )
       .trim(),
   })
@@ -142,16 +142,17 @@ const PremiumChatBox: React.FC<PremiumChatBoxProps> = ({
             fullWidth
             value={values.message}
             onChange={handleChange}
-            classes={{ 
-              root: classes.purchaseCommentRoot, input: classes.purchaseCommentInput,
-              adornedEnd: classes.end 
+            classes={{
+              root: classes.purchaseCommentRoot,
+              input: classes.purchaseCommentInput,
+              adornedEnd: classes.end,
             }}
             onFocus={handleChatInputOnFocus}
             onBlur={handleChatInputOnBlur}
             error={touched.message && !!errors?.message}
             size="big"
             endAdornment={
-              <InputAdornment position="end" >
+              <InputAdornment position="end">
                 <Typography className={classes.purchaseCommentTextLimit}>
                   {`${values.message.length} / ${purchasePoints[purchaseValueSelected].maxLengthInput}`}
                 </Typography>
@@ -187,7 +188,10 @@ const PremiumChatBox: React.FC<PremiumChatBoxProps> = ({
               'common:common.eXe_points'
             )}`}
           </Typography>
-          <Typography className={classes.purchasePointText} onClick={() => openPurchasePointModal(purchasePoints[purchaseValueSelected].value)}>
+          <Typography
+            className={classes.purchasePointText}
+            onClick={() => openPurchasePointModal(purchasePoints[purchaseValueSelected].value)}
+          >
             {i18n.t('common:live_stream_screen.purchase_points')}
           </Typography>
         </Box>
@@ -198,9 +202,7 @@ const PremiumChatBox: React.FC<PremiumChatBoxProps> = ({
 }
 
 const useStyles = makeStyles((theme) => ({
-  end: {
-
-  },
+  end: {},
   purchaseCommentInput: {
     fontSize: '12px',
     color: '#FFFFFF',
@@ -236,14 +238,14 @@ const useStyles = makeStyles((theme) => ({
       WebkitBoxShadow: '0 0 0 100px #000000 inset',
     },
     '& .MuiInputAdornment-root ': {
-      position: "absolute", 
-      bottom: 6, 
+      position: 'absolute',
+      bottom: 6,
       right: 14,
-      alignItems: "flex-end"
+      alignItems: 'flex-end',
     },
     '& .MuiOutlinedInput-inputMultiline': {
-      marginBottom: "14px"
-    }
+      marginBottom: '14px',
+    },
   },
   purchasePointText: {
     fontSize: 10,

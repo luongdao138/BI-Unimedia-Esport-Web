@@ -1,9 +1,7 @@
 /* eslint-disable prefer-const */
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { 
-  Box, Typography, Icon, Button, IconButton, useTheme, useMediaQuery, ButtonBase, ClickAwayListener 
-} from '@material-ui/core'
+import { Box, Typography, Icon, Button, IconButton, useTheme, useMediaQuery, ButtonBase, ClickAwayListener } from '@material-ui/core'
 // import { useTranslation } from 'react-i18next'
 // import i18n from '@locales/i18n'
 import React, { useState, useEffect, useRef } from 'react'
@@ -380,7 +378,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
 
   useEffect(() => {
     // hide dialog message if message donate is no longer show
-    if (messActiveUser && !messagesDonate.find(item => item.id === messActiveUser.id)) {
+    if (messActiveUser && !messagesDonate.find((item) => item.id === messActiveUser.id)) {
       setMessActiveUser(null)
     }
   }, [messagesDonate])
@@ -761,7 +759,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
   )
 
   const closeDialogActiveUser = () => {
-    if(messActiveUser && !displayDialogMess) {
+    if (messActiveUser && !displayDialogMess) {
       setMessActiveUser(null)
     }
     setDisplayDialogMess(false)
@@ -868,9 +866,9 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
             <Box
               key={item.id}
               className={classes.userWatchingItem}
-              style={{ 
-                backgroundColor: purchasePoints[`p_${item.point}`].backgroundColor, 
-                opacity: !messActiveUser ? 1 : (item.id === messActiveUser.id ? 1 : 0.5)
+              style={{
+                backgroundColor: purchasePoints[`p_${item.point}`].backgroundColor,
+                opacity: !messActiveUser ? 1 : item.id === messActiveUser.id ? 1 : 0.5,
               }}
               onClick={() => {
                 setDisplayDialogMess(true)
