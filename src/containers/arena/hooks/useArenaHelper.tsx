@@ -43,7 +43,7 @@ const useArenaHelper = (
   const isCancelled = status === TOURNAMENT_STATUS.CANCELLED
   const isCompleted = status === TOURNAMENT_STATUS.COMPLETED
   const isRecruitmentClosed = status === TOURNAMENT_STATUS.RECRUITMENT_CLOSED || status === TOURNAMENT_STATUS.READY_TO_START
-  const isBattleRoyale = tournament?.attributes?.rule === RULE.BATTLE_ROYALE
+  const isBattleRoyale = [RULE.BATTLE_ROYALE, RULE.TIME_ATTACK, RULE.SCORE_ATTACK].includes(tournament?.attributes?.rule)
   const isRecruiting = status === TOURNAMENT_STATUS.RECRUITING
   const isTeam = tournament?.attributes?.participant_type > 1
   const isEditable = isModerator && status !== TOURNAMENT_STATUS.CANCELLED

@@ -1,22 +1,13 @@
 import ESInput from '@components/Input'
+import { OutlinedInputProps } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
 
-interface BRScoreInputProps {
-  value: string | number | null
-  editable?: boolean
-  onChange?: (score: string) => void
-  onClick?: () => void
-  clickable?: boolean
-}
-const BRScoreInput: React.FC<BRScoreInputProps> = (props: BRScoreInputProps) => {
+const BRScoreInput: React.FC<OutlinedInputProps> = (props) => {
   const classes = useStyles()
-  const handleChange = (e) => {
-    props.onChange(e.target.value.replace(/[^0-9.]/g, ''))
-  }
   return (
     <div className={classes.scoreWrap}>
-      <ESInput placeholder="未入力" value={props.value} onChange={handleChange} />
+      <ESInput {...props} />
     </div>
   )
 }
@@ -28,9 +19,21 @@ const useStyles = makeStyles(() => ({
       paddingTop: 6,
       paddingBottom: 6,
       backgroundColor: Colors.white_opacity['10'],
+      borderRadius: 5,
     },
     '& .MuiOutlinedInput-root': {
       borderRadius: 5,
+    },
+
+    '& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline': {
+      borderWidth: 0,
+    },
+    '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-inputMarginDense': {
+      borderWidth: 0,
+      backgroundColor: Colors.white_opacity['7'],
+    },
+    '& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline': {
+      borderWidth: 0,
     },
   },
 }))
