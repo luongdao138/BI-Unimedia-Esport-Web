@@ -102,7 +102,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
 
   const renderClickableImage = (image_url: string, isPopOver?: boolean) => {
     return (
-      <Box mb={1}>
+      <Box my={1}>
         <SRLWrapper options={LIGHTBOX_OPTIONS}>
           <img className={`${classes.imageBox} ${isPopOver && classes.popOverImage}`} src={image_url} />
         </SRLWrapper>
