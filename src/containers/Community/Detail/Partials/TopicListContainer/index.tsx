@@ -1,18 +1,18 @@
 import { Box, useMediaQuery, useTheme, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import TopicRowItem from '@components/TopicRowItem'
-import Pagination from '@material-ui/lab/Pagination'
 import { Colors } from '@theme/colors'
 import { useState, useEffect } from 'react'
 import moment from 'moment'
 import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
-import PaginationMobile from '../../../Partials/PaginationMobile'
+import PaginationSmall from '../../../Partials/PaginationSmall'
 import useCommunityDetail from '../../useCommunityDetail'
 import ESLoader from '@components/Loader'
 import { TOPIC_STATUS } from '@constants/community.constants'
 import { useTranslation } from 'react-i18next'
 import _ from 'lodash'
+import PaginationBig from '@containers/Community/Partials/PaginationBig'
 
 const TopicListContainer: React.FC = () => {
   const [page, setPage] = useState(1)
@@ -39,11 +39,6 @@ const TopicListContainer: React.FC = () => {
   useEffect(() => {
     getTopicList({ community_hash: String(hash_key), filter: TOPIC_STATUS.ALL, page: page })
   }, [page])
-
-  const handleChange = (event, value) => {
-    setPage(value)
-    return event
-  }
 
   return (
     <>
@@ -77,21 +72,9 @@ const TopicListContainer: React.FC = () => {
       {!_.isEmpty(topicList) && (
         <Box display="flex" justifyContent="center" mt={4}>
           {isMobile ? (
-            <PaginationMobile page={page} pageNumber={count} setPage={setPage} />
+            <PaginationSmall page={page} pageNumber={count} setPage={setPage} disabled={topicListMeta.pending} />
           ) : (
-            <Pagination
-              className={classes.pagination}
-              count={count}
-              page={page}
-              onChange={handleChange}
-              variant="outlined"
-              shape="rounded"
-              color="primary"
-              hideNextButton
-              hidePrevButton
-              showFirstButton
-              showLastButton
-            />
+            <PaginationBig page={page} pageNumber={count} setPage={setPage} disabled={topicListMeta.pending} />
           )}
         </Box>
       )}

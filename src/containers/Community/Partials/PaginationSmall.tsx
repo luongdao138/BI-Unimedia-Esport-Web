@@ -6,9 +6,10 @@ type Props = {
   page: number
   pageNumber: number
   setPage: Dispatch<SetStateAction<number>>
+  disabled: boolean
 }
 
-const Pagination: React.FC<Props> = ({ page, pageNumber, setPage }) => {
+const PaginationSmall: React.FC<Props> = ({ page, pageNumber, setPage, disabled }) => {
   const classes = useStyles()
 
   const firstPage = () => {
@@ -27,19 +28,19 @@ const Pagination: React.FC<Props> = ({ page, pageNumber, setPage }) => {
   return (
     <Box>
       <Box className={classes.pagination}>
-        <ButtonBase className={classes.buttons} onClick={firstPage} disabled={page === 1}>
+        <ButtonBase className={classes.buttons} onClick={firstPage} disabled={page === 1 || disabled}>
           <Icon className={`${classes.icons} fas fa-angle-double-left`} />
         </ButtonBase>
-        <ButtonBase className={classes.buttons} onClick={previousPage} disabled={page === 1}>
+        <ButtonBase className={classes.buttons} onClick={previousPage} disabled={page === 1 || disabled}>
           <Icon className={`${classes.icons} fas fa-chevron-left`} />
         </ButtonBase>
-        <ButtonBase className={classes.pageButton} disabled={false}>
+        <ButtonBase className={classes.pageButton} disabled={true}>
           <Typography className={classes.pageText}>{page}</Typography>
         </ButtonBase>
-        <ButtonBase className={classes.buttons} onClick={nextPage} disabled={page === pageNumber}>
+        <ButtonBase className={classes.buttons} onClick={nextPage} disabled={page === pageNumber || disabled}>
           <Icon className={`${classes.icons} fas fa-chevron-right`} />
         </ButtonBase>
-        <ButtonBase className={classes.buttons} onClick={lastPage} disabled={page === pageNumber}>
+        <ButtonBase className={classes.buttons} onClick={lastPage} disabled={page === pageNumber || disabled}>
           <Icon className={`${classes.icons} fas fa-angle-double-right`} />
         </ButtonBase>
       </Box>
@@ -91,4 +92,4 @@ const useStyles = makeStyles(() => ({
   },
 }))
 
-export default Pagination
+export default PaginationSmall
