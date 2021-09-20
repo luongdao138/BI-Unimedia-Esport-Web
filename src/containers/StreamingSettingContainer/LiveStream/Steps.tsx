@@ -1,6 +1,6 @@
 import { Box, Grid, Icon, IconButton, InputAdornment, makeStyles, Theme, Typography } from '@material-ui/core'
 import React, { useCallback, useEffect, useState } from 'react'
-import { useFormik } from 'formik'
+import { FormikProps } from 'formik'
 import ESInput from '@components/Input'
 import i18n from '@locales/i18n'
 import ESSelect from '@components/Select'
@@ -15,8 +15,7 @@ import { Colors } from '@theme/colors'
 import ESLabel from '@components/Label'
 import ESButton from '@components/Button'
 import { FormLiveType } from '@containers/arena/UpsertForm/FormLiveSettingsModel/FormLiveSettingsType'
-import { getInitialLiveSettingValues } from '@containers/arena/UpsertForm/FormLiveSettingsModel/InitialLiveSettingsValues'
-import { validationLiveSettingsScheme } from '@containers/arena/UpsertForm/FormLiveSettingsModel/ValidationLiveSettingsScheme'
+
 import { LiveStreamSettingHelper } from '@utils/helpers/LiveStreamSettingHelper'
 import useLiveSetting from '../useLiveSetting'
 import {
@@ -25,7 +24,6 @@ import {
   SetLiveStreamParams,
   StreamUrlAndKeyParams,
   TYPE_SECRET_KEY,
-  TYPE_SETTING,
 } from '@services/liveStream.service'
 import useReturnHref from '@utils/hooks/useReturnHref'
 import { FIELD_TITLES } from '../field_titles.constants'
@@ -45,6 +43,7 @@ interface StepsProps {
   step: number
   onNext: (step: number, isShare?: boolean, post?: { title: string; content: string }) => void
   category: GetCategoryResponse
+  formik?: FormikProps<FormLiveType>
 }
 const KEY_TYPE = {
   URL: 1,
@@ -52,71 +51,54 @@ const KEY_TYPE = {
   UUID: 3,
 }
 
-const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
+const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik }) => {
   const classes = useStyles()
   const dispatch = useAppDispatch()
   const { t } = useTranslation(['common'])
   const [categoryName, setCategoryName] = useState('')
-  const { liveSettingInformation, getLiveSettingTab, setLiveStreamConfirm, getStreamUrlAndKey, isPending } = useLiveSetting()
-  const liveInfo = liveSettingInformation?.data
-
+  const { liveSettingInformation, setLiveStreamConfirm, getStreamUrlAndKey, isPending } = useLiveSetting()
   const { userProfile } = useGetProfile()
   const [showStreamURL, setShowStreamURL] = useState(false)
   const [showStreamKey, setShowStreamKey] = useState(false)
-  const [hasError, setError] = useState(false)
-  const initialValues = getInitialLiveSettingValues(liveInfo ? liveInfo : null)
-  const formik = useFormik<FormLiveType>({
-    initialValues: initialValues,
-    validationSchema: validationLiveSettingsScheme(),
-    enableReinitialize: true,
-    onSubmit: () => {
-      //TODO: smt
-    },
-  })
+  const [hasError, setError] = useState(true)
   const { checkNgWordFields, checkNgWordByField } = useCheckNgWord()
   const paid_delivery_flag = userProfile?.attributes?.paid_delivery_flag
   const [showReNew, setShowReNew] = useState<boolean>(false)
-  const [errPublicTime, setErrPublicTime] = useState(false)
+  // const [errPublicTime, setErrPublicTime] = useState(false)
   const [isLive, setIsLive] = useState<boolean>(false)
   // const [status, setStatus] = useState<number>(0)
-  const [counter, setCounter] = useState<number>(0)
+  // const [counter, setCounter] = useState<number>(0)
 
   useEffect(() => {
-    getLiveSetting()
+    // getLiveSetting()
+    checkStatusRecord(liveSettingInformation)
   }, [])
 
   useEffect(() => {
-    setCounter(counter + 1)
-    removeField()
+    // setCounter(counter + 1)
+    // removeField()
     const isRequiredFieldsValid = LiveStreamSettingHelper.checkRequiredFields(1, formik.errors)
     setError(!isRequiredFieldsValid)
   }, [formik.errors.stepSettingOne])
 
   useEffect(() => {
     category?.data.forEach((h) => {
-      if (Number(h.id) === Number(formik.values.stepSettingOne.category)) {
+      if (Number(h.id) === Number(formik?.values?.stepSettingOne?.category)) {
         setCategoryName(h.name)
       }
     })
-  }, [formik.values.stepSettingOne.category])
+  }, [formik?.values?.stepSettingOne?.category])
 
-  const removeField = () => {
-    if (counter <= 1) {
-      formik?.errors?.stepSettingOne?.video_publish_end_time && delete formik?.errors?.stepSettingOne?.video_publish_end_time
-    }
-    return formik.errors
-  }
-
-  const getLiveSetting = () => {
-    getLiveSettingTab({ type: TYPE_SETTING.LIVE }).then((res) => {
-      formik.validateForm()
-      checkStatusRecord(res.payload)
-    })
-  }
+  // const removeField = () => {
+  //   if (counter <= 1 && isLive) {
+  //     formik?.errors?.stepSettingOne?.video_publish_end_time && delete formik?.errors?.stepSettingOne?.video_publish_end_time
+  //   }
+  //   return formik.errors
+  // }
 
   const checkStatusRecord = (data) => {
     if (!data?.data?.created_at) {
-      onReNewUrlAndKey(TYPE_SECRET_KEY.URL, TYPE_SECRET_KEY.GET, false)
+      // onReNewUrlAndKey(TYPE_SECRET_KEY.URL, TYPE_SECRET_KEY.GET, false)
       setShowReNew(false)
     } else {
       setShowReNew(true)
@@ -142,19 +124,19 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
     switch (type) {
       case KEY_TYPE.UUID:
         if (window.navigator.clipboard) {
-          window.navigator.clipboard.writeText(formik.values.stepSettingOne.linkUrl)
+          window.navigator.clipboard.writeText(formik?.values?.stepSettingOne?.linkUrl)
         }
         dispatch(commonActions.addToast(t('common:streaming_setting_screen.message_copy')))
         break
       case KEY_TYPE.URL:
         if (window.navigator.clipboard) {
-          window.navigator.clipboard.writeText(formik.values.stepSettingOne.stream_url.toString())
+          window.navigator.clipboard.writeText(formik?.values?.stepSettingOne?.stream_url.toString())
         }
         dispatch(commonActions.addToast(t('common:streaming_setting_screen.message_copy')))
         break
       case KEY_TYPE.KEY:
         if (window.navigator.clipboard) {
-          window.navigator.clipboard.writeText(formik.values.stepSettingOne.stream_key.toString())
+          window.navigator.clipboard.writeText(formik?.values?.stepSettingOne?.stream_key.toString())
         }
         dispatch(commonActions.addToast(t('common:streaming_setting_screen.message_copy')))
         break
@@ -184,13 +166,11 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
       // setShowStreamKey(false)
       // setShowStreamURL(false)
       if (checkPublicTime(stepSettingOne.video_publish_end_time)) {
-        setErrPublicTime(false)
         onNext(step + 1, stepSettingOne.share_sns_flag, {
           title: stepSettingOne.title,
           content: `${baseViewingURL}${stepSettingOne.linkUrl}`,
         })
-      } else {
-        setErrPublicTime(true)
+        formik.setFieldValue('stepSettingOne.step_setting', step + 1)
       }
     }
   }
@@ -199,7 +179,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
       title: formik.values.stepSettingOne.title,
       content: `${baseViewingURL}${formik.values.stepSettingOne.linkUrl}`,
     })
-    setErrPublicTime(false)
+    formik.setFieldValue('stepSettingOne.step_setting', step - 1)
   }
   const isFirstStep = () => {
     return step === 1 ? true : false
@@ -262,6 +242,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
         title: formik.values.stepSettingOne.title,
         content: `${baseViewingURL}${formik.values.stepSettingOne.linkUrl}`,
       })
+      formik.setFieldValue('stepSettingOne.step_setting', step + 1)
     })
   }
 
@@ -301,11 +282,11 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                 id="linkUrl"
                 name="stepSettingOne.linkUrl"
                 value={
-                  formik.values.stepSettingOne.linkUrl
-                    ? `${baseViewingURL}${formik.values.stepSettingOne.linkUrl}`
-                    : formik.values.stepSettingOne.linkUrl
+                  formik?.values?.stepSettingOne?.linkUrl
+                    ? `${baseViewingURL}${formik?.values?.stepSettingOne?.linkUrl}`
+                    : formik?.values?.stepSettingOne?.linkUrl
                 }
-                placeholder={!formik.values.stepSettingOne.linkUrl && i18n.t('common:streaming_setting_screen.placeholder_input_url')}
+                placeholder={!formik?.values?.stepSettingOne?.linkUrl && i18n.t('common:streaming_setting_screen.placeholder_input_url')}
                 labelPrimary={i18n.t('common:streaming_setting_screen.label_input_url')}
                 fullWidth
                 rows={8}
@@ -335,18 +316,18 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
               <Box pt={1} className={classes.box}>
                 {isFirstStep() ? (
                   <CoverUploaderStream
-                    src={formik.values.stepSettingOne.thumbnail}
+                    src={formik?.values?.stepSettingOne?.thumbnail}
                     onChange={handleUpload}
                     isUploading={isUploading}
-                    disabled={isLive}
+                    disabled={false}
                     size="big"
                     onOpenStateChange={handleCoverDailogStateChange}
                   />
-                ) : !formik.values.stepSettingOne.thumbnail ? (
+                ) : !formik?.values?.stepSettingOne?.thumbnail ? (
                   <img src={'/images/default_card.png'} className={classes.coverImg} />
                 ) : (
                   <CoverUploaderStream
-                    src={formik.values.stepSettingOne.thumbnail}
+                    src={formik?.values?.stepSettingOne?.thumbnail}
                     onChange={handleUpload}
                     isUploading={isUploading}
                     disabled={!isFirstStep()}
@@ -366,7 +347,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                 placeholder={i18n.t('common:streaming_setting_screen.placeholder_input_title')}
                 labelPrimary={i18n.t('common:streaming_setting_screen.label_input_title')}
                 fullWidth
-                value={isFirstStep() ? formik.values.stepSettingOne.title : formik.values.stepSettingOne.title.trim()}
+                value={isFirstStep() ? formik?.values?.stepSettingOne?.title : formik?.values?.stepSettingOne?.title.trim()}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 helperText={formik?.touched?.stepSettingOne?.title && formik?.errors.stepSettingOne?.title}
@@ -389,7 +370,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                   placeholder={i18n.t('common:streaming_setting_screen.placeholder_input_description')}
                   labelPrimary={i18n.t('common:streaming_setting_screen.label_input_description')}
                   fullWidth
-                  value={formik.values.stepSettingOne.description}
+                  value={formik?.values?.stepSettingOne?.description}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   helperText={formik?.touched?.stepSettingOne?.description && formik?.errors?.stepSettingOne?.description}
@@ -402,7 +383,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                 <>
                   <ESLabel label={i18n.t('common:streaming_setting_screen.label_input_description')} required={true} />
                   <Linkify>
-                    <span className={classes.detectLink}> {formik.values.stepSettingOne.description.trim()}</span>
+                    <span className={classes.detectLink}> {formik?.values?.stepSettingOne?.description.trim()}</span>
                   </Linkify>
                 </>
               )}
@@ -415,7 +396,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                   fullWidth
                   id="category"
                   name="stepSettingOne.category"
-                  value={formik.values.stepSettingOne.category}
+                  value={formik?.values?.stepSettingOne?.category}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   label={i18n.t('common:streaming_setting_screen.category')}
@@ -457,7 +438,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                   name="stepSettingOne.video_publish_end_time"
                   placeholder={'2021年7月31日 23:59'}
                   fullWidth
-                  value={formik.values.stepSettingOne.video_publish_end_time}
+                  value={formik?.values?.stepSettingOne?.video_publish_end_time}
                   onChange={(date) => {
                     const temp = moment(date).add(5, 's')
                     formik.setFieldValue('stepSettingOne.video_publish_end_time', temp)
@@ -467,15 +448,14 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                     formik?.touched?.stepSettingOne?.video_publish_end_time && formik?.errors?.stepSettingOne?.video_publish_end_time
                   }
                   error={
-                    (formik?.touched?.stepSettingOne?.video_publish_end_time && !!formik?.errors?.stepSettingOne?.video_publish_end_time) ||
-                    errPublicTime
+                    formik?.touched?.stepSettingOne?.video_publish_end_time && !!formik?.errors?.stepSettingOne?.video_publish_end_time
                   }
                 />
               ) : (
                 <Box pt={1}>
                   <Typography className={classes.date}>
-                    {formik.values.stepSettingOne.video_publish_end_time !== null
-                      ? moment(formik.values.stepSettingOne.video_publish_end_time).format(FORMAT_DATE_TIME_JP)
+                    {formik?.values?.stepSettingOne?.video_publish_end_time !== null
+                      ? moment(formik?.values?.stepSettingOne?.video_publish_end_time).format(FORMAT_DATE_TIME_JP)
                       : i18n.t('common:streaming_setting_screen.public_time_title')}
                   </Typography>
                   {/* {errPublicTime && <FormHelperText error>{errPublicTime}</FormHelperText>} */}
@@ -488,9 +468,9 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
               {isFirstStep() ? (
                 <Box pb={1}>
                   <ESCheckboxBig
-                    checked={formik.values.stepSettingOne.use_ticket}
+                    checked={formik?.values?.stepSettingOne?.use_ticket}
                     onChange={() => {
-                      formik.setFieldValue('stepSettingOne.use_ticket', !formik.values.stepSettingOne.use_ticket)
+                      formik.setFieldValue('stepSettingOne.use_ticket', !formik?.values?.stepSettingOne?.use_ticket)
                     }}
                     label={t('common:streaming_setting_screen.ticket_use')}
                     name="stepSettingOne.use_ticket"
@@ -513,12 +493,12 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                       // className={classes.input}
                       placeholder={'0'}
                       value={
-                        isFirstStep() && (formik.values.stepSettingOne.ticket_price === 0 || !formik.values.stepSettingOne.use_ticket)
+                        isFirstStep() && (formik?.values?.stepSettingOne?.ticket_price === 0 || !formik?.values?.stepSettingOne?.use_ticket)
                           ? ''
-                          : formik.values.stepSettingOne.ticket_price
+                          : formik?.values?.stepSettingOne?.ticket_price
                       }
                       onChange={formik.handleChange}
-                      onBlur={formik.values.stepSettingOne.use_ticket && formik.handleBlur}
+                      onBlur={formik?.values?.stepSettingOne?.use_ticket && formik.handleBlur}
                       helperText={formik?.touched?.stepSettingOne?.ticket_price && formik?.errors?.stepSettingOne?.ticket_price}
                       error={formik?.touched?.stepSettingOne?.ticket_price && !!formik?.errors?.stepSettingOne?.ticket_price}
                       size="big"
@@ -526,7 +506,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                       formik={formik}
                       disabled={isLive}
                       className={getAddClassByStep(classes.input_text)}
-                      readOnly={!formik.values.stepSettingOne.use_ticket}
+                      readOnly={!formik?.values?.stepSettingOne?.use_ticket}
                       nowrapHelperText
                       endAdornment={
                         isFirstStep() ? (
@@ -544,8 +524,8 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
               ) : (
                 <Box pb={2}>
                   <Typography className={classes.date}>
-                    {formik.values.stepSettingOne.use_ticket
-                      ? `利用する（${formik.values.stepSettingOne.ticket_price} exeポイント）`
+                    {formik?.values?.stepSettingOne?.use_ticket
+                      ? `利用する（${formik?.values?.stepSettingOne?.ticket_price} exeポイント）`
                       : '利用しない'}
                   </Typography>
                 </Box>
@@ -555,9 +535,9 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
           {isFirstStep() ? (
             <Box>
               <ESCheckboxBig
-                checked={formik.values.stepSettingOne.share_sns_flag}
+                checked={formik?.values?.stepSettingOne?.share_sns_flag}
                 onChange={() => {
-                  formik.setFieldValue('stepSettingOne.share_sns_flag', !formik.values.stepSettingOne.share_sns_flag)
+                  formik.setFieldValue('stepSettingOne.share_sns_flag', !formik?.values?.stepSettingOne?.share_sns_flag)
                 }}
                 label={t('common:streaming_setting_screen.share_SNS')}
                 name="share_sns_flag"
@@ -570,7 +550,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                 id="title"
                 name="title"
                 value={
-                  formik.values.stepSettingOne.share_sns_flag
+                  formik?.values?.stepSettingOne?.share_sns_flag
                     ? t('common:streaming_setting_screen.shared_it')
                     : t('common:streaming_setting_screen.dont_share')
                 }
@@ -591,8 +571,8 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                 labelPrimary={i18n.t('common:streaming_setting_screen.stream_url')}
                 placeholder={
                   isFirstStep()
-                    ? !formik.values.stepSettingOne.stream_url && i18n.t('common:streaming_setting_screen.stream_mask')
-                    : !formik.values.stepSettingOne.stream_url && t('common:streaming_setting_screen.issued_stream')
+                    ? !formik?.values?.stepSettingOne?.stream_url && i18n.t('common:streaming_setting_screen.stream_mask')
+                    : !formik?.values?.stepSettingOne?.stream_url && t('common:streaming_setting_screen.issued_stream')
                 }
                 type={showStreamURL ? 'text' : 'password'}
                 endAdornment={
@@ -614,7 +594,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                   )
                 }
                 fullWidth
-                value={formik.values.stepSettingOne.stream_url}
+                value={formik?.values?.stepSettingOne?.stream_url}
                 readOnly={true}
                 size="big"
                 disabled={!isFirstStep()}
@@ -653,8 +633,8 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                 labelPrimary={i18n.t('common:streaming_setting_screen.stream_key')}
                 placeholder={
                   isFirstStep()
-                    ? !formik.values.stepSettingOne.stream_key && i18n.t('common:streaming_setting_screen.stream_mask')
-                    : !formik.values.stepSettingOne.stream_key && t('common:streaming_setting_screen.issued_stream')
+                    ? !formik?.values?.stepSettingOne?.stream_key && i18n.t('common:streaming_setting_screen.stream_mask')
+                    : !formik?.values?.stepSettingOne?.stream_key && t('common:streaming_setting_screen.issued_stream')
                 }
                 type={showStreamKey ? 'text' : 'password'}
                 endAdornment={
@@ -676,7 +656,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                   )
                 }
                 fullWidth
-                value={formik.values.stepSettingOne.stream_key}
+                value={formik?.values?.stepSettingOne?.stream_key}
                 readOnly={true}
                 size="big"
                 disabled={!isFirstStep()}
@@ -706,8 +686,8 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
           {isFirstStep() ? (
             <Box pb={3 / 8} pt={2}>
               <ESCheckboxBig
-                checked={formik.values.stepSettingOne.publish_flag}
-                onChange={() => formik.setFieldValue('stepSettingOne.publish_flag', !formik.values.stepSettingOne.publish_flag)}
+                checked={formik?.values?.stepSettingOne?.publish_flag}
+                onChange={() => formik.setFieldValue('stepSettingOne.publish_flag', !formik?.values?.stepSettingOne?.publish_flag)}
                 label={t('common:streaming_setting_screen.publish_delivery')}
                 name="stepSettingOne.publish_flag"
               />
@@ -717,7 +697,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
               <ESInput
                 id="title"
                 name="title"
-                value={!formik.values.stepSettingOne.publish_flag ? t('common:profile.dont_show') : t('common:profile.show')}
+                value={!formik?.values?.stepSettingOne?.publish_flag ? t('common:profile.dont_show') : t('common:profile.show')}
                 fullWidth
                 labelPrimary={t('common:streaming_setting_screen.publish_delivery')}
                 disabled={true}

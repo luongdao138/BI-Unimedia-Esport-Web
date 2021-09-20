@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Box, Grid, makeStyles, Theme, Typography } from '@material-ui/core'
-import { useFormik } from 'formik'
+import { FormikProps } from 'formik'
 import _ from 'lodash'
 import ESInput from '@components/Input'
 import i18n from '@locales/i18n'
@@ -9,8 +9,6 @@ import SnsInfoStream from '@components/SnsInfoStream'
 import ButtonPrimary from '@components/ButtonPrimary'
 import { Colors } from '@theme/colors'
 import ESButton from '@components/Button'
-import { getInitialDistributorValues } from '@containers/arena/UpsertForm/FormLiveSettingsModel/InitialLiveSettingsValues'
-import { validationLDistributorScheme } from '@containers/arena/UpsertForm/FormLiveSettingsModel/ValidationLiveSettingsScheme'
 import { FormLiveType } from '@containers/arena/UpsertForm/FormLiveSettingsModel/FormLiveSettingsType'
 import { LiveStreamSettingHelper } from '@utils/helpers/LiveStreamSettingHelper'
 import { GetChannelResponse, SetChannelParams } from '@services/liveStream.service'
@@ -28,38 +26,26 @@ interface StepsProps {
   onNext: (step: number) => void
   channel: GetChannelResponse
   hasChannel?: boolean
+  formik?: FormikProps<FormLiveType>
 }
 
-const Steps: React.FC<StepsProps> = ({ step, onNext, channel, hasChannel }) => {
+const Steps: React.FC<StepsProps> = ({ step, onNext, channel, hasChannel, formik }) => {
   const classes = useStyles()
   const dispatch = useAppDispatch()
   const [social, setSocial] = useState(null)
-  const [hasError, setError] = useState(false)
-  const initialValues = getInitialDistributorValues(channel?.data ? channel.data : null)
-  const formik = useFormik<FormLiveType>({
-    initialValues: initialValues,
-    validationSchema: validationLDistributorScheme(),
-    enableReinitialize: true,
-    onSubmit: () => {
-      //TODO: smt
-    },
-  })
-  const { setChannelConfirm, isPending, getChannelLive } = useLiveSetting()
+  const [hasError, setError] = useState(true)
+  const { setChannelConfirm, isPending } = useLiveSetting()
   const { checkNgWordFields, checkNgWordByField } = useCheckNgWord()
   // const [status, setStatus] = useState<boolean>(false)
 
   useEffect(() => {
-    getChannelInfo()
-  }, [])
-
-  useEffect(() => {
     const isRequiredFieldsValid = LiveStreamSettingHelper.checkRequiredFields(3, formik.errors)
     setError(!isRequiredFieldsValid)
-  }, [formik.errors.stepSettingThree])
+  }, [formik?.errors?.stepSettingThree])
 
   useEffect(() => {
     setSocial(channel?.data)
-  }, [])
+  }, [channel])
 
   const handleError = (errors) => {
     setError(!_.isEmpty(errors))
@@ -67,13 +53,6 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, channel, hasChannel }) => {
   const onBasicInfoChanged = (data): void => {
     setSocial((prevState) => {
       return { ...prevState, ...data }
-    })
-  }
-
-  const getChannelInfo = () => {
-    getChannelLive().then(() => {
-      // checkStatusRecord(res.payload)
-      formik.validateForm()
     })
   }
 
@@ -100,10 +79,12 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, channel, hasChannel }) => {
       dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: ngFields.join(', ') }))
     } else {
       onNext(step + 1)
+      formik.setFieldValue('stepSettingThree.step_setting', step + 1)
     }
   }
   const onClickPrev = () => {
     onNext(step - 1)
+    formik.setFieldValue('stepSettingThree.step_setting', step - 1)
   }
 
   const isFirstStep = () => {
@@ -130,6 +111,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, channel, hasChannel }) => {
     }
     setChannelConfirm(data, () => {
       onNext(step + 1)
+      formik.setFieldValue('stepSettingThree.step_setting', step + 1)
     })
   }
 
@@ -147,7 +129,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, channel, hasChannel }) => {
                 placeholder={i18n.t('common:streaming_setting_screen.placeholder_channel_name')}
                 labelPrimary={i18n.t('common:streaming_setting_screen.label_channel_name')}
                 fullWidth
-                value={isFirstStep() ? formik.values.stepSettingThree.name : formik.values.stepSettingThree.name.trim()}
+                value={isFirstStep() ? formik?.values?.stepSettingThree?.name : formik?.values?.stepSettingThree?.name.trim()}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 helperText={formik?.touched?.stepSettingThree?.name && formik?.errors?.stepSettingThree?.name}
@@ -170,7 +152,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, channel, hasChannel }) => {
                   placeholder={i18n.t('common:streaming_setting_screen.placeholder_overview')}
                   labelPrimary={i18n.t('common:streaming_setting_screen.label_overview')}
                   fullWidth
-                  value={formik.values.stepSettingThree.description}
+                  value={formik?.values?.stepSettingThree?.description}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   helperText={formik?.touched?.stepSettingThree?.description && formik?.errors?.stepSettingThree?.description}

@@ -7,9 +7,15 @@ import useLiveSetting from '../useLiveSetting'
 import ESModal from '@components/Modal'
 import BlankLayout from '@layouts/BlankLayout'
 import { useTranslation } from 'react-i18next'
+import { FormikProps } from 'formik'
+import { FormLiveType } from '@containers/arena/UpsertForm/FormLiveSettingsModel/FormLiveSettingsType'
 
-const StreamingReservationContainer: React.FC = () => {
-  const [step, setStep] = useState(1)
+interface Props {
+  formik?: FormikProps<FormLiveType>
+}
+
+const StreamingReservationContainer: React.FC<Props> = ({ formik }) => {
+  // const [step, setStep] = useState(1)
   const router = useRouter()
   const { categoryData } = useLiveSetting()
 
@@ -22,7 +28,7 @@ const StreamingReservationContainer: React.FC = () => {
   })
 
   const onChangeStep = (step: number, isShare?: boolean, post?: { title: string; content: string }): void => {
-    setStep(step)
+    // setStep(step)
     setShare(isShare)
     setPost(post)
     if (step === 3) {
@@ -40,7 +46,7 @@ const StreamingReservationContainer: React.FC = () => {
 
   return (
     <>
-      <Steps step={step} onNext={onChangeStep} category={categoryData} />
+      <Steps step={formik?.values?.stepSettingTwo?.step_setting} onNext={onChangeStep} category={categoryData} formik={formik} />
       <ESModal open={modal} handleClose={() => setModal(false)}>
         <BlankLayout>
           <SettingsCompleted

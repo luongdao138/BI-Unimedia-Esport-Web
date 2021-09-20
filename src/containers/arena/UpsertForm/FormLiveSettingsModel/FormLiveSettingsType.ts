@@ -13,6 +13,9 @@ export type FormLiveType = {
     publish_flag: boolean
     video_publish_end_time?: string
     status?: number
+    channel_id?: number
+    //check step
+    step_setting?: number
   }
   stepSettingTwo?: {
     uuid: string
@@ -32,6 +35,7 @@ export type FormLiveType = {
     publish_flag: boolean
     video_publish_end_time?: string
     status?: number
+    channel_id?: number
     //cross-fields validations
     schedule_live_date?: string
     notify_live_start_date?: string
@@ -41,6 +45,8 @@ export type FormLiveType = {
     public_time_more_than_end?: string
     sell_less_than_start?: string
     sell_optional?: string
+    //check step
+    step_setting?: number
   }
   stepSettingThree?: {
     name?: string
@@ -48,5 +54,7 @@ export type FormLiveType = {
     discord_link?: string
     twitter_link?: string
     instagram_link?: string
+    //check step
+    step_setting?: number
   }
 }

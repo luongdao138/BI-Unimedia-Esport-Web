@@ -54,7 +54,7 @@ const VideosList: React.FC<VideoListProps> = ({ setTab, videoItemStyle }) => {
         <Box className={classes.titleContainer} key={index}>
           <TitleSeeMore
             titleText={item.name}
-            rightText={i18n.t('common:videos_top_tab.view_more')}
+            rightText={item?.videos.length > 0 ? i18n.t('common:videos_top_tab.view_more') : ''}
             // iconSource={item.image}
             onPress={() => onClickSeeMorePopular(item)}
           />

@@ -12,7 +12,9 @@ const checkRequiredFields = (tab: number, errors: FormikErrors<FormLiveType>, ty
         requiredFieldErrors.push(stepSettingOne.title)
         requiredFieldErrors.push(stepSettingOne.description)
         requiredFieldErrors.push(stepSettingOne.category)
-        requiredFieldErrors.push(stepSettingOne.video_publish_end_time)
+        if (stepSettingOne.video_publish_end_time) {
+          requiredFieldErrors.push(stepSettingOne.video_publish_end_time)
+        }
         if (stepSettingOne.ticket_price) {
           requiredFieldErrors.push(stepSettingOne.ticket_price)
         }

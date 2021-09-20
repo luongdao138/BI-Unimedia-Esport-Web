@@ -2,7 +2,6 @@ import { LiveStreamSettingParams, SetChannelParams, SetLiveStreamParams, StreamU
 import { useAppDispatch, useAppSelector } from '@store/hooks'
 import { createMetaSelector } from '@store/metadata/selectors'
 import stream from '@store/stream'
-import { useEffect } from 'react'
 
 const { selectors, actions } = stream
 const _getMeta = createMetaSelector(actions.getLiveSettingInfo)
@@ -45,11 +44,8 @@ const useLiveSetting = () => {
   }
 
   const getChannelLive = () => dispatch(actions.getChannel())
+  const getCategory = () => dispatch(actions.getCategory())
 
-  useEffect(() => {
-    dispatch(actions.getCategory())
-    dispatch(actions.getChannel())
-  }, [])
   return {
     getLiveSettingTab,
     liveSettingInformation,
@@ -65,6 +61,7 @@ const useLiveSetting = () => {
     getChannelLive,
     scheduleInformation,
     getScheduleSettingTab,
+    getCategory,
   }
 }
 export default useLiveSetting

@@ -28,7 +28,7 @@ export const validationLiveSettingsScheme = (): any => {
       }),
 
       video_publish_end_time: Yup.date()
-        // .nullable()
+        .nullable()
         // .notRequired()
         // .required(i18n.t('common:streaming_setting_screen.validation.input_required'))
         .min(approximateMinDate, i18n.t('common:streaming_setting_screen.validation.min_date')),
