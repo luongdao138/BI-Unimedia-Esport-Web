@@ -107,6 +107,15 @@ export type ResultsResponse = {
 export type TournamentStatus = 'ready' | 'recruiting' | 'recruitment_closed' | 'ready_to_start' | 'in_progress' | 'completed' | 'cancelled'
 export type TournamentRule = 'single' | 'double' | 'battle_royale' | 'score_attack' | 'time_attack'
 export type ArenaRole = 'admin' | 'participant' | 'interested' | 'co_organizer'
+export type ArenaInfo = {
+  id?: number
+  team_id?: number
+  user_id?: number
+  role?: string
+  position?: number
+  is_leader?: boolean
+  name?: string
+}
 export type TournamentDetail = {
   id: string
   type: 'tournament_details'
@@ -165,7 +174,7 @@ export type TournamentDetail = {
     interested_count: number
     participant_count: number
     my_role: null | ArenaRole
-    my_info: { team_id: number }[] | { id: number; user_id: number; role: string; position: number; is_leader: boolean; name: string }[]
+    my_info: ArenaInfo[]
     my_position: null | string
     hash_key: string
     is_entered?: boolean
