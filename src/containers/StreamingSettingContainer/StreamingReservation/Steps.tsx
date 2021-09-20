@@ -86,7 +86,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik }) => {
   // }
 
   const checkStatusRecord = (data) => {
-    if (!data?.data?.created_at) {
+    if (!data?.data?.created_at && (data?.data?.status === 1 || !data?.data?.title)) {
       // onReNewUrlAndKey(TYPE_SECRET_KEY.URL, TYPE_SECRET_KEY.GET, false)
       setShowReNew(false)
     } else {
