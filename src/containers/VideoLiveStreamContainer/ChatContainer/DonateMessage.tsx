@@ -55,7 +55,8 @@ const DonateMessage: React.FC<DonateMessageProps> = ({ message, deleteMess, getM
       </Box>
       <Box className={classes.accountInfoContent} style={{ backgroundColor: bgColor }}>
         <Typography className={classes.accountInfoContentText}>
-          <span className={getClassDeletedMess()}>{getMessageWithoutNgWords(message.text) + ' ' + message.video_time + 's'}</span>
+          {/* <span className={getClassDeletedMess()}>{getMessageWithoutNgWords(message.text) + ' ' + message.video_time + 's'}</span> */}
+          <span className={getClassDeletedMess()}>{getMessageWithoutNgWords(message.text)}</span>
         </Typography>
       </Box>
     </Box>

@@ -727,6 +727,12 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
     // // Submit chat message
   }
 
+  const handlePressEnter = (event: any) => {
+    if (event.key === 'Enter') {
+      handleSubmitChatContent()
+    }
+  }
+
   const chatInputComponent = () => (
     <Box className={classes.chatInputMobileContainer}>
       {purchaseDialogVisible && isMobile && purchaseInfoDialog()}
@@ -748,6 +754,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
             onBlur={handleChatInputOnBlur}
             helperText={touched.message && errors?.message}
             error={touched.message && !!errors?.message}
+            onKeyPress={handlePressEnter}
           />
           <Button onClick={handleSubmitChatContent} className={classes.iconButtonBg}>
             <Icon className={`fa fa-paper-plane ${classes.sendIcon}`} fontSize="small" />
@@ -858,7 +865,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
 
   const chatContent = () => (
     <Box className={classes.chatContent}>
-      <Button onClick={scrollToCurrentMess}>Scroll to chat mess</Button>
+      {/* <Button onClick={scrollToCurrentMess}>Scroll to chat mess</Button> */}
       <Box className={classes.userWatchingList}>
         {messagesDonate
           .sort((a: any, b: any) => b.createdAt.localeCompare(a.createdAt))

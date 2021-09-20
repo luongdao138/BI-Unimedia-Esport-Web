@@ -27,7 +27,8 @@ const ChatTextMessage: React.FC<ChatContainerProps> = ({ message, deleteMess, ge
       <Box className={classes.container}>
         <Typography className={classes.chatMessage}>
           <span className={`${message.delete_flag ? '' : classes.chatMessageUser} ${getClassDeletedMess()}`}>{`${message.owner}: `}</span>
-          <span className={getClassDeletedMess()}>{getMessageWithoutNgWords(message.text) + ' ' + message.video_time + 's'}</span>
+          {/* <span className={getClassDeletedMess()}>{getMessageWithoutNgWords(message.text) + ' ' + message.video_time + 's'}</span> */}
+          <span className={getClassDeletedMess()}>{getMessageWithoutNgWords(message.text)}</span>
         </Typography>
         {is_streamer ? (
           <ESMenu className={classes.menu_del_mess} iconClass={classes.iconClass}>
