@@ -61,7 +61,7 @@ const PaginationBig: React.FC<Props> = ({ page, pageNumber, setPage, disabled })
           const temp = { number: i }
           temp_array.push(temp)
         }
-      } else if (rightSideCount() >= PAGE_VALUES.THREE_DOTS_THRESHOLD && leftSideCount() >= PAGE_VALUES.THREE_DOTS_THRESHOLD) {
+      } else {
         temp_array.push(three_dots)
         for (let i = page - PAGE_VALUES.FIRST_PAGE; i <= page + PAGE_VALUES.FIRST_PAGE; i++) {
           const temp = { number: i }

@@ -143,13 +143,13 @@ const TopicDetailContainer: React.FC = () => {
               )
             })
           )}
-        </Box>
-        <Box display="flex" justifyContent="center" my={2}>
-          {isMobile ? (
-            <PaginationSmall page={page} pageNumber={count} setPage={setPage} disabled={commentsListMeta.pending} />
-          ) : (
-            <PaginationBig page={page} pageNumber={count} setPage={setPage} disabled={commentsListMeta.pending} />
-          )}
+          <Box display="flex" justifyContent="center" my={2}>
+            {isMobile ? (
+              <PaginationSmall page={page} pageNumber={count} setPage={setPage} disabled={commentsListMeta.pending} />
+            ) : (
+              <PaginationBig page={page} pageNumber={count} setPage={setPage} disabled={commentsListMeta.pending} />
+            )}
+          </Box>
         </Box>
 
         {!isNotMember && (
