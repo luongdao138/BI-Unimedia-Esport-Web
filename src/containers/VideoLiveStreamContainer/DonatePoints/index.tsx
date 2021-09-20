@@ -7,7 +7,6 @@ import Stage2 from './Stage2'
 import Stage3 from './Stage3'
 import Head from 'next/head'
 interface DonatePointsProps {
-  isPurchaseLackPoint?: boolean
   myPoint: number
   lackedPoint: number
   showModalPurchasePoint: boolean
@@ -18,7 +17,6 @@ const DonatePoints: React.FC<DonatePointsProps> = ({
   setShowModalPurchasePoint,
   lackedPoint,
   myPoint,
-  isPurchaseLackPoint,
 }) => {
   // const { t } = useTranslation('common')
   const classes = useStyles()
@@ -77,7 +75,7 @@ const DonatePoints: React.FC<DonatePointsProps> = ({
                 <Icon className={`fa fa-arrow-left ${classes.iconBack}`} />
               </Box>
             )}
-            <Box className={classes.buttonClose} onClick={onCloseModal}>
+            <Box className={classes.buttonClose} onClick={() => onCloseModal()}>
               <Icon className={`fa fa-times ${classes.iconClose}`} fontSize="small" />
             </Box>
           </Box>
@@ -112,7 +110,6 @@ const DonatePoints: React.FC<DonatePointsProps> = ({
             {stage === 1 && (
               <Box className={classes.stepOneContainer}>
                 <Stage1
-                  isPurchaseLackPoint={isPurchaseLackPoint}
                   myPoints={myPoint}
                   lackedPoint={lackedPoint}
                   onClickPurchaseLackedPoint={onClickPurchaseLackedPoint}
@@ -306,9 +303,5 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
 }))
-
-DonatePoints.defaultProps = {
-  isPurchaseLackPoint: true,
-}
 
 export default DonatePoints

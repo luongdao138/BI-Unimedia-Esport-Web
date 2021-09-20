@@ -65,7 +65,6 @@ const VideosTop: React.FC = () => {
   const [purchaseType, setPurchaseType] = useState<number>(null)
   const [donatedPoints, setDonatedPoints] = useState<number>(0)
   const [softKeyboardIsShown, setSoftKeyboardIsShown] = useState(false)
-  const [isPurchaseLackPoint, setIsPurchaseLackPoint] = useState(true)
 
   const { getVideoDetail, detailVideoResult, userResult } = useDetailVideo()
 
@@ -118,7 +117,6 @@ const VideosTop: React.FC = () => {
     } else {
       dispatch(addToast(i18n.t('common:donate_points.lack_point_mess')))
       setShowModalPurchasePoint(true)
-      setIsPurchaseLackPoint(true)
     }
   }
   const handleClose = () => {
@@ -143,7 +141,6 @@ const VideosTop: React.FC = () => {
     } else {
       dispatch(addToast(i18n.t('common:donate_points.lack_point_mess')))
       setShowModalPurchasePoint(true)
-      setIsPurchaseLackPoint(true)
     }
   }
   // purchase ticket
@@ -200,7 +197,7 @@ const VideosTop: React.FC = () => {
         height: 50,
         marginLeft: theme.spacing(5),
         marginRight: theme.spacing(5),
-        marginTop: 50,
+        marginTop: 150,
       }}
       onClick={onClick}
     >
@@ -224,8 +221,17 @@ const VideosTop: React.FC = () => {
         userHasViewingTicket={userHasViewingTicket()}
         handleKeyboardVisibleState={changeSoftKeyboardVisibleState}
         donateConfirmModalIsShown={modalIsShown}
-        openPurchasePointModal={() => {
-          setIsPurchaseLackPoint(false)
+        openPurchasePointModal={(donate_point) => {
+          // reset donate point
+          setDonatedPoints(0)
+          setDonatedPoints(donate_point)
+          // no lack point if my point larger than donate point
+          if (+donate_point < +myPoint) {
+            setLackedPoint(0)
+          } else {
+            setLackedPoint(donate_point - myPoint)
+          }
+          setPurchaseType(PURCHASE_TYPE.PURCHASE_SUPER_CHAT)
           setShowModalPurchasePoint(true)
         }}
       />
@@ -336,11 +342,10 @@ const VideosTop: React.FC = () => {
       />
       {showModalPurchasePoint && (
         <DonatePoints
-          isPurchaseLackPoint={isPurchaseLackPoint}
           myPoint={myPoint}
           lackedPoint={purchaseType === PURCHASE_TYPE.PURCHASE_SUPER_CHAT ? lackedPoint : ticket_points}
           showModalPurchasePoint={showModalPurchasePoint}
-          setShowModalPurchasePoint={setShowModalPurchasePoint}
+          setShowModalPurchasePoint={value => setShowModalPurchasePoint(value)}
         />
       )}
     </Box>
