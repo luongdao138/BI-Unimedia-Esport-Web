@@ -7,20 +7,23 @@ import useLiveSetting from '../useLiveSetting'
 import ESModal from '@components/Modal'
 import BlankLayout from '@layouts/BlankLayout'
 import { useTranslation } from 'react-i18next'
+import { FormikProps } from 'formik'
+import { FormLiveType } from '@containers/arena/UpsertForm/FormLiveSettingsModel/FormLiveSettingsType'
 
 interface Props {
   hasChannel?: boolean
+  formik?: FormikProps<FormLiveType>
 }
 
-const DistributorInformationContainer: React.FC<Props> = ({ hasChannel }) => {
-  const [step, setStep] = useState(1)
+const DistributorInformationContainer: React.FC<Props> = ({ hasChannel, formik }) => {
+  // const [step, setStep] = useState(1)
   const router = useRouter()
   const { channelInfo } = useLiveSetting()
   const [modal, setModal] = useState(false)
   const { t } = useTranslation(['common'])
 
   const onChangeStep = (step: number): void => {
-    setStep(step)
+    // setStep(step)
     if (step === 3) {
       setModal(true)
     }
@@ -36,7 +39,13 @@ const DistributorInformationContainer: React.FC<Props> = ({ hasChannel }) => {
 
   return (
     <>
-      <Steps step={step} onNext={onChangeStep} channel={channelInfo} hasChannel={hasChannel} />
+      <Steps
+        step={formik?.values?.stepSettingThree?.step_setting}
+        onNext={onChangeStep}
+        channel={channelInfo}
+        hasChannel={hasChannel}
+        formik={formik}
+      />
       <ESModal open={modal} handleClose={() => setModal(false)}>
         <BlankLayout>
           <SettingsCompleted

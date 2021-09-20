@@ -11,8 +11,8 @@ export const TYPE_SECRET_KEY = {
   RE_NEW: 'new',
   KEY: 'key',
   URL: 'url',
-  LIVE: 1,
-  SCHEDULE: 0,
+  LIVE: 0,
+  SCHEDULE: 1,
 }
 
 export const TYPE_RM = {
@@ -47,6 +47,7 @@ export type LiveStreamSetting = {
   sell_ticket_start_time?: string
   video_publish_end_time?: string
   status?: number
+  channel_id?: number
 }
 
 export type DistributorStepSetting = {

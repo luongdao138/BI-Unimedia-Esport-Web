@@ -58,25 +58,16 @@ const VideoPlayer: React.FC<PlayerProps> = ({ src }) => {
     playedSecond,
   } = useDetailVideo()
 
-  // useEffect(() => {
-  //   if(Math.floor(playedSeconds) !== streamingSecond) {
-  //     changeStreamingSecond(Math.floor(playedSeconds))
-  //   }
-  // }, [playedSeconds])
-
-  // useEffect(() => {
-  //   console.log("🚀 ~ useEffect ~ durationPlayer", durationPlayer)
-  // }, [durationPlayer])
-
   const onProgress = (event) => {
-    console.log('🚀 ~ onProgress ~ 1111-----playedSeconds', event, src)
-    console.log('🚀 ~ onProgress ~ 2222-----playedSeconds', event.playedSeconds)
-    console.log('🚀 ~ onProgress ~ 3333-----loadedSeconds', event.loadedSeconds)
     setState({ ...state, loading: false })
     if (isLive) {
-      setDurationPlayer(event.loadedSeconds)
+      console.log('🚀 ~ onProgress ~ 1111-----playedSeconds', event)
+      //live stream => duration = current
+      // setDurationPlayer(event.playedSeconds)
+      setDurationPlayer(durationPlayer + 1)
     }
     setPlayedSeconds(event.playedSeconds)
+
     // trigger change streaming second in redux
     if (Math.floor(event.loadedSeconds) !== streamingSecond) {
       let is_viewing_video = true
@@ -95,11 +86,14 @@ const VideoPlayer: React.FC<PlayerProps> = ({ src }) => {
   const onDuration = (duration) => {
     if (!isLive) {
       setDurationPlayer(duration) //video archive
+    } else {
+      console.log('getCurrentTime====', reactPlayerRef.current.getCurrentTime())
+      setDurationPlayer(reactPlayerRef.current.getCurrentTime())
     }
   }
 
   useEffect(() => {
-    const { ENDED, PLAYING, READY } = IVSPlayer.PlayerState
+    const { ENDED, PLAYING, READY, BUFFERING } = IVSPlayer.PlayerState
     const { ERROR } = IVSPlayer.PlayerEventType
     if (!isPlayerSupported) {
       console.warn('The current browser does not support the Amazon IVS player.')
@@ -109,8 +103,9 @@ const VideoPlayer: React.FC<PlayerProps> = ({ src }) => {
 
     const onStateChange = () => {
       const playerState = player.current.getState()
-      console.warn(`Player State - ${playerState} - ${player.current.getDuration()}--${player.current.getDuration()}---src===${src}`)
+      console.warn(`Player State - ${playerState} - ${player.current.getDuration()}--${player.current.getDuration()} - src=${src}`)
       setIsLive(player.current.getDuration() === Infinity ? true : false)
+      setDurationPlayer(player.current.getDuration() === Infinity && reactPlayerRef.current.getCurrentTime())
     }
     const onError = (err) => {
       console.warn('Player Event - ERROR:', err)
@@ -127,15 +122,17 @@ const VideoPlayer: React.FC<PlayerProps> = ({ src }) => {
     player.current.addEventListener(PLAYING, onStateChange)
     player.current.addEventListener(ENDED, onStateChange)
     player.current.addEventListener(ERROR, onError)
+    player.current.addEventListener(BUFFERING, onStateChange)
 
     return () => {
       player.current.removeEventListener(READY, onStateChange)
       player.current.removeEventListener(PLAYING, onStateChange)
       player.current.removeEventListener(ENDED, onStateChange)
       player.current.removeEventListener(ERROR, onError)
+      player.current.removeEventListener(BUFFERING, onStateChange)
     }
   }, [
-    // IVSPlayer,
+    IVSPlayer,
     // isPlayerSupported,
     src,
   ])
@@ -179,8 +176,13 @@ const VideoPlayer: React.FC<PlayerProps> = ({ src }) => {
   const onBuffer = () => {
     setState({ ...state, loading: true })
   }
-  const onSeek = () => {
+  const onSeek = (se) => {
+    console.log('====SEEK===', se)
     setState({ ...state, loading: true })
+
+    //for live
+
+    // reactPlayerRef.current.seekTo(10,'seconds')
   }
   const onReady = () => {
     setState({ ...state, loading: false })
@@ -211,7 +213,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({ src }) => {
             config={{
               file: {
                 attributes: {
-                  autoPlay: false,
+                  autoPlay: true,
                   muted: muted,
                   volume: volume,
                 },
@@ -220,6 +222,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({ src }) => {
             onError={onError}
             onReady={onReady}
             onSeek={onSeek}
+            // controls
           />
           {ended ||
             (!playing && (
