@@ -221,21 +221,6 @@ export const memberSubmit = (payload: services.MemberParams) => {
 
 export const memberSubmitFulfilled = createAction(COMMUNITY_ACTION_TYPE.MEMBERS_SUBMIT_FULFILLED)
 
-export const confirmMembers = createAsyncThunk<void, services.CommunityMembersApproveCancelParams>(
-  COMMUNITY_ACTION_TYPE.APPROVE_COMMUNITY_MEMBERS,
-  async (params, { rejectWithValue }) => {
-    try {
-      const res = await services.approveCommunityMembers(params)
-      return res
-    } catch (error) {
-      if (!error.response) {
-        throw error
-      }
-      return rejectWithValue(error.response.data)
-    }
-  }
-)
-
 export const approveCommunityMembers = createAsyncThunk<void, services.CommunityMembersApproveCancelParams>(
   COMMUNITY_ACTION_TYPE.APPROVE_COMMUNITY_MEMBERS,
   async (params, { rejectWithValue }) => {
