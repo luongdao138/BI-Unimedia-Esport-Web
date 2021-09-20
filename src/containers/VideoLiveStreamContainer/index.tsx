@@ -134,15 +134,15 @@ const VideosTop: React.FC = () => {
     // }
   }
 
-  const handlePurchaseTicket = () => {
-    setPurchaseType(PURCHASE_TYPE.PURCHASE_TICKET)
-    if (myPoint >= ticket_points) {
-      setShowPurchaseTicketModal(true)
-    } else {
-      dispatch(addToast(i18n.t('common:donate_points.lack_point_mess')))
-      setShowModalPurchasePoint(true)
-    }
-  }
+  // const handlePurchaseTicket = () => {
+  //   setPurchaseType(PURCHASE_TYPE.PURCHASE_TICKET)
+  //   if (myPoint >= ticket_points) {
+  //     setShowPurchaseTicketModal(true)
+  //   } else {
+  //     dispatch(addToast(i18n.t('common:donate_points.lack_point_mess')))
+  //     setShowModalPurchasePoint(true)
+  //   }
+  // }
   // purchase ticket
   const doConfirmPurchaseTicket = async () => {
     await purchaseTicketSuperChat(ticket_params)
@@ -185,25 +185,25 @@ const VideosTop: React.FC = () => {
     )
   }
 
-  const buttonPurchaseTicket = (onClick) => (
-    <Box
-      style={{
-        backgroundColor: Colors.primary,
-        display: 'flex',
-        position: 'relative',
-        borderRadius: 10,
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: 50,
-        marginLeft: theme.spacing(5),
-        marginRight: theme.spacing(5),
-        marginTop: 150,
-      }}
-      onClick={onClick}
-    >
-      <Typography style={{ textAlign: 'center', fontSize: 20 }}>Purchase Ticket</Typography>
-    </Box>
-  )
+  // const buttonPurchaseTicket = (onClick) => (
+  //   <Box
+  //     style={{
+  //       backgroundColor: Colors.primary,
+  //       display: 'flex',
+  //       position: 'relative',
+  //       borderRadius: 10,
+  //       justifyContent: 'center',
+  //       alignItems: 'center',
+  //       height: 50,
+  //       marginLeft: theme.spacing(5),
+  //       marginRight: theme.spacing(5),
+  //       marginTop: 150,
+  //     }}
+  //     onClick={onClick}
+  //   >
+  //     <Typography style={{ textAlign: 'center', fontSize: 20 }}>Purchase Ticket</Typography>
+  //   </Box>
+  // )
 
   const modalIsShown = () => {
     return showConfirmModal || showPurchaseTicketModal || showModalPurchasePoint
@@ -235,7 +235,7 @@ const VideosTop: React.FC = () => {
           setShowModalPurchasePoint(true)
         }}
       />
-      {buttonPurchaseTicket(handlePurchaseTicket)}
+      {/* {buttonPurchaseTicket(handlePurchaseTicket)} */}
     </Box>
   )
 
