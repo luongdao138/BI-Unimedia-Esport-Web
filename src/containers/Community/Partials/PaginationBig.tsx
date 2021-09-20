@@ -4,6 +4,14 @@ import { SetStateAction, Dispatch } from 'react'
 import _ from 'lodash'
 import { useState, useEffect } from 'react'
 
+const PAGE_VALUES = {
+  FIRST_PAGE: 1,
+  SECOND_PAGE: 2,
+  THREE_DOTS_THRESHOLD: 4,
+  DOTS_RIGHT_THRESHOLD: 5,
+  NO_DOT_THRESHOLD: 7,
+}
+
 type Props = {
   page: number
   pageNumber: number
@@ -15,18 +23,18 @@ const PaginationBig: React.FC<Props> = ({ page, pageNumber, setPage, disabled })
   const classes = useStyles()
 
   const firstPage = () => {
-    setPage(1)
+    setPage(PAGE_VALUES.FIRST_PAGE)
   }
 
   const lastPage = () => {
     setPage(pageNumber)
   }
 
-  const leftCount = () => {
-    return page - 1
+  const leftSideCount = () => {
+    return page - PAGE_VALUES.FIRST_PAGE
   }
 
-  const rightCount = () => {
+  const rightSideCount = () => {
     return pageNumber - page
   }
   const [buttons, setButtons] = useState([])
@@ -34,35 +42,35 @@ const PaginationBig: React.FC<Props> = ({ page, pageNumber, setPage, disabled })
   const renderPagination = () => {
     const temp_array = []
     const three_dots = { number: null }
-    temp_array.push({ number: 1 })
-    if (pageNumber <= 7) {
-      for (let i = 2; i <= pageNumber - 1; i++) {
+    temp_array.push({ number: PAGE_VALUES.FIRST_PAGE })
+    if (pageNumber <= PAGE_VALUES.NO_DOT_THRESHOLD) {
+      for (let i = PAGE_VALUES.SECOND_PAGE; i <= pageNumber - PAGE_VALUES.FIRST_PAGE; i++) {
         const temp = { number: i }
         temp_array.push(temp)
       }
     } else {
-      if (leftCount() < 4) {
-        for (let i = 2; i <= 5; i++) {
+      if (leftSideCount() < PAGE_VALUES.THREE_DOTS_THRESHOLD) {
+        for (let i = PAGE_VALUES.SECOND_PAGE; i <= PAGE_VALUES.DOTS_RIGHT_THRESHOLD; i++) {
           const temp = { number: i }
           temp_array.push(temp)
         }
         temp_array.push(three_dots)
-      } else if (rightCount() < 4) {
+      } else if (rightSideCount() < PAGE_VALUES.THREE_DOTS_THRESHOLD) {
         temp_array.push(three_dots)
-        for (let i = pageNumber - 4; i < pageNumber; i++) {
+        for (let i = pageNumber - PAGE_VALUES.THREE_DOTS_THRESHOLD; i < pageNumber; i++) {
           const temp = { number: i }
           temp_array.push(temp)
         }
-      } else if (rightCount() > 3 && leftCount() > 3) {
+      } else if (rightSideCount() >= PAGE_VALUES.THREE_DOTS_THRESHOLD && leftSideCount() >= PAGE_VALUES.THREE_DOTS_THRESHOLD) {
         temp_array.push(three_dots)
-        for (let i = page - 1; i <= page + 1; i++) {
+        for (let i = page - PAGE_VALUES.FIRST_PAGE; i <= page + PAGE_VALUES.FIRST_PAGE; i++) {
           const temp = { number: i }
           temp_array.push(temp)
         }
         temp_array.push(three_dots)
       }
     }
-    pageNumber !== 1 && temp_array.push({ number: pageNumber })
+    pageNumber !== PAGE_VALUES.FIRST_PAGE && temp_array.push({ number: pageNumber })
     setButtons(temp_array)
   }
 
@@ -99,7 +107,7 @@ const PaginationBig: React.FC<Props> = ({ page, pageNumber, setPage, disabled })
   )
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   pagination: {
     display: 'flex',
     flexDirection: 'row',
@@ -109,8 +117,8 @@ const useStyles = makeStyles(() => ({
     border: '1px solid',
     borderColor: Colors.primary,
     borderRadius: 4,
-    width: 32,
-    height: 32,
+    width: theme.spacing(4),
+    height: theme.spacing(4),
     color: Colors.white,
     transition: 'color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
     '&:disabled': {
@@ -126,8 +134,8 @@ const useStyles = makeStyles(() => ({
     border: '1px solid',
     borderColor: Colors.primary,
     borderRadius: 4,
-    width: 32,
-    height: 32,
+    width: theme.spacing(4),
+    height: theme.spacing(4),
   },
   icons: {
     fontSize: 10,
