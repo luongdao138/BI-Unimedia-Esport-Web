@@ -49,7 +49,7 @@ const RelatedVideos: React.FC<RelatedVideosProps> = ({ video_id }) => {
 
   const renderRelatedVideoItem = (item: TypeVideoArchived, index: number) => {
     return (
-      <>
+      <React.Fragment key={item?.id || index}>
         {downMd ? (
           <Box className={classes.xsItemContainer} key={item?.id || index}>
             <VideoPreviewItem data={item} />
@@ -59,7 +59,7 @@ const RelatedVideos: React.FC<RelatedVideosProps> = ({ video_id }) => {
             <VideoPreviewItem data={item} />
           </Grid>
         )}
-      </>
+      </React.Fragment>
     )
   }
 

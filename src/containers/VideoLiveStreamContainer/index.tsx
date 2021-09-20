@@ -70,7 +70,7 @@ const VideosTop: React.FC = () => {
   const { getVideoDetail, detailVideoResult, userResult } = useDetailVideo()
 
   // const isPending = (meta.pending || meta_my_points.pending) && detailVideoResult != null
-  const isLoadingData = !detailVideoResult || !myPointsData || !userResult
+  const isLoadingData = !detailVideoResult || !myPointsData || !userResult || !video_id
 
   const ticket_points = 100
 
@@ -84,6 +84,7 @@ const VideosTop: React.FC = () => {
     type: PURCHASE_TYPE.PURCHASE_SUPER_CHAT,
     video_id,
   }
+
   useEffect(() => {
     getMyPointData({ page: 1, limit: 10 })
   }, [])
@@ -270,11 +271,6 @@ const VideosTop: React.FC = () => {
   const changeSoftKeyboardVisibleState = (visible: boolean) => {
     setSoftKeyboardIsShown(visible)
   }
-
-  //video detail
-  // useEffect(() => {
-  //   getVideoDetail({video_id:`${video_id}`})
-  // }, [video_id])
 
   return (
     <Box className={classes.root}>

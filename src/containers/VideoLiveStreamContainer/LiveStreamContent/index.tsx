@@ -62,26 +62,24 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
     if (subscribe === 0) {
       setSubscribe(1)
       console.log('enter Subscribe')
-      debouncedhandleSubscribe(1)
+      if (detailVideoResult?.channel_id) {
+        debouncedHandleSubscribe(1, detailVideoResult?.channel_id, props?.video_id)
+      }
     } else {
       setSubscribe(0)
       console.log('enter unSubscribe')
-      debouncedhandleSubscribe(0)
+      if (detailVideoResult?.channel_id) {
+        debouncedHandleSubscribe(0, detailVideoResult?.channel_id, props?.video_id)
+      }
     }
   }
 
-  // const handleSubscribe = () => {
-  //   if (!meta_follow_channel?.pending) {
-  //     userFollowChannel(followParams)
-  //   }
-  // }
-
-  const debouncedhandleSubscribe = useCallback(
-    _.debounce((followValue: any) => {
-      console.log('debounced HandleReactionVideo')
+  const debouncedHandleSubscribe = useCallback(
+    _.debounce((followValue: number, channelIdValue: number, videoIdValue: string | string[]) => {
+      console.log('debounced HandleSubscribeVideo')
       userFollowChannel({
-        video_id: props?.video_id,
-        channel_id: detailVideoResult?.channel_id,
+        video_id: videoIdValue,
+        channel_id: channelIdValue,
         follow: followValue,
       })
     }, 700),
@@ -89,10 +87,10 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
   )
 
   const debouncedHandleReactionVideo = useCallback(
-    _.debounce((likeValue: any, unlikeValue: any) => {
+    _.debounce((likeValue: number, unlikeValue: number, videoIdValue: string | string[]) => {
       console.log('debounced HandleReactionVideo')
       userReactionVideoStream({
-        video_id: props?.video_id,
+        video_id: videoIdValue,
         like: likeValue,
         unlike: unlikeValue,
       })
@@ -109,12 +107,12 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
         setUnlikeCount(unlikeCount > 0 ? unlikeCount - 1 : 0)
       }
       console.log('enter like')
-      debouncedHandleReactionVideo(1, 0)
+      debouncedHandleReactionVideo(1, 0, props?.video_id)
     } else {
       setLike(0)
       setLikeCount(likeCount > 0 ? likeCount - 1 : 0)
       console.log('enter like')
-      debouncedHandleReactionVideo(0, unlike)
+      debouncedHandleReactionVideo(0, unlike, props?.video_id)
     }
   }
 
@@ -127,23 +125,15 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
         setLikeCount(likeCount > 0 ? likeCount - 1 : 0)
       }
       console.log('enter unlike')
-      debouncedHandleReactionVideo(0, 1)
+      debouncedHandleReactionVideo(0, 1, props?.video_id)
     } else {
       setUnlike(0)
       setUnlikeCount(unlikeCount > 0 ? unlikeCount - 1 : 0)
 
       console.log('enter unlike')
-      debouncedHandleReactionVideo(like, 0)
+      debouncedHandleReactionVideo(like, 0, props?.video_id)
     }
   }
-
-  // useEffect(() => {
-  //   handleReactionVideo()
-  // }, [like, unlike])
-
-  // useEffect(() => {
-  //   handleSubscribe()
-  // }, [subscribe])
 
   useEffect(() => {
     if (userResult) {

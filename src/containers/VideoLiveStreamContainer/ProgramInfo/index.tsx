@@ -54,7 +54,7 @@ const ProgramInfo: React.FC<ProgramInfoProps> = ({ video_id }) => {
 
   const renderArchiveVideoItem = (item: TypeVideoArchived, index: number) => {
     return (
-      <>
+      <React.Fragment key={item?.id || index}>
         {downMd ? (
           <Box className={classes.xsItemContainer} key={item?.id || index}>
             <VideoPreviewItem data={item} />
@@ -64,7 +64,7 @@ const ProgramInfo: React.FC<ProgramInfoProps> = ({ video_id }) => {
             <VideoPreviewItem data={item} />
           </Grid>
         )}
-      </>
+      </React.Fragment>
     )
   }
   const renderPreLoadArchiveVideoItem = () => {
@@ -88,6 +88,9 @@ const ProgramInfo: React.FC<ProgramInfoProps> = ({ video_id }) => {
   const getDescriptionTruncated = () => {
     return descriptionCollapse ? `${getDescription.substring(0, downMd ? 70 : 200)}...` : getDescription
   }
+  const toggleDescriptionCollapse = () => {
+    setDescriptionCollapse(!descriptionCollapse)
+  }
   const renderDescription = () => {
     return (
       <>
@@ -95,12 +98,7 @@ const ProgramInfo: React.FC<ProgramInfoProps> = ({ video_id }) => {
           {getDescription?.length < 200 ? getDescription : getDescriptionTruncated()}
         </Typography>
         {getDescription?.length > 200 && (
-          <Box
-            onClick={() => {
-              setDescriptionCollapse(!descriptionCollapse)
-            }}
-            className={classes.seeMoreContainer}
-          >
+          <Box onClick={toggleDescriptionCollapse} className={classes.seeMoreContainer}>
             <Typography className={classes.seeMoreTitle}>
               {descriptionCollapse ? i18n.t('common:live_stream_screen.view_more') : i18n.t('common:live_stream_screen.view_less')}
             </Typography>
