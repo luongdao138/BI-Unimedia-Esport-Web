@@ -8,7 +8,7 @@ import PaginationBig from '../Partials/PaginationBig'
 import CommentInput from './Partials/CommentInput'
 import useTopicDetail from './useTopicDetail'
 import { Colors } from '@theme/colors'
-import ESLoader from '@components/Loader'
+import ESFullLoader from '@components/FullScreenLoader'
 import { useRouter } from 'next/router'
 import useCommunityDetail from '../Detail/useCommunityDetail'
 import useCommunityHelper from '../hooks/useCommunityHelper'
@@ -41,12 +41,19 @@ const TopicDetailContainer: React.FC = () => {
     deleteComment,
   } = useTopicDetail()
   const { getCommunityDetail, communityDetail, isAuthenticated } = useCommunityDetail()
-  const [reply, setReply] = useState<{ hash_key: string; comment_no: number } | any>({})
-
-  const [render, setRender] = useState(false)
-  const { isNotMember, isModerator, isPublic, isAutomatic } = useCommunityHelper(communityDetail)
-  const data = topic?.attributes
   const { isOwner } = useTopicHelper(topic?.attributes?.owner_user_code)
+  const { isNotMember, isModerator, isPublic, isAutomatic } = useCommunityHelper(communityDetail)
+
+  const [reply, setReply] = useState<{ hash_key: string; comment_no: number } | any>({})
+  const [openDelete, setOpenDelete] = useState(false)
+  const [selectedCommentNo, setSelectedCommentNo] = useState()
+  const [reportData, setReportData] = useState<ReportData | null>(null)
+  const [page, setPage] = useState(1)
+  const [count, setCount] = useState(1)
+  const [commentCount, setCommentCount] = useState<number>()
+  const [render, setRender] = useState<boolean>(false)
+
+  const data = topic?.attributes
 
   const menuParams = {
     isNotMember: isNotMember,
@@ -55,17 +62,10 @@ const TopicDetailContainer: React.FC = () => {
     isTopicOwner: isOwner,
   }
 
-  const [openDelete, setOpenDelete] = useState(false)
-  const [selectedCommentNo, setSelectedCommentNo] = useState()
-  const [reportData, setReportData] = useState<ReportData | null>(null)
-
   const handleDeleteComment = () => {
     deleteComment({ comment_no: selectedCommentNo, topic_hash: String(topic_hash_key) })
     setOpenDelete(false)
   }
-
-  const [page, setPage] = useState(1)
-  const [count, setCount] = useState(1)
 
   useEffect(() => {
     getCommentsList({ hash_key: String(topic_hash_key), page: 1 })
@@ -78,6 +78,10 @@ const TopicDetailContainer: React.FC = () => {
       getCommentsList({ hash_key: String(topic_hash_key) })
     }
   }, [router])
+
+  useEffect(() => {
+    if (!topicDetailMeta.pending && topicDetailMeta.loaded) setCommentCount(topic.attributes.comment_count)
+  }, [topicDetailMeta])
 
   useEffect(() => {
     getCommentsList({ hash_key: String(topic_hash_key), page: page })
@@ -115,19 +119,15 @@ const TopicDetailContainer: React.FC = () => {
     <>
       <Box display="flex" flexDirection="column" minHeight="100vh">
         <Box flex={1}>
+          <ESFullLoader open={topicDetailMeta.pending || commentsListMeta.pending} />
           {topicDetailMeta.loaded && (
             <>
               <TopicDetailHeader title={data?.title} isTopic={true} onHandleBack={handleBack} />
-              <MainTopic topic={topic} handleDelete={handleDeleteTopic} community={communityDetail} />
+              <MainTopic topic={topic} handleDelete={handleDeleteTopic} community={communityDetail} comment_count={commentCount} />
             </>
           )}
 
-          {commentsListMeta.pending ? (
-            <Box className={classes.loaderBox}>
-              <ESLoader />
-            </Box>
-          ) : (
-            !!commentsList &&
+          {!!commentsList &&
             !_.isEmpty(commentsList) &&
             commentsList.map((comment, i) => {
               return (
@@ -141,20 +141,21 @@ const TopicDetailContainer: React.FC = () => {
                   onReport={handleReportComment}
                 />
               )
-            })
+            })}
+          {!_.isEmpty(commentsList) && (
+            <Box display="flex" justifyContent="center" my={2}>
+              {isMobile ? (
+                <PaginationSmall page={page} pageNumber={count} setPage={setPage} disabled={commentsListMeta.pending} />
+              ) : (
+                <PaginationBig page={page} pageNumber={count} setPage={setPage} disabled={commentsListMeta.pending} />
+              )}
+            </Box>
           )}
-          <Box display="flex" justifyContent="center" my={2}>
-            {isMobile ? (
-              <PaginationSmall page={page} pageNumber={count} setPage={setPage} disabled={commentsListMeta.pending} />
-            ) : (
-              <PaginationBig page={page} pageNumber={count} setPage={setPage} disabled={commentsListMeta.pending} />
-            )}
-          </Box>
         </Box>
 
         {!isNotMember && (
           <Box className={classes.inputContainer}>
-            <CommentInput reply_param={reply} setPage={setPage} />
+            <CommentInput reply_param={reply} setPage={setPage} setCommentCount={setCommentCount} commentCount={commentCount} />
           </Box>
         )}
         {isAuthenticated && reportData && (

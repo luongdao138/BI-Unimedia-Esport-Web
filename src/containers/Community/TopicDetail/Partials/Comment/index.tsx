@@ -216,9 +216,6 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
             </Box>
           </Box>
           <Box className={classes.contentContainer}>
-            {newLineText(commentData.content)}
-            {/* TODO Just for test */}
-            {/* <Box className={classes.popcontent}>asdaasd</Box> */}
             <Linkify
               componentDecorator={(decoratedHref, decoratedText, key) => (
                 <a target="_blank" rel="noopener noreferrer" href={decoratedHref} key={key} className={classes.linkify}>
