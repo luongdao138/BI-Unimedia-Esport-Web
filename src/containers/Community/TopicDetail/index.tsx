@@ -84,7 +84,7 @@ const TopicDetailContainer: React.FC = () => {
   }, [router])
 
   useEffect(() => {
-    if (!topicDetailMeta.pending && topicDetailMeta.loaded) setCommentCount(topic.attributes.comment_count)
+    if (!topicDetailMeta.pending && topicDetailMeta.loaded && !_.isEmpty(topic)) setCommentCount(topic.attributes.comment_count)
   }, [topicDetailMeta])
 
   useEffect(() => {
@@ -133,7 +133,7 @@ const TopicDetailContainer: React.FC = () => {
 
           {!!commentsList &&
             !_.isEmpty(commentsList) &&
-            commentsList.map((comment, i) => {
+            _.map(_.reverse([...commentsList]), (comment, i) => {
               return (
                 <Comment
                   key={i}

@@ -137,6 +137,7 @@ const InfoContainer: React.FC = () => {
                   />
                 )
               })}
+
               <Box display="flex" justifyContent="center" mt={4}>
                 {isMobile ? (
                   <PaginationSmall page={page} pageNumber={count} setPage={setPage} disabled={topicListMeta.pending} />
