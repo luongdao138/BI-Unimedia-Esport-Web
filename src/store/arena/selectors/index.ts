@@ -14,15 +14,15 @@ export const getTournamentFollowersMeta = createSelector(getRoot, (state) => sta
 export const getTournamentResults = createSelector(getRoot, (state) => state.tournamentResults)
 export const getTournamentDetail = createSelector(getRoot, (state) => state.tournamentDetail)
 export const getParticipants = createSelector(getRoot, (state) => state.tournamentParticipants)
-export const getBattleRoyaleParticipants = createSelector(getRoot, (state) => {
-  const isTeam = state.tournamentDetail?.attributes.participant_type > 1
+export const getBattleRoyaleParticipants = createSelector(getRoot, getTournamentDetail, (state, arena) => {
+  const isTeam = arena?.attributes.participant_type > 1
   const ids = isTeam
-    ? (state.tournamentDetail?.attributes.my_info || []).map((a) => a.team_id)
-    : (state.tournamentDetail?.attributes.my_info || []).map((a) => a.id)
+    ? (arena?.attributes.my_info || []).map((a) => String(a.team_id))
+    : (arena?.attributes.my_info || []).map((a) => String(a.id))
   const participants = state.tournamentParticipants.map((participant) => {
     return {
       ...participant,
-      highlight: ids.includes(Number(participant.id)),
+      highlight: isTeam ? ids.includes(participant.attributes.team.data.id) : ids.includes(String(participant.id)),
     }
   })
   return participants

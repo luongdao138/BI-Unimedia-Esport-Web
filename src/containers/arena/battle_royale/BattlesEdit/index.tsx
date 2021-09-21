@@ -14,7 +14,6 @@ import { useRandomizeDialog } from '../Partials/RandomizeDialog'
 import { useFreezeDialog } from '../Partials/FreezeDialog'
 import ESLoader from '@components/FullScreenLoader'
 import useModeratorActions from '@containers/arena/hooks/useModeratorActions'
-import useBattleRoyaleScore from '@containers/arena/hooks/useBattleRoyaleScore'
 import HeaderWithButton from '@components/HeaderWithButton'
 import ButtonPrimary from '@components/ButtonPrimary'
 import ButtonPrimaryOutlined from '@components/ButtonPrimaryOutlined'
@@ -22,9 +21,7 @@ import { use100vh } from 'react-div-100vh'
 import { Colors } from '@theme/colors'
 import { ParticipantsResponse } from '@services/arena.service'
 import Avatar from '@components/Avatar'
-import BRScoreInput from '../Partials/BRScoreInput'
 import BRList from '../Partials/BRList'
-import useAddToast from '@utils/hooks/useAddToast'
 
 const participantDefault: ParticipantsResponse = {
   id: undefined,
@@ -42,8 +39,6 @@ const ArenaBattlesEdit: React.FC = () => {
   const { tournament, meta: detailMeta } = useTournamentDetail()
   const { participants, brMeta: participantsMeta, getBattleRoyaleParticipants, resetMeta } = useParticipants()
   const { freeze, randomize, setParticipants, randomizeMeta, freezeMeta, setParticipantsMeta } = useModeratorActions()
-  const { setBattleRoyaleScores, setBattleRoyaleScoresMeta, resetBattleRoyaleScoresMeta } = useBattleRoyaleScore()
-  const { addToast } = useAddToast()
 
   const [showParticipants, setShowParticipants] = useState<{ pid: number | undefined; open: boolean }>({ pid: undefined, open: false })
   const [selecteds, setSelecteds] = useState<ParticipantsResponse[]>([])
@@ -86,12 +81,6 @@ const ArenaBattlesEdit: React.FC = () => {
       )
     }
   }, [participantsMeta])
-
-  useEffect(() => {
-    if (setBattleRoyaleScoresMeta.loaded) {
-      setSelecteds(participants)
-    }
-  }, [setBattleRoyaleScoresMeta.loaded, setBattleRoyaleScoresMeta.error])
 
   useEffect(() => {
     if (router.query.hash_key && detailMeta.loaded) {
@@ -151,30 +140,6 @@ const ArenaBattlesEdit: React.FC = () => {
     setFreezable(selectedLength === data?.maxCapacity)
   }, [selecteds])
 
-  const setScores = (value: number, id: number) => {
-    const newSelecteds = selecteds.map((v) => {
-      if (v.id == id) {
-        return {
-          ...v,
-          attributes: {
-            ...v.attributes,
-            position: value,
-          },
-        }
-      }
-      return v
-    })
-    setSelecteds(newSelecteds)
-  }
-  useEffect(() => {
-    if (setBattleRoyaleScoresMeta.loaded) {
-      resetBattleRoyaleScoresMeta()
-      addToast('結果を反映しました')
-    }
-  }, [setBattleRoyaleScoresMeta.loaded])
-
-  const handleSubmitScore = () => setBattleRoyaleScores({ hash_key: tournament.attributes.hash_key, participants: selecteds })
-
   return (
     <>
       {detailMeta.loaded && participantsMeta.loaded && data && (
@@ -197,9 +162,7 @@ const ArenaBattlesEdit: React.FC = () => {
                   }
                 }}
                 highlight={v.highlight}
-              >
-                <BRScoreInput value={v.attributes.position || ''} onChange={({ target: { value } }) => setScores(Number(value), v.id)} />
-              </BRListItem>
+              />
             ))}
           </BRList>
           {tournament.attributes.is_freezed ? null : (
@@ -216,13 +179,6 @@ const ArenaBattlesEdit: React.FC = () => {
               </Box>
             </Box>
           )}
-          <Box className={classes.actionButtonContainer}>
-            <Box className={classes.actionButton}>
-              <ButtonPrimary onClick={handleSubmitScore} style={{ width: 280 }}>
-                結果を反映する
-              </ButtonPrimary>
-            </Box>
-          </Box>
           <InterestedList
             pid={showParticipants.pid}
             tournament={tournament}
