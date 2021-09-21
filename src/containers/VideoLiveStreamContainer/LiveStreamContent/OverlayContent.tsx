@@ -6,6 +6,7 @@ interface OverlayContentProps {
   buttonText?: string
   buttonDescriptionText?: string
   message?: string
+  onClickButton?: () => void
 }
 
 const OverlayContent: React.FC<OverlayContentProps> = (props) => {
@@ -14,7 +15,11 @@ const OverlayContent: React.FC<OverlayContentProps> = (props) => {
 
   return (
     <Box className={classes.container}>
-      {buttonText && <ButtonPrimary className={classes.button}>{buttonText}</ButtonPrimary>}
+      {buttonText && (
+        <ButtonPrimary className={classes.button} onClick={props?.onClickButton}>
+          {buttonText}
+        </ButtonPrimary>
+      )}
       {buttonDescriptionText && <Typography className={classes.buttonDescription}>{buttonDescriptionText}</Typography>}
       {message && <Typography className={classes.message}>{message}</Typography>}
     </Box>

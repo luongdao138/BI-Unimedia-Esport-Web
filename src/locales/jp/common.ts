@@ -1105,5 +1105,6 @@ export default {
     title_required_points: '必要ポイント',
     title_points_left_after_purchase: '交換後の残ポイント',
     purchase_ticket_success: 'チケット交換が完了しました。',
+    error_message_purchase_point: 'ポイントの購入できませんでした' + '\n' + 'しばらくお時間を空けて、再度ご購入手続きをお願いいたします',
   },
 }
