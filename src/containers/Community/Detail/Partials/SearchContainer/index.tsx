@@ -1,4 +1,4 @@
-import { Box, IconButton, OutlinedInput, Icon, Button, useMediaQuery, useTheme, Typography, Grid } from '@material-ui/core'
+import { Box, IconButton, OutlinedInput, Icon, Button, Typography, Grid } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
 import _ from 'lodash'
@@ -7,13 +7,12 @@ import { useTranslation } from 'react-i18next'
 import ESCheckbox from '@components/Checkbox'
 import ESLabel from '@components/Label'
 import TopicRowItem from '@components/TopicRowItem'
-import PaginationSmall from '../../../Partials/PaginationSmall'
 import useTopicSearch from '../useTopicSearch'
 import moment from 'moment'
 import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
 import ESLoader from '@components/Loader'
-import PaginationBig from '@containers/Community/Partials/PaginationBig'
+import Pagination from '@containers/Community/Partials/Pagination'
 
 const InfoContainer: React.FC = () => {
   const { t } = useTranslation(['common'])
@@ -24,8 +23,6 @@ const InfoContainer: React.FC = () => {
   const [showResult, setShowResult] = useState(false)
   const [isOnlyTitle, setIsOnlyTitle] = useState(false)
   const { topicList, getTopicList, topicListMeta, pages } = useTopicSearch()
-  const _theme = useTheme()
-  const isMobile = useMediaQuery(_theme.breakpoints.down('sm'))
   const hash_key = String(router.query.hash_key)
   const [page, setPage] = useState(1)
   const [count, setCount] = useState(1)
@@ -139,11 +136,7 @@ const InfoContainer: React.FC = () => {
               })}
 
               <Box display="flex" justifyContent="center" mt={4}>
-                {isMobile ? (
-                  <PaginationSmall page={page} pageNumber={count} setPage={setPage} disabled={topicListMeta.pending} />
-                ) : (
-                  <PaginationBig page={page} pageNumber={count} setPage={setPage} disabled={topicListMeta.pending} />
-                )}
+                <Pagination page={page} pageNumber={count} setPage={setPage} disabled={topicListMeta.pending} />
               </Box>
             </>
           )}

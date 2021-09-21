@@ -19,7 +19,7 @@ type Props = {
   disabled?: boolean
 }
 
-const PaginationBig: React.FC<Props> = ({ page, pageNumber, setPage, disabled }) => {
+const Pagination: React.FC<Props> = ({ page, pageNumber, setPage, disabled }) => {
   const classes = useStyles()
 
   const firstPage = () => {
@@ -154,4 +154,4 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-export default PaginationBig
+export default Pagination
