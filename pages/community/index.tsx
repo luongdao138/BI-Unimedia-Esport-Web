@@ -8,6 +8,8 @@ import { useAppSelector } from '@store/hooks'
 import { getIsAuthenticated } from '@store/auth/selectors'
 import { useEffect, useState } from 'react'
 import { ESRoutes } from '@constants/route.constants'
+import { GetStaticProps } from 'next'
+import i18n from '@locales/i18n'
 
 const CommunityPage: PageWithLayoutType = () => {
   const router = useRouter()
@@ -41,6 +43,14 @@ function formatFilter(filterText: string) {
     return filterText as CommunityFilterOption
   }
   return CommunityFilterOption.all
+}
+
+export const getStaticProps: GetStaticProps = async () => {
+  return {
+    props: {
+      title: i18n.t('common:page_head.community_default_title'),
+    },
+  }
 }
 
 export default CommunityPage

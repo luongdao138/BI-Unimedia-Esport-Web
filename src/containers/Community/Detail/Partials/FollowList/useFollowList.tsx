@@ -22,9 +22,10 @@ const useFollowList = (): {
   const membersList = useAppSelector(selectors.getCommunityMembers)
   const pages = useAppSelector(selectors.getCommunityMembersMeta)
   const membersMeta = useAppSelector(getMeta)
+
   const getMembers = (params: CommunityMembersParams) => dispatch(actions.getCommunityMembers(params))
   const resetMembers = () => dispatch(actions.resetCommunityMembers())
-  const submitMembers = (params) => dispatch(actions.memberSubmit(params))
+  const submitMembers = (params: MemberParams) => dispatch(actions.memberSubmit(params))
   const resetMeta = () => dispatch(clearMetaData(actions.getCommunityMembers.typePrefix))
 
   useEffect(() => {
@@ -33,8 +34,6 @@ const useFollowList = (): {
       dispatch(clearMetaData(actions.cancelCommunityMembers.typePrefix))
       dispatch(clearMetaData(actions.changeCommunityMemberRole.typePrefix))
       dispatch(clearMetaData(actions.removeCommunityMember.typePrefix))
-      resetMembers()
-      resetMeta()
     }
   }, [])
 

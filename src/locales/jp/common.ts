@@ -1125,6 +1125,10 @@ export default {
     arena_summary_title: 'eXeLAB｜大会総括',
     lobby_default_title: 'eXeLAB｜ロビー',
     lobby_detail_title: 'eXeLAB｜ロビー情報',
+    community_default_title: 'eXeLAB｜コミュニティ',
+    community_detail_title: 'eXeLAB｜コミュニティ情報',
+    community_topic_default_title: 'eXeLAB｜トピック',
+    community_topic_detail_title: 'eXeLAB｜トピック情報',
   },
   lobby_create: {
     tab1: '募集概要',

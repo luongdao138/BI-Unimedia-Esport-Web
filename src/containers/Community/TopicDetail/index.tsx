@@ -39,6 +39,7 @@ const TopicDetailContainer: React.FC = () => {
     commentsListMeta,
     commentsListPageMeta,
     deleteComment,
+    resetTopicMeta,
   } = useTopicDetail()
   const { getCommunityDetail, communityDetail, isAuthenticated } = useCommunityDetail()
   const [reply, setReply] = useState<{ hash_key: string; comment_no: number } | any>({})
@@ -69,6 +70,9 @@ const TopicDetailContainer: React.FC = () => {
 
   useEffect(() => {
     getCommentsList({ hash_key: String(topic_hash_key), page: 1 })
+    return () => {
+      resetTopicMeta()
+    }
   }, [])
 
   useEffect(() => {
