@@ -124,7 +124,7 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({
           </Box>
           {(isConfirm ? image : !!topicData?.attachments && topicData.attachments[0]?.assets_url) && renderClickableImage()}
           {topicData && (
-            <Box display="flex" justifyContent="flex-end" mt={2}>
+            <Box display="flex" justifyContent="flex-end" marginTop={1.75}>
               <Box className={classes.numberBox}>
                 <Icon className="fas fa-comment-alt" fontSize="small" />
               </Box>
