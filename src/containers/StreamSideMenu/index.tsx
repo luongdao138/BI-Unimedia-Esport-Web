@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Box, List, ListItem as MuiListItem, ListItemIcon, ListItemText, Typography } from '@material-ui/core'
 import Link from 'next/link'
 import { makeStyles, withStyles } from '@material-ui/core/styles'
@@ -20,6 +20,7 @@ import useMediaQuery from '@material-ui/core/useMediaQuery'
 import { useTheme } from '@material-ui/core/styles'
 import SideFooter from '@containers/SideMenu/SideFooter'
 import AppDialog from '@containers/SideMenu/AppDialog'
+import usePointsManage from '@containers/PointManage/usePointsManage'
 interface StreamSideMenuProps {
   minimizeLayout?: boolean
   isStreamer: boolean
@@ -36,11 +37,23 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
   const { selectors } = userProfileStore
   const isAuthenticated = useAppSelector(getIsAuthenticated)
   const userProfile = useAppSelector(selectors.getUserProfile)
+  const { getMyPointData, myPointsData } = usePointsManage()
+  const totalMyPoints = myPointsData?.total_point
   const theme = useTheme()
   const downSm = useMediaQuery(theme.breakpoints.down('sm'))
   const isSelected = (routeName: string): boolean => {
     return router.pathname && router.pathname.startsWith(routeName)
   }
+
+  useEffect(() => {
+    if (isAuthenticated && !myPointsData) {
+      const params = {
+        page: 1,
+        limit: 10,
+      }
+      getMyPointData(params)
+    }
+  }, [])
 
   const handleModal = (contentType: string) => {
     setModal(true)
@@ -97,10 +110,10 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
           </>
         )}
         <Box className={classes.menuWrap + getAddClass(classes.noMinimizeMenuWrap, classes.minimizeMenuWrap)}>
-          {!minimizeLayout && (
+          {!minimizeLayout && isAuthenticated && (
             <Box className={classes.wrap_point}>
               <Box className={classes.text_point}>{t('common:common.eXe_points')}</Box>
-              <Box className={classes.point}>999999</Box>
+              <Box className={classes.point}>{totalMyPoints ?? 0}</Box>
               <Box className={classes.link_point}>
                 {/* redirect to point management */}
                 <Link href={ESRoutes.USER_POINT_MANAGEMENT}>

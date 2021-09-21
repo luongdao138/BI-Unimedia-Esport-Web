@@ -122,7 +122,8 @@ const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
       Multipayment.getToken(
         {
           cardno: values.card_number.replace(/\s/g, ''),
-          expire: values.card_expire_date.replace(/[\s/]/g, ''),
+          // send expire date with format year + month
+          expire: values.card_expire_date.slice(-2) + values.card_expire_date.substring(0, 2),
           securitycode: values.card_cvc,
           holdername: values.card_name,
           tokennumber: '1',

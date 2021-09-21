@@ -114,6 +114,7 @@ const VideosTop: React.FC = () => {
     setLackedPoint(0)
     setLackedPoint(donated_point - myPoint)
     setPurchaseComment(comment)
+    setPurchaseType(PURCHASE_TYPE.PURCHASE_SUPER_CHAT)
     if (myPoint >= donated_point) {
       setShowConfirmModal(true)
     } else {
