@@ -33,7 +33,7 @@ const useDetailVideo = () => {
     changePlayedSecond,
     changeIsViewingStream,
     isViewingStream,
-    changeVideoTime
+    changeVideoTime,
   }
 }
 

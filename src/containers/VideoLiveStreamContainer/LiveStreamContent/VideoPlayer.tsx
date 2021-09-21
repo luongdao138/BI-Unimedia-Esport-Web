@@ -54,7 +54,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({ src, statusVideo }) => {
     // isViewingStream,
     // changePlayedSecond,
     // playedSecond,
-    changeVideoTime
+    changeVideoTime,
   } = useDetailVideo()
 
   const onProgress = async (event) => {
@@ -90,20 +90,20 @@ const VideoPlayer: React.FC<PlayerProps> = ({ src, statusVideo }) => {
     console.log(' 🚀 🚀 🚀 🚀 🚀 🚀 🚀 --111111 ', playedSeconds, durationPlayer)
     // trigger change streaming second in redux
     // if (Math.floor(durationPlayer) !== streamingSecond) {
-      console.log("🚀 ~ onProgress ~ durationPlayer", durationPlayer)
-      // let is_viewing_video = true
-      // if (Math.floor(playedSeconds) < Math.floor(durationPlayer)) {
-      //   is_viewing_video = false
-      // }
-      // if (isViewingStream !== is_viewing_video) {
-      //   changeIsViewingStream(is_viewing_video)
-      // }
-      changeVideoTime(Math.floor(durationPlayer), Math.floor(playedSeconds))
-      // changeStreamingSecond(Math.floor(durationPlayer))
+    console.log('🚀 ~ onProgress ~ durationPlayer', durationPlayer)
+    // let is_viewing_video = true
+    // if (Math.floor(playedSeconds) < Math.floor(durationPlayer)) {
+    //   is_viewing_video = false
+    // }
+    // if (isViewingStream !== is_viewing_video) {
+    //   changeIsViewingStream(is_viewing_video)
+    // }
+    changeVideoTime(Math.floor(durationPlayer), Math.floor(playedSeconds))
+    // changeStreamingSecond(Math.floor(durationPlayer))
     // }
     // if (Math.floor(playedSeconds) !== playedSecond) {
-      console.log("🚀 ~ onProgress ~ playedSeconds", playedSeconds)
-      // changePlayedSecond(Math.floor(playedSeconds))
+    console.log('🚀 ~ onProgress ~ playedSeconds', playedSeconds)
+    // changePlayedSecond(Math.floor(playedSeconds))
     // }
   }
   const onDuration = (duration) => {
