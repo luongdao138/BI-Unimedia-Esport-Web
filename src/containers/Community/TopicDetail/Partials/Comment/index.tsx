@@ -202,16 +202,18 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
             <Box className={classes.dateReportContainer}>
               <Typography className={classes.date}>{CommonHelper.staticSmartTime(commentData.created_at)}</Typography>
               {(isPublic || !isNotMember) && (
-                <ESMenu>
-                  {(isModerator || isOwner || isTopicOwner) && (
-                    <ESMenuItem onClick={handleDeleteOpen}>{t('common:topic_comment.delete.button')}</ESMenuItem>
-                  )}
-                  {!isOwner && (
-                    <LoginRequired>
-                      <ESMenuItem onClick={handleReport}>{t('common:topic_comment.report.button')}</ESMenuItem>
-                    </LoginRequired>
-                  )}
-                </ESMenu>
+                <Box className={classes.menuWrapper}>
+                  <ESMenu>
+                    {(isModerator || isOwner || isTopicOwner) && (
+                      <ESMenuItem onClick={handleDeleteOpen}>{t('common:topic_comment.delete.button')}</ESMenuItem>
+                    )}
+                    {!isOwner && (
+                      <LoginRequired>
+                        <ESMenuItem onClick={handleReport}>{t('common:topic_comment.report.button')}</ESMenuItem>
+                      </LoginRequired>
+                    )}
+                  </ESMenu>
+                </Box>
               )}
             </Box>
           </Box>
@@ -332,8 +334,8 @@ const useStyles = makeStyles((theme) => ({
   },
   container: {
     display: 'flex',
-    marginRight: theme.spacing(2),
-    marginLeft: theme.spacing(2),
+    marginRight: theme.spacing(3),
+    marginLeft: theme.spacing(3),
     flexDirection: 'column',
     borderTop: '2px solid rgba(255,255,255,0.1)',
     padding: `14.5px ${theme.spacing(2)}px 14.5px`,
@@ -459,7 +461,7 @@ const useStyles = makeStyles((theme) => ({
   },
   shareButton: {
     padding: theme.spacing(0.5),
-    marginRight: theme.spacing(1),
+    marginRight: -12,
     color: Colors.white_opacity[70],
   },
   mainComment: {
@@ -482,6 +484,9 @@ const useStyles = makeStyles((theme) => ({
         borderColor: '#646464 transparent transparent transparent',
       },
     },
+  },
+  menuWrapper: {
+    marginRight: -12,
   },
   [theme.breakpoints.down('sm')]: {
     imageBox: {

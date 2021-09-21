@@ -104,16 +104,18 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({
                 <Typography className={classes.date}>{CommonHelper.staticSmartTime(topicData?.created_at)}</Typography>
 
                 {(isPublic || !isNotMember) && (
-                  <ESMenu>
-                    {(isModerator || isOwner) && (
-                      <ESMenuItem onClick={handleDeleteOpen}>{t('common:topic_comment.delete.button')}</ESMenuItem>
-                    )}
-                    {!isOwner && (
-                      <LoginRequired>
-                        <ESMenuItem onClick={handleReportOpen}>{t('common:topic_comment.report.button')}</ESMenuItem>
-                      </LoginRequired>
-                    )}
-                  </ESMenu>
+                  <Box className={classes.menuWrapper}>
+                    <ESMenu>
+                      {(isModerator || isOwner) && (
+                        <ESMenuItem onClick={handleDeleteOpen}>{t('common:topic_comment.delete.button')}</ESMenuItem>
+                      )}
+                      {!isOwner && (
+                        <LoginRequired>
+                          <ESMenuItem onClick={handleReportOpen}>{t('common:topic_comment.report.button')}</ESMenuItem>
+                        </LoginRequired>
+                      )}
+                    </ESMenu>
+                  </Box>
                 )}
               </Box>
             )}
@@ -124,7 +126,7 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({
           </Box>
           {(isConfirm ? image : !!topicData?.attachments && topicData.attachments[0]?.assets_url) && renderClickableImage()}
           {topicData && (
-            <Box display="flex" justifyContent="flex-end" marginTop={1.75}>
+            <Box display="flex" justifyContent="flex-end" alignItems="flex-end" mt={2}>
               <Box className={classes.numberBox}>
                 <Icon className="fas fa-comment-alt" fontSize="small" />
               </Box>
@@ -263,6 +265,9 @@ const useStyles = makeStyles((theme) => ({
     maxHeight: 300,
     maxWidth: 300,
     objectFit: 'contain',
+  },
+  menuWrapper: {
+    marginRight: -12,
   },
   [theme.breakpoints.down('sm')]: {
     imageBox: {
