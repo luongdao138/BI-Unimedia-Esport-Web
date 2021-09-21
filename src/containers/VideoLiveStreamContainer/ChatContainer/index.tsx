@@ -677,8 +677,8 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
           //@ts-ignore
           point: point.toString(),
           is_premium: true,
-          // display_avatar_time: videoTime + purchasePoints[`p_${point}`].displayTime,
-          display_avatar_time: videoTime + 20,
+          display_avatar_time: videoTime + purchasePoints[`p_${point}`].displayTime,
+          // display_avatar_time: videoTime + 20,
         }
       }
       console.log('input', input)
