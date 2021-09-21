@@ -7,7 +7,7 @@ import ESLoader from '@components/Loader'
 import ESMenuItem from '@components/Menu/MenuItem'
 import LoginRequired from '@containers/LoginRequired'
 import { useTranslation } from 'react-i18next'
-import { Dispatch, SetStateAction, useState } from 'react'
+import { createRef, Dispatch, SetStateAction, useState } from 'react'
 import { SRLWrapper } from 'simple-react-lightbox'
 import { LIGHTBOX_OPTIONS } from '@constants/common.constants'
 import { CommentsResponse } from '@services/community.service'
@@ -19,9 +19,12 @@ import Linkify from 'react-linkify'
 import _ from 'lodash'
 import useTopicHelper from '../../useTopicHelper'
 import useTopicDetail from '../../useTopicDetail'
+import styled from 'styled-components'
+import { useRect } from '@utils/hooks/useRect'
 
-let currentReplyNumberRectLeft = null
-
+let currentReplyNumberRectLeft: number
+const StyledBox = styled(Box)``
+const contentRef = createRef<HTMLDivElement>()
 type MenuParams = {
   isTopicOwner: boolean
   isModerator: boolean
@@ -50,7 +53,8 @@ type CommunityHeaderProps = {
   onReport?: (comment: ReportData) => void
 }
 const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleReply, setOpenDelete, setSelectedCommentNo, onReport }) => {
-  const classes = useStyles({ currentReplyNumberRectLeft })
+  const contentRect = useRect(contentRef)
+  const classes = useStyles({ currentReplyNumberRectLeft, contentRect })
   const { query } = useRouter()
   const { topic_hash_key } = query
   const { t } = useTranslation(['common'])
@@ -62,7 +66,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
   const handleClickReply = (event, content) => {
     getCommentDetail({ topic_hash: topic_hash_key, comment_no: content.slice(2) })
     setReplyAnchorEl(event.currentTarget)
-    currentReplyNumberRectLeft = event.currentTarget.getBoundingClientRect().left
+    currentReplyNumberRectLeft = event.currentTarget.getBoundingClientRect().left - contentRect.left
   }
 
   const handleCloseReply = () => {
@@ -182,7 +186,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
 
   const notDeletedComment = () => {
     return (
-      <>
+      <StyledBox ref={contentRef}>
         <Box className={classes.container}>
           <Box className={classes.userContainer}>
             <Box className={classes.userInfoContainer}>
@@ -225,7 +229,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
                 </a>
               )}
             >
-              <Typography>{newLineText(commentData.content)}</Typography>
+              {newLineText(commentData.content)}
             </Linkify>
           </Box>
           {commentData.attachments &&
@@ -268,7 +272,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
             </Box>
           )}
         </Popover>
-      </>
+      </StyledBox>
     )
   }
 
@@ -445,6 +449,7 @@ const useStyles = makeStyles((theme) => ({
   },
   mainComment: {
     '& .MuiPopover-paper': {
+      left: (props: { currentReplyNumberRectLeft: number; contentRect: { left: number } }) => `${props.contentRect.left + 24}px !important`,
       padding: 16,
       border: '3px solid #646464',
       background: 'rgba(33,33,33,.9)',
@@ -456,7 +461,8 @@ const useStyles = makeStyles((theme) => ({
         content: "''",
         position: 'absolute',
         top: 'Calc(100% + 3px)',
-        left: (props: { currentReplyNumberRectLeft: number }) => `min(${props.currentReplyNumberRectLeft}px, 747px)`,
+        left: (props: { currentReplyNumberRectLeft: number; contentRect: { left: number } }) =>
+          `min(${props.currentReplyNumberRectLeft}px, 747px)`,
         marginLeft: -5,
         borderWidth: 5,
         borderStyle: 'solid',
