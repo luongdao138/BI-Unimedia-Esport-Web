@@ -47,6 +47,7 @@ const useTopicDetail = (): {
   commentsListMeta: Meta
   commentsListPageMeta: PageMeta
   commentsList: CommentsResponse[]
+  resetTopicMeta: () => void
 } => {
   const dispatch = useAppDispatch()
   const { t } = useTranslation(['common'])
@@ -92,12 +93,6 @@ const useTopicDetail = (): {
     }
   }, [deleteTopicMeta])
 
-  useEffect(() => {
-    return () => {
-      resetTopicMeta()
-    }
-  }, [])
-
   return {
     getTopicDetail,
     getCommentDetail,
@@ -116,6 +111,7 @@ const useTopicDetail = (): {
     commentsListMeta,
     commentsListPageMeta,
     createCommentMeta,
+    resetTopicMeta,
   }
 }
 
