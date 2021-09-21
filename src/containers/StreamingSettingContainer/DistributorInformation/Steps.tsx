@@ -39,8 +39,10 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, channel, hasChannel, formik
   // const [status, setStatus] = useState<boolean>(false)
 
   useEffect(() => {
-    const isRequiredFieldsValid = LiveStreamSettingHelper.checkRequiredFields(3, formik.errors)
-    setError(!isRequiredFieldsValid)
+    formik.validateForm().then(() => {
+      const isRequiredFieldsValid = LiveStreamSettingHelper.checkRequiredFields(3, formik.errors)
+      setError(!isRequiredFieldsValid)
+    })
   }, [formik?.errors?.stepSettingThree])
 
   useEffect(() => {
