@@ -19,19 +19,35 @@ const SeekBar: React.FC<Props> = ({ currentTime, durationsPlayer, videoRef }) =>
   // const [currentTimeState, setCurrentTime] = useState(0);
   // const [duration, setDuration] = useState(0)
   const [timePlayed, setTimePlayed] = useState(0)
-  // const { changePlayedSecond, playedSecond, streamingSecond, changeIsViewingStream, isViewingStream } = useDetailVideo()
+  // const { changeStreamingSecond, changePlayedSecond, playedSecond, streamingSecond, changeIsViewingStream, isViewingStream } = useDetailVideo()
 
   useEffect(() => {
+    // trigger change streaming second in redux
+    // if (Math.floor(durationsPlayer) !== streamingSecond) {
+    //   let is_viewing_video = true
+    //   if (Math.floor(currentTime) < Math.floor(durationsPlayer)) {
+    //     is_viewing_video = false
+    //   }
+    //   if (isViewingStream !== is_viewing_video) {
+    //     changeIsViewingStream(is_viewing_video)
+    //   }
+    //   changeStreamingSecond(Math.floor(durationsPlayer))
+    // }
+    // if (Math.floor(currentTime) !== playedSecond) {
+    //   changePlayedSecond(Math.floor(currentTime))
+    // }
+
+    // console.log(' 🚀 🚀 🚀 🚀 🚀 🚀 🚀  ', currentTime, durationsPlayer)
     // setCurrentTime(videoRef.current.getCurrentTime()) //
     setTimePlayed((currentTime / durationsPlayer) * 100)
   }, [currentTime, durationsPlayer])
 
   const handleChange = (_, value) => {
-    console.log('🚀 ~ 11111', value)
+    // console.log('🚀 ~ 11111', value)
     const newSecond = (value * durationsPlayer) / 100
     setTimePlayed(value)
     videoRef.current.seekTo(newSecond, 'seconds')
-    console.log('🚀 ~ handleChange', newSecond)
+    // console.log('🚀 ~ handleChange', newSecond)
     // trigger change played second in redux
     // if(Math.floor(newSecond) !== playedSecond) {
     //   changePlayedSecond(Math.floor(newSecond))

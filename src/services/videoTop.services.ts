@@ -236,6 +236,11 @@ export type StreamingChangeParams = {
   streaming_second: number
 }
 
+export type VideoTimeChangeParams = {
+  streaming_second: number
+  played_second: number
+}
+
 export type PlayedSecondChangeParams = {
   played_second: number
 }
