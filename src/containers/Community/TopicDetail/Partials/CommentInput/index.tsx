@@ -17,8 +17,10 @@ import useTopicDetail from '../../useTopicDetail'
 type CommunityHeaderProps = {
   reply_param?: { hash_key: string; comment_no: number }
   setPage: Dispatch<SetStateAction<number>>
+  setCommentCount?: Dispatch<SetStateAction<number>>
+  commentCount?: number
 }
-const Comment: React.FC<CommunityHeaderProps> = ({ reply_param, setPage }) => {
+const Comment: React.FC<CommunityHeaderProps> = ({ reply_param, setPage, setCommentCount, commentCount }) => {
   const classes = useStyles()
   const { query } = useRouter()
   const { topic_hash_key } = query
@@ -36,6 +38,16 @@ const Comment: React.FC<CommunityHeaderProps> = ({ reply_param, setPage }) => {
       setInputText(inputText.concat('>>' + reply_param.comment_no))
     }
   }, [reply_param])
+
+  useEffect(() => {
+    if (!createCommentMeta.pending && createCommentMeta.loaded) {
+      setInputText('')
+      setImageURL('')
+      setCommentCount(commentCount + 1)
+      getCommentsList({ hash_key: String(topic_hash_key) })
+      setPage(1)
+    }
+  }, [createCommentMeta])
 
   const handleUpload = (file: File) => {
     setUploading(true)
@@ -66,12 +78,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ reply_param, setPage }) => {
       }
       if (!createCommentMeta.pending) {
         createComment(data)
-        setPage(1)
       }
-
-      getCommentsList({ hash_key: String(topic_hash_key), page: 1 })
-      setInputText('')
-      setImageURL('')
     } else {
       dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: NG_WORD_AREA.chat_section }))
     }
