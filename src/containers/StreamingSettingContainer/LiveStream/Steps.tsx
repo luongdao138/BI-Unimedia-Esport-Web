@@ -77,8 +77,10 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik }) => {
   useEffect(() => {
     // setCounter(counter + 1)
     // removeField()
-    const isRequiredFieldsValid = LiveStreamSettingHelper.checkRequiredFields(1, formik.errors)
-    setError(!isRequiredFieldsValid)
+    formik.validateForm().then(() => {
+      const isRequiredFieldsValid = LiveStreamSettingHelper.checkRequiredFields(1, formik.errors)
+      setError(!isRequiredFieldsValid)
+    })
   }, [formik.errors.stepSettingOne])
 
   useEffect(() => {
@@ -321,7 +323,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik }) => {
                     src={formik?.values?.stepSettingOne?.thumbnail}
                     onChange={handleUpload}
                     isUploading={isUploading}
-                    disabled={false}
+                    disabled={isFirstStep() && !formik?.values?.stepSettingOne?.thumbnail ? false : true}
                     size="big"
                     onOpenStateChange={handleCoverDailogStateChange}
                   />
@@ -729,7 +731,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik }) => {
                 </Box>
                 <Box className={classes.actionButton}>
                   <ButtonPrimary round fullWidth onClick={onConfirm}>
-                    {showReNew ? i18n.t('common:streaming_setting_screen.update') : t('common:streaming_setting_screen.start_live_stream')}
+                    {isLive ? i18n.t('common:streaming_setting_screen.update') : t('common:streaming_setting_screen.start_live_stream')}
                   </ButtonPrimary>
                 </Box>
               </Box>
@@ -822,9 +824,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     paddingTop: 27,
   },
+  // coverImg: {
+  //   width: 200,
+  //   // height: 278,
+  //   objectFit: 'cover',
+  //   objectPosition: '50% 50%',
+  //   borderRadius: 4,
+  //   border: `1px solid rgba(255,255,255,0.3)`,
+  // },
   coverImg: {
-    width: 200,
-    // height: 278,
+    width: '100%',
     objectFit: 'cover',
     objectPosition: '50% 50%',
     borderRadius: 4,

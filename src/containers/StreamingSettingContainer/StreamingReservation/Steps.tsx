@@ -109,8 +109,10 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik }) => {
   }
 
   useEffect(() => {
-    setCounter(counter + 1)
-    onHandleError()
+    formik.validateForm().then(() => {
+      setCounter(counter + 1)
+      onHandleError()
+    })
   }, [formik?.errors?.stepSettingTwo, type])
 
   const onHandleError = () => {
@@ -327,7 +329,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik }) => {
                     src={formik?.values?.stepSettingTwo?.thumbnail}
                     onChange={handleUpload}
                     isUploading={isUploading}
-                    disabled={!isFirstStep()}
+                    disabled={isFirstStep() && !formik?.values?.stepSettingTwo?.thumbnail ? false : true}
                     size="big"
                     onOpenStateChange={handleCoverDailogStateChange}
                   />
@@ -744,9 +746,12 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik }) => {
                 name="stepSettingTwo.stream_url"
                 labelPrimary={i18n.t('common:streaming_setting_screen.stream_url')}
                 placeholder={
-                  isFirstStep()
-                    ? !formik?.values?.stepSettingTwo?.stream_url && i18n.t('common:streaming_setting_screen.stream_mask')
-                    : !formik?.values?.stepSettingTwo?.stream_url && t('common:streaming_setting_screen.issued_stream')
+                  // isFirstStep()
+                  //   ? !formik?.values?.stepSettingTwo?.stream_url && i18n.t('common:streaming_setting_screen.stream_mask')
+                  //   : !formik?.values?.stepSettingTwo?.stream_url && t('common:streaming_setting_screen.issued_stream')
+                  formik?.values?.stepSettingTwo?.stream_url
+                    ? formik?.values?.stepSettingTwo?.stream_url
+                    : t('common:streaming_setting_screen.issued_stream')
                 }
                 type={showStreamURL ? 'text' : 'password'}
                 endAdornment={
@@ -759,8 +764,13 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik }) => {
                         disableRipple
                         color="inherit"
                         onMouseDown={() => setShowStreamURL(!showStreamURL)}
+                        disabled={!formik?.values?.stepSettingTwo?.stream_url}
                       >
-                        {showStreamURL ? <img src="/images/password_show.svg" /> : <img src="/images/password_hide.svg" />}
+                        {showStreamURL ? (
+                          <img src="/images/password_show.svg" className={!formik?.values?.stepSettingTwo?.stream_url && classes.iconEye} />
+                        ) : (
+                          <img src="/images/password_hide.svg" className={!formik?.values?.stepSettingTwo?.stream_url && classes.iconEye} />
+                        )}
                       </IconButton>
                     </InputAdornment>
                   ) : (
@@ -781,9 +791,9 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik }) => {
                   py={1}
                   display="flex"
                   justifyContent="flex-end"
-                  className={classes.urlCopy}
+                  className={formik?.values?.stepSettingTwo?.stream_url ? classes.copyBtn : classes.copyBtnDisable}
                   onClick={() => {
-                    handleCopy(KEY_TYPE.URL)
+                    formik?.values?.stepSettingTwo?.stream_url && handleCopy(KEY_TYPE.URL)
                   }}
                 >
                   <Icon className={`fa fa-link ${classes.link}`} fontSize="small" />
@@ -814,9 +824,12 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik }) => {
                 name="stepSettingTwo.stream_key"
                 labelPrimary={i18n.t('common:streaming_setting_screen.stream_key')}
                 placeholder={
-                  isFirstStep()
-                    ? !formik?.values?.stepSettingTwo?.stream_key && i18n.t('common:streaming_setting_screen.stream_mask')
-                    : !formik?.values?.stepSettingTwo?.stream_key && t('common:streaming_setting_screen.issued_stream')
+                  // isFirstStep()
+                  //   ? !formik?.values?.stepSettingTwo?.stream_key && i18n.t('common:streaming_setting_screen.stream_mask')
+                  //   : !formik?.values?.stepSettingTwo?.stream_key && t('common:streaming_setting_screen.issued_stream')
+                  formik?.values?.stepSettingTwo?.stream_key
+                    ? formik?.values?.stepSettingTwo?.stream_key
+                    : t('common:streaming_setting_screen.issued_stream')
                 }
                 type={showStreamKey ? 'text' : 'password'}
                 endAdornment={
@@ -828,9 +841,14 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik }) => {
                         size="small"
                         disableRipple
                         color="inherit"
+                        disabled={!formik?.values?.stepSettingTwo?.stream_key}
                         onMouseDown={() => setShowStreamKey(!showStreamKey)}
                       >
-                        {showStreamKey ? <img src="/images/password_show.svg" /> : <img src="/images/password_hide.svg" />}
+                        {showStreamKey ? (
+                          <img src="/images/password_show.svg" className={!formik?.values?.stepSettingTwo?.stream_key && classes.iconEye} />
+                        ) : (
+                          <img src="/images/password_hide.svg" className={!formik?.values?.stepSettingTwo?.stream_key && classes.iconEye} />
+                        )}
                       </IconButton>
                     </InputAdornment>
                   ) : (
@@ -851,9 +869,9 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik }) => {
                   py={1}
                   display="flex"
                   justifyContent="flex-end"
-                  className={classes.urlCopy}
+                  className={formik?.values?.stepSettingTwo?.stream_key ? classes.copyBtn : classes.copyBtnDisable}
                   onClick={() => {
-                    handleCopy(KEY_TYPE.KEY)
+                    formik?.values?.stepSettingTwo?.stream_key && handleCopy(KEY_TYPE.KEY)
                   }}
                 >
                   <Icon className={`fa fa-link ${classes.link}`} fontSize="small" />
@@ -952,6 +970,20 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: '#EB5686',
     // textDecoration: 'underline',
   },
+  copyBtn: {
+    paddingLeft: 12,
+    cursor: 'pointer',
+    color: '#EB5686',
+    // textDecoration: 'underline',
+  },
+  copyBtnDisable: {
+    paddingLeft: 12,
+    color: '#FFFFFF30',
+    '&:focus': {
+      color: '#ffffff9c',
+    },
+    cursor: 'default',
+  },
   linkDisable: {
     marginLeft: 12,
     // cursor: 'pointer',
@@ -1016,8 +1048,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   coverImg: {
-    width: 200,
-    // height: 278,
+    width: '100%',
     objectFit: 'cover',
     objectPosition: '50% 50%',
     borderRadius: 4,
@@ -1101,5 +1132,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& :-webkit-autofill': {
       WebkitBoxShadow: '0 0 0 100px #000000 inset',
     },
+  },
+  iconEye: {
+    filter: 'opacity(0.5)',
   },
 }))
