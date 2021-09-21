@@ -18,6 +18,7 @@ const useDetailVideo = () => {
   const playedSecond = useAppSelector(selectors.playedSecond)
   const isViewingStream = useAppSelector(selectors.isViewingStream)
   const changeStreamingSecond = (streaming_second) => dispatch(actions.changeStreamingSecond({ streaming_second }))
+  const changeVideoTime = (streaming_second, played_second) => dispatch(actions.changeVideoTime({ streaming_second, played_second }))
   const changePlayedSecond = (played_second) => dispatch(actions.changePlayedSecond({ played_second }))
   const changeIsViewingStream = (is_viewing_stream) => dispatch(actions.changeIsViewingStream({ is_viewing_stream }))
 
@@ -32,6 +33,7 @@ const useDetailVideo = () => {
     changePlayedSecond,
     changeIsViewingStream,
     isViewingStream,
+    changeVideoTime
   }
 }
 

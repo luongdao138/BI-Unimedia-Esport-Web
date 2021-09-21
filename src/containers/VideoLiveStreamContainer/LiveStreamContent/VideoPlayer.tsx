@@ -48,18 +48,19 @@ const VideoPlayer: React.FC<PlayerProps> = ({ src, statusVideo }) => {
   })
 
   const {
-    changeStreamingSecond,
-    streamingSecond,
-    changeIsViewingStream,
-    isViewingStream,
-    changePlayedSecond,
-    playedSecond,
+    // changeStreamingSecond,
+    // streamingSecond,
+    // changeIsViewingStream,
+    // isViewingStream,
+    // changePlayedSecond,
+    // playedSecond,
+    changeVideoTime
   } = useDetailVideo()
 
   const onProgress = async (event) => {
     setState({ ...state, loading: false })
     if (isLive) {
-      console.log('🚀 ~ onProgress ~ 1111-----playedSeconds', event)
+      // console.log('🚀 ~ onProgress ~ 1111-----playedSeconds', event)
       //live stream => duration = current
       // setDurationPlayer(event.playedSeconds)
       // setDurationPlayer(event.playedSeconds)
@@ -71,20 +72,39 @@ const VideoPlayer: React.FC<PlayerProps> = ({ src, statusVideo }) => {
     }
     setPlayedSeconds(event.playedSeconds)
 
+    // // trigger change streaming second in redux
+    // if (Math.floor(event.loadedSeconds) !== streamingSecond) {
+    //   let is_viewing_video = true
+    //   if (Math.floor(event.playedSeconds) < Math.floor(event.loadedSeconds)) {
+    //     is_viewing_video = false
+    //   }
+    //   if (isViewingStream !== is_viewing_video) {
+    //     changeIsViewingStream(is_viewing_video)
+    //   }
+    //   changeStreamingSecond(Math.floor(event.loadedSeconds))
+    // }
+    // if (Math.floor(event.playedSeconds) !== playedSecond) {
+    //   changePlayedSecond(Math.floor(event.playedSeconds))
+    // }
+
+    console.log(' 🚀 🚀 🚀 🚀 🚀 🚀 🚀 --111111 ', playedSeconds, durationPlayer)
     // trigger change streaming second in redux
-    if (Math.floor(event.loadedSeconds) !== streamingSecond) {
-      let is_viewing_video = true
-      if (Math.floor(event.playedSeconds) < Math.floor(event.loadedSeconds)) {
-        is_viewing_video = false
-      }
-      if (isViewingStream !== is_viewing_video) {
-        changeIsViewingStream(is_viewing_video)
-      }
-      changeStreamingSecond(Math.floor(event.loadedSeconds))
-    }
-    if (Math.floor(event.playedSeconds) !== playedSecond) {
-      changePlayedSecond(Math.floor(event.playedSeconds))
-    }
+    // if (Math.floor(durationPlayer) !== streamingSecond) {
+      console.log("🚀 ~ onProgress ~ durationPlayer", durationPlayer)
+      // let is_viewing_video = true
+      // if (Math.floor(playedSeconds) < Math.floor(durationPlayer)) {
+      //   is_viewing_video = false
+      // }
+      // if (isViewingStream !== is_viewing_video) {
+      //   changeIsViewingStream(is_viewing_video)
+      // }
+      changeVideoTime(Math.floor(durationPlayer), Math.floor(playedSeconds))
+      // changeStreamingSecond(Math.floor(durationPlayer))
+    // }
+    // if (Math.floor(playedSeconds) !== playedSecond) {
+      console.log("🚀 ~ onProgress ~ playedSeconds", playedSeconds)
+      // changePlayedSecond(Math.floor(playedSeconds))
+    // }
   }
   const onDuration = (duration) => {
     if (!isLive) {

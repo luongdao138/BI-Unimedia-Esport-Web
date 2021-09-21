@@ -130,4 +130,8 @@ export default createReducer(initialState, (builder) => {
   builder.addCase(actions.changeIsViewingStream, (state, action) => {
     state.is_viewing_stream = action.payload.is_viewing_stream
   })
+  builder.addCase(actions.changeVideoTime, (state, action) => {
+    state.streaming_second = action.payload.streaming_second
+    state.played_second = action.payload.played_second
+  })
 })

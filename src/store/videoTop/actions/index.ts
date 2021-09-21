@@ -164,6 +164,7 @@ export const resetLive = createAction(ACTION_VIDEO_TOP.RESET_LIVE)
 export const resetSchedule = createAction(ACTION_VIDEO_TOP.RESET_SCHEDULE)
 export const resetArchive = createAction(ACTION_VIDEO_TOP.RESET_ARCHIVE)
 export const changeStreamingSecond = createAction<services.StreamingChangeParams>(ACTION_VIDEO_TOP.CHANGE_STREAMING_SECOND)
+export const changeVideoTime = createAction<services.VideoTimeChangeParams>(ACTION_VIDEO_TOP.CHANGE_VIDEO_TIME)
 export const changePlayedSecond = createAction<services.PlayedSecondChangeParams>(ACTION_VIDEO_TOP.CHANGE_PLAYED_SECOND)
 export const changeIsViewingStream = createAction<services.ChangeIsViewingStreamParams>(ACTION_VIDEO_TOP.CHANGE_IS_VIEWING_STREAM)
 
