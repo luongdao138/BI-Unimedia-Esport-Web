@@ -20,6 +20,7 @@ import { REPORT_TYPE } from '@constants/common.constants'
 import DiscardDialog from '@containers/Community/Partials/DiscardDialog'
 import { useTranslation } from 'react-i18next'
 import ESReport from '@containers/Report'
+import useDocTitle from '@utils/hooks/useDocTitle'
 
 const TopicDetailContainer: React.FC = () => {
   const { t } = useTranslation(['common'])
@@ -53,6 +54,7 @@ const TopicDetailContainer: React.FC = () => {
   const [count, setCount] = useState(1)
   const [commentCount, setCommentCount] = useState<number>()
   const [render, setRender] = useState<boolean>(false)
+  const { changeTitle } = useDocTitle()
 
   const data = topic?.attributes
 
@@ -96,6 +98,13 @@ const TopicDetailContainer: React.FC = () => {
       setCount(commentsListPageMeta?.total_pages)
     }
   }, [commentsListMeta])
+
+  useEffect(() => {
+    if (topic) {
+      const title = `${t('common:page_head.community_topic_detail_title')}｜${topic?.attributes?.title || ''}`
+      changeTitle(title)
+    }
+  }, [topic])
 
   useEffect(() => {
     if (communityDetail && !isAutomatic && isNotMember) {
