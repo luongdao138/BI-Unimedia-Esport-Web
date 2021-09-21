@@ -2,9 +2,8 @@ import React, { useEffect, useState } from 'react'
 import TopicDetailHeader from '@containers/Community/TopicDetail/Partials/TopicDetailHeader'
 import Comment, { ReportData } from '@containers/Community/TopicDetail/Partials/Comment'
 import MainTopic from '@containers/Community/TopicDetail/Partials/MainTopic'
-import { Box, useMediaQuery, useTheme, makeStyles, Theme } from '@material-ui/core'
-import PaginationSmall from '../Partials/PaginationSmall'
-import PaginationBig from '../Partials/PaginationBig'
+import { Box, makeStyles, Theme } from '@material-ui/core'
+import Pagination from '../Partials/Pagination'
 import CommentInput from './Partials/CommentInput'
 import useTopicDetail from './useTopicDetail'
 import { Colors } from '@theme/colors'
@@ -24,8 +23,6 @@ import useDocTitle from '@utils/hooks/useDocTitle'
 
 const TopicDetailContainer: React.FC = () => {
   const { t } = useTranslation(['common'])
-  const _theme = useTheme()
-  const isMobile = useMediaQuery(_theme.breakpoints.down('sm'))
   const classes = useStyles()
   const router = useRouter()
   const { back } = useRouter()
@@ -157,11 +154,7 @@ const TopicDetailContainer: React.FC = () => {
             })}
           {!_.isEmpty(commentsList) && (
             <Box display="flex" justifyContent="center" my={2}>
-              {isMobile ? (
-                <PaginationSmall page={page} pageNumber={count} setPage={setPage} disabled={commentsListMeta.pending} />
-              ) : (
-                <PaginationBig page={page} pageNumber={count} setPage={setPage} disabled={commentsListMeta.pending} />
-              )}
+              <Pagination page={page} pageNumber={count} setPage={setPage} disabled={commentsListMeta.pending} />
             </Box>
           )}
         </Box>
