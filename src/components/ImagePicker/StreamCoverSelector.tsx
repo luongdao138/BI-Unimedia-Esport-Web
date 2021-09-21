@@ -115,7 +115,7 @@ const StreamCoverSelector: React.FC<StreamCoverSelectorProps> = ({ src, ratio, c
             setErrorMessage('')
           } else {
             setError(true)
-            setErrorMessage(i18n.t('common:messages.file_min_width'))
+            setErrorMessage(i18n.t('common:messages.file_size_2mb_limit'))
           }
         }
         // setFile(reader.result)
