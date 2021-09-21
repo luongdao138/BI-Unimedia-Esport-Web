@@ -137,6 +137,10 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
   useEffect(() => {
     if (followCommunityMeta.loaded && isCommunityAutomatic) {
       handleChangeRole(ROLE_TYPES.IS_FOLLOWING, true)
+      dispatch(commonActions.addToast(t('common:community.toast_follow')))
+    }
+    if (followCommunityMeta.loaded && !isCommunityAutomatic) {
+      dispatch(commonActions.addToast(t('common:community.toast_follow_manual_approval')))
     }
   }, [followCommunityMeta])
 
@@ -149,6 +153,8 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
   useEffect(() => {
     if (unfollowCommunityPendingMeta.loaded) {
       handleChangeRole(ROLE_TYPES.IS_FOLLOWING, false)
+      dispatch(commonActions.addToast(t('common:community.toast_cancel_follow_request')))
+      setIsDiscardApplying(false)
     }
   }, [unfollowCommunityPendingMeta])
 
@@ -156,9 +162,6 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
     followCommunity(String(hash_key))
     if (!isCommunityAutomatic) {
       setIsRequested(true)
-      dispatch(commonActions.addToast(t('common:community.toast_follow_manual_approval')))
-    } else {
-      dispatch(commonActions.addToast(t('common:community.toast_follow')))
     }
   }
 
@@ -177,8 +180,6 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
 
   const unfollowApplyingDialogHandle = () => {
     unfollowCommunityPending(String(hash_key))
-    dispatch(commonActions.addToast(t('common:community.toast_cancel_follow_request')))
-    setIsDiscardApplying(false)
   }
   const cancelApplyingHandle = () => {
     setIsDiscardApplying(true)

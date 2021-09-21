@@ -65,6 +65,13 @@ const FollowList: React.FC<Props> = ({ community }) => {
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   useEffect(() => {
+    return () => {
+      resetMembers()
+      resetMeta()
+    }
+  }, [])
+
+  useEffect(() => {
     if (isSubmitting) {
       submitMembers(submitParams)
       setSubmitParams({ ...initialValue, hash_key: hash_key })
