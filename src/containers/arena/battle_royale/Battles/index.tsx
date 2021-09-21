@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import { Container } from '@material-ui/core'
 import useTournamentDetail from '@containers/arena/hooks/useTournamentDetail'
 import HeaderWithButton from '@components/HeaderWithButton'
 import Avatar from '@components/Avatar'
@@ -13,6 +12,9 @@ import useBattleRoyaleScore from '@containers/arena/hooks/useBattleRoyaleScore'
 import useAddToast from '@utils/hooks/useAddToast'
 import { ParticipantsResponse } from '@services/arena.service'
 import BRScoreInput from '../Partials/BRScoreInput'
+import BRList from '../Partials/BRList'
+import { Typography, Box } from '@material-ui/core'
+import _ from 'lodash'
 
 const ArenaBattles: React.FC = () => {
   const router = useRouter()
@@ -61,12 +63,27 @@ const ArenaBattles: React.FC = () => {
     }
   }, [setBattleRoyaleScoresMeta.loaded])
 
+  const getInputColumnName = () => {
+    const rule = _.get(tournament, 'attributes.rule') as string
+    switch (rule) {
+      case 'score_attack':
+        return 'スコア'
+      case 'time_attack':
+        return 'タイム'
+      default:
+        return '順位'
+    }
+  }
+
   const handleSubmitScore = () => setBattleRoyaleScores({ hash_key: tournament.attributes.hash_key, participants: selecteds })
 
   return (
     <>
       {detailMeta.loaded && <HeaderWithButton title={tournament.attributes.title} />}
-      <Container maxWidth="lg" className={classes.listContainer}>
+      <Box pt={3} pb={3} textAlign="center">
+        <Typography>スコアを入力してください</Typography>
+      </Box>
+      <BRList headers={['プレイヤー', getInputColumnName()]} className={classes.listContainer}>
         {selecteds.map((v, i) => (
           <BRListItem
             key={i}
@@ -75,19 +92,32 @@ const ArenaBattles: React.FC = () => {
             textSecondary={v.attributes.user?.user_code || ''}
             highlight={v.highlight}
           >
-            <BRScoreInput value={v.attributes.position || ''} onChange={({ target: { value } }) => setScores(Number(value), v.id)} />
+            <BRScoreInput
+              value={v.attributes.position || ''}
+              onChange={({ target: { value } }) => setScores(Number(value), v.id)}
+              type={tournament.attributes.rule}
+            />
           </BRListItem>
         ))}
-      </Container>
+      </BRList>
       <button onClick={handleSubmitScore}>Submit Score</button>
       <ESLoader open={detailMeta.pending || participantsMeta.pending} />
     </>
   )
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   listContainer: {
     paddingBottom: 80,
+    paddingLeft: theme.spacing(3),
+    paddingRight: theme.spacing(10),
+  },
+  [theme.breakpoints.down('sm')]: {
+    listContainer: {
+      paddingBottom: 120,
+      paddingLeft: theme.spacing(2),
+      paddingRight: theme.spacing(2),
+    },
   },
 }))
 

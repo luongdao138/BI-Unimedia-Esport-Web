@@ -1,40 +1,38 @@
-import ESInput from '@components/Input'
-import { OutlinedInputProps } from '@material-ui/core'
+import BRInput from './BRInput'
+import { OutlinedInputProps, Box, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
-import { Colors } from '@theme/colors'
+import { TournamentRule } from '@services/arena.service'
 
-const BRScoreInput: React.FC<OutlinedInputProps> = (props) => {
+const BRScoreInput: React.FC<OutlinedInputProps & { type: TournamentRule }> = ({ type, ...props }) => {
   const classes = useStyles()
-  return (
-    <div className={classes.scoreWrap}>
-      <ESInput {...props} />
-    </div>
-  )
+
+  if (type === 'battle_royale') {
+    return (
+      <div className={classes.scoreInputWrap}>
+        <BRInput {...props} placeholder="未入力" />
+        <Box className={classes.rankTextHolder}>
+          <Typography className={classes.sign}>位</Typography>
+        </Box>
+      </div>
+    )
+  } else if (type === 'time_attack') {
+    return <BRInput {...props} placeholder="未入力" />
+  } else {
+    return <BRInput {...props} placeholder="未入力" />
+  }
 }
 
 const useStyles = makeStyles(() => ({
-  scoreWrap: {
-    width: '100%',
-    '& .MuiOutlinedInput-inputMarginDense': {
-      paddingTop: 6,
-      paddingBottom: 6,
-      backgroundColor: Colors.white_opacity['10'],
-      borderRadius: 5,
-    },
-    '& .MuiOutlinedInput-root': {
-      borderRadius: 5,
-    },
-
-    '& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline': {
-      borderWidth: 0,
-    },
-    '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-inputMarginDense': {
-      borderWidth: 0,
-      backgroundColor: Colors.white_opacity['7'],
-    },
-    '& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline': {
-      borderWidth: 0,
-    },
+  scoreInputWrap: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  rankTextHolder: {
+    paddingRight: 12,
+    paddingLeft: 12,
+  },
+  sign: {
+    fontWeight: 'bold',
   },
 }))
 
