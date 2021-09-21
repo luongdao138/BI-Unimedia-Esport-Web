@@ -144,7 +144,9 @@ const TopicCreate: React.FC = () => {
               <Icon className="fa fa-arrow-left" fontSize="small" />
             </IconButton>
             <Box pl={2}>
-              <Typography variant="h2">{isConfirm ? i18n.t('common:topic_create.title') : i18n.t('common:topic_create.title')}</Typography>
+              <Typography variant="h2">
+                {isConfirm ? i18n.t('common:topic_create.confirm') : i18n.t('common:topic_create.title')}
+              </Typography>
             </Box>
           </Box>
         </Box>
