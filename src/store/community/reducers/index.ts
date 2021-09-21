@@ -50,7 +50,7 @@ const initialState: StateType = {
   topicList: [],
   topicDetail: null,
   commentsList: [],
-  communityDetail: undefined,
+  communityDetail: null,
 }
 
 export default createReducer(initialState, (builder) => {
