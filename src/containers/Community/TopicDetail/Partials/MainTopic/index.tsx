@@ -106,12 +106,10 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({
                 {(isPublic || !isNotMember) && (
                   <Box className={classes.menuWrapper}>
                     <ESMenu>
-                      {(isModerator || isOwner) && (
-                        <ESMenuItem onClick={handleDeleteOpen}>{t('common:topic_comment.delete.button')}</ESMenuItem>
-                      )}
+                      {(isModerator || isOwner) && <ESMenuItem onClick={handleDeleteOpen}>{t('common:topic.delete.button')}</ESMenuItem>}
                       {!isOwner && (
                         <LoginRequired>
-                          <ESMenuItem onClick={handleReportOpen}>{t('common:topic_comment.report.button')}</ESMenuItem>
+                          <ESMenuItem onClick={handleReportOpen}>{t('common:topic.report.button')}</ESMenuItem>
                         </LoginRequired>
                       )}
                     </ESMenu>
