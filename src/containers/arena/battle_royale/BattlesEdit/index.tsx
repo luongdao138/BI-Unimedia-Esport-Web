@@ -153,7 +153,7 @@ const ArenaBattlesEdit: React.FC = () => {
               <BRListItem
                 key={i}
                 avatar={<Avatar alt={v.attributes.name || ''} src={v.attributes.avatar_url || ''} size={26} />}
-                text={v.attributes.name}
+                text={v.attributes.user?.user_code ? v.attributes.name : v.attributes.team?.data.attributes.name}
                 textSecondary={v.attributes.user?.user_code || ''}
                 onClick={() => {
                   if (data?.memberSelectable) {

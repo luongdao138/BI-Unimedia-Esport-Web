@@ -325,6 +325,7 @@ export type ParticipantsResponse = {
           members: {
             user_id: number
           }[]
+          name: string
         }
         id: string
       }
