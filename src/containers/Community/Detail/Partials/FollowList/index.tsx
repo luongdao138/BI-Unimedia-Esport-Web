@@ -12,12 +12,13 @@ import ESStickyFooter from '@components/StickyFooter'
 import ButtonPrimary from '@components/ButtonPrimary'
 import { FormatHelper } from '@utils/helpers/FormatHelper'
 import useCommunityHelper from '@containers/Community/hooks/useCommunityHelper'
-import { CommunityDetail, CommunityMember, CommunityMemberRole } from '@services/community.service'
+import { CommunityDetail, CommunityMember, CommunityMemberRole, MemberParams } from '@services/community.service'
 import UserSelectBoxList from '../../../Partials/UserSelectBoxList'
 import useFollowList from './useFollowList'
 import _ from 'lodash'
 import ESLoader from '@components/Loader'
 import { MEMBER_ROLE } from '@constants/community.constants'
+import useCommunityDetail from '../../useCommunityDetail'
 
 type Props = {
   community: CommunityDetail
@@ -34,27 +35,85 @@ enum MemberSection {
   participating,
 }
 
+const initialValue: MemberParams = {
+  approveParams: [],
+  cancelParams: [],
+  removeParams: [],
+  changeRoleToOrganizer: {
+    member_ids: [],
+    member_role: 0,
+  },
+  changeRoleToMember: {
+    member_ids: [],
+    member_role: 0,
+  },
+  hash_key: '',
+}
+
 const FollowList: React.FC<Props> = ({ community }) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const hash_key = community.attributes.hash_key
   const [open, setOpen] = useState(false)
   const { isModerator } = useCommunityHelper(community)
-  const {
-    getMembers,
-    membersList,
-    pages,
-    resetMembers,
-    membersMeta,
-    approveMembers,
-    cancelMembers,
-    changeMemberRole,
-    removeMember,
-    sendToast,
-  } = useFollowList()
+  const { getMembers, membersList, pages, resetMembers, membersMeta, submitMembers, resetMeta } = useFollowList()
+  const { getCommunityDetail } = useCommunityDetail()
   const [hasChanged, setHasChanged] = useState(false)
+  const [submitParams, setSubmitParams] = useState<MemberParams | null>(initialValue)
+  const [changedGroupedMembers, setChangedGroupedMembers] = useState<GroupedMembers[]>(null)
   const [groupedMembers, setGroupedMembers] = useState<GroupedMembers[]>([])
-  const [initialValue, setInitialValue] = useState<GroupedMembers[]>([])
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
+  useEffect(() => {
+    if (isSubmitting) {
+      submitMembers(submitParams)
+      setSubmitParams({ ...initialValue, hash_key: hash_key })
+      setIsSubmitting(false)
+    }
+  }, [isSubmitting])
+
+  const approve = (data: CommunityMember, index) => {
+    index == 0
+      ? setSubmitParams((prev) => {
+          return { ...prev, approveParams: [...prev?.approveParams, data.attributes.id] }
+        })
+      : setSubmitParams((prev) => {
+          return {
+            ...prev,
+            changeRoleToMember: {
+              member_ids: [...prev?.changeRoleToMember.member_ids, data.attributes.id],
+              member_role: MEMBER_ROLE.MEMBER,
+            },
+          }
+        })
+  }
+  const cancel = (data: CommunityMember) => {
+    setSubmitParams((prev) => {
+      return { ...prev, cancelParams: [...prev?.cancelParams, data.attributes.id] }
+    })
+  }
+  const changeRole = (data: CommunityMember) => {
+    setSubmitParams((prev) => {
+      return {
+        ...prev,
+        changeRoleToOrganizer: {
+          member_ids: [...prev?.changeRoleToOrganizer.member_ids, data.attributes.id],
+          member_role: MEMBER_ROLE.CO_ORGANIZER,
+        },
+      }
+    })
+  }
+  const remove = (data: CommunityMember) => {
+    setSubmitParams((prev) => {
+      return { ...prev, removeParams: [...prev?.removeParams, data.attributes.id] }
+    })
+  }
+  const actionHandler = {
+    [MEMBER_ROLE.MEMBER]: approve,
+    [MEMBER_ROLE.NOT_MEMBER]: cancel,
+    [MEMBER_ROLE.CO_ORGANIZER]: changeRole,
+    [MEMBER_ROLE.LEAVE]: remove,
+  }
 
   useEffect(() => {
     if (membersList) {
@@ -74,7 +133,7 @@ const FollowList: React.FC<Props> = ({ community }) => {
       !data[MemberSection.applying]?.isApplying && data.unshift({ value: [] } as GroupedMembers)
       !data[MemberSection.participating] && data.push({ value: [] } as GroupedMembers)
       setGroupedMembers(data)
-      setInitialValue(data)
+      setChangedGroupedMembers(data)
     }
   }, [membersList])
 
@@ -84,13 +143,16 @@ const FollowList: React.FC<Props> = ({ community }) => {
 
   const handleClose = () => {
     setOpen(false)
+    getCommunityDetail(hash_key)
   }
 
   useEffect(() => {
     if (open) {
+      setSubmitParams({ ...initialValue, hash_key: hash_key })
       getMembers({ hash_key: hash_key, role: CommunityMemberRole.all, page: 1 })
     } else {
       resetMembers()
+      resetMeta()
     }
   }, [open])
 
@@ -103,79 +165,27 @@ const FollowList: React.FC<Props> = ({ community }) => {
     }
   }
 
-  const getDetailAndToast = () => {
-    getMembers({ hash_key: hash_key, role: CommunityMemberRole.all, page: 1 })
-    sendToast(t('common:community.change_applying_members_toast'))
-  }
-
-  const handleApplyingParam = (data, role) => {
-    return _.map(
-      _.filter(data, (d) => handleValue(d.attributes.member_role) == role),
-      (m) => m.attributes.id
-    )
-  }
-
-  const handleValue = (value) => {
-    switch (Number(value)) {
-      case MEMBER_ROLE.ON_HOLD:
-        return MEMBER_ROLE.REQUESTED
-      case MEMBER_ROLE.NOT_MEMBER:
-        return null
-      default:
-        return Number(value)
-    }
-  }
-
-  const handleSubmit = async () => {
-    const applyingData: CommunityMember[] = _.differenceWith(
-      groupedMembers[MemberSection.applying].value,
-      initialValue[MemberSection.applying].value,
-      _.isEqual
-    )
-    const participatingData: CommunityMember[] =
-      groupedMembers[MemberSection.participating] &&
-      _.differenceWith(groupedMembers[MemberSection.participating].value, initialValue[MemberSection.participating].value, _.isEqual)
-
-    let approveUsers, cancelUsers, makeCoOrganizers, makeUsers, kickUsers
-    if (!_.isEmpty(applyingData)) {
-      approveUsers = handleApplyingParam(applyingData, MEMBER_ROLE.MEMBER)
-      cancelUsers = handleApplyingParam(applyingData, null)
-      if (!_.isEmpty(approveUsers)) {
-        await approveMembers({ hash_key: hash_key, data: { member_ids: approveUsers } })
-      }
-      if (!_.isEmpty(cancelUsers)) {
-        await cancelMembers({ hash_key: hash_key, data: { member_ids: cancelUsers } })
-      }
-      getDetailAndToast()
-    }
-    if (!_.isEmpty(participatingData)) {
-      makeCoOrganizers = handleApplyingParam(participatingData, MEMBER_ROLE.CO_ORGANIZER)
-      makeUsers = handleApplyingParam(participatingData, MEMBER_ROLE.MEMBER)
-      kickUsers = handleApplyingParam(participatingData, MEMBER_ROLE.LEAVE)
-      if (!_.isEmpty(makeCoOrganizers)) {
-        await changeMemberRole({ hash_key: hash_key, data: { member_ids: makeCoOrganizers, member_role: MEMBER_ROLE.CO_ORGANIZER } })
-      }
-      if (!_.isEmpty(makeUsers)) {
-        await changeMemberRole({ hash_key: hash_key, data: { member_ids: makeUsers, member_role: MEMBER_ROLE.MEMBER } })
-      }
-      if (!_.isEmpty(kickUsers)) {
-        await removeMember({ hash_key: hash_key, data: { member_ids: kickUsers } })
-      }
-      getDetailAndToast()
-    }
+  const handleSubmit = () => {
+    _.map(groupedMembers, (__, i) => {
+      _.map(_.differenceWith(changedGroupedMembers[i].value, groupedMembers[i].value, _.isEqual), (m) => {
+        const handler = actionHandler[m.attributes.member_role]
+        if (handler) {
+          handler(m, i)
+        }
+      })
+    })
+    setIsSubmitting(true)
     setHasChanged(false)
   }
 
   const handleSelectedValue = async (isApplying: boolean, id: number, value: number) => {
-    const data = JSON.parse(JSON.stringify(groupedMembers))
-
+    const data = _.cloneDeep(changedGroupedMembers)
     _.set(
       _.find(data[!isApplying ? MemberSection.participating : MemberSection.applying].value, { attributes: { id: id } }),
       'attributes.member_role',
       Number(value)
     )
-
-    setGroupedMembers(data)
+    setChangedGroupedMembers(data)
     setHasChanged(true)
   }
 
@@ -188,11 +198,9 @@ const FollowList: React.FC<Props> = ({ community }) => {
   const renderMemberList = () => {
     return (
       <Box>
-        {groupedMembers[community.attributes.has_requested ? MemberSection.participating : MemberSection.applying].value.map(
-          (participant, i) => (
-            <UserListItem data={userData(participant)} key={i} nicknameYellow={false} />
-          )
-        )}
+        {groupedMembers[MemberSection.participating].value.map((participant, i) => (
+          <UserListItem data={userData(participant)} key={i} nicknameYellow={false} />
+        ))}
       </Box>
     )
   }

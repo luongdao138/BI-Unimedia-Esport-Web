@@ -10,6 +10,7 @@ import { useRouter } from 'next/router'
 import ESLoader from '@components/Loader'
 import { Box, Grid } from '@material-ui/core'
 import { TOPIC_STATUS } from '@constants/community.constants'
+import _ from 'lodash'
 
 const CommunityContainer: React.FC = () => {
   const router = useRouter()
@@ -40,7 +41,7 @@ const CommunityContainer: React.FC = () => {
   const renderBody = () => {
     return (
       <>
-        {!!communityDetail && meta.loaded && !meta.pending && (
+        {!_.isEmpty(communityDetail) && (
           <>
             <CommunityDetailHeader
               title={communityDetail.attributes.name}

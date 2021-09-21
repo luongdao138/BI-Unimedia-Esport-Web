@@ -1,6 +1,8 @@
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit'
 import * as services from '@services/community.service'
 import { COMMUNITY_ACTION_TYPE } from './types'
+import { AppDispatch } from '@store/store'
+import _ from 'lodash'
 
 export const getTopicList = createAsyncThunk<services.TopicListResponse, services.TopicListParams>(
   COMMUNITY_ACTION_TYPE.GET_TOPIC_LIST,
@@ -94,6 +96,9 @@ export const getTopicFollowers = createAsyncThunk<services.TopicFollowersRespons
 
 export const clearCommunityData = createAction(COMMUNITY_ACTION_TYPE.CLEAR_COMMUNITY_LIST)
 export const clearCommunityDataByUser = createAction(COMMUNITY_ACTION_TYPE.CLEAR_COMMUNITY_LIST_BY_USER)
+export const clearTopicListData = createAction(COMMUNITY_ACTION_TYPE.CLEAR_TOPIC_LIST)
+export const clearCommunityDetail = createAction(COMMUNITY_ACTION_TYPE.CLEAR_COMMUNITY_DETAIL)
+export const clearSearchTopic = createAction(COMMUNITY_ACTION_TYPE.CLEAR_SEARCH_TOPIC)
 
 export const getCommunityDetail = createAsyncThunk<services.CommunityDetailResponse, string>(
   COMMUNITY_ACTION_TYPE.GET_COMMUNITY_DETAIL,
@@ -172,6 +177,50 @@ export const getCommunityMembers = createAsyncThunk<services.CommunityMembersRes
   }
 )
 
+export const memberSubmit = (payload: services.MemberParams) => {
+  return (dispatch: AppDispatch): void => {
+    Promise.resolve()
+      .then(() => {
+        if (!_.isEmpty(payload.approveParams)) {
+          return dispatch(approveCommunityMembers({ data: { member_ids: payload.approveParams }, hash_key: payload.hash_key }))
+        }
+      })
+      .then(() => {
+        if (!_.isEmpty(payload.cancelParams)) {
+          return dispatch(cancelCommunityMembers({ data: { member_ids: payload.approveParams }, hash_key: payload.hash_key }))
+        }
+      })
+      .then(() => {
+        if (!_.isEmpty(payload.changeRoleToOrganizer.member_ids)) {
+          return dispatch(
+            changeCommunityMemberRole({
+              data: { member_ids: payload.changeRoleToOrganizer.member_ids, member_role: payload.changeRoleToOrganizer.member_role },
+              hash_key: payload.hash_key,
+            })
+          )
+        }
+      })
+      .then(() => {
+        if (!_.isEmpty(payload.changeRoleToMember.member_ids)) {
+          return dispatch(
+            changeCommunityMemberRole({
+              data: { member_ids: payload.changeRoleToMember.member_ids, member_role: payload.changeRoleToMember.member_role },
+              hash_key: payload.hash_key,
+            })
+          )
+        }
+      })
+      .then(() => {
+        if (!_.isEmpty(payload.removeParams)) {
+          return dispatch(removeCommunityMember({ data: { member_ids: payload.removeParams }, hash_key: payload.hash_key }))
+        }
+      })
+      .then(() => dispatch(memberSubmitFulfilled()))
+  }
+}
+
+export const memberSubmitFulfilled = createAction(COMMUNITY_ACTION_TYPE.MEMBERS_SUBMIT_FULFILLED)
+
 export const approveCommunityMembers = createAsyncThunk<void, services.CommunityMembersApproveCancelParams>(
   COMMUNITY_ACTION_TYPE.APPROVE_COMMUNITY_MEMBERS,
   async (params, { rejectWithValue }) => {
@@ -244,7 +293,7 @@ export const closeCommunity = createAsyncThunk<void, string>(COMMUNITY_ACTION_TY
   }
 })
 
-export const createTopic = createAsyncThunk<services.CreateTopicResponse, services.TopicParams>(
+export const createTopic = createAsyncThunk<services.TopicDetailResponse, services.TopicParams>(
   COMMUNITY_ACTION_TYPE.CREATE_TOPIC,
   async (params, { rejectWithValue }) => {
     try {
@@ -291,6 +340,23 @@ export const deleteTopic = createAsyncThunk<void, services.TopicDeleteParams>(
   }
 )
 
+export const getTopicComment = createAsyncThunk<services.CommentDetailResponse, services.CommentDetailParams>(
+  COMMUNITY_ACTION_TYPE.GET_TOPIC_COMMENT,
+  async (params, { rejectWithValue }) => {
+    try {
+      const res = await services.getTopicComment(params)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
+export const resetCommentDetail = createAction(COMMUNITY_ACTION_TYPE.RESET_COMMENT_DETAIL)
+
 export const createTopicComment = createAsyncThunk<void, services.CommentCreateParams>(
   COMMUNITY_ACTION_TYPE.CREATE_TOPIC_COMMENT,
   async (params, { rejectWithValue }) => {
@@ -306,7 +372,7 @@ export const createTopicComment = createAsyncThunk<void, services.CommentCreateP
   }
 )
 
-export const deleteTopicComment = createAsyncThunk<void, string>(
+export const deleteTopicComment = createAsyncThunk<void, services.DeleteCommentParams>(
   COMMUNITY_ACTION_TYPE.DELETE_TOPIC_COMMENT,
   async (params, { rejectWithValue }) => {
     try {
@@ -383,36 +449,6 @@ export const unfollowCommunityPending = createAsyncThunk<void, string>(
 
 export const getCommentsList = createAsyncThunk<services.CommentsListResponse, services.CommentsListParams>(
   COMMUNITY_ACTION_TYPE.GET_COMMENTS_LIST,
-  async (params, { rejectWithValue }) => {
-    try {
-      const res = await services.getCommentsList(params)
-      return res
-    } catch (error) {
-      if (!error.response) {
-        throw error
-      }
-      return rejectWithValue(error.response.data)
-    }
-  }
-)
-
-export const getCommentsListPage = createAsyncThunk<services.CommentsListResponse, services.CommentsListParams>(
-  COMMUNITY_ACTION_TYPE.GET_COMMENTS_LIST_PAGE,
-  async (params, { rejectWithValue }) => {
-    try {
-      const res = await services.getCommentsListPage(params)
-      return res
-    } catch (error) {
-      if (!error.response) {
-        throw error
-      }
-      return rejectWithValue(error.response.data)
-    }
-  }
-)
-
-export const getCommentsListNext = createAsyncThunk<services.CommentsListResponse, services.CommentsListParams>(
-  COMMUNITY_ACTION_TYPE.GET_COMMENTS_LIST_NEXT,
   async (params, { rejectWithValue }) => {
     try {
       const res = await services.getCommentsList(params)

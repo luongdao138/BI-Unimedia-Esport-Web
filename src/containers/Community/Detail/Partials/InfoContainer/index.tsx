@@ -12,12 +12,20 @@ import { OPEN_RANGE, JOIN_CONDITION } from '@constants/community.constants'
 import Linkify from 'react-linkify'
 import { Colors } from '@theme/colors'
 
-const InfoContainer: React.FC<{ data: CommunityDetail['attributes'] }> = ({ data }) => {
+const InfoContainer: React.FC<{ isOfficial: boolean; data: CommunityDetail['attributes'] }> = ({ isOfficial, data }) => {
   const router = useRouter()
   const classes = useStyles()
   const { t } = useTranslation(['common'])
 
   const toProfile = (user_code) => router.push(`${ESRoutes.PROFILE}/${user_code}`)
+
+  const newLineText = (text) => {
+    return _.map(_.split(text, '\n'), (str, i) => (
+      <Typography key={i} className={classes.content}>
+        {str}
+      </Typography>
+    ))
+  }
 
   return (
     <>
@@ -44,7 +52,7 @@ const InfoContainer: React.FC<{ data: CommunityDetail['attributes'] }> = ({ data
             </a>
           )}
         >
-          <Typography>{data.description}</Typography>
+          {newLineText(data.description)}
         </Linkify>
       </Box>
 
@@ -55,7 +63,7 @@ const InfoContainer: React.FC<{ data: CommunityDetail['attributes'] }> = ({ data
         <Box className={classes.value}>
           <Box display="flex" flexDirection="column">
             <Typography>{data.area_name}</Typography>
-            <Typography>{data.address ? data.address : t('common:common.dash_separator')}</Typography>
+            <Typography>{data.address ? newLineText(data.address) : t('common:common.dash_separator')}</Typography>
           </Box>
         </Box>
       </Box>
@@ -93,11 +101,15 @@ const InfoContainer: React.FC<{ data: CommunityDetail['attributes'] }> = ({ data
         </Box>
         <Box className={classes.userValue}>
           {data.admin && (
-            <Box display="flex" flexDirection="row" alignItems="center">
+            <Box display="flex" flexDirection="row" alignItems="center" mb={1}>
               <LoginRequired>
-                <ButtonBase onClick={() => toProfile(data.admin.user_code)}>
-                  <ESAvatar alt={data.admin.nickname} src={data.admin.avatar_image_url} />
-                </ButtonBase>
+                {isOfficial ? (
+                  <ESAvatar src={'/images/avatar.png'} />
+                ) : (
+                  <ButtonBase onClick={() => toProfile(data.admin.user_code)}>
+                    <ESAvatar alt={data.admin.nickname} src={data.admin.avatar_image_url} />
+                  </ButtonBase>
+                )}
                 <Typography className={classes.ellipsis}>{data.admin.nickname}</Typography>
               </LoginRequired>
             </Box>
@@ -113,7 +125,7 @@ const InfoContainer: React.FC<{ data: CommunityDetail['attributes'] }> = ({ data
         <Box className={classes.userValue}>
           {!_.isEmpty(data.co_organizers) ? (
             data.co_organizers.map((organizer, i) => (
-              <Box key={i} display="flex" flexDirection="row" alignItems="center" mt={0}>
+              <Box key={i} display="flex" flexDirection="row" alignItems="center" mt={0} mb={1}>
                 <LoginRequired>
                   <ButtonBase onClick={() => toProfile(organizer.user_code)}>
                     <ESAvatar alt={organizer.nickname} src={organizer.avatar_image_url} />

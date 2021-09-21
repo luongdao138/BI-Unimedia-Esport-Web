@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
 import { createMetaSelector } from '@store/metadata/selectors'
 import { clearMetaData } from '@store/metadata/actions'
@@ -19,6 +20,13 @@ const useCommunityData = () => {
     dispatch(isAuthenticated ? actions.getCommunityList(param) : actions.getCommunityListPublic(param))
   const resetMeta = () => dispatch(clearMetaData(actions.getCommunityList.typePrefix))
   const clearCommunityData = () => dispatch(actions.clearCommunityData())
+
+  useEffect(() => {
+    return () => {
+      resetMeta()
+      clearCommunityData()
+    }
+  }, [])
 
   return { communities, meta, pages, fetchCommunityData, resetMeta, clearCommunityData }
 }

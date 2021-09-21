@@ -126,7 +126,7 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
           )}
           <Box display="flex" mb={2}>
             <Box ml={1}>
-              <Avatar className={classes.topicAvatar} alt={attr.nickname} src={attr.nickname ? '' : '/images/avatar.png'} />
+              <Avatar className={classes.topicAvatar} alt={attr.nickname} src={attr.avatar_image} />
             </Box>
 
             <Box className={classes.userInfoBox} ml={1} maxWidth="77%">
@@ -143,15 +143,10 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
             </Typography>
             <Typography variant="body1">{attr.content}</Typography>
           </Box>
-          {attr.image ? (
-            <Box
-              className={classes.topicCover}
-              style={{
-                backgroundImage: `url(${attr.image})`,
-              }}
-            ></Box>
-          ) : (
-            <></>
+          {attr.image && (
+            <Box>
+              <img className={classes.imageBox} src={attr.image} />
+            </Box>
           )}
         </Box>
       </>
@@ -366,20 +361,19 @@ const useStyles = makeStyles((theme) => ({
   wordBreak: {
     wordBreak: 'break-all',
   },
-  topicCover: {
-    display: 'flex',
-    paddingTop: '30.27%',
-    backgroundSize: 'cover',
-    backgroundRepeat: 'no-repeat',
-    backgroundPosition: 'center center',
-    borderRadius: 7,
-    width: '66%',
-  },
   topicAvatar: {
-    zIndex: 2,
     width: theme.spacing(5),
     height: theme.spacing(5),
   },
+  imageBox: {
+    display: 'flex',
+    transition: 'all 0.5s ease',
+    borderRadius: 7,
+    maxHeight: 300,
+    maxWidth: 300,
+    objectFit: 'contain',
+  },
+
   userInfoContainer: {
     backgroundColor: Colors.black,
     marginTop: theme.spacing(3),
@@ -497,9 +491,6 @@ const useStyles = makeStyles((theme) => ({
     },
     blankSpace: {
       height: theme.spacing(15),
-    },
-    topicCover: {
-      width: '80%',
     },
   },
 }))

@@ -114,7 +114,9 @@ const CommunityContainer: React.FC<CommunityContainerProps> = ({ filter }) => {
   }
 
   const onFilter = (filter: CommunityFilterOption) => {
-    router.push(`${ESRoutes.COMMUNITY}?filter=${filter}`, undefined, { shallow: true })
+    if (!meta.pending) {
+      router.push(`${ESRoutes.COMMUNITY}?filter=${filter}`, undefined, { shallow: true })
+    }
     return null
   }
 
