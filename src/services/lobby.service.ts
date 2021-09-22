@@ -205,6 +205,10 @@ export type ParticipantParams = {
   page: number
 }
 
+export type RecentLobbiesParams = {
+  page?: number
+}
+
 export const entry = async (hash_key: string): Promise<EntryLobbyResponse> => {
   const { data } = await api.post<EntryLobbyResponse>(URI.LOBBY_ENTRY.replace(/:hash_key/gi, hash_key))
   return data
@@ -259,5 +263,10 @@ export const getLobbyCategories = async (): Promise<LobbyCategoriesResponse> => 
 
 export const getLobbyDetail = async (hash_key: string | string[]): Promise<LobbyDetailResponse> => {
   const { data } = await api.get<LobbyDetailResponse>(URI.LOBBY_DETAIL.replace(/:hash_key/gi, String(hash_key)))
+  return data
+}
+
+export const getRecentLobbies = async (params: RecentLobbiesParams): Promise<LobbySearchResponse> => {
+  const { data } = await api.post<LobbySearchResponse>(URI.LOBBY_RECENTS, params)
   return data
 }

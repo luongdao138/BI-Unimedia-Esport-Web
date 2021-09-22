@@ -833,6 +833,10 @@ export default {
     edit: {
       submit: 'この内容で編集する',
     },
+    home: {
+      recent_lobbies_title: 'フォローしている人の募集',
+      recent_lobbies_empty: '該当の募集は存在しません',
+    },
   },
   lobbySearchFilters: {
     all: 'すべて',

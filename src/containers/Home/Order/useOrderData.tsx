@@ -45,6 +45,8 @@ const useOrderData = () => {
         return t('common:tournament.follower_ended')
       // case HOME_SETTINGS.TOPIC_FOLLOW: //TODO skip 2.0
       //   return t('common:home.topic_follow')
+      case HOME_SETTINGS.LOBBY:
+        return t('common:lobby.home.recent_lobbies_title')
       default:
         return ''
     }

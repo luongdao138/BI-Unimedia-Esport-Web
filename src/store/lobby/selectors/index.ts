@@ -20,3 +20,5 @@ export const getSearchLobbies = createSelector(getRoot, (state) => {
     }
   })
 })
+export const getRecentLobbies = createSelector(getRoot, (state) => state.recentLobbies)
+export const getRecentLobbiesPageMeta = createSelector(getRoot, (state) => state.recentLobbiesPageMeta)

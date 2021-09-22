@@ -15,6 +15,7 @@ import useTournamentData from './useTournamentData'
 // import useTopicData from './useTopicData'
 import { HOME_SETTINGS } from '@constants/common.constants'
 import ESLoader from '@components/FullScreenLoader'
+import { RecentLobbies } from '@containers/Home/elements/Slider/RecentLobbies'
 
 const HomeContainer: React.FC = () => {
   const { recommendedUsers, getUserRecommendations, homeSettings, getUserProfile, metaHomeSettings } = useUserData()
@@ -57,6 +58,8 @@ const HomeContainer: React.FC = () => {
         return <TournamentResult data={tournamentResults} key={index} meta={tournamentResultsMeta} />
       // case HOME_SETTINGS.TOPIC_FOLLOW:
       //   return <TopicFollow data={followersTopicList} key={index} />
+      case HOME_SETTINGS.LOBBY:
+        return <RecentLobbies key={index} />
       default:
         return ''
     }
