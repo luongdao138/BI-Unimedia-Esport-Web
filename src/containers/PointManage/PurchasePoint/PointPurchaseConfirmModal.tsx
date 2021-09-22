@@ -25,7 +25,7 @@ const PointPurchaseConfirmModal: React.FC<ModalProps> = ({
   handlePurchasePoint,
   hasError,
   isLoading,
-  errorMess
+  errorMess,
 }) => {
   const { t } = useTranslation('common')
   const classes = useStyles()
@@ -49,28 +49,28 @@ const PointPurchaseConfirmModal: React.FC<ModalProps> = ({
             </Typography>
           </Box>
           {hasError ? (
-            <Typography className={classes.note_purchase_point}>{errorMess ? errorMess : t('purchase_point_tab.mess_purchase_point_error')}</Typography>
+            <Typography className={classes.note_purchase_point}>
+              {errorMess ? errorMess : t('purchase_point_tab.mess_purchase_point_error')}
+            </Typography>
           ) : (
             <Typography className={classes.note_purchase_point}>{t('purchase_point_tab.note_purchase_point')}</Typography>
           )}
         </Box>
         <Box className={classes.actionBox}>
           {hasError ? (
-              <ButtonPrimary className={classes.actionBtnBuy} onClick={handleClose}>
-                {t('purchase_point_tab.btn_understand_error')}
+            <ButtonPrimary className={classes.actionBtnBuy} onClick={handleClose}>
+              {t('purchase_point_tab.btn_understand_error')}
+            </ButtonPrimary>
+          ) : (
+            <>
+              <ButtonPrimary className={classes.actionBtnClose} gradient={false} onClick={handleClose}>
+                {t('common.cancel')}
               </ButtonPrimary>
-            )
-            : (
-              <>
-                <ButtonPrimary className={classes.actionBtnClose} gradient={false} onClick={handleClose}>
-                  {t('common.cancel')}
-                </ButtonPrimary>
-                <ButtonPrimary className={classes.actionBtnBuy} onClick={handlePurchasePoint}>
-                  {t('purchase_point_tab.btn_buy')}
-                </ButtonPrimary>
-              </>
-            )
-          }
+              <ButtonPrimary className={classes.actionBtnBuy} onClick={handlePurchasePoint}>
+                {t('purchase_point_tab.btn_buy')}
+              </ButtonPrimary>
+            </>
+          )}
         </Box>
       </ConfirmModal>
     </Box>

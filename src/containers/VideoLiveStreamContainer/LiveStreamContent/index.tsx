@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { Box, ButtonBase, Icon, makeStyles, Typography, useMediaQuery, useTheme } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
 import ESChip from '@components/Chip'
@@ -11,7 +10,6 @@ import React, { useCallback, useEffect, useState } from 'react'
 import ESMenuItem from '@components/Menu/MenuItem'
 import { VIDEO_TYPE } from '@containers/VideoLiveStreamContainer'
 import OverlayContent from '@containers/VideoLiveStreamContainer/LiveStreamContent/OverlayContent'
-// import ESButton from '@components/Button'
 import VideoPlayer from './VideoPlayer'
 import useLiveStreamDetail from '../useLiveStreamDetail'
 import ReactionButton from './ReactionButton'
@@ -20,6 +18,10 @@ import PreloadButtonReaction from '../PreloadContainer/PreloadButtonReaction'
 import PreloadVideoInfo from '../PreloadContainer/PreloadVideoInfo'
 import { STATUS_VIDEO } from '@services/videoTop.services'
 import _ from 'lodash'
+import ESReport from '@containers/Report'
+import { REPORT_TYPE } from '@constants/common.constants'
+import LoginRequired from '@containers/LoginRequired'
+import ESMenu from '@components/Menu'
 
 interface LiveStreamContentProps {
   videoType?: VIDEO_TYPE
@@ -60,16 +62,23 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
 
   const classes = useStyles({ isSubscribed: isSubscribed() })
 
+  // useEffect(() => {
+  //   console.log('user profile data >>>>>>>>', userProfile)
+  //   if (isAuthenticated && props?.video_id) {
+  //     getVideoDetail({ video_id: `${props?.video_id}` })
+  //   }
+  // }, [userProfile])
+
   const toggleSubscribeClick = () => {
     if (subscribe === 0) {
       setSubscribe(1)
-      console.log('enter Subscribe')
+      // console.log('enter Subscribe')
       if (detailVideoResult?.channel_id) {
         debouncedHandleSubscribe(1, detailVideoResult?.channel_id, props?.video_id)
       }
     } else {
       setSubscribe(0)
-      console.log('enter unSubscribe')
+      // console.log('enter unSubscribe')
       if (detailVideoResult?.channel_id) {
         debouncedHandleSubscribe(0, detailVideoResult?.channel_id, props?.video_id)
       }
@@ -78,7 +87,7 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
 
   const debouncedHandleSubscribe = useCallback(
     _.debounce((followValue: number, channelIdValue: number, videoIdValue: string | string[]) => {
-      console.log('debounced HandleSubscribeVideo')
+      // console.log('debounced HandleSubscribeVideo')
       userFollowChannel({
         video_id: videoIdValue,
         channel_id: channelIdValue,
@@ -90,7 +99,7 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
 
   const debouncedHandleReactionVideo = useCallback(
     _.debounce((likeValue: number, unlikeValue: number, videoIdValue: string | string[]) => {
-      console.log('debounced HandleReactionVideo')
+      // console.log('debounced HandleReactionVideo')
       userReactionVideoStream({
         video_id: videoIdValue,
         like: likeValue,
@@ -108,12 +117,12 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
         setUnlike(0)
         setUnlikeCount(unlikeCount > 0 ? unlikeCount - 1 : 0)
       }
-      console.log('enter like')
+      // console.log('enter like')
       debouncedHandleReactionVideo(1, 0, props?.video_id)
     } else {
       setLike(0)
       setLikeCount(likeCount > 0 ? likeCount - 1 : 0)
-      console.log('enter like')
+      // console.log('enter like')
       debouncedHandleReactionVideo(0, unlike, props?.video_id)
     }
   }
@@ -126,13 +135,13 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
         setLike(0)
         setLikeCount(likeCount > 0 ? likeCount - 1 : 0)
       }
-      console.log('enter unlike')
+      // console.log('enter unlike')
       debouncedHandleReactionVideo(0, 1, props?.video_id)
     } else {
       setUnlike(0)
       setUnlikeCount(unlikeCount > 0 ? unlikeCount - 1 : 0)
 
-      console.log('enter unlike')
+      // console.log('enter unlike')
       debouncedHandleReactionVideo(like, 0, props?.video_id)
     }
   }
@@ -150,7 +159,7 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
   }, [userResult, detailVideoResult])
 
   const registerChannelButton = () => (
-    <ButtonBase onClick={toggleSubscribeClick} className={classes.register_channel_btn}>
+    <ButtonBase className={classes.register_channel_btn}>
       <Box>
         <Icon className={`far fa-heart ${classes.heartIcon}`} fontSize="small" />
       </Box>
@@ -179,7 +188,9 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
     <Box className={classes.mobileRegisterChannelContainer}>
       <ESAvatar className={classes.smallAvatar} src={'/images/avatar.png'} />
       <Typography className={classes.channelName}>{'配信者の名前がはいります'}</Typography>
-      {registerChannelButton()}
+      <LoginRequired>
+        <div onClick={toggleSubscribeClick}>{registerChannelButton()}</div>
+      </LoginRequired>
     </Box>
   )
 
@@ -299,7 +310,7 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
 
   const liveBasicContentVisible = () => !isMobile || !props.softKeyboardIsShown
   const mobileRegisterChannelVisible = () => isMobile && !props.softKeyboardIsShown
-
+  const handleReportOpen = () => setShowReportMenu(true)
   return (
     <Box className={classes.container}>
       <Box className={classes.mediaPlayerContainer}>
@@ -340,33 +351,29 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
                 <>
                   <Box className={classes.interactive_info}>
                     <ReactionButton iconName={'fa fa-eye'} value={detailVideoResult?.view_count} status={1} />
-                    <ReactionButton iconName={'fa fa-thumbs-up'} value={likeCount} onPress={toggleLikeVideo} status={like} />
-                    <ReactionButton iconName={'fa fa-thumbs-down'} value={unlikeCount} onPress={toggleUnLikeVideo} status={unlike} />
+                    <LoginRequired>
+                      <div onClick={toggleLikeVideo}>
+                        <ReactionButton iconName={'fa fa-thumbs-up'} value={likeCount} status={like} />
+                      </div>
+                    </LoginRequired>
+                    <LoginRequired>
+                      <div onClick={toggleUnLikeVideo}>
+                        <ReactionButton iconName={'fa fa-thumbs-down'} value={unlikeCount} status={unlike} />
+                      </div>
+                    </LoginRequired>
                     {!isMobile && shareButton()}
                   </Box>
-                  {!isMobile && (
-                    <Box className={classes.dropDownMenu}>
-                      <Typography
-                        onClick={() => {
-                          setShowReportMenu(true)
-                        }}
-                        className={classes.three_dot}
-                      >
-                        <Icon className={`fa fa-ellipsis-v ${classes.icon}`} fontSize="small" />
-                      </Typography>
-                      {showReportMenu && (
-                        <Box className={`${classes.dropDownContent} MuiPaper-elevation8 MuiPaper-rounded`}>
-                          <ESMenuItem
-                            onClick={() => {
-                              setShowReportMenu(false)
-                            }}
-                          >
-                            {t('live_stream_screen.report')}
-                          </ESMenuItem>
-                        </Box>
-                      )}
-                    </Box>
-                  )}
+
+                  {/* report icon */}
+                  <Box ml={1} pr={3} display="flex" flexDirection="row" flexShrink={0}>
+                    <ESMenu>
+                      <LoginRequired>
+                        <div onClick={handleReportOpen}>
+                          <ESMenuItem>{t('tournament.report')}</ESMenuItem>
+                        </div>
+                      </LoginRequired>
+                    </ESMenu>
+                  </Box>
                 </>
               )
             )}
@@ -376,11 +383,7 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
       {!isMobile && (
         <Box className={classes.wrap_streamer_info}>
           <Box className={classes.streamer_info}>
-            <ESAvatar
-              className={classes.avatar}
-              alt={userProfile?.attributes?.nickname}
-              src={userProfile ? userProfile?.attributes?.avatar_url : '/images/avatar.png'}
-            />
+            <ESAvatar className={classes.avatar} alt={detailVideoResult?.user_nickname} src={detailVideoResult?.user_avatar} />
             <Box className={classes.streamer_data}>
               {userProfile?.attributes?.nickname && <Box className={classes.streamer_name}>{detailVideoResult?.channel_name}</Box>}
               <Box className={classes.registration}>
@@ -392,8 +395,20 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
               </Box>
             </Box>
           </Box>
-          {registerChannelButton()}
+          <LoginRequired>
+            <div onClick={toggleSubscribeClick}>{registerChannelButton()}</div>
+          </LoginRequired>
         </Box>
+      )}
+      {/* Show Report Modal */}
+      {showReportMenu && (
+        <ESReport
+          reportType={REPORT_TYPE.USER_LIST}
+          // target_id={userCode}
+          // data={profile}
+          open={showReportMenu}
+          handleClose={() => setShowReportMenu(false)}
+        />
       )}
     </Box>
   )

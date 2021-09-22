@@ -32,6 +32,7 @@ import DonateMessage from './DonateMessage'
 import Avatar from '@components/Avatar/'
 import ESInput from '@components/Input'
 import { STATUS_VIDEO } from '@services/videoTop.services'
+import LoginRequired from '@containers/LoginRequired'
 
 type ChatContainerProps = {
   onPressDonate?: (donatedPoint: number, purchaseComment: string) => void
@@ -822,9 +823,13 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
       {purchaseDialogVisible && isMobile && purchaseInfoDialog()}
       <Box className={classes.chatInputContainer}>
         {purchaseDialogVisible && !isMobile && purchaseInfoDialog()}
-        <IconButton id="btnOpenPremiumChatDialog" onClick={purchaseIconClick} className={classes.iconPurchase}>
-          <img id="btnOpenPremiumChatDialogImage" src="/images/ic_purchase.svg" />
-        </IconButton>
+        <LoginRequired>
+          {/* <div onClick={purchaseIconClick}> */}
+          <IconButton onClick={purchaseIconClick} id="btnOpenPremiumChatDialog" className={classes.iconPurchase}>
+            <img id="btnOpenPremiumChatDialogImage" src="/images/ic_purchase.svg" />
+          </IconButton>
+          {/* </div> */}
+        </LoginRequired>
         <Box className={classes.chatBox}>
           <ESInput
             id={'message'}
@@ -840,9 +845,13 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
             error={touched.message && !!errors?.message}
             onKeyPress={handlePressEnter}
           />
-          <Button onClick={handleSubmitChatContent} className={classes.iconButtonBg} disabled={!isEnabledChat}>
-            <Icon className={`fa fa-paper-plane ${classes.sendIcon}`} fontSize="small" />
-          </Button>
+          <LoginRequired>
+            {/* <div onClick={handleSubmitChatContent}> */}
+            <Button onClick={handleSubmitChatContent} className={classes.iconButtonBg} disabled={!isEnabledChat}>
+              <Icon className={`fa fa-paper-plane ${classes.sendIcon}`} fontSize="small" />
+            </Button>
+            {/* </div> */}
+          </LoginRequired>
         </Box>
         {/* {errors.message && <Typography className={classes.chatInputErrorText}>{errors.message}</Typography>} */}
       </Box>

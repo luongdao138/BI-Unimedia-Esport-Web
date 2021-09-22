@@ -4,7 +4,7 @@ import VideosTopContainer from '@containers/VideosTopContainer'
 
 const VideosTopPage: PageWithLayoutType = () => {
   return (
-    <StreamLayout minimizeLayout>
+    <StreamLayout minimizeLayout loginRequired={false}>
       <VideosTopContainer />
     </StreamLayout>
   )

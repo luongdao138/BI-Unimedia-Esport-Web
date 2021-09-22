@@ -39,7 +39,7 @@ const useDetailVideo = () => {
     changeVideoTime,
     changeIsEndLive,
     liveStreamInfo,
-    changeSeekCount
+    changeSeekCount,
   }
 }
 

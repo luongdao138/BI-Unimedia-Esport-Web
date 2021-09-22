@@ -56,7 +56,7 @@ const initialState: StateType = {
   streaming_second: -1,
   played_second: -1,
   is_end_live: false,
-  seek_count: 0 
+  seek_count: 0,
 }
 
 export default createReducer(initialState, (builder) => {
