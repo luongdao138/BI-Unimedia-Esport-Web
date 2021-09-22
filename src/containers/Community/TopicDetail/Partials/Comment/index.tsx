@@ -21,6 +21,7 @@ import useTopicHelper from '../../useTopicHelper'
 import useTopicDetail from '../../useTopicDetail'
 import styled from 'styled-components'
 import { useRect } from '@utils/hooks/useRect'
+import { REPLY_REGEX } from '@constants/community.constants'
 
 let currentReplyNumberRectLeft: number
 const StyledBox = styled(Box)``
@@ -120,15 +121,13 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
     )
   }
 
-  const reply_regex = /(>>[0-9]+)/g
-
   const newLineText = (text, isReply = false) => {
     return _.map(_.split(text, '\n'), (str, i) => (
       <Typography key={i} className={classes.content}>
         {_.map(
-          _.filter(_.split(str, reply_regex), (el) => !_.isEmpty(el)),
+          _.filter(_.split(str, REPLY_REGEX), (el) => !_.isEmpty(el)),
           (content, index) => {
-            return content.match(reply_regex) && !isReply ? renderPopover(content, index) : content
+            return content.match(REPLY_REGEX) && !isReply ? renderPopover(content, index) : content
           }
         )}
       </Typography>
