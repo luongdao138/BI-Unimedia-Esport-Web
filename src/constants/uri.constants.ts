@@ -79,7 +79,7 @@ export const URI = {
   TOURNAMENTS_FREEZE_PARTICIPANTS: '/v2/tournaments/:id/freeze_participants',
   ARENA_SET_PARTICIPANTS: 'v2/tournaments/:id/set_participants',
   TOURNAMENTS_HISTORY_SEARCH: '/v2/tournaments/history_search',
-  TOPICS_FOLLOWERS: '/v2/users/followings_topic', //TODO skip 2.0
+  TOPICS_FOLLOWERS: '/v2/users/followings_topic',
   TOPICS: '/v2/topics/:id',
   TOPICS_DETAILS: '/v2/topics/details',
   TOPIC_CREATE: '/v2/topic/create',
