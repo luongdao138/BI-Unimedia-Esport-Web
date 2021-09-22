@@ -30,24 +30,25 @@ const getCommentsListMeta = createMetaSelector(actions.getCommentsList)
 const getDeleteTopicCommentMeta = createMetaSelector(actions.deleteTopicComment)
 
 const useTopicDetail = (): {
-  topic: TopicDetail
-  commentDetail: CommentDetail
   getTopicDetail: (TopicDetailParams) => void
   getCommentDetail: (CommentDetailParams) => void
   getCommentsList: (CommentsListParams) => void
   deleteTopic: (TopicDetailParams) => void
+  createComment: (params: CommentCreateParams) => void
+  deleteComment: (params: DeleteCommentParams) => void
   resetCommentDetail: () => void
   resetMeta: () => void
+  resetTopicMeta: () => void
   topicDetailMeta: Meta
   deleteTopicMeta: Meta
   commentDetailMeta: Meta
-  createComment: (params: CommentCreateParams) => void
-  createCommentMeta: Meta
-  deleteComment: (params: DeleteCommentParams) => void
   commentsListMeta: Meta
+  createCommentMeta: Meta
+  deleteTopicCommentMeta: Meta
   commentsListPageMeta: PageMeta
   commentsList: CommentsResponse[]
-  resetTopicMeta: () => void
+  topic: TopicDetail
+  commentDetail: CommentDetail
 } => {
   const dispatch = useAppDispatch()
   const { t } = useTranslation(['common'])
@@ -112,6 +113,7 @@ const useTopicDetail = (): {
     commentsListPageMeta,
     createCommentMeta,
     resetTopicMeta,
+    deleteTopicCommentMeta,
   }
 }
 
