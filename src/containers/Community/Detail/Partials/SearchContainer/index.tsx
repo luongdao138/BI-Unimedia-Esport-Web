@@ -75,7 +75,7 @@ const InfoContainer: React.FC = () => {
   }, [pages])
 
   useEffect(() => {
-    if (page > 1) {
+    if (showResult) {
       getTopicList({ community_hash: hash_key, keyword: value, only_title: isOnlyTitle.toString(), page: page })
     }
   }, [page])

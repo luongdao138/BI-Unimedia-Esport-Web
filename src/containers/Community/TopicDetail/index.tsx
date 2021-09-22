@@ -101,7 +101,7 @@ const TopicDetailContainer: React.FC = () => {
   }, [topicDetailMeta])
 
   useEffect(() => {
-    if (page > 1) {
+    if (topic_hash_key) {
       getCommentsList({ hash_key: String(topic_hash_key), page: page })
     }
   }, [page])
