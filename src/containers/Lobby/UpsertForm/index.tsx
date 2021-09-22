@@ -31,6 +31,7 @@ import { LobbyHelper } from '@utils/helpers/LobbyHelper'
 import { LobbyUpsertParams } from '@services/lobby.service'
 import { LOBBY_STATUS } from '@constants/lobby.constants'
 import withProtected from '@containers/Lobby/utils/withProtected'
+import DiscardDialog from '@containers/Community/Partials/DiscardDialog'
 
 let activeTabIndex = 0
 
@@ -48,6 +49,7 @@ const LobbyCreate: React.FC = () => {
   const [isConfirm, setIsConfirm] = useState(false)
   const isEnded = [LOBBY_STATUS.CANCELLED, LOBBY_STATUS.ENDED].includes(_.get(lobby, 'attributes.status', LOBBY_STATUS.ENDED))
   const isFreezed = _.get(lobby, 'attributes.is_freezed', false)
+  const [isDiscard, setIsDiscard] = useState(false)
 
   const { checkNgWordFields, checkNgWordByField } = useCheckNgWord()
 
@@ -74,6 +76,8 @@ const LobbyCreate: React.FC = () => {
       }
     },
   })
+
+  const isChanged = !_.isEqual(formik.values, initialValues)
 
   useEffect(() => {
     if (updateMeta.error || meta.error) {
@@ -181,7 +185,7 @@ const LobbyCreate: React.FC = () => {
 
   const handleBack = () => {
     if (isConfirm) setIsConfirm(false)
-    else handleReturn()
+    else isChanged ? setIsDiscard(true) : handleReturn()
   }
 
   const getFirstError = () => {
@@ -286,6 +290,14 @@ const LobbyCreate: React.FC = () => {
         </form>
         <ESLoader open={meta.pending || updateMeta.pending} />
       </>
+      <DiscardDialog
+        open={isDiscard}
+        onClose={() => setIsDiscard(false)}
+        onSubmit={handleReturn}
+        title={i18n.t('common:lobby.discard.title')}
+        description={i18n.t('common:lobby.discard.message')}
+        confirmTitle={i18n.t('common:lobby.discard.confirm')}
+      />
     </ESStickyFooter>
   )
 }
