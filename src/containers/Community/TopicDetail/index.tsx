@@ -69,18 +69,30 @@ const TopicDetailContainer: React.FC = () => {
     setOpenDelete(false)
   }
 
+  const [pageHeight, setPageHeight] = useState(document.body.scrollHeight)
+
   useEffect(() => {
-    getCommentsList({ hash_key: String(topic_hash_key), page: 1 })
-    return () => {
-      resetTopicMeta()
+    if (createCommentMeta.loaded && !commentsListMeta.pending && commentsListMeta.loaded) {
+      if (pageHeight !== document.body.scrollHeight) {
+        setPageHeight(document.body.scrollHeight)
+      }
     }
-  }, [])
+  }, [commentsListMeta])
+
+  useEffect(() => {
+    setTimeout(() => {
+      window.scrollTo(0, document.body.scrollHeight)
+    }, 100)
+  }, [pageHeight])
 
   useEffect(() => {
     if (topic_hash_key) {
       getCommunityDetail(String(hash_key))
       getTopicDetail({ topic_hash: String(topic_hash_key), community_hash: String(hash_key) })
       getCommentsList({ hash_key: String(topic_hash_key) })
+    }
+    return () => {
+      resetTopicMeta()
     }
   }, [router])
 
@@ -89,7 +101,9 @@ const TopicDetailContainer: React.FC = () => {
   }, [topicDetailMeta])
 
   useEffect(() => {
-    getCommentsList({ hash_key: String(topic_hash_key), page: page })
+    if (topic_hash_key) {
+      getCommentsList({ hash_key: String(topic_hash_key), page: page })
+    }
   }, [page])
 
   useEffect(() => {

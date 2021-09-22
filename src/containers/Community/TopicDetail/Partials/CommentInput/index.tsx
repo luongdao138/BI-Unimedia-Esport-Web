@@ -13,6 +13,7 @@ import { useAppDispatch } from '@store/hooks'
 import { showDialog } from '@store/common/actions'
 import { NG_WORD_AREA, NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
 import useTopicDetail from '../../useTopicDetail'
+import { REPLY_REGEX } from '@constants/community.constants'
 
 const TEXT_INPUT_LIMIT = 5000
 
@@ -30,7 +31,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ reply_param, setPage, setComm
   const { t } = useTranslation(['common'])
   const dispatch = useAppDispatch()
   const { checkNgWord } = useCheckNgWord()
-  const { createComment, createCommentMeta, getCommentsList } = useTopicDetail()
+  const { createComment, createCommentMeta } = useTopicDetail()
   const { uploadCommentImage } = useUploadImage()
 
   const [isUploading, setUploading] = useState(false)
@@ -40,7 +41,9 @@ const Comment: React.FC<CommunityHeaderProps> = ({ reply_param, setPage, setComm
 
   useEffect(() => {
     if (!_.isEmpty(reply_param)) {
-      setInputText(inputText.concat('>>' + reply_param.comment_no))
+      if (!_.includes(_.split(inputText, REPLY_REGEX), `>>${reply_param.comment_no}`)) {
+        setInputText(inputText.concat('>>' + reply_param.comment_no))
+      }
     }
   }, [reply_param])
 
@@ -48,9 +51,8 @@ const Comment: React.FC<CommunityHeaderProps> = ({ reply_param, setPage, setComm
     if (!createCommentMeta.pending && createCommentMeta.loaded) {
       setInputText('')
       setImageURL('')
-      setCommentCount(commentCount + 1)
-      getCommentsList({ hash_key: String(topic_hash_key) })
       setPage(1)
+      setCommentCount(commentCount + 1)
     }
   }, [createCommentMeta])
 

@@ -50,12 +50,15 @@ const Confirm: React.FC<ConfirmProps> = ({ values, prefectures }) => {
   return (
     <Box pb={20} className={classes.viewHolder}>
       <Box pb={4.25} />
-      <Box>
-        <img
-          src={values.stepOne.cover_image_url ? values.stepOne.cover_image_url : '/images/default_card.png'}
-          className={classes.coverImg}
-        />
-      </Box>
+      <Box
+        style={{
+          background: `url(${values.stepOne.cover_image_url ? values.stepOne.cover_image_url : '/images/default_card.png'})`,
+          paddingTop: '30.21756647864625%',
+          backgroundSize: 'cover',
+          backgroundRepeat: 'no-repeat',
+          backgroundPosition: 'center center',
+        }}
+      />
       <Box pb={2} />
       <ESInput labelPrimary={t('common:community_create.name')} fullWidth value={values.stepOne.name} disabled />
       <Box pb={2} />
