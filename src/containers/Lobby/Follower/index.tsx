@@ -98,7 +98,7 @@ const LobbyFollowerContainer: React.FC = () => {
           {i18n.t('common:lobby.home.recent_lobbies_title')}
         </Typography>
       </Box>
-      {meta.loaded && _.isEmpty(recentLobbies.length) && (
+      {meta.loaded && _.isEmpty(recentLobbies) && (
         <Box display="flex" py={3} justifyContent="center" alignItems="center">
           <Typography>{i18n.t('common:lobby.home.recent_lobbies_empty')}</Typography>
         </Box>
