@@ -14,12 +14,15 @@ import { showDialog } from '@store/common/actions'
 import { NG_WORD_AREA, NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
 import useTopicDetail from '../../useTopicDetail'
 
+const TEXT_INPUT_LIMIT = 5000
+
 type CommunityHeaderProps = {
   reply_param?: { hash_key: string; comment_no: number }
   setPage: Dispatch<SetStateAction<number>>
   setCommentCount?: Dispatch<SetStateAction<number>>
   commentCount?: number
 }
+
 const Comment: React.FC<CommunityHeaderProps> = ({ reply_param, setPage, setCommentCount, commentCount }) => {
   const classes = useStyles()
   const { query } = useRouter()
@@ -29,7 +32,9 @@ const Comment: React.FC<CommunityHeaderProps> = ({ reply_param, setPage, setComm
   const { checkNgWord } = useCheckNgWord()
   const { createComment, createCommentMeta, getCommentsList } = useTopicDetail()
   const { uploadCommentImage } = useUploadImage()
+
   const [isUploading, setUploading] = useState(false)
+  const [isMaxLength, setIsMaxLength] = useState(false)
   const [imageURL, setImageURL] = useState('')
   const [inputText, setInputText] = useState('')
 
@@ -51,7 +56,6 @@ const Comment: React.FC<CommunityHeaderProps> = ({ reply_param, setPage, setComm
 
   const handleUpload = (file: File) => {
     setUploading(true)
-
     uploadCommentImage(file, undefined, 1, true, (imageUrl) => {
       setUploading(false)
       setImageURL(imageUrl)
@@ -85,6 +89,11 @@ const Comment: React.FC<CommunityHeaderProps> = ({ reply_param, setPage, setComm
   }
 
   const handleChange = (event) => {
+    if (event.target.value.length > TEXT_INPUT_LIMIT) {
+      setIsMaxLength(true)
+    } else {
+      setIsMaxLength(false)
+    }
     setInputText(event.target.value)
   }
 
@@ -106,7 +115,11 @@ const Comment: React.FC<CommunityHeaderProps> = ({ reply_param, setPage, setComm
         </Box>
         <Box className={classes.sendCont}>
           <Box display="flex" alignItems="center">
-            <IconButton className={classes.iconButton} onClick={send} disabled={imageURL === '' && inputText.trim() === ''}>
+            <IconButton
+              className={classes.iconButton}
+              onClick={send}
+              disabled={(imageURL === '' && inputText.trim() === '') || isMaxLength}
+            >
               <Icon className={`${classes.icon} fas fa-paper-plane`} />
             </IconButton>
           </Box>
