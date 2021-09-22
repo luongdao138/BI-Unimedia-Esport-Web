@@ -36,6 +36,7 @@ const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
     purchasePointInfo,
     metaPurchaseUseNewCardMeta,
     metaPurchaseUseOldCardMeta,
+    resetErrorMess
   } = usePurchasePointData()
 
   const [selectedCardId, setSelectedCardId] = React.useState<any>('')
@@ -96,6 +97,8 @@ const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
   })
   const { values, errors, touched, handleChange, handleSubmit, handleBlur, setFieldValue, resetForm, validateForm } = formik
 
+  const isExceedCard = purchasePointInfo.saved_cards.length >= 5 && values.is_saved_card
+
   useEffect(() => {
     validateForm()
   }, [])
@@ -116,6 +119,7 @@ const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
   const handlePurchasePoint = (): void => {
     // purchase point use new card
     if (selectedCardId === '') {
+      resetErrorMess()
       const Multipayment = window.Multipayment
       Multipayment.init(purchasePointInfo.GMO_SHOP_ID)
       setIsPurchasingPoint(true)
@@ -287,7 +291,12 @@ const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
                   name={'is_saved_card'}
                   checked={values.is_saved_card}
                 />
-                <Box className={classes.toggle_name}>{t('purchase_point_tab.register_toggle_name')}</Box>
+                <Box>
+                  <Box className={classes.toggle_name}>{t('purchase_point_tab.register_toggle_name')}</Box>
+                  {isExceedCard && (
+                    <Box className={classes.mess_exceed_card}>{t('purchase_point_tab.mess_exceed_card')}</Box>
+                  )}
+                </Box>
               </Box>
             </Box>
           </Box>
@@ -357,7 +366,7 @@ const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
       <Box pb={3} pt={2} justifyContent="center" display="flex" className={classes.actionButton}>
         <ButtonPrimary
           // disable button if has error when use new card and no use old card
-          disabled={!_.isEmpty(errors) && selectedCardId === ''}
+          disabled={(!_.isEmpty(errors) && selectedCardId === '') || isExceedCard}
           type="submit"
           round
           fullWidth
@@ -368,6 +377,7 @@ const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
       </Box>
       {isShowPurchasePointModal && (
         <PointPurchaseConfirmModal
+          errorMess={purchasePointInfo.mess_error_purchase_point}
           isLoading={isLoading}
           handlePurchasePoint={handlePurchasePoint}
           open={isShowPurchasePointModal}
@@ -484,6 +494,11 @@ const useStyles = makeStyles((theme) => ({
   toggle_name: {
     fontSize: '12px',
     color: Colors.white,
+    paddingLeft: 16,
+  },
+  mess_exceed_card: {
+    fontSize: '12px',
+    color: '#F7F735',
     paddingLeft: 16,
   },
   second_card_info_container: {

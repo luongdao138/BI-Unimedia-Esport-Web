@@ -1,4 +1,4 @@
-import { createAsyncThunk } from '@reduxjs/toolkit'
+import { createAsyncThunk, createAction } from '@reduxjs/toolkit'
 import * as services from '@services/purchasePoints.service'
 import { POINT_PURCHASE_ACTION_TYPE } from './types'
 
@@ -55,3 +55,5 @@ export const purchasePointUseOldCard = createAsyncThunk(
     }
   }
 )
+
+export const resetErrorMess = createAction(POINT_PURCHASE_ACTION_TYPE.RESET_ERROR_MESS_PURCHASE_POINT)
