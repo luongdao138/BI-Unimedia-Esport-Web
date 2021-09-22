@@ -219,6 +219,7 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
       disabled={false}
       noScroll
       noSpacing={isEdit && !isConfirm}
+      noBottomSpace
       content={
         <>
           {isConfirm ? (

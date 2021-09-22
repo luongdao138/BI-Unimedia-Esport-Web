@@ -243,7 +243,7 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
       <>
         <Box mb={2}>
           <Box display="flex" flexDirection="row" justifyContent="space-between" alignItems="center">
-            <Box color={Colors.white} display="flex">
+            <Box color={Colors.white} display="flex" alignItems="center">
               <Typography className={classes.title} variant="h3">
                 {data.name}
               </Typography>
@@ -253,7 +253,11 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
                     <Icon className="fa fa-check" fontSize="small" />
                   </span>
                 )}
-                {!isPublic && <Icon className={`fas fa-lock ${classes.lockIcon}`} />}
+                {!isPublic && (
+                  <Box className={classes.lockIconWrap}>
+                    <Icon className={`fas fa-lock ${classes.lockIcon}`} />
+                  </Box>
+                )}
               </Box>
             </Box>
             <Box className={classes.detailCommonButtons}>
@@ -367,6 +371,19 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
 }
 
 const useStyles = makeStyles((theme) => ({
+  lockIconWrap: {
+    position: 'relative',
+    '&::before': {
+      backgroundColor: Colors.white,
+      content: "''",
+      position: 'absolute',
+      top: 11,
+      right: 8,
+      width: 4,
+      height: 5,
+      borderRadius: '50%',
+    },
+  },
   sharedUrl: {
     textDecoration: 'underline',
   },
