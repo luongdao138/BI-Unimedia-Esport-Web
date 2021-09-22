@@ -6,6 +6,8 @@ export type PurchaseTicketParams = {
   point: number
   type: number //1 : mua ticket, 2 : supper chat
   video_id: string | string[]
+  handleError?: () => void
+  handleSuccess?: () => void
 }
 export type PurchaseTicketResponse = {
   message?: string
@@ -18,7 +20,9 @@ export type ListPointsParams = {
   limit?: number
 }
 export type DetailUsagePointParams = {
-  uuid: number
+  page?: number
+  limit?: number
+  uuid?: number
 }
 export type HistoryPointsParams = {
   page?: number

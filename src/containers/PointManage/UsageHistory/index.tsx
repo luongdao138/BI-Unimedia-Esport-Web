@@ -56,25 +56,22 @@ const UsageHistory: FC = () => {
     divide: '',
   }
 
-  const paramsPeriod = {
-    page: page,
-    limit: limit,
-    type: 2,
-    period: querySelected,
-  }
-  const params = {
-    page: page,
-    limit: limit,
-    type: 2,
-  }
-
   useEffect(() => {
-    getUsedPointData(querySelected != '' ? paramsPeriod : params)
+    getUsedPointData(
+      querySelected != ''
+        ? { page: page, limit: limit, type: 2, period: querySelected }
+        : {
+            page: page,
+            limit: limit,
+            type: 2,
+          }
+    )
     return () => {
       resetUsagePoints()
     }
   }, [page, querySelected])
 
+  //set list filter
   useEffect(() => {
     if (listFilterData) {
       setFilterOptions(filterOptionsData)
@@ -86,13 +83,8 @@ const UsageHistory: FC = () => {
     }
   }, [listFilterData])
 
-  const detailParams = {
-    page: pageDetail,
-    limit: limit,
-    uuid: purchasePointId,
-  }
   useEffect(() => {
-    getUsagePointsHistoryData(detailParams)
+    getUsagePointsHistoryData({ page: pageDetail, limit: limit, uuid: purchasePointId })
     return () => {
       resetDetailUsagePointsHistory()
     }

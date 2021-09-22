@@ -29,6 +29,7 @@ interface LiveStreamContentProps {
   softKeyboardIsShown?: boolean
   video_id?: string | string[]
   ticketPrice?: number
+  clickButtonPurchaseTicket?: () => void
 }
 
 const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
@@ -239,6 +240,7 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
     return (
       <Box className={classes.overlayPurchaseContainer}>
         <OverlayContent
+          onClickButton={props?.clickButtonPurchaseTicket}
           buttonText={getOverlayButtonText()}
           buttonDescriptionText={getOverlayButtonDescriptionText()}
           message={getOverlayMessage()}
