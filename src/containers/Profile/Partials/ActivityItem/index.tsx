@@ -72,10 +72,10 @@ const ActivityItem: React.FC<Props> = ({ activity }) => {
     if (targetId) {
       switch (action) {
         case ACTIVITY_ACTION_TYPE.TOPIC_CREATE:
-          router.push(`${ESRoutes.TOPIC}/${data.hash_key}`)
+          router.push(`${ESRoutes.COMMUNITY}/${data.hash_key}`)
           break
         case ACTIVITY_ACTION_TYPE.TOPIC_COMMENT:
-          router.push(`${ESRoutes.TOPIC}/${data.hash_key}`)
+          router.push(`${ESRoutes.COMMUNITY}/${data.hash_key}`)
           break
         case ACTIVITY_ACTION_TYPE.COMMUNITY_CREATE:
           router.push(`${ESRoutes.COMMUNITY}/${data.hash_key}`)
