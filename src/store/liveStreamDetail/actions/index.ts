@@ -1,5 +1,6 @@
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit'
 import * as services from '@services/liveStreamDetail.service'
+import { getTimeZone } from '@utils/helpers/CommonHelper'
 import { ACTION_VIDEO_DETAIL_STREAM } from './types'
 
 export const resetArchivedVideoStream = createAction(ACTION_VIDEO_DETAIL_STREAM.RESET_ARCHIVED_STREAM)
@@ -10,7 +11,7 @@ export const getListArchivedVideoStream = createAsyncThunk<
   services.ListArchivedVideoStreamParams
 >(ACTION_VIDEO_DETAIL_STREAM.GET_LIST_ARCHIVE_VIDEOS_STREAM, async (archivedParams, { rejectWithValue }) => {
   try {
-    const res = await services.ListArchivedVideoStream(archivedParams)
+    const res = await services.ListArchivedVideoStream({ ...archivedParams, timezone: getTimeZone() })
     if (res?.code === 200) {
       return res
     } else {
@@ -29,7 +30,7 @@ export const getListRelatedVideoStream = createAsyncThunk<services.ListArchivedV
   ACTION_VIDEO_DETAIL_STREAM.GET_LIST_RELATED_VIDEOS_STREAM,
   async (relatedParams, { rejectWithValue }) => {
     try {
-      const res = await services.ListRelatedVideoStream(relatedParams)
+      const res = await services.ListRelatedVideoStream({ ...relatedParams, timezone: getTimeZone() })
       if (res?.code === 200) {
         return res
       } else {

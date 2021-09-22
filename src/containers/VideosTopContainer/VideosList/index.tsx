@@ -12,7 +12,7 @@ import PreLoadContainer from '../PreLoadContainer'
 import { searchTypes } from '@constants/common.constants'
 import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
-import useSearch from '@containers/Search/useSearch'
+import useVideoSearch from '@containers/Search/useVideoSearch'
 
 type VideoListProps = {
   setTab: (value: number) => void
@@ -24,7 +24,7 @@ const VideosList: React.FC<VideoListProps> = ({ setTab, videoItemStyle }) => {
   const theme = useTheme()
   const downMd = useMediaQuery(theme.breakpoints.down(769))
   const classes = useStyles()
-  const { setSearch } = useSearch()
+  const { setSearch, setSearchCategoryID } = useVideoSearch()
   const { listLiveVideo, meta, videoTop, videoPopular, videoCategoryPopular } = useListVideoAll()
 
   useEffect(() => {
@@ -86,6 +86,7 @@ const VideosList: React.FC<VideoListProps> = ({ setTab, videoItemStyle }) => {
   }
   const onClickSeeMorePopular = (item) => {
     setSearch({ type: searchTypes.VIDEO, keyword: item.name })
+    setSearchCategoryID({ type: searchTypes.VIDEO, category_id: item.id })
     router.push(ESRoutes.SEARCH_VIDEO)
   }
 

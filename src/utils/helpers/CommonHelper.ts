@@ -1,6 +1,7 @@
 import { FORMAT_DATE_TIME_JP, FORMAT_SCHEDULE_TIME, TAX, REGEX_DETECT_BRANCH } from '@constants/common.constants'
 import { StoreType } from '@store/store'
 import moment from 'moment'
+import * as mTimeZone from 'moment-timezone'
 
 /* eslint-disable no-useless-escape */
 const validateEmail = (email: string): boolean => {
@@ -244,6 +245,10 @@ export const hexToRgba = (hex: string, opacity: number): string => {
   rgba.push(parseInt(hex.slice(4, 6), 16))
   rgba.push(opacity)
   return 'rgb(' + rgba.toString() + ')'
+}
+
+export const getTimeZone = (): string => {
+  return mTimeZone.tz.guess()
 }
 
 export const CommonHelper = {

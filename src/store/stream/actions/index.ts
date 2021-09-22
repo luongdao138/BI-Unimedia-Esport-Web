@@ -1,12 +1,13 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import * as services from '@services/liveStream.service'
+import { getTimeZone } from '@utils/helpers/CommonHelper'
 import { ACTION_STREAM_TYPES } from './types'
 
 export const getLiveSettingInfo = createAsyncThunk<services.LiveStreamSettingResponse, services.LiveStreamSettingParams>(
   ACTION_STREAM_TYPES.GET_INFORMATION_LIVE_SETTING,
   async (liveSettingParams, { rejectWithValue }) => {
     try {
-      const res = await services.getLiveSetting(liveSettingParams)
+      const res = await services.getLiveSetting({ ...liveSettingParams, timezone: getTimeZone() })
       return res
     } catch (error) {
       if (!error.response) {
@@ -21,7 +22,7 @@ export const getScheduleSettingInfo = createAsyncThunk<services.LiveStreamSettin
   ACTION_STREAM_TYPES.GET_INFORMATION_SCHEDULE,
   async (liveSettingParams, { rejectWithValue }) => {
     try {
-      const res = await services.getScheduleSetting(liveSettingParams)
+      const res = await services.getScheduleSetting({ ...liveSettingParams, timezone: getTimeZone() })
       return res
     } catch (error) {
       if (!error.response) {
@@ -36,7 +37,7 @@ export const setLiveStream = createAsyncThunk<services.SetLiveStreamResponse, se
   ACTION_STREAM_TYPES.SET_INFORMATION_LIVE_SETTING,
   async (setLiveStreamParams, { rejectWithValue }) => {
     try {
-      const res = await services.setLiveSetting(setLiveStreamParams)
+      const res = await services.setLiveSetting({ ...setLiveStreamParams, timezone: getTimeZone() })
       if (res?.code === 200) {
         return res
       } else {

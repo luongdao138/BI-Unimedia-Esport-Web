@@ -1,12 +1,13 @@
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit'
 import * as services from '@services/videoTop.services'
+import { getTimeZone } from '@utils/helpers/CommonHelper'
 import { ACTION_VIDEO_TOP } from './types'
 
 export const getListVideoAll = createAsyncThunk<services.ListVideoTopResponse, services.ListVideoTopParams>(
   ACTION_VIDEO_TOP.GET_LIST_ALL,
   async (videoParams, { rejectWithValue }) => {
     try {
-      const res = await services.ListVideoAll(videoParams)
+      const res = await services.ListVideoAll({ ...videoParams, timezone: getTimeZone() })
       if (res?.code === 200) {
         return res
       } else {
@@ -22,11 +23,11 @@ export const getListVideoAll = createAsyncThunk<services.ListVideoTopResponse, s
   }
 )
 
-export const getCategoryPopularVideo = createAsyncThunk<services.VideoPopularResponse>(
+export const getCategoryPopularVideo = createAsyncThunk<services.VideoPopularResponse, services.CategoryPopularParams>(
   ACTION_VIDEO_TOP.GET_VIDEO_POPULAR,
-  async (_, { rejectWithValue }) => {
+  async (params, { rejectWithValue }) => {
     try {
-      const res = await services.ListVideoPopular()
+      const res = await services.ListVideoPopular(params)
       if (res?.code === 200) {
         return res
       } else {
@@ -63,7 +64,7 @@ export const getVideoLive = createAsyncThunk<services.VideoTypeLiveResponse, ser
   ACTION_VIDEO_TOP.GET_LIST_LIVE,
   async (videoParams, { rejectWithValue }) => {
     try {
-      const res = await services.ListVideoLiveStream(videoParams)
+      const res = await services.ListVideoLiveStream({ ...videoParams, timezone: getTimeZone() })
       if (res?.code === 200) {
         return res
       } else {
@@ -83,7 +84,7 @@ export const getVideoSchedule = createAsyncThunk<services.VideoTypeScheduleRespo
   ACTION_VIDEO_TOP.GET_LIST_SCHEDULE,
   async (videoParams, { rejectWithValue }) => {
     try {
-      const res = await services.ListVideoSchedule(videoParams)
+      const res = await services.ListVideoSchedule({ ...videoParams, timezone: getTimeZone() })
       if (res?.code === 200) {
         return res
       } else {
@@ -103,7 +104,7 @@ export const getVideoArchived = createAsyncThunk<services.VideoTypeArchivedRespo
   ACTION_VIDEO_TOP.GET_LIST_ARCHIVE,
   async (videoParams, { rejectWithValue }) => {
     try {
-      const res = await services.ListVideoArchived(videoParams)
+      const res = await services.ListVideoArchived({ ...videoParams, timezone: getTimeZone() })
       if (res?.code === 200) {
         return res
       } else {
@@ -143,7 +144,7 @@ export const videoSearch = createAsyncThunk<services.SearchVideoResponse, servic
   ACTION_VIDEO_TOP.SEARCH_VIDEO,
   async (searchParams, { rejectWithValue }) => {
     try {
-      const res = await services.VideoSearch(searchParams)
+      const res = await services.VideoSearch({ ...searchParams, timezone: getTimeZone() })
       if (res?.code === 200) {
         return res
       } else {
@@ -172,7 +173,7 @@ export const videoDetail = createAsyncThunk<services.VideoDetailResponse, servic
   ACTION_VIDEO_TOP.VIDEO_DETAIL,
   async (params, { rejectWithValue }) => {
     try {
-      const res = await services.DetailVideo(params)
+      const res = await services.DetailVideo({ ...params, timezone: getTimeZone() })
       if (res?.code === 200) {
         return res
       } else {

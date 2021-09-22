@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Grid, Box, makeStyles, Theme, Typography } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
-import useSearch from '@containers/Search/useSearch'
 import VideoPreviewItem from '@containers/VideosTopContainer/VideoPreviewItem'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import { useTheme } from '@material-ui/core/styles'
@@ -9,11 +8,12 @@ import useSearchVideoResult from './useSearchVideoResult'
 import ESLoader from '@components/Loader'
 import { TypeVideo } from '@services/videoTop.services'
 import InfiniteScroll from 'react-infinite-scroll-component'
+import useVideoSearch from './useVideoSearch'
 
 const LIMIT = 9
 const VideoSearchContainer: React.FC = () => {
   const classes = useStyles()
-  const { searchKeyword } = useSearch()
+  const { searchKeyword, searchCategoryID } = useVideoSearch()
   const { t } = useTranslation(['common'])
   const theme = useTheme()
   const downMd = useMediaQuery(theme.breakpoints.down(769))
@@ -24,7 +24,7 @@ const VideoSearchContainer: React.FC = () => {
 
   useEffect(() => {
     setKeyword(searchKeyword)
-    videoSearch({ page: page, keyword: searchKeyword, limit: LIMIT })
+    videoSearch({ page: page, keyword: searchKeyword, limit: LIMIT, category_id: searchCategoryID })
 
     return () => {
       setPage(1)
@@ -34,7 +34,7 @@ const VideoSearchContainer: React.FC = () => {
   }, [searchKeyword])
 
   useEffect(() => {
-    if (page > 1) videoSearch({ page: page, limit: LIMIT, keyword: keyword })
+    if (page > 1) videoSearch({ page: page, limit: LIMIT, keyword: keyword, category_id: searchCategoryID })
   }, [page])
 
   const handleLoadMore = async () => {

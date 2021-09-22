@@ -64,6 +64,7 @@ export type ListVideoTopParams = {
   page?: number
   limit?: number
   follow?: number
+  timezone?: string
 }
 
 export type TypeVideo = {
@@ -181,6 +182,8 @@ export type SearchVideoParams = {
   keyword: string
   page: number
   limit: number
+  timezone?: string
+  category_id?: number
 }
 
 export type SearchType = {
@@ -190,6 +193,7 @@ export type SearchType = {
 
 export type VideoDetailParams = {
   video_id: string
+  timezone?: string
 }
 
 export type VideoDetailData = {
@@ -258,13 +262,17 @@ export type VideoDetailResponse = {
   }
 }
 
+export type CategoryPopularParams = {
+  timezone?: string
+}
+
 export const ListVideoAll = async (params: ListVideoTopParams): Promise<ListVideoTopResponse> => {
   const { data } = await api.get<ListVideoTopResponse>(URI.GET_LIST_VIDEO_TOP, { params })
   return data
 }
 
-export const ListVideoPopular = async (): Promise<VideoPopularResponse> => {
-  const { data } = await api.get<VideoPopularResponse>(URI.GET_CATEGORY_POPULAR_VIDEO)
+export const ListVideoPopular = async (params: CategoryPopularParams): Promise<VideoPopularResponse> => {
+  const { data } = await api.get<VideoPopularResponse>(URI.GET_CATEGORY_POPULAR_VIDEO, { params })
   return data
 }
 

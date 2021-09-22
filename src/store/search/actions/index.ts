@@ -22,3 +22,4 @@ export const setSearchParams = createAction<services.SearchParams>(SEARCH_ACTION
 
 //only search video
 export const setSearchVideoParams = createAction<services.SearchParams>(SEARCH_ACTION_TYPE.SET_SEARCH_VIDEO_PARAMS)
+export const setCategoryIdParams = createAction<services.CategoryIDParams>(SEARCH_ACTION_TYPE.SET_CATEGORY_ID_PARAMS)

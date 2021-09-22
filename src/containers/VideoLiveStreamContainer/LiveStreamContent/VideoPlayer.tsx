@@ -114,7 +114,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({ src, statusVideo, mediaOverlayIsSh
     if (!isLive) {
       setDurationPlayer(duration) //video archive
     } else {
-      console.log('getCurrentTime====', reactPlayerRef.current.getCurrentTime())
+      console.log('getCurrentTime====', reactPlayerRef.current.getCurrentTime(), duration)
       setDurationPlayer(reactPlayerRef.current.getCurrentTime())
     }
   }
@@ -137,7 +137,8 @@ const VideoPlayer: React.FC<PlayerProps> = ({ src, statusVideo, mediaOverlayIsSh
         onVideoEnd()
       }
       setIsLive(player.current.getDuration() === Infinity ? true : false)
-      setDurationPlayer(player.current.getDuration() === Infinity && reactPlayerRef.current.getCurrentTime())
+      // setDurationPlayer(player.current.getDuration() === Infinity && reactPlayerRef.current.getCurrentTime())
+      setDurationPlayer(player.current.getDuration() === Infinity ? reactPlayerRef.current.getCurrentTime() : player.current.getDuration())
     }
     const onError = (err) => {
       console.warn('Player Event - ERROR:', err)
@@ -218,6 +219,10 @@ const VideoPlayer: React.FC<PlayerProps> = ({ src, statusVideo, mediaOverlayIsSh
   const onSeek = (se) => {
     console.log('SEEK=', se)
     setState({ ...state, loading: true })
+
+    //for live
+
+    // reactPlayerRef.current.seekTo(10,'seconds')
   }
   const onReady = () => {
     setState({ ...state, loading: false })
