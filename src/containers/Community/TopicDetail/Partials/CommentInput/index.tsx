@@ -111,6 +111,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ reply_param, setPage, setComm
             multiline
             rowsMax={9}
             placeholder={t('common:topic_create.comment_placeholder')}
+            inputProps={{ maxLength: TEXT_INPUT_LIMIT }}
           />
         </Box>
         <Box className={classes.sendCont}>
