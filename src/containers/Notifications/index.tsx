@@ -89,7 +89,12 @@ const NotificationContainer: React.FC = () => {
                   }
                   case NOTIFICATION_ACTION_TYPES.NOTIFICATION_TYPE_RECRUITMENT: {
                     seenNotificationBadge()
-                    router.push(`${ESRoutes.LOBBY.replace(/:id/gi, notification.attributes.hash_key)}`)
+                    router.push(`${ESRoutes.LOBBY_DETAIL.replace(/:id/gi, notification.attributes.hash_key)}`)
+                    break
+                  }
+                  case NOTIFICATION_ACTION_TYPES.NOTIFICATION_TYPE_COMMUNITY: {
+                    seenNotificationBadge()
+                    router.push(`${ESRoutes.COMMUNITY_DETAIL.replace(/:id/gi, notification.attributes.hash_key)}`)
                     break
                   }
                   default: {
