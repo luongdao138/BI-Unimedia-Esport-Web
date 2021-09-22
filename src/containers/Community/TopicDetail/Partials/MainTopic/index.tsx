@@ -31,6 +31,7 @@ type CommunityHeaderProps = {
   hash_key?: string
   handleDelete?: () => void
   topic?: TopicDetail
+  comment_count?: number
   community?: CommunityDetail
 }
 const MainTopic: React.FC<CommunityHeaderProps> = ({
@@ -42,6 +43,7 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({
   isConfirm,
   handleDelete,
   topic,
+  comment_count,
   community,
 }) => {
   const classes = useStyles()
@@ -85,16 +87,16 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({
         <Box m={2}>
           <Box className={classes.userContainer}>
             <Box className={topicData?.created_at ? classes.userInfoContainer : classes.userInfoContainerNoDate}>
-              <ButtonBase onClick={() => router.push(`${ESRoutes.PROFILE}/${topicData.owner_user_code}`)}>
+              <ButtonBase onClick={() => router.push(`${ESRoutes.PROFILE}/${topicData?.owner_user_code}`)}>
                 <ESAvatar
                   className={classes.avatar}
-                  alt={isConfirm ? nickname : topicData.owner_name}
-                  src={isConfirm ? user_avatar : topicData.owner_profile}
+                  alt={isConfirm ? nickname : topicData?.owner_name}
+                  src={isConfirm ? user_avatar : topicData?.owner_profile}
                 />
               </ButtonBase>
               <Box className={classes.userInfoBox} ml={1} maxWidth="100%">
-                <Typography className={classes.nickname}>{isConfirm ? nickname : topicData.owner_name}</Typography>
-                <Typography className={classes.userCode}>{isConfirm ? '@' + user_code : '@' + topicData.owner_user_code}</Typography>
+                <Typography className={classes.nickname}>{isConfirm ? nickname : topicData?.owner_name}</Typography>
+                <Typography className={classes.userCode}>{isConfirm ? '@' + user_code : '@' + topicData?.owner_user_code}</Typography>
               </Box>
             </Box>
             {!isConfirm && (
@@ -102,32 +104,32 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({
                 <Typography className={classes.date}>{CommonHelper.staticSmartTime(topicData?.created_at)}</Typography>
 
                 {(isPublic || !isNotMember) && (
-                  <ESMenu>
-                    {(isModerator || isOwner) && (
-                      <ESMenuItem onClick={handleDeleteOpen}>{t('common:topic_comment.delete.button')}</ESMenuItem>
-                    )}
-                    {!isOwner && (
-                      <LoginRequired>
-                        <ESMenuItem onClick={handleReportOpen}>{t('common:topic_comment.report.button')}</ESMenuItem>
-                      </LoginRequired>
-                    )}
-                  </ESMenu>
+                  <Box className={classes.menuWrapper}>
+                    <ESMenu>
+                      {(isModerator || isOwner) && <ESMenuItem onClick={handleDeleteOpen}>{t('common:topic.delete.button')}</ESMenuItem>}
+                      {!isOwner && (
+                        <LoginRequired>
+                          <ESMenuItem onClick={handleReportOpen}>{t('common:topic.report.button')}</ESMenuItem>
+                        </LoginRequired>
+                      )}
+                    </ESMenu>
+                  </Box>
                 )}
               </Box>
             )}
           </Box>
 
           <Box className={classes.contentContainer} mb={2} mt={1}>
-            <Typography className={classes.content}>{isConfirm ? content : topicData.content}</Typography>
+            <Typography className={classes.content}>{isConfirm ? content : topicData?.content}</Typography>
           </Box>
           {(isConfirm ? image : !!topicData?.attachments && topicData.attachments[0]?.assets_url) && renderClickableImage()}
           {topicData && (
-            <Box display="flex" justifyContent="flex-end" mt={2}>
+            <Box display="flex" justifyContent="flex-end" alignItems="flex-end" mt={2}>
               <Box className={classes.numberBox}>
                 <Icon className="fas fa-comment-alt" fontSize="small" />
               </Box>
               <Box className={classes.numberBox} mr={1} ml={1}>
-                <Typography className={classes.count}>{FormatHelper.kFormatter(topicData?.comment_count)}</Typography>
+                <Typography className={classes.count}>{FormatHelper.kFormatter(comment_count)}</Typography>
               </Box>
             </Box>
           )}
@@ -261,6 +263,9 @@ const useStyles = makeStyles((theme) => ({
     maxHeight: 300,
     maxWidth: 300,
     objectFit: 'contain',
+  },
+  menuWrapper: {
+    marginRight: -12,
   },
   [theme.breakpoints.down('sm')]: {
     imageBox: {

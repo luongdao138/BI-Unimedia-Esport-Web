@@ -1,4 +1,4 @@
-import { Box, useMediaQuery, useTheme, Typography } from '@material-ui/core'
+import { Box, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import TopicRowItem from '@components/TopicRowItem'
 import { Colors } from '@theme/colors'
@@ -6,21 +6,18 @@ import { useState, useEffect } from 'react'
 import moment from 'moment'
 import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
-import PaginationSmall from '../../../Partials/PaginationSmall'
 import useCommunityDetail from '../../useCommunityDetail'
 import ESLoader from '@components/Loader'
 import { TOPIC_STATUS } from '@constants/community.constants'
 import { useTranslation } from 'react-i18next'
 import _ from 'lodash'
-import PaginationBig from '@containers/Community/Partials/PaginationBig'
+import Pagination from '@containers/Community/Partials/Pagination'
 
 const TopicListContainer: React.FC = () => {
   const [page, setPage] = useState(1)
   const [count, setCount] = useState(1)
   const classes = useStyles()
-  const _theme = useTheme()
   const { t } = useTranslation(['common'])
-  const isMobile = useMediaQuery(_theme.breakpoints.down('sm'))
   const router = useRouter()
 
   const { topicList, getTopicList, topicListMeta, topicListPageMeta } = useCommunityDetail()
@@ -71,11 +68,7 @@ const TopicListContainer: React.FC = () => {
       )}
       {!_.isEmpty(topicList) && (
         <Box display="flex" justifyContent="center" mt={4}>
-          {isMobile ? (
-            <PaginationSmall page={page} pageNumber={count} setPage={setPage} disabled={topicListMeta.pending} />
-          ) : (
-            <PaginationBig page={page} pageNumber={count} setPage={setPage} disabled={topicListMeta.pending} />
-          )}
+          <Pagination page={page} pageNumber={count} setPage={setPage} disabled={topicListMeta.pending} />
         </Box>
       )}
     </>

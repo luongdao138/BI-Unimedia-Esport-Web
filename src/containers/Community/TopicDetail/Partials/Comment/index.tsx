@@ -102,7 +102,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
 
   const renderClickableImage = (image_url: string, isPopOver?: boolean) => {
     return (
-      <Box my={1}>
+      <Box className={classes.imageContainer}>
         <SRLWrapper options={LIGHTBOX_OPTIONS}>
           <img className={`${classes.imageBox} ${isPopOver && classes.popOverImage}`} src={image_url} />
         </SRLWrapper>
@@ -202,33 +202,41 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
             <Box className={classes.dateReportContainer}>
               <Typography className={classes.date}>{CommonHelper.staticSmartTime(commentData.created_at)}</Typography>
               {(isPublic || !isNotMember) && (
-                <ESMenu>
-                  {(isModerator || isOwner || isTopicOwner) && (
-                    <ESMenuItem onClick={handleDeleteOpen}>{t('common:topic_comment.delete.button')}</ESMenuItem>
-                  )}
-                  {!isOwner && (
-                    <LoginRequired>
-                      <ESMenuItem onClick={handleReport}>{t('common:topic_comment.report.button')}</ESMenuItem>
-                    </LoginRequired>
-                  )}
-                </ESMenu>
+                <Box className={classes.menuWrapper}>
+                  <ESMenu>
+                    {(isModerator || isOwner || isTopicOwner) && (
+                      <ESMenuItem onClick={handleDeleteOpen}>{t('common:topic_comment.delete.button')}</ESMenuItem>
+                    )}
+                    {!isOwner && (
+                      <LoginRequired>
+                        <ESMenuItem onClick={handleReport}>{t('common:topic_comment.report.button')}</ESMenuItem>
+                      </LoginRequired>
+                    )}
+                  </ESMenu>
+                </Box>
               )}
             </Box>
           </Box>
-          <Box className={classes.contentContainer}>
-            {newLineText(commentData.content)}
-            {/* TODO Just for test */}
-            {/* <Box className={classes.popcontent}>asdaasd</Box> */}
-            <Linkify
-              componentDecorator={(decoratedHref, decoratedText, key) => (
-                <a target="_blank" rel="noopener noreferrer" href={decoratedHref} key={key} className={classes.linkify}>
-                  {decoratedText}
-                </a>
-              )}
+          {commentData.content && (
+            <Box
+              className={
+                commentData.attachments && commentData.attachments[0]?.assets_url
+                  ? classes.contentContainerWithImage
+                  : classes.contentContainer
+              }
             >
-              <Typography>{newLineText(commentData.content)}</Typography>
-            </Linkify>
-          </Box>
+              <Linkify
+                componentDecorator={(decoratedHref, decoratedText, key) => (
+                  <a target="_blank" rel="noopener noreferrer" href={decoratedHref} key={key} className={classes.linkify}>
+                    {decoratedText}
+                  </a>
+                )}
+              >
+                <Typography>{newLineText(commentData.content)}</Typography>
+              </Linkify>
+            </Box>
+          )}
+
           {commentData.attachments &&
             commentData.attachments[0]?.assets_url &&
             renderClickableImage(commentData.attachments[0]?.assets_url)}
@@ -326,11 +334,11 @@ const useStyles = makeStyles((theme) => ({
   },
   container: {
     display: 'flex',
-    marginRight: theme.spacing(2),
-    marginLeft: theme.spacing(2),
+    marginRight: theme.spacing(3),
+    marginLeft: theme.spacing(3),
     flexDirection: 'column',
     borderTop: '2px solid rgba(255,255,255,0.1)',
-    padding: `${theme.spacing(2)}px ${theme.spacing(2)}px ${theme.spacing(2)}px`,
+    padding: `14.5px ${theme.spacing(2)}px 14.5px`,
   },
   containerDeleted: {
     display: 'flex',
@@ -339,11 +347,10 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: `${theme.spacing(2)}px ${theme.spacing(2)}px ${theme.spacing(2)}px`,
+    padding: `14.5px ${theme.spacing(2)}px 14.5px`,
   },
   userContainer: {
     display: 'flex',
-    marginBottom: theme.spacing(1),
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
@@ -402,6 +409,19 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     position: 'relative',
+    marginBottom: theme.spacing(1),
+    marginTop: 9,
+  },
+  contentContainerWithImage: {
+    display: 'flex',
+    flexDirection: 'column',
+    position: 'relative',
+    marginBottom: 7,
+    marginTop: 9,
+  },
+  imageContainer: {
+    marginTop: 9,
+    marginBottom: theme.spacing(1),
   },
   popcontent: {
     position: 'absolute',
@@ -441,7 +461,7 @@ const useStyles = makeStyles((theme) => ({
   },
   shareButton: {
     padding: theme.spacing(0.5),
-    marginRight: theme.spacing(1),
+    marginRight: -12,
     color: Colors.white_opacity[70],
   },
   mainComment: {
@@ -464,6 +484,9 @@ const useStyles = makeStyles((theme) => ({
         borderColor: '#646464 transparent transparent transparent',
       },
     },
+  },
+  menuWrapper: {
+    marginRight: -12,
   },
   [theme.breakpoints.down('sm')]: {
     imageBox: {
