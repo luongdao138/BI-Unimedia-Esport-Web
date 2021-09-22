@@ -76,6 +76,8 @@ export const TOPIC_ROW_ITEM_DIVISOR = {
   CHARACTER_BEFORE_KEYWORD: 10,
 }
 
+export const REPLY_REGEX = /(>>[0-9]+)/g
+
 export const CARD_TAG = {
   THREE_DOT_SPACE: 21,
 }

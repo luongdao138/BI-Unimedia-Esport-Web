@@ -69,13 +69,6 @@ const TopicDetailContainer: React.FC = () => {
     setOpenDelete(false)
   }
 
-  useEffect(() => {
-    getCommentsList({ hash_key: String(topic_hash_key), page: 1 })
-    return () => {
-      resetTopicMeta()
-    }
-  }, [])
-
   const [pageHeight, setPageHeight] = useState(document.body.scrollHeight)
 
   useEffect(() => {
@@ -98,6 +91,9 @@ const TopicDetailContainer: React.FC = () => {
       getTopicDetail({ topic_hash: String(topic_hash_key), community_hash: String(hash_key) })
       getCommentsList({ hash_key: String(topic_hash_key) })
     }
+    return () => {
+      resetTopicMeta()
+    }
   }, [router])
 
   useEffect(() => {
@@ -105,7 +101,9 @@ const TopicDetailContainer: React.FC = () => {
   }, [topicDetailMeta])
 
   useEffect(() => {
-    getCommentsList({ hash_key: String(topic_hash_key), page: page })
+    if (topic_hash_key) {
+      getCommentsList({ hash_key: String(topic_hash_key), page: page })
+    }
   }, [page])
 
   useEffect(() => {
