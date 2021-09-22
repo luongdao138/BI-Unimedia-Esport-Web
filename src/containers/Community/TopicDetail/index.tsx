@@ -70,17 +70,13 @@ const TopicDetailContainer: React.FC = () => {
   }
 
   useEffect(() => {
-    getCommentsList({ hash_key: String(topic_hash_key), page: 1 })
-    return () => {
-      resetTopicMeta()
-    }
-  }, [])
-
-  useEffect(() => {
     if (topic_hash_key) {
       getCommunityDetail(String(hash_key))
       getTopicDetail({ topic_hash: String(topic_hash_key), community_hash: String(hash_key) })
       getCommentsList({ hash_key: String(topic_hash_key) })
+    }
+    return () => {
+      resetTopicMeta()
     }
   }, [router])
 
@@ -89,7 +85,9 @@ const TopicDetailContainer: React.FC = () => {
   }, [topicDetailMeta])
 
   useEffect(() => {
-    getCommentsList({ hash_key: String(topic_hash_key), page: page })
+    if (page > 1) {
+      getCommentsList({ hash_key: String(topic_hash_key), page: page })
+    }
   }, [page])
 
   useEffect(() => {

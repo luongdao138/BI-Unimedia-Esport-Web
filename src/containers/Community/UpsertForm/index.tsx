@@ -16,7 +16,7 @@ import useCommunityCreate from './useCommunityCreate'
 import { CommunityHelper } from '@utils/helpers/CommunityHelper'
 import useCheckNgWord from '@utils/hooks/useCheckNgWord'
 import _ from 'lodash'
-import { useAppDispatch, useAppSelector } from '@store/hooks'
+import { useAppDispatch } from '@store/hooks'
 import { FIELD_TITLES } from './FormModel/field_titles.constants'
 import { showDialog } from '@store/common/actions'
 import { NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
@@ -27,10 +27,7 @@ import { useTranslation } from 'react-i18next'
 import { CommunityFeature } from '@services/community.service'
 import { GameTitle } from '@services/game.service'
 import { useRouter } from 'next/router'
-import community from '@store/community'
 import * as commonActions from '@store/common/actions'
-
-const { selectors } = community
 
 type CommunityCreateProps = {
   communityName?: string
@@ -56,10 +53,9 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
     community,
     getCreateCommunityMeta,
     getUpdateCommunityMeta,
+    communityFeatures,
   } = useCommunityCreate()
-  const communityFeatures = useAppSelector(selectors.getCommunityFeatures)
   const [detailFeatures, setDetailFeatures] = useState([])
-
   const initialValues = getInitialValues(isEdit ? community : undefined, isEdit && detailFeatures)
   const [isDiscard, setIsDiscard] = useState(false)
 
@@ -98,20 +94,12 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
   }, [community])
 
   useEffect(() => {
-    if (getCreateCommunityMeta.error['message'] === SUBMIT_TITLE_ERROR_MESSAGE) {
+    if ((isEdit ? getUpdateCommunityMeta : getCreateCommunityMeta).error['message'] === SUBMIT_TITLE_ERROR_MESSAGE) {
       setIsAlreadyUsedTitle(true)
-    } else if (getCreateCommunityMeta.error) {
+    } else if ((isEdit ? getUpdateCommunityMeta : getCreateCommunityMeta).error) {
       renderFailedDataToast()
     }
-  }, [getCreateCommunityMeta])
-
-  useEffect(() => {
-    if (getUpdateCommunityMeta.error['message'] === SUBMIT_TITLE_ERROR_MESSAGE) {
-      setIsAlreadyUsedTitle(true)
-    } else if (getCreateCommunityMeta.error) {
-      renderFailedDataToast()
-    }
-  }, [getUpdateCommunityMeta])
+  }, [getCreateCommunityMeta, getUpdateCommunityMeta])
 
   useEffect(() => {
     if (isFirstRun.current) {
@@ -147,7 +135,7 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
         })
       )
     }
-  }, [isEdit])
+  }, [isEdit && communityFeatures])
 
   const renderFailedDataToast = () => {
     dispatch(commonActions.addToast(t('common:common.failed_to_get_data')))

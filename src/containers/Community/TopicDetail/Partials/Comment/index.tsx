@@ -70,6 +70,8 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
   const { isModerator, isPublic, isNotMember, isTopicOwner } = menuParams
   const { getCommentDetail, commentDetail, commentDetailMeta, resetCommentDetail } = useTopicDetail()
 
+  const toProfile = (user_code) => router.push(`${ESRoutes.PROFILE}/${user_code}`)
+
   const handleClickReply = (event, content) => {
     getCommentDetail({ topic_hash: topic_hash_key, comment_no: content.slice(2) })
     setReplyAnchorEl(event.currentTarget)
@@ -149,7 +151,9 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
           <Box className={classes.userInfoContainerMain}>
             <Typography className={classes.number}>{replyData.comment_no}</Typography>
             <Box ml={1}>
-              <ESAvatar className={classes.avatar} alt={replyData.owner_nickname} src={replyData.owner_profile} />
+              <ButtonBase onClick={() => toProfile(replyData.user_code)}>
+                <ESAvatar className={classes.avatar} alt={replyData.owner_nickname} src={replyData.owner_profile} />
+              </ButtonBase>
             </Box>
             <Box className={classes.userInfoBox} ml={1}>
               <Typography className={classes.username}>{replyData.owner_nickname}</Typography>
