@@ -615,6 +615,7 @@ export default {
       submit: '削除する',
       success_toast: 'コメントを削除しました。',
     },
+    comment_not_exist: '該当のコメントは存在しません。',
     has_deleted_comment: 'この投稿は削除されました。',
     has_deleted_last_comment: 'この投稿は削除されました',
   },

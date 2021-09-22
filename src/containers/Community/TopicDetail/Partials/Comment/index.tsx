@@ -128,24 +128,18 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
         {_.map(
           _.filter(_.split(str, reply_regex), (el) => !_.isEmpty(el)),
           (content, index) => {
-            return content.match(reply_regex) ? renderPopover(content, index, isReply) : content
+            return content.match(reply_regex) && !isReply ? renderPopover(content, index) : content
           }
         )}
       </Typography>
     ))
   }
 
-  const renderPopover = (content, index, isReply = false) => {
+  const renderPopover = (content, index) => {
     return (
-      <>
-        {isReply ? (
-          <Typography className={classes.replied_id}>{content}</Typography>
-        ) : (
-          <Link id={index} onClick={(e) => handleClickReply(e, content)} className={classes.reply}>
-            <Typography className={classes.replied_id}>{content}</Typography>
-          </Link>
-        )}
-      </>
+      <Link id={index} onClick={(e) => handleClickReply(e, content)} className={classes.reply}>
+        <Typography className={classes.replied_id}>{content}</Typography>
+      </Link>
     )
   }
 
@@ -268,11 +262,16 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
             commentDetailMeta.loaded &&
             (replyData.deleted_at ? deletedComment(replyData.comment_no, true) : popoverContent())}
           {commentDetailMeta.error && (
-            <Box my={1} display="flex" justifyContent="space-between">
-              Not found
-              <IconButton className={classes.closeMainComment} onClick={handleCloseReply}>
-                <IconClose fontSize="small" className={classes.closeMainCommentIcon} />
-              </IconButton>
+            <Box className={classes.emptyPopoverContent}>
+              <Box flex={1} />
+              <Typography className={`${classes.content} ${classes.center}`}>{t('common:topic_comment.comment_not_exist')}</Typography>
+              <Box>
+                <Box flex={1} textAlign="end">
+                  <IconButton className={classes.closeMainComment} onClick={handleCloseReply}>
+                    <IconClose fontSize="small" className={classes.closeMainCommentIcon} />
+                  </IconButton>
+                </Box>
+              </Box>
             </Box>
           )}
           {commentDetailMeta.pending && (
@@ -288,14 +287,19 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
   const deletedComment = (comment_no, isReply = false) => {
     return (
       <>
-        <Box className={classes.containerDeleted} borderTop={!isReply && '2px solid rgba(255,255,255,0.1)'}>
+        <Box
+          className={isReply ? classes.emptyPopoverContent : classes.containerDeleted}
+          borderTop={!isReply && '2px solid rgba(255,255,255,0.1)'}
+        >
           <Box flex={1}>
             <Typography className={classes.number}>{comment_no}</Typography>
           </Box>
           <Box display="flex" justifyContent="center" flex={8} textAlign="center">
-            <Typography className={classes.content}>{t('common:topic_comment.has_deleted_comment')}</Typography>
+            <Typography className={`${classes.content} ${isReply && classes.center}`}>
+              {t('common:topic_comment.has_deleted_comment')}
+            </Typography>
           </Box>
-          <Box flex={1}>
+          <Box flex={1} textAlign="end">
             {isReply && (
               <IconButton className={classes.closeMainComment} onClick={handleCloseReply}>
                 <IconClose fontSize="small" className={classes.closeMainCommentIcon} />
@@ -318,6 +322,12 @@ const useStyles = makeStyles((theme) => ({
   },
   closeMainCommentIcon: {
     fontSize: 10,
+  },
+  center: {
+    flex: 8,
+    textAlign: 'center',
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(1),
   },
   reply: {
     width: 'fit-content',
@@ -346,12 +356,16 @@ const useStyles = makeStyles((theme) => ({
   },
   containerDeleted: {
     display: 'flex',
-    marginRight: theme.spacing(2),
-    marginLeft: theme.spacing(2),
+    marginRight: theme.spacing(3),
+    marginLeft: theme.spacing(3),
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: `${theme.spacing(2)}px ${theme.spacing(2)}px ${theme.spacing(2)}px`,
+    padding: theme.spacing(2),
+  },
+  emptyPopoverContent: {
+    display: 'flex',
+    justifyContent: 'space-between',
   },
   userContainer: {
     display: 'flex',
@@ -470,7 +484,7 @@ const useStyles = makeStyles((theme) => ({
         content: "''",
         position: 'absolute',
         top: 'Calc(100% + 3px)',
-        left: (props: StyleParams) => `min(${props.currentReplyNumberRectLeft}px, 747px)`,
+        left: (props: StyleParams) => props.currentReplyNumberRectLeft - 12,
         marginLeft: -5,
         borderWidth: 5,
         borderStyle: 'solid',
