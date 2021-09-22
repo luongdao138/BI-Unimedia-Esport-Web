@@ -57,7 +57,7 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
         return CommonHelper.validateEmail(value)
       })
       .required(t('common.input_required')),
-    description: Yup.string().required(t('common.input_required')).max(1000),
+    description: Yup.string().required(t('common.input_required')).max(5000),
     reason_id: Yup.number()
       .test('reason_id', '', (value) => {
         return value !== -1

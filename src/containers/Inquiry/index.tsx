@@ -42,7 +42,7 @@ const ESInquiry: React.FC = () => {
         return CommonHelper.validateEmail(value)
       }),
 
-    content: Yup.string().required(t('inquiry.desc_required')).max(255),
+    content: Yup.string().required(t('inquiry.desc_required')).max(5000),
   })
 
   const { handleChange, values, handleSubmit, errors, touched, handleBlur } = useFormik<InquiryParams>({
