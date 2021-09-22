@@ -20,5 +20,14 @@ export const getSearchLobbies = createSelector(getRoot, (state) => {
     }
   })
 })
-export const getRecentLobbies = createSelector(getRoot, (state) => state.recentLobbies)
+export const getRecentLobbies = createSelector(getRoot, (state) => {
+  return state.recentLobbies.map((item) => {
+    return {
+      ...item,
+      participantsLimited: item.attributes.participants ? item.attributes.participants.slice(0, 3) : [],
+      startDate: DateHelper.formatDate(item.attributes.start_datetime),
+      entryEndDate: DateHelper.formatDate(item.attributes.entry_end_datetime),
+    }
+  })
+})
 export const getRecentLobbiesPageMeta = createSelector(getRoot, (state) => state.recentLobbiesPageMeta)
