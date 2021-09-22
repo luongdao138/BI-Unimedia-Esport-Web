@@ -11,18 +11,22 @@ import screenfull from 'screenfull'
 import ESLoader from '@components/Loader'
 
 import useDetailVideo from '../useDetailVideo'
+
 interface PlayerProps {
   src?: string
   thumbnail?: string
   statusVideo?: boolean
+  mediaOverlayIsShown?: boolean
+  onVideoEnd?: () => void
 }
+
 declare global {
   interface Window {
     IVSPlayer: any
   }
 }
 
-const VideoPlayer: React.FC<PlayerProps> = ({ src, statusVideo }) => {
+const VideoPlayer: React.FC<PlayerProps> = ({ src, statusVideo, mediaOverlayIsShown, onVideoEnd }) => {
   const checkStatusVideo = 1
   const classes = useStyles({ checkStatusVideo })
 
@@ -129,6 +133,9 @@ const VideoPlayer: React.FC<PlayerProps> = ({ src, statusVideo }) => {
       console.warn(
         `Player State - ${playerState} - ${player.current.getDuration()}- src=${src}- getLiveLatency=${player.current.getLiveLatency()}`
       )
+      if (playerState === IVSPlayer.PlayerState.ENDED) {
+        onVideoEnd()
+      }
       setIsLive(player.current.getDuration() === Infinity ? true : false)
       setDurationPlayer(player.current.getDuration() === Infinity && reactPlayerRef.current.getCurrentTime())
     }
@@ -193,6 +200,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({ src, statusVideo }) => {
   const onEnded = () => {
     console.log('-----ENDED RN----')
     setState({ ...state, ended: true })
+    onVideoEnd()
   }
   const handlePlayPauseOut = () => {
     setState({ ...state, playing: !state.playing })
@@ -252,12 +260,13 @@ const VideoPlayer: React.FC<PlayerProps> = ({ src, statusVideo }) => {
             // controls
           />
 
-          {ended ||
-            (!playing && (
-              <div className={classes.playOverView}>
-                <Icon className={`fas fa-play ${classes.fontSizeLarge}`} />
-              </div>
-            ))}
+          {!mediaOverlayIsShown &&
+            (ended ||
+              (!playing && (
+                <div className={classes.playOverView}>
+                  <Icon className={`fas fa-play ${classes.fontSizeLarge}`} />
+                </div>
+              )))}
         </div>
 
         <div className={classes.processControl}>

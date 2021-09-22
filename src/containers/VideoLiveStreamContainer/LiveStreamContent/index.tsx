@@ -30,6 +30,7 @@ interface LiveStreamContentProps {
   video_id?: string | string[]
   ticketPrice?: number
   clickButtonPurchaseTicket?: () => void
+  onVideoEnd: () => void
 }
 
 const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
@@ -193,6 +194,8 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
         src={detailVideoResult?.archived_url}
         thumbnail={'/images/live_stream/exelab_thumb.png'}
         statusVideo={showOverlayOnMediaPlayer() ? true : null}
+        mediaOverlayIsShown={showOverlayOnMediaPlayer()}
+        onVideoEnd={props.onVideoEnd}
       />
     )
   }
@@ -457,7 +460,7 @@ const useStyles = makeStyles((theme) => ({
     background: 'rgba(4, 4, 4, 0.71)',
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'flex-end',
+    justifyContent: 'center',
     flexDirection: 'column',
     zIndex: 100,
   },

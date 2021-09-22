@@ -60,6 +60,8 @@ export const ESRoutes = {
   VIDEO_TOP: '/videos/top',
   // w02-02
   VIDEO_LIVE_STREAM: '/live',
+  VIDEO_ARCHIVED: '/archived',
+  VIDEO_RESERVED: '/reserved',
   //w02-05
   DONATE_POINTS: '/live/donate_points',
   // w03-02
