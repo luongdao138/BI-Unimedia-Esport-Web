@@ -24,10 +24,6 @@ const TopicListContainer: React.FC = () => {
   const { hash_key } = router.query
 
   useEffect(() => {
-    getTopicList({ community_hash: String(hash_key), filter: TOPIC_STATUS.ALL, page: 1 })
-  }, [])
-
-  useEffect(() => {
     if (!topicListMeta.pending && topicListMeta.loaded) {
       setCount(topicListPageMeta?.total_pages)
     }
