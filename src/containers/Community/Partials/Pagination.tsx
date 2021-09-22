@@ -79,7 +79,7 @@ const Pagination: React.FC<Props> = ({ page, pageNumber, setPage, disabled }) =>
   }, [pageNumber, page])
 
   return (
-    pageNumber !== 1 && (
+    pageNumber > 1 && (
       <Box>
         <Box className={classes.pagination}>
           <ButtonBase className={classes.buttons} onClick={firstPage} disabled={page === 1 || disabled}>
