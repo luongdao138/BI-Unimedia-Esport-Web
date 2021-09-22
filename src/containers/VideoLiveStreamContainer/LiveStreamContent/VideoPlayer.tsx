@@ -212,7 +212,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({ src, statusVideo, mediaOverlayIsSh
   }
   const onError = (error, data) => {
     console.warn('onError player', error, data)
-    if (data.response === 404) {
+    if (data?.response === 404) {
       setState({ ...state, errorVideo: true, loading: false })
     }
   }

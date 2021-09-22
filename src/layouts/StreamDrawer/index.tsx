@@ -36,7 +36,7 @@ export const StreamDrawer: React.FC<StreamDrawerProps> = ({ toggleDrawer, open, 
   )
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   paper: {
     top: 61,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
@@ -49,5 +49,11 @@ const useStyles = makeStyles(() => ({
     height: '100%',
     paddingLeft: 24,
     paddingRight: 0,
+  },
+  [theme.breakpoints.down(375)]: {
+    box: {
+      overflow: 'scroll',
+      paddingBottom: '100px',
+    },
   },
 }))
