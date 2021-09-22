@@ -53,7 +53,7 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
 
   const validationSchema = Yup.object().shape({
     user_email: Yup.string()
-      .test('email-validation', t('common.error'), (value) => {
+      .test('email-validation', t('user_report.email_test_result'), (value) => {
         return CommonHelper.validateEmail(value)
       })
       .required(t('common.input_required')),

@@ -36,7 +36,6 @@ const Composer: React.FC<ComposerProps> = ({ renderSuggestion, onChange, msg, pl
         spellCheck={false}
         suggestionsPortalHost={container}
         placeholder={placeholder}
-        maxLength={5000}
         onKeyDown={(e: React.KeyboardEvent<HTMLTextAreaElement> | React.KeyboardEvent<HTMLInputElement>) => onKeyPress(e)}
         style={{
           suggestions: {
