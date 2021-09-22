@@ -1,6 +1,6 @@
 import React from 'react'
 import { Box, Typography, Theme, makeStyles } from '@material-ui/core'
-import { TypeVideo } from '@services/videoTop.services'
+import { TypeVideo, STATUS_VIDEO } from '@services/videoTop.services'
 import { useTranslation } from 'react-i18next'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
 import { FormatHelper } from '@utils/helpers/FormatHelper'
@@ -21,8 +21,14 @@ const VideoPreviewItem: React.FC<VideoPreviewItemProps> = ({ data }) => {
   //status = 0-schedule|1-live|2-archive
   const router = useRouter()
   const onNavigateLive = () => {
-    router.push({ pathname: ESRoutes.VIDEO_LIVE_STREAM, query: { vid: data?.uuid } })
+    const getRoute = () => ({
+      [STATUS_VIDEO.LIVE_STREAM.toString()]: ESRoutes.VIDEO_LIVE_STREAM,
+      [STATUS_VIDEO.ARCHIVE.toString()]: ESRoutes.VIDEO_ARCHIVED,
+      [STATUS_VIDEO.SCHEDULE.toString()]: ESRoutes.VIDEO_RESERVED,
+    })
+    router.push({ pathname: getRoute()[data?.status.toString() ?? ESRoutes.VIDEO_LIVE_STREAM], query: { vid: data?.uuid } })
   }
+
   return (
     <Box className={classes.container} key={data?.id} onClick={onNavigateLive}>
       <Box className={classes.videoContainer}>

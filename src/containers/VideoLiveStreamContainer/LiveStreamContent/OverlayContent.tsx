@@ -26,11 +26,13 @@ const OverlayContent: React.FC<OverlayContentProps> = (props) => {
   )
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   container: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+    paddingLeft: '20px',
+    paddingRight: '20px',
   },
   button: {
     '&.MuiButtonBase-root.button-primary': {
@@ -50,7 +52,25 @@ const useStyles = makeStyles(() => ({
     fontSize: 14,
     fontWeight: 'bold',
     color: '#F7F735',
-    marginBottom: '91px',
+    textAlign: 'center',
+  },
+  [theme.breakpoints.down(475)]: {
+    button: {
+      '&.MuiButtonBase-root.button-primary': {
+        paddingLeft: '30px',
+        paddingRight: '30px',
+        height: '40px',
+      },
+    },
+    message: {
+      marginTop: '15px',
+      fontSize: 12,
+      textAlign: 'center',
+    },
+    buttonDescription: {
+      fontSize: 12,
+      marginTop: '10px',
+    },
   },
 }))
 

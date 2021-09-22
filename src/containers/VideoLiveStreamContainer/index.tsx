@@ -254,6 +254,12 @@ const VideosTop: React.FC = () => {
     setSoftKeyboardIsShown(visible)
   }
 
+  const onVideoEnd = () => {
+    if (video_id) {
+      getVideoDetail({ video_id: `${video_id}` })
+    }
+  }
+
   return (
     <Box className={classes.root}>
       {isPendingPurchaseTicket && <ESLoader />}
@@ -284,6 +290,7 @@ const VideosTop: React.FC = () => {
               softKeyboardIsShown={softKeyboardIsShown}
               ticketPrice={detailVideoResult?.ticket_price}
               clickButtonPurchaseTicket={handlePurchaseTicket}
+              onVideoEnd={onVideoEnd}
             />
             <Grid container direction="row" className={classes.tabContainer}>
               {getTabs()}
