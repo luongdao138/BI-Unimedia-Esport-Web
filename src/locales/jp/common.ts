@@ -707,8 +707,8 @@ export default {
   },
   lobby: {
     copy_toast: 'クリップボードにコピーしました',
-    lobby_results: 'ロビー「:key」 の検索結果',
-    lobby_results_all: 'ロビーの検索結果',
+    lobby_results: '募集「:key」の検索結果',
+    lobby_results_all: '募集の検索結果',
     until_deadline: '締め切りまであと',
     until_event: '開催まであと',
     end_from_minutes: '分に受付終了',
@@ -875,7 +875,10 @@ export default {
     copy_url: '大会URLのコピー',
     report: '通報',
     search_placeholder: 'キーワード検索',
+    nickname: 'ニックネーム・ID',
+    arena: '大会',
     lobby: '募集',
+    community: 'コミュニティ',
   },
   user_profile: {
     edit_profile: 'プロフィールを編集',

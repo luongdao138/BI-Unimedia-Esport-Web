@@ -19,6 +19,10 @@ const NotificationListItem: React.FC<Props> = ({ data }) => {
         return <ESAvatar src={'/images/avatar.png'} />
       case NOTIFICATION_ACTION_TYPES.NOTIFICATION_TYPE_FOLLOW:
         return <ESAvatar alt={notification.nickname} src={notification.avatar_url} />
+      case NOTIFICATION_ACTION_TYPES.NOTIFICATION_TYPE_RECRUITMENT ||
+        NOTIFICATION_ACTION_TYPES.NOTIFICATION_TYPE_RECRUITMENT_ACTION_CANCELED ||
+        NOTIFICATION_ACTION_TYPES.NOTIFICATION_TYPE_RECRUITMENT_ACTION_SELECTED:
+        return <ESAvatar src={'/images/avatar.png'} />
       default:
         return <ESAvatar src={notification.avatar_url || '/images/avatar.png'} />
     }

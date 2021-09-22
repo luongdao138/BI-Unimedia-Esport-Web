@@ -6,18 +6,17 @@ export const searchTypes = {
   USER: 1,
   COMMUNITY: 2,
   TOURNAMENT: 3,
-  RECRUITMENT: 4,
-  LOBBY: 5,
+  LOBBY: 4,
 }
 
 export const searchOptions = [
   {
     value: searchTypes.USER,
-    name: 'ニックネーム・ID',
+    name: i18n.t('common:search.nickname'),
   },
   {
     value: searchTypes.TOURNAMENT,
-    name: '大会',
+    name: i18n.t('common:search.arena'),
   },
   {
     value: searchTypes.LOBBY,
@@ -25,7 +24,7 @@ export const searchOptions = [
   },
   {
     value: searchTypes.COMMUNITY,
-    name: 'コミュニティ',
+    name: i18n.t('common:search.community'),
   },
 ]
 
