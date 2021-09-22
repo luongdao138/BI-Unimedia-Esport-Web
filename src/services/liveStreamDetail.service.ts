@@ -51,6 +51,7 @@ export type ListArchivedVideoStreamParams = {
   video_id?: string | string[]
   page?: number
   limit?: number
+  timezone?: string
 }
 export type ReactionUserParams = {
   video_id?: string | string[]

@@ -168,6 +168,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   descriptionContainer: {
     display: 'flex',
     width: '100%',
+    flexDirection: 'column',
   },
   label: {
     marginLeft: 10,
@@ -181,8 +182,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 36,
+    // marginTop: 36,
     cursor: 'pointer',
+    justifyContent: 'center',
   },
   contentContainer: {
     marginTop: theme.spacing(0),

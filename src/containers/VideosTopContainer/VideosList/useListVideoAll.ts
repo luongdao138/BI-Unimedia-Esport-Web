@@ -3,6 +3,7 @@ import { useAppDispatch, useAppSelector } from '@store/hooks'
 import { Meta } from '@store/metadata/actions/types'
 import { createMetaSelector } from '@store/metadata/selectors'
 import videoTop from '@store/videoTop'
+import { getTimeZone } from '@utils/helpers/CommonHelper'
 
 const { selectors, actions } = videoTop
 const _getListVideoAll = createMetaSelector(actions.getListVideoAll)
@@ -23,7 +24,7 @@ const useListVideoAll = (): {
   // const page = useAppSelector(selectors.getListVideoTop)
   const meta = useAppSelector(_getListVideoAll)
   const getListVideoTop = (params: ListVideoTopParams) => dispatch(actions.getListVideoAll(params))
-  const getListVideoPopular = () => dispatch(actions.getCategoryPopularVideo())
+  const getListVideoPopular = () => dispatch(actions.getCategoryPopularVideo({ timezone: getTimeZone() }))
   const bannerTop = () => dispatch(actions.getBannerTop())
 
   //TODO: add limit (if you need)

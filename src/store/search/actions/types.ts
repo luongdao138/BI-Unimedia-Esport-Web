@@ -7,4 +7,5 @@ export enum SEARCH_ACTION_TYPE {
 
   //only search video
   SET_SEARCH_VIDEO_PARAMS = 'search/setSearchVideoParams',
+  SET_CATEGORY_ID_PARAMS = 'search/setCategoryIdParams',
 }

@@ -465,7 +465,7 @@ const useStyles = makeStyles((theme) => ({
     zIndex: 100,
   },
   wrap_info: {
-    padding: '16px 0 16px 24px',
+    padding: '16px 16px 16px 24px',
     width: '100%',
   },
   wrap_movie_info: {
@@ -477,7 +477,7 @@ const useStyles = makeStyles((theme) => ({
   },
   movie_title: {
     // maxWidth: '254px',
-    whiteSpace: 'nowrap',
+    // whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     fontSize: '20px',

@@ -89,6 +89,7 @@ export type LiveStreamSettingResponse = {
 }
 export type LiveStreamSettingParams = {
   type: string
+  timezone?: string
 }
 export type SetLiveStreamParams = {
   uuid?: string
@@ -109,6 +110,7 @@ export type SetLiveStreamParams = {
   stream_key: string
   status?: string
   video_publish_end_time?: string
+  timezone?: string
 }
 export type SetLiveStreamResponse = {
   code: number

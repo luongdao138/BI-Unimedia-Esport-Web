@@ -10,3 +10,4 @@ export const getSearchKeyword = createSelector(getRoot, (state) => state.keyword
 
 //only search video
 export const getSearchVideoType = createSelector(getRoot, (state) => state.typeSearchVideo)
+export const getSearchCategoryID = createSelector(getRoot, (state) => state.categoryID)

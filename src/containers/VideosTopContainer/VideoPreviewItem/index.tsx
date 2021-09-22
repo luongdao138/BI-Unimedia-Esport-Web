@@ -68,7 +68,9 @@ const VideoPreviewItem: React.FC<VideoPreviewItemProps> = ({ data }) => {
             {data?.status !== 2 && (
               <Typography className={classes.nameStyle}>
                 {data?.type !== 'related'
-                  ? FormatHelper.currencyFormat(`${data?.live_view_count}`) +
+                  ? (data?.status === 1
+                      ? FormatHelper.currencyFormat(`${data?.live_view_count}`)
+                      : FormatHelper.currencyFormat(`${data?.view_count}`)) +
                     (data?.status === 1 ? t('common:videos_top_tab.view_count_text') : t('common:videos_top_tab.view_count_schedule_text'))
                   : '2021/06/22'}
               </Typography>
@@ -191,6 +193,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   label: {
     textAlign: 'left',
     fontSize: 14,
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
   },
   valorantStyle: {
     textAlign: 'right',
