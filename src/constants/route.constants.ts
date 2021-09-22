@@ -66,4 +66,20 @@ export const ESRoutes = {
   PR: '/pr',
   LINE_CALLBACK: '/line/callback',
   TWITTER_CALLBACK: '/twitter/callback',
+  // w01-01
+  VIDEO_STREAMING_MANAGEMENT: '/video/streaming_manage',
+  // w01-02
+  VIDEO_STREAMING_SETTING: '/video/streaming_setting',
+  // w02-01
+  VIDEO_TOP: '/videos/top',
+  // w02-02
+  VIDEO_LIVE_STREAM: '/live',
+  VIDEO_ARCHIVED: '/archived',
+  VIDEO_RESERVED: '/reserved',
+  //w02-05
+  DONATE_POINTS: '/live/donate_points',
+  // w03-02
+  USER_POINT_MANAGEMENT: '/settings/points',
+  // w00
+  SEARCH_VIDEO: '/search/video',
 }

@@ -3,6 +3,7 @@ import UserSearchContainer from '@containers/Search/UserSearch'
 import TournamentSearchContainer from '@containers/Search/TournamentSearch'
 import LobbySearchContainer from '@containers/Search/LobbySearch'
 import CommunitySearchContainer from '@containers/Search/CommunitySearch'
+import VideoSearchContainer from '@containers/Search/VideoSearch'
 import { Box, makeStyles, Typography, IconButton, Icon, Theme } from '@material-ui/core'
 import MainLayout from '@layouts/MainLayout'
 import { searchTypes } from '@constants/common.constants'
@@ -11,6 +12,7 @@ import { useRouter } from 'next/router'
 import { Colors } from '@theme/colors'
 import PageWithLayoutType from '@constants/page'
 import useSearch from '@containers/Search/useSearch'
+// import StreamLayout from '@layouts/StreamLayout'
 
 const SearchPage: PageWithLayoutType = () => {
   const { t } = useTranslation(['common'])
@@ -35,6 +37,8 @@ const SearchPage: PageWithLayoutType = () => {
         return <LobbySearchContainer />
       case searchTypes.COMMUNITY:
         return <CommunitySearchContainer />
+      case searchTypes.VIDEO:
+        return <VideoSearchContainer />
       default:
         return <></>
     }
@@ -62,6 +66,11 @@ const SearchPage: PageWithLayoutType = () => {
           return t('common:community.community_results').replace(/:key/gi, keyword)
         }
         return t('common:community.community_results_all')
+      case searchTypes.VIDEO:
+        if (keyword) {
+          return t('common:video_search.video_results').replace(/:key/gi, keyword)
+        }
+        return t('common:video_search.video_results')
       default:
         return <></>
     }

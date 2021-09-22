@@ -109,6 +109,9 @@ export type UserProfile = {
     allow_groups_from_strangers: boolean
     is_deleted?: boolean
     home_settings?: string[]
+    delivery_flag?: boolean //check is streamer or not streamer
+    paid_delivery_flag?: boolean //check use ticket for live stream
+    uuid: string
   }
 }
 

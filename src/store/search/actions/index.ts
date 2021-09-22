@@ -19,3 +19,7 @@ export const userSearch = createAsyncThunk<services.UserSearchResponse, services
 
 export const resetSearchUsers = createAction(SEARCH_ACTION_TYPE.RESET_SEARCH_USERS)
 export const setSearchParams = createAction<services.SearchParams>(SEARCH_ACTION_TYPE.SET_SEARCH_PARAMS)
+
+//only search video
+export const setSearchVideoParams = createAction<services.SearchParams>(SEARCH_ACTION_TYPE.SET_SEARCH_VIDEO_PARAMS)
+export const setCategoryIdParams = createAction<services.CategoryIDParams>(SEARCH_ACTION_TYPE.SET_CATEGORY_ID_PARAMS)

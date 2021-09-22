@@ -6,6 +6,9 @@ import Button from '@components/Button'
 import { useTranslation } from 'react-i18next'
 import _ from 'lodash'
 import useSearch from '@containers/Search/useSearch'
+import router from 'next/router'
+import { ESRoutes } from '@constants/route.constants'
+import { searchTypes } from '@constants/common.constants'
 
 interface SearchModalProps {
   show: boolean
@@ -42,6 +45,21 @@ const SearchModal: React.FC<SearchModalProps> = ({ show, selectData, onSearch, h
 
   useEffect(() => {
     setOption(searchType)
+    return () => {
+      document.body.style.overflow = 'unset'
+      document.body.style.position = 'unset'
+      document.body.style.width = 'unset'
+      document.body.style.height = 'unset'
+    }
+  }, [])
+
+  useEffect(() => {
+    if (router.pathname == ESRoutes.VIDEO_TOP || router.pathname == ESRoutes.SEARCH_VIDEO) {
+      //only search video
+      setOption(searchTypes.VIDEO)
+    } else {
+      setOption(searchType)
+    }
     setValue(searchKeyword)
   }, [searchType, searchKeyword])
 

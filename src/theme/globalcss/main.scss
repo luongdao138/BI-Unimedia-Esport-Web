@@ -708,3 +708,146 @@ body.has-sticky-div .sticky-div {
     }
   }
 }
+
+.no_minimize_aside_left {
+  top: 60px;
+  position: fixed;
+  left: 0;
+  height: 100%;
+  border-right: 1px solid #70707070;
+  will-change: transform;
+  max-width: calc((100% - 802px) / 2);
+  width: 100%;
+}
+
+.no_minimize_main {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  min-height: 100vh;
+  padding-left: calc((100% - 802px) / 2);
+  background: url('/images/pattern.png') center 60px repeat-x #212121 fixed;
+}
+
+.no_minimize_aside_right {
+  padding-top: 60px;
+  background-color: #000;
+  position: relative;
+  max-width: 100%;
+  height: 100vh;
+  justify-content: flex-start;
+  display: flex;
+  z-index: 100;
+}
+
+.no_minimize_content_wrapper {
+  max-width: 802px;
+  padding-top: 60px;
+  position: relative;
+  width: 100%;
+}
+
+.minimize_content {
+  min-height: 100vh;
+  background-color: #212121;
+}
+
+.main_wrapper {
+  display: flex;
+  min-height: 400px;
+  background: #000;
+  justify-content: flex-end;
+}
+
+.minimize_main_wrapper {
+  justify-content: flex-start;
+}
+
+.minimize_aside_left {
+  top: 60px;
+  position: fixed;
+  left: 0;
+  width: 98px;
+  border-right: 1px solid #70707070;
+}
+
+.minimize_main {
+  padding-left: 98px;
+  width: 100%;
+}
+
+.minimize_content_wrapper {
+  padding-top: 60px;
+  width: 100%;
+  min-height: 100vh;
+}
+
+.streaming_setting_dialog {
+  #customized-dialog-title {
+    h2 {
+      background: #000;
+      padding: 15px 30px;
+    }
+    span {
+      font-weight: bold;
+    }
+  }
+}
+
+.no_minimize_content {
+  min-height: calc(100vh - 195px);
+}
+
+.line_through_text {
+  text-decoration: line-through;
+  color: #c1c1c1;
+}
+
+@media (max-width: 1200px) {
+  .no_minimize_aside_left {
+    width: 200px;
+    max-width: 200px;
+  }
+
+  .no_minimize_main {
+    padding-left: 200px;
+  }
+}
+
+@media (max-width: 1166px) {
+  .no_minimize_content_wrapper {
+    max-width: 660px;
+  }
+}
+
+@media (max-width: 960px) {
+  .minimize_aside_left {
+    display: none;
+  }
+
+  .no_minimize_aside_left {
+    display: none;
+  }
+
+  .minimize_main {
+    padding-left: 0px;
+  }
+
+  .no_minimize_aside_right {
+    display: none;
+  }
+
+  .no_minimize_main {
+    max-width: 100%;
+    padding-left: 0;
+  }
+
+  .no_minimize_content_wrapper {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .no_minimize_content {
+    min-height: calc(100vh - 264px);
+  }
+}

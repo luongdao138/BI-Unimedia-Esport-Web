@@ -20,6 +20,11 @@ import liveSocket from '@store/live_socket/reducers'
 import { liveEventsReducer } from '@store/liveEvents/reducers'
 import chatHistory from '@store/chatHistory/reducers'
 import { prReducer as pr } from '@store/pr/reducers'
+import stream from '@store/stream'
+import videoTop from '@store/videoTop'
+import purchasePoint from '@store/purchasePoint'
+import pointsManage from '@store/pointsManage'
+import liveStreamDetail from '@store/liveStreamDetail'
 
 const reducer = combineReducers({
   liveSocket,
@@ -43,6 +48,11 @@ const reducer = combineReducers({
   socket: socket.reducers,
   liveEvent: liveEventsReducer,
   chatHistory,
+  liveSetting: stream.reducers,
+  videoTop: videoTop.reducers,
+  purchasePoint: purchasePoint.reducers,
+  pointsManage: pointsManage.reducers,
+  liveStreamDetail: liveStreamDetail.reducers,
 })
 export default reducer
 

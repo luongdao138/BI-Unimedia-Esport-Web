@@ -34,6 +34,25 @@ import 'src/containers/VideoPlayer/theme.scss'
 import 'src/containers/VideoPlayer/position.scss'
 import 'src/containers/VideoPlayer/customPlugins/plugin.scss'
 import 'src/theme/globalcss/layout.scss'
+import Script from 'react-load-script'
+import Amplify from 'aws-amplify'
+
+const AWS_PROJECT_REGION = process.env.NEXT_PUBLIC_AWS_PROJECT_REGION
+const AWS_APPSYNC_GRAPHQLENDPOINT = process.env.NEXT_PUBLIC_AWS_APPSYNC_GRAPHQLENDPOINT
+const AWS_APPSYNC_REGION = process.env.NEXT_PUBLIC_AWS_APPSYNC_REGION
+const AWS_APPSYNC_AUTHENTICATIONTYPE = process.env.NEXT_PUBLIC_AWS_APPSYNC_AUTHENTICATIONTYPE
+const AWS_APPSYNC_APIKEY = process.env.NEXT_PUBLIC_AWS_APPSYNC_APIKEY
+
+Amplify.configure({
+  ...{
+    aws_project_region: AWS_PROJECT_REGION,
+    aws_appsync_graphqlEndpoint: AWS_APPSYNC_GRAPHQLENDPOINT,
+    aws_appsync_region: AWS_APPSYNC_REGION,
+    aws_appsync_authenticationType: AWS_APPSYNC_AUTHENTICATIONTYPE,
+    aws_appsync_apiKey: AWS_APPSYNC_APIKEY,
+  },
+  ssr: true,
+})
 
 type Props = AppProps & {
   Component: PageWithLayoutType
@@ -87,9 +106,12 @@ const App = ({ Component, pageProps }: Props) => {
   const Layout = Component.Layout ?? React.Fragment
 
   const { previousRoute } = useRouteUrlHistory()
-
+  const handleLoadScript = () => {
+    // console.warn('IVSPlayer; ', window?.IVSPlayer)
+  }
   return (
     <>
+      <Script url="https://player.live-video.net/1.4.0/amazon-ivs-player.min.js" onError={console.error} onLoad={handleLoadScript} />
       <ESHead title={pageProps.title || 'eXeLAB'} desc={pageProps.desc} keywords={pageProps.keywords} image={pageProps.image} />
       <PersistGate persistor={persistStore(store)}>
         <RouteContext.Provider

@@ -6,6 +6,7 @@
 export const Colors = {
   primary: '#FF4786',
   secondary: '#F7F735',
+  transparent: 'transparent',
   grey: {
     '10': '#060606',
     '100': '#212121',
@@ -29,6 +30,7 @@ export const Colors = {
     '30': 'rgba(255,255,255,.3)',
     '70': 'rgba(255,255,255,.7)',
     '87': 'rgba(255,255,255,.87)',
+    '6': 'rgba(255,255,255,.06)',
   },
   black_card: '#0A0A0A',
   black_opacity: {
