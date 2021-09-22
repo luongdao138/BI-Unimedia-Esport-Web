@@ -72,25 +72,25 @@ const ActivityItem: React.FC<Props> = ({ activity }) => {
     if (targetId) {
       switch (action) {
         case ACTIVITY_ACTION_TYPE.TOPIC_CREATE:
-          // TODO: target detail
+          router.push(`${ESRoutes.TOPIC}/${data.hash_key}`)
           break
         case ACTIVITY_ACTION_TYPE.TOPIC_COMMENT:
-          // TODO: target detail
+          router.push(`${ESRoutes.TOPIC}/${data.hash_key}`)
           break
         case ACTIVITY_ACTION_TYPE.COMMUNITY_CREATE:
-          // TODO: target detail
+          router.push(`${ESRoutes.COMMUNITY}/${data.hash_key}`)
           break
         case ACTIVITY_ACTION_TYPE.COMMUNITY_JOIN:
-          // TODO: target detail
+          router.push(`${ESRoutes.COMMUNITY}/${data.hash_key}`)
           break
         case ACTIVITY_ACTION_TYPE.USER_FOLLOWS:
           router.push(`${ESRoutes.PROFILE}/${data.user_code}`)
           break
         case ACTIVITY_ACTION_TYPE.RECRUITMENT_CREATE:
-          // TODO: target detail
+          router.push(`${ESRoutes.LOBBY}/${data.hash_key}`)
           break
         case ACTIVITY_ACTION_TYPE.RECRUITMENT_JOIN:
-          // TODO: target detail
+          router.push(`${ESRoutes.LOBBY}/${data.hash_key}`)
           break
         case ACTIVITY_ACTION_TYPE.TOURNAMENT_CREATE:
           router.push(`${ESRoutes.ARENA}/${data.hash_key}`)
