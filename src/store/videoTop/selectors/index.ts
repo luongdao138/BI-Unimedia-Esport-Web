@@ -20,3 +20,4 @@ export const userStreamerResult = createSelector(getRoot, (state) => state.userD
 export const streamingSecond = createSelector(getRoot, (state) => state.streaming_second)
 export const playedSecond = createSelector(getRoot, (state) => state.played_second)
 export const isViewingStream = createSelector(getRoot, (state) => state.is_viewing_stream)
+export const liveStreamInfo = createSelector(getRoot, (state) => state)

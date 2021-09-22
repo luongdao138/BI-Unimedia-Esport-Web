@@ -26,6 +26,8 @@ type StateType = {
   streaming_second?: number
   played_second?: number
   is_viewing_stream?: boolean
+  is_end_live?: boolean
+  seek_count?: number
 }
 const initialState: StateType = {
   listVideoAll: {
@@ -53,6 +55,8 @@ const initialState: StateType = {
   userDetailData: {},
   streaming_second: -1,
   played_second: -1,
+  is_end_live: false,
+  seek_count: 0 
 }
 
 export default createReducer(initialState, (builder) => {
@@ -133,5 +137,11 @@ export default createReducer(initialState, (builder) => {
   builder.addCase(actions.changeVideoTime, (state, action) => {
     state.streaming_second = action.payload.streaming_second
     state.played_second = action.payload.played_second
+  })
+  builder.addCase(actions.changeIsEndLive, (state, action) => {
+    state.is_end_live = action.payload.is_end_live
+  })
+  builder.addCase(actions.changeSeekCount, (state) => {
+    state.seek_count = state.seek_count + 1
   })
 })

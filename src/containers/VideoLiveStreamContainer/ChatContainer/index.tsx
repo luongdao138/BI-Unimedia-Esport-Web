@@ -189,10 +189,12 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
   const [isChatInBottom, setIsChatInBottom] = useState(false)
   console.log('🚀 ~ ---000---isChatInBottom', isChatInBottom)
 
-  const { userResult, streamingSecond, playedSecond, isViewingStream } = useDetailVideo()
+  const { userResult, streamingSecond, playedSecond, isViewingStream, liveStreamInfo } = useDetailVideo()
   // const userResult = {streamer: 0}
   const { dataPurchaseTicketSuperChat } = usePurchaseTicketSuperChat()
   // const dispatch = useAppDispatch()
+
+  const isEnabledChat = videoType === STATUS_VIDEO.LIVE_STREAM && !liveStreamInfo.is_end_live && +streamingSecond >= 0
 
   const validationSchema = Yup.object().shape({
     message: Yup.string()
@@ -279,29 +281,25 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
     return +message.display_avatar_time > +compareSecond && conditionWithoutTime
   }
 
-  // http://localhost:3000/live?vid=SusFHhEpuymQwgbo
-  // http://localhost:3000/live?vid=4RsJ1UMj0Lyt0Uh0
   const refOnCreateMess = useRef(null)
   const onCreateMess = (createdMessage) => {
     console.log('🚀 ~ subscribeAction ~ 1234', savedMess)
-    if (!createdMessage.delete_flag) {
-      if (playedSecond >= streamingSecond) {
-        // render new messages with savedMess
-        const isMessageInBottom = checkMessIsInBottom()
-        // console.log("🚀 ~ 11111")
-        setStateMessages([...savedMess, createdMessage])
-        // console.log("🚀 ~ 33333")
-        if (isMessageInBottom) {
-          scrollToCurrentMess()
-        }
+    if (playedSecond >= streamingSecond) {
+      // render new messages with savedMess
+      const isMessageInBottom = checkMessIsInBottom()
+      // console.log("🚀 ~ 11111")
+      setStateMessages([...savedMess, createdMessage])
+      // console.log("🚀 ~ 33333")
+      if (isMessageInBottom) {
+        scrollToCurrentMess()
+      }
 
-        // render new users donate
-        if (isPremiumChat(createdMessage, false)) {
-          let newMessDonate = [...savedDonateMess]
-          newMessDonate = newMessDonate.filter((item) => +item.display_avatar_time >= +streamingSecond)
-          // render user donate icon by time of local
-          setMessagesDonate([...newMessDonate, createdMessage])
-        }
+      // render new users donate
+      if (isPremiumChat(createdMessage, false)) {
+        let newMessDonate = [...savedDonateMess]
+        newMessDonate = newMessDonate.filter((item) => +item.display_avatar_time >= +streamingSecond)
+        // render user donate icon by time of local
+        setMessagesDonate([...newMessDonate, createdMessage])
       }
       // save mess for local
       setSavedMess((messages) => [...messages, createdMessage])
@@ -360,6 +358,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
         //@ts-ignore
         const subMessage = sub?.value
         if (subMessage.data.onCreateMessage.video_id === key_video_id) {
+          getMessages()
           const createdMessage = subMessage.data.onCreateMessage
           // checkMessIsInBottom()
           refOnCreateMess.current(createdMessage)
@@ -484,6 +483,11 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
   }, [isChatInBottom])
 
   useEffect(() => {
+    console.log('🚀 liveStreamInfo.seek_count ---- 000', liveStreamInfo.seek_count)
+    console.log('🚀 liveStreamInfo.playedSecond ---- 000', playedSecond)
+  }, [liveStreamInfo.seek_count])
+
+  useEffect(() => {
     getListUser()
     // getUsersDonate()
   }, [])
@@ -503,7 +507,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
           // video_id: { eq: "2f1141b031696738c1eb72cc450afadb"},
           video_id: { eq: key_video_id },
           is_premium: { eq: true },
-          delete_flag: { ne: true },
+          // delete_flag: { ne: true },
         },
       }
       const messagesResults: any = await API.graphql(graphqlOperation(listMessages, listQV))
@@ -524,7 +528,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
       const listQV: APIt.ListMessagesQueryVariables = {
         filter: {
           video_id: { eq: key_video_id },
-          delete_flag: { ne: true },
+          // delete_flag: { ne: true },
         },
       }
       const messagesResults: any = await API.graphql(graphqlOperation(listMessages, listQV))
@@ -640,6 +644,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
       onPressDonate={onPressDonate}
       myPoint={myPoint}
       openPurchasePointModal={openPurchasePointModal}
+      isEnabledChat={isEnabledChat}
     />
   )
 
@@ -661,7 +666,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
   }
 
   const createMess = async (message: string, point = 0): Promise<void> => {
-    if ((successFlagGetAddUSer || chatUser) && message) {
+    if ((successFlagGetAddUSer || chatUser) && message && isEnabledChat) {
       const videoTime = streamingSecond
       let input = {
         // id is auto populated by AWS Amplify
@@ -835,7 +840,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
             error={touched.message && !!errors?.message}
             onKeyPress={handlePressEnter}
           />
-          <Button onClick={handleSubmitChatContent} className={classes.iconButtonBg}>
+          <Button onClick={handleSubmitChatContent} className={classes.iconButtonBg} disabled={!isEnabledChat}>
             <Icon className={`fa fa-paper-plane ${classes.sendIcon}`} fontSize="small" />
           </Button>
         </Box>
@@ -866,7 +871,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
               message={messActiveUser}
               deleteMess={deleteMsg}
               getMessageWithoutNgWords={getMessageWithoutNgWords}
-              is_streamer={userResult?.streamer}
+              is_streamer={0}
             />
           )}
           <Box

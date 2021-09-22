@@ -168,6 +168,8 @@ export const changeStreamingSecond = createAction<services.StreamingChangeParams
 export const changeVideoTime = createAction<services.VideoTimeChangeParams>(ACTION_VIDEO_TOP.CHANGE_VIDEO_TIME)
 export const changePlayedSecond = createAction<services.PlayedSecondChangeParams>(ACTION_VIDEO_TOP.CHANGE_PLAYED_SECOND)
 export const changeIsViewingStream = createAction<services.ChangeIsViewingStreamParams>(ACTION_VIDEO_TOP.CHANGE_IS_VIEWING_STREAM)
+export const changeIsEndLive = createAction<{ is_end_live: boolean }>(ACTION_VIDEO_TOP.CHANGE_IS_END_LIVE)
+export const changeSeekCount = createAction(ACTION_VIDEO_TOP.CHANGE_SEEK_COUNT)
 
 export const videoDetail = createAsyncThunk<services.VideoDetailResponse, services.VideoDetailParams>(
   ACTION_VIDEO_TOP.VIDEO_DETAIL,
