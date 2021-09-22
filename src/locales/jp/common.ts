@@ -873,6 +873,7 @@ export default {
     copy_url: '大会URLのコピー',
     report: '通報',
     search_placeholder: 'キーワード検索',
+    lobby: '募集',
   },
   user_profile: {
     edit_profile: 'プロフィールを編集',
