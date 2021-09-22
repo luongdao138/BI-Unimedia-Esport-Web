@@ -21,7 +21,7 @@ import { useLayoutEffect } from 'react'
 
 const cache = new CellMeasurerCache({
   fixedWidth: true,
-  defaultHeight: 270,
+  defaultHeight: 279,
 })
 interface CommunityContainerProps {
   filter: CommunityFilterOption
