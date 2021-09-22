@@ -1,3 +1,4 @@
+import { RecentLobbiesParams } from '@services/lobby.service'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
 import lobbyStore from '@store/lobby'
 import { clearMetaData } from '@store/metadata/actions'
@@ -10,18 +11,17 @@ const _getRecentLobbiesMeta = createMetaSelector(actions.getRecentLobbies)
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const useLobbyData = () => {
   const dispatch = useAppDispatch()
-
   const recentLobbies = useAppSelector(selectors.getRecentLobbies)
   const recentLobbiesPageMeta = useAppSelector(selectors.getRecentLobbiesPageMeta)
   const getRecentLobbiesMeta = useAppSelector(_getRecentLobbiesMeta)
-  const getRecentLobbies = () => dispatch(actions.getRecentLobbies({ page: 1 }))
+  const getRecentLobbies = (params: RecentLobbiesParams) => dispatch(actions.getRecentLobbies(params))
   const reset = () => {
     dispatch(actions.clearLobbyResult())
-    dispatch(clearMetaData(actions.searchLobby.typePrefix))
+    dispatch(clearMetaData(actions.getRecentLobbies.typePrefix))
   }
 
   useEffect(() => {
-    getRecentLobbies()
+    getRecentLobbies({ page: 1 })
     return () => reset()
   }, [])
 

@@ -50,16 +50,14 @@ const HomeContainer: React.FC = () => {
       //   return <RecommendedRecruitment data={recommendedRecruitments} key={index} />
       // case HOME_SETTINGS.RECOMMENDED_EVENT:
       //   return <RecommendedEvent data={recommendedEventList} key={index} />
-      // case HOME_SETTINGS.RECRUITMENT_FOLLOW:
-      //   return <RecruitmentFollow data={recruitmentFollow} key={index} />
+      case HOME_SETTINGS.LOBBY_FOLLOW:
+        return <RecentLobbies key={index} />
       case HOME_SETTINGS.TOURNAMENT_FOLLOW:
         return <TournamentFollow data={tournamentFollowers} key={index} meta={tournamentFollowersMeta} />
       case HOME_SETTINGS.TOURNAMENT_RESULT:
         return <TournamentResult data={tournamentResults} key={index} meta={tournamentResultsMeta} />
       // case HOME_SETTINGS.TOPIC_FOLLOW:
       //   return <TopicFollow data={followersTopicList} key={index} />
-      case HOME_SETTINGS.LOBBY:
-        return <RecentLobbies key={index} />
       default:
         return ''
     }

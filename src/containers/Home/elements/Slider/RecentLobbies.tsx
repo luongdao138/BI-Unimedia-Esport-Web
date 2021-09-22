@@ -11,7 +11,7 @@ export const RecentLobbies: React.FC = () => {
   return (
     <ESSlider
       title={i18n.t('common:lobby.home.recent_lobbies_title')}
-      moreLink={ESRoutes.TOURNAMENT_FOLLOWER_ENDED}
+      moreLink={ESRoutes.LOBBY_FOLLOWER}
       navigation
       meta={getRecentLobbiesMeta}
       noItemsMessage={i18n.t('common:lobby.home.recent_lobbies_empty')}
