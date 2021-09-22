@@ -838,6 +838,11 @@ export default {
       recent_lobbies_title: 'フォローしている人の募集',
       recent_lobbies_empty: '該当の募集は存在しません',
     },
+    discard: {
+      title: '内容を破棄します',
+      message: '画面を戻ると、現在の入力内容は破棄されます。よろしいですか？',
+      confirm: '内容を破棄して戻る',
+    },
   },
   lobbySearchFilters: {
     all: 'すべて',
@@ -869,6 +874,7 @@ export default {
     copy_url: '大会URLのコピー',
     report: '通報',
     search_placeholder: 'キーワード検索',
+    lobby: '募集',
   },
   user_profile: {
     edit_profile: 'プロフィールを編集',
