@@ -2,9 +2,8 @@ import React, { useEffect, useState } from 'react'
 import TopicDetailHeader from '@containers/Community/TopicDetail/Partials/TopicDetailHeader'
 import Comment, { ReportData } from '@containers/Community/TopicDetail/Partials/Comment'
 import MainTopic from '@containers/Community/TopicDetail/Partials/MainTopic'
-import { Box, useMediaQuery, useTheme, makeStyles, Theme } from '@material-ui/core'
-import PaginationSmall from '../Partials/PaginationSmall'
-import PaginationBig from '../Partials/PaginationBig'
+import { Box, makeStyles, Theme } from '@material-ui/core'
+import Pagination from '../Partials/Pagination'
 import CommentInput from './Partials/CommentInput'
 import useTopicDetail from './useTopicDetail'
 import { Colors } from '@theme/colors'
@@ -24,8 +23,6 @@ import useDocTitle from '@utils/hooks/useDocTitle'
 
 const TopicDetailContainer: React.FC = () => {
   const { t } = useTranslation(['common'])
-  const _theme = useTheme()
-  const isMobile = useMediaQuery(_theme.breakpoints.down('sm'))
   const classes = useStyles()
   const router = useRouter()
   const { back } = useRouter()
@@ -41,6 +38,8 @@ const TopicDetailContainer: React.FC = () => {
     commentsListPageMeta,
     deleteComment,
     resetTopicMeta,
+    createCommentMeta,
+    deleteTopicCommentMeta,
   } = useTopicDetail()
   const { getCommunityDetail, communityDetail, isAuthenticated } = useCommunityDetail()
   const { isOwner } = useTopicHelper(topic?.attributes?.owner_user_code)
@@ -132,7 +131,9 @@ const TopicDetailContainer: React.FC = () => {
     <>
       <Box display="flex" flexDirection="column" minHeight="100vh">
         <Box flex={1}>
-          <ESFullLoader open={topicDetailMeta.pending || commentsListMeta.pending} />
+          <ESFullLoader
+            open={topicDetailMeta.pending || commentsListMeta.pending || createCommentMeta.pending || deleteTopicCommentMeta.pending}
+          />
           {topicDetailMeta.loaded && (
             <>
               <TopicDetailHeader title={data?.title} isTopic={true} onHandleBack={handleBack} />
@@ -157,11 +158,7 @@ const TopicDetailContainer: React.FC = () => {
             })}
           {!_.isEmpty(commentsList) && (
             <Box display="flex" justifyContent="center" my={2}>
-              {isMobile ? (
-                <PaginationSmall page={page} pageNumber={count} setPage={setPage} disabled={commentsListMeta.pending} />
-              ) : (
-                <PaginationBig page={page} pageNumber={count} setPage={setPage} disabled={commentsListMeta.pending} />
-              )}
+              <Pagination page={page} pageNumber={count} setPage={setPage} disabled={commentsListMeta.pending} />
             </Box>
           )}
         </Box>
@@ -176,6 +173,7 @@ const TopicDetailContainer: React.FC = () => {
             reportType={REPORT_TYPE.TOPIC_COMMENT}
             target_id={reportData.attributes.hash_key}
             data={reportData}
+            title={t('common:topic_comment.report.dialog_title')}
             open={reportData !== null}
             handleClose={() => setReportData(null)}
           />

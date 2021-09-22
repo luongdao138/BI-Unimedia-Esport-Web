@@ -603,6 +603,7 @@ export default {
   topic_comment: {
     there_is_no_topic: '該当のトピックはありません。',
     report: {
+      dialog_title: 'コメントを通報する',
       button: 'コメントを通報',
       title: '通報するコメント',
       chat_topic: '雑談トピック',

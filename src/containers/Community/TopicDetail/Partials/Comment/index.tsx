@@ -112,7 +112,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
 
   const renderClickableImage = (image_url: string, isPopOver?: boolean) => {
     return (
-      <Box my={1}>
+      <Box className={classes.imageContainer}>
         <SRLWrapper options={LIGHTBOX_OPTIONS}>
           <img className={`${classes.imageBox} ${isPopOver && classes.popOverImage}`} src={image_url} />
         </SRLWrapper>
@@ -221,17 +221,26 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
               )}
             </Box>
           </Box>
-          <Box className={classes.contentContainer}>
-            <Linkify
-              componentDecorator={(decoratedHref, decoratedText, key) => (
-                <a target="_blank" rel="noopener noreferrer" href={decoratedHref} key={key} className={classes.linkify}>
-                  {decoratedText}
-                </a>
-              )}
+          {commentData.content && (
+            <Box
+              className={
+                commentData.attachments && commentData.attachments[0]?.assets_url
+                  ? classes.contentContainerWithImage
+                  : classes.contentContainer
+              }
             >
-              {newLineText(commentData.content)}
-            </Linkify>
-          </Box>
+              <Linkify
+                componentDecorator={(decoratedHref, decoratedText, key) => (
+                  <a target="_blank" rel="noopener noreferrer" href={decoratedHref} key={key} className={classes.linkify}>
+                    {decoratedText}
+                  </a>
+                )}
+              >
+                {newLineText(commentData.content)}
+              </Linkify>
+            </Box>
+          )}
+
           {commentData.attachments &&
             commentData.attachments[0]?.assets_url &&
             renderClickableImage(commentData.attachments[0]?.assets_url)}
@@ -352,7 +361,7 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: theme.spacing(3),
     flexDirection: 'column',
     borderTop: '1px solid rgba(255,255,255,0.1)',
-    padding: `${theme.spacing(2)}px ${theme.spacing(2)}px ${theme.spacing(2)}px`,
+    padding: `14.5px ${theme.spacing(2)}px 14.5px`,
   },
   containerDeleted: {
     display: 'flex',
@@ -361,7 +370,7 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: theme.spacing(2),
+    padding: `14.5px ${theme.spacing(2)}px 14.5px`,
   },
   emptyPopoverContent: {
     display: 'flex',
@@ -369,7 +378,6 @@ const useStyles = makeStyles((theme) => ({
   },
   userContainer: {
     display: 'flex',
-    marginBottom: theme.spacing(1),
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
@@ -428,6 +436,19 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     position: 'relative',
+    marginBottom: theme.spacing(1),
+    marginTop: 9,
+  },
+  contentContainerWithImage: {
+    display: 'flex',
+    flexDirection: 'column',
+    position: 'relative',
+    marginBottom: 7,
+    marginTop: 9,
+  },
+  imageContainer: {
+    marginTop: 9,
+    marginBottom: theme.spacing(1),
   },
   popcontent: {
     position: 'absolute',

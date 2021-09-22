@@ -19,7 +19,7 @@ type Props = {
   disabled?: boolean
 }
 
-const PaginationBig: React.FC<Props> = ({ page, pageNumber, setPage, disabled }) => {
+const Pagination: React.FC<Props> = ({ page, pageNumber, setPage, disabled }) => {
   const classes = useStyles()
 
   const firstPage = () => {
@@ -79,32 +79,34 @@ const PaginationBig: React.FC<Props> = ({ page, pageNumber, setPage, disabled })
   }, [pageNumber, page])
 
   return (
-    <Box>
-      <Box className={classes.pagination}>
-        <ButtonBase className={classes.buttons} onClick={firstPage} disabled={page === 1 || disabled}>
-          <Icon className={`${classes.icons} fas fa-angle-double-left`} />
-        </ButtonBase>
+    pageNumber > 1 && (
+      <Box>
+        <Box className={classes.pagination}>
+          <ButtonBase className={classes.buttons} onClick={firstPage} disabled={page === 1 || disabled}>
+            <Icon className={`${classes.icons} fas fa-angle-double-left`} />
+          </ButtonBase>
 
-        {_.map(buttons, (button, i) => {
-          return (
-            <ButtonBase
-              key={i}
-              className={`${classes.pageButton} ${page === button.number && classes.activeButton}`}
-              onClick={() => {
-                setPage(button.number)
-              }}
-              disabled={disabled || button.number === null}
-            >
-              <Typography className={classes.pageText}>{button.number === null ? '...' : button.number}</Typography>
-            </ButtonBase>
-          )
-        })}
+          {_.map(buttons, (button, i) => {
+            return (
+              <ButtonBase
+                key={i}
+                className={`${classes.pageButton} ${page === button.number && classes.activeButton}`}
+                onClick={() => {
+                  setPage(button.number)
+                }}
+                disabled={disabled || button.number === null}
+              >
+                <Typography className={classes.pageText}>{button.number === null ? '...' : button.number}</Typography>
+              </ButtonBase>
+            )
+          })}
 
-        <ButtonBase className={classes.buttons} onClick={lastPage} disabled={page === pageNumber || disabled}>
-          <Icon className={`${classes.icons} fas fa-angle-double-right`} />
-        </ButtonBase>
+          <ButtonBase className={classes.buttons} onClick={lastPage} disabled={page === pageNumber || disabled}>
+            <Icon className={`${classes.icons} fas fa-angle-double-right`} />
+          </ButtonBase>
+        </Box>
       </Box>
-    </Box>
+    )
   )
 }
 
@@ -154,4 +156,4 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-export default PaginationBig
+export default Pagination
