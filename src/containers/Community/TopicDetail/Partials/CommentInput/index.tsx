@@ -31,7 +31,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ reply_param, setPage, setComm
   const { t } = useTranslation(['common'])
   const dispatch = useAppDispatch()
   const { checkNgWord } = useCheckNgWord()
-  const { createComment, createCommentMeta, getCommentsList } = useTopicDetail()
+  const { createComment, createCommentMeta } = useTopicDetail()
   const { uploadCommentImage } = useUploadImage()
 
   const [isUploading, setUploading] = useState(false)
@@ -51,9 +51,8 @@ const Comment: React.FC<CommunityHeaderProps> = ({ reply_param, setPage, setComm
     if (!createCommentMeta.pending && createCommentMeta.loaded) {
       setInputText('')
       setImageURL('')
-      setCommentCount(commentCount + 1)
-      getCommentsList({ hash_key: String(topic_hash_key) })
       setPage(1)
+      setCommentCount(commentCount + 1)
     }
   }, [createCommentMeta])
 

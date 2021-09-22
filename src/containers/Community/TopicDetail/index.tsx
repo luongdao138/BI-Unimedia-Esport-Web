@@ -69,6 +69,22 @@ const TopicDetailContainer: React.FC = () => {
     setOpenDelete(false)
   }
 
+  const [pageHeight, setPageHeight] = useState(document.body.scrollHeight)
+
+  useEffect(() => {
+    if (createCommentMeta.loaded && !commentsListMeta.pending && commentsListMeta.loaded) {
+      if (pageHeight !== document.body.scrollHeight) {
+        setPageHeight(document.body.scrollHeight)
+      }
+    }
+  }, [commentsListMeta])
+
+  useEffect(() => {
+    setTimeout(() => {
+      window.scrollTo(0, document.body.scrollHeight)
+    }, 100)
+  }, [pageHeight])
+
   useEffect(() => {
     if (topic_hash_key) {
       getCommunityDetail(String(hash_key))
