@@ -29,6 +29,7 @@ import { STATUS_VIDEO } from '@services/videoTop.services'
 import { useAppSelector } from '@store/hooks'
 import { getIsAuthenticated } from '@store/auth/selectors'
 import userProfileStore from '@store/userProfile'
+import { ESRoutes } from '@constants/route.constants'
 
 enum TABS {
   PROGRAM_INFO = 1,
@@ -75,7 +76,7 @@ const VideosTop: React.FC = () => {
   const [softKeyboardIsShown, setSoftKeyboardIsShown] = useState(false)
   const [errorPurchase, setErrorPurchase] = useState(false)
 
-  const { getVideoDetail, detailVideoResult, userResult } = useDetailVideo()
+  const { getVideoDetail, detailVideoResult, userResult, videoDetailError, resetVideoDetailError } = useDetailVideo()
 
   const isPendingPurchaseTicket = meta_purchase_ticket_super_chat?.pending && purchaseType === PURCHASE_TYPE.PURCHASE_TICKET
   const isLoadingData = isAuthenticated ? !detailVideoResult || !myPointsData || !userResult || !video_id : !detailVideoResult || !video_id
@@ -106,6 +107,13 @@ const VideosTop: React.FC = () => {
       }
     }
   }, [isAuthenticated])
+
+  useEffect(() => {
+    if (videoDetailError) {
+      router.push(ESRoutes.NOT_FOUND)
+      resetVideoDetailError()
+    }
+  }, [videoDetailError])
 
   const confirmDonatePoint = (donated_point, comment) => {
     // reset donate point
@@ -172,12 +180,15 @@ const VideosTop: React.FC = () => {
     return (
       <Grid item xs={12}>
         <ESTabs value={tab} onChange={(_, v) => setTab(v)} className={classes.tabs}>
-          {isMobile && <ESTab label={t('live_stream_screen.comment')} value={TABS.COMMENT} className={classes.singleTab} />}
+          {isMobile &&
+          <ESTab label={t('live_stream_screen.comment')} value={TABS.COMMENT} className={classes.singleTab} />}
           <ESTab label={t('live_stream_screen.program_info')} value={TABS.PROGRAM_INFO} className={classes.singleTab} />
           {!isScheduleAndNotHaveTicket() && (
-            <ESTab label={t('live_stream_screen.distributor_info')} value={TABS.DISTRIBUTOR_INFO} className={classes.singleTab} />
+            <ESTab label={t('live_stream_screen.distributor_info')} value={TABS.DISTRIBUTOR_INFO}
+                   className={classes.singleTab} />
           )}
-          <ESTab label={t('live_stream_screen.related_videos')} value={TABS.RELATED_VIDEOS} className={classes.singleTab} />
+          <ESTab label={t('live_stream_screen.related_videos')} value={TABS.RELATED_VIDEOS}
+                 className={classes.singleTab} />
         </ESTabs>
       </Grid>
     )

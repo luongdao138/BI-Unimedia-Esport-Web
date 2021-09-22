@@ -21,3 +21,4 @@ export const streamingSecond = createSelector(getRoot, (state) => state.streamin
 export const playedSecond = createSelector(getRoot, (state) => state.played_second)
 export const isViewingStream = createSelector(getRoot, (state) => state.is_viewing_stream)
 export const liveStreamInfo = createSelector(getRoot, (state) => state)
+export const videoDetailError = createSelector(getRoot, (state) => state.videoDetailError)
