@@ -62,7 +62,7 @@ export const HOME_SETTINGS = {
   LOBBY_FOLLOW: '4',
   TOURNAMENT_FOLLOW: '5',
   TOURNAMENT_RESULT: '6',
-  // TOPIC_FOLLOW: '7', //TODO skip 2.0
+  TOPIC_FOLLOW: '7',
 }
 
 export enum TOURNAMENT_STATUS {

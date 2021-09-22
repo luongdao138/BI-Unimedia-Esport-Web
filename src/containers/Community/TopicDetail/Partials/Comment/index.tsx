@@ -337,7 +337,7 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(3),
     marginLeft: theme.spacing(3),
     flexDirection: 'column',
-    borderTop: '2px solid rgba(255,255,255,0.1)',
+    borderTop: '1px solid rgba(255,255,255,0.1)',
     padding: `14.5px ${theme.spacing(2)}px 14.5px`,
   },
   containerDeleted: {

@@ -38,6 +38,8 @@ const TopicDetailContainer: React.FC = () => {
     commentsListPageMeta,
     deleteComment,
     resetTopicMeta,
+    createCommentMeta,
+    deleteTopicCommentMeta,
   } = useTopicDetail()
   const { getCommunityDetail, communityDetail, isAuthenticated } = useCommunityDetail()
   const { isOwner } = useTopicHelper(topic?.attributes?.owner_user_code)
@@ -129,7 +131,9 @@ const TopicDetailContainer: React.FC = () => {
     <>
       <Box display="flex" flexDirection="column" minHeight="100vh">
         <Box flex={1}>
-          <ESFullLoader open={topicDetailMeta.pending || commentsListMeta.pending} />
+          <ESFullLoader
+            open={topicDetailMeta.pending || commentsListMeta.pending || createCommentMeta.pending || deleteTopicCommentMeta.pending}
+          />
           {topicDetailMeta.loaded && (
             <>
               <TopicDetailHeader title={data?.title} isTopic={true} onHandleBack={handleBack} />
@@ -169,6 +173,7 @@ const TopicDetailContainer: React.FC = () => {
             reportType={REPORT_TYPE.TOPIC_COMMENT}
             target_id={reportData.attributes.hash_key}
             data={reportData}
+            title={t('common:topic_comment.report.dialog_title')}
             open={reportData !== null}
             handleClose={() => setReportData(null)}
           />

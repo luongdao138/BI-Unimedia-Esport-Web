@@ -36,9 +36,10 @@ export interface ESReportProps {
   reportType?: number
   handleClose?: () => void
   members?: any
+  title?: string
 }
 
-const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, reportType, msg_body, open, handleClose }) => {
+const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, title, reportType, msg_body, open, handleClose }) => {
   const _theme = useTheme()
   const classes = useStyles()
   const dispatch = useAppDispatch()
@@ -272,7 +273,7 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
                   <Icon className="fa fa-arrow-left" fontSize="small" />
                 </IconButton>
                 <Box pl={2}>
-                  <Typography variant="h2">{t('user_report.title')}</Typography>
+                  <Typography variant="h2">{title || t('user_report.title')}</Typography>
                 </Box>
               </Box>
               <Box py={4}>{attr && reportInfo()}</Box>
