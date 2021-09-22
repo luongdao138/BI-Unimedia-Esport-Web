@@ -75,7 +75,9 @@ const InfoContainer: React.FC = () => {
   }, [pages])
 
   useEffect(() => {
-    getTopicList({ community_hash: hash_key, keyword: value, only_title: isOnlyTitle.toString(), page: page })
+    if (page > 1) {
+      getTopicList({ community_hash: hash_key, keyword: value, only_title: isOnlyTitle.toString(), page: page })
+    }
   }, [page])
 
   const handleSubmit = (e) => {

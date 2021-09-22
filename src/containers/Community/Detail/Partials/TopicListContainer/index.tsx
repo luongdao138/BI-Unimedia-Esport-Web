@@ -34,7 +34,9 @@ const TopicListContainer: React.FC = () => {
   }, [topicListMeta])
 
   useEffect(() => {
-    getTopicList({ community_hash: String(hash_key), filter: TOPIC_STATUS.ALL, page: page })
+    if (page > 1) {
+      getTopicList({ community_hash: String(hash_key), filter: TOPIC_STATUS.ALL, page: page })
+    }
   }, [page])
 
   return (
