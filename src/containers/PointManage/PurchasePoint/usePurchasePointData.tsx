@@ -49,6 +49,8 @@ const usePurchasePointData = () => {
     }
   }
 
+  const resetErrorMess = () => dispatch(actions.resetErrorMess())
+
   return {
     metaSavedCardsMeta,
     getSavedCards,
@@ -59,6 +61,7 @@ const usePurchasePointData = () => {
     metaPurchaseUseNewCardMeta,
     purchasePointUseOldCard,
     metaPurchaseUseOldCardMeta,
+    resetErrorMess
   }
 }
 
