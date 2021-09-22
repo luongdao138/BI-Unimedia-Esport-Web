@@ -173,6 +173,7 @@ const TopicDetailContainer: React.FC = () => {
             reportType={REPORT_TYPE.TOPIC_COMMENT}
             target_id={reportData.attributes.hash_key}
             data={reportData}
+            title={t('common:topic_comment.report.dialog_title')}
             open={reportData !== null}
             handleClose={() => setReportData(null)}
           />

@@ -73,7 +73,7 @@ const CommunityCard: React.FC<Props> = ({ community }) => {
   }
   const getTags = (tags: { feature: string }[]) => {
     return (
-      <StyledBox display="flex" mt={1} ref={cardRef} maxHeight={21}>
+      <StyledBox display="flex" mt={1} ref={cardRef} maxHeight={19} height={19}>
         {_.map(tags, (tag, i) => {
           if (lineRefs.current[i].current) {
             total.current += lineRefs.current[i].current?.clientWidth + _theme.spacing(1.5)
@@ -179,6 +179,7 @@ const useStyles = makeStyles((theme) => ({
   },
   description: {
     fontSize: 10,
+    height: 30,
     display: '-webkit-box',
     WebkitBoxOrient: 'vertical',
     WebkitLineClamp: 2,
@@ -203,6 +204,7 @@ const useStyles = makeStyles((theme) => ({
   avatarContainer: {
     height: 20,
     marginLeft: theme.spacing(1),
+    marginTop: 22,
   },
   chipPrimary: {
     height: 20,
