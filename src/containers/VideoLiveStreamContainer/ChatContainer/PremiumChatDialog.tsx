@@ -15,6 +15,7 @@ type PremiumChatBoxProps = {
   onClickOutside?: () => void
   onPressDonate?: (donatedPoint: number, purchaseComment: string) => void
   myPoint: number
+  isEnabledChat: boolean
   createMess: (message: string, point?: number) => Promise<void>
   openPurchasePointModal?: (point: any) => void
 }
@@ -31,6 +32,7 @@ const PremiumChatBox: React.FC<PremiumChatBoxProps> = ({
   myPoint,
   createMess,
   openPurchasePointModal,
+  isEnabledChat,
 }) => {
   const getPurchasePointList = () => Object.values(purchasePoints)
   const [purchaseValueSelected, setPurchaseValueSelected] = useState<string>('p_100')
@@ -176,7 +178,7 @@ const PremiumChatBox: React.FC<PremiumChatBoxProps> = ({
               ))}
           </Box>
         </Box>
-        <Button onClick={handlePremiumChatClick} className={classes.purchaseButton}>
+        <Button onClick={handlePremiumChatClick} className={classes.purchaseButton} disabled={!isEnabledChat}>
           <Typography className={classes.purchaseButtonText}>{i18n.t('common:live_stream_screen.send')}</Typography>
         </Button>
         {(premiumChatValidationError || errors.message) && (

@@ -16,4 +16,6 @@ export const ACTION_VIDEO_TOP = {
   CHANGE_VIDEO_TIME: 'streaming/changeVideoTime',
   CHANGE_PLAYED_SECOND: 'streaming/changePlayedSecond',
   CHANGE_IS_VIEWING_STREAM: 'streaming/changeIsViewingStream',
+  CHANGE_IS_END_LIVE: 'streaming/changeIsEndLive',
+  CHANGE_SEEK_COUNT: 'streaming/changeSeekCount',
 }

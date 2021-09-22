@@ -113,6 +113,7 @@ const VideosTop: React.FC = () => {
     }
   }
   const handleCloseConfirmModal = () => {
+    getMyPointData({ page: 1, limit: 10 })
     setShowConfirmModal(false)
     setErrorPurchase(false)
   }

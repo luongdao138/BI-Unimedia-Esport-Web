@@ -59,6 +59,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({ src, statusVideo, mediaOverlayIsSh
     // changePlayedSecond,
     // playedSecond,
     changeVideoTime,
+    changeIsEndLive,
   } = useDetailVideo()
 
   const onProgress = async (event) => {
@@ -135,6 +136,9 @@ const VideoPlayer: React.FC<PlayerProps> = ({ src, statusVideo, mediaOverlayIsSh
       )
       if (playerState === IVSPlayer.PlayerState.ENDED) {
         onVideoEnd()
+      }
+      if (playerState === 'Ended') {
+        changeIsEndLive(true)
       }
       setIsLive(player.current.getDuration() === Infinity ? true : false)
       // setDurationPlayer(player.current.getDuration() === Infinity && reactPlayerRef.current.getCurrentTime())

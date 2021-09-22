@@ -188,7 +188,7 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
       // <VideoPlayer
       //   src={'https://usher.ttvnw.net/api/lvs/hls/lvs.lvs-client-example.c6341be8-a3c7-42bc-b89a-8dabe040eae9.m3u8'}
       //   thumbnail={'/images/live_stream/exelab_thumb.png'}
-      //   statusVideo={props.videoType}
+      //   statusVideo={true}
       // />
       <VideoPlayer
         src={detailVideoResult?.archived_url}
