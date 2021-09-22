@@ -78,7 +78,7 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
             </Box>
           )}
         </Box>
-        <Box display="flex" flexDirection="row" alignItems="center">
+        <Box className={classes.labelUrlShareContainer}>
           <Typography>{`${t('common:lobby.detail.label_id')}${detail.id}`}</Typography>
           {extended && (
             <>
@@ -244,6 +244,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: 23,
     marginLeft: 12,
   },
+  labelUrlShareContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: theme.spacing(1),
+  },
   multiline: {
     whiteSpace: 'pre-wrap',
     wordBreak: 'break-word',
@@ -302,6 +308,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   [theme.breakpoints.down('sm')]: {
     label: {
       flex: 5,
+    },
+    labelUrlShareContainer: {
+      marginTop: theme.spacing(2),
     },
   },
 }))
