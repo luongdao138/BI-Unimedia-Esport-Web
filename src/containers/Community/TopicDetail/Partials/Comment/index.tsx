@@ -289,7 +289,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
       <>
         <Box
           className={isReply ? classes.emptyPopoverContent : classes.containerDeleted}
-          borderTop={!isReply && '2px solid rgba(255,255,255,0.1)'}
+          borderTop={!isReply && '1px solid rgba(255,255,255,0.1)'}
         >
           <Box flex={1}>
             <Typography className={classes.number}>{comment_no}</Typography>
