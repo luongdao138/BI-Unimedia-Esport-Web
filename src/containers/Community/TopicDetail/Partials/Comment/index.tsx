@@ -1,4 +1,4 @@
-import { Box, Typography, Icon, IconButton, Popover, Link, ButtonBase } from '@material-ui/core'
+import { Box, Typography, Icon, IconButton, Popover, Link, ButtonBase, useTheme } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import ESAvatar from '@components/Avatar'
 import { Colors } from '@theme/colors'
@@ -25,6 +25,11 @@ import { useRect } from '@utils/hooks/useRect'
 let currentReplyNumberRectLeft: number
 const StyledBox = styled(Box)``
 const contentRef = createRef<HTMLDivElement>()
+
+type StyleParams = {
+  currentReplyNumberRectLeft: number
+}
+
 type MenuParams = {
   isTopicOwner: boolean
   isModerator: boolean
@@ -53,12 +58,13 @@ type CommunityHeaderProps = {
   onReport?: (comment: ReportData) => void
 }
 const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleReply, setOpenDelete, setSelectedCommentNo, onReport }) => {
-  const contentRect = useRect(contentRef)
-  const classes = useStyles({ currentReplyNumberRectLeft, contentRect })
+  const classes = useStyles({ currentReplyNumberRectLeft })
   const { query } = useRouter()
   const { topic_hash_key } = query
   const { t } = useTranslation(['common'])
   const [replyAnchorEl, setReplyAnchorEl] = useState(null)
+  const contentRect = useRect(contentRef)
+  const _theme = useTheme()
   const { isOwner } = useTopicHelper(comment.attributes.user_code)
   const { isModerator, isPublic, isNotMember, isTopicOwner } = menuParams
   const { getCommentDetail, commentDetail, commentDetailMeta, resetCommentDetail } = useTopicDetail()
@@ -253,6 +259,9 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
           transformOrigin={{
             vertical: 'bottom',
             horizontal: 'right',
+          }}
+          style={{
+            left: contentRect.left + _theme.spacing(3),
           }}
         >
           {!_.isEmpty(commentDetail) &&
@@ -449,20 +458,19 @@ const useStyles = makeStyles((theme) => ({
   },
   mainComment: {
     '& .MuiPopover-paper': {
-      left: (props: { currentReplyNumberRectLeft: number; contentRect: { left: number } }) => `${props.contentRect.left + 24}px !important`,
-      padding: 16,
+      left: '0 !important',
+      padding: theme.spacing(2),
       border: '3px solid #646464',
       background: 'rgba(33,33,33,.9)',
       borderRadius: 4,
       position: 'relative',
       overflow: 'initial !important',
-      width: 754,
+      width: 791,
       '&:before': {
         content: "''",
         position: 'absolute',
         top: 'Calc(100% + 3px)',
-        left: (props: { currentReplyNumberRectLeft: number; contentRect: { left: number } }) =>
-          `min(${props.currentReplyNumberRectLeft}px, 747px)`,
+        left: (props: StyleParams) => `min(${props.currentReplyNumberRectLeft}px, 747px)`,
         marginLeft: -5,
         borderWidth: 5,
         borderStyle: 'solid',
@@ -472,6 +480,13 @@ const useStyles = makeStyles((theme) => ({
   },
   menuWrapper: {
     marginRight: -12,
+  },
+  [theme.breakpoints.only('lg')]: {
+    mainComment: {
+      '& .MuiPopover-paper': {
+        maxWidth: 610,
+      },
+    },
   },
   [theme.breakpoints.down('sm')]: {
     imageBox: {
