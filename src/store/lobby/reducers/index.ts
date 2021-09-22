@@ -154,15 +154,16 @@ export default createReducer(initialState, (builder) => {
     state.participants = []
     state.recommendedParticipants = []
   })
-  builder.addCase(actions.getRecentLobbies.fulfilled, (_state, _action) => {
-    let _recentLobbies = _action.payload.data
-    if (_action.payload.meta != undefined && _action.payload.meta.current_page > 1) {
-      _recentLobbies = _state.recentLobbies.concat(_action.payload.data)
+  builder.addCase(actions.getRecentLobbies.fulfilled, (state, action) => {
+    let recentLobbies = action.payload.data
+    if (action.payload.meta != undefined && action.payload.meta.current_page > 1) {
+      recentLobbies = _.unionBy(state.recentLobbies, action.payload.data, 'attributes.hash_key')
     }
-    _state.recentLobbies = _recentLobbies
-    _state.recentLobbiesPageMeta = _action.payload.meta
+    state.recentLobbies = recentLobbies
+    state.recentLobbiesPageMeta = action.payload.meta
   })
   builder.addCase(actions.clearLobbyRecents, (state, _) => {
     state.recentLobbies = []
+    state.recentLobbiesPageMeta = undefined
   })
 })
