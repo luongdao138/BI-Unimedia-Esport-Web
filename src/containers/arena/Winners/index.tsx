@@ -11,15 +11,15 @@ import { useTranslation } from 'react-i18next'
 import Linkify from 'react-linkify'
 import _ from 'lodash'
 import { PlacementItem } from '@services/arena.service'
-import useGetProfile from '@utils/hooks/useGetProfile'
 import TeamEntryEditModal from '@containers/arena/Detail/Partials/ActionComponent/TeamEntryEditModal'
 import InidividualEntryEditModal from '@containers/arena/Detail/Partials/ActionComponent/InidividualEntryEditModal'
 import { ROLE } from '@constants/tournament.constants'
 import ResultListItem from './ResultListItem'
+import ResultList from './ResultList'
 
 const ArenaWinners: React.FC = () => {
   const { t } = useTranslation(['common'])
-  const { arenaWinners, arena, handleBack, toDetail } = useArenaWinners()
+  const { arenaWinners, arena, handleBack, toDetail, isTeam, hasWinnersData, userProfile } = useArenaWinners()
   const showWinner = arenaWinners['1'] && !!arenaWinners['1'].length
   const classes = useStyles()
   const [showSummary, setShowSummary] = useState(false)
@@ -27,7 +27,6 @@ const ArenaWinners: React.FC = () => {
   const winnerListRef = useRef(null)
   const backButtonRef = useRef(null)
   const [selectedItem, setSelectedItem] = useState(null as PlacementItem | null)
-  const { userProfile } = useGetProfile()
 
   useEffect(() => {
     window.onscroll = () => {
@@ -42,14 +41,6 @@ const ArenaWinners: React.FC = () => {
       return ref.current.getBoundingClientRect()
     }
     return { top: 0, bottom: 0 }
-  }
-
-  const isTeam = () => {
-    const pType = _.get(arena, 'attributes.participant_type', 0)
-    if (_.isNumber(pType)) {
-      return pType > 1
-    }
-    return false
   }
 
   const toEntryDetail = (placementItem: PlacementItem) => {
@@ -71,19 +62,6 @@ const ArenaWinners: React.FC = () => {
 
   const isMe = (participant: PlacementItem) => {
     return `${userProfile?.id}` === `${_.get(participant, 'attributes.user.id', '')}`
-  }
-
-  const hasWinnersData = () => {
-    if (!arenaWinners) return false
-
-    let hasData = false
-    Object.keys(arenaWinners).forEach((place) => {
-      const placement = arenaWinners[place]
-      if (!!placement && placement.length > 0) {
-        hasData = true
-      }
-    })
-    return hasData
   }
 
   return (
@@ -142,23 +120,26 @@ const ArenaWinners: React.FC = () => {
           {t('common:tournament.tournament_detail')}
         </ESButton>
       </Box>
-      {hasWinnersData() && (
-        <div ref={winnerListRef} className={classes.listContainer}>
-          {Object.keys(arenaWinners).map((key) =>
-            (arenaWinners[key] || []).map((p, idx) => (
-              <ResultListItem
-                key={idx}
-                position={p.position}
-                avatar={<Avatar src={p.avatar} alt={p.name} />}
-                onClickAvatar={() => toEntryDetail(p)}
-                name={p.name}
-                nameSecondary={p.user ? `@${p.user.user_code}` : undefined}
-              />
-            ))
-          )}
-        </div>
-      )}
-      {!selectedItem ? null : isTeam() ? (
+      <div ref={winnerListRef} className={classes.listContainer}>
+        {hasWinnersData && arena ? (
+          <ResultList rule={arena?.attributes.rule}>
+            {Object.keys(arenaWinners).map((key) =>
+              (arenaWinners[key] || []).map((p, idx) => (
+                <ResultListItem
+                  key={idx}
+                  position={p.position}
+                  avatar={<Avatar src={p.avatar} alt={p.name} />}
+                  onClickAvatar={() => toEntryDetail(p)}
+                  name={p.name}
+                  nameSecondary={p.user ? `@${p.user.user_code}` : ''}
+                  score={p.position}
+                />
+              ))
+            )}
+          </ResultList>
+        ) : null}
+      </div>
+      {!selectedItem ? null : isTeam ? (
         <TeamEntryEditModal
           tournament={arena}
           userProfile={userProfile}
@@ -284,27 +265,8 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   listContainer: {
-    borderRadius: theme.spacing(0.5),
-    border: `1px solid ${Colors.white_opacity['30']}`,
     marginRight: theme.spacing(3),
     marginLeft: theme.spacing(3),
-    padding: theme.spacing(3),
-    paddingLeft: theme.spacing(1),
-    paddingBottom: theme.spacing(1),
-    background: Colors.black_opacity['70'],
-    position: 'sticky',
-    zIndex: 1,
-  },
-  listItem: {
-    height: 66,
-    marginBottom: theme.spacing(2),
-    borderRadius: theme.spacing(0.5),
-    paddingLeft: theme.spacing(2),
-    display: 'flex',
-    alignItems: 'center',
-    '&:hover': {
-      backgroundColor: Colors.white_opacity['10'],
-    },
   },
   placementImage: {
     height: 40,
@@ -320,5 +282,14 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: theme.spacing(7),
     paddingRight: theme.spacing(7),
     alignSelf: 'center',
+  },
+  [theme.breakpoints.down('sm')]: {
+    listContainer: {
+      marginRight: theme.spacing(1),
+      marginLeft: theme.spacing(1),
+    },
+    listWrapper: {
+      paddingRight: theme.spacing(1),
+    },
   },
 }))

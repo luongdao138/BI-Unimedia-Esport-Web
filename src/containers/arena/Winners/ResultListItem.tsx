@@ -1,6 +1,8 @@
 import { ButtonBase, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
+import { TournamentHelper } from '@utils/helpers/TournamentHelper'
+import { useArenaResult } from './ResultList'
 
 interface ResultListItemProps {
   position: number
@@ -8,13 +10,15 @@ interface ResultListItemProps {
   onClickAvatar: () => void
   name: string
   nameSecondary?: string | undefined
+  score?: number
 }
 
-export default function ResultListItem({ position, avatar, onClickAvatar, name, nameSecondary }: ResultListItemProps) {
+export default function ResultListItem({ position, avatar, onClickAvatar, name, nameSecondary, score }: ResultListItemProps) {
   const classes = useStyles()
+  const rule = useArenaResult()
   return (
     <div className={classes.root}>
-      <div className={classes.content}>
+      <div className={classes.contentWrapper}>
         <div className={classes.placementWrapper}>
           <p
             className={`${classes.text} ${position === 1 && classes.first} ${position === 2 && classes.second} ${
@@ -31,15 +35,18 @@ export default function ResultListItem({ position, avatar, onClickAvatar, name, 
           {avatar}
         </ButtonBase>
         <div className={classes.nameWrapper}>
-          <Typography className={classes.breakWord} variant="h3" component="p">
+          <Typography variant="h3" component="p">
             {name}
           </Typography>
           {nameSecondary && (
-            <Typography variant="body2" className={`${classes.user_code} ${classes.breakWord}`}>
+            <Typography variant="body2" className={classes.user_code}>
               {nameSecondary}
             </Typography>
           )}
         </div>
+        {score && (rule === 'score_attack' || rule === 'time_attack') ? (
+          <Typography className={classes.score}>{TournamentHelper.formatArenaScore(score, rule)}</Typography>
+        ) : null}
       </div>
     </div>
   )
@@ -49,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     position: 'relative',
   },
-  content: {
+  contentWrapper: {
     height: 66,
     marginBottom: theme.spacing(2),
     borderRadius: theme.spacing(0.5),
@@ -59,9 +66,10 @@ const useStyles = makeStyles((theme) => ({
     '&:hover': {
       backgroundColor: Colors.white_opacity['10'],
     },
+    paddingRight: 120,
   },
   placementWrapper: {
-    width: 55,
+    minWidth: 55,
     marginRight: theme.spacing(1),
   },
   itemAvatar: {
@@ -123,5 +131,18 @@ const useStyles = makeStyles((theme) => ({
   },
   user_code: {
     color: Colors.white_opacity['70'],
+  },
+  score: {
+    position: 'absolute',
+    right: 8,
+    top: '50%',
+    transform: 'translateY(-50%)',
+    fontSize: 20,
+    color: theme.palette.common.white,
+  },
+  [theme.breakpoints.down('sm')]: {
+    contentWrapper: {
+      paddingLeft: 0,
+    },
   },
 }))

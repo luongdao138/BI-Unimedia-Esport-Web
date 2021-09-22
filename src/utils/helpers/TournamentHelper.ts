@@ -1,7 +1,7 @@
 import { PARTICIPATION_TYPES, RULE, T_TYPE, TOURNAMENT_STATUS, ROLE } from '@constants/tournament.constants'
 import moment from 'moment'
 import _ from 'lodash'
-import { TournamentDetail, TournamentMatchRound } from '@services/arena.service'
+import { TournamentDetail, TournamentMatchRound, TournamentRule } from '@services/arena.service'
 import { FormikErrors } from 'formik'
 import { FormType } from '@containers/arena/UpsertForm/FormModel/FormType'
 
@@ -237,6 +237,11 @@ const getLabelName = (field: string): string => {
   return ''
 }
 
+const formatArenaScore = (score: number, rule: TournamentRule): string => {
+  if (rule === 'time_attack') return moment.unix(score).format('HH:mm:ss:SSS')
+  return String(score)
+}
+
 export const TournamentHelper = {
   participantTypeText,
   ruleText,
@@ -251,4 +256,5 @@ export const TournamentHelper = {
   isStatusPassed,
   checkRequiredFields,
   getLabelName,
+  formatArenaScore,
 }

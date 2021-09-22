@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useRouter } from 'next/router'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
 import * as selectors from '@store/arena/selectors'
@@ -7,6 +7,8 @@ import { createMetaSelector } from '@store/metadata/selectors'
 import { Meta } from '@store/metadata/actions/types'
 import useArenaHelper from '@containers/arena/hooks/useArenaHelper'
 import { ArenaWinners, TournamentDetail } from '@services/arena.service'
+import useGetProfile from '@utils/hooks/useGetProfile'
+import { UserProfile } from '@services/user.service'
 
 const getWinnersMeta = createMetaSelector(actions.getArenaWinners)
 const getArenaMeta = createMetaSelector(actions.getTournamentDetail)
@@ -21,6 +23,9 @@ const useWinners = (
   fetchWinners: () => void
   toDetail: () => void
   handleBack: () => void
+  isTeam: boolean
+  hasWinnersData: boolean
+  userProfile: UserProfile
 } => {
   const router = useRouter()
   const dispatch = useAppDispatch()
@@ -28,19 +33,20 @@ const useWinners = (
   const arenaMeta = useAppSelector(getArenaMeta)
   const arena = useAppSelector(selectors.getTournamentDetail)
   const arenaWinners = useAppSelector(selectors.getArenaWinners)
-  const { isNotHeld, isBattleRoyale } = useArenaHelper(arena)
+  const { userProfile } = useGetProfile()
+  const { isNotHeld, isTeam } = useArenaHelper(arena)
   const fetchWinners = () => dispatch(actions.getArenaWinners(router.query.hash_key))
 
   useEffect(() => {
-    if (isNotHeld || isBattleRoyale) toDetail()
-  }, [isNotHeld, isBattleRoyale])
+    if (isNotHeld) toDetail()
+  }, [isNotHeld])
 
   useEffect(() => {
     if (router.query.hash_key && isImmediately) {
       dispatch(actions.getTournamentDetail(router.query.hash_key))
       dispatch(actions.getArenaWinners(router.query.hash_key))
     }
-  }, [router.query.hash_key])
+  }, [router.query.hash_key, userProfile])
 
   const toDetail = () => {
     const placementsUrl = '/placements'
@@ -51,6 +57,8 @@ const useWinners = (
 
   const handleBack = () => router.back()
 
+  const hasWinners = useMemo(() => hasWinnersData(arenaWinners), [arenaWinners])
+
   return {
     arenaWinners,
     winnersMeta,
@@ -59,7 +67,22 @@ const useWinners = (
     fetchWinners,
     toDetail,
     handleBack,
+    isTeam,
+    hasWinnersData: hasWinners,
+    userProfile,
   }
+}
+
+function hasWinnersData(arenaWinners: ArenaWinners): boolean {
+  if (!arenaWinners) return false
+  let hasData = false
+  Object.keys(arenaWinners).forEach((place) => {
+    const placement = arenaWinners[place]
+    if (!!placement && placement.length > 0) {
+      hasData = true
+    }
+  })
+  return hasData
 }
 
 export default useWinners
