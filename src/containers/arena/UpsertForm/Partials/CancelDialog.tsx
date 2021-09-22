@@ -42,11 +42,7 @@ const CancelDialog: React.FC<Props> = ({ arena, hashKey }) => {
   return (
     <>
       <Box mt={3}>
-        {!isCanceled && (
-          <LinkButton style={{ color: Colors.white_opacity[70] }} onClick={() => setModal(true)}>
-            {t('common:tournament_cancel.confirm_cancel_btn')}
-          </LinkButton>
-        )}
+        {!isCanceled && <LinkButton onClick={() => setModal(true)}>{t('common:tournament_cancel.confirm_cancel_btn')}</LinkButton>}
       </Box>
       <ESPopup open={modal} handleClose={() => setModal(false)}>
         <BlankLayout>

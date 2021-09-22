@@ -1,11 +1,12 @@
 import { Link, LinkProps, Typography } from '@material-ui/core'
+import { Colors } from '@theme/colors'
 import { makeStyles } from '@material-ui/core/styles'
 
-const LinkButton: React.FC<LinkProps> = ({ children, onClick, ...props }) => {
+const LinkButton: React.FC<LinkProps> = ({ children, onClick }) => {
   const classes = useStyles()
 
   return (
-    <Link className={classes.link} underline="always" component="button" onClick={onClick} style={props.style}>
+    <Link className={classes.link} underline="always" component="button" onClick={onClick}>
       <Typography>{children}</Typography>
     </Link>
   )
@@ -13,11 +14,10 @@ const LinkButton: React.FC<LinkProps> = ({ children, onClick, ...props }) => {
 
 const useStyles = makeStyles(() => ({
   link: {
-    color: '#FFFFFF30',
-    '&:focus': {
-      color: '#ffffff9c',
+    color: Colors.white_opacity[70],
+    '&:hover, &:focus': {
+      color: Colors.white,
     },
-    cursor: 'pointer',
   },
 }))
 
