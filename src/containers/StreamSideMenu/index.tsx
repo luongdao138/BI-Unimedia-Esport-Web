@@ -21,6 +21,7 @@ import { useTheme } from '@material-ui/core/styles'
 import SideFooter from '@containers/SideMenu/SideFooter'
 import AppDialog from '@containers/SideMenu/AppDialog'
 import usePointsManage from '@containers/PointManage/usePointsManage'
+
 interface StreamSideMenuProps {
   minimizeLayout?: boolean
   isStreamer: boolean
@@ -325,7 +326,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'center',
     minHeight: '100vh',
-    background: '#000',
+    background: '#000000',
   },
   noMinimizeMenu: {
     alignItems: 'flex-end',
@@ -392,7 +393,6 @@ const useStyles = makeStyles((theme) => ({
   },
   menuWrap: {
     height: '100%',
-    overflowY: 'auto',
     scrollbarColor: '#222 transparent',
     scrollbarWidth: 'thin',
     '&::-webkit-scrollbar': {
@@ -407,7 +407,7 @@ const useStyles = makeStyles((theme) => ({
       visibility: 'visible',
     },
     '&::-webkit-scrollbar-thumb': {
-      backgroundColor: '#222',
+      backgroundColor: '#222222',
       borderRadius: 6,
       opacity: 1,
       visibility: 'visible',

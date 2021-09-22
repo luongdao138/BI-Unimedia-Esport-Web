@@ -283,7 +283,6 @@ const useStyles = makeStyles((theme) => ({
   },
   menuWrap: {
     height: '100%',
-    overflowY: 'auto',
     scrollbarColor: '#222 transparent',
     scrollbarWidth: 'thin',
     '&::-webkit-scrollbar': {
@@ -323,6 +322,12 @@ const useStyles = makeStyles((theme) => ({
     fontSize: '9px',
     '& a': {
       color: Colors.white_opacity[70],
+    },
+  },
+  [theme.breakpoints.down(475)]: {
+    menu: {
+      overflow: 'scroll',
+      paddingBottom: 200,
     },
   },
 }))

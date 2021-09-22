@@ -29,7 +29,7 @@ const useListVideoAll = (): {
 
   //TODO: add limit (if you need)
   const listLiveVideo = () => {
-    getListVideoTop({ type: TYPE_VIDEO_TOP.ALL })
+    getListVideoTop({ type: TYPE_VIDEO_TOP.ALL, limit: 10 })
   }
 
   const videoPopular = () => {
