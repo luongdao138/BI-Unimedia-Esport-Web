@@ -1,16 +1,13 @@
-import { Grid, Box, makeStyles, useMediaQuery, Theme } from '@material-ui/core'
-import { LobbyFilterOption } from '@services/lobby.service'
-import { useRouter } from 'next/router'
-import { ESRoutes } from '@constants/route.constants'
-import useLobbyHelper from '../hooks/useLobbyHelper'
-import LobbyCard from '@components/LobbyCard'
+import { Grid, Box, makeStyles, Typography, IconButton, Icon, Theme, useMediaQuery } from '@material-ui/core'
+import { Colors } from '@theme/colors'
+import { AutoSizer, WindowScroller, List, CellMeasurer, CellMeasurerCache } from 'react-virtualized'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import ESLoader from '@components/Loader'
-import useLobbyHome from './useLobbyHome'
-import { useEffect, useLayoutEffect, useRef, useState } from 'react'
-import Header from './Header'
-import { AutoSizer, WindowScroller, List, CellMeasurer, CellMeasurerCache } from 'react-virtualized'
 import useReturnHref from '@utils/hooks/useReturnHref'
+import useLobbyData from '@containers/Home/useLobbyData'
+import LobbyCard from '@components/LobbyCard'
+import i18n from '@locales/i18n'
 import _ from 'lodash'
 
 const cache = new CellMeasurerCache({
@@ -18,15 +15,12 @@ const cache = new CellMeasurerCache({
   defaultHeight: 270,
 })
 
-interface LobbyHomeProps {
-  filter: LobbyFilterOption
-}
-
-const LobbyHome: React.FC<LobbyHomeProps> = ({ filter }) => {
+const LobbyFollowerContainer: React.FC = () => {
   const classes = useStyles()
-  const { lobbies, meta, loadMore, onFilterChange } = useLobbyHome()
-  const router = useRouter()
-  const { toCreate } = useLobbyHelper()
+  const { handleReturn } = useReturnHref()
+  const { recentLobbies, getRecentLobbiesMeta, loadMore } = useLobbyData()
+  const meta = getRecentLobbiesMeta
+  const lobbies = recentLobbies
 
   const listRef = useRef<any>(null)
   const [itemsPerRow, setPerRow] = useState<number>(4)
@@ -68,24 +62,6 @@ const LobbyHome: React.FC<LobbyHomeProps> = ({ filter }) => {
     }
   }, [lobbies])
 
-  useEffect(() => {
-    if (!router.isReady) return
-
-    let filterVal = LobbyFilterOption.all
-
-    if (_.has(router.query, 'filter')) {
-      const queryFilterVal = _.get(router.query, 'filter') as LobbyFilterOption
-      if (Object.values(LobbyFilterOption).includes(queryFilterVal)) filterVal = queryFilterVal
-    }
-
-    onFilterChange(filterVal)
-  }, [router.query])
-
-  const onFilter = (filter: LobbyFilterOption) => {
-    if (!meta.pending) router.push(`${ESRoutes.LOBBY}?filter=${filter}`, undefined, { shallow: true })
-    return null
-  }
-
   const rowRenderer = ({ index, key, style, parent }) => {
     const items = []
     const fromIndex = index * itemsPerRow
@@ -114,7 +90,19 @@ const LobbyHome: React.FC<LobbyHomeProps> = ({ filter }) => {
 
   return (
     <>
-      <Header onFilter={onFilter} toCreate={toCreate} filter={filter} />
+      <Box py={2} px={3} mb={6} display="flex" flexDirection="row" alignItems="center">
+        <IconButton className={classes.iconButtonBg} onClick={handleReturn}>
+          <Icon className="fa fa-arrow-left" fontSize="small" />
+        </IconButton>
+        <Typography variant="h2" className={classes.title}>
+          {i18n.t('common:lobby.home.recent_lobbies_title')}
+        </Typography>
+      </Box>
+      {meta.loaded && _.isEmpty(recentLobbies) && (
+        <Box display="flex" py={3} justifyContent="center" alignItems="center">
+          <Typography>{i18n.t('common:lobby.home.recent_lobbies_empty')}</Typography>
+        </Box>
+      )}
       <div className={classes.container}>
         <InfiniteScroll
           dataLength={lobbies.length}
@@ -158,11 +146,26 @@ const LobbyHome: React.FC<LobbyHomeProps> = ({ filter }) => {
   )
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme: Theme) => ({
   container: {
     paddingLeft: theme.spacing(2),
     paddingRight: theme.spacing(2),
   },
+  title: {
+    display: '-webkit-box',
+    WebkitBoxOrient: 'vertical',
+    WebkitLineClamp: 2,
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    wordWrap: 'break-word',
+  },
+  iconButtonBg: {
+    backgroundColor: `${Colors.grey[200]}80`,
+    '&:focus': {
+      backgroundColor: `${Colors.grey[200]}80`,
+    },
+    marginRight: theme.spacing(2),
+  },
 }))
 
-export default LobbyHome
+export default LobbyFollowerContainer

@@ -141,4 +141,5 @@ export const URI = {
   LOBBY_DETAIL: '/v2/recruitments/:hash_key/details',
   LOBBY_RANDOMIZE_PARTICIPANTS: '/v2/recruitments/:hash_key/randomize_participants',
   LOBBY_CONFIRM_PARTICIPANTS: '/v2/recruitments/:hash_key/do_member_confirm',
+  LOBBY_RECENTS: '/v2/recruitments/recent',
 }

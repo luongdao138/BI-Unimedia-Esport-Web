@@ -15,6 +15,7 @@ import useTournamentData from './useTournamentData'
 // import useTopicData from './useTopicData'
 import { HOME_SETTINGS } from '@constants/common.constants'
 import ESLoader from '@components/FullScreenLoader'
+import { RecentLobbies } from '@containers/Home/elements/Slider/RecentLobbies'
 
 const HomeContainer: React.FC = () => {
   const { recommendedUsers, getUserRecommendations, homeSettings, getUserProfile, metaHomeSettings } = useUserData()
@@ -49,8 +50,8 @@ const HomeContainer: React.FC = () => {
       //   return <RecommendedRecruitment data={recommendedRecruitments} key={index} />
       // case HOME_SETTINGS.RECOMMENDED_EVENT:
       //   return <RecommendedEvent data={recommendedEventList} key={index} />
-      // case HOME_SETTINGS.RECRUITMENT_FOLLOW:
-      //   return <RecruitmentFollow data={recruitmentFollow} key={index} />
+      case HOME_SETTINGS.LOBBY_FOLLOW:
+        return <RecentLobbies key={index} />
       case HOME_SETTINGS.TOURNAMENT_FOLLOW:
         return <TournamentFollow data={tournamentFollowers} key={index} meta={tournamentFollowersMeta} />
       case HOME_SETTINGS.TOURNAMENT_RESULT:
