@@ -25,11 +25,18 @@ const useLobbyData = () => {
     return () => reset()
   }, [])
 
+  const loadMore = () => {
+    if (recentLobbiesPageMeta && recentLobbiesPageMeta.current_page < recentLobbiesPageMeta.total_pages) {
+      getRecentLobbies({ page: recentLobbiesPageMeta.current_page + 1 })
+    }
+  }
+
   return {
     recentLobbies,
     recentLobbiesPageMeta,
     getRecentLobbiesMeta,
     getRecentLobbies,
+    loadMore,
   }
 }
 
