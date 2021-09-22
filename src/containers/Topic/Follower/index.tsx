@@ -170,9 +170,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   card: {
     paddingTop: 0,
-    paddingRight: theme.spacing(1),
+    paddingRight: theme.spacing(0),
     paddingBottom: theme.spacing(3),
-    paddingLeft: theme.spacing(1),
+    paddingLeft: theme.spacing(0),
     [theme.breakpoints.down('sm')]: {
       paddingBottom: theme.spacing(1),
     },

@@ -1,4 +1,4 @@
-import { Box, Typography, Icon, IconButton, Popover, Link, ButtonBase } from '@material-ui/core'
+import { Box, Typography, Icon, IconButton, Popover, Link, ButtonBase, useTheme } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import ESAvatar from '@components/Avatar'
 import { Colors } from '@theme/colors'
@@ -7,7 +7,7 @@ import ESLoader from '@components/Loader'
 import ESMenuItem from '@components/Menu/MenuItem'
 import LoginRequired from '@containers/LoginRequired'
 import { useTranslation } from 'react-i18next'
-import { Dispatch, SetStateAction, useState } from 'react'
+import { createRef, Dispatch, SetStateAction, useState } from 'react'
 import { SRLWrapper } from 'simple-react-lightbox'
 import { LIGHTBOX_OPTIONS } from '@constants/common.constants'
 import { CommentsResponse } from '@services/community.service'
@@ -19,8 +19,16 @@ import Linkify from 'react-linkify'
 import _ from 'lodash'
 import useTopicHelper from '../../useTopicHelper'
 import useTopicDetail from '../../useTopicDetail'
+import styled from 'styled-components'
+import { useRect } from '@utils/hooks/useRect'
 
-let currentReplyNumberRectLeft = null
+let currentReplyNumberRectLeft: number
+const StyledBox = styled(Box)``
+const contentRef = createRef<HTMLDivElement>()
+
+type StyleParams = {
+  currentReplyNumberRectLeft: number
+}
 
 type MenuParams = {
   isTopicOwner: boolean
@@ -55,6 +63,8 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
   const { topic_hash_key } = query
   const { t } = useTranslation(['common'])
   const [replyAnchorEl, setReplyAnchorEl] = useState(null)
+  const contentRect = useRect(contentRef)
+  const _theme = useTheme()
   const { isOwner } = useTopicHelper(comment.attributes.user_code)
   const { isModerator, isPublic, isNotMember, isTopicOwner } = menuParams
   const { getCommentDetail, commentDetail, commentDetailMeta, resetCommentDetail } = useTopicDetail()
@@ -62,7 +72,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
   const handleClickReply = (event, content) => {
     getCommentDetail({ topic_hash: topic_hash_key, comment_no: content.slice(2) })
     setReplyAnchorEl(event.currentTarget)
-    currentReplyNumberRectLeft = event.currentTarget.getBoundingClientRect().left
+    currentReplyNumberRectLeft = event.currentTarget.getBoundingClientRect().left - contentRect.left
   }
 
   const handleCloseReply = () => {
@@ -118,24 +128,18 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
         {_.map(
           _.filter(_.split(str, reply_regex), (el) => !_.isEmpty(el)),
           (content, index) => {
-            return content.match(reply_regex) ? renderPopover(content, index, isReply) : content
+            return content.match(reply_regex) && !isReply ? renderPopover(content, index) : content
           }
         )}
       </Typography>
     ))
   }
 
-  const renderPopover = (content, index, isReply = false) => {
+  const renderPopover = (content, index) => {
     return (
-      <>
-        {isReply ? (
-          <Typography className={classes.replied_id}>{content}</Typography>
-        ) : (
-          <Link id={index} onClick={(e) => handleClickReply(e, content)} className={classes.reply}>
-            <Typography className={classes.replied_id}>{content}</Typography>
-          </Link>
-        )}
-      </>
+      <Link id={index} onClick={(e) => handleClickReply(e, content)} className={classes.reply}>
+        <Typography className={classes.replied_id}>{content}</Typography>
+      </Link>
     )
   }
 
@@ -182,7 +186,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
 
   const notDeletedComment = () => {
     return (
-      <>
+      <StyledBox ref={contentRef}>
         <Box className={classes.container}>
           <Box className={classes.userContainer}>
             <Box className={classes.userInfoContainer}>
@@ -232,7 +236,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
                   </a>
                 )}
               >
-                <Typography>{newLineText(commentData.content)}</Typography>
+                {newLineText(commentData.content)}
               </Linkify>
             </Box>
           )}
@@ -259,16 +263,24 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
             vertical: 'bottom',
             horizontal: 'right',
           }}
+          style={{
+            left: contentRect.left + _theme.spacing(3),
+          }}
         >
           {!_.isEmpty(commentDetail) &&
             commentDetailMeta.loaded &&
             (replyData.deleted_at ? deletedComment(replyData.comment_no, true) : popoverContent())}
           {commentDetailMeta.error && (
-            <Box my={1} display="flex" justifyContent="space-between">
-              Not found
-              <IconButton className={classes.closeMainComment} onClick={handleCloseReply}>
-                <IconClose fontSize="small" className={classes.closeMainCommentIcon} />
-              </IconButton>
+            <Box className={classes.emptyPopoverContent}>
+              <Box flex={1} />
+              <Typography className={`${classes.content} ${classes.center}`}>{t('common:topic_comment.comment_not_exist')}</Typography>
+              <Box>
+                <Box flex={1} textAlign="end">
+                  <IconButton className={classes.closeMainComment} onClick={handleCloseReply}>
+                    <IconClose fontSize="small" className={classes.closeMainCommentIcon} />
+                  </IconButton>
+                </Box>
+              </Box>
             </Box>
           )}
           {commentDetailMeta.pending && (
@@ -277,21 +289,26 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
             </Box>
           )}
         </Popover>
-      </>
+      </StyledBox>
     )
   }
 
   const deletedComment = (comment_no, isReply = false) => {
     return (
       <>
-        <Box className={classes.containerDeleted} borderTop={!isReply && '2px solid rgba(255,255,255,0.1)'}>
+        <Box
+          className={isReply ? classes.emptyPopoverContent : classes.containerDeleted}
+          borderTop={!isReply && '1px solid rgba(255,255,255,0.1)'}
+        >
           <Box flex={1}>
             <Typography className={classes.number}>{comment_no}</Typography>
           </Box>
           <Box display="flex" justifyContent="center" flex={8} textAlign="center">
-            <Typography className={classes.content}>{t('common:topic_comment.has_deleted_comment')}</Typography>
+            <Typography className={`${classes.content} ${isReply && classes.center}`}>
+              {t('common:topic_comment.has_deleted_comment')}
+            </Typography>
           </Box>
-          <Box flex={1}>
+          <Box flex={1} textAlign="end">
             {isReply && (
               <IconButton className={classes.closeMainComment} onClick={handleCloseReply}>
                 <IconClose fontSize="small" className={classes.closeMainCommentIcon} />
@@ -314,6 +331,12 @@ const useStyles = makeStyles((theme) => ({
   },
   closeMainCommentIcon: {
     fontSize: 10,
+  },
+  center: {
+    flex: 8,
+    textAlign: 'center',
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(1),
   },
   reply: {
     width: 'fit-content',
@@ -342,12 +365,16 @@ const useStyles = makeStyles((theme) => ({
   },
   containerDeleted: {
     display: 'flex',
-    marginRight: theme.spacing(2),
-    marginLeft: theme.spacing(2),
+    marginRight: theme.spacing(3),
+    marginLeft: theme.spacing(3),
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: `14.5px ${theme.spacing(2)}px 14.5px`,
+  },
+  emptyPopoverContent: {
+    display: 'flex',
+    justifyContent: 'space-between',
   },
   userContainer: {
     display: 'flex',
@@ -466,18 +493,19 @@ const useStyles = makeStyles((theme) => ({
   },
   mainComment: {
     '& .MuiPopover-paper': {
-      padding: 16,
+      left: '0 !important',
+      padding: theme.spacing(2),
       border: '3px solid #646464',
       background: 'rgba(33,33,33,.9)',
       borderRadius: 4,
       position: 'relative',
       overflow: 'initial !important',
-      width: 754,
+      width: 791,
       '&:before': {
         content: "''",
         position: 'absolute',
         top: 'Calc(100% + 3px)',
-        left: (props: { currentReplyNumberRectLeft: number }) => `min(${props.currentReplyNumberRectLeft}px, 747px)`,
+        left: (props: StyleParams) => props.currentReplyNumberRectLeft - 12,
         marginLeft: -5,
         borderWidth: 5,
         borderStyle: 'solid',
@@ -487,6 +515,13 @@ const useStyles = makeStyles((theme) => ({
   },
   menuWrapper: {
     marginRight: -12,
+  },
+  [theme.breakpoints.only('lg')]: {
+    mainComment: {
+      '& .MuiPopover-paper': {
+        maxWidth: 610,
+      },
+    },
   },
   [theme.breakpoints.down('sm')]: {
     imageBox: {
