@@ -19,7 +19,7 @@ export const getInitialValues = (data?: LobbyDetail): FormType => {
       entry_start_datetime: data ? data.attributes.entry_start_datetime : null,
       entry_end_datetime: data ? data.attributes.entry_end_datetime : null,
       start_datetime: data ? data.attributes.start_datetime : null,
-      area_id: data ? data.attributes.area_id : -1,
+      area_id: data ? data.attributes.area_id : 1,
       address: data ? data.attributes.address : '',
       recruit_date: '',
       acceptance_dates: '',
