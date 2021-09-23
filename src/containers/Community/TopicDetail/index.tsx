@@ -132,6 +132,7 @@ const TopicDetailContainer: React.FC = () => {
   }
 
   const handleReportComment = (detail: ReportData) => {
+    detail.attributes.topic_title = topic?.attributes?.title
     setReportData(detail)
   }
 

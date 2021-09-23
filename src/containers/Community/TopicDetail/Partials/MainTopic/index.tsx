@@ -60,9 +60,10 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({
       user_code: topicData?.owner_user_code,
       content: topicData?.content,
       date: CommonHelper.staticSmartTime(topicData?.created_at),
-      image: !!topicData?.attachments && topicData.attachments[0]?.assets_url,
+      image: (!!topicData?.attachments && topicData.attachments[0]?.assets_url) || '',
       hash_key: topicData?.hash_key,
       avatar_image: topicData?.owner_profile,
+      topic_title: topicData?.title,
     },
   }
 
