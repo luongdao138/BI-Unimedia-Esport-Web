@@ -82,7 +82,7 @@ const useLobbyCreate = (): {
       router.push(`${ESRoutes.LOBBY}/${resultAction.meta.arg.hash_key}`)
       dispatch(actions.getLobbyDetail(String(resultAction.meta.arg.hash_key)))
     } else if (actions.updateLobby.rejected.match(resultAction)) {
-      if (_.get(resultAction.payload, 'error.code') === 422409) {
+      if (_.get(resultAction.payload, 'error.code') === 422415) {
         resetUpdateMeta()
         handleReturn()
         dispatch(actions.getLobbyDetail(String(resultAction.meta.arg.hash_key)))
