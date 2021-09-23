@@ -428,6 +428,7 @@ export type SetParticipantsParams = {
 
 export type PlacementItem = {
   id: number
+  team_id?: number
   user_id: number
   position: number
   name: string
@@ -441,6 +442,7 @@ export type PlacementItem = {
     user_code: string
     bio: null | string
   }
+  highlight?: boolean
 }
 export type ArenaWinners = Record<string, PlacementItem[]>
 

@@ -9,24 +9,32 @@ import { useEffect, useState, useRef } from 'react'
 import ESButton from '@components/Button'
 import { useTranslation } from 'react-i18next'
 import Linkify from 'react-linkify'
-import _ from 'lodash'
-import { PlacementItem } from '@services/arena.service'
+import { ParticipantsResponse, PlacementItem } from '@services/arena.service'
 import TeamEntryEditModal from '@containers/arena/Detail/Partials/ActionComponent/TeamEntryEditModal'
 import InidividualEntryEditModal from '@containers/arena/Detail/Partials/ActionComponent/InidividualEntryEditModal'
-import { ROLE } from '@constants/tournament.constants'
 import ResultListItem from './ResultListItem'
 import ResultList from './ResultList'
 
 const ArenaWinners: React.FC = () => {
   const { t } = useTranslation(['common'])
-  const { arenaWinners, arena, handleBack, toDetail, isTeam, hasWinnersData, userProfile } = useArenaWinners()
+  const {
+    arenaWinners,
+    arena,
+    handleBack,
+    toDetail,
+    isTeam,
+    hasWinnersData,
+    userProfile,
+    isBattleRoyale,
+    arenaBRWinners,
+  } = useArenaWinners()
   const showWinner = arenaWinners['1'] && !!arenaWinners['1'].length
   const classes = useStyles()
   const [showSummary, setShowSummary] = useState(false)
   const [, setUpdate] = useState(false)
   const winnerListRef = useRef(null)
   const backButtonRef = useRef(null)
-  const [selectedItem, setSelectedItem] = useState(null as PlacementItem | null)
+  const [selectedItem, setSelectedItem] = useState<{ id: number; highlight: boolean } | null>(null)
 
   useEffect(() => {
     window.onscroll = () => {
@@ -43,27 +51,15 @@ const ArenaWinners: React.FC = () => {
     return { top: 0, bottom: 0 }
   }
 
-  const toEntryDetail = (placementItem: PlacementItem) => {
-    setSelectedItem(placementItem)
+  const selectTournamentParticipant = (item: PlacementItem) => {
+    const id = isTeam ? item.team_id : item.id
+    setSelectedItem({ id, highlight: item.highlight })
   }
 
-  const getTeamId = (participant: PlacementItem) => {
-    return _.get(participant, 'team.id')
+  const selectBRParticipant = (item: ParticipantsResponse) => {
+    const id = Number(item.attributes.team?.data.id || item.id)
+    setSelectedItem({ id, highlight: item.highlight })
   }
-
-  const isMyTeam = (participant: PlacementItem) => {
-    const myInfo = _.get(arena, 'attributes.my_info', [])
-    const interestedInfos = myInfo
-      .filter((info) => info.role === ROLE.INTERESTED || info.role === ROLE.PARTICIPANT)
-      .map((info) => `${info.team_id}`)
-    if (!interestedInfos || !interestedInfos.length) return false
-    return interestedInfos.includes(`${getTeamId(participant)}`)
-  }
-
-  const isMe = (participant: PlacementItem) => {
-    return `${userProfile?.id}` === `${_.get(participant, 'attributes.user.id', '')}`
-  }
-
   return (
     <div className={classes.root}>
       <div ref={backButtonRef} className={classes.backButtonWrapper}>
@@ -121,7 +117,7 @@ const ArenaWinners: React.FC = () => {
         </ESButton>
       </Box>
       <div ref={winnerListRef} className={classes.listContainer}>
-        {hasWinnersData && arena ? (
+        {hasWinnersData && !isBattleRoyale ? (
           <ResultList rule={arena?.attributes.rule}>
             {Object.keys(arenaWinners).map((key) =>
               (arenaWinners[key] || []).map((p, idx) => (
@@ -129,13 +125,28 @@ const ArenaWinners: React.FC = () => {
                   key={idx}
                   position={p.position}
                   avatar={<Avatar src={p.avatar} alt={p.name} />}
-                  onClickAvatar={() => toEntryDetail(p)}
+                  onClickAvatar={() => selectTournamentParticipant(p)}
                   name={p.name}
                   nameSecondary={p.user ? `@${p.user.user_code}` : ''}
                   score={p.position}
                 />
               ))
             )}
+          </ResultList>
+        ) : null}
+        {isBattleRoyale ? (
+          <ResultList rule={arena?.attributes.rule}>
+            {arenaBRWinners.map((p, idx) => (
+              <ResultListItem
+                key={idx}
+                position={idx + 1}
+                avatar={<Avatar src={p.attributes.avatar_url} alt={p.attributes.name} />}
+                onClickAvatar={() => selectBRParticipant(p)}
+                name={p.attributes.team ? p.attributes.team.data.attributes.name : p.attributes.name}
+                nameSecondary={p.attributes.user ? `@${p.attributes.user.user_code}` : ''}
+                score={p.attributes.position}
+              />
+            ))}
           </ResultList>
         ) : null}
       </div>
@@ -145,9 +156,9 @@ const ArenaWinners: React.FC = () => {
           userProfile={userProfile}
           previewMode
           open={true}
-          initialTeamId={`${getTeamId(selectedItem)}`}
+          initialTeamId={String(selectedItem.id)}
           onClose={() => setSelectedItem(null)}
-          myTeam={isMyTeam(selectedItem)}
+          myTeam={selectedItem.highlight}
           toDetail={toDetail}
         />
       ) : (
@@ -155,9 +166,9 @@ const ArenaWinners: React.FC = () => {
           tournament={arena}
           previewMode
           open={true}
-          initialParticipantId={`${selectedItem.id}`}
+          initialParticipantId={String(selectedItem.id)}
           onClose={() => setSelectedItem(null)}
-          me={isMe(selectedItem)}
+          me={selectedItem.highlight}
           toDetail={toDetail}
         />
       )}

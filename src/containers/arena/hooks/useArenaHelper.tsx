@@ -52,7 +52,6 @@ const useArenaHelper = (
   const isReady = status === TOURNAMENT_STATUS.READY
   const isEntered = tournament?.attributes?.is_entered
   const isUnselected = isEntered && isFreezed && myRole === ROLE.INTERESTED
-
   const checkAdminJoined = () => {
     if (!isModerator) return false
     const myInfoList = _.get(tournament, 'attributes.my_info', [])

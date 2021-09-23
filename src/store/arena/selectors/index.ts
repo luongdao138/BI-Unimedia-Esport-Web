@@ -1,5 +1,5 @@
 import { createSelector } from '@reduxjs/toolkit'
-import { MatchItemType } from '@services/arena.service'
+import { ArenaWinners, MatchItemType } from '@services/arena.service'
 import { RootState } from '@store/store'
 import moment from 'moment'
 import _ from 'lodash'
@@ -66,7 +66,20 @@ export const getTournamentMatches = createSelector(getRoot, getUserId, (state, m
   return { matches, third_place_match }
 })
 export const getRecruitingTournaments = createSelector(getRoot, (state) => state.recruitingTournaments)
-export const getArenaWinners = createSelector(getRoot, (state) => state.arenaWinners)
+export const getArenaWinners = createSelector(getRoot, getTournamentDetail, (state, arena) => {
+  const { arenaWinners } = state
+  if (!arena?.attributes?.my_info) return arenaWinners
+  const isTeam = arena.attributes.participant_type > 1
+  const ids = arena.attributes.my_info.map((i) => (isTeam ? i.team_id : i.id))
+
+  const winners: ArenaWinners = {}
+  Object.keys(arenaWinners).forEach((key) => {
+    winners[key] = state.arenaWinners[key].map((item) => {
+      return { ...item, highlight: ids.includes(isTeam ? item.team_id : item.id) }
+    })
+  })
+  return winners
+})
 export const getRecommendedUsers = createSelector(getRoot, (state) => state.recommendedUsers)
 export const getRecommendedUsersMeta = createSelector(getRoot, (state) => state.recommendedUsersMeta)
 export const getTournamentResultsMeta = createSelector(getRoot, (state) => state.tournamentResultsMeta)

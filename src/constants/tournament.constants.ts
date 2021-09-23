@@ -35,7 +35,7 @@ export const RULE = {
   SINGLE: 'single',
   BATTLE_ROYALE: 'battle_royale',
   SCORE_ATTACK: 'score_attack',
-  TIME_ATTACK: 'time_attacks',
+  TIME_ATTACK: 'time_attack',
 }
 
 export const PARTICIPANT_TYPE = {
