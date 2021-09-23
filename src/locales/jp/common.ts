@@ -54,6 +54,7 @@ export default {
     },
     no_data: '対象データありません',
     failed_to_get_data: 'データの取得に失敗しました。',
+    input_is_incorrect: '入力内容が適切ではありません。',
     dash: '-',
     dash_separator: 'ー',
     team: 'チーム',
@@ -254,6 +255,7 @@ export default {
   },
   community: {
     report: '通報',
+    reported_community: 'コミュニティを通報しました',
     community_id: 'コミュニティID：',
     copy_shared_url: '共有URLをコピー',
     community_results: 'コミュニティ「:key」 の検索結果',
@@ -330,11 +332,13 @@ export default {
     user_info_title: '通報する内容',
     reason: '通報理由',
     reason_desc: '詳細・補足',
+    reason_desc_placeholder: `通報する理由の詳細や補足をご記入ください。
+また、上記で「その他」を選んだ方はその内容をご記入ください。`,
     require: '※入力必須項目です',
     email: 'メールアドレス',
     reporter_email: 'メールアドレスの確認',
-    reporter_email_placeholder: 'mail address',
-    reporter_email_confirm: '通報にはメールアドレスの登録が必要となります。',
+    reporter_email_placeholder: 'メールアドレスを入力してください。',
+    reporter_email_confirm: '※通報にはメールアドレスの登録が必要となります。',
     email_required_text: '通報にはメールアドレスの登録が必要です',
     btn_text: '通報する',
     report_menu: '通報',
@@ -607,7 +611,7 @@ export default {
     report: {
       button: 'トピックを通報',
       title: '通報するトピック',
-      chat_topic: '雑談トピック',
+      reported_topic: 'トピックを通報しました',
     },
     delete: {
       button: 'トピックの削除',
@@ -623,7 +627,7 @@ export default {
       dialog_title: 'コメントを通報する',
       button: 'コメントを通報',
       title: '通報するコメント',
-      chat_topic: '雑談トピック',
+      reported_comment: 'コメントを通報しました',
     },
     delete: {
       button: 'コメントを削除',
@@ -736,6 +740,7 @@ export default {
     detail: {
       label_id: '募集ID：',
       number_of_entries: 'エントリー数',
+      number_of_entries_freezed: '参加数',
       organizer: '開催者',
       entry_period: 'エントリー期間',
       start_date: '開催日時',
@@ -748,7 +753,8 @@ export default {
     },
     cancel_lobby_dialog: {
       title: '募集を中止しますか？',
-      description: '中止した募集は復元することはできません。募集の中止は、メンバーに通知されます。',
+      description1: '中止した募集は復元することはできません。',
+      description2: '募集の中止は、メンバーに通知されます。',
       additionalText: '',
       confirmationText: '中止する',
       cancellationText: 'キャンセル',
@@ -825,6 +831,7 @@ export default {
       entry_decline_failed: 'エントリーを辞退できませんでした',
       randomize_participant: 'ユーザーをランダムに選びました',
       confirm_participant: 'エントリーを締め切りました',
+      edit_status_changed: '募集の開催ステータスが変更されました、編集内容の見直しをお願いします',
     },
     create: {
       submit: 'この内容で作成する',
@@ -1142,6 +1149,7 @@ export default {
   ng_word_area: {
     chat_section: 'メッセージテキストボックス',
     room_name_title: 'グループ名',
+    comment_section: 'メッセージテキストボックス',
   },
   page_head: {
     default_desc:
@@ -1249,12 +1257,12 @@ export default {
     decide: '決定する',
     check_content: '内容を確認する',
     discard: {
-      title: '作成内容を破棄します',
-      message: '画面を戻ると、現在の作成内容は破棄されます。よろしいですか？',
-      confirm: '作成内容を破棄して戻る',
-      edit_title: '編集内容を破棄します',
-      edit_confirm: '編集内容を破棄して戻る',
-      edit_message: '画面を戻ると、現在の編集内容は破棄されます。よろしいですか？',
+      title: '内容を破棄します',
+      message: '画面を戻ると、現在の入力内容は破棄されます。よろしいですか？',
+      confirm: '内容を破棄して戻る',
+      edit_title: '内容を破棄します',
+      edit_confirm: '内容を破棄して戻る',
+      edit_message: '画面を戻ると、現在の入力内容は破棄されます。よろしいですか？',
     },
     confirm: {
       title: 'この内容で作成しますか？',
@@ -1265,7 +1273,7 @@ export default {
     edit: {
       title: 'コミュニティを編集する',
       disband_button: 'コミュニティを解散する',
-      check_edited_content: '編集内容を確認する',
+      check_edited_content: '内容を確認する',
     },
     disband: {
       title: 'コミュニティを解散する',
@@ -1287,9 +1295,9 @@ export default {
     confirm: 'この内容でトピックを作成しますか？',
     preview: 'プレビュー',
     discard: {
-      title: '作成内容を破棄します',
-      message: '画面を戻ると、現在の作成内容は破棄されます。よろしいですか？',
-      confirm: '作成内容を破棄して戻る',
+      title: '内容を破棄します',
+      message: '画面を戻ると、現在の入力内容は破棄されます。よろしいですか？',
+      confirm: '内容を破棄して戻る',
     },
     create_success: 'トピックを作成しました',
     comment_placeholder: 'コメントを入力…',

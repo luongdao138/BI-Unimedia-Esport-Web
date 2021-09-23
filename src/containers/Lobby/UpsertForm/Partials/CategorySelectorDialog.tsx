@@ -35,7 +35,7 @@ const CategorySelectorDialog: React.FC<Props> = ({ values, onChange, disabled })
   }, [open])
 
   const onSubmit = () => {
-    onChange(selectedCategories)
+    onChange(_.orderBy(selectedCategories, 'id'))
     setOpen(false)
   }
 
@@ -62,7 +62,7 @@ const CategorySelectorDialog: React.FC<Props> = ({ values, onChange, disabled })
           ) : (
             values.map((item, idx) => (
               <Box paddingRight={1} key={idx}>
-                <Typography>{(idx > 0 ? ' / ' : '') + '#' + item.name}</Typography>
+                <Typography>{(idx > 0 ? ' ' : '') + item.name}</Typography>
               </Box>
             ))
           )}

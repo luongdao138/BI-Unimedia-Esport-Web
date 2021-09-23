@@ -28,7 +28,7 @@ const TagSelectorDialog: React.FC<Props> = ({ values, onChange, disabled }) => {
 
   useEffect(() => {
     if (open === true) {
-      setCategoryTitles(categoryTitles)
+      setCategoryTitles(values)
     }
   }, [open])
 
