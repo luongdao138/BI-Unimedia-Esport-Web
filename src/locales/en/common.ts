@@ -810,6 +810,7 @@ export default {
       entry_decline_failed: 'エントリーを辞退できませんでした',
       randomize_participant: 'ユーザーをランダムに選びました',
       confirm_participant: 'エントリーを締め切りました',
+      edit_status_changed: '募集の開催ステータスが変更されました、編集内容の見直しをお願いします',
     },
     create: {
       submit: 'この内容で作成する',

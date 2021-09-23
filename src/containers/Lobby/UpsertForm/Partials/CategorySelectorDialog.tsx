@@ -35,7 +35,7 @@ const CategorySelectorDialog: React.FC<Props> = ({ values, onChange, disabled })
   }, [open])
 
   const onSubmit = () => {
-    onChange(selectedCategories)
+    onChange(_.orderBy(selectedCategories, 'id'))
     setOpen(false)
   }
 

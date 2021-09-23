@@ -9,7 +9,10 @@ import { ESRoutes } from '@constants/route.constants'
 import { Meta } from '@store/metadata/actions/types'
 import { LobbyUpsertParams } from '@services/lobby.service'
 import { LOBBY_STATUS } from '@constants/lobby.constants'
+import * as commonActions from '@store/common/actions'
 import _ from 'lodash'
+import i18n from '@locales/i18n'
+import useReturnHref from '@utils/hooks/useReturnHref'
 
 const { actions, selectors } = lobbyStore
 const getTournamentMeta = createMetaSelector(actions.createLobby)
@@ -42,6 +45,7 @@ const useLobbyCreate = (): {
 } => {
   const router = useRouter()
   const dispatch = useAppDispatch()
+  const { handleReturn } = useReturnHref()
   const meta = useAppSelector(getTournamentMeta)
   const updateMeta = useAppSelector(getUpdateMeta)
   const lobby = useAppSelector(selectors.getLobbyDetail)
@@ -77,6 +81,13 @@ const useLobbyCreate = (): {
       resetUpdateMeta()
       router.push(`${ESRoutes.LOBBY}/${resultAction.meta.arg.hash_key}`)
       dispatch(actions.getLobbyDetail(String(resultAction.meta.arg.hash_key)))
+    } else if (actions.updateLobby.rejected.match(resultAction)) {
+      if (_.get(resultAction.payload, 'error.code') === 422409) {
+        resetUpdateMeta()
+        handleReturn()
+        dispatch(actions.getLobbyDetail(String(resultAction.meta.arg.hash_key)))
+        dispatch(commonActions.addToast(i18n.t('common:lobby.toasts.status_changed')))
+      }
     }
   }
 
