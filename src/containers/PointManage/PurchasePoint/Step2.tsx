@@ -36,7 +36,7 @@ const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
     purchasePointInfo,
     metaPurchaseUseNewCardMeta,
     metaPurchaseUseOldCardMeta,
-    resetErrorMess
+    resetErrorMess,
   } = usePurchasePointData()
 
   const [selectedCardId, setSelectedCardId] = React.useState<any>('')
@@ -293,9 +293,7 @@ const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
                 />
                 <Box>
                   <Box className={classes.toggle_name}>{t('purchase_point_tab.register_toggle_name')}</Box>
-                  {isExceedCard && (
-                    <Box className={classes.mess_exceed_card}>{t('purchase_point_tab.mess_exceed_card')}</Box>
-                  )}
+                  {isExceedCard && <Box className={classes.mess_exceed_card}>{t('purchase_point_tab.mess_exceed_card')}</Box>}
                 </Box>
               </Box>
             </Box>

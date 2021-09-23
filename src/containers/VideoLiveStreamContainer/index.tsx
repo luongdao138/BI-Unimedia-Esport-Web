@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import ESTab from '@components/Tab'
 import ESTabs from '@components/Tabs'
 import i18n from '@locales/i18n'
@@ -25,6 +26,9 @@ import moment from 'moment'
 import ESLoader from '@components/Loader'
 import PreloadChatContainer from './PreloadContainer/PreloadChatContainer'
 import { STATUS_VIDEO } from '@services/videoTop.services'
+import { useAppSelector } from '@store/hooks'
+import { getIsAuthenticated } from '@store/auth/selectors'
+import userProfileStore from '@store/userProfile'
 
 enum TABS {
   PROGRAM_INFO = 1,
@@ -51,6 +55,9 @@ const VideosTop: React.FC = () => {
   const dispatch = useAppDispatch()
   const router = useRouter()
   const video_id = router.query?.vid // uuid video
+  const { selectors } = userProfileStore
+  const isAuthenticated = useAppSelector(getIsAuthenticated)
+  const userProfile = useAppSelector(selectors.getUserProfile)
 
   const { getMyPointData, myPointsData } = usePointsManage()
   const { purchaseTicketSuperChat, meta_purchase_ticket_super_chat } = usePurchaseTicketSuperChat()
@@ -71,10 +78,12 @@ const VideosTop: React.FC = () => {
   const { getVideoDetail, detailVideoResult, userResult } = useDetailVideo()
 
   const isPendingPurchaseTicket = meta_purchase_ticket_super_chat?.pending && purchaseType === PURCHASE_TYPE.PURCHASE_TICKET
-  const isLoadingData = !detailVideoResult || !myPointsData || !userResult || !video_id
+  const isLoadingData = isAuthenticated ? !detailVideoResult || !myPointsData || !userResult || !video_id : !detailVideoResult || !video_id
 
   useEffect(() => {
-    getMyPointData({ page: 1, limit: 10 })
+    if (isAuthenticated) {
+      getMyPointData({ page: 1, limit: 10 })
+    }
   }, [])
 
   useEffect(() => {
@@ -83,18 +92,20 @@ const VideosTop: React.FC = () => {
     }
   }, [video_id])
 
-  // useEffect(() => {
-  //   if (dataPurchaseTicketSuperChat?.code === 200) {
-  //     handleClose()
-  //     dispatch(addToast(i18n.t('common:donate_points.purchase_ticket_success')))
-  //   } else if (!dataPurchaseTicketSuperChat && purchaseType === PURCHASE_TYPE.PURCHASE_TICKET) {
-  //     handleShowErrorPurchaseTicketModal()
-  //   }
-  // }, [dataPurchaseTicketSuperChat])
-
   useEffect(() => {
     setTab(isMobile ? TABS.COMMENT : TABS.PROGRAM_INFO)
   }, [isMobile])
+
+  useEffect(() => {
+    console.log('Is Authenticated >>>>>>>>', userProfile)
+    console.log('Video detail data >>>>>>>>', detailVideoResult)
+    if (isAuthenticated) {
+      getMyPointData({ page: 1, limit: 10 })
+      if (video_id) {
+        getVideoDetail({ video_id: `${video_id}` })
+      }
+    }
+  }, [isAuthenticated])
 
   const confirmDonatePoint = (donated_point, comment) => {
     // reset donate point

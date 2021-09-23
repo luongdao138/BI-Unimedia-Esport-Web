@@ -55,7 +55,7 @@ export default createReducer(initialState, (builder) => {
   })
   builder.addCase(actions.purchasePointUseOldCard.rejected, (state, action: any) => {
     const errorCode = action?.payload?.error?.ErrInfo
-    if(errorCode && GMO_ERROR_CODE[errorCode]){
+    if (errorCode && GMO_ERROR_CODE[errorCode]) {
       state.mess_error_purchase_point = GMO_ERROR_CODE[errorCode]
     }
   })
@@ -69,7 +69,7 @@ export default createReducer(initialState, (builder) => {
   })
   builder.addCase(actions.purchasePointUseNewCard.rejected, (state, action: any) => {
     const errorCode = action?.payload?.error?.ErrInfo
-    if(errorCode && GMO_ERROR_CODE[errorCode]){
+    if (errorCode && GMO_ERROR_CODE[errorCode]) {
       state.mess_error_purchase_point = GMO_ERROR_CODE[errorCode]
     }
   })

@@ -4,7 +4,7 @@ import VideoLiveStreamContainer from '@containers/VideoLiveStreamContainer'
 
 const VideoLiveStreamPage: PageWithLayoutType = () => {
   return (
-    <StreamLayout minimizeLayout>
+    <StreamLayout minimizeLayout loginRequired={false}>
       <VideoLiveStreamContainer />
     </StreamLayout>
   )

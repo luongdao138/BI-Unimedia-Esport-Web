@@ -61,7 +61,7 @@ const usePurchasePointData = () => {
     metaPurchaseUseNewCardMeta,
     purchasePointUseOldCard,
     metaPurchaseUseOldCardMeta,
-    resetErrorMess
+    resetErrorMess,
   }
 }
 
