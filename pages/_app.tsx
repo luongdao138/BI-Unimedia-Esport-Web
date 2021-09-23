@@ -46,8 +46,6 @@ Amplify.configure({
   ssr: true,
 })
 
-import Script from 'react-load-script'
-
 type Props = AppProps & {
   Component: PageWithLayoutType
   pageProps: any
@@ -101,12 +99,9 @@ const App = ({ Component, pageProps }: Props) => {
   const Layout = Component.Layout ?? React.Fragment
 
   const { previousRoute } = useRouteUrlHistory()
-  const handleLoadScript = () => {
-    console.warn('IVSPlayer; ', window?.IVSPlayer)
-  }
+
   return (
     <>
-      <Script url="https://player.live-video.net/1.4.0/amazon-ivs-player.min.js" onError={console.error} onLoad={handleLoadScript} />
       <ESHead title={pageProps.title || 'eXeLAB'} desc={pageProps.desc} keywords={pageProps.keywords} image={pageProps.image} />
       <PersistGate persistor={persistStore(store)}>
         <RouteContext.Provider

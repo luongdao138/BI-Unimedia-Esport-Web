@@ -21,6 +21,8 @@ import LoginRequired from '@containers/LoginRequired'
 import { useAppSelector } from '@store/hooks'
 import { getIsAuthenticated } from '@store/auth/selectors'
 
+import Script from 'react-load-script'
+
 enum TABS {
   VIDEOS_LIST = 0,
   LIVE_VIDEOS = 1,
@@ -119,8 +121,12 @@ const VideosTop: React.FC = () => {
   //   { "id": 17, "title": "banner 7", "image": "https://gombattrangdoanquang.com/wp-content/uploads/2021/01/so-5-la-bieu-tuong-cho-quyen-luc.jpg", "url": "https://exelab.jp/", "target": "_blank" },
   //   { "id": 3, "title": "banner 3", "image": "https://alokiddy.com.vn/Uploads/images/BAI%20TEST%20DINH%20KY/FLYERS/tranh-06.jpg", "url": "https://exelab.jp/", "target": "_blank" },
   // ]
+  const handleLoadScript = () => {
+    console.warn('IVSPlayer; ', window?.IVSPlayer)
+  }
   return (
     <Box className={classes.root}>
+      <Script url="https://player.live-video.net/1.4.0/amazon-ivs-player.min.js" onError={console.error} onLoad={handleLoadScript} />
       <Box className={classes.container}>
         {/* //listBanner */}
         <Box className={classes.bannerContainer}>{listBanner.length > 0 && <BannerCarousel data={listBanner} />}</Box>

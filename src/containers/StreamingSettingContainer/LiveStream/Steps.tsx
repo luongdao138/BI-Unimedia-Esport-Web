@@ -72,7 +72,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik }) => {
   useEffect(() => {
     // getLiveSetting()
     checkStatusRecord(liveSettingInformation)
-  }, [])
+  }, [liveSettingInformation])
 
   useEffect(() => {
     // setCounter(counter + 1)

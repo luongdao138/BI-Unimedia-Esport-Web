@@ -65,7 +65,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({ src, statusVideo, mediaOverlayIsSh
   const onProgress = async (event) => {
     setState({ ...state, loading: false })
     if (isLive) {
-      // console.log('🚀 ~ onProgress ~ 1111-----playedSeconds', event)
+      console.log('🚀 ~ onProgress ~ 1111-----playedSeconds', player.current.getPosition())
       //live stream => duration = current
       // setDurationPlayer(event.playedSeconds)
       // setDurationPlayer(event.playedSeconds)
@@ -132,7 +132,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({ src, statusVideo, mediaOverlayIsSh
     const onStateChange = () => {
       const playerState = player.current.getState()
       console.warn(
-        `Player State - ${playerState} - ${player.current.getDuration()}- src=${src}- getLiveLatency=${player.current.getLiveLatency()}`
+        `Player State - ${playerState} - ${player.current.getDuration()}- src=${src}- getLiveLatency=${player.current.getPosition()}`
       )
       if (playerState === IVSPlayer.PlayerState.ENDED) {
         onVideoEnd()
@@ -161,6 +161,10 @@ const VideoPlayer: React.FC<PlayerProps> = ({ src, statusVideo, mediaOverlayIsSh
     player.current.addEventListener(ENDED, onStateChange)
     player.current.addEventListener(ERROR, onError)
     player.current.addEventListener(BUFFERING, onStateChange)
+
+    // videoEl.current.addEventListener('timeupdate', (event) => {
+    //   console.log('-----', event);
+    // });
 
     return () => {
       player.current.removeEventListener(READY, onStateChange)
