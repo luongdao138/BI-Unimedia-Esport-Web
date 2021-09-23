@@ -290,7 +290,7 @@ export default {
     unfollow_dialog: {
       title: 'フォローを解除する',
       description: '再フォローには再度フォロー申請が必要となりますが、よろしいでしょうか？',
-      submit_title: 'フォローを解除',
+      submit_title: 'フォロー解除',
     },
     unfollow_dialog_applying: {
       title: 'フォロー申請を取り消す',
@@ -1219,12 +1219,12 @@ export default {
     decide: '決定する',
     check_content: '内容を確認する',
     discard: {
-      title: '作成内容を破棄します',
-      message: '画面を戻ると、現在の作成内容は破棄されます。よろしいですか？',
-      confirm: '作成内容を破棄して戻る',
-      edit_title: '編集内容を破棄します',
-      edit_confirm: '編集内容を破棄して戻る',
-      edit_message: '画面を戻ると、現在の編集内容は破棄されます。よろしいですか？',
+      title: '内容を破棄します',
+      message: '画面を戻ると、現在の入力内容は破棄されます。よろしいですか？',
+      confirm: '内容を破棄して戻る',
+      edit_title: '内容を破棄します',
+      edit_confirm: '内容を破棄して戻る',
+      edit_message: '画面を戻ると、現在の入力内容は破棄されます。よろしいですか？',
     },
     confirm: {
       title: 'この内容で作成しますか？',

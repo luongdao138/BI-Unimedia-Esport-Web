@@ -268,6 +268,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
           }}
           style={{
             left: contentRect.left + _theme.spacing(3),
+            top: 60,
           }}
         >
           {!_.isEmpty(commentDetail) &&
