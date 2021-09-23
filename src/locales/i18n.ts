@@ -54,6 +54,39 @@ i18n
             case 'time_attack': {
               return 'タイムアタック'
             }
+            case 0: {
+              return 'トーナメント'
+            }
+            case 2: {
+              return 'バトルロイヤル'
+            }
+            case 3: {
+              return 'スコアアタック'
+            }
+            case 4: {
+              return 'タイムアタック'
+            }
+          }
+        } else if (format === 'status_rule') {
+          switch (value) {
+            case 1: {
+              return '受付前'
+            }
+            case 2: {
+              return '受付中'
+            }
+            case 3:
+            case 4: {
+              return '開催前'
+            }
+            case 5: {
+              return '開催中'
+            }
+            case 6: {
+              return '大会終了'
+            }
+            default:
+              return ''
           }
         }
         return value

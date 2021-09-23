@@ -510,6 +510,7 @@ export default {
       time_attack: 'タイムアタック',
     },
     status: {
+      status: '{{status, status_rule}}',
       ready: '受付前',
       recruiting: '受付中',
       recruitment_closed: '開催前',

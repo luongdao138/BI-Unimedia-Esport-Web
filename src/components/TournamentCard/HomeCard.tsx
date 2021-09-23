@@ -1,4 +1,4 @@
-import { memo, useState, useEffect } from 'react'
+import { memo } from 'react'
 import { Typography, Box, makeStyles, Icon, Chip } from '@material-ui/core'
 import ESChip from '@components/Chip'
 import ESAvatar from '@components/Avatar'
@@ -8,9 +8,9 @@ import ESCardContent from '@components/Card/CardContent'
 import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
 import { Colors } from '@theme/colors'
-import { ParticipantType, TournamentListItem, TournamentFilterOption } from '@services/arena.service'
+import { ParticipantType, TournamentListItem } from '@services/arena.service'
 import { useTranslation } from 'react-i18next'
-import { TOURNAMENT_STATUS as TS, TOURNAMENT_RULE as TR } from '@constants/common.constants'
+import { TOURNAMENT_STATUS as TS } from '@constants/common.constants'
 import i18n from '@locales/i18n'
 import _ from 'lodash'
 
@@ -22,39 +22,12 @@ export interface TournamentListFiltered extends TournamentListItem {
 
 interface Props {
   tournament: TournamentListFiltered
-  selectedFilter: string
 }
 
-const TournamentHomeCard: React.FC<Props> = ({ tournament, selectedFilter }) => {
-  const [filterName, setFilterName] = useState<string>('')
+const TournamentHomeCard: React.FC<Props> = ({ tournament }) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const router = useRouter()
-
-  useEffect(() => {
-    switch (selectedFilter) {
-      case TournamentFilterOption.all:
-        setFilterName(t('common:arenaSearchFilters.all'))
-        break
-      case TournamentFilterOption.beforeStart:
-        setFilterName(t('common:arenaSearchFilters.beforeStart'))
-        break
-      case TournamentFilterOption.completed:
-        setFilterName(t('common:arenaSearchFilters.completed'))
-        break
-      case TournamentFilterOption.inProgress:
-        setFilterName(t('common:arenaSearchFilters.inProgress'))
-        break
-      case TournamentFilterOption.ready:
-        setFilterName(t('common:arenaSearchFilters.ready'))
-        break
-      case TournamentFilterOption.recruiting:
-        setFilterName(t('common:arenaSearchFilters.recruiting'))
-        break
-      default:
-        break
-    }
-  }, [])
 
   const attr = tournament.attributes
   const participant = tournament.attributes.participant ? tournament.attributes.participant : tournament.attributes.winner
@@ -63,6 +36,7 @@ const TournamentHomeCard: React.FC<Props> = ({ tournament, selectedFilter }) => 
   const startDate = tournament.startDate
 
   const getMediaScreen = () => {
+    const status = t('common:arena.status.status', { status: tournament.attributes.status })
     const p_type =
       attr.participant_type === 1 ? i18n.t('common:tournament:type_single') : `${attr.participant_type}on${attr.participant_type}`
     return (
@@ -76,18 +50,18 @@ const TournamentHomeCard: React.FC<Props> = ({ tournament, selectedFilter }) => 
           padding={1}
         >
           <ESAvatar size={36} src={attr.organizer_avatar} alt={attr.organizer_name} />
-          {selectedFilter === TournamentFilterOption.joined || selectedFilter === TournamentFilterOption.organized ? null : (
+          {status ? (
             <Chip
               className={classes.chipSecondary}
               size="small"
               variant="outlined"
               label={
                 <Box color={Colors.grey[300]} justifyContent="flex-start" className={classes.label}>
-                  <Typography variant="overline">{filterName}</Typography>
+                  <Typography variant="overline">{status}</Typography>
                 </Box>
               }
             />
-          )}
+          ) : null}
 
           <Box display="flex" flexDirection="column" alignItems="flex-end">
             <Chip
@@ -96,7 +70,8 @@ const TournamentHomeCard: React.FC<Props> = ({ tournament, selectedFilter }) => 
               label={
                 <Box color={Colors.white} justifyContent="flex-">
                   <Typography variant="overline">
-                    {attr.rule === TR.BATTLE_ROYAL ? i18n.t('common:tournament:rule_battle') : i18n.t('common:tournament:rule_tournament')}
+                    {t('common:arena.rules.rule', { rule: attr.rule })}
+                    {/* {attr.rule === TR.BATTLE_ROYAL ? i18n.t('common:tournament:rule_battle') : i18n.t('common:tournament:rule_tournament')} */}
                   </Typography>
                 </Box>
               }
