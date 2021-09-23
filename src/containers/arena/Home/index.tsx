@@ -24,7 +24,7 @@ interface ArenaHomeProps {
 }
 
 const ArenaHome: React.FC<ArenaHomeProps> = ({ filter }) => {
-  const { arenasFiltered, meta, loadMore, onFilterChange } = useArenaHome()
+  const { arenasFiltered, meta, loadMore, onFilterChange, selectedFilter } = useArenaHome()
   const [itemsPerRow, setPerRow] = useState<number>(4)
   const rowCount = Math.ceil(arenasFiltered.length / itemsPerRow)
   const classes = useStyles()
@@ -97,7 +97,7 @@ const ArenaHome: React.FC<ArenaHomeProps> = ({ filter }) => {
 
       items.push(
         <Grid key={i} item sm={12} lg={4} xl={3} xs={12}>
-          <TournamentCard tournament={data} />
+          <TournamentCard tournament={data} selectedFilter={selectedFilter} />
         </Grid>
       )
     }

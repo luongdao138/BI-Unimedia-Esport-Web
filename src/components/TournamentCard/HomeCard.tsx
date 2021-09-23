@@ -1,4 +1,4 @@
-import { memo } from 'react'
+import { memo, useState, useEffect } from 'react'
 import { Typography, Box, makeStyles, Icon, Chip } from '@material-ui/core'
 import ESChip from '@components/Chip'
 import ESAvatar from '@components/Avatar'
@@ -8,7 +8,7 @@ import ESCardContent from '@components/Card/CardContent'
 import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
 import { Colors } from '@theme/colors'
-import { ParticipantType, TournamentListItem } from '@services/arena.service'
+import { ParticipantType, TournamentListItem, TournamentFilterOption } from '@services/arena.service'
 import { useTranslation } from 'react-i18next'
 import { TOURNAMENT_STATUS as TS, TOURNAMENT_RULE as TR } from '@constants/common.constants'
 import i18n from '@locales/i18n'
@@ -22,12 +22,39 @@ export interface TournamentListFiltered extends TournamentListItem {
 
 interface Props {
   tournament: TournamentListFiltered
+  selectedFilter: string
 }
 
-const TournamentHomeCard: React.FC<Props> = ({ tournament }) => {
+const TournamentHomeCard: React.FC<Props> = ({ tournament, selectedFilter }) => {
+  const [filterName, setFilterName] = useState<string>('')
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const router = useRouter()
+
+  useEffect(() => {
+    switch (selectedFilter) {
+      case TournamentFilterOption.all:
+        setFilterName(t('common:arenaSearchFilters.all'))
+        break
+      case TournamentFilterOption.beforeStart:
+        setFilterName(t('common:arenaSearchFilters.beforeStart'))
+        break
+      case TournamentFilterOption.completed:
+        setFilterName(t('common:arenaSearchFilters.completed'))
+        break
+      case TournamentFilterOption.inProgress:
+        setFilterName(t('common:arenaSearchFilters.inProgress'))
+        break
+      case TournamentFilterOption.ready:
+        setFilterName(t('common:arenaSearchFilters.ready'))
+        break
+      case TournamentFilterOption.recruiting:
+        setFilterName(t('common:arenaSearchFilters.recruiting'))
+        break
+      default:
+        break
+    }
+  }, [])
 
   const attr = tournament.attributes
   const participant = tournament.attributes.participant ? tournament.attributes.participant : tournament.attributes.winner
@@ -49,6 +76,19 @@ const TournamentHomeCard: React.FC<Props> = ({ tournament }) => {
           padding={1}
         >
           <ESAvatar size={36} src={attr.organizer_avatar} alt={attr.organizer_name} />
+          {selectedFilter === TournamentFilterOption.joined || selectedFilter === TournamentFilterOption.organized ? null : (
+            <Chip
+              className={classes.chipSecondary}
+              size="small"
+              variant="outlined"
+              label={
+                <Box color={Colors.grey[300]} justifyContent="flex-start" className={classes.label}>
+                  <Typography variant="overline">{filterName}</Typography>
+                </Box>
+              }
+            />
+          )}
+
           <Box display="flex" flexDirection="column" alignItems="flex-end">
             <Chip
               className={classes.chipPrimary}
@@ -193,6 +233,21 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: 5,
     backgroundColor: Colors.black_opacity[90],
     borderRadius: 10,
+  },
+  chipSecondary: {
+    width: 64,
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    margin: 5,
+    height: 17,
+    backgroundColor: Colors.black_opacity[90],
+    borderRadius: 4,
+    border: `0.2px solid ${Colors.grey[300]}`,
+  },
+  label: {
+    fontWeight: 'bold',
+    fontSize: 8,
   },
   mediaOverlay: {
     position: 'absolute',
