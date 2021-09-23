@@ -194,3 +194,45 @@ export const deleteMessage = /* GraphQL */ `
     }
   }
 `
+export const createVideo = /* GraphQL */ `
+  mutation CreateVideo($input: CreateVideoInput!, $condition: ModelVideoConditionInput) {
+    createVideo(input: $input, condition: $condition) {
+      id
+      uuid
+      arn
+      process_status
+      video_status
+      live_start_time
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const updateVideo = /* GraphQL */ `
+  mutation UpdateVideo($input: UpdateVideoInput!, $condition: ModelVideoConditionInput) {
+    updateVideo(input: $input, condition: $condition) {
+      id
+      uuid
+      arn
+      process_status
+      video_status
+      live_start_time
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const deleteVideo = /* GraphQL */ `
+  mutation DeleteVideo($input: DeleteVideoInput!, $condition: ModelVideoConditionInput) {
+    deleteVideo(input: $input, condition: $condition) {
+      id
+      uuid
+      arn
+      process_status
+      video_status
+      live_start_time
+      createdAt
+      updatedAt
+    }
+  }
+`
