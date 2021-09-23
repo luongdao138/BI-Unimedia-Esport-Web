@@ -86,7 +86,7 @@ const useLobbyCreate = (): {
         resetUpdateMeta()
         handleReturn()
         dispatch(actions.getLobbyDetail(String(resultAction.meta.arg.hash_key)))
-        dispatch(commonActions.addToast(i18n.t('common:lobby.toasts.status_changed')))
+        dispatch(commonActions.addToast(i18n.t('common:lobby.toasts.edit_status_changed')))
       }
     }
   }
