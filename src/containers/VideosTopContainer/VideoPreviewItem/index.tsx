@@ -1,6 +1,6 @@
 import React from 'react'
 import { Box, Typography, Theme, makeStyles } from '@material-ui/core'
-import { TypeVideo, STATUS_VIDEO } from '@services/videoTop.services'
+import { TypeVideo } from '@services/videoTop.services'
 import { useTranslation } from 'react-i18next'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
 import { FormatHelper } from '@utils/helpers/FormatHelper'
@@ -9,6 +9,7 @@ import { ESRoutes } from '@constants/route.constants'
 import moment from 'moment'
 import { FORMAT_DATE_ARCHIVED } from '@constants/common.constants'
 import { TypeVideoArchived } from '@services/liveStreamDetail.service'
+import ESAvatar from '@components/Avatar'
 
 type VideoPreviewItemProps = {
   data?: TypeVideo | TypeVideoArchived
@@ -17,16 +18,13 @@ const VideoPreviewItem: React.FC<VideoPreviewItemProps> = ({ data }) => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
   const IMG_PLACEHOLDER = '/images/live_stream/exelab_default_card.png'
-  const iconDefault = '/images/avatar.png'
   //status = 0-schedule|1-live|2-archive
   const router = useRouter()
   const onNavigateLive = () => {
-    const getRoute = () => ({
-      [STATUS_VIDEO.LIVE_STREAM.toString()]: ESRoutes.VIDEO_LIVE_STREAM,
-      [STATUS_VIDEO.ARCHIVE.toString()]: ESRoutes.VIDEO_ARCHIVED,
-      [STATUS_VIDEO.SCHEDULE.toString()]: ESRoutes.VIDEO_RESERVED,
+    router.push({
+      pathname: ESRoutes.TOP,
+      query: { vid: data?.uuid },
     })
-    router.push({ pathname: getRoute()[data?.status.toString() ?? ESRoutes.VIDEO_LIVE_STREAM], query: { vid: data?.uuid } })
   }
 
   return (
@@ -57,9 +55,7 @@ const VideoPreviewItem: React.FC<VideoPreviewItemProps> = ({ data }) => {
         )}
         <Box className={classes.userItemContainer}>
           <Box className={classes.userStyle}>
-            <Box className={classes.iconStyle}>
-              <img src={data?.user_avatar ? data.user_avatar : iconDefault} width={36} height={36} className={classes.iconStyle} />
-            </Box>
+            <ESAvatar className={classes.iconStyle} alt={data?.user_nickname} src={data?.user_avatar} />
             <Box className={classes.nameContainer}>
               <Typography className={classes.userNameStyle}>{data?.user_nickname}</Typography>
             </Box>
@@ -176,12 +172,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   nameStyle: {
     textAlign: 'center',
     fontSize: 12,
-    color: '#fff',
+    color: '#FFFFFF',
   },
   userNameStyle: {
     textAlign: 'left',
     fontSize: 12,
-    color: '#fff',
+    color: '#FFFFFF',
   },
   watchContainer: {
     display: 'flex',

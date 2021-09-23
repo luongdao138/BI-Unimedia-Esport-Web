@@ -84,7 +84,9 @@ const UsageHistory: FC = () => {
   }, [listFilterData])
 
   useEffect(() => {
-    getUsagePointsHistoryData({ page: pageDetail, limit: limit, uuid: purchasePointId })
+    if (usageHistoryDetail) {
+      getUsagePointsHistoryData({ page: pageDetail, limit: limit, uuid: purchasePointId })
+    }
     return () => {
       resetDetailUsagePointsHistory()
     }

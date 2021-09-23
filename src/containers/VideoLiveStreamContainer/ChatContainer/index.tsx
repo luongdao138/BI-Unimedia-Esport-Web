@@ -10,8 +10,6 @@ import i18n from '@locales/i18n'
 import useStyles from './styles'
 import useCheckNgWord from '@utils/hooks/useCheckNgWord'
 import _, { size } from 'lodash'
-// import { showDialog } from '@store/common/actions'
-// import { NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
 import { useAppSelector } from '@store/hooks'
 // import { useAppDispatch, useAppSelector } from '@store/hooks'
 import userProfileStore from '@store/userProfile'
@@ -19,7 +17,6 @@ import { UserProfile } from '@services/user.service'
 import API, { GraphQLResult, graphqlOperation } from '@aws-amplify/api'
 import { listMessages, listUsers } from 'src/graphql/queries'
 import { createMessage, createUser, updateMessage } from 'src/graphql/mutations'
-// import { createMessage, deleteMessage } from "src/graphql/mutations";
 import { onCreateMessage, onUpdateMessage } from 'src/graphql/subscriptions'
 import * as APIt from 'src/types/graphqlAPI'
 import useDetailVideo from '../useDetailVideo'
@@ -32,6 +29,7 @@ import DonateMessage from './DonateMessage'
 import Avatar from '@components/Avatar/'
 import ESInput from '@components/Input'
 import { STATUS_VIDEO } from '@services/videoTop.services'
+import LoginRequired from '@containers/LoginRequired'
 
 type ChatContainerProps = {
   onPressDonate?: (donatedPoint: number, purchaseComment: string) => void
@@ -822,9 +820,13 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
       {purchaseDialogVisible && isMobile && purchaseInfoDialog()}
       <Box className={classes.chatInputContainer}>
         {purchaseDialogVisible && !isMobile && purchaseInfoDialog()}
-        <IconButton id="btnOpenPremiumChatDialog" onClick={purchaseIconClick} className={classes.iconPurchase}>
-          <img id="btnOpenPremiumChatDialogImage" src="/images/ic_purchase.svg" />
-        </IconButton>
+        <LoginRequired>
+          {/* <div onClick={purchaseIconClick}> */}
+          <IconButton onClick={purchaseIconClick} id="btnOpenPremiumChatDialog" className={classes.iconPurchase}>
+            <img id="btnOpenPremiumChatDialogImage" src="/images/ic_purchase.svg" />
+          </IconButton>
+          {/* </div> */}
+        </LoginRequired>
         <Box className={classes.chatBox}>
           <ESInput
             id={'message'}
@@ -840,9 +842,13 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
             error={touched.message && !!errors?.message}
             onKeyPress={handlePressEnter}
           />
-          <Button onClick={handleSubmitChatContent} className={classes.iconButtonBg} disabled={!isEnabledChat}>
-            <Icon className={`fa fa-paper-plane ${classes.sendIcon}`} fontSize="small" />
-          </Button>
+          <LoginRequired>
+            {/* <div onClick={handleSubmitChatContent}> */}
+            <Button onClick={handleSubmitChatContent} className={classes.iconButtonBg} disabled={!isEnabledChat}>
+              <Icon className={`fa fa-paper-plane ${classes.sendIcon}`} fontSize="small" />
+            </Button>
+            {/* </div> */}
+          </LoginRequired>
         </Box>
         {/* {errors.message && <Typography className={classes.chatInputErrorText}>{errors.message}</Typography>} */}
       </Box>

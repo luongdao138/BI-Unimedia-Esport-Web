@@ -15,6 +15,9 @@ import useListVideoAll from './VideosList/useListVideoAll'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import { useTheme } from '@material-ui/core/styles'
 import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
+// import { useAppSelector } from '@store/hooks'
+// import { getIsAuthenticated } from '@store/auth/selectors'
+import LoginRequired from '@containers/LoginRequired'
 
 enum TABS {
   VIDEOS_LIST = 0,
@@ -35,6 +38,7 @@ export const TabsVideo = {
 const VideosTop: React.FC = () => {
   const { t } = useTranslation('common')
   const classes = useStyles()
+  // const isAuthenticated = useAppSelector(getIsAuthenticated)
   const [tab, setTab] = useState(0)
   const [follow, setFollow] = useState(0)
   const { bannerTop, listBanner } = useListVideoAll()
@@ -55,7 +59,11 @@ const VideosTop: React.FC = () => {
           <ESTab className={classes.tabMin} label={t('videos_top_tab.live_stream_video')} value={1} />
           <ESTab className={classes.tabMin} label={t('videos_top_tab.schedule_stream_video')} value={2} />
           <ESTab className={classes.tabMin} label={t('videos_top_tab.archived_stream_video')} value={3} />
-          <ESTab className={classes.tabMin} label={t('videos_top_tab.favorite_video')} value={4} />
+          <LoginRequired>
+            <div onClick={() => setTab(4)}>
+              <ESTab className={classes.tabMin} label={t('videos_top_tab.favorite_video')} value={4} />
+            </div>
+          </LoginRequired>
         </ESTabs>
       </Grid>
     )
@@ -105,7 +113,6 @@ const VideosTop: React.FC = () => {
       <Box className={classes.container}>
         {/* //listBanner */}
         <Box className={classes.bannerContainer}>{listBanner.length > 0 && <BannerCarousel data={listBanner} />}</Box>
-        {/* <Box className={classes.bannerContainer}>{dt.length > 0 && <BannerCarousel data={dt} />}</Box> */}
       </Box>
       <Grid container direction="column">
         {getTabs()}

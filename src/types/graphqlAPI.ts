@@ -182,6 +182,51 @@ export type DeleteMessageInput = {
   id: string
 }
 
+export type CreateVideoInput = {
+  id?: string | null
+  uuid: string
+  arn: string
+  process_status?: string | null
+  video_status?: string | null
+  live_start_time?: string | null
+}
+
+export type ModelVideoConditionInput = {
+  uuid?: ModelStringInput | null
+  arn?: ModelStringInput | null
+  process_status?: ModelStringInput | null
+  video_status?: ModelStringInput | null
+  live_start_time?: ModelStringInput | null
+  and?: Array<ModelVideoConditionInput | null> | null
+  or?: Array<ModelVideoConditionInput | null> | null
+  not?: ModelVideoConditionInput | null
+}
+
+export type Video = {
+  __typename: 'Video'
+  id?: string
+  uuid?: string
+  arn?: string
+  process_status?: string | null
+  video_status?: string | null
+  live_start_time?: string | null
+  createdAt?: string
+  updatedAt?: string
+}
+
+export type UpdateVideoInput = {
+  id: string
+  uuid?: string | null
+  arn?: string | null
+  process_status?: string | null
+  video_status?: string | null
+  live_start_time?: string | null
+}
+
+export type DeleteVideoInput = {
+  id: string
+}
+
 export type ModelUserFilterInput = {
   id?: ModelIDInput | null
   uuid?: ModelStringInput | null
@@ -215,6 +260,24 @@ export type ModelMessageFilterInput = {
   and?: Array<ModelMessageFilterInput | null> | null
   or?: Array<ModelMessageFilterInput | null> | null
   not?: ModelMessageFilterInput | null
+}
+
+export type ModelVideoFilterInput = {
+  id?: ModelIDInput | null
+  uuid?: ModelStringInput | null
+  arn?: ModelStringInput | null
+  process_status?: ModelStringInput | null
+  video_status?: ModelStringInput | null
+  live_start_time?: ModelStringInput | null
+  and?: Array<ModelVideoFilterInput | null> | null
+  or?: Array<ModelVideoFilterInput | null> | null
+  not?: ModelVideoFilterInput | null
+}
+
+export type ModelVideoConnection = {
+  __typename: 'ModelVideoConnection'
+  items?: Array<Video | null> | null
+  nextToken?: string | null
 }
 
 export type CreateUserMutationVariables = {
@@ -388,6 +451,63 @@ export type DeleteMessageMutation = {
   } | null
 }
 
+export type CreateVideoMutationVariables = {
+  input?: CreateVideoInput
+  condition?: ModelVideoConditionInput | null
+}
+
+export type CreateVideoMutation = {
+  createVideo?: {
+    __typename: 'Video'
+    id: string
+    uuid: string
+    arn: string
+    process_status?: string | null
+    video_status?: string | null
+    live_start_time?: string | null
+    createdAt: string
+    updatedAt: string
+  } | null
+}
+
+export type UpdateVideoMutationVariables = {
+  input?: UpdateVideoInput
+  condition?: ModelVideoConditionInput | null
+}
+
+export type UpdateVideoMutation = {
+  updateVideo?: {
+    __typename: 'Video'
+    id: string
+    uuid: string
+    arn: string
+    process_status?: string | null
+    video_status?: string | null
+    live_start_time?: string | null
+    createdAt: string
+    updatedAt: string
+  } | null
+}
+
+export type DeleteVideoMutationVariables = {
+  input?: DeleteVideoInput
+  condition?: ModelVideoConditionInput | null
+}
+
+export type DeleteVideoMutation = {
+  deleteVideo?: {
+    __typename: 'Video'
+    id: string
+    uuid: string
+    arn: string
+    process_status?: string | null
+    video_status?: string | null
+    live_start_time?: string | null
+    createdAt: string
+    updatedAt: string
+  } | null
+}
+
 export type GetUserQueryVariables = {
   id?: string
 }
@@ -489,6 +609,48 @@ export type ListMessagesQuery = {
       use_point_id?: string | null
       is_premium?: boolean | null
       userId: string
+      createdAt: string
+      updatedAt: string
+    } | null> | null
+    nextToken?: string | null
+  } | null
+}
+
+export type GetVideoQueryVariables = {
+  id?: string
+}
+
+export type GetVideoQuery = {
+  getVideo?: {
+    __typename: 'Video'
+    id: string
+    uuid: string
+    arn: string
+    process_status?: string | null
+    video_status?: string | null
+    live_start_time?: string | null
+    createdAt: string
+    updatedAt: string
+  } | null
+}
+
+export type ListVideosQueryVariables = {
+  filter?: ModelVideoFilterInput | null
+  limit?: number | null
+  nextToken?: string | null
+}
+
+export type ListVideosQuery = {
+  listVideos?: {
+    __typename: 'ModelVideoConnection'
+    items?: Array<{
+      __typename: 'Video'
+      id: string
+      uuid: string
+      arn: string
+      process_status?: string | null
+      video_status?: string | null
+      live_start_time?: string | null
       createdAt: string
       updatedAt: string
     } | null> | null
@@ -632,6 +794,48 @@ export type OnDeleteMessageSubscription = {
       createdAt: string
       updatedAt: string
     } | null
+    createdAt: string
+    updatedAt: string
+  } | null
+}
+
+export type OnCreateVideoSubscription = {
+  onCreateVideo?: {
+    __typename: 'Video'
+    id: string
+    uuid: string
+    arn: string
+    process_status?: string | null
+    video_status?: string | null
+    live_start_time?: string | null
+    createdAt: string
+    updatedAt: string
+  } | null
+}
+
+export type OnUpdateVideoSubscription = {
+  onUpdateVideo?: {
+    __typename: 'Video'
+    id: string
+    uuid: string
+    arn: string
+    process_status?: string | null
+    video_status?: string | null
+    live_start_time?: string | null
+    createdAt: string
+    updatedAt: string
+  } | null
+}
+
+export type OnDeleteVideoSubscription = {
+  onDeleteVideo?: {
+    __typename: 'Video'
+    id: string
+    uuid: string
+    arn: string
+    process_status?: string | null
+    video_status?: string | null
+    live_start_time?: string | null
     createdAt: string
     updatedAt: string
   } | null

@@ -117,3 +117,34 @@ export const listMessages = /* GraphQL */ `
     }
   }
 `
+export const getVideo = /* GraphQL */ `
+  query GetVideo($id: ID!) {
+    getVideo(id: $id) {
+      id
+      uuid
+      arn
+      process_status
+      video_status
+      live_start_time
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const listVideos = /* GraphQL */ `
+  query ListVideos($filter: ModelVideoFilterInput, $limit: Int, $nextToken: String) {
+    listVideos(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        uuid
+        arn
+        process_status
+        video_status
+        live_start_time
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`
