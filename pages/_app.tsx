@@ -28,6 +28,7 @@ import ToastContainer from '@containers/ToastContainer'
 import DialogContainer from '@containers/DialogContainer'
 import ESHead from '@components/ESHead'
 import Amplify from 'aws-amplify'
+import Script from 'react-load-script'
 
 const AWS_PROJECT_REGION = process.env.NEXT_PUBLIC_AWS_PROJECT_REGION
 const AWS_APPSYNC_GRAPHQLENDPOINT = process.env.NEXT_PUBLIC_AWS_APPSYNC_GRAPHQLENDPOINT
@@ -99,10 +100,13 @@ const App = ({ Component, pageProps }: Props) => {
   const Layout = Component.Layout ?? React.Fragment
 
   const { previousRoute } = useRouteUrlHistory()
-
+  const handleLoadScript = () => {
+    console.warn('IVSPlayer; ', window?.IVSPlayer)
+  }
   return (
     <>
       <ESHead title={pageProps.title || 'eXeLAB'} desc={pageProps.desc} keywords={pageProps.keywords} image={pageProps.image} />
+      <Script url="https://player.live-video.net/1.4.0/amazon-ivs-player.min.js" onError={console.error} onLoad={handleLoadScript} />
       <PersistGate persistor={persistStore(store)}>
         <RouteContext.Provider
           value={{
