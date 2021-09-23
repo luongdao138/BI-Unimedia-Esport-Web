@@ -60,6 +60,9 @@ const VideoPlayer: React.FC<PlayerProps> = ({ src, statusVideo, mediaOverlayIsSh
     // playedSecond,
     changeVideoTime,
     changeIsEndLive,
+    changeIsPausingLive,
+    liveStreamInfo,
+    changeSeekCount
   } = useDetailVideo()
 
   const onProgress = async (event) => {
@@ -179,7 +182,28 @@ const VideoPlayer: React.FC<PlayerProps> = ({ src, statusVideo, mediaOverlayIsSh
     src,
   ])
 
+  const handlePauseAndSeekVideo = () => {
+    console.log(' 🚀 🚀 🚀 🚀 🚀 🚀 🚀 --01234 ', playedSeconds, durationPlayer, state.playing)
+    // seek to current live stream second if is pausing live and is not playing
+    if(!state.playing && liveStreamInfo.is_pausing_live){
+      const newSecond = Math.floor(durationPlayer)
+      reactPlayerRef.current.seekTo(newSecond, 'seconds')
+      console.log("🚀 ~ handleChange ~ newSecond--- 0000", newSecond)
+      changeSeekCount(Math.floor(newSecond))
+    }
+    // if pause video when is live streaming => set is pausing to true
+    if(state.playing && Math.floor(playedSeconds) === Math.floor(durationPlayer)){
+      console.log('-----aaaa----')
+      changeIsPausingLive(true)
+    } else {
+      console.log('-----bbbb----')
+      changeIsPausingLive(false)
+    }
+  }
+
   const handlePlayPause = () => {
+    console.log('-----handlePlayPause----')
+    handlePauseAndSeekVideo()
     setState({ ...state, playing: !state.playing })
   }
 
@@ -212,13 +236,15 @@ const VideoPlayer: React.FC<PlayerProps> = ({ src, statusVideo, mediaOverlayIsSh
     onVideoEnd()
   }
   const handlePlayPauseOut = () => {
+    console.log('-----handlePlayPauseOut----')
+    handlePauseAndSeekVideo()
     setState({ ...state, playing: !state.playing })
   }
   const onError = (error, data) => {
     console.warn('onError player', error, data)
-    if (data?.response === 404) {
-      setState({ ...state, errorVideo: true, loading: false })
-    }
+    // if (data.response === 404) {
+    //   setState({ ...state, errorVideo: true, loading: false })
+    // }
   }
   const onBuffer = () => {
     console.log('BUFFER=')
