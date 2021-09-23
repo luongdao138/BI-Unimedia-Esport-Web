@@ -18,6 +18,8 @@ import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
 // import { useAppSelector } from '@store/hooks'
 // import { getIsAuthenticated } from '@store/auth/selectors'
 import LoginRequired from '@containers/LoginRequired'
+import { useAppSelector } from '@store/hooks'
+import { getIsAuthenticated } from '@store/auth/selectors'
 
 enum TABS {
   VIDEOS_LIST = 0,
@@ -38,10 +40,10 @@ export const TabsVideo = {
 const VideosTop: React.FC = () => {
   const { t } = useTranslation('common')
   const classes = useStyles()
-  // const isAuthenticated = useAppSelector(getIsAuthenticated)
+  const isAuthenticated = useAppSelector(getIsAuthenticated)
   const [tab, setTab] = useState(0)
   const [follow, setFollow] = useState(0)
-  const { bannerTop, listBanner } = useListVideoAll()
+  const { bannerTop, listBanner, setLoginPreAction, getLoginPreAction } = useListVideoAll()
   const theme = useTheme()
   const isWideScreen = useMediaQuery(theme.breakpoints.up(1920))
   const { width: listDisplayWidth } = useWindowDimensions(244)
@@ -50,7 +52,16 @@ const VideosTop: React.FC = () => {
     setTab(0)
     bannerTop()
     setFollow(0)
+    setLoginPreAction('')
   }, [])
+
+  useEffect(() => {
+    if (isAuthenticated && getLoginPreAction === 'favorite_tab') {
+      setTab(TabsVideo.FAVORITE_VIDEOS)
+      setLoginPreAction('')
+    }
+  }, [isAuthenticated, getLoginPreAction])
+
   const getTabs = () => {
     return (
       <Grid item xs={12} className={classes.tabsContainer}>
