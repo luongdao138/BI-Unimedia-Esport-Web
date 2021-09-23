@@ -160,7 +160,7 @@ const LobbyCard: React.FC<Props> = ({ lobby }) => {
         {getInfoRow(`${i18n.t('common:lobby.card.organizer')} ${organizer_name}`)}
         {getChippedRow(i18n.t('common:lobby.card.start_date'), startDate)}
         {getChippedRow(i18n.t('common:lobby.card.entry_period'), entryEndDate)}
-        {getChippedRow(i18n.t('common:lobby.card.entries'), participant_count, `/${max_participants}`)}
+        {getChippedRow(i18n.t('common:lobby.card.entries'), participant_count, `/ ${max_participants}`)}
         {getParticipants()}
       </ESCardContent>
     </ESCard>
