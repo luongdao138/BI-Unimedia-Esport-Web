@@ -18,7 +18,7 @@ const RemainingDate: React.FC<Props> = ({ lobby }) => {
   const entryStartDate = moment(lobby.attributes.entry_start_datetime)
   const entryEndDate = moment(lobby.attributes.entry_end_datetime)
   const startDate = moment(lobby.attributes.start_datetime)
-  const targetDate = status === LOBBY_STATUS.READY ? entryStartDate : status === LOBBY_STATUS.RECRUITING ? entryEndDate : startDate
+  let targetDate = status === LOBBY_STATUS.READY ? entryStartDate : status === LOBBY_STATUS.RECRUITING ? entryEndDate : startDate
 
   const nowDate = moment()
   const days = targetDate.diff(nowDate, 'days')
@@ -57,6 +57,8 @@ const RemainingDate: React.FC<Props> = ({ lobby }) => {
   }
 
   const renderDueDate = () => {
+    if (status === LOBBY_STATUS.RECRUITING) targetDate = startDate
+
     return (
       <>
         <Typography className={classes.highlightedNumberSmall}>{targetDate.format('YYYY/MM/DD HH')}</Typography>
