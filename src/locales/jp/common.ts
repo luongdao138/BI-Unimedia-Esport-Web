@@ -1111,6 +1111,7 @@ export default {
   ng_word_area: {
     chat_section: 'メッセージテキストボックス',
     room_name_title: 'グループ名',
+    comment_section: 'メッセージテキストボックス',
   },
   page_head: {
     default_desc:
