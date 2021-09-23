@@ -26,7 +26,7 @@ declare global {
   }
 }
 
-const VideoPlayer: React.FC<PlayerProps> = ({ src, statusVideo, mediaOverlayIsShown, onVideoEnd }) => {
+const VideoPlayer: React.FC<PlayerProps> = ({ src, statusVideo, mediaOverlayIsShown, onVideoEnd, thumbnail }) => {
   const checkStatusVideo = 1
   const classes = useStyles({ checkStatusVideo })
 
@@ -297,7 +297,13 @@ const VideoPlayer: React.FC<PlayerProps> = ({ src, statusVideo, mediaOverlayIsSh
           </div>
         </div>
         {loading && (
-          <div className={classes.loading}>
+          <div
+            className={classes.loading}
+            style={{
+              backgroundImage: `url(${thumbnail ?? '/images/live_stream/exelab_thumb.png'})`,
+              backgroundSize: 'cover',
+            }}
+          >
             <ESLoader />
           </div>
         )}
@@ -363,11 +369,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'center',
     alignItems: 'center',
     zIndex: 99,
-  },
-  [theme.breakpoints.down('xs')]: {
-    fontSizeLarge: {
-      fontSize: '50px',
-    },
   },
   //video-react-video
   // videoPlayerCustom: {
@@ -439,31 +440,41 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     justifyContent: 'space-between',
   },
-  processControl: (props: { checkStatusVideo: number }) => {
-    return {
-      width: '100%',
-      position: 'absolute',
-      bottom: 0,
-      left: 0,
-      // visibility:'hidden',
-      // opacity: 1,
-      // height: 40,
-      // display: 'flex',
-      // alignItems: 'center',
-      // paddingLeft: 26,
-      // justifyContent: 'space-between',
-      zIndex: 99,
-      // transition: 'opacity 0.3s ease-in',
-      opacity: props.checkStatusVideo === 1 ? 1 : 0, //always show controlBar by status video
-      background: 'linear-gradient(rgb(128 128 128 / 0%) 20%, rgb(39 39 39) 100%)',
-    }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  processControl: {
+    width: '100%',
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    // visibility:'hidden',
+    // opacity: 1,
+    // height: 40,
+    // display: 'flex',
+    // alignItems: 'center',
+    // paddingLeft: 26,
+    // justifyContent: 'space-between',
+    zIndex: 99,
+    transition: 'opacity 0.1s ease-in',
+    opacity: 0, //always show controlBar by status video
+    background: 'linear-gradient(rgb(128 128 128 / 0%) 20%, rgb(39 39 39) 100%)',
   },
-  playerContainer: {},
+  playerContainer: {
+    '&:hover $processControl': {
+      opacity: 1,
+      background: 'linear-gradient(rgb(128 128 128 / 0%) 20%, rgb(39 39 39) 100%)',
+      transition: 'opacity 0.1s ease-in',
+    },
+  },
   reactPlayer: {
     '&:hover $.processControl': {
       transition: 'opacity 0.3s ease-in',
       opacity: 1,
       backgroundColor: 'yellow',
+    },
+  },
+  [theme.breakpoints.down('xs')]: {
+    fontSizeLarge: {
+      fontSize: '50px',
     },
   },
 }))

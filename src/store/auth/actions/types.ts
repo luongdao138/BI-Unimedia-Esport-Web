@@ -10,4 +10,5 @@ export enum AUTH_ACTION_TYPE {
   RESET_PASSWORD = 'auth/resetPassword',
   REGISTER_PROFILE = 'auth/registerProfile',
   LOGOUT = 'auth/logout',
+  PRE_LOGIN_ACTION = 'auth/preLogin',
 }
