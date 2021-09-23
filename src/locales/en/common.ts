@@ -719,6 +719,7 @@ export default {
     detail: {
       label_id: '募集ID：',
       number_of_entries: 'エントリー数',
+      number_of_entries_freezed: '参加数',
       organizer: '開催者',
       entry_period: 'エントリー期間',
       start_date: '開催日時',
