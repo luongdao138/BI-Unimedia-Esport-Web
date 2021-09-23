@@ -719,6 +719,7 @@ export default {
     detail: {
       label_id: '募集ID：',
       number_of_entries: 'エントリー数',
+      number_of_entries_freezed: '参加数',
       organizer: '開催者',
       entry_period: 'エントリー期間',
       start_date: '開催日時',
@@ -731,7 +732,8 @@ export default {
     },
     cancel_lobby_dialog: {
       title: '募集を中止しますか？',
-      description: '中止した募集は復元することはできません。募集の中止は、メンバーに通知されます。',
+      description1: '中止した募集は復元することはできません。',
+      description2: '募集の中止は、メンバーに通知されます。',
       additionalText: '',
       confirmationText: '中止する',
       cancellationText: 'キャンセル',
@@ -808,6 +810,7 @@ export default {
       entry_decline_failed: 'エントリーを辞退できませんでした',
       randomize_participant: 'ユーザーをランダムに選びました',
       confirm_participant: 'エントリーを締め切りました',
+      edit_status_changed: '募集の開催ステータスが変更されました、編集内容の見直しをお願いします',
     },
     create: {
       submit: 'この内容で作成する',

@@ -66,6 +66,7 @@ const useStyles = makeStyles((theme) => ({
   tabsFixed: {
     display: 'flex',
     justifyContent: 'center',
+    marginBottom: 18,
   },
   [theme.breakpoints.up('md')]: {
     flexContainer: {

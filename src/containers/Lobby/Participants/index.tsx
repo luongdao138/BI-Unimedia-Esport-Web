@@ -46,6 +46,8 @@ const Participants: React.FC<ParticipantsProps> = ({ open, data, handleClose }) 
 
   const currentPage = _.get(participantsPageMeta, 'current_page', 1)
   const totalPage = _.get(participantsPageMeta, 'total_pages', 1)
+  const totalCount = _.get(participantsPageMeta, 'total_count', '')
+  const maxParticipants = _.get(data, 'attributes.max_participants', '')
   const [isInitialPageLoad, setInitialPageLoad] = useState(false)
 
   useEffect(() => {
@@ -119,9 +121,7 @@ const Participants: React.FC<ParticipantsProps> = ({ open, data, handleClose }) 
                     </Typography>
                   </Box>
                   <Typography variant="h3" style={{ fontSize: 24, fontWeight: 'bold' }}>
-                    {data.attributes.is_freezed
-                      ? data.attributes.participants_count
-                      : data.attributes.participants_count + data.attributes.entry_count}
+                    {totalCount}
                   </Typography>
                   <Typography variant="h3" className={classes.countLabel}>
                     {unit}
@@ -129,9 +129,8 @@ const Participants: React.FC<ParticipantsProps> = ({ open, data, handleClose }) 
                   <Typography variant="h3" className={classes.countLabel} style={{ fontSize: 20, marginLeft: 4 }}>
                     /
                   </Typography>
-
                   <Typography variant="h3" className={classes.countLabel} style={{ fontSize: 22 }}>
-                    {data.attributes.max_participants}
+                    {maxParticipants}
                   </Typography>
                   <Typography variant="h3" className={classes.countLabel}>
                     {unit}

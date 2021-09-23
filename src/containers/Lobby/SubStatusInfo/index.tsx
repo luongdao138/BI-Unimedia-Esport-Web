@@ -74,8 +74,8 @@ const SubStatusInfo: React.FC<Props> = ({ lobby }) => {
 
   const renderEntryMembersInfo = () => {
     if (status === LOBBY_STATUS.CANCELLED || status === LOBBY_STATUS.DELETED) return null
-
-    return <EntryMembersCount entryCount={entryMembersCount} maxCount={maxMembersCount} />
+    const label = is_freezed ? t('common:lobby.detail.number_of_entries_freezed') : t('common:lobby.detail.number_of_entries')
+    return <EntryMembersCount label={label} entryCount={entryMembersCount} maxCount={maxMembersCount} />
   }
 
   return (
@@ -92,7 +92,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: 'column',
     alignItems: 'center',
     marginTop: theme.spacing(3),
-    marginBottom: theme.spacing(3),
   },
   roundInfoText: {
     fontSize: 24,

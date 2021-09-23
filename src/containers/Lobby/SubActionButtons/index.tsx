@@ -113,8 +113,15 @@ const SubActionButtons: React.FC<Props> = ({ lobby, openChat, openMemberList }) 
     }
   }
 
+  const renderSpacing = () => {
+    if (status !== LOBBY_STATUS.READY && status !== LOBBY_STATUS.DELETED && status !== LOBBY_STATUS.CANCELLED) {
+      return <Box mt={2} />
+    }
+  }
+
   return (
     <Box className={classes.body}>
+      {renderSpacing()}
       <Box className={classes.actionButtonContainer}>
         {renderMemberList()}
         {renderChat()}
@@ -132,8 +139,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    marginTop: 24,
-    marginBottom: 24,
   },
   actionButtonContainer: {
     display: 'flex',
