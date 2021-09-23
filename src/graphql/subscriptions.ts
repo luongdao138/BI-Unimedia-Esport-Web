@@ -194,3 +194,45 @@ export const onDeleteMessage = /* GraphQL */ `
     }
   }
 `
+export const onCreateVideo = /* GraphQL */ `
+  subscription OnCreateVideo {
+    onCreateVideo {
+      id
+      uuid
+      arn
+      process_status
+      video_status
+      live_start_time
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const onUpdateVideo = /* GraphQL */ `
+  subscription OnUpdateVideo {
+    onUpdateVideo {
+      id
+      uuid
+      arn
+      process_status
+      video_status
+      live_start_time
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const onDeleteVideo = /* GraphQL */ `
+  subscription OnDeleteVideo {
+    onDeleteVideo {
+      id
+      uuid
+      arn
+      process_status
+      video_status
+      live_start_time
+      createdAt
+      updatedAt
+    }
+  }
+`
