@@ -7,6 +7,7 @@ import { UserLoginResponse } from '@services/auth.service'
 type StateType = {
   user?: UserLoginResponse
   confirmType?: 'register' | 'forgot'
+  loginPreAction?: string
 }
 
 const initialState: StateType = {}
@@ -57,5 +58,8 @@ export default createReducer(initialState, (builder) => {
     })
     .addCase(userProfileActions.changeEmailConfirm.fulfilled, (state, action) => {
       state.user.email = action.payload.email
+    })
+    .addCase(actions.setLoginPreAction, (state, action) => {
+      state.loginPreAction = action.payload.action
     })
 })

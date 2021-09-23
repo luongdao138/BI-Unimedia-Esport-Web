@@ -166,3 +166,4 @@ export const logout = createAsyncThunk(AUTH_ACTION_TYPE.LOGOUT, async (_, { reje
     return rejectWithValue(error.response.data)
   }
 })
+export const setLoginPreAction = createAction<{ action: string }>(AUTH_ACTION_TYPE.PRE_LOGIN_ACTION)
