@@ -14,12 +14,14 @@ import DiscardDialog from '@containers/Community/Partials/DiscardDialog'
 import { SRLWrapper } from 'simple-react-lightbox'
 import { LIGHTBOX_OPTIONS } from '@constants/common.constants'
 import { CommunityDetail, TopicDetail } from '@services/community.service'
-import { CommonHelper } from '@utils/helpers/CommonHelper'
 import router from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
 import useTopicHelper from '../../useTopicHelper'
 import useCommunityHelper from '@containers/Community/hooks/useCommunityHelper'
 import { FormatHelper } from '@utils/helpers/FormatHelper'
+import moment from 'moment'
+import _ from 'lodash'
+import Linkify from 'react-linkify'
 
 type CommunityHeaderProps = {
   user_avatar?: string
@@ -59,7 +61,7 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({
       nickname: topicData?.owner_name,
       user_code: topicData?.owner_user_code,
       content: topicData?.content,
-      date: CommonHelper.staticSmartTime(topicData?.created_at),
+      date: moment(topicData?.created_at).format('LL'),
       image: (!!topicData?.attachments && topicData.attachments[0]?.assets_url) || '',
       hash_key: topicData?.hash_key,
       avatar_image: topicData?.owner_profile,
@@ -82,6 +84,10 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({
     )
   }
 
+  const newLineText = (text) => {
+    return _.map(_.split(text, '\n'), (str, i) => <Typography key={i}>{str}</Typography>)
+  }
+
   return (
     <>
       <Box className={isConfirm ? classes.containerConfirm : classes.container}>
@@ -102,17 +108,15 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({
             </Box>
             {!isConfirm && (
               <Box className={classes.dateReportContainer}>
-                <Typography className={classes.date}>{CommonHelper.staticSmartTime(topicData?.created_at)}</Typography>
+                <Typography className={classes.date}>{moment(topicData?.created_at).format('LL')}</Typography>
 
                 {(isPublic || !isNotMember) && (
                   <Box className={classes.menuWrapper}>
                     <ESMenu>
                       {(isModerator || isOwner) && <ESMenuItem onClick={handleDeleteOpen}>{t('common:topic.delete.button')}</ESMenuItem>}
-                      {!isOwner && (
-                        <LoginRequired>
-                          <ESMenuItem onClick={handleReportOpen}>{t('common:topic.report.button')}</ESMenuItem>
-                        </LoginRequired>
-                      )}
+                      <LoginRequired>
+                        <ESMenuItem onClick={handleReportOpen}>{t('common:topic.report.button')}</ESMenuItem>
+                      </LoginRequired>
                     </ESMenu>
                   </Box>
                 )}
@@ -120,8 +124,16 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({
             )}
           </Box>
 
-          <Box className={classes.contentContainer} mb={2} mt={1}>
-            <Typography className={classes.content}>{isConfirm ? content : topicData?.content}</Typography>
+          <Box className={classes.content} mb={2} mt={1}>
+            <Linkify
+              componentDecorator={(decoratedHref, decoratedText, key) => (
+                <a target="_blank" rel="noopener noreferrer" href={decoratedHref} key={key} className={classes.linkify}>
+                  {decoratedText}
+                </a>
+              )}
+            >
+              {newLineText(isConfirm ? content : topicData?.content)}
+            </Linkify>
           </Box>
           {(isConfirm ? image : !!topicData?.attachments && topicData.attachments[0]?.assets_url) && renderClickableImage()}
           {topicData && (
@@ -248,6 +260,11 @@ const useStyles = makeStyles((theme) => ({
     color: Colors.grey[300],
     fontSize: 14,
     wordBreak: 'break-word',
+  },
+  linkify: {
+    color: Colors.white,
+    textDecoration: 'underline',
+    wordBreak: 'break-all',
   },
   numberBox: {
     display: 'flex',
