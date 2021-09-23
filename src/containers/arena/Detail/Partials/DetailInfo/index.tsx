@@ -114,8 +114,12 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
               </Box>
               <Box className={classes.value}>
                 <Typography>
-                  {TournamentHelper.ruleText(data.rule)}
-                  {data.rule === RULE.SINGLE && data.has_third_place ? t('common:arena.third_place') : t('common:arena.no_third_place')}
+                  {t('common:arena.rules.rule', { rule: data.rule })}
+                  {helper.isBattleRoyale
+                    ? ''
+                    : data.rule === RULE.SINGLE && data.has_third_place
+                    ? t('common:arena.third_place')
+                    : t('common:arena.no_third_place')}
                 </Typography>
               </Box>
             </Box>
