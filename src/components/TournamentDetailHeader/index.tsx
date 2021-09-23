@@ -1,6 +1,7 @@
 import { TournamentStatus } from '@services/arena.service'
 import { Box, Icon, IconButton, Typography, useMediaQuery, useTheme } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
+import { useTranslation } from 'react-i18next'
 import { Colors } from '@theme/colors'
 import { ReactNode, useEffect, useState } from 'react'
 import Tabs from '@components/Tabs'
@@ -16,28 +17,30 @@ type TournamentHeaderProps = {
 }
 const TournamentHeader: React.FC<TournamentHeaderProps> = ({ title, status, children, cover, onHandleBack, showTab = true }) => {
   const _theme = useTheme()
+  const { t } = useTranslation(['common'])
   const isMobile = useMediaQuery(_theme.breakpoints.down('sm'))
   const classes = useStyles()
   const [tab, setTab] = useState(4)
   useEffect(() => {
     switch (status) {
-      case 'recruiting':
+      case 'ready':
         setTab(0)
         break
+      case 'recruiting':
+        setTab(1)
+        break
       case 'recruitment_closed':
-        setTab(1)
-        break
       case 'ready_to_start':
-        setTab(1)
-        break
-      case 'in_progress':
         setTab(2)
         break
-      case 'completed':
+      case 'in_progress':
         setTab(3)
         break
-      default:
+      case 'completed':
         setTab(4)
+        break
+      default:
+        setTab(5)
     }
   }, [status])
   return (
@@ -72,10 +75,23 @@ const TournamentHeader: React.FC<TournamentHeaderProps> = ({ title, status, chil
             onChange={() => {}}
             classes={{ indicator: classes.tabIndicator, flexContainer: classes.flexContainer, fixed: classes.tabsFixed }}
           >
-            <Tab label="受付中" icon={<Icon className="fa fa-door-open" />} classes={{ root: classes.tabRoot }} />
-            <Tab label="開催前" icon={<Icon className="fa fa-hourglass-start" />} classes={{ root: classes.tabRoot }} />
-            <Tab label="開催中" icon={<Icon className="fa fa-headset" />} classes={{ root: classes.tabRoot }} />
-            <Tab label="大会終了" icon={<Icon className="fa fa-trophy" />} classes={{ root: classes.tabRoot }} />
+            <Tab label={t('common:arena.status.ready')} icon={<Icon className="fa fa-desktop" />} classes={{ root: classes.tabRoot }} />
+            <Tab
+              label={t('common:arena.status.recruiting')}
+              icon={<Icon className="fa fa-door-open" />}
+              classes={{ root: classes.tabRoot }}
+            />
+            <Tab
+              label={t('common:arena.status.recruitment_closed')}
+              icon={<Icon className="fa fa-hourglass-start" />}
+              classes={{ root: classes.tabRoot }}
+            />
+            <Tab
+              label={t('common:arena.status.in_progress')}
+              icon={<Icon className="fa fa-headset" />}
+              classes={{ root: classes.tabRoot }}
+            />
+            <Tab label={t('common:arena.status.completed')} icon={<Icon className="fa fa-trophy" />} classes={{ root: classes.tabRoot }} />
             <Tab style={{ display: 'none' }} />
           </Tabs>
         )}
