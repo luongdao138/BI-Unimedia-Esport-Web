@@ -56,11 +56,18 @@ const initialState: StateType = {
   totalResult: 0,
   videoDetailData: {},
   videoDetailError: null,
-  userDetailData: {},
+  userDetailData: {
+    uuid: '',
+    like: 0,
+    unlike: 0,
+    follow: 0,
+    buy_ticket: 0,
+    streamer: 0,
+  },
   streaming_second: -1,
   played_second: -1,
   is_end_live: false,
-  seek_count: 0, 
+  seek_count: 0,
   seeked_second: 0,
   is_pausing_live: false,
 }
@@ -129,7 +136,7 @@ export default createReducer(initialState, (builder) => {
     const videoData = action.payload.data.video
     const userData = action.payload.data.user
     state.videoDetailData = videoData
-    state.userDetailData = userData
+    state.userDetailData = userData ? userData : state.userDetailData
   })
   builder.addCase(actions.videoDetail.rejected, (state, action) => {
     // const videoData = action.payload.data.video
@@ -158,7 +165,7 @@ export default createReducer(initialState, (builder) => {
   })
   builder.addCase(actions.changeSeekCount, (state, action) => {
     state.seek_count = state.seek_count + 1
-    state.seeked_second = action.payload.seeked_second 
+    state.seeked_second = action.payload.seeked_second
   })
   builder.addCase(actions.changeIsPausingLive, (state, action) => {
     state.is_pausing_live = action.payload.is_pausing_live

@@ -62,7 +62,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({ src, statusVideo, mediaOverlayIsSh
     changeIsEndLive,
     changeIsPausingLive,
     liveStreamInfo,
-    changeSeekCount
+    changeSeekCount,
   } = useDetailVideo()
 
   const onProgress = async (event) => {
@@ -185,14 +185,14 @@ const VideoPlayer: React.FC<PlayerProps> = ({ src, statusVideo, mediaOverlayIsSh
   const handlePauseAndSeekVideo = () => {
     console.log(' 🚀 🚀 🚀 🚀 🚀 🚀 🚀 --01234 ', playedSeconds, durationPlayer, state.playing)
     // seek to current live stream second if is pausing live and is not playing
-    if(!state.playing && liveStreamInfo.is_pausing_live){
+    if (!state.playing && liveStreamInfo.is_pausing_live) {
       const newSecond = Math.floor(durationPlayer)
       reactPlayerRef.current.seekTo(newSecond, 'seconds')
-      console.log("🚀 ~ handleChange ~ newSecond--- 0000", newSecond)
+      console.log('🚀 ~ handleChange ~ newSecond--- 0000', newSecond)
       changeSeekCount(Math.floor(newSecond))
     }
     // if pause video when is live streaming => set is pausing to true
-    if(state.playing && Math.floor(playedSeconds) === Math.floor(durationPlayer)){
+    if (state.playing && Math.floor(playedSeconds) === Math.floor(durationPlayer)) {
       console.log('-----aaaa----')
       changeIsPausingLive(true)
     } else {

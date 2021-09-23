@@ -37,7 +37,7 @@ import LoginRequired from '@containers/LoginRequired'
 type ChatContainerProps = {
   onPressDonate?: (donatedPoint: number, purchaseComment: string) => void
   onCloseChatPanel?: () => void
-  userHasViewingTicket?: boolean
+  userHasViewingTicket?: boolean | number
   key_video_id?: string
   myPoint?: any
   handleKeyboardVisibleState: any
@@ -194,7 +194,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
   const { userResult, streamingSecond, playedSecond, isViewingStream, liveStreamInfo } = useDetailVideo()
   // const { streamingSecond, playedSecond, isViewingStream, liveStreamInfo } = useDetailVideo()
   // const userResult = {streamer: 1}
-  console.log("🚀 ~ userResult", userResult)
+  console.log('🚀 ~ userResult', userResult)
   const { dataPurchaseTicketSuperChat } = usePurchaseTicketSuperChat()
   // const dispatch = useAppDispatch()
 
@@ -441,8 +441,10 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
       // scrollToCurrentMess()
     }
     let newMessDonate = [...savedDonateMess]
-    console.log("🚀 ~ useEffect ~ newMessDonate---1111", savedDonateMess)
-    newMessDonate = newMessDonate.filter((item) => +item.display_avatar_time >= +new_played_second && +item.video_time <= +new_played_second)
+    console.log('🚀 ~ useEffect ~ newMessDonate---1111', savedDonateMess)
+    newMessDonate = newMessDonate.filter(
+      (item) => +item.display_avatar_time >= +new_played_second && +item.video_time <= +new_played_second
+    )
     console.log('🚀 ~ useEffect ~ newMessDonate---222', newMessDonate)
     // render user donate icon by time of local
     setMessagesDonate(newMessDonate)
@@ -451,13 +453,13 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
 
   useEffect(() => {
     console.log('🚀 ~ playedSecond', playedSecond)
-    console.log("🚀 ~ useEffect ~ isSeeking---0000", isSeeking)
+    console.log('🚀 ~ useEffect ~ isSeeking---0000', isSeeking)
     console.log('🚀 ~ isViewingStream', playedSecond >= streamingSecond)
     // filter mess when user no seeking or pausing live video
     if (playedSecond < streamingSecond && !isSeeking && !liveStreamInfo.is_pausing_live) {
       filterMessByPlayedSecond(playedSecond)
     }
-    if(isSeeking){
+    if (isSeeking) {
       setIsSeeking(false)
     }
   }, [playedSecond])
@@ -475,7 +477,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
     console.log('🚀 liveStreamInfo.playedSecond ---- 000', playedSecond)
     console.log('🚀 liveStreamInfo.seeked_second ---- 000', liveStreamInfo.seeked_second)
     filterMessByPlayedSecond(liveStreamInfo.seeked_second)
-    if(!isSeeking) {
+    if (!isSeeking) {
       setIsSeeking(true)
     }
   }, [liveStreamInfo.seek_count])
@@ -502,7 +504,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
           is_premium: { eq: true },
           // delete_flag: { ne: true },
         },
-        limit: 2000
+        limit: 2000,
       }
       const messagesResults: any = await API.graphql(graphqlOperation(listMessages, listQV))
       console.log('getUsersDonate Results; ', messagesResults)
@@ -524,7 +526,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
           video_id: { eq: key_video_id },
           // delete_flag: { ne: true },
         },
-        limit: 2000
+        limit: 2000,
       }
       const messagesResults: any = await API.graphql(graphqlOperation(listMessages, listQV))
       // const messagesResults: any = await API.graphql(graphqlOperation(listMessagesNew, listQV))
@@ -543,8 +545,6 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
       console.error(error)
     }
   }
-
-  
 
   const checkUserExist = (checkedAllUsers: any) => {
     if (!checkedAllUsers) {

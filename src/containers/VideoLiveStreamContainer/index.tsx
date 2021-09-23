@@ -94,7 +94,7 @@ const VideosTop: React.FC = () => {
   const handleCreateVideo = async () => {
     const input = {
       uuid: detailVideoResult.key_video_id,
-      arn: detailVideoResult.arn
+      arn: detailVideoResult.arn,
     }
     console.log('input', input)
     await API.graphql(graphqlOperation(createVideo, { input }))
@@ -108,12 +108,12 @@ const VideosTop: React.FC = () => {
         },
       }
       const videoRs: any = await API.graphql(graphqlOperation(listVideos, listQV))
-      console.log("🚀 ~ checkVideoExist ~ videoRs", videoRs)
+      console.log('🚀 ~ checkVideoExist ~ videoRs', videoRs)
       const videoData = videoRs.data.listVideos.items
-      if(videoData.length === 0) {
+      if (videoData.length === 0) {
         handleCreateVideo()
       } else {
-        console.log("🚀 2222", videoRs)
+        console.log('🚀 2222', videoRs)
       }
     } catch (error) {
       console.error(error)
@@ -121,31 +121,22 @@ const VideosTop: React.FC = () => {
   }
 
   useEffect(() => {
-    if (isAuthenticated) {
+    if (isAuthenticated && !myPointsData) {
       getMyPointData({ page: 1, limit: 10 })
     }
-  }, [])
+  }, [isAuthenticated])
 
   useEffect(() => {
     if (video_id) {
       getVideoDetail({ video_id: `${video_id}` })
     }
-  }, [video_id])
+  }, [video_id, isAuthenticated])
 
   useEffect(() => {
     setTab(isMobile ? TABS.COMMENT : TABS.PROGRAM_INFO)
   }, [isMobile])
-
-  useEffect(() => {
-    console.log('Is Authenticated >>>>>>>>', userProfile)
-    console.log('Video detail data >>>>>>>>', detailVideoResult)
-    if (isAuthenticated) {
-      getMyPointData({ page: 1, limit: 10 })
-      if (video_id) {
-        getVideoDetail({ video_id: `${video_id}` })
-      }
-    }
-  }, [isAuthenticated])
+  console.log('Is Authenticated >>>>>>>>', userProfile)
+  console.log('Video detail data >>>>>>>>', detailVideoResult, userResult)
 
   useEffect(() => {
     if (videoDetailError) {
@@ -186,12 +177,14 @@ const VideosTop: React.FC = () => {
   }
 
   const handlePurchaseTicket = () => {
-    setPurchaseType(PURCHASE_TYPE.PURCHASE_TICKET)
-    if (myPoint >= detailVideoResult?.ticket_price) {
-      setShowPurchaseTicketModal(true)
-    } else {
-      dispatch(addToast(i18n.t('common:donate_points.lack_point_mess')))
-      setShowModalPurchasePoint(true)
+    if (isAuthenticated) {
+      setPurchaseType(PURCHASE_TYPE.PURCHASE_TICKET)
+      if (myPoint >= detailVideoResult?.ticket_price) {
+        setShowPurchaseTicketModal(true)
+      } else {
+        dispatch(addToast(i18n.t('common:donate_points.lack_point_mess')))
+        setShowModalPurchasePoint(true)
+      }
     }
   }
   // show modal error purchase ticket
@@ -202,6 +195,7 @@ const VideosTop: React.FC = () => {
   }
   // handle purchase ticket success
   const handlePurchaseTicketSuccess = () => {
+    getMyPointData({ page: 1, limit: 10 })
     setShowPurchaseTicketModal(false)
   }
   // purchase ticket
@@ -295,7 +289,7 @@ const VideosTop: React.FC = () => {
     }
     return true
   }
-  const userHasViewingTicket = () => (userResult?.buy_ticket === 0 ? false : true)
+  const userHasViewingTicket = () => (userResult ? userResult?.buy_ticket : 0)
   const isScheduleAndNotHaveTicket = () => getVideoType() === STATUS_VIDEO.SCHEDULE && userResult?.buy_ticket === 0
   // const getVideoType = () => 1
   // const isVideoFreeToWatch = () => false

@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import ESChip from '@components/Chip'
 import userProfileStore from '@store/userProfile'
 import ESAvatar from '@components/Avatar'
-import { useAppSelector } from '@store/hooks'
+import { useAppDispatch, useAppSelector } from '@store/hooks'
 import { Colors } from '@theme/colors'
 import { FormatHelper } from '@utils/helpers/FormatHelper'
 import React, { useCallback, useEffect, useState } from 'react'
@@ -26,7 +26,7 @@ import ESMenu from '@components/Menu'
 interface LiveStreamContentProps {
   videoType?: VIDEO_TYPE
   freeToWatch?: boolean
-  userHasViewingTicket?: boolean
+  userHasViewingTicket?: boolean | number
   ticketAvailableForSale?: boolean
   softKeyboardIsShown?: boolean
   video_id?: string | string[]
@@ -40,34 +40,26 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
 
   const theme = useTheme()
   const { t } = useTranslation('common')
-  const { selectors } = userProfileStore
+  const { actions, selectors } = userProfileStore
+  const dispatch = useAppDispatch()
   const userProfile = useAppSelector(selectors.getUserProfile)
+  const streamerProfile = useAppSelector(selectors.getLastSeenUserData)
+
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
   const downMd = useMediaQuery(theme.breakpoints.down(769))
   const { detailVideoResult, meta, userResult } = useDetailVideo()
   const { userReactionVideoStream, userFollowChannel } = useLiveStreamDetail()
   // const isLoadingReaction = meta_reaction_video_stream?.pending
   const isLoadingVideoDetail = meta?.pending
-  const [like, setLike] = useState(!isLoadingVideoDetail ? userResult.like : 0)
-  const [unlike, setUnlike] = useState(!isLoadingVideoDetail ? userResult.unlike : 0)
-  const [likeCount, setLikeCount] = useState(
-    !isLoadingVideoDetail && detailVideoResult?.like_count !== undefined ? detailVideoResult?.like_count : 0
-  )
-  const [unlikeCount, setUnlikeCount] = useState(
-    !isLoadingVideoDetail && detailVideoResult?.unlike_count !== undefined ? detailVideoResult?.unlike_count : 0
-  )
-  const [subscribe, setSubscribe] = useState(userResult?.follow !== null ? userResult.follow : 0)
+  const [like, setLike] = useState(userResult ? userResult.like : 0)
+  const [unlike, setUnlike] = useState(userResult ? userResult.unlike : 0)
+  const [likeCount, setLikeCount] = useState(detailVideoResult?.like_count !== null ? detailVideoResult?.like_count : 0)
+  const [unlikeCount, setUnlikeCount] = useState(detailVideoResult?.unlike_count !== null ? detailVideoResult?.unlike_count : 0)
+  const [subscribe, setSubscribe] = useState(userResult?.follow || 0)
 
   const isSubscribed = () => subscribe
 
   const classes = useStyles({ isSubscribed: isSubscribed() })
-
-  // useEffect(() => {
-  //   console.log('user profile data >>>>>>>>', userProfile)
-  //   if (isAuthenticated && props?.video_id) {
-  //     getVideoDetail({ video_id: `${props?.video_id}` })
-  //   }
-  // }, [userProfile])
 
   const toggleSubscribeClick = () => {
     if (subscribe === 0) {
@@ -310,7 +302,11 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
 
   const liveBasicContentVisible = () => !isMobile || !props.softKeyboardIsShown
   const mobileRegisterChannelVisible = () => isMobile && !props.softKeyboardIsShown
-  const handleReportOpen = () => setShowReportMenu(true)
+  const handleReportOpen = () => {
+    setShowReportMenu(true)
+    //get profile streamer
+    dispatch(actions.getMemberProfile(detailVideoResult?.user_nickname))
+  }
   return (
     <Box className={classes.container}>
       <Box className={classes.mediaPlayerContainer}>
@@ -404,8 +400,8 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
       {showReportMenu && (
         <ESReport
           reportType={REPORT_TYPE.USER_LIST}
-          // target_id={userCode}
-          // data={profile}
+          target_id={userProfile?.attributes?.user_code}
+          data={streamerProfile}
           open={showReportMenu}
           handleClose={() => setShowReportMenu(false)}
         />
@@ -598,7 +594,7 @@ const useStyles = makeStyles((theme) => ({
   register_person_number: {},
   register_channel_btn: (props: { isSubscribed?: number }) => ({
     background: props?.isSubscribed === 1 ? Colors.primary : Colors.transparent,
-    ...(props?.isSubscribed === 0 && {
+    ...(props?.isSubscribed !== 1 && {
       borderRadius: 4,
       borderWidth: 1,
       borderStyle: 'solid',
