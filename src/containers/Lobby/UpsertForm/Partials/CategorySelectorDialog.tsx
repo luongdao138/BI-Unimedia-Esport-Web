@@ -62,7 +62,7 @@ const CategorySelectorDialog: React.FC<Props> = ({ values, onChange, disabled })
           ) : (
             values.map((item, idx) => (
               <Box paddingRight={1} key={idx}>
-                <Typography>{(idx > 0 ? ' / ' : '') + '#' + item.name}</Typography>
+                <Typography>{(idx > 0 ? ' ' : '') + item.name}</Typography>
               </Box>
             ))
           )}

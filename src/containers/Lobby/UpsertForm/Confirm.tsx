@@ -27,8 +27,6 @@ const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, prefectures, isEdi
   const [areaName, setAreaName] = useState('')
   const classes = useStyles()
 
-  const categories = values.stepOne.categories.map((category, idx) => (idx > 0 ? ' / ' : '') + category.name)
-
   useEffect(() => {
     if (prefectures) {
       const area = prefectures.find((area) => area.id === String(values.stepTwo.area_id))
@@ -164,11 +162,9 @@ const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, prefectures, isEdi
       <ESInput labelPrimary={t('common:lobby_create.area')} value={areaName} disabled={true} fullWidth />
       <ESInput labelPrimary={''} value={values.stepTwo.address} disabled={true} fullWidth multiline />
       <Box pb={2} />
-      {isEdit ? (
-        <ESInput labelPrimary={t('common:lobby.create.category')} value={categories} disabled={true} fullWidth multiline />
-      ) : (
-        values.stepOne.categories.map((category, idx) => <ESChip key={idx} className={classes.chip} label={category.name} />)
-      )}
+      {values.stepOne.categories.map((category, idx) => (
+        <ESChip key={idx} className={classes.chip} label={category.name} />
+      ))}
 
       <Box pb={2} />
     </Box>
