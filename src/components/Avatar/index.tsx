@@ -54,7 +54,7 @@ const ESAvatar: React.FC<Props> = (props) => {
 }
 
 ESAvatar.defaultProps = {
-  size: 35,
+  size: 50,
   alt: '',
 }
 
