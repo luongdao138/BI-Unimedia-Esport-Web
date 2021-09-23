@@ -170,6 +170,7 @@ export const changePlayedSecond = createAction<services.PlayedSecondChangeParams
 export const changeIsViewingStream = createAction<services.ChangeIsViewingStreamParams>(ACTION_VIDEO_TOP.CHANGE_IS_VIEWING_STREAM)
 export const changeIsEndLive = createAction<{ is_end_live: boolean }>(ACTION_VIDEO_TOP.CHANGE_IS_END_LIVE)
 export const changeSeekCount = createAction(ACTION_VIDEO_TOP.CHANGE_SEEK_COUNT)
+export const resetVideoDetailError = createAction(ACTION_VIDEO_TOP.RESET_VIDEO_DETAIL_ERROR)
 
 export const videoDetail = createAsyncThunk<services.VideoDetailResponse, services.VideoDetailParams>(
   ACTION_VIDEO_TOP.VIDEO_DETAIL,
@@ -180,7 +181,7 @@ export const videoDetail = createAsyncThunk<services.VideoDetailResponse, servic
         return res
       } else {
         // throw res.message
-        return rejectWithValue(JSON.stringify(res.message))
+        return rejectWithValue(res.message)
       }
     } catch (error) {
       if (!error.response) {

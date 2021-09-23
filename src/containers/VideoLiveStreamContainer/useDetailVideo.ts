@@ -19,11 +19,19 @@ const useDetailVideo = () => {
   const isViewingStream = useAppSelector(selectors.isViewingStream)
   const liveStreamInfo = useAppSelector(selectors.liveStreamInfo)
   const changeStreamingSecond = (streaming_second) => dispatch(actions.changeStreamingSecond({ streaming_second }))
-  const changeVideoTime = (streaming_second, played_second) => dispatch(actions.changeVideoTime({ streaming_second, played_second }))
+  const changeVideoTime = (streaming_second, played_second) =>
+    dispatch(
+      actions.changeVideoTime({
+        streaming_second,
+        played_second,
+      })
+    )
   const changePlayedSecond = (played_second) => dispatch(actions.changePlayedSecond({ played_second }))
   const changeIsViewingStream = (is_viewing_stream) => dispatch(actions.changeIsViewingStream({ is_viewing_stream }))
   const changeIsEndLive = (is_end_live) => dispatch(actions.changeIsEndLive({ is_end_live }))
   const changeSeekCount = () => dispatch(actions.changeSeekCount())
+  const videoDetailError = useAppSelector(selectors.videoDetailError)
+  const resetVideoDetailError = () => dispatch(actions.resetVideoDetailError())
 
   return {
     meta,
@@ -40,6 +48,8 @@ const useDetailVideo = () => {
     changeIsEndLive,
     liveStreamInfo,
     changeSeekCount,
+    videoDetailError,
+    resetVideoDetailError,
   }
 }
 
