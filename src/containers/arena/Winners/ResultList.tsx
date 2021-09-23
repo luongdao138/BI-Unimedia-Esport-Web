@@ -37,6 +37,7 @@ const useStyles = makeStyles((theme) => ({
     border: `1px solid ${Colors.white_opacity['30']}`,
     padding: theme.spacing(3),
     paddingLeft: theme.spacing(1),
+    paddingRight: theme.spacing(1),
     paddingBottom: theme.spacing(1),
     background: Colors.black_opacity['70'],
     position: 'sticky',
@@ -76,6 +77,9 @@ const useStyles = makeStyles((theme) => ({
       '&:nth-child(2)': {
         paddingLeft: theme.spacing(9),
       },
+    },
+    listWrapper: {
+      paddingRight: theme.spacing(1),
     },
   },
 }))
