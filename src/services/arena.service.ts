@@ -302,10 +302,11 @@ export type TournamentMatchResponse = {
   third_place_match: TournamentMatchRound
 }
 
+export type ArenaParticipantRole = 'admin' | 'co_organizer' | 'participant' | 'interested'
 export type GetParticipantsParams = {
   page: number
   hash_key: string
-  role?: string
+  role?: ArenaParticipantRole
   p_id?: number
 }
 

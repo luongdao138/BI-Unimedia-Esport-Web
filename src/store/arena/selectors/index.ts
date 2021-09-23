@@ -15,17 +15,22 @@ export const getTournamentResults = createSelector(getRoot, (state) => state.tou
 export const getTournamentDetail = createSelector(getRoot, (state) => state.tournamentDetail)
 export const getParticipants = createSelector(getRoot, (state) => state.tournamentParticipants)
 export const getBattleRoyaleParticipants = createSelector(getRoot, getTournamentDetail, (state, arena) => {
+  if (!arena?.attributes.my_info) return state.tournamentParticipants
   const isTeam = arena?.attributes.participant_type > 1
   const ids = isTeam
     ? (arena?.attributes.my_info || []).map((a) => String(a.team_id))
     : (arena?.attributes.my_info || []).map((a) => String(a.id))
-  const participants = state.tournamentParticipants.map((participant) => {
-    return {
-      ...participant,
-      highlight: isTeam ? ids.includes(participant.attributes.team.data.id) : ids.includes(String(participant.id)),
-    }
-  })
-  return participants
+  return state.tournamentParticipants.map((participant) => ({
+    ...participant,
+    highlight: isTeam ? ids.includes(participant.attributes.team.data.id) : ids.includes(String(participant.id)),
+  }))
+})
+export const getSortedBRParticipants = createSelector(getBattleRoyaleParticipants, getTournamentDetail, (participants, arena) => {
+  if (!arena) return []
+  const { sort_by } = arena.attributes
+  return sort_by === 'by_desc'
+    ? _.orderBy(participants, ['attributes.position'], ['desc'])
+    : _.orderBy(participants, ['attributes.position'], ['asc'])
 })
 
 export const getParticipantsMeta = createSelector(getRoot, (state) => state.participantsMeta)

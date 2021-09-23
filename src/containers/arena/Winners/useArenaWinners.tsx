@@ -6,7 +6,7 @@ import * as actions from '@store/arena/actions'
 import { createMetaSelector } from '@store/metadata/selectors'
 import { Meta } from '@store/metadata/actions/types'
 import useArenaHelper from '@containers/arena/hooks/useArenaHelper'
-import { ArenaWinners, TournamentDetail } from '@services/arena.service'
+import { ArenaWinners, ParticipantsResponse, TournamentDetail } from '@services/arena.service'
 import useGetProfile from '@utils/hooks/useGetProfile'
 import { UserProfile } from '@services/user.service'
 
@@ -19,6 +19,7 @@ const useWinners = (
   arenaMeta: Meta
   winnersMeta: Meta
   arenaWinners: ArenaWinners
+  arenaBRWinners: ParticipantsResponse[]
   arena: TournamentDetail
   fetchWinners: () => void
   toDetail: () => void
@@ -26,6 +27,7 @@ const useWinners = (
   isTeam: boolean
   hasWinnersData: boolean
   userProfile: UserProfile
+  isBattleRoyale: boolean
 } => {
   const router = useRouter()
   const dispatch = useAppDispatch()
@@ -33,8 +35,9 @@ const useWinners = (
   const arenaMeta = useAppSelector(getArenaMeta)
   const arena = useAppSelector(selectors.getTournamentDetail)
   const arenaWinners = useAppSelector(selectors.getArenaWinners)
+  const arenaBRWinners = useAppSelector(selectors.getSortedBRParticipants)
   const { userProfile } = useGetProfile()
-  const { isNotHeld, isTeam } = useArenaHelper(arena)
+  const { isNotHeld, isTeam, isBattleRoyale } = useArenaHelper(arena)
   const fetchWinners = () => dispatch(actions.getArenaWinners(router.query.hash_key))
 
   useEffect(() => {
@@ -44,9 +47,26 @@ const useWinners = (
   useEffect(() => {
     if (router.query.hash_key && isImmediately) {
       dispatch(actions.getTournamentDetail(router.query.hash_key))
-      dispatch(actions.getArenaWinners(router.query.hash_key))
     }
   }, [router.query.hash_key, userProfile])
+
+  useEffect(() => {
+    if (arenaMeta.loaded && !isNotHeld) {
+      switch (arena.attributes.rule) {
+        case 'battle_royale':
+        case 'score_attack':
+        case 'time_attack':
+          dispatch(actions.getBattleRoyaleParticipants({ page: 1, hash_key: String(router.query.hash_key), role: 'participant' }))
+          break
+        case 'single':
+        case 'double':
+          dispatch(actions.getArenaWinners(router.query.hash_key))
+          break
+        default:
+          break
+      }
+    }
+  }, [arenaMeta.loaded, isNotHeld])
 
   const toDetail = () => {
     const placementsUrl = '/placements'
@@ -70,6 +90,8 @@ const useWinners = (
     isTeam,
     hasWinnersData: hasWinners,
     userProfile,
+    arenaBRWinners,
+    isBattleRoyale,
   }
 }
 
