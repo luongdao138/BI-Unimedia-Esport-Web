@@ -140,6 +140,7 @@ export const NG_WORD_DIALOG_CONFIG: Dialog = {
 
 export const NG_WORD_AREA = {
   chat_section: i18n.t('common:ng_word_area.chat_section'),
+  comment_section: i18n.t('common:ng_word_area.comment_section'),
   room_name_title: i18n.t('common:ng_word_area.room_name_title'),
   register_by_email: i18n.t('common:register_by_email.email'),
   add_game: i18n.t('common:profile.favorite_game.title_label'),

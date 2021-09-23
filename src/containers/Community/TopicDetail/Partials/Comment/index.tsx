@@ -47,6 +47,7 @@ export type ReportData = {
     image: string
     number: number
     hash_key: string
+    topic_title?: string
   }
 }
 

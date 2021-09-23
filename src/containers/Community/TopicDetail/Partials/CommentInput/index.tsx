@@ -86,7 +86,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ reply_param, setPage, setComm
         createComment(data)
       }
     } else {
-      dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: NG_WORD_AREA.chat_section }))
+      dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: NG_WORD_AREA.comment_section }))
     }
   }
 
