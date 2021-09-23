@@ -732,7 +732,7 @@ export default {
     },
     cancel_lobby_dialog: {
       title: '募集を中止しますか？',
-      description: '中止した募集は復元することはできません。募集の中止は、メンバーに通知されます。',
+      description: '中止した募集は復元することはできません。\n募集の中止は、メンバーに通知されます。',
       additionalText: '',
       confirmationText: '中止する',
       cancellationText: 'キャンセル',
