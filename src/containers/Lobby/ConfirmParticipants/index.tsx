@@ -55,11 +55,12 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ lobby, op
     confirmParticipants,
     confirmParticipantsMeta,
   } = useLobbyActions()
-  const { status, max_participants, hash_key } = lobby.attributes
+  const { status, max_participants, hash_key, is_owner, is_freezed } = lobby.attributes
 
   const currentPage = _.get(participantsPageMeta, 'current_page', 1)
   const totalPage = _.get(participantsPageMeta, 'total_pages', 1)
   const [isInitialPageLoad, setInitialPageLoad] = useState(false)
+  const isConfirmable = (status === LOBBY_STATUS.RECRUITING || status === LOBBY_STATUS.ENTRY_CLOSED) && is_owner && !is_freezed
 
   useEffect(() => {
     if (open) {
@@ -208,10 +209,12 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ lobby, op
                     onClick={() => {
                       confirm({ ...LOBBY_DIALOGS.CONFIRM_MEMBER.confirm })
                         .then(() => {
-                          const selectedParticipants = participants
-                            .filter((p) => selected.includes(p.attributes.id))
-                            .map((a) => a.attributes.user_id)
-                          confirmParticipants(hash_key, selectedParticipants)
+                          if (isConfirmable) {
+                            const selectedParticipants = participants
+                              .filter((p) => selected.includes(p.attributes.id))
+                              .map((a) => a.attributes.user_id)
+                            confirmParticipants(hash_key, selectedParticipants)
+                          }
                         })
                         .catch(() => {
                           /* ... */
@@ -229,7 +232,7 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ lobby, op
                     onClick={() => {
                       confirm({ ...LOBBY_DIALOGS.CONFIRM_MEMBER.shuffle })
                         .then(() => {
-                          if (status === LOBBY_STATUS.RECRUITING) {
+                          if (isConfirmable) {
                             getRecommendedParticipants(hash_key)
                           }
                         })
