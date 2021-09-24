@@ -168,6 +168,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'flex-start',
     paddingLeft: 16,
     paddingRight: 24,
+    '&:hover': {
+      cursor: 'pointer',
+    },
   },
   iconBack: {
     fontSize: 14,
@@ -183,6 +186,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignContent: 'center',
     alignSelf: 'center',
     position: 'relative',
+    '&:hover': {
+      cursor: 'pointer',
+    },
   },
   iconClose: {
     fontSize: 14,

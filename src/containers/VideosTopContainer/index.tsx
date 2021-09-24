@@ -17,9 +17,12 @@ import { useTheme } from '@material-ui/core/styles'
 import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
 // import { useAppSelector } from '@store/hooks'
 // import { getIsAuthenticated } from '@store/auth/selectors'
-import LoginRequired from '@containers/LoginRequired'
+// import LoginRequired from '@containers/LoginRequired'
 import { useAppSelector } from '@store/hooks'
 import { getIsAuthenticated } from '@store/auth/selectors'
+import router from 'next/router'
+import { useContextualRouting } from 'next-use-contextual-routing'
+import { ESRoutes } from '@constants/route.constants'
 
 enum TABS {
   VIDEOS_LIST = 0,
@@ -47,6 +50,7 @@ const VideosTop: React.FC = () => {
   const theme = useTheme()
   const isWideScreen = useMediaQuery(theme.breakpoints.up(1920))
   const { width: listDisplayWidth } = useWindowDimensions(244)
+  const { makeContextualHref } = useContextualRouting()
 
   useEffect(() => {
     setTab(0)
@@ -62,19 +66,27 @@ const VideosTop: React.FC = () => {
     }
   }, [isAuthenticated, getLoginPreAction])
 
+  const handleFocusTab = (_, v) => {
+    if (v === TabsVideo.FAVORITE_VIDEOS) {
+      isAuthenticated
+        ? setTab(v)
+        : router.push(makeContextualHref({ pathName: ESRoutes.LOGIN }), ESRoutes.LOGIN, {
+            shallow: true,
+          })
+    } else {
+      setTab(v)
+    }
+  }
+
   const getTabs = () => {
     return (
       <Grid item xs={12} className={classes.tabsContainer}>
-        <ESTabs value={tab} onChange={(_, v) => setTab(v)} className={classes.tabs}>
+        <ESTabs value={tab} onChange={handleFocusTab} className={classes.tabs}>
           <ESTab className={classes.tabMin} label={t('videos_top_tab.video_list')} value={0} />
           <ESTab className={classes.tabMin} label={t('videos_top_tab.live_stream_video')} value={1} />
           <ESTab className={classes.tabMin} label={t('videos_top_tab.schedule_stream_video')} value={2} />
           <ESTab className={classes.tabMin} label={t('videos_top_tab.archived_stream_video')} value={3} />
-          <LoginRequired>
-            <div onClick={() => setTab(4)}>
-              <ESTab className={classes.tabMin} label={t('videos_top_tab.favorite_video')} value={4} />
-            </div>
-          </LoginRequired>
+          <ESTab className={classes.tabMin} label={t('videos_top_tab.favorite_video')} value={4} />
         </ESTabs>
       </Grid>
     )

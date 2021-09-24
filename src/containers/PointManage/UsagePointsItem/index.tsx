@@ -49,7 +49,7 @@ const UsagePointsItem: FC<UsagePointsItemProps> = ({ data, serialNumber, setShow
       <Box className={classes.wrapTitle}>
         <Box className={classes.wrapRow}>
           <Typography className={classes.titleCommon}>{i18n.t('common:point_management_tab.id')}</Typography>
-          <Typography className={classes.textStyle}>{data?.uuid + 'U'}</Typography>
+          <Typography className={classes.textStyle}>{data?.uuid}</Typography>
         </Box>
         <Box className={classes.wrapRow}>
           <Typography className={classes.titleCommon}>{i18n.t('common:point_management_tab.points')}</Typography>
@@ -87,6 +87,9 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexWrap: 'wrap',
     flex: 1,
+    '&:hover': {
+      cursor: 'pointer',
+    },
   },
   wrapRow: {
     display: 'flex',

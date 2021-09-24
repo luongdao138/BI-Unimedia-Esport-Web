@@ -22,6 +22,10 @@ import ESReport from '@containers/Report'
 import { REPORT_TYPE } from '@constants/common.constants'
 import LoginRequired from '@containers/LoginRequired'
 import ESMenu from '@components/Menu'
+import { useRouter } from 'next/router'
+import { useContextualRouting } from 'next-use-contextual-routing'
+import { ESRoutes } from '@constants/route.constants'
+import { getIsAuthenticated } from '@store/auth/selectors'
 
 interface LiveStreamContentProps {
   videoType?: VIDEO_TYPE
@@ -37,11 +41,13 @@ interface LiveStreamContentProps {
 
 const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
   const [showReportMenu, setShowReportMenu] = useState<boolean>(false)
-
+  const router = useRouter()
+  const { makeContextualHref } = useContextualRouting()
   const theme = useTheme()
   const { t } = useTranslation('common')
   const { actions, selectors } = userProfileStore
   const dispatch = useAppDispatch()
+  const isAuthenticated = useAppSelector(getIsAuthenticated)
   const userProfile = useAppSelector(selectors.getUserProfile)
   const streamerProfile = useAppSelector(selectors.getLastSeenUserData)
 
@@ -140,18 +146,18 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
 
   useEffect(() => {
     if (userResult) {
-      setLike(userResult?.like)
-      setUnlike(userResult?.unlike)
-      setSubscribe(userResult?.follow)
+      setLike(userResult?.like !== like ? userResult?.like : like)
+      setUnlike(userResult?.unlike !== unlike ? userResult?.unlike : unlike)
+      setSubscribe(userResult?.follow !== subscribe ? userResult?.follow : subscribe)
     }
     if (detailVideoResult) {
-      setLikeCount(detailVideoResult?.like_count)
-      setUnlikeCount(detailVideoResult?.unlike_count)
+      setLikeCount(detailVideoResult?.like_count !== likeCount ? detailVideoResult?.like_count : likeCount)
+      setUnlikeCount(detailVideoResult?.unlike_count !== unlikeCount ? detailVideoResult?.unlike_count : unlikeCount)
     }
   }, [userResult, detailVideoResult])
 
   const registerChannelButton = () => (
-    <ButtonBase className={classes.register_channel_btn}>
+    <ButtonBase onClick={isAuthenticated ? toggleSubscribeClick : goToLogin} className={classes.register_channel_btn}>
       <Box>
         <Icon className={`far fa-heart ${classes.heartIcon}`} fontSize="small" />
       </Box>
@@ -302,10 +308,13 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
 
   const liveBasicContentVisible = () => !isMobile || !props.softKeyboardIsShown
   const mobileRegisterChannelVisible = () => isMobile && !props.softKeyboardIsShown
+  const goToLogin = () => {
+    router.push(makeContextualHref({ pathName: ESRoutes.LOGIN }), ESRoutes.LOGIN, { shallow: true })
+  }
   const handleReportOpen = () => {
     setShowReportMenu(true)
     //get profile streamer
-    dispatch(actions.getMemberProfile(detailVideoResult?.user_nickname))
+    dispatch(actions.getMemberProfile(detailVideoResult?.user_code))
   }
   return (
     <Box className={classes.container}>
@@ -346,28 +355,40 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
               detailVideoResult !== '' && (
                 <>
                   <Box className={classes.interactive_info}>
-                    <ReactionButton iconName={'fa fa-eye'} value={detailVideoResult?.view_count} status={1} />
-                    <LoginRequired>
-                      <div onClick={toggleLikeVideo}>
-                        <ReactionButton iconName={'fa fa-thumbs-up'} value={likeCount} status={like} />
-                      </div>
-                    </LoginRequired>
-                    <LoginRequired>
-                      <div onClick={toggleUnLikeVideo}>
-                        <ReactionButton iconName={'fa fa-thumbs-down'} value={unlikeCount} status={unlike} />
-                      </div>
-                    </LoginRequired>
+                    <ReactionButton iconName={'fa fa-eye'} value={detailVideoResult?.view_count} status={1} showPointer={false} />
+                    {/* <LoginRequired>
+                      <div onClick={toggleLikeVideo}> */}
+                    <ReactionButton
+                      onPress={isAuthenticated ? toggleLikeVideo : goToLogin}
+                      iconName={'fa fa-thumbs-up'}
+                      value={likeCount}
+                      status={like}
+                      showPointer={true}
+                    />
+                    {/* </div> */}
+                    {/* </LoginRequired> */}
+                    {/* <LoginRequired>
+                      <div onClick={toggleUnLikeVideo}> */}
+                    <ReactionButton
+                      onPress={isAuthenticated ? toggleUnLikeVideo : goToLogin}
+                      iconName={'fa fa-thumbs-down'}
+                      value={unlikeCount}
+                      status={unlike}
+                      showPointer={true}
+                    />
+                    {/* </div> */}
+                    {/* </LoginRequired> */}
                     {!isMobile && shareButton()}
                   </Box>
 
                   {/* report icon */}
                   <Box ml={1} pr={3} display="flex" flexDirection="row" flexShrink={0}>
                     <ESMenu>
-                      <LoginRequired>
-                        <div onClick={handleReportOpen}>
-                          <ESMenuItem>{t('tournament.report')}</ESMenuItem>
-                        </div>
-                      </LoginRequired>
+                      {/* <LoginRequired>
+                        <div onClick={handleReportOpen}> */}
+                      <ESMenuItem onClick={isAuthenticated ? handleReportOpen : goToLogin}>{t('tournament.report')}</ESMenuItem>
+                      {/* </div>
+                      </LoginRequired> */}
                     </ESMenu>
                   </Box>
                 </>
@@ -391,9 +412,11 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
               </Box>
             </Box>
           </Box>
-          <LoginRequired>
-            <div onClick={toggleSubscribeClick}>{registerChannelButton()}</div>
-          </LoginRequired>
+          {/* <LoginRequired>
+            <div onClick={toggleSubscribeClick}> */}
+          {registerChannelButton()}
+          {/* </div>
+          </LoginRequired> */}
         </Box>
       )}
       {/* Show Report Modal */}

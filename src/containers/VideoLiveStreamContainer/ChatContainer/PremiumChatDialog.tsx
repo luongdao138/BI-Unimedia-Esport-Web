@@ -276,6 +276,9 @@ const useStyles = makeStyles((theme) => ({
   purchaseButton: {
     backgroundColor: '#FF4786',
     width: '100%',
+    '&:hover': {
+      cursor: 'pointer',
+    },
   },
   purchaseButtonText: {
     fontSize: 14,
@@ -296,6 +299,9 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 10,
+    '&:hover': {
+      cursor: 'pointer',
+    },
   },
   purchaseItemUnselected: {
     backgroundColor: 'transparent !important',

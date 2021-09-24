@@ -168,7 +168,7 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
                 </ListItem>
               </Link>
             )}
-            {!isStreamer && (
+            {!isStreamer && isAuthenticated && (
               <a
                 target="_blank"
                 href="https://docs.google.com/forms/d/1Jjj0HnsmysqystYIwQTqmHmjO1h3ol7lipAkBDZJzuY/viewform?edit_requested=true"
