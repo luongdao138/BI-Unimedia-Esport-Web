@@ -279,7 +279,7 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
             <Typography className={classes.communityId}>{`${t('common:community.community_id')}${detail.id}`}</Typography>
             <Box display="flex" justifyContent="flex-end" className={classes.urlCopy} onClick={handleCopy}>
               <Icon className={`fa fa-link ${classes.link}`} fontSize="small" />
-              <Typography className={classes.sharedUrl}>{t('common:community.copy_shared_url')}</Typography>
+              <Typography>{t('common:community.copy_shared_url')}</Typography>
             </Box>
             <TwitterShareButton url={window.location.toString()} title={_.defaultTo(detail.attributes.name, '')}>
               <img className={classes.twitter_logo} src="/images/twitter_logo.png" />
@@ -383,9 +383,6 @@ const useStyles = makeStyles((theme) => ({
       height: 5,
       borderRadius: '50%',
     },
-  },
-  sharedUrl: {
-    textDecoration: 'underline',
   },
   twitter_logo: {
     height: 23,
