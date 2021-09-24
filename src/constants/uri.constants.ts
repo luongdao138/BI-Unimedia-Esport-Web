@@ -96,6 +96,7 @@ export const URI = {
   NOTIFICATION_SETTINGS: '/v2/notification/settings',
   NOTIFICATION_UPDATE_SETTINGS: '/v2/notification/settings_update',
   S3_PRESIGNED_URL: '/v2/s3/presigned_url',
+  LOBBY_PRESIGNED_URL: '/v2/recruitments/presigned_url',
   AVATAR_PRESIGNED_URL: '/v2/avatar_presigned_url',
   COVER_PRESIGNED_URL: '/v2/cover_presigned_url',
   LOGOUT: '/v2/auth/logout',
