@@ -146,6 +146,24 @@ const TournamentHomeCard: React.FC<Props> = ({ tournament }) => {
       </Box>
     )
   }
+  const getChippedRow1 = (chipLabel: string, value: string | number) => {
+    return (
+      <Box display="flex" flexDirection="row" mt={1} alignItems="center">
+        <ESChip
+          className={classes.chip}
+          size="small"
+          label={
+            <Box color={Colors.white}>
+              <Typography variant="overline">{chipLabel}</Typography>
+            </Box>
+          }
+        />
+        <Box ml={1} color={Colors.white}>
+          <Typography variant="caption">{value + ' ~'}</Typography>
+        </Box>
+      </Box>
+    )
+  }
   const getParticipants = () => {
     const participants = attr.participants
     return (
@@ -177,7 +195,7 @@ const TournamentHomeCard: React.FC<Props> = ({ tournament }) => {
         <Typography className={classes.organizer}>{attr.game_of_title}</Typography>
         <Typography className={classes.organizer}>{`${t('common:tournament.organizer')} ${organizer}`}</Typography>
         {getChippedRow(t('common:tournament.card_date'), startDate)}
-        {getChippedRow(t('common:tournament.acceptance_start_date'), acceptance_start_date)}
+        {getChippedRow1(t('common:tournament.acceptance_start_date'), acceptance_start_date)}
         {getChippedRow(t('common:tournament.entry'), tournament.total, `/${attr.max_participants}`, 0.5)}
         {getParticipants()}
       </ESCardContent>

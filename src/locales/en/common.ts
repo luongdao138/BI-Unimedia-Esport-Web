@@ -512,6 +512,7 @@ export default {
       rule: '{{rule, arena_rule}}',
       single: 'トーナメント',
       battle_royale: 'バトルロイヤル',
+      battle_royale_rule: '{{rule, battle_royale_rule}}',
       score_attack: 'スコアアタック',
       time_attack: 'タイムアタック',
     },

@@ -1,6 +1,7 @@
 import { makeStyles } from '@material-ui/core/styles'
 import { Typography } from '@material-ui/core'
 import { TournamentRule } from '@services/arena.service'
+import { useTranslation } from 'react-i18next'
 import { ReactNode } from 'hoist-non-react-statics/node_modules/@types/react'
 
 export interface BRListProps {
@@ -10,14 +11,12 @@ export interface BRListProps {
 }
 function BRList({ children, className, rule }: BRListProps) {
   const classes = useStyles()
+  const { t } = useTranslation(['common'])
   return (
     <div className={className || ''}>
       <div className={classes.listHeader}>
-        <Typography className={classes.headerTitle}>順位</Typography>
         <Typography className={classes.headerTitle}>プレイヤー</Typography>
-        <Typography className={classes.headerTitle}>
-          {rule === 'score_attack' ? 'スコア' : rule === 'time_attack' ? 'タイム' : ''}
-        </Typography>
+        <Typography className={classes.headerTitle}>{t('common:arena.rules.battle_royale_rule', { rule: rule })}</Typography>
       </div>
       {children}
     </div>
