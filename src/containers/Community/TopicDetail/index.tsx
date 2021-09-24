@@ -2,13 +2,12 @@ import React, { useEffect, useState } from 'react'
 import TopicDetailHeader from '@containers/Community/TopicDetail/Partials/TopicDetailHeader'
 import Comment, { ReportData } from '@containers/Community/TopicDetail/Partials/Comment'
 import MainTopic from '@containers/Community/TopicDetail/Partials/MainTopic'
-import { Box, useMediaQuery, useTheme, makeStyles, Theme } from '@material-ui/core'
-import Pagination from '@material-ui/lab/Pagination'
-import PaginationMobile from '../Partials/PaginationMobile'
+import { Box, makeStyles, Theme } from '@material-ui/core'
+import Pagination from '../Partials/Pagination'
 import CommentInput from './Partials/CommentInput'
 import useTopicDetail from './useTopicDetail'
 import { Colors } from '@theme/colors'
-import ESLoader from '@components/Loader'
+import ESFullLoader from '@components/FullScreenLoader'
 import { useRouter } from 'next/router'
 import useCommunityDetail from '../Detail/useCommunityDetail'
 import useCommunityHelper from '../hooks/useCommunityHelper'
@@ -20,11 +19,10 @@ import { REPORT_TYPE } from '@constants/common.constants'
 import DiscardDialog from '@containers/Community/Partials/DiscardDialog'
 import { useTranslation } from 'react-i18next'
 import ESReport from '@containers/Report'
+import useDocTitle from '@utils/hooks/useDocTitle'
 
 const TopicDetailContainer: React.FC = () => {
   const { t } = useTranslation(['common'])
-  const _theme = useTheme()
-  const isMobile = useMediaQuery(_theme.breakpoints.down('sm'))
   const classes = useStyles()
   const router = useRouter()
   const { back } = useRouter()
@@ -39,14 +37,25 @@ const TopicDetailContainer: React.FC = () => {
     commentsListMeta,
     commentsListPageMeta,
     deleteComment,
+    resetTopicMeta,
+    createCommentMeta,
+    deleteTopicCommentMeta,
   } = useTopicDetail()
   const { getCommunityDetail, communityDetail, isAuthenticated } = useCommunityDetail()
-  const [reply, setReply] = useState<{ hash_key: string; comment_no: number } | any>({})
-
-  const [render, setRender] = useState(false)
-  const { isNotMember, isModerator, isPublic, isAutomatic } = useCommunityHelper(communityDetail)
-  const data = topic?.attributes
   const { isOwner } = useTopicHelper(topic?.attributes?.owner_user_code)
+  const { isNotMember, isModerator, isPublic, isAutomatic } = useCommunityHelper(communityDetail)
+
+  const [reply, setReply] = useState<{ hash_key: string; comment_no: number } | any>({})
+  const [openDelete, setOpenDelete] = useState(false)
+  const [selectedCommentNo, setSelectedCommentNo] = useState()
+  const [reportData, setReportData] = useState<ReportData | null>(null)
+  const [page, setPage] = useState(1)
+  const [count, setCount] = useState(1)
+  const [commentCount, setCommentCount] = useState<number>()
+  const [render, setRender] = useState<boolean>(false)
+  const { changeTitle } = useDocTitle()
+
+  const data = topic?.attributes
 
   const menuParams = {
     isNotMember: isNotMember,
@@ -55,21 +64,10 @@ const TopicDetailContainer: React.FC = () => {
     isTopicOwner: isOwner,
   }
 
-  const [openDelete, setOpenDelete] = useState(false)
-  const [selectedCommentHashKey, setSelectedCommentHashKey] = useState('')
-  const [reportData, setReportData] = useState<ReportData | null>(null)
-
   const handleDeleteComment = () => {
-    deleteComment(selectedCommentHashKey)
+    deleteComment({ comment_no: selectedCommentNo, topic_hash: String(topic_hash_key) })
     setOpenDelete(false)
   }
-
-  const [page, setPage] = useState(1)
-  const [count, setCount] = useState(1)
-
-  useEffect(() => {
-    getCommentsList({ hash_key: String(topic_hash_key), page: 1 })
-  }, [])
 
   useEffect(() => {
     if (topic_hash_key) {
@@ -77,10 +75,19 @@ const TopicDetailContainer: React.FC = () => {
       getTopicDetail({ topic_hash: String(topic_hash_key), community_hash: String(hash_key) })
       getCommentsList({ hash_key: String(topic_hash_key) })
     }
+    return () => {
+      resetTopicMeta()
+    }
   }, [router])
 
   useEffect(() => {
-    getCommentsList({ hash_key: String(topic_hash_key), page: page })
+    if (!topicDetailMeta.pending && topicDetailMeta.loaded && !_.isEmpty(topic)) setCommentCount(topic.attributes.comment_count)
+  }, [topicDetailMeta])
+
+  useEffect(() => {
+    if (topic_hash_key) {
+      getCommentsList({ hash_key: String(topic_hash_key), page: page })
+    }
   }, [page])
 
   useEffect(() => {
@@ -89,10 +96,12 @@ const TopicDetailContainer: React.FC = () => {
     }
   }, [commentsListMeta])
 
-  const handleChange = (event, value) => {
-    setPage(value)
-    return event
-  }
+  useEffect(() => {
+    if (topic) {
+      const title = `${t('common:page_head.community_topic_detail_title')}｜${topic?.attributes?.title || ''}`
+      changeTitle(title)
+    }
+  }, [topic])
 
   useEffect(() => {
     if (communityDetail && !isAutomatic && isNotMember) {
@@ -107,6 +116,7 @@ const TopicDetailContainer: React.FC = () => {
   }
 
   const handleReportComment = (detail: ReportData) => {
+    detail.attributes.topic_title = topic?.attributes?.title
     setReportData(detail)
   }
 
@@ -120,21 +130,19 @@ const TopicDetailContainer: React.FC = () => {
     <>
       <Box display="flex" flexDirection="column" minHeight="100vh">
         <Box flex={1}>
+          <ESFullLoader
+            open={topicDetailMeta.pending || commentsListMeta.pending || createCommentMeta.pending || deleteTopicCommentMeta.pending}
+          />
           {topicDetailMeta.loaded && (
             <>
               <TopicDetailHeader title={data?.title} isTopic={true} onHandleBack={handleBack} />
-              <MainTopic topic={topic} handleDelete={handleDeleteTopic} community={communityDetail} />
+              <MainTopic topic={topic} handleDelete={handleDeleteTopic} community={communityDetail} comment_count={commentCount} />
             </>
           )}
 
-          {commentsListMeta.pending ? (
-            <Box className={classes.loaderBox}>
-              <ESLoader />
-            </Box>
-          ) : (
-            !!commentsList &&
+          {!!commentsList &&
             !_.isEmpty(commentsList) &&
-            commentsList.map((comment, i) => {
+            _.map(commentsList, (comment, i) => {
               return (
                 <Comment
                   key={i}
@@ -142,60 +150,42 @@ const TopicDetailContainer: React.FC = () => {
                   menuParams={menuParams}
                   handleReply={setReply}
                   setOpenDelete={setOpenDelete}
-                  setSelectedCommentHashKey={setSelectedCommentHashKey}
+                  setSelectedCommentNo={setSelectedCommentNo}
                   onReport={handleReportComment}
                 />
               )
-            })
-          )}
-        </Box>
-
-        <Box display="flex" justifyContent="center" my={2}>
-          {commentsListMeta.pending ? (
-            <></>
-          ) : isMobile ? (
-            <PaginationMobile page={page} pageNumber={count} setPage={setPage} />
-          ) : (
-            <Pagination
-              className={classes.pagination}
-              count={count}
-              page={page}
-              onChange={handleChange}
-              variant="outlined"
-              shape="rounded"
-              color="primary"
-              hideNextButton
-              hidePrevButton
-              showFirstButton
-              showLastButton
-            />
+            })}
+          {!_.isEmpty(commentsList) && (
+            <Box display="flex" justifyContent="center" my={2}>
+              <Pagination page={page} pageNumber={count} setPage={setPage} disabled={commentsListMeta.pending} />
+            </Box>
           )}
         </Box>
 
         {!isNotMember && (
           <Box className={classes.inputContainer}>
-            <CommentInput reply_param={reply} setPage={setPage} />
+            <CommentInput reply_param={reply} setPage={setPage} setCommentCount={setCommentCount} commentCount={commentCount} />
           </Box>
         )}
-
         {isAuthenticated && reportData && (
-          <>
-            <DiscardDialog
-              title={t('common:topic_comment.delete.title')}
-              open={openDelete}
-              onClose={() => setOpenDelete(false)}
-              onSubmit={handleDeleteComment}
-              description={t('common:topic_comment.delete.description')}
-              confirmTitle={t('common:topic_comment.delete.submit')}
-            />
-            <ESReport
-              reportType={REPORT_TYPE.TOPIC_COMMENT}
-              target_id={reportData.attributes.hash_key}
-              data={reportData}
-              open={reportData !== null}
-              handleClose={() => setReportData(null)}
-            />
-          </>
+          <ESReport
+            reportType={REPORT_TYPE.TOPIC_COMMENT}
+            target_id={reportData.attributes.hash_key}
+            data={reportData}
+            title={t('common:topic_comment.report.dialog_title')}
+            open={reportData !== null}
+            handleClose={() => setReportData(null)}
+          />
+        )}
+        {isAuthenticated && (
+          <DiscardDialog
+            title={t('common:topic_comment.delete.title')}
+            open={openDelete}
+            onClose={() => setOpenDelete(false)}
+            onSubmit={handleDeleteComment}
+            description={t('common:topic_comment.delete.description')}
+            confirmTitle={t('common:topic_comment.delete.submit')}
+          />
         )}
       </Box>
     </>

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Box } from '@material-ui/core'
+import { Box, Typography } from '@material-ui/core'
 import ESLoader from '@components/FullScreenLoader'
 import useCancelDialog from './useCancelDialog'
 import LinkButton from '@components/LinkButton'
@@ -26,13 +26,20 @@ const CancelDialog: React.FC<Props> = ({ lobby, hashKey }) => {
     }
   }, [lobby])
 
+  const renderDescription = (
+    <>
+      <Typography>{t('common:lobby.cancel_lobby_dialog.description1')}</Typography>
+      <Typography>{t('common:lobby.cancel_lobby_dialog.description2')}</Typography>
+    </>
+  )
+
   return (
     <>
       <Box mt={3}>
         {!isCanceled && (
           <LinkButton
             onClick={() => {
-              confirm({ ...LOBBY_DIALOGS.CANCEL_LOBBY })
+              confirm({ ...LOBBY_DIALOGS.CANCEL_LOBBY, description: renderDescription })
                 .then(() => {
                   hashKey && cancelLobby(hashKey)
                 })

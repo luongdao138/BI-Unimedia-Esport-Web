@@ -2,10 +2,9 @@ import ButtonPrimary from '@components/ButtonPrimary'
 import ESChip from '@components/Chip'
 import ESLoader from '@components/Loader'
 import LoginRequired from '@containers/LoginRequired'
-import { Box, Grid, Typography, useMediaQuery } from '@material-ui/core'
+import { Box, Grid, Typography, useMediaQuery, makeStyles, Theme } from '@material-ui/core'
 import { AddRounded } from '@material-ui/icons'
 import React, { useEffect, useState, useRef } from 'react'
-import { makeStyles, Theme } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
 import { CommunityFilterOption } from '@services/community.service'
 import { Colors } from '@theme/colors'
@@ -21,7 +20,7 @@ import { useLayoutEffect } from 'react'
 
 const cache = new CellMeasurerCache({
   fixedWidth: true,
-  defaultHeight: 270,
+  defaultHeight: 255,
 })
 interface CommunityContainerProps {
   filter: CommunityFilterOption
@@ -114,7 +113,9 @@ const CommunityContainer: React.FC<CommunityContainerProps> = ({ filter }) => {
   }
 
   const onFilter = (filter: CommunityFilterOption) => {
-    router.push(`${ESRoutes.COMMUNITY}?filter=${filter}`, undefined, { shallow: true })
+    if (!meta.pending) {
+      router.push(`${ESRoutes.COMMUNITY}?filter=${filter}`, undefined, { shallow: true })
+    }
     return null
   }
 

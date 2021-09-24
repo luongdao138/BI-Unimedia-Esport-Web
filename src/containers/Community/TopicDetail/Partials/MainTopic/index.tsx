@@ -1,4 +1,4 @@
-import { Box, Typography, Icon, IconButton, ButtonBase } from '@material-ui/core'
+import { Box, Typography, Icon, ButtonBase } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import ESAvatar from '@components/Avatar'
 import { Colors } from '@theme/colors'
@@ -14,11 +14,14 @@ import DiscardDialog from '@containers/Community/Partials/DiscardDialog'
 import { SRLWrapper } from 'simple-react-lightbox'
 import { LIGHTBOX_OPTIONS } from '@constants/common.constants'
 import { CommunityDetail, TopicDetail } from '@services/community.service'
-import { CommonHelper } from '@utils/helpers/CommonHelper'
 import router from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
 import useTopicHelper from '../../useTopicHelper'
 import useCommunityHelper from '@containers/Community/hooks/useCommunityHelper'
+import { FormatHelper } from '@utils/helpers/FormatHelper'
+import moment from 'moment'
+import _ from 'lodash'
+import Linkify from 'react-linkify'
 
 type CommunityHeaderProps = {
   user_avatar?: string
@@ -30,6 +33,7 @@ type CommunityHeaderProps = {
   hash_key?: string
   handleDelete?: () => void
   topic?: TopicDetail
+  comment_count?: number
   community?: CommunityDetail
 }
 const MainTopic: React.FC<CommunityHeaderProps> = ({
@@ -41,6 +45,7 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({
   isConfirm,
   handleDelete,
   topic,
+  comment_count,
   community,
 }) => {
   const classes = useStyles()
@@ -56,9 +61,11 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({
       nickname: topicData?.owner_name,
       user_code: topicData?.owner_user_code,
       content: topicData?.content,
-      date: CommonHelper.staticSmartTime(topicData?.created_at),
-      image: !!topicData?.attachments && topicData.attachments[0]?.assets_url,
+      date: moment(topicData?.created_at).format('LL'),
+      image: (!!topicData?.attachments && topicData.attachments[0]?.assets_url) || '',
       hash_key: topicData?.hash_key,
+      avatar_image: topicData?.owner_profile,
+      topic_title: topicData?.title,
     },
   }
 
@@ -77,74 +84,67 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({
     )
   }
 
+  const newLineText = (text) => {
+    return _.map(_.split(text, '\n'), (str, i) => <Typography key={i}>{str}</Typography>)
+  }
+
   return (
     <>
       <Box className={isConfirm ? classes.containerConfirm : classes.container}>
         <Box m={2}>
           <Box className={classes.userContainer}>
             <Box className={topicData?.created_at ? classes.userInfoContainer : classes.userInfoContainerNoDate}>
-              <ButtonBase onClick={() => router.push(`${ESRoutes.PROFILE}/${topicData.owner_user_code}`)}>
+              <ButtonBase onClick={() => router.push(`${ESRoutes.PROFILE}/${topicData?.owner_user_code}`)}>
                 <ESAvatar
                   className={classes.avatar}
-                  alt={isConfirm ? nickname : topicData.owner_name}
-                  src={isConfirm ? user_avatar : topicData.owner_profile}
+                  alt={isConfirm ? nickname : topicData?.owner_name}
+                  src={isConfirm ? user_avatar : topicData?.owner_profile}
                 />
               </ButtonBase>
               <Box className={classes.userInfoBox} ml={1} maxWidth="100%">
-                <Typography className={classes.nickname}>{isConfirm ? nickname : topicData.owner_name}</Typography>
-                <Typography className={classes.userCode}>{isConfirm ? '@' + user_code : '@' + topicData.owner_user_code}</Typography>
+                <Typography className={classes.nickname}>{isConfirm ? nickname : topicData?.owner_name}</Typography>
+                <Typography className={classes.userCode}>{isConfirm ? '@' + user_code : '@' + topicData?.owner_user_code}</Typography>
               </Box>
             </Box>
             {!isConfirm && (
               <Box className={classes.dateReportContainer}>
-                <Typography className={classes.date}>{CommonHelper.staticSmartTime(topicData?.created_at)}</Typography>
+                <Typography className={classes.date}>{moment(topicData?.created_at).format('LL')}</Typography>
 
                 {(isPublic || !isNotMember) && (
-                  <ESMenu>
-                    {(isModerator || isOwner) && (
-                      <ESMenuItem onClick={handleDeleteOpen}>{t('common:topic_comment.delete.button')}</ESMenuItem>
-                    )}
-                    {!isOwner && (
+                  <Box className={classes.menuWrapper}>
+                    <ESMenu>
+                      {(isModerator || isOwner) && <ESMenuItem onClick={handleDeleteOpen}>{t('common:topic.delete.button')}</ESMenuItem>}
                       <LoginRequired>
-                        <ESMenuItem onClick={handleReportOpen}>{t('common:topic_comment.report.button')}</ESMenuItem>
+                        <ESMenuItem onClick={handleReportOpen}>{t('common:topic.report.button')}</ESMenuItem>
                       </LoginRequired>
-                    )}
-                  </ESMenu>
+                    </ESMenu>
+                  </Box>
                 )}
               </Box>
             )}
           </Box>
 
-          <Box className={classes.contentContainer} mb={2} mt={1}>
-            <Typography className={classes.content}>{isConfirm ? content : topicData.content}</Typography>
+          <Box className={classes.content} mb={2} mt={1}>
+            <Linkify
+              componentDecorator={(decoratedHref, decoratedText, key) => (
+                <a target="_blank" rel="noopener noreferrer" href={decoratedHref} key={key} className={classes.linkify}>
+                  {decoratedText}
+                </a>
+              )}
+            >
+              {newLineText(isConfirm ? content : topicData?.content)}
+            </Linkify>
           </Box>
           {(isConfirm ? image : !!topicData?.attachments && topicData.attachments[0]?.assets_url) && renderClickableImage()}
-          {topicData?.like_count || topicData?.like_count == 0 ? (
-            <Box display="flex" justifyContent="space-between" mt={2}>
-              <Box display="flex" justifyContent="flex-end">
-                <Box className={classes.numberBox}>
-                  <Icon className="fas fa-comment-alt" fontSize="small" />
-                </Box>
-                <Box className={classes.numberBox} mr={1} ml={1}>
-                  <Typography className={classes.count}>{topicData?.comment_count}</Typography>
-                </Box>
+          {topicData && (
+            <Box display="flex" justifyContent="flex-end" alignItems="flex-end" mt={2}>
+              <Box className={classes.numberBox}>
+                <Icon className="fas fa-comment-alt" fontSize="small" />
               </Box>
-              <Box display="flex" justifyContent="flex-end">
-                <Box className={classes.numberBox}>
-                  <Icon className="fas fa-comment-alt" fontSize="small" />
-                </Box>
-                <Box className={classes.numberBox} mr={1} ml={1}>
-                  <Typography className={classes.count}>{topicData?.comment_count}</Typography>
-                </Box>
-                <Box className={classes.numberBox}>
-                  <IconButton className={classes.replyButton}>
-                    <Icon className="fas fa-share" fontSize="small" style={{ transform: 'scaleX(-1)' }} />
-                  </IconButton>
-                </Box>
+              <Box className={classes.numberBox} mr={1} ml={1}>
+                <Typography className={classes.count}>{FormatHelper.kFormatter(comment_count)}</Typography>
               </Box>
             </Box>
-          ) : (
-            <></>
           )}
         </Box>
       </Box>
@@ -261,6 +261,11 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 14,
     wordBreak: 'break-word',
   },
+  linkify: {
+    color: Colors.white,
+    textDecoration: 'underline',
+    wordBreak: 'break-all',
+  },
   numberBox: {
     display: 'flex',
     alignItems: 'center',
@@ -276,6 +281,9 @@ const useStyles = makeStyles((theme) => ({
     maxHeight: 300,
     maxWidth: 300,
     objectFit: 'contain',
+  },
+  menuWrapper: {
+    marginRight: -12,
   },
   [theme.breakpoints.down('sm')]: {
     imageBox: {

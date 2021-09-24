@@ -4,7 +4,6 @@ import community from '@store/community'
 import { CommunityDetail, CommunityFeature, CommunityFormParams, UpdateParams } from '@services/community.service'
 import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
-import _ from 'lodash'
 import * as commonActions from '@store/common/actions'
 import { useTranslation } from 'react-i18next'
 import { createMetaSelector } from '@store/metadata/selectors'
@@ -51,7 +50,7 @@ const useCommunityCreate = (): {
   const getUpdateCommunityMeta = useAppSelector(updateCommunityMeta)
   const [isEdit, setIsEdit] = useState(false)
 
-  const [editables, setEditables] = useState<EditableTypes>({
+  const editables: EditableTypes = {
     name: true,
     description: true,
     features: true,
@@ -61,8 +60,7 @@ const useCommunityCreate = (): {
     open_range: true,
     address: true,
     cover_image_url: true,
-  })
-  const isEditable = true
+  }
 
   const resetMeta = () => dispatch(clearMetaData(actions.createCommunity.typePrefix))
   const submit = async (params: CommunityFormParams) => {
@@ -84,33 +82,11 @@ const useCommunityCreate = (): {
   }
 
   useEffect(() => {
-    if (router.asPath.endsWith('/edit') && router.query.community_id) {
-      // TODO dispatch get Community detail
+    if (router.asPath.endsWith('/edit') && router.query.hash_key) {
       setIsEdit(true)
+      dispatch(actions.getCommunityDetail(String(router.query.hash_key)))
     }
   }, [router])
-
-  useEffect(() => {
-    if (community && router.asPath.endsWith('/edit') && router.query.community_id) {
-      if (!isEditable) {
-        router.push(ESRoutes.COMMUNITY_DETAIL.replace(/:id/gi, String(router.query.community_id)))
-        return
-      }
-
-      let _editables = { ...editables }
-      _editables = _.mapValues(_editables, () => false)
-      _editables.game_titles = true
-      _editables.cover_image_url = true
-      _editables.name = true
-      _editables.description = true
-      _editables.open_range = true
-      _editables.join_condition = true
-      _editables.area_id = true
-      _editables.address = true
-      _editables.features = true
-      setEditables(_editables)
-    }
-  }, [community, router])
 
   return {
     isEdit,

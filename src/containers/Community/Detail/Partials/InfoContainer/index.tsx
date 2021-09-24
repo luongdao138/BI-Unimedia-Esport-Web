@@ -19,6 +19,10 @@ const InfoContainer: React.FC<{ isOfficial: boolean; data: CommunityDetail['attr
 
   const toProfile = (user_code) => router.push(`${ESRoutes.PROFILE}/${user_code}`)
 
+  const newLineText = (text) => {
+    return _.map(_.split(text, '\n'), (str, i) => <Typography key={i}>{str}</Typography>)
+  }
+
   return (
     <>
       {(!_.isEmpty(data.game_titles) || !_.isEmpty(data.features)) && (
@@ -44,7 +48,7 @@ const InfoContainer: React.FC<{ isOfficial: boolean; data: CommunityDetail['attr
             </a>
           )}
         >
-          <Typography>{data.description}</Typography>
+          {newLineText(data.description)}
         </Linkify>
       </Box>
 
@@ -55,7 +59,19 @@ const InfoContainer: React.FC<{ isOfficial: boolean; data: CommunityDetail['attr
         <Box className={classes.value}>
           <Box display="flex" flexDirection="column">
             <Typography>{data.area_name}</Typography>
-            <Typography>{data.address ? data.address : t('common:common.dash_separator')}</Typography>
+            {data.address ? (
+              <Linkify
+                componentDecorator={(decoratedHref, decoratedText, key) => (
+                  <a target="_blank" rel="noopener noreferrer" href={decoratedHref} key={key} className={classes.linkify}>
+                    {decoratedText}
+                  </a>
+                )}
+              >
+                {newLineText(data.address)}
+              </Linkify>
+            ) : (
+              <Typography>{t('common:common.dash_separator')}</Typography>
+            )}
           </Box>
         </Box>
       </Box>

@@ -9,13 +9,13 @@ import ESModal from '@components/Modal'
 import { useRouter } from 'next/router'
 import ESLoader from '@components/Loader'
 import { Box, Grid } from '@material-ui/core'
-import { TOPIC_STATUS } from '@constants/community.constants'
+import _ from 'lodash'
 
 const CommunityContainer: React.FC = () => {
   const router = useRouter()
   const { hash_key } = router.query
   const [showTopicListAndSearchTab, setShowTopicListAndSearchTab] = useState<boolean>(true)
-  const { handleBack, communityDetail, getCommunityDetail, topicList, getTopicList, meta } = useCommunityDetail()
+  const { handleBack, communityDetail, getCommunityDetail, topicList, meta } = useCommunityDetail()
   const { isAutomatic, isNotMember } = useCommunityHelper(communityDetail)
 
   useEffect(() => {
@@ -28,9 +28,6 @@ const CommunityContainer: React.FC = () => {
     if (communityDetail && !isAutomatic && isNotMember) {
       setShowTopicListAndSearchTab(false)
     } else {
-      if (hash_key) {
-        getTopicList({ community_hash: String(hash_key), filter: TOPIC_STATUS.ALL, page: 1 })
-      }
       setShowTopicListAndSearchTab(true)
     }
   }, [communityDetail])
@@ -40,7 +37,7 @@ const CommunityContainer: React.FC = () => {
   const renderBody = () => {
     return (
       <>
-        {!!communityDetail && meta.loaded && !meta.pending && (
+        {!_.isEmpty(communityDetail) && (
           <>
             <CommunityDetailHeader
               title={communityDetail.attributes.name}

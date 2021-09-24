@@ -6,7 +6,6 @@ import React, { useEffect, useState, Dispatch, SetStateAction } from 'react'
 import useUploadImage from '@utils/hooks/useUploadImage'
 import { useTranslation } from 'react-i18next'
 import ImageUploader from '../ImageUploader'
-import ESLoader from '@components/Loader'
 import { useRouter } from 'next/router'
 import _ from 'lodash'
 import useCheckNgWord from '@utils/hooks/useCheckNgWord'
@@ -14,41 +13,55 @@ import { useAppDispatch } from '@store/hooks'
 import { showDialog } from '@store/common/actions'
 import { NG_WORD_AREA, NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
 import useTopicDetail from '../../useTopicDetail'
+import { REPLY_REGEX } from '@constants/community.constants'
+
+const TEXT_INPUT_LIMIT = 5000
 
 type CommunityHeaderProps = {
   reply_param?: { hash_key: string; comment_no: number }
   setPage: Dispatch<SetStateAction<number>>
+  setCommentCount?: Dispatch<SetStateAction<number>>
+  commentCount?: number
 }
-const Comment: React.FC<CommunityHeaderProps> = ({ reply_param, setPage }) => {
+
+const Comment: React.FC<CommunityHeaderProps> = ({ reply_param, setPage, setCommentCount, commentCount }) => {
   const classes = useStyles()
   const { query } = useRouter()
   const { topic_hash_key } = query
   const { t } = useTranslation(['common'])
   const dispatch = useAppDispatch()
   const { checkNgWord } = useCheckNgWord()
-  const { createComment, createCommentMeta, getCommentsList } = useTopicDetail()
-  const { uploadArenaCoverImage } = useUploadImage()
+  const { createComment, createCommentMeta } = useTopicDetail()
+  const { uploadCommentImage } = useUploadImage()
+
   const [isUploading, setUploading] = useState(false)
+  const [isMaxLength, setIsMaxLength] = useState(false)
   const [imageURL, setImageURL] = useState('')
   const [inputText, setInputText] = useState('')
 
   useEffect(() => {
     if (!_.isEmpty(reply_param)) {
-      setInputText(inputText.concat('>>' + reply_param.comment_no))
+      if (!_.includes(_.split(inputText, REPLY_REGEX), `>>${reply_param.comment_no}`)) {
+        setInputText(inputText.concat('>>' + reply_param.comment_no))
+      }
     }
   }, [reply_param])
 
+  useEffect(() => {
+    if (!createCommentMeta.pending && createCommentMeta.loaded) {
+      setInputText('')
+      setImageURL('')
+      setPage(1)
+      setCommentCount(commentCount + 1)
+    }
+  }, [createCommentMeta])
+
   const handleUpload = (file: File) => {
     setUploading(true)
-
-    uploadArenaCoverImage(file, undefined, 1, true, (imageUrl) => {
+    uploadCommentImage(file, undefined, 1, true, (imageUrl) => {
       setUploading(false)
       setImageURL(imageUrl)
     })
-  }
-
-  const closeImage = () => {
-    setImageURL('')
   }
 
   const isInputEmpty = (text: string) => {
@@ -61,7 +74,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ reply_param, setPage }) => {
     return true
   }
 
-  const send = async () => {
+  const send = () => {
     if (_.isEmpty(checkNgWord(inputText.trim()))) {
       const data = {
         topic_hash: String(topic_hash_key),
@@ -70,19 +83,19 @@ const Comment: React.FC<CommunityHeaderProps> = ({ reply_param, setPage }) => {
         attachments: imageURL,
       }
       if (!createCommentMeta.pending) {
-        await createComment(data)
-        setPage(1)
+        createComment(data)
       }
-
-      getCommentsList({ hash_key: String(topic_hash_key), page: 1 })
-      setInputText('')
-      setImageURL('')
     } else {
-      dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: NG_WORD_AREA.chat_section }))
+      dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: NG_WORD_AREA.comment_section }))
     }
   }
 
   const handleChange = (event) => {
+    if (event.target.value.length > TEXT_INPUT_LIMIT) {
+      setIsMaxLength(true)
+    } else {
+      setIsMaxLength(false)
+    }
     setInputText(event.target.value)
   }
 
@@ -90,7 +103,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ reply_param, setPage }) => {
     <>
       <Box className={classes.root}>
         <Box className={classes.toolbarCont}>
-          <ImageUploader src={imageURL} onChange={handleUpload} isUploading={isUploading} />
+          <ImageUploader src={imageURL} setSrc={setImageURL} onChange={handleUpload} isUploading={isUploading} />
         </Box>
         <Box className={classes.inputCont}>
           <InputBase
@@ -100,32 +113,21 @@ const Comment: React.FC<CommunityHeaderProps> = ({ reply_param, setPage }) => {
             multiline
             rowsMax={9}
             placeholder={t('common:topic_create.comment_placeholder')}
+            inputProps={{ maxLength: TEXT_INPUT_LIMIT }}
           />
         </Box>
         <Box className={classes.sendCont}>
           <Box display="flex" alignItems="center">
-            <IconButton className={classes.iconButton} onClick={send} disabled={imageURL === '' && inputText.trim() === ''}>
+            <IconButton
+              className={classes.iconButton}
+              onClick={send}
+              disabled={(imageURL === '' && inputText.trim() === '') || isMaxLength}
+            >
               <Icon className={`${classes.icon} fas fa-paper-plane`} />
             </IconButton>
           </Box>
         </Box>
       </Box>
-      {imageURL && (
-        <Box className={classes.imageContainer}>
-          <Box position="absolute" top={0} right={0}>
-            <IconButton className={classes.removeIconButton} disableRipple onClick={closeImage}>
-              <Icon className={`${classes.removeIcon} fas fa-times`} />
-            </IconButton>
-          </Box>
-
-          <img src={imageURL} className={classes.coverImg} />
-        </Box>
-      )}
-      {isUploading ? (
-        <Box className={classes.loader}>
-          <ESLoader />
-        </Box>
-      ) : null}
     </>
   )
 }

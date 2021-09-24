@@ -1,4 +1,4 @@
-import { Box, IconButton, OutlinedInput, Icon, Button, useMediaQuery, useTheme, Typography, Grid } from '@material-ui/core'
+import { Box, IconButton, OutlinedInput, Icon, Button, Typography, Grid } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
 import _ from 'lodash'
@@ -7,13 +7,12 @@ import { useTranslation } from 'react-i18next'
 import ESCheckbox from '@components/Checkbox'
 import ESLabel from '@components/Label'
 import TopicRowItem from '@components/TopicRowItem'
-import Pagination from '@material-ui/lab/Pagination'
-import PaginationMobile from '../../../Partials/PaginationMobile'
 import useTopicSearch from '../useTopicSearch'
 import moment from 'moment'
 import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
 import ESLoader from '@components/Loader'
+import Pagination from '@containers/Community/Partials/Pagination'
 
 const InfoContainer: React.FC = () => {
   const { t } = useTranslation(['common'])
@@ -24,8 +23,6 @@ const InfoContainer: React.FC = () => {
   const [showResult, setShowResult] = useState(false)
   const [isOnlyTitle, setIsOnlyTitle] = useState(false)
   const { topicList, getTopicList, topicListMeta, pages } = useTopicSearch()
-  const _theme = useTheme()
-  const isMobile = useMediaQuery(_theme.breakpoints.down('sm'))
   const hash_key = String(router.query.hash_key)
   const [page, setPage] = useState(1)
   const [count, setCount] = useState(1)
@@ -73,23 +70,25 @@ const InfoContainer: React.FC = () => {
 
   useEffect(() => {
     if (topicList) {
-      setCount(pages.total_pages)
+      setCount(pages?.total_pages)
     }
   }, [pages])
 
   useEffect(() => {
-    getTopicList({ community_hash: hash_key, keyword: value, only_title: isOnlyTitle.toString(), page: page })
+    if (showResult) {
+      getTopicList({ community_hash: hash_key, keyword: value, only_title: isOnlyTitle.toString(), page: page })
+    }
   }, [page])
 
-  const handleChange = (event, val) => {
-    setPage(val)
-    return event
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    handleSearch()
   }
 
   return (
     <Box ml={2}>
       <Box mt={3} mb={1}>
-        <form onSubmit={handleSearch} className={classes.searchContainer}>
+        <form method="post" onSubmit={handleSubmit} className={classes.searchContainer}>
           <OutlinedInput
             autoComplete="off"
             onChange={onChange}
@@ -133,27 +132,13 @@ const InfoContainer: React.FC = () => {
                     comment_count={attr.comment_count}
                     keyword={value}
                     isSearched={isSearched}
+                    isOnlyTitle={isOnlyTitle}
                   />
                 )
               })}
+
               <Box display="flex" justifyContent="center" mt={4}>
-                {isMobile ? (
-                  <PaginationMobile page={page} pageNumber={count} setPage={setPage} />
-                ) : (
-                  <Pagination
-                    className={classes.pagination}
-                    count={count}
-                    page={page}
-                    onChange={handleChange}
-                    variant="outlined"
-                    shape="rounded"
-                    color="primary"
-                    hideNextButton
-                    hidePrevButton
-                    showFirstButton
-                    showLastButton
-                  />
-                )}
+                <Pagination page={page} pageNumber={count} setPage={setPage} disabled={topicListMeta.pending} />
               </Box>
             </>
           )}

@@ -24,6 +24,7 @@ import { NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
 import { useTranslation } from 'react-i18next'
 import { TopicParams } from '@services/community.service'
 import { useRouter } from 'next/router'
+import useDocTitle from '@utils/hooks/useDocTitle'
 
 const TopicCreate: React.FC = () => {
   const dispatch = useAppDispatch()
@@ -37,7 +38,9 @@ const TopicCreate: React.FC = () => {
   const [isDiscard, setIsDiscard] = useState(false)
   const { t } = useTranslation(['common'])
   const router = useRouter()
+  const { changeTitle } = useDocTitle()
 
+  changeTitle(t('common:page_head.community_topic_default_title'))
   const { checkNgWordFields, checkNgWordByField } = useCheckNgWord()
 
   const formik = useFormik<FormType>({
@@ -141,7 +144,9 @@ const TopicCreate: React.FC = () => {
               <Icon className="fa fa-arrow-left" fontSize="small" />
             </IconButton>
             <Box pl={2}>
-              <Typography variant="h2">{isConfirm ? i18n.t('common:topic_create.title') : i18n.t('common:topic_create.title')}</Typography>
+              <Typography variant="h2">
+                {isConfirm ? i18n.t('common:topic_create.confirm') : i18n.t('common:topic_create.title')}
+              </Typography>
             </Box>
           </Box>
         </Box>

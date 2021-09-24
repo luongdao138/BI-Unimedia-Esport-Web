@@ -37,14 +37,14 @@ const useOrderData = () => {
       //   return t('common:home.recommended_recruitment')
       // case HOME_SETTINGS.RECOMMENDED_EVENT: //TODO skip 2.0
       //   return t('common:home.recommended_event')
-      // case HOME_SETTINGS.RECRUITMENT_FOLLOW: //TODO skip 2.0
-      //   return t('common:home.recruitment_follow')
+      case HOME_SETTINGS.LOBBY_FOLLOW: //TODO skip 2.0
+        return t('common:home.recruitment_follow')
       case HOME_SETTINGS.TOURNAMENT_FOLLOW:
         return t('common:tournament.follower_entering')
       case HOME_SETTINGS.TOURNAMENT_RESULT:
         return t('common:tournament.follower_ended')
-      // case HOME_SETTINGS.TOPIC_FOLLOW: //TODO skip 2.0
-      //   return t('common:home.topic_follow')
+      case HOME_SETTINGS.TOPIC_FOLLOW:
+        return t('common:home.topic_follow')
       default:
         return ''
     }

@@ -100,7 +100,6 @@ export const LOBBY_DIALOGS = {
   },
   CANCEL_LOBBY: {
     title: i18n.t('common:lobby.cancel_lobby_dialog.title'),
-    description: i18n.t('common:lobby.cancel_lobby_dialog.description'),
     additionalText: i18n.t('common:lobby.cancel_lobby_dialog.additionalText'),
     confirmationText: i18n.t('common:lobby.cancel_lobby_dialog.confirmationText'),
     cancellationText: i18n.t('common:lobby.cancel_lobby_dialog.cancellationText'),

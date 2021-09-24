@@ -3,17 +3,18 @@ import { Colors } from '@theme/colors'
 import i18n from '@locales/i18n'
 
 interface Props {
-  unit?: string
+  label: string
   entryCount: number
   maxCount: number
+  unit?: string
 }
 
-const EntryMembersCount: React.FC<Props> = ({ unit, entryCount, maxCount }) => {
+const EntryMembersCount: React.FC<Props> = ({ label, entryCount, maxCount, unit }) => {
   const classes = useStyles()
 
   return (
     <Box display="flex" flexDirection="row" color={Colors.grey[300]} alignItems="baseline">
-      <Typography className={classes.entryMembersInfoText}>{i18n.t('common:lobby.detail.number_of_entries')}</Typography>
+      <Typography className={classes.entryMembersInfoText}>{label}</Typography>
       <Box mr={2} />
       <Typography className={classes.highlightedNumber}>{entryCount}</Typography>
       <Typography>{`${unit} /`}&nbsp;</Typography>
