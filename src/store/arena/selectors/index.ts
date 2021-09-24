@@ -107,7 +107,7 @@ export const getBattleRoyaleFirstPlace = createSelector(getTournamentDetail, get
     const isTeam = arena.attributes.participant_type > 1
     return {
       avatar: participants[0].attributes.avatar_url,
-      name: participants[0].attributes.name,
+      name: isTeam ? participants[0].attributes.team?.data.attributes.name : participants[0].attributes.name,
       user_code: isTeam ? '' : participants[0].attributes.user.user_code,
     }
   }
@@ -115,7 +115,7 @@ export const getBattleRoyaleFirstPlace = createSelector(getTournamentDetail, get
 })
 
 export const getTournamentFirstPlace = createSelector(getTournamentDetail, getArenaWinners, (arena, arenaWinners) => {
-  if (arena && arenaWinners['1']) {
+  if (arena && arenaWinners['1'] && arenaWinners['1'].length) {
     const isTeam = arena.attributes.participant_type > 1
     return {
       avatar: arenaWinners['1'][0].avatar,
