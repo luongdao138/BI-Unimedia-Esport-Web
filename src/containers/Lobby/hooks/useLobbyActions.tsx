@@ -45,6 +45,7 @@ const useLobbyActions = (): {
   confirmParticipantsMeta: Meta
   resetMetaAll: () => void
   resetAllParticipants: () => void
+  fetchAndRandomize: (params: AllParticipantParams) => void
 } => {
   const dispatch = useAppDispatch()
   const entryMeta = useAppSelector(entryMetaSelector)
@@ -58,6 +59,7 @@ const useLobbyActions = (): {
   const recommendedParticipants = useAppSelector(recommendedParticipantsSelector)
   const participantsPageMeta = useAppSelector(pageMeta)
   const confirmParticipantsMeta = useAppSelector(confirmParticipantsMetaSelector)
+  const fetchAndRandomize = (params: AllParticipantParams) => dispatch(actions.fetchBeforeRandomize(params))
 
   const entry = (hash_key: string) => {
     dispatch(actions.entryLobby(hash_key))
@@ -115,6 +117,7 @@ const useLobbyActions = (): {
     getRecommendedParticipants,
     recommendedParticipantsMeta,
     recommendedParticipants,
+    fetchAndRandomize,
     confirmParticipants,
     participantsPageMeta,
     resetMeta,
