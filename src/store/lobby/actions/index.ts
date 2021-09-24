@@ -1,6 +1,6 @@
 import { createAsyncThunk, createAction } from '@reduxjs/toolkit'
 import * as services from '@services/lobby.service'
-import { CLEAR_LOBBY_DETAIL, CLEAR_LOBBY_RECENTS, LOBBY_ACTION_TYPE, RESET_LOBBY_PARTICIPANTS } from './types'
+import { CLEAR_LOBBY_DETAIL, CLEAR_LOBBY_RECENTS, LOBBY_ACTION_TYPE, RESET_LOBBY_ALL_PARTICIPANTS, RESET_LOBBY_PARTICIPANTS } from './types'
 import { follow, FollowActionResponse, FollowParams, unfollow, UnFollowResponse } from '@services/user.service'
 import { UnblockParams, UnblockResponse, unblockUser } from '@services/block.service'
 import { AppDispatch } from '@store/store'
@@ -85,6 +85,21 @@ export const getParticipants = createAsyncThunk<services.ParticipantsResponse, s
   async (params, { rejectWithValue }) => {
     try {
       const res = await services.participants(params)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
+export const getAllParticipants = createAsyncThunk<services.AllParticipantsResponse, services.AllParticipantParams>(
+  LOBBY_ACTION_TYPE.LOBBY_ALL_PARTICIPANTS,
+  async (params, { rejectWithValue }) => {
+    try {
+      const res = await services.getAllParticipants(params)
       return res
     } catch (error) {
       if (!error.response) {
@@ -186,6 +201,7 @@ export const getLobbyCategories = createAsyncThunk<services.LobbyCategoriesRespo
 )
 
 export const resetParticipants = createAction(RESET_LOBBY_PARTICIPANTS)
+export const resetAllParticipants = createAction(RESET_LOBBY_ALL_PARTICIPANTS)
 
 export const lobbyFollow = createAsyncThunk<FollowActionResponse, FollowParams>(
   LOBBY_ACTION_TYPE.LOBBY_FOLLOW,

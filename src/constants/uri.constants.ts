@@ -136,6 +136,7 @@ export const URI = {
   LOBBY_UNJOIN: '/v2/recruitments/:hash_key/unjoin',
   LOBBY_SEARCH: '/v2/recruitments/search',
   LOBBY_PARTICIPANTS: '/v2/recruitments/:hash_key/participants',
+  LOBBY_ALL_PARTICIPANTS: '/v2/recruitments/:hash_key/all_participants',
   LOBBY_CREATE: '/v2/recruitments',
   LOBBY_UPDATE: '/v2/recruitments/:hash_key',
   LOBBY_CATEGORIES: '/v2/recruitment_categories',

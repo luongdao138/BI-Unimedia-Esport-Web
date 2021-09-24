@@ -43,12 +43,11 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ lobby, op
   const { height } = useRect(contentRef)
   const { userProfile } = useGetProfile()
   const {
-    participants,
-    participantsMeta,
-    participantsPageMeta,
-    getParticipants,
-    resetMeta,
-    resetParticipants,
+    allParticipants,
+    allParticipantsMeta,
+    getAllParticipants,
+    resetAllParticipants,
+    resetMetaAll,
     recommendedParticipants,
     recommendedParticipantsMeta,
     getRecommendedParticipants,
@@ -57,21 +56,19 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ lobby, op
   } = useLobbyActions()
   const { status, max_participants, hash_key, is_owner, is_freezed } = lobby.attributes
 
-  const currentPage = _.get(participantsPageMeta, 'current_page', 1)
-  const totalPage = _.get(participantsPageMeta, 'total_pages', 1)
   const [isInitialPageLoad, setInitialPageLoad] = useState(false)
   const isConfirmable = (status === LOBBY_STATUS.RECRUITING || status === LOBBY_STATUS.ENTRY_CLOSED) && is_owner && !is_freezed
 
   useEffect(() => {
     if (open) {
       setInitialPageLoad(true)
-      getParticipants({ page: 1, hash_key: hash_key })
+      getAllParticipants({ hash_key: hash_key })
     }
 
     return () => {
       if (open) {
-        resetParticipants()
-        resetMeta()
+        resetAllParticipants()
+        resetMetaAll()
         setHasMore(true)
         setInitialPageLoad(false)
         setSelected([])
@@ -85,26 +82,18 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ lobby, op
 
   useEffect(() => {
     setFiltered(
-      participants.map((user: ConfirmParticipantItem) => {
+      allParticipants.map((user: ConfirmParticipantItem) => {
         const item = selected.includes(Number(user.id))
         return { ...user, checked: item }
       })
     )
-  }, [selected, participants])
+  }, [selected, allParticipants])
 
   useEffect(() => {
-    if (isInitialPageLoad && !participantsMeta.pending) {
+    if (isInitialPageLoad && !allParticipantsMeta.pending) {
       setInitialPageLoad(false)
     }
-  }, [isInitialPageLoad, participantsMeta.pending])
-
-  const fetchMoreData = () => {
-    if (currentPage >= totalPage) {
-      setHasMore(false)
-      return
-    }
-    getParticipants({ page: Number(currentPage) + 1, hash_key: hash_key })
-  }
+  }, [isInitialPageLoad, allParticipantsMeta.pending])
 
   useEffect(() => {
     if (!_.isEmpty(recommendedParticipants)) {
@@ -160,21 +149,21 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ lobby, op
                 <Typography className={classes.subTitle}>{t('common:confirm_member.from')}</Typography>
               </Box>
             </Box>
-            {isInitialPageLoad && participantsMeta.pending && (
+            {isInitialPageLoad && allParticipantsMeta.pending && (
               <div className={classes.loaderCenter}>
                 <ESLoader />
               </div>
             )}
-            {_.isArray(participants) && !_.isEmpty(participants) && open ? (
+            {_.isArray(allParticipants) && !_.isEmpty(allParticipants) && open ? (
               <InfiniteScroll
-                dataLength={participants.length}
-                next={fetchMoreData}
+                dataLength={allParticipants.length}
+                next={null}
                 hasMore={hasMore}
                 scrollableTarget="scrollableDiv"
                 scrollThreshold={0.99}
                 style={{ overflow: 'hidden' }}
                 loader={
-                  participantsMeta.pending && (
+                  allParticipantsMeta.pending && (
                     <div className={classes.loaderCenter}>
                       <ESLoader />
                     </div>
@@ -210,7 +199,7 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ lobby, op
                       confirm({ ...LOBBY_DIALOGS.CONFIRM_MEMBER.confirm })
                         .then(() => {
                           if (isConfirmable) {
-                            const selectedParticipants = participants
+                            const selectedParticipants = allParticipants
                               .filter((p) => selected.includes(p.attributes.id))
                               .map((a) => a.attributes.user_id)
                             confirmParticipants(hash_key, selectedParticipants)
@@ -228,7 +217,7 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ lobby, op
               <Box className={classes.actionButton}>
                 <LoginRequired>
                   <ButtonPrimaryOutlined
-                    disabled={isInitialPageLoad && participantsMeta.pending}
+                    disabled={isInitialPageLoad && allParticipantsMeta.pending}
                     onClick={() => {
                       confirm({ ...LOBBY_DIALOGS.CONFIRM_MEMBER.shuffle })
                         .then(() => {

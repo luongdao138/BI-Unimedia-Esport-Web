@@ -107,6 +107,10 @@ export type ParticipantsResponse = {
   meta: PageMeta
 }
 
+export type AllParticipantsResponse = {
+  data: ParticipantsData
+}
+
 export type ParticipantType = {
   nickname?: string
   profile_image?: string | null
@@ -205,6 +209,10 @@ export type ParticipantParams = {
   page: number
 }
 
+export type AllParticipantParams = {
+  hash_key: string
+}
+
 export type RecentLobbiesParams = {
   page?: number
 }
@@ -243,6 +251,11 @@ export const participants = async (params: ParticipantParams): Promise<Participa
   const { data } = await api.get<ParticipantsResponse>(
     `${URI.LOBBY_PARTICIPANTS.replace(/:hash_key/gi, params.hash_key)}/?page=${params.page}`
   )
+  return data
+}
+
+export const getAllParticipants = async (params: AllParticipantParams): Promise<AllParticipantsResponse> => {
+  const { data } = await api.get<AllParticipantsResponse>(`${URI.LOBBY_ALL_PARTICIPANTS.replace(/:hash_key/gi, params.hash_key)}`)
   return data
 }
 
