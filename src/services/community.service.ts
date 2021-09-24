@@ -342,7 +342,16 @@ export type TopicFollowersResponse = {
 }
 
 export type FollowersTopicResponse = {
-  attributes: any
+  id: string
+  type: string
+  attributes: {
+    title: string
+    content: string
+    created_at: string
+    avatar: {
+      assets_url: string | null
+    }
+  }
 }
 
 export type TopicFollowersParams = {
