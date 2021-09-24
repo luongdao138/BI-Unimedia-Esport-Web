@@ -85,13 +85,23 @@ const SideMenu: React.FC = () => {
                 <ListItemText className={classes.listText} primary={t('common:home.tournament')} />
               </ListItem>
             </Link>
-            {/* <ListItem className={classes.list} button disableRipple>
-            <ListItemIcon className={classes.icon}>
-              <Icon fontSize="small" className="fa fa-university" />
-            </ListItemIcon>
-            <ListItemText className={classes.listText} primary={t('common:home.lobby')} />
-          </ListItem>
-          <ListItem className={classes.list} button disableRipple>
+            <Link href={ESRoutes.LOBBY} passHref>
+              <ListItem className={classes.list} button disableRipple selected={isSelected(ESRoutes.LOBBY)}>
+                <ListItemIcon className={classes.icon}>
+                  <Icon fontSize="small" className="fa fa-university" />
+                </ListItemIcon>
+                <ListItemText className={classes.listText} primary={t('common:home.lobby')} />
+              </ListItem>
+            </Link>
+            <Link href={ESRoutes.COMMUNITY} passHref>
+              <ListItem className={classes.list} button disableRipple selected={isSelected(ESRoutes.COMMUNITY)}>
+                <ListItemIcon className={classes.icon}>
+                  <Icon fontSize="small" className="fa fa-users" />
+                </ListItemIcon>
+                <ListItemText className={classes.listText} primary={t('common:home.community')} />
+              </ListItem>
+            </Link>
+            {/*<ListItem className={classes.list} button disableRipple>
             <ListItemIcon className={classes.icon}>
               <Icon fontSize="small" className="fa fa-users" />
             </ListItemIcon>

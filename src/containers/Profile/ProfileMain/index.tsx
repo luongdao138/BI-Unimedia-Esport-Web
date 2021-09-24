@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { Box, Grid, Typography, Icon, ButtonBase } from '@material-ui/core'
 import { orderBy } from 'lodash'
 import i18n from '@locales/i18n'
@@ -8,7 +8,6 @@ import ESButtonFacebookCircle from '@components/Button/FacebookCircle'
 import ESButtonTwitterCircle from '@components/Button/TwitterCircle'
 import ESButtonTwitchCircle from '@components/Button/TwitchCircle'
 import ESButtonInstagramCircle from '@components/Button/InstagramCircle'
-// import CommunityCard from '@components/CommunityCard'
 import HeaderTags from '../Partials/headerTags'
 import Iconic from '../Partials/iconic'
 import { GENDER } from '@constants/common.constants'
@@ -17,6 +16,7 @@ import { UserProfile } from '@services/user.service'
 import { ESRoutes } from '@constants/route.constants'
 import { useRouter } from 'next/router'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
+import CommunityContainer from '@containers/Profile/Communities'
 
 interface Props {
   userProfile: UserProfile
@@ -128,42 +128,7 @@ const ProfileMainContainer: React.FC<Props> = ({ userProfile, isOthers }) => {
   }
 
   const getCommunitySection = () => {
-    return (
-      // <Grid xs={12} item className={classes.bodyContainer}>
-      //   <Box display="flex" mt={3}>
-      //     <Grid container>
-      //       <Grid item xs={6} md={4}>
-      //         <CommunityCard community={null} />
-      //       </Grid>
-      //       <Grid item xs={6} md={4}>
-      //         <CommunityCard community={null} />
-      //       </Grid>
-      //       <Grid item xs={6} md={4}>
-      //         <CommunityCard community={null} />
-      //       </Grid>
-      //       <Grid item xs={6} md={4}>
-      //         <CommunityCard community={null} />
-      //       </Grid>
-      //       <Grid item xs={6} md={4}>
-      //         <CommunityCard community={null} />
-      //       </Grid>
-      //       <Grid item xs={6} md={4}>
-      //         <CommunityCard community={null} />
-      //       </Grid>
-      //     </Grid>
-      //   </Box>
-      //   <Box display="flex" alignItems="center" justifyContent="center" mt={2} mb={2}>
-      //     <Typography className={classes.marginRight}>{i18n.t('common:profile.read_more')}</Typography>
-      //     <Icon className={'fa fa-angle-down'} fontSize="small" />
-      //   </Box>
-      // </Grid>
-      // <Box display="flex" alignItems="center" justifyContent="center" mt={5} pt={3} mb={2} >
-      //   <Typography gutterBottom color="textSecondary">
-      //     {i18n.t('common:profile.no_communities')}
-      //   </Typography>
-      // </Box>
-      null
-    )
+    return <CommunityContainer userCode={attr.user_code} />
   }
 
   return (
@@ -198,6 +163,12 @@ const useStyles = makeStyles((theme) => ({
   },
   marginRight: {
     marginRight: 8,
+  },
+  card: {
+    paddingTop: 0,
+    paddingRight: theme.spacing(1),
+    paddingBottom: theme.spacing(3.6),
+    paddingLeft: theme.spacing(1),
   },
 }))
 
