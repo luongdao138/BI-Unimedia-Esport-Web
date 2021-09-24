@@ -75,8 +75,8 @@ const useStyles = makeStyles((theme) => ({
   chatBoard: {
     position: 'relative',
     overflow: 'auto',
-    // height: 565,
-    height: 400,
+    height: 565,
+    // height: 400,
     display: 'flex',
     flexDirection: 'column',
     // marginTop: 16,

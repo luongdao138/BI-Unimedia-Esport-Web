@@ -15,7 +15,7 @@ import DonatePoints from './DonatePoints'
 import DonatePointsConfirmModal from './DonatePointsConfirmModal/DonatePointsConfirmModal'
 import ProgramInfoNoViewingTicket from '@containers/VideoLiveStreamContainer/ProgramInfoNoViewingTicket'
 import usePointsManage from '@containers/PointManage/usePointsManage'
-// import ESLoader from '@components/FullScreenLoader'
+import FullESLoader from '@components/FullScreenLoader'
 import { addToast } from '@store/common/actions'
 import { useAppDispatch } from '@store/hooks'
 import PurchaseTicketSuperChat from './PurchaseTicketSuperChat'
@@ -28,7 +28,6 @@ import PreloadChatContainer from './PreloadContainer/PreloadChatContainer'
 import { STATUS_VIDEO } from '@services/videoTop.services'
 import { useAppSelector } from '@store/hooks'
 import { getIsAuthenticated } from '@store/auth/selectors'
-// import userProfileStore from '@store/userProfile'
 import { ESRoutes } from '@constants/route.constants'
 // import { listVideos } from 'src/graphql/queries'
 import { onUpdateVideo } from 'src/graphql/subscriptions'
@@ -84,6 +83,9 @@ const VideosTop: React.FC = () => {
   const { getVideoDetail, detailVideoResult, userResult, videoDetailError, resetVideoDetailError } = useDetailVideo()
 
   const isPendingPurchaseTicket = meta_purchase_ticket_super_chat?.pending && purchaseType === PURCHASE_TYPE.PURCHASE_TICKET
+    
+  const isPendingPurchaseSuperChat = meta_purchase_ticket_super_chat.pending && purchaseType === PURCHASE_TYPE.PURCHASE_SUPER_CHAT
+  
   const isLoadingData = isAuthenticated ? !detailVideoResult || !myPointsData || !userResult || !video_id : !detailVideoResult || !video_id
 
   // const handleCreateVideo = async () => {
@@ -331,6 +333,7 @@ const VideosTop: React.FC = () => {
   return (
     <Box className={classes.root}>
       {isPendingPurchaseTicket && <ESLoader />}
+      {isPendingPurchaseSuperChat && <FullESLoader open={isPendingPurchaseSuperChat} />}
       <Box className={classes.container}>
         {isLoadingData ? (
           <Box
