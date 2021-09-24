@@ -1,5 +1,5 @@
 import { OutlinedInputProps } from '@material-ui/core'
-import { ReactElement, useEffect, useState } from 'react'
+import { ReactElement } from 'react'
 import ESInput from './Input'
 
 import { FormType } from '@containers/Lobby/UpsertForm/FormModel/FormType'
@@ -17,21 +17,13 @@ export type InputProps = {
 }
 
 const ESNumberInput: React.FC<OutlinedInputProps & InputProps> = (props) => {
-  const [value, setValue] = useState('')
-
-  useEffect(() => {
-    if (props.value !== null && props.value !== undefined) {
-      setValue(String(props.value))
-    }
-  }, [props.value])
-
   const handleChange = (e) => {
     e.persist()
-    setValue(e.target.value)
-    if (props.formik) props.formik.setFieldValue('stepOne.max_participants', e.target.value)
+    const value = e.target.value.replace(/[^0-9]/g, '')
+    if (props.formik) props.formik.setFieldValue('stepOne.max_participants', value)
   }
 
-  return <ESInput {...props} value={value} onChange={handleChange} />
+  return <ESInput {...props} value={props.value} onChange={handleChange} />
 }
 
 export default ESNumberInput

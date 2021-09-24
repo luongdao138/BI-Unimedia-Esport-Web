@@ -867,6 +867,8 @@ export default {
     discard: {
       title: '内容を破棄します',
       message: '画面を戻ると、現在の入力内容は破棄されます。よろしいですか？',
+      message_part1: '画面を戻ると、現在の入力内容は破棄されます。',
+      message_part2: 'よろしいですか？',
       confirm: '内容を破棄して戻る',
     },
   },
@@ -959,7 +961,7 @@ export default {
     room_not_found: 'ルームが見つかりませんでした',
     delete_chat: '削除',
     see_tournament: '該当の大会をみる',
-    see_lobby: 'ロビーをみる',
+    see_lobby: '該当の募集をみる',
     lets_start: 'メッセージを入力',
     select_destination: '宛先を選んでください',
     already_member: '既にメンバーです',
