@@ -76,6 +76,7 @@ export default {
     username: 'ユーザー名',
     loading: '読み込み中...',
     no_user_available: '一致するデータが見つかりません',
+    made: 'まで',
   },
   confirm_member: {
     confirm: 'メンバーの確定',
