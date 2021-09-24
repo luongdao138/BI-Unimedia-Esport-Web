@@ -1,4 +1,4 @@
-import { Box, Typography, Icon, IconButton, Popover, Link, ButtonBase } from '@material-ui/core'
+import { Box, Typography, Icon, IconButton, Popover, Link, ButtonBase, useTheme } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import ESAvatar from '@components/Avatar'
 import { Colors } from '@theme/colors'
@@ -7,7 +7,7 @@ import ESLoader from '@components/Loader'
 import ESMenuItem from '@components/Menu/MenuItem'
 import LoginRequired from '@containers/LoginRequired'
 import { useTranslation } from 'react-i18next'
-import { Dispatch, SetStateAction, useState } from 'react'
+import { createRef, Dispatch, SetStateAction, useState } from 'react'
 import { SRLWrapper } from 'simple-react-lightbox'
 import { LIGHTBOX_OPTIONS } from '@constants/common.constants'
 import { CommentsResponse } from '@services/community.service'
@@ -15,11 +15,22 @@ import { CommonHelper } from '@utils/helpers/CommonHelper'
 import router, { useRouter } from 'next/router'
 import { Close as IconClose } from '@material-ui/icons'
 import { ESRoutes } from '@constants/route.constants'
+import Linkify from 'react-linkify'
 import _ from 'lodash'
 import useTopicHelper from '../../useTopicHelper'
 import useTopicDetail from '../../useTopicDetail'
+import styled from 'styled-components'
+import { useRect } from '@utils/hooks/useRect'
+import { REPLY_REGEX } from '@constants/community.constants'
+import moment from 'moment'
 
-let currentReplyNumberRectLeft = null
+let currentReplyNumberRectLeft: number
+const StyledBox = styled(Box)``
+const contentRef = createRef<HTMLDivElement>()
+
+type StyleParams = {
+  currentReplyNumberRectLeft: number
+}
 
 type MenuParams = {
   isTopicOwner: boolean
@@ -37,6 +48,7 @@ export type ReportData = {
     image: string
     number: number
     hash_key: string
+    topic_title?: string
   }
 }
 
@@ -45,34 +57,32 @@ type CommunityHeaderProps = {
   menuParams?: MenuParams
   handleReply?: (params: { hash_key: string; comment_no: number }) => void
   setOpenDelete?: Dispatch<SetStateAction<boolean>>
-  setSelectedCommentHashKey?: Dispatch<SetStateAction<string>>
+  setSelectedCommentNo?: Dispatch<SetStateAction<number>>
   onReport?: (comment: ReportData) => void
 }
-const Comment: React.FC<CommunityHeaderProps> = ({
-  comment,
-  menuParams,
-  handleReply,
-  setOpenDelete,
-  setSelectedCommentHashKey,
-  onReport,
-}) => {
+const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleReply, setOpenDelete, setSelectedCommentNo, onReport }) => {
   const classes = useStyles({ currentReplyNumberRectLeft })
   const { query } = useRouter()
   const { topic_hash_key } = query
   const { t } = useTranslation(['common'])
   const [replyAnchorEl, setReplyAnchorEl] = useState(null)
+  const contentRect = useRect(contentRef)
+  const _theme = useTheme()
   const { isOwner } = useTopicHelper(comment.attributes.user_code)
   const { isModerator, isPublic, isNotMember, isTopicOwner } = menuParams
-  const { getCommentDetail, commentDetail, commentDetailMeta } = useTopicDetail()
+  const { getCommentDetail, commentDetail, commentDetailMeta, resetCommentDetail } = useTopicDetail()
+
+  const toProfile = (user_code) => router.push(`${ESRoutes.PROFILE}/${user_code}`)
 
   const handleClickReply = (event, content) => {
     getCommentDetail({ topic_hash: topic_hash_key, comment_no: content.slice(2) })
     setReplyAnchorEl(event.currentTarget)
-    currentReplyNumberRectLeft = event.currentTarget.getBoundingClientRect().left
+    currentReplyNumberRectLeft = event.currentTarget.getBoundingClientRect().left - contentRect.left
   }
 
   const handleCloseReply = () => {
     setReplyAnchorEl(null)
+    resetCommentDetail()
   }
 
   const commentData = comment.attributes
@@ -83,7 +93,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({
       nickname: commentData.owner_nickname,
       user_code: commentData.user_code,
       content: commentData.content,
-      date: CommonHelper.staticSmartTime(commentData.created_at),
+      date: moment(commentData.created_at).format('LL'),
       image: commentData.attachments && commentData.attachments[0]?.assets_url,
       number: commentData.comment_no,
       hash_key: commentData.hash_key,
@@ -94,7 +104,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({
   const replyData = commentDetail?.attributes
 
   const handleDeleteOpen = () => {
-    setSelectedCommentHashKey(hash_key)
+    setSelectedCommentNo(commentData.comment_no)
     setOpenDelete(true)
   }
   const handleReport = () => {
@@ -107,7 +117,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({
 
   const renderClickableImage = (image_url: string, isPopOver?: boolean) => {
     return (
-      <Box mb={1}>
+      <Box className={classes.imageContainer}>
         <SRLWrapper options={LIGHTBOX_OPTIONS}>
           <img className={`${classes.imageBox} ${isPopOver && classes.popOverImage}`} src={image_url} />
         </SRLWrapper>
@@ -115,15 +125,13 @@ const Comment: React.FC<CommunityHeaderProps> = ({
     )
   }
 
-  const reply_regex = /(>>[0-9]+)/g
-
-  const newLineText = (text) => {
+  const newLineText = (text, isReply = false) => {
     return _.map(_.split(text, '\n'), (str, i) => (
       <Typography key={i} className={classes.content}>
         {_.map(
-          _.filter(_.split(str, reply_regex), (el) => !_.isEmpty(el)),
+          _.filter(_.split(str, REPLY_REGEX), (el) => !_.isEmpty(el)),
           (content, index) => {
-            return content.match(reply_regex) ? renderPopover(content, index) : content
+            return content.match(REPLY_REGEX) && !isReply ? renderPopover(content, index) : content
           }
         )}
       </Typography>
@@ -132,11 +140,9 @@ const Comment: React.FC<CommunityHeaderProps> = ({
 
   const renderPopover = (content, index) => {
     return (
-      <>
-        <Link id={index} onClick={(e) => handleClickReply(e, content)} className={classes.reply}>
-          <Typography className={classes.replied_id}>{content}</Typography>
-        </Link>
-      </>
+      <Link id={index} onClick={(e) => handleClickReply(e, content)} className={classes.reply}>
+        <Typography className={classes.replied_id}>{content}</Typography>
+      </Link>
     )
   }
 
@@ -147,7 +153,9 @@ const Comment: React.FC<CommunityHeaderProps> = ({
           <Box className={classes.userInfoContainerMain}>
             <Typography className={classes.number}>{replyData.comment_no}</Typography>
             <Box ml={1}>
-              <ESAvatar className={classes.avatar} alt={replyData.owner_nickname} src={replyData.owner_profile} />
+              <ButtonBase onClick={() => toProfile(replyData.user_code)}>
+                <ESAvatar className={classes.avatar} alt={replyData.owner_nickname} src={replyData.owner_profile} />
+              </ButtonBase>
             </Box>
             <Box className={classes.userInfoBox} ml={1}>
               <Typography className={classes.username}>{replyData.owner_nickname}</Typography>
@@ -162,7 +170,17 @@ const Comment: React.FC<CommunityHeaderProps> = ({
           </Box>
         </Box>
         <Box mb={3}>
-          <Typography className={classes.content}>{replyData.content}</Typography>
+          <Typography className={classes.content}>
+            <Linkify
+              componentDecorator={(decoratedHref, decoratedText, key) => (
+                <a target="_blank" rel="noopener noreferrer" href={decoratedHref} key={key} className={classes.linkify}>
+                  {decoratedText}
+                </a>
+              )}
+            >
+              <Typography>{newLineText(replyData.content, true)}</Typography>
+            </Linkify>
+          </Typography>
           {replyData.attachments &&
             replyData.attachments[0]?.assets_url &&
             renderClickableImage(replyData.attachments[0]?.assets_url, true)}
@@ -173,7 +191,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({
 
   const notDeletedComment = () => {
     return (
-      <>
+      <StyledBox ref={contentRef}>
         <Box className={classes.container}>
           <Box className={classes.userContainer}>
             <Box className={classes.userInfoContainer}>
@@ -193,20 +211,41 @@ const Comment: React.FC<CommunityHeaderProps> = ({
             <Box className={classes.dateReportContainer}>
               <Typography className={classes.date}>{CommonHelper.staticSmartTime(commentData.created_at)}</Typography>
               {(isPublic || !isNotMember) && (
-                <ESMenu>
-                  {(isModerator || isOwner || isTopicOwner) && (
-                    <ESMenuItem onClick={handleDeleteOpen}>{t('common:topic_comment.delete.button')}</ESMenuItem>
-                  )}
-                  {!isOwner && (
-                    <LoginRequired>
-                      <ESMenuItem onClick={handleReport}>{t('common:topic_comment.report.button')}</ESMenuItem>
-                    </LoginRequired>
-                  )}
-                </ESMenu>
+                <Box className={classes.menuWrapper}>
+                  <ESMenu>
+                    {(isModerator || isOwner || isTopicOwner) && (
+                      <ESMenuItem onClick={handleDeleteOpen}>{t('common:topic_comment.delete.button')}</ESMenuItem>
+                    )}
+                    {!isOwner && (
+                      <LoginRequired>
+                        <ESMenuItem onClick={handleReport}>{t('common:topic_comment.report.button')}</ESMenuItem>
+                      </LoginRequired>
+                    )}
+                  </ESMenu>
+                </Box>
               )}
             </Box>
           </Box>
-          <Box className={classes.contentContainer}>{newLineText(commentData.content)}</Box>
+          {commentData.content && (
+            <Box
+              className={
+                commentData.attachments && commentData.attachments[0]?.assets_url
+                  ? classes.contentContainerWithImage
+                  : classes.contentContainer
+              }
+            >
+              <Linkify
+                componentDecorator={(decoratedHref, decoratedText, key) => (
+                  <a target="_blank" rel="noopener noreferrer" href={decoratedHref} key={key} className={classes.linkify}>
+                    {decoratedText}
+                  </a>
+                )}
+              >
+                {newLineText(commentData.content)}
+              </Linkify>
+            </Box>
+          )}
+
           {commentData.attachments &&
             commentData.attachments[0]?.assets_url &&
             renderClickableImage(commentData.attachments[0]?.assets_url)}
@@ -229,16 +268,25 @@ const Comment: React.FC<CommunityHeaderProps> = ({
             vertical: 'bottom',
             horizontal: 'right',
           }}
+          style={{
+            left: contentRect.left + _theme.spacing(3),
+            top: 60,
+          }}
         >
           {!_.isEmpty(commentDetail) &&
             commentDetailMeta.loaded &&
             (replyData.deleted_at ? deletedComment(replyData.comment_no, true) : popoverContent())}
           {commentDetailMeta.error && (
-            <Box my={1} display="flex" justifyContent="space-between">
-              Not found
-              <IconButton className={classes.closeMainComment} onClick={handleCloseReply}>
-                <IconClose fontSize="small" className={classes.closeMainCommentIcon} />
-              </IconButton>
+            <Box className={classes.emptyPopoverContent}>
+              <Box flex={1} />
+              <Typography className={`${classes.content} ${classes.center}`}>{t('common:topic_comment.comment_not_exist')}</Typography>
+              <Box>
+                <Box flex={1} textAlign="end">
+                  <IconButton className={classes.closeMainComment} onClick={handleCloseReply}>
+                    <IconClose fontSize="small" className={classes.closeMainCommentIcon} />
+                  </IconButton>
+                </Box>
+              </Box>
             </Box>
           )}
           {commentDetailMeta.pending && (
@@ -247,21 +295,26 @@ const Comment: React.FC<CommunityHeaderProps> = ({
             </Box>
           )}
         </Popover>
-      </>
+      </StyledBox>
     )
   }
 
   const deletedComment = (comment_no, isReply = false) => {
     return (
       <>
-        <Box className={classes.containerDeleted} borderTop={!isReply && '2px solid rgba(255,255,255,0.1)'}>
+        <Box
+          className={isReply ? classes.emptyPopoverContent : classes.containerDeleted}
+          borderTop={!isReply && '1px solid rgba(255,255,255,0.1)'}
+        >
           <Box flex={1}>
             <Typography className={classes.number}>{comment_no}</Typography>
           </Box>
           <Box display="flex" justifyContent="center" flex={8} textAlign="center">
-            <Typography className={classes.content}>{t('common:topic_comment.has_deleted_comment')}</Typography>
+            <Typography className={`${classes.content} ${isReply && classes.center}`}>
+              {t('common:topic_comment.has_deleted_comment')}
+            </Typography>
           </Box>
-          <Box flex={1}>
+          <Box flex={1} textAlign="end">
             {isReply && (
               <IconButton className={classes.closeMainComment} onClick={handleCloseReply}>
                 <IconClose fontSize="small" className={classes.closeMainCommentIcon} />
@@ -273,7 +326,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({
     )
   }
 
-  return commentData.deleted_at ? deletedComment(commentData.comment_no) : notDeletedComment()
+  return commentData.deleted_at !== null ? deletedComment(commentData.comment_no) : notDeletedComment()
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -284,6 +337,12 @@ const useStyles = makeStyles((theme) => ({
   },
   closeMainCommentIcon: {
     fontSize: 10,
+  },
+  center: {
+    flex: 8,
+    textAlign: 'center',
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(1),
   },
   reply: {
     width: 'fit-content',
@@ -297,26 +356,34 @@ const useStyles = makeStyles((theme) => ({
     textDecoration: 'underline',
     display: 'inline',
   },
+  linkify: {
+    color: Colors.white,
+    textDecoration: 'underline',
+    wordBreak: 'break-all',
+  },
   container: {
     display: 'flex',
-    marginRight: theme.spacing(2),
-    marginLeft: theme.spacing(2),
+    marginRight: theme.spacing(3),
+    marginLeft: theme.spacing(3),
     flexDirection: 'column',
-    borderTop: '2px solid rgba(255,255,255,0.1)',
-    padding: `${theme.spacing(2)}px ${theme.spacing(2)}px ${theme.spacing(2)}px`,
+    borderTop: '1px solid rgba(255,255,255,0.1)',
+    padding: `14.5px ${theme.spacing(2)}px 14.5px`,
   },
   containerDeleted: {
     display: 'flex',
-    marginRight: theme.spacing(2),
-    marginLeft: theme.spacing(2),
+    marginRight: theme.spacing(3),
+    marginLeft: theme.spacing(3),
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: `${theme.spacing(2)}px ${theme.spacing(2)}px ${theme.spacing(2)}px`,
+    padding: `14.5px ${theme.spacing(2)}px 14.5px`,
+  },
+  emptyPopoverContent: {
+    display: 'flex',
+    justifyContent: 'space-between',
   },
   userContainer: {
     display: 'flex',
-    marginBottom: theme.spacing(1),
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
@@ -374,6 +441,36 @@ const useStyles = makeStyles((theme) => ({
   contentContainer: {
     display: 'flex',
     flexDirection: 'column',
+    position: 'relative',
+    marginBottom: theme.spacing(1),
+    marginTop: 9,
+  },
+  contentContainerWithImage: {
+    display: 'flex',
+    flexDirection: 'column',
+    position: 'relative',
+    marginBottom: 7,
+    marginTop: 9,
+  },
+  imageContainer: {
+    marginTop: 9,
+    marginBottom: theme.spacing(1),
+  },
+  popcontent: {
+    position: 'absolute',
+    width: 'calc(100% + 32px)',
+    background: 'green',
+    border: '2px solid blue',
+    borderRadius: 4,
+    padding: 24,
+    top: '-90%',
+    left: -16,
+    visibility: 'hidden',
+    opacity: 0,
+    '& .show': {
+      visibility: 'visible',
+      opacity: 1,
+    },
   },
   imageBox: {
     display: 'flex',
@@ -397,27 +494,38 @@ const useStyles = makeStyles((theme) => ({
   },
   shareButton: {
     padding: theme.spacing(0.5),
-    marginRight: theme.spacing(1),
+    marginRight: -12,
     color: Colors.white_opacity[70],
   },
   mainComment: {
     '& .MuiPopover-paper': {
-      padding: 16,
+      left: '0 !important',
+      padding: theme.spacing(2),
       border: '3px solid #646464',
       background: 'rgba(33,33,33,.9)',
       borderRadius: 4,
       position: 'relative',
       overflow: 'initial !important',
-      width: 754,
+      width: 791,
       '&:before': {
         content: "''",
         position: 'absolute',
         top: 'Calc(100% + 3px)',
-        left: (props: { currentReplyNumberRectLeft: number }) => `min(${props.currentReplyNumberRectLeft}px, 747px)`,
+        left: (props: StyleParams) => props.currentReplyNumberRectLeft - 12,
         marginLeft: -5,
         borderWidth: 5,
         borderStyle: 'solid',
         borderColor: '#646464 transparent transparent transparent',
+      },
+    },
+  },
+  menuWrapper: {
+    marginRight: -12,
+  },
+  [theme.breakpoints.only('lg')]: {
+    mainComment: {
+      '& .MuiPopover-paper': {
+        maxWidth: 610,
       },
     },
   },

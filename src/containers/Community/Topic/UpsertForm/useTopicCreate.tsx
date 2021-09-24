@@ -1,15 +1,17 @@
-import { useAppDispatch } from '@store/hooks'
+import { useEffect } from 'react'
 import communityStore from '@store/community'
 import { TopicParams } from '@services/community.service'
 import { clearMetaData } from '@store/metadata/actions'
 import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
 import * as commonActions from '@store/common/actions'
+import { useAppDispatch, useAppSelector } from '@store/hooks'
 import { useTranslation } from 'react-i18next'
+import { createMetaSelector } from '@store/metadata/selectors'
 
-const { actions } = communityStore
+const { actions, selectors } = communityStore
+const createTopicMeta = createMetaSelector(actions.createTopic)
 
-// TODO change when data is ready
 export type EditableTypes = {
   title: boolean
   overview: boolean
@@ -25,14 +27,24 @@ const useTopicCreate = (): {
 
   const resetMeta = () => dispatch(clearMetaData(actions.createTopic.typePrefix))
 
-  const submit = async (params: TopicParams) => {
-    const resultAction = await dispatch(actions.createTopic(params))
-    if (actions.createTopic.fulfilled.match(resultAction)) {
+  const meta = useAppSelector(createTopicMeta)
+  const topicDetail = useAppSelector(selectors.getTopicDetail)
+
+  const submit = (params: TopicParams) => dispatch(actions.createTopic(params))
+
+  useEffect(() => {
+    if (meta.loaded) {
       resetMeta()
-      router.push(`${ESRoutes.COMMUNITY}/${router.query.hash_key}/topic/${resultAction.payload.data.attributes.hash_key}`)
+      router.push(`${ESRoutes.COMMUNITY}/${router.query.hash_key}/topic/${topicDetail.attributes.hash_key}`)
       dispatch(commonActions.addToast(t('common:topic_create.create_success')))
     }
-  }
+  }, [meta])
+
+  useEffect(() => {
+    return () => {
+      resetMeta()
+    }
+  }, [])
 
   return { submit }
 }

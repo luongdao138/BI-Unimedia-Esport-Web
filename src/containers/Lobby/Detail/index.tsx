@@ -118,7 +118,10 @@ const useStyles = makeStyles((theme) => ({
   statusContainer: {
     backgroundColor: '#FFFFFF0F',
     borderRadius: 4,
-    padding: 6,
+    paddingLeft: 6,
+    paddingRight: 6,
+    paddingTop: 6,
+    paddingBottom: 24,
   },
   [theme.breakpoints.down('xs')]: {
     root: {

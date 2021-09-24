@@ -27,6 +27,7 @@ import DetailInfoButtons from '../../../Partials/DetailInfoButtons'
 import { MEMBER_ROLE, JOIN_CONDITION, TABS } from '@constants/community.constants'
 import { TwitterShareButton } from 'react-share'
 import _ from 'lodash'
+import { useClearMeta } from './../../useCommunityDetail'
 
 const ROLE_TYPES = {
   IS_ADMIN: 'setIsAdmin',
@@ -45,6 +46,8 @@ type Props = {
 const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListAndSearchTab }) => {
   const dispatch = useAppDispatch()
   const { t } = useTranslation(['common'])
+
+  useClearMeta()
 
   const classes = useStyles()
   const [openReport, setOpenReport] = useState(false)
@@ -134,6 +137,10 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
   useEffect(() => {
     if (followCommunityMeta.loaded && isCommunityAutomatic) {
       handleChangeRole(ROLE_TYPES.IS_FOLLOWING, true)
+      dispatch(commonActions.addToast(t('common:community.toast_follow')))
+    }
+    if (followCommunityMeta.loaded && !isCommunityAutomatic) {
+      dispatch(commonActions.addToast(t('common:community.toast_follow_manual_approval')))
     }
   }, [followCommunityMeta])
 
@@ -146,6 +153,8 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
   useEffect(() => {
     if (unfollowCommunityPendingMeta.loaded) {
       handleChangeRole(ROLE_TYPES.IS_FOLLOWING, false)
+      dispatch(commonActions.addToast(t('common:community.toast_cancel_follow_request')))
+      setIsDiscardApplying(false)
     }
   }, [unfollowCommunityPendingMeta])
 
@@ -153,9 +162,6 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
     followCommunity(String(hash_key))
     if (!isCommunityAutomatic) {
       setIsRequested(true)
-      dispatch(commonActions.addToast(t('common:community.toast_follow_manual_approval')))
-    } else {
-      dispatch(commonActions.addToast(t('common:community.toast_follow')))
     }
   }
 
@@ -174,8 +180,6 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
 
   const unfollowApplyingDialogHandle = () => {
     unfollowCommunityPending(String(hash_key))
-    dispatch(commonActions.addToast(t('common:community.toast_cancel_follow_request')))
-    setIsDiscardApplying(false)
   }
   const cancelApplyingHandle = () => {
     setIsDiscardApplying(true)
@@ -230,8 +234,8 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
   const handleCopy = () => {
     if (window.navigator.clipboard) {
       window.navigator.clipboard.writeText(window.location.toString())
+      dispatch(commonActions.addToast(t('common:community.copy_shared_url_toast')))
     }
-    dispatch(commonActions.addToast(t('common:community.copy_shared_url_toast')))
   }
 
   const getHeader = () => {
@@ -239,7 +243,7 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
       <>
         <Box mb={2}>
           <Box display="flex" flexDirection="row" justifyContent="space-between" alignItems="center">
-            <Box color={Colors.white} display="flex">
+            <Box color={Colors.white} display="flex" alignItems="center">
               <Typography className={classes.title} variant="h3">
                 {data.name}
               </Typography>
@@ -249,7 +253,11 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
                     <Icon className="fa fa-check" fontSize="small" />
                   </span>
                 )}
-                {!isPublic && <Icon className={`fas fa-lock ${classes.lockIcon}`} />}
+                {!isPublic && (
+                  <Box className={classes.lockIconWrap}>
+                    <Icon className={`fas fa-lock ${classes.lockIcon}`} />
+                  </Box>
+                )}
               </Box>
             </Box>
             <Box className={classes.detailCommonButtons}>
@@ -363,6 +371,19 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
 }
 
 const useStyles = makeStyles((theme) => ({
+  lockIconWrap: {
+    position: 'relative',
+    '&::before': {
+      backgroundColor: Colors.white,
+      content: "''",
+      position: 'absolute',
+      top: 11,
+      right: 8,
+      width: 4,
+      height: 5,
+      borderRadius: '50%',
+    },
+  },
   sharedUrl: {
     textDecoration: 'underline',
   },

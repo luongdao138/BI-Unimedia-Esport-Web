@@ -25,12 +25,10 @@ const CommunityDetailHeader: React.FC<CommunityDetailHeaderProps> = ({ title, co
         </div>
       </Box>
       <Box
+        className={classes.background}
         style={{
-          background: `url(${cover || '/images/default_card.png'})`,
+          backgroundImage: `url(${cover || '/images/default_card.png'})`,
           paddingTop: isMobile ? '45.41%' : '30.29%',
-          backgroundSize: 'cover',
-          backgroundRepeat: 'no-repeat',
-          backgroundPosition: 'center center',
         }}
       />
     </>
@@ -63,6 +61,11 @@ const useStyles = makeStyles((theme) => ({
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
+  },
+  background: {
+    backgroundSize: 'cover',
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'center center',
   },
   ['@media (max-width: 960px)']: {
     backContainer: {

@@ -11,6 +11,8 @@ type StateType = {
   lobbyCategories: CategoryItem['attributes'][]
   lobbyDetail?: LobbyDetail
   participantsMeta?: PageMeta
+  recentLobbies?: Array<LobbyListItem>
+  recentLobbiesPageMeta?: PageMeta
 }
 
 const initialState: StateType = {
@@ -18,6 +20,7 @@ const initialState: StateType = {
   recommendedParticipants: [],
   searchLobbies: [],
   lobbyCategories: [],
+  recentLobbies: [],
 }
 
 export default createReducer(initialState, (builder) => {
@@ -150,5 +153,17 @@ export default createReducer(initialState, (builder) => {
   builder.addCase(actions.resetParticipants, (state, _) => {
     state.participants = []
     state.recommendedParticipants = []
+  })
+  builder.addCase(actions.getRecentLobbies.fulfilled, (state, action) => {
+    let recentLobbies = action.payload.data
+    if (action.payload.meta != undefined && action.payload.meta.current_page > 1) {
+      recentLobbies = _.unionBy(state.recentLobbies, action.payload.data, 'attributes.hash_key')
+    }
+    state.recentLobbies = recentLobbies
+    state.recentLobbiesPageMeta = action.payload.meta
+  })
+  builder.addCase(actions.clearLobbyRecents, (state, _) => {
+    state.recentLobbies = []
+    state.recentLobbiesPageMeta = undefined
   })
 })

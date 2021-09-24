@@ -54,6 +54,7 @@ export default {
     },
     no_data: '対象データありません',
     failed_to_get_data: 'データの取得に失敗しました。',
+    input_is_incorrect: '入力内容が適切ではありません。',
     dash: '-',
     dash_separator: 'ー',
     team: 'チーム',
@@ -75,6 +76,7 @@ export default {
     username: 'ユーザー名',
     loading: '読み込み中...',
     no_user_available: '一致するデータが見つかりません',
+    made: 'まで',
   },
   confirm_member: {
     confirm: 'メンバーの確定',
@@ -241,6 +243,7 @@ export default {
   },
   community: {
     report: '通報',
+    reported_community: 'コミュニティを通報しました',
     community_id: 'コミュニティID：',
     copy_shared_url: '共有URLをコピー',
     community_results: 'コミュニティ「:key」 の検索結果',
@@ -267,8 +270,8 @@ export default {
     },
     follow_list: 'フォローリスト',
     member_list: {
-      approve: '承認',
-      cancel: '拒否',
+      approve: '許可',
+      cancel: '却下',
       hold: '保留',
       user: '一般ユーザー',
       co_organizer: '共同管理者',
@@ -290,7 +293,7 @@ export default {
     unfollow_dialog: {
       title: 'フォローを解除する',
       description: '再フォローには再度フォロー申請が必要となりますが、よろしいでしょうか？',
-      submit_title: 'フォローを解除',
+      submit_title: 'フォロー解除',
     },
     unfollow_dialog_applying: {
       title: 'フォロー申請を取り消す',
@@ -317,11 +320,13 @@ export default {
     user_info_title: '通報する内容',
     reason: '通報理由',
     reason_desc: '詳細・補足',
+    reason_desc_placeholder: `通報する理由の詳細や補足をご記入ください。
+また、上記で「その他」を選んだ方はその内容をご記入ください。`,
     require: '※入力必須項目です',
     email: 'メールアドレス',
     reporter_email: 'メールアドレスの確認',
-    reporter_email_placeholder: 'mail address',
-    reporter_email_confirm: '通報にはメールアドレスの登録が必要となります。',
+    reporter_email_placeholder: 'メールアドレスを入力してください。',
+    reporter_email_confirm: '※通報にはメールアドレスの登録が必要となります。',
     email_required_text: '通報にはメールアドレスの登録が必要です',
     btn_text: '通報する',
     report_menu: '通報',
@@ -629,7 +634,7 @@ export default {
     report: {
       button: 'トピックを通報',
       title: '通報するトピック',
-      chat_topic: '雑談トピック',
+      reported_topic: 'トピックを通報しました',
     },
     delete: {
       button: 'トピックの削除',
@@ -642,9 +647,10 @@ export default {
   topic_comment: {
     there_is_no_topic: '該当のトピックはありません。',
     report: {
+      dialog_title: 'コメントを通報する',
       button: 'コメントを通報',
       title: '通報するコメント',
-      chat_topic: '雑談トピック',
+      reported_comment: 'コメントを通報しました',
     },
     delete: {
       button: 'コメントを削除',
@@ -654,6 +660,7 @@ export default {
       submit: '削除する',
       success_toast: 'コメントを削除しました。',
     },
+    comment_not_exist: '該当のコメントは存在しません。',
     has_deleted_comment: 'この投稿は削除されました。',
     has_deleted_last_comment: 'この投稿は削除されました',
   },
@@ -754,8 +761,8 @@ export default {
   },
   lobby: {
     copy_toast: 'クリップボードにコピーしました',
-    lobby_results: 'ロビー「:key」 の検索結果',
-    lobby_results_all: 'ロビーの検索結果',
+    lobby_results: '募集「:key」の検索結果',
+    lobby_results_all: '募集の検索結果',
     until_deadline: '締め切りまであと',
     until_event: '開催まであと',
     end_from_minutes: '分に受付終了',
@@ -766,6 +773,7 @@ export default {
     detail: {
       label_id: '募集ID：',
       number_of_entries: 'エントリー数',
+      number_of_entries_freezed: '参加数',
       organizer: '開催者',
       entry_period: 'エントリー期間',
       start_date: '開催日時',
@@ -778,7 +786,8 @@ export default {
     },
     cancel_lobby_dialog: {
       title: '募集を中止しますか？',
-      description: '中止した募集は復元することはできません。募集の中止は、メンバーに通知されます。',
+      description1: '中止した募集は復元することはできません。',
+      description2: '募集の中止は、メンバーに通知されます。',
       additionalText: '',
       confirmationText: '中止する',
       cancellationText: 'キャンセル',
@@ -855,6 +864,7 @@ export default {
       entry_decline_failed: 'エントリーを辞退できませんでした',
       randomize_participant: 'ユーザーをランダムに選びました',
       confirm_participant: 'エントリーを締め切りました',
+      edit_status_changed: '募集の開催ステータスが変更されました、編集内容の見直しをお願いします',
     },
     create: {
       submit: 'この内容で作成する',
@@ -881,6 +891,15 @@ export default {
     },
     edit: {
       submit: 'この内容で編集する',
+    },
+    home: {
+      recent_lobbies_title: 'フォローしている人の募集',
+      recent_lobbies_empty: '該当の募集は存在しません',
+    },
+    discard: {
+      title: '内容を破棄します',
+      message: '画面を戻ると、現在の入力内容は破棄されます。よろしいですか？',
+      confirm: '内容を破棄して戻る',
     },
   },
   lobbySearchFilters: {
@@ -913,6 +932,10 @@ export default {
     copy_url: '大会URLのコピー',
     report: '通報',
     search_placeholder: 'キーワード検索',
+    nickname: 'ニックネーム・ID',
+    arena: '大会',
+    lobby: '募集',
+    community: 'コミュニティ',
   },
   user_profile: {
     edit_profile: 'プロフィールを編集',
@@ -1158,6 +1181,7 @@ export default {
   ng_word_area: {
     chat_section: 'メッセージテキストボックス',
     room_name_title: 'グループ名',
+    comment_section: 'メッセージテキストボックス',
   },
   page_head: {
     default_desc:
@@ -1174,6 +1198,10 @@ export default {
     arena_summary_title: 'eXeLAB｜大会総括',
     lobby_default_title: 'eXeLAB｜ロビー',
     lobby_detail_title: 'eXeLAB｜ロビー情報',
+    community_default_title: 'eXeLAB｜コミュニティ',
+    community_detail_title: 'eXeLAB｜コミュニティ情報',
+    community_topic_default_title: 'eXeLAB｜トピック',
+    community_topic_detail_title: 'eXeLAB｜トピック情報',
   },
   lobby_create: {
     tab1: '募集概要',
@@ -1261,12 +1289,12 @@ export default {
     decide: '決定する',
     check_content: '内容を確認する',
     discard: {
-      title: '作成内容を破棄します',
-      message: '画面を戻ると、現在の作成内容は破棄されます。よろしいですか？',
-      confirm: '作成内容を破棄して戻る',
-      edit_title: '編集内容を破棄します',
-      edit_confirm: '編集内容を破棄して戻る',
-      edit_message: '画面を戻ると、現在の編集内容は破棄されます。よろしいですか？',
+      title: '内容を破棄します',
+      message: '画面を戻ると、現在の入力内容は破棄されます。よろしいですか？',
+      confirm: '内容を破棄して戻る',
+      edit_title: '内容を破棄します',
+      edit_confirm: '内容を破棄して戻る',
+      edit_message: '画面を戻ると、現在の入力内容は破棄されます。よろしいですか？',
     },
     confirm: {
       title: 'この内容で作成しますか？',
@@ -1277,7 +1305,7 @@ export default {
     edit: {
       title: 'コミュニティを編集する',
       disband_button: 'コミュニティを解散する',
-      check_edited_content: '編集内容を確認する',
+      check_edited_content: '内容を確認する',
     },
     disband: {
       title: 'コミュニティを解散する',
@@ -1299,9 +1327,9 @@ export default {
     confirm: 'この内容でトピックを作成しますか？',
     preview: 'プレビュー',
     discard: {
-      title: '作成内容を破棄します',
-      message: '画面を戻ると、現在の作成内容は破棄されます。よろしいですか？',
-      confirm: '作成内容を破棄して戻る',
+      title: '内容を破棄します',
+      message: '画面を戻ると、現在の入力内容は破棄されます。よろしいですか？',
+      confirm: '内容を破棄して戻る',
     },
     create_success: 'トピックを作成しました',
     comment_placeholder: 'コメントを入力…',

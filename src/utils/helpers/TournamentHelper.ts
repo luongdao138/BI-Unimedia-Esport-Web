@@ -242,6 +242,13 @@ const formatArenaScore = (score: number, rule: TournamentRule): string => {
   return String(score)
 }
 
+function isBattleRoyale(arena: TournamentDetail) {
+  if (arena.attributes.rule === 'battle_royale') return true
+  if (arena.attributes.rule === 'score_attack') return true
+  if (arena.attributes.rule === 'time_attack') return true
+  return false
+}
+
 export const TournamentHelper = {
   participantTypeText,
   ruleText,
@@ -257,4 +264,5 @@ export const TournamentHelper = {
   checkRequiredFields,
   getLabelName,
   formatArenaScore,
+  isBattleRoyale,
 }

@@ -27,8 +27,8 @@ const ArenaWinners: React.FC = () => {
     userProfile,
     isBattleRoyale,
     arenaBRWinners,
+    winner,
   } = useArenaWinners()
-  const showWinner = arenaWinners['1'] && !!arenaWinners['1'].length
   const classes = useStyles()
   const [showSummary, setShowSummary] = useState(false)
   const [, setUpdate] = useState(false)
@@ -78,19 +78,9 @@ const ArenaWinners: React.FC = () => {
         </Box>
         <Divider />
         <Box position="relative">
-          <div
-            className={`${classes.winnerAvatarWrapper} ${!showWinner && classes.winnerFull}`}
-            onClick={() => setShowSummary(!showSummary)}
-          >
-            {showWinner ? (
-              <ArenaAvatar
-                src={arenaWinners['1'][0].avatar}
-                name={arenaWinners['1'][0].name}
-                user_code={arenaWinners['1'][0].user?.user_code}
-                win
-                leaf
-                nameWhite
-              />
+          <div className={`${classes.winnerAvatarWrapper} ${!winner && classes.winnerFull}`} onClick={() => setShowSummary(!showSummary)}>
+            {winner ? (
+              <ArenaAvatar src={winner.avatar} name={winner.name} user_code={winner.user_code} win leaf nameWhite />
             ) : (
               <Typography variant="h3">{t('common:arena.result_not_decided')}</Typography>
             )}

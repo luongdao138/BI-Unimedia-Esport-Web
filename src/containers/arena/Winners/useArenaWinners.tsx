@@ -4,31 +4,14 @@ import { useAppDispatch, useAppSelector } from '@store/hooks'
 import * as selectors from '@store/arena/selectors'
 import * as actions from '@store/arena/actions'
 import { createMetaSelector } from '@store/metadata/selectors'
-import { Meta } from '@store/metadata/actions/types'
 import useArenaHelper from '@containers/arena/hooks/useArenaHelper'
-import { ArenaWinners, ParticipantsResponse, TournamentDetail } from '@services/arena.service'
+import { ArenaWinners } from '@services/arena.service'
 import useGetProfile from '@utils/hooks/useGetProfile'
-import { UserProfile } from '@services/user.service'
 
 const getWinnersMeta = createMetaSelector(actions.getArenaWinners)
 const getArenaMeta = createMetaSelector(actions.getTournamentDetail)
 
-const useWinners = (
-  isImmediately = true
-): {
-  arenaMeta: Meta
-  winnersMeta: Meta
-  arenaWinners: ArenaWinners
-  arenaBRWinners: ParticipantsResponse[]
-  arena: TournamentDetail
-  fetchWinners: () => void
-  toDetail: () => void
-  handleBack: () => void
-  isTeam: boolean
-  hasWinnersData: boolean
-  userProfile: UserProfile
-  isBattleRoyale: boolean
-} => {
+const useWinners = (isImmediately = true) => {
   const router = useRouter()
   const dispatch = useAppDispatch()
   const winnersMeta = useAppSelector(getWinnersMeta)
@@ -37,9 +20,10 @@ const useWinners = (
   const arenaWinners = useAppSelector(selectors.getArenaWinners)
   const arenaBRWinners = useAppSelector(selectors.getSortedBRParticipants)
   const { userProfile } = useGetProfile()
+  const brFirstPlace = useAppSelector(selectors.getBattleRoyaleFirstPlace)
+  const trFirstPlace = useAppSelector(selectors.getTournamentFirstPlace)
   const { isNotHeld, isTeam, isBattleRoyale } = useArenaHelper(arena)
   const fetchWinners = () => dispatch(actions.getArenaWinners(router.query.hash_key))
-
   useEffect(() => {
     if (isNotHeld) toDetail()
   }, [isNotHeld])
@@ -92,6 +76,7 @@ const useWinners = (
     userProfile,
     arenaBRWinners,
     isBattleRoyale,
+    winner: isBattleRoyale ? brFirstPlace : trFirstPlace,
   }
 }
 

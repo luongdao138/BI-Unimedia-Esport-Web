@@ -22,7 +22,7 @@ export const getValidationScheme = (data: LobbyDetail, editables: EditableTypes)
         .max(60, i18n.t('common:common.validation.char_limit', { char_limit: 60 })),
       message: Yup.string()
         .nullable()
-        .max(1500, i18n.t('common:common.validation.char_limit', { char_limit: 1500 })),
+        .max(5000, i18n.t('common:common.validation.char_limit', { char_limit: 5000 })),
       categories: Yup.array(),
       game_title_id: Yup.array().nullable(),
       game_hardware_id: Yup.number().nullable().integer(i18n.t('common:common.integer')),
@@ -46,7 +46,7 @@ export const getValidationScheme = (data: LobbyDetail, editables: EditableTypes)
       area_id: Yup.number().min(1, i18n.t('common:common.input_required')).integer(i18n.t('common:common.integer')).notOneOf([-1]),
       address: Yup.string()
         .nullable()
-        .max(60, i18n.t('common:common.validation.char_limit', { char_limit: 60 })),
+        .max(5000, i18n.t('common:common.validation.char_limit', { char_limit: 5000 })),
       // for cross-fields validations
       recruit_date: Yup.string().when(['entry_start_datetime'], {
         is: (entry_start_datetime) => {

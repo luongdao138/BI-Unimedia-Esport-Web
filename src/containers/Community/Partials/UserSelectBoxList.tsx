@@ -8,6 +8,7 @@ import { CommunityMember } from '@services/community.service'
 import { MEMBER_ROLE } from '@constants/community.constants'
 import { ESRoutes } from '@constants/route.constants'
 import { useRouter } from 'next/router'
+import { useState, useEffect } from 'react'
 
 type UserSelectBoxListProps = {
   member: CommunityMember
@@ -36,8 +37,14 @@ const UserSelectBoxList: React.FC<UserSelectBoxListProps> = ({ member, setValue,
   const router = useRouter()
   const classes = useStyles()
   const data = member.attributes
+  const [role, setRole] = useState<number>(member.attributes.member_role)
+
+  useEffect(() => {
+    setRole(member.attributes.member_role)
+  }, [member.attributes.member_role])
 
   const handleSelectOption = (e: any) => {
+    setRole(e.target.value)
     setValue(isApplying, data.id, e.target.value)
   }
 
@@ -70,7 +77,7 @@ const UserSelectBoxList: React.FC<UserSelectBoxListProps> = ({ member, setValue,
           <ESSelect
             className={classes.selectWidth}
             size="small"
-            value={(isApplying && data.member_role == MEMBER_ROLE.REQUESTED && -1) || data.member_role}
+            value={(isApplying && role == MEMBER_ROLE.REQUESTED && -1) || role}
             onChange={handleSelectOption}
           >
             {isApplying && (

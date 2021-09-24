@@ -1,8 +1,8 @@
 import MainLayout from '@layouts/MainLayout'
-import PageWithLayoutType from '@constants/page'
 import TopicDetailContainer from '@containers/Community/TopicDetail'
 
-const TopicDetailPage: PageWithLayoutType = () => {
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+const TopicDetailPage = () => {
   return (
     <MainLayout loginRequired={true} patternBg={true}>
       <TopicDetailContainer />

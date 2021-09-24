@@ -1,6 +1,6 @@
 import { createAsyncThunk, createAction } from '@reduxjs/toolkit'
 import * as services from '@services/lobby.service'
-import { CLEAR_LOBBY_DETAIL, LOBBY_ACTION_TYPE, RESET_LOBBY_PARTICIPANTS } from './types'
+import { CLEAR_LOBBY_DETAIL, CLEAR_LOBBY_RECENTS, LOBBY_ACTION_TYPE, RESET_LOBBY_PARTICIPANTS } from './types'
 import { follow, FollowActionResponse, FollowParams, unfollow, UnFollowResponse } from '@services/user.service'
 import { UnblockParams, UnblockResponse, unblockUser } from '@services/block.service'
 import { AppDispatch } from '@store/store'
@@ -240,3 +240,20 @@ export const getDetailWithClear = (hashKey: string) => {
     Promise.resolve(dispatch(clearLobbyDetail())).then(() => dispatch(getLobbyDetail(hashKey)))
   }
 }
+
+export const getRecentLobbies = createAsyncThunk<services.LobbySearchResponse, services.RecentLobbiesParams>(
+  LOBBY_ACTION_TYPE.LOBBY_RECENTS,
+  async (params, { rejectWithValue }) => {
+    try {
+      const res = await services.getRecentLobbies(params)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
+export const clearLobbyRecents = createAction(CLEAR_LOBBY_RECENTS)

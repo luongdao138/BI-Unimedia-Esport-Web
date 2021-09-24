@@ -1,8 +1,8 @@
+import moment from 'moment'
+import _ from 'lodash'
 import { createSelector } from '@reduxjs/toolkit'
 import { ArenaWinners, MatchItemType } from '@services/arena.service'
 import { RootState } from '@store/store'
-import moment from 'moment'
-import _ from 'lodash'
 
 const getRoot = (state: RootState) => state.arena
 const getUserId = (state: RootState) => state.auth?.user?.id
@@ -101,4 +101,28 @@ export const getSearchFilteredTournaments = createSelector(getRoot, (state) => {
       acceptance_start_date: moment(item.attributes.start_date).format('YYYY/MM/DD'),
     }
   })
+})
+
+export const getBattleRoyaleFirstPlace = createSelector(getTournamentDetail, getSortedBRParticipants, (arena, participants) => {
+  if (arena && participants.length) {
+    const isTeam = arena.attributes.participant_type > 1
+    return {
+      avatar: participants[0].attributes.avatar_url,
+      name: isTeam ? participants[0].attributes.team?.data.attributes.name : participants[0].attributes.name,
+      user_code: isTeam ? '' : participants[0].attributes.user.user_code,
+    }
+  }
+  return null
+})
+
+export const getTournamentFirstPlace = createSelector(getTournamentDetail, getArenaWinners, (arena, arenaWinners) => {
+  if (arena && arenaWinners['1'] && arenaWinners['1'].length) {
+    const isTeam = arena.attributes.participant_type > 1
+    return {
+      avatar: arenaWinners['1'][0].avatar,
+      name: arenaWinners['1'][0].name,
+      user_code: isTeam ? '' : arenaWinners['1'][0].user?.user_code,
+    }
+  }
+  return null
 })

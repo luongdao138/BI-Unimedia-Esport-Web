@@ -6,15 +6,16 @@ import { RecommendedUser } from './elements/Slider/RecommendedUser'
 // import { RecruitmentFollow } from './elements/Slider/RecruitmentFollow'
 import { TournamentFollow } from './elements/Slider/TournamentFollow'
 import { TournamentResult } from './elements/Slider/TournamentResult'
-// import { TopicFollow } from './elements/Slider/TopicFollow'
+import { TopicFollow } from './elements/Slider/TopicFollow'
 import useUserData from './useUserData'
 // import uesRecruitmentData from './useRecruitmentData'
 // import useEventData from './useEventData'
 import { Box } from '@material-ui/core'
 import useTournamentData from './useTournamentData'
-// import useTopicData from './useTopicData'
+import useTopicData from './useTopicData'
 import { HOME_SETTINGS } from '@constants/common.constants'
 import ESLoader from '@components/FullScreenLoader'
+import { RecentLobbies } from '@containers/Home/elements/Slider/RecentLobbies'
 
 const HomeContainer: React.FC = () => {
   const { recommendedUsers, getUserRecommendations, homeSettings, getUserProfile, metaHomeSettings } = useUserData()
@@ -28,7 +29,7 @@ const HomeContainer: React.FC = () => {
     tournamentFollowersMeta,
     tournamentResultsMeta,
   } = useTournamentData()
-  // const { followersTopicList, getFollowersTopicList } = useTopicData()
+  const { followersTopicList, getFollowersTopicList } = useTopicData()
 
   useEffect(() => {
     getUserProfile()
@@ -38,7 +39,7 @@ const HomeContainer: React.FC = () => {
     // getRecruitmentFollow()
     getTournamentFollowers()
     getTournamentResults()
-    // getFollowersTopicList()
+    getFollowersTopicList()
   }, [])
 
   const renderItem = (value: string, index: number) => {
@@ -49,14 +50,14 @@ const HomeContainer: React.FC = () => {
       //   return <RecommendedRecruitment data={recommendedRecruitments} key={index} />
       // case HOME_SETTINGS.RECOMMENDED_EVENT:
       //   return <RecommendedEvent data={recommendedEventList} key={index} />
-      // case HOME_SETTINGS.RECRUITMENT_FOLLOW:
-      //   return <RecruitmentFollow data={recruitmentFollow} key={index} />
+      case HOME_SETTINGS.LOBBY_FOLLOW:
+        return <RecentLobbies key={index} />
       case HOME_SETTINGS.TOURNAMENT_FOLLOW:
         return <TournamentFollow data={tournamentFollowers} key={index} meta={tournamentFollowersMeta} />
       case HOME_SETTINGS.TOURNAMENT_RESULT:
         return <TournamentResult data={tournamentResults} key={index} meta={tournamentResultsMeta} />
-      // case HOME_SETTINGS.TOPIC_FOLLOW:
-      //   return <TopicFollow data={followersTopicList} key={index} />
+      case HOME_SETTINGS.TOPIC_FOLLOW:
+        return <TopicFollow data={followersTopicList} key={index} />
       default:
         return ''
     }
