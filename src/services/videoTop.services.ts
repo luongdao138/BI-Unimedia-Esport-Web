@@ -225,6 +225,7 @@ export type VideoDetailData = {
   channel_follow_count?: number
   category_name?: string
   key_video_id?: string
+  arn?: string
 }
 
 export type DetailUserData = {

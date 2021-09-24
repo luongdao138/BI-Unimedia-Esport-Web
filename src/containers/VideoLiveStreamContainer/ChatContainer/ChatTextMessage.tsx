@@ -4,6 +4,7 @@ import ESMenuItem from '@components/Menu/MenuItem'
 import { useTranslation } from 'react-i18next'
 import ESMenu from '@components/Menu'
 import * as APIt from 'src/types/graphqlAPI'
+import _ from 'lodash'
 
 type ChatContainerProps = {
   message?: APIt.Message
@@ -12,10 +13,9 @@ type ChatContainerProps = {
   getMessageWithoutNgWords: (chatMessContent: string) => ReactNode
 }
 
-const ChatTextMessage: React.FC<ChatContainerProps> = ({ message, deleteMess, getMessageWithoutNgWords, is_streamer }) => {
+const ChatTextMessage =  React.memo<ChatContainerProps>(({ message, deleteMess, getMessageWithoutNgWords, is_streamer }) => {
   const classes = useStyles()
   const { t } = useTranslation('common')
-
   const getClassDeletedMess = (): string => {
     if (message.delete_flag) {
       return 'line_through_text'
@@ -46,7 +46,9 @@ const ChatTextMessage: React.FC<ChatContainerProps> = ({ message, deleteMess, ge
       </Box>
     </Box>
   )
-}
+}, (prevProps, nextProps) => {
+  return _.isEqual(prevProps.message, nextProps.message)
+})
 
 const useStyles = makeStyles(() => ({
   menu_del_mess: {},

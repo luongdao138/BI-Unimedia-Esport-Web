@@ -26,7 +26,7 @@ import PremiumChatDialog from '@containers/VideoLiveStreamContainer/ChatContaine
 import * as Yup from 'yup'
 import { useFormik } from 'formik'
 import DonateMessage from './DonateMessage'
-import Avatar from '@components/Avatar/'
+import ESAvatar from '@components/Avatar'
 import ESInput from '@components/Input'
 import { STATUS_VIDEO } from '@services/videoTop.services'
 import LoginRequired from '@containers/LoginRequired'
@@ -185,14 +185,18 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
   console.log('🚀 ~ savedMess', savedMess)
   const [savedDonateMess, setSavedDonateMess] = useState([])
   const [isChatInBottom, setIsChatInBottom] = useState(false)
+  const [isSeeking, setIsSeeking] = useState(false)
   console.log('🚀 ~ ---000---isChatInBottom', isChatInBottom)
 
   const { userResult, streamingSecond, playedSecond, isViewingStream, liveStreamInfo } = useDetailVideo()
-  // const userResult = {streamer: 0}
+  // const { streamingSecond, playedSecond, isViewingStream, liveStreamInfo } = useDetailVideo()
+  // const userResult = {streamer: 1}
+  console.log("🚀 ~ userResult", userResult)
   const { dataPurchaseTicketSuperChat } = usePurchaseTicketSuperChat()
   // const dispatch = useAppDispatch()
 
   const isEnabledChat = videoType === STATUS_VIDEO.LIVE_STREAM && !liveStreamInfo.is_end_live && +streamingSecond >= 0
+  // const isEnabledChat = true
 
   const validationSchema = Yup.object().shape({
     message: Yup.string()
@@ -282,7 +286,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
   const refOnCreateMess = useRef(null)
   const onCreateMess = (createdMessage) => {
     console.log('🚀 ~ subscribeAction ~ 1234', savedMess)
-    if (playedSecond >= streamingSecond) {
+    if (playedSecond >= streamingSecond || liveStreamInfo.is_pausing_live) {
       // render new messages with savedMess
       const isMessageInBottom = checkMessIsInBottom()
       // console.log("🚀 ~ 11111")
@@ -299,13 +303,13 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
         // render user donate icon by time of local
         setMessagesDonate([...newMessDonate, createdMessage])
       }
-      // save mess for local
-      setSavedMess((messages) => [...messages, createdMessage])
-      // save donated messages for local (not check display time)
-      if (isPremiumChat(createdMessage, false)) {
-        console.log('🚀 ~ save donated messages')
-        setSavedDonateMess((messages) => [...messages, createdMessage])
-      }
+    }
+    // save mess for local
+    setSavedMess((messages) => [...messages, createdMessage])
+    // save donated messages for local (not check display time)
+    if (isPremiumChat(createdMessage, false)) {
+      console.log('🚀 ~ save donated messages')
+      setSavedDonateMess((messages) => [...messages, createdMessage])
     }
   }
   refOnCreateMess.current = onCreateMess
@@ -356,7 +360,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
         //@ts-ignore
         const subMessage = sub?.value
         if (subMessage.data.onCreateMessage.video_id === key_video_id) {
-          getMessages()
+          // getMessages()
           const createdMessage = subMessage.data.onCreateMessage
           // checkMessIsInBottom()
           refOnCreateMess.current(createdMessage)
@@ -383,7 +387,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
   useEffect(() => {
     console.log('🚀 ~ useEffect ~ playedSecond ---> streamingSecond', playedSecond, streamingSecond)
     console.log('🚀 ~ isViewingStream', playedSecond >= streamingSecond)
-    if (playedSecond >= streamingSecond) {
+    if (playedSecond >= streamingSecond || liveStreamInfo.is_pausing_live) {
       // check archive video => no use that case
       if (!firstRender && +streamingSecond > 0) {
         setFirstRender(true)
@@ -414,61 +418,44 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
     }
   }, [messagesDonate])
 
-  // useEffect(() => {
-  //   console.log("🚀 ~ playedSecond", playedSecond)
-  //   console.log("🚀 ~ isViewingStream", playedSecond >= streamingSecond)
-  //   if (playedSecond < streamingSecond) {
-  //     const oldMessCount = stateMessages.length
-  //     console.log("🚀 ~ useEffect ~ old----", stateMessages)
-  //     let newMess = [...savedMess]
-  //     newMess = newMess.filter((item) => +item.video_time <= +playedSecond)
-  //     console.log("🚀 ~ useEffect ~ newMess----", newMess)
-  //     let isCheckSeeMore = false
-  //     if(oldMessCount < newMess.length) {
-  //       isCheckSeeMore = true
-  //     }
-  //     const isMessageInBottom = isCheckSeeMore ? checkMessIsInBottom() : false
-  //     // render messages by time of local
-  //     setStateMessages([...newMess])
-  //     if(isMessageInBottom) {
-  //       scrollToCurrentMess()
-  //     }
-
-  //     const newMessDonate = [...savedDonateMess]
-  //     // render user donate icon by time of local
-  //     setMessagesDonate(newMessDonate.filter((item) => +item.display_avatar_time >= +playedSecond))
-  //     // scrollToCurrentMess()
-  //   }
-  // }, [playedSecond])
+  const filterMessByPlayedSecond = (new_played_second) => {
+    const oldMessCount = stateMessages.length
+    console.log('🚀 ~ useEffect ~ old----', stateMessages)
+    let newMess = [...savedMess]
+    newMess = newMess.filter((item) => +item.video_time <= +new_played_second)
+    console.log('🚀 ~ useEffect ~ newMess----', newMess)
+    let isCheckSeeMore = false
+    if (oldMessCount < newMess.length) {
+      isCheckSeeMore = true
+    }
+    const isMessageInBottom = isCheckSeeMore ? checkMessIsInBottom() : false
+    if (isMessageInBottom) {
+      setIsChatInBottom(true)
+    }
+    // render messages by time of local
+    setStateMessages([...newMess])
+    if (isMessageInBottom) {
+      // scrollToCurrentMess()
+    }
+    let newMessDonate = [...savedDonateMess]
+    console.log("🚀 ~ useEffect ~ newMessDonate---1111", savedDonateMess)
+    newMessDonate = newMessDonate.filter((item) => +item.display_avatar_time >= +new_played_second && +item.video_time <= +new_played_second)
+    console.log('🚀 ~ useEffect ~ newMessDonate---222', newMessDonate)
+    // render user donate icon by time of local
+    setMessagesDonate(newMessDonate)
+    // scrollToCurrentMess()
+  }
 
   useEffect(() => {
     console.log('🚀 ~ playedSecond', playedSecond)
+    console.log("🚀 ~ useEffect ~ isSeeking---0000", isSeeking)
     console.log('🚀 ~ isViewingStream', playedSecond >= streamingSecond)
-    if (playedSecond < streamingSecond) {
-      const oldMessCount = stateMessages.length
-      console.log('🚀 ~ useEffect ~ old----', stateMessages)
-      let newMess = [...savedMess]
-      newMess = newMess.filter((item) => +item.video_time <= +playedSecond)
-      console.log('🚀 ~ useEffect ~ newMess----', newMess)
-      let isCheckSeeMore = false
-      if (oldMessCount < newMess.length) {
-        isCheckSeeMore = true
-      }
-      const isMessageInBottom = isCheckSeeMore ? checkMessIsInBottom() : false
-      if (isMessageInBottom) {
-        setIsChatInBottom(true)
-      }
-      // render messages by time of local
-      setStateMessages([...newMess])
-      if (isMessageInBottom) {
-        // scrollToCurrentMess()
-      }
-      let newMessDonate = [...savedDonateMess]
-      newMessDonate = newMessDonate.filter((item) => +item.display_avatar_time >= +playedSecond && +item.video_time <= +playedSecond)
-      console.log('🚀 ~ useEffect ~ newMessDonate---222', newMessDonate)
-      // render user donate icon by time of local
-      setMessagesDonate(newMessDonate)
-      // scrollToCurrentMess()
+    // filter mess when user no seeking or pausing live video
+    if (playedSecond < streamingSecond && !isSeeking && !liveStreamInfo.is_pausing_live) {
+      filterMessByPlayedSecond(playedSecond)
+    }
+    if(isSeeking){
+      setIsSeeking(false)
     }
   }, [playedSecond])
 
@@ -483,6 +470,11 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
   useEffect(() => {
     console.log('🚀 liveStreamInfo.seek_count ---- 000', liveStreamInfo.seek_count)
     console.log('🚀 liveStreamInfo.playedSecond ---- 000', playedSecond)
+    console.log('🚀 liveStreamInfo.seeked_second ---- 000', liveStreamInfo.seeked_second)
+    filterMessByPlayedSecond(liveStreamInfo.seeked_second)
+    if(!isSeeking) {
+      setIsSeeking(true)
+    }
   }, [liveStreamInfo.seek_count])
 
   useEffect(() => {
@@ -507,6 +499,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
           is_premium: { eq: true },
           // delete_flag: { ne: true },
         },
+        limit: 2000
       }
       const messagesResults: any = await API.graphql(graphqlOperation(listMessages, listQV))
       console.log('getUsersDonate Results; ', messagesResults)
@@ -528,10 +521,13 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
           video_id: { eq: key_video_id },
           // delete_flag: { ne: true },
         },
+        limit: 2000
       }
       const messagesResults: any = await API.graphql(graphqlOperation(listMessages, listQV))
+      // const messagesResults: any = await API.graphql(graphqlOperation(listMessagesNew, listQV))
       console.log('getMessages Results; ', messagesResults)
       const transformMess = messagesResults.data.listMessages.items.filter((item) => item.parent)
+      // const transformMess = messagesResults.data.listMessages.items.filter((item) => item.video_id === key_video_id)
       console.log('🚀 ~ getMessages ~ transformMess', transformMess)
       // console.log("🚀 ~ ------111 ~ playedSecond", playedSecond)
       // console.log("🚀 ~ ------222 ~ streamingSecond", streamingSecond)
@@ -544,6 +540,8 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
       console.error(error)
     }
   }
+
+  
 
   const checkUserExist = (checkedAllUsers: any) => {
     if (!checkedAllUsers) {
@@ -982,7 +980,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
                 setMessActiveUser(item)
               }}
             >
-              <Avatar src={item?.parent?.avatar ? item.parent.avatar : '/images/avatar.png'} size={32} alt={item.parent.user_name} />
+              <ESAvatar src={item?.parent?.avatar} size={32} alt={item.parent.user_name} />
             </Box>
           ))}
       </Box>

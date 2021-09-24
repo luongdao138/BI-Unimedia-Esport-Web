@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/styles'
 import React, { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import PlayerTooltip from './PlayerTooltip'
-
+import useDetailVideo from '../../useDetailVideo'
 interface Props {
   videoRef?: any
   typeButton: 'reload' | 'previous' | 'next'
@@ -14,19 +14,25 @@ interface Props {
 const ReloadButton: React.FC<Props> = ({ videoRef, typeButton, currentTime }) => {
   const classes = useStyles()
   const { t } = useTranslation('common')
+   const { changeSeekCount } = useDetailVideo()
 
   const onChangeTime = () => {
+    let newSecond = 0
     switch (typeButton) {
       case 'reload':
         videoRef.current.seekTo(0, 'seconds')
         break
       case 'previous':
         videoRef.current.seekTo(currentTime - 10, 'seconds')
+        newSecond = currentTime - 10
         break
       case 'next':
         videoRef.current.seekTo(currentTime + 10, 'seconds')
+        newSecond = currentTime + 10
         break
     }
+    console.log("🚀 ~ onChangeTime ~ newSecond-0909", newSecond)
+    changeSeekCount(Math.floor(newSecond))
   }
   if (typeButton === 'reload') {
     return (
