@@ -22,6 +22,7 @@ import useTopicDetail from '../../useTopicDetail'
 import styled from 'styled-components'
 import { useRect } from '@utils/hooks/useRect'
 import { REPLY_REGEX } from '@constants/community.constants'
+import moment from 'moment'
 
 let currentReplyNumberRectLeft: number
 const StyledBox = styled(Box)``
@@ -92,7 +93,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
       nickname: commentData.owner_nickname,
       user_code: commentData.user_code,
       content: commentData.content,
-      date: CommonHelper.staticSmartTime(commentData.created_at),
+      date: moment(commentData.created_at).format('LL'),
       image: commentData.attachments && commentData.attachments[0]?.assets_url,
       number: commentData.comment_no,
       hash_key: commentData.hash_key,
@@ -269,6 +270,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
           }}
           style={{
             left: contentRect.left + _theme.spacing(3),
+            top: 60,
           }}
         >
           {!_.isEmpty(commentDetail) &&

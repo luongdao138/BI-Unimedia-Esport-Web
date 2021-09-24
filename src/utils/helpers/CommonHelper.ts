@@ -9,6 +9,11 @@ const validateEmail = (email: string): boolean => {
   return emailValidationRegex.test(String(email).toLowerCase())
 }
 
+const validateImageUrl = (imageUrl: string): boolean => {
+  const imageUrlRegex = /^(http(s?):)([/|.|\w|\s|-])*\.(?:jpe?g|gif|png|bmp)$/i
+  return imageUrlRegex.test(String(imageUrl))
+}
+
 const replaceSingleByteString = (value: string): string => {
   return value.replace(/[^A-Za-z0-9.!@#$%^&*()_+-=]/g, '')
 }
@@ -310,4 +315,5 @@ export const CommonHelper = {
   formatDateTime,
   formatDateTimeJP,
   formatTimeVideo,
+  validateImageUrl,
 }
