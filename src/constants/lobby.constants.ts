@@ -120,7 +120,7 @@ export const defaultFilterOptions: LobbyFilterItem[] = [
   {
     type: LobbyFilterOption.suggested,
     label: i18n.t('common:lobbySearchFilters.suggested'),
-    loginRequired: false,
+    loginRequired: true,
   },
   {
     type: LobbyFilterOption.recruiting,
