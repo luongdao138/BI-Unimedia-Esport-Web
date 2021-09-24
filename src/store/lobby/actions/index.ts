@@ -200,6 +200,10 @@ export const getLobbyCategories = createAsyncThunk<services.LobbyCategoriesRespo
   }
 )
 
+export const fetchBeforeRandomize = (params: services.AllParticipantParams) => async (dispatch: AppDispatch): Promise<any> => {
+  Promise.resolve(dispatch(getAllParticipants(params))).then(() => dispatch(randomizeParticipants(params.hash_key)))
+}
+
 export const resetParticipants = createAction(RESET_LOBBY_PARTICIPANTS)
 export const resetAllParticipants = createAction(RESET_LOBBY_ALL_PARTICIPANTS)
 

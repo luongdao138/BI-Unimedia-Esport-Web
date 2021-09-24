@@ -34,7 +34,6 @@ const contentRef = createRef<HTMLDivElement>()
 const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ lobby, open, handleClose }) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
-  const [hasMore, setHasMore] = useState(true)
   const [selected, setSelected] = useState<number[]>([])
   const [filtered, setFiltered] = useState<ConfirmParticipantItem[]>([])
   const router = useRouter()
@@ -50,8 +49,8 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ lobby, op
     resetMetaAll,
     recommendedParticipants,
     recommendedParticipantsMeta,
-    getRecommendedParticipants,
     confirmParticipants,
+    fetchAndRandomize,
     confirmParticipantsMeta,
   } = useLobbyActions()
   const { status, max_participants, hash_key, is_owner, is_freezed } = lobby.attributes
@@ -69,7 +68,6 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ lobby, op
       if (open) {
         resetAllParticipants()
         resetMetaAll()
-        setHasMore(true)
         setInitialPageLoad(false)
         setSelected([])
       }
@@ -158,7 +156,7 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ lobby, op
               <InfiniteScroll
                 dataLength={allParticipants.length}
                 next={null}
-                hasMore={hasMore}
+                hasMore={false}
                 scrollableTarget="scrollableDiv"
                 scrollThreshold={0.99}
                 style={{ overflow: 'hidden' }}
@@ -222,7 +220,7 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ lobby, op
                       confirm({ ...LOBBY_DIALOGS.CONFIRM_MEMBER.shuffle })
                         .then(() => {
                           if (isConfirmable) {
-                            getRecommendedParticipants(hash_key)
+                            fetchAndRandomize({ hash_key: hash_key })
                           }
                         })
                         .catch(() => {
@@ -238,7 +236,6 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ lobby, op
           </div>
         </Container>
       </ESModal>
-
       {recommendedParticipantsMeta.pending && <ESFullLoader open={recommendedParticipantsMeta.pending} />}
     </Box>
   )
