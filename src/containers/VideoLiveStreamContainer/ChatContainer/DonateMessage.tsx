@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next'
 import { hexToRgba } from '@utils/helpers/CommonHelper'
 import ESMenuItem from '@components/Menu/MenuItem'
 import ESMenu from '@components/Menu'
+import _ from 'lodash'
 
 type DonateMessageProps = {
   message?: APIt.Message
@@ -19,7 +20,7 @@ const DonateMessage: React.FC<DonateMessageProps> = ({ message, deleteMess, getM
   const classes = useStyles()
   const { t } = useTranslation('common')
 
-  const bgColor = message.delete_flag ? '#7e7c80' : purchasePoints[`p_${message.point}`].backgroundColor
+  const bgColor = message.delete_flag ? '#7e7c80' : (message.point ? purchasePoints[`p_${message.point}`].backgroundColor : '#7e7c80')
 
   const getClassDeletedMess = (): string => {
     if (message.delete_flag) {
@@ -143,4 +144,6 @@ const useStyles = makeStyles(() => ({
   },
 }))
 
-export default DonateMessage
+export default React.memo(DonateMessage, (prevProps, nextProps) => {
+  return _.isEqual(prevProps.message, nextProps.message)
+})

@@ -169,8 +169,9 @@ export const changeVideoTime = createAction<services.VideoTimeChangeParams>(ACTI
 export const changePlayedSecond = createAction<services.PlayedSecondChangeParams>(ACTION_VIDEO_TOP.CHANGE_PLAYED_SECOND)
 export const changeIsViewingStream = createAction<services.ChangeIsViewingStreamParams>(ACTION_VIDEO_TOP.CHANGE_IS_VIEWING_STREAM)
 export const changeIsEndLive = createAction<{ is_end_live: boolean }>(ACTION_VIDEO_TOP.CHANGE_IS_END_LIVE)
-export const changeSeekCount = createAction(ACTION_VIDEO_TOP.CHANGE_SEEK_COUNT)
+export const changeSeekCount = createAction<{ seeked_second: number }>(ACTION_VIDEO_TOP.CHANGE_SEEK_COUNT)
 export const resetVideoDetailError = createAction(ACTION_VIDEO_TOP.RESET_VIDEO_DETAIL_ERROR)
+export const changeIsPausingLive = createAction<{ is_pausing_live: boolean }>(ACTION_VIDEO_TOP.CHANGE_IS_PAUSING_LIVE)
 
 export const videoDetail = createAsyncThunk<services.VideoDetailResponse, services.VideoDetailParams>(
   ACTION_VIDEO_TOP.VIDEO_DETAIL,

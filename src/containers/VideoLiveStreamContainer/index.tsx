@@ -30,6 +30,10 @@ import { useAppSelector } from '@store/hooks'
 import { getIsAuthenticated } from '@store/auth/selectors'
 import userProfileStore from '@store/userProfile'
 import { ESRoutes } from '@constants/route.constants'
+import API, { graphqlOperation } from '@aws-amplify/api'
+import { listVideos } from 'src/graphql/queries'
+import { createVideo } from 'src/graphql/mutations'
+import * as APIt from 'src/types/graphqlAPI'
 
 enum TABS {
   PROGRAM_INFO = 1,
@@ -80,6 +84,41 @@ const VideosTop: React.FC = () => {
 
   const isPendingPurchaseTicket = meta_purchase_ticket_super_chat?.pending && purchaseType === PURCHASE_TYPE.PURCHASE_TICKET
   const isLoadingData = isAuthenticated ? !detailVideoResult || !myPointsData || !userResult || !video_id : !detailVideoResult || !video_id
+
+  useEffect(() => {
+    if (detailVideoResult.key_video_id && detailVideoResult.arn) {
+      checkVideoExist()
+    }
+  }, [detailVideoResult])
+
+  const handleCreateVideo = async () => {
+    const input = {
+      uuid: detailVideoResult.key_video_id,
+      arn: detailVideoResult.arn
+    }
+    console.log('input', input)
+    await API.graphql(graphqlOperation(createVideo, { input }))
+  }
+
+  const checkVideoExist = async () => {
+    try {
+      const listQV: APIt.ListMessagesQueryVariables = {
+        filter: {
+          uuid: { eq: detailVideoResult.key_video_id },
+        },
+      }
+      const videoRs: any = await API.graphql(graphqlOperation(listVideos, listQV))
+      console.log("🚀 ~ checkVideoExist ~ videoRs", videoRs)
+      const videoData = videoRs.data.listVideos.items
+      if(videoData.length === 0) {
+        handleCreateVideo()
+      } else {
+        console.log("🚀 2222", videoRs)
+      }
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -223,9 +262,6 @@ const VideosTop: React.FC = () => {
       <ChatContainer
         myPoint={myPoint}
         key_video_id={detailVideoResult?.key_video_id}
-        // VOjyj1m048y7sAjx -
-        // key_video_id="2f1141b031696738c1eb72cc450afadb"
-        // key_video_id="5eafa95943a1b5c118be607d42742a48"
         onPressDonate={confirmDonatePoint}
         userHasViewingTicket={userHasViewingTicket()}
         videoType={getVideoType()}

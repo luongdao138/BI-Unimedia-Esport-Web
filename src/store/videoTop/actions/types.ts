@@ -19,4 +19,5 @@ export const ACTION_VIDEO_TOP = {
   CHANGE_IS_END_LIVE: 'streaming/changeIsEndLive',
   CHANGE_SEEK_COUNT: 'streaming/changeSeekCount',
   RESET_VIDEO_DETAIL_ERROR: 'video/resetVideoDetailError',
+  CHANGE_IS_PAUSING_LIVE: 'streaming/changeIsPausingLive',
 }

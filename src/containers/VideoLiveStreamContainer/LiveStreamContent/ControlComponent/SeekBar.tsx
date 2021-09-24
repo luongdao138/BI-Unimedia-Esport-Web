@@ -47,9 +47,6 @@ const SeekBar: React.FC<Props> = ({ currentTime, durationsPlayer, videoRef }) =>
     const newSecond = (value * durationsPlayer) / 100
     setTimePlayed(value)
     videoRef.current.seekTo(newSecond, 'seconds')
-    console.log('🚀 ~ handleChange ~ newSecond--- 0000', newSecond)
-    changeSeekCount()
-    // console.log('🚀 ~ handleChange', newSecond)
     // trigger change played second in redux
     // if(Math.floor(newSecond) !== playedSecond) {
     //   changePlayedSecond(Math.floor(newSecond))
@@ -66,6 +63,9 @@ const SeekBar: React.FC<Props> = ({ currentTime, durationsPlayer, videoRef }) =>
   const handleCommit = (_, value) => {
     setTimePlayed(value)
     videoRef.current.seekTo((value * durationsPlayer) / 100, 'seconds')
+    const newSecond = (value * durationsPlayer) / 100
+    console.log("🚀 ~ handleChange ~ newSecond--- 0000", newSecond)
+    changeSeekCount(Math.floor(newSecond))
   }
 
   return (
