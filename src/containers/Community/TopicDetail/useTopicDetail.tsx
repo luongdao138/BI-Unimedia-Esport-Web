@@ -68,6 +68,7 @@ const useTopicDetail = (): {
   const resetTopicMeta = () => dispatch(actions.clearTopicDetail())
   const createComment = (params: CommentCreateParams) => dispatch(actions.createTopicComment(params))
   const resetMeta = () => dispatch(clearMetaData(actions.getCommentsList.typePrefix))
+  const resetTopicDeleteMeta = () => dispatch(clearMetaData(actions.deleteTopic.typePrefix))
   const deleteComment = (params: DeleteCommentParams) => {
     dispatch(actions.deleteTopicComment(params))
   }
@@ -91,6 +92,7 @@ const useTopicDetail = (): {
       dispatch(commonActions.addToast(t('common:community.topic.delete_success')))
       router.push(`${ESRoutes.COMMUNITY}/${router.query.hash_key}`)
       resetTopicMeta()
+      resetTopicDeleteMeta()
     }
   }, [deleteTopicMeta])
 

@@ -292,7 +292,7 @@ export default {
     unfollow_dialog: {
       title: 'フォローを解除する',
       description: '再フォローには再度フォロー申請が必要となりますが、よろしいでしょうか？',
-      submit_title: 'フォローを解除',
+      submit_title: 'フォロー解除',
     },
     unfollow_dialog_applying: {
       title: 'フォロー申請を取り消す',
