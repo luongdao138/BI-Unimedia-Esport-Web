@@ -508,6 +508,12 @@ export default {
     },
   },
   arena: {
+    listHeaders: {
+      player: 'プレイヤー',
+      place: '順位',
+      score: 'スコア',
+      time: 'タイム',
+    },
     rules: {
       rule: '{{rule, arena_rule}}',
       single: 'トーナメント',

@@ -16,7 +16,15 @@ function BRList({ children, className, rule }: BRListProps) {
     <div className={className || ''}>
       <div className={classes.listHeader}>
         <Typography className={classes.headerTitle}>プレイヤー</Typography>
-        <Typography className={classes.headerTitle}>{t('common:arena.rules.battle_royale_rule', { rule: rule })}</Typography>
+        {!rule ? null : (
+          <Typography className={classes.headerTitle}>
+            {rule === 'score_attack'
+              ? t('common:arena.listHeaders.score')
+              : rule === 'time_attack'
+              ? t('common:arena.listHeaders.time')
+              : ''}
+          </Typography>
+        )}
       </div>
       {children}
     </div>
