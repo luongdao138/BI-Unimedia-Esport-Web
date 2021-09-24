@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { Box } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
 import React, { memo } from 'react'
@@ -14,7 +15,7 @@ interface Props {
 const ReloadButton: React.FC<Props> = ({ videoRef, typeButton, currentTime }) => {
   const classes = useStyles()
   const { t } = useTranslation('common')
-   const { changeSeekCount } = useDetailVideo()
+  const { changeSeekCount } = useDetailVideo()
 
   const onChangeTime = () => {
     let newSecond = 0
@@ -31,7 +32,7 @@ const ReloadButton: React.FC<Props> = ({ videoRef, typeButton, currentTime }) =>
         newSecond = currentTime + 10
         break
     }
-    console.log("🚀 ~ onChangeTime ~ newSecond-0909", newSecond)
+    console.log('🚀 ~ onChangeTime ~ newSecond-0909', newSecond)
     changeSeekCount(Math.floor(newSecond))
   }
   if (typeButton === 'reload') {
@@ -61,6 +62,7 @@ const useStyles = makeStyles(() => ({
   buttonNormal: {
     alignItems: 'center',
     display: 'flex',
+    cursor: 'pointer',
   },
 }))
 

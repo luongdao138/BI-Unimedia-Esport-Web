@@ -64,7 +64,7 @@ const SeekBar: React.FC<Props> = ({ currentTime, durationsPlayer, videoRef }) =>
     setTimePlayed(value)
     videoRef.current.seekTo((value * durationsPlayer) / 100, 'seconds')
     const newSecond = (value * durationsPlayer) / 100
-    console.log("🚀 ~ handleChange ~ newSecond--- 0000", newSecond)
+    console.log('🚀 ~ handleChange ~ newSecond--- 0000', newSecond)
     changeSeekCount(Math.floor(newSecond))
   }
 

@@ -125,6 +125,7 @@ const useStyles = makeStyles(() => ({
   buttonNormal: {
     alignItems: 'center',
     display: 'flex',
+    cursor: 'pointer',
   },
   time: {
     //  borderWidth:1,
@@ -191,6 +192,7 @@ const useStyles = makeStyles(() => ({
   boxIconVolume: {
     alignItems: 'center',
     display: 'flex',
+    cursor: 'pointer',
   },
   playerTooltip: {
     padding: '5px 7px !important',

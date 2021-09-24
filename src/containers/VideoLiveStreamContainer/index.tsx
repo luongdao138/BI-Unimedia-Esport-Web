@@ -28,12 +28,13 @@ import PreloadChatContainer from './PreloadContainer/PreloadChatContainer'
 import { STATUS_VIDEO } from '@services/videoTop.services'
 import { useAppSelector } from '@store/hooks'
 import { getIsAuthenticated } from '@store/auth/selectors'
-import userProfileStore from '@store/userProfile'
+// import userProfileStore from '@store/userProfile'
 import { ESRoutes } from '@constants/route.constants'
-import API, { graphqlOperation } from '@aws-amplify/api'
-import { listVideos } from 'src/graphql/queries'
-import { createVideo } from 'src/graphql/mutations'
+// import { listVideos } from 'src/graphql/queries'
+import { onUpdateVideo } from 'src/graphql/subscriptions'
+// import { createVideo } from 'src/graphql/mutations'
 import * as APIt from 'src/types/graphqlAPI'
+import API, { GraphQLResult, graphqlOperation } from '@aws-amplify/api'
 
 enum TABS {
   PROGRAM_INFO = 1,
@@ -60,9 +61,9 @@ const VideosTop: React.FC = () => {
   const dispatch = useAppDispatch()
   const router = useRouter()
   const video_id = router.query?.vid // uuid video
-  const { selectors } = userProfileStore
+  // const { selectors } = userProfileStore
   const isAuthenticated = useAppSelector(getIsAuthenticated)
-  const userProfile = useAppSelector(selectors.getUserProfile)
+  // const userProfile = useAppSelector(selectors.getUserProfile)
 
   const { getMyPointData, myPointsData } = usePointsManage()
   const { purchaseTicketSuperChat, meta_purchase_ticket_super_chat } = usePurchaseTicketSuperChat()
@@ -85,67 +86,75 @@ const VideosTop: React.FC = () => {
   const isPendingPurchaseTicket = meta_purchase_ticket_super_chat?.pending && purchaseType === PURCHASE_TYPE.PURCHASE_TICKET
   const isLoadingData = isAuthenticated ? !detailVideoResult || !myPointsData || !userResult || !video_id : !detailVideoResult || !video_id
 
+  // const handleCreateVideo = async () => {
+  //   const input = {
+  //     uuid: detailVideoResult.key_video_id,
+  //     arn: detailVideoResult.arn,
+  //   }
+  //   console.log('input', input)
+  //   await API.graphql(graphqlOperation(createVideo, { input }))
+  // }
+
+  // const checkVideoExist = async () => {
+  //   try {
+  //     const listQV: APIt.ListMessagesQueryVariables = {
+  //       filter: {
+  //         uuid: { eq: detailVideoResult.key_video_id },
+  //       },
+  //     }
+  //     const videoRs: any = await API.graphql(graphqlOperation(listVideos, listQV))
+  //     console.log('🚀 ~ checkVideoExist ~ videoRs', videoRs)
+  //     const videoData = videoRs.data.listVideos.items
+  //     if (videoData.length === 0) {
+  //       handleCreateVideo()
+  //     } else {
+  //       console.log('🚀 2222', videoRs)
+  //     }
+  //   } catch (error) {
+  //     console.error(error)
+  //   }
+  // }
+
   useEffect(() => {
-    if (detailVideoResult.key_video_id && detailVideoResult.arn) {
-      checkVideoExist()
-    }
+    // if (detailVideoResult.key_video_id && detailVideoResult.arn) {
+    //   checkVideoExist()
+    // }
   }, [detailVideoResult])
 
-  const handleCreateVideo = async () => {
-    const input = {
-      uuid: detailVideoResult.key_video_id,
-      arn: detailVideoResult.arn
-    }
-    console.log('input', input)
-    await API.graphql(graphqlOperation(createVideo, { input }))
-  }
-
-  const checkVideoExist = async () => {
-    try {
-      const listQV: APIt.ListMessagesQueryVariables = {
-        filter: {
-          uuid: { eq: detailVideoResult.key_video_id },
-        },
-      }
-      const videoRs: any = await API.graphql(graphqlOperation(listVideos, listQV))
-      console.log("🚀 ~ checkVideoExist ~ videoRs", videoRs)
-      const videoData = videoRs.data.listVideos.items
-      if(videoData.length === 0) {
-        handleCreateVideo()
-      } else {
-        console.log("🚀 2222", videoRs)
-      }
-    } catch (error) {
-      console.error(error)
-    }
+  const subscribeAction = () => {
+    const pubSubClient = API.graphql(graphqlOperation(onUpdateVideo))
+    pubSubClient.subscribe({
+      next: (sub: GraphQLResult<APIt.OnCreateMessageSubscription>) => {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        //@ts-ignore
+        const subMessage = sub?.value
+        console.log('🚀  Data onUpdateVideo:' + JSON.stringify(subMessage.data))
+      },
+      error: (error) => console.warn(error),
+    })
   }
 
   useEffect(() => {
-    if (isAuthenticated) {
+    subscribeAction()
+  }, [])
+
+  useEffect(() => {
+    if (isAuthenticated && !myPointsData) {
       getMyPointData({ page: 1, limit: 10 })
     }
-  }, [])
+  }, [isAuthenticated])
 
   useEffect(() => {
     if (video_id) {
       getVideoDetail({ video_id: `${video_id}` })
     }
-  }, [video_id])
+  }, [video_id, isAuthenticated])
 
   useEffect(() => {
     setTab(isMobile ? TABS.COMMENT : TABS.PROGRAM_INFO)
   }, [isMobile])
-
-  useEffect(() => {
-    console.log('Is Authenticated >>>>>>>>', userProfile)
-    console.log('Video detail data >>>>>>>>', detailVideoResult)
-    if (isAuthenticated) {
-      getMyPointData({ page: 1, limit: 10 })
-      if (video_id) {
-        getVideoDetail({ video_id: `${video_id}` })
-      }
-    }
-  }, [isAuthenticated])
+  // console.log('Is Authenticated >>>>>>>>', userProfile)
+  // console.log('Video detail data >>>>>>>>', detailVideoResult, userResult)
 
   useEffect(() => {
     if (videoDetailError) {
@@ -186,12 +195,14 @@ const VideosTop: React.FC = () => {
   }
 
   const handlePurchaseTicket = () => {
-    setPurchaseType(PURCHASE_TYPE.PURCHASE_TICKET)
-    if (myPoint >= detailVideoResult?.ticket_price) {
-      setShowPurchaseTicketModal(true)
-    } else {
-      dispatch(addToast(i18n.t('common:donate_points.lack_point_mess')))
-      setShowModalPurchasePoint(true)
+    if (isAuthenticated) {
+      setPurchaseType(PURCHASE_TYPE.PURCHASE_TICKET)
+      if (myPoint >= detailVideoResult?.ticket_price) {
+        setShowPurchaseTicketModal(true)
+      } else {
+        dispatch(addToast(i18n.t('common:donate_points.lack_point_mess')))
+        setShowModalPurchasePoint(true)
+      }
     }
   }
   // show modal error purchase ticket
@@ -202,6 +213,7 @@ const VideosTop: React.FC = () => {
   }
   // handle purchase ticket success
   const handlePurchaseTicketSuccess = () => {
+    getMyPointData({ page: 1, limit: 10 })
     setShowPurchaseTicketModal(false)
   }
   // purchase ticket
@@ -295,7 +307,7 @@ const VideosTop: React.FC = () => {
     }
     return true
   }
-  const userHasViewingTicket = () => (userResult?.buy_ticket === 0 ? false : true)
+  const userHasViewingTicket = () => (userResult ? userResult?.buy_ticket : 0)
   const isScheduleAndNotHaveTicket = () => getVideoType() === STATUS_VIDEO.SCHEDULE && userResult?.buy_ticket === 0
   // const getVideoType = () => 1
   // const isVideoFreeToWatch = () => false

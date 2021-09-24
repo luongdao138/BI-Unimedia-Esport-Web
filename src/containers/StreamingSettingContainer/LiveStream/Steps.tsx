@@ -128,7 +128,9 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik }) => {
     switch (type) {
       case KEY_TYPE.UUID:
         if (window.navigator.clipboard) {
-          window.navigator.clipboard.writeText(formik?.values?.stepSettingOne?.linkUrl)
+          window.navigator.clipboard.writeText(
+            formik?.values?.stepSettingOne?.linkUrl && `${baseViewingURL}${formik?.values?.stepSettingOne?.linkUrl}`
+          )
         }
         dispatch(commonActions.addToast(t('common:streaming_setting_screen.message_copy')))
         break
@@ -386,7 +388,14 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik }) => {
               ) : (
                 <>
                   <ESLabel label={i18n.t('common:streaming_setting_screen.label_input_description')} required={true} />
-                  <Linkify>
+                  <Linkify
+                    componentDecorator={(decoratedHref, decoratedText, key) => (
+                      <a target="blank" href={decoratedHref} key={key} className={classes.detectLink}>
+                        {' '}
+                        {decoratedText}
+                      </a>
+                    )}
+                  >
                     <span className={classes.detectLink}> {formik?.values?.stepSettingOne?.description.trim()}</span>
                   </Linkify>
                 </>
@@ -846,7 +855,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   detectLink: {
     whiteSpace: 'pre-line',
     paddingTop: '12px',
-    color: '#ffffffb3',
+    // color: '#ffffffb3',
     display: 'inline-block',
     fontSize: '14px',
     fontWeight: 400,

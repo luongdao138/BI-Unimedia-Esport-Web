@@ -87,6 +87,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
+    '&:hover': {
+      cursor: 'pointer',
+    },
   },
   tagContainer: {
     display: 'flex',
@@ -192,6 +195,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
+    color: '#FFFFFF',
   },
   valorantStyle: {
     textAlign: 'right',

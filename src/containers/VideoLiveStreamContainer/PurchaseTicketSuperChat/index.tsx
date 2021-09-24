@@ -101,6 +101,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignContent: 'center',
     alignSelf: 'center',
     position: 'relative',
+    '&:hover': {
+      cursor: 'pointer',
+    },
   },
   iconClose: {
     fontSize: 14,

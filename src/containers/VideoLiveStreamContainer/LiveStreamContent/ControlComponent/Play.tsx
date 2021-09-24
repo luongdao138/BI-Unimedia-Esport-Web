@@ -29,6 +29,7 @@ const useStyles = makeStyles(() => ({
     alignItems: 'center',
     display: 'flex',
     paddingLeft: 16,
+    cursor: 'pointer',
   },
   pauseSmall: {
     color: Colors.white,
