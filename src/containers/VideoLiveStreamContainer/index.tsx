@@ -28,7 +28,7 @@ import PreloadChatContainer from './PreloadContainer/PreloadChatContainer'
 import { STATUS_VIDEO } from '@services/videoTop.services'
 import { useAppSelector } from '@store/hooks'
 import { getIsAuthenticated } from '@store/auth/selectors'
-import userProfileStore from '@store/userProfile'
+// import userProfileStore from '@store/userProfile'
 import { ESRoutes } from '@constants/route.constants'
 // import { listVideos } from 'src/graphql/queries'
 import { onUpdateVideo } from 'src/graphql/subscriptions'
@@ -61,9 +61,9 @@ const VideosTop: React.FC = () => {
   const dispatch = useAppDispatch()
   const router = useRouter()
   const video_id = router.query?.vid // uuid video
-  const { selectors } = userProfileStore
+  // const { selectors } = userProfileStore
   const isAuthenticated = useAppSelector(getIsAuthenticated)
-  const userProfile = useAppSelector(selectors.getUserProfile)
+  // const userProfile = useAppSelector(selectors.getUserProfile)
 
   const { getMyPointData, myPointsData } = usePointsManage()
   const { purchaseTicketSuperChat, meta_purchase_ticket_super_chat } = usePurchaseTicketSuperChat()
@@ -153,8 +153,8 @@ const VideosTop: React.FC = () => {
   useEffect(() => {
     setTab(isMobile ? TABS.COMMENT : TABS.PROGRAM_INFO)
   }, [isMobile])
-  console.log('Is Authenticated >>>>>>>>', userProfile)
-  console.log('Video detail data >>>>>>>>', detailVideoResult, userResult)
+  // console.log('Is Authenticated >>>>>>>>', userProfile)
+  // console.log('Video detail data >>>>>>>>', detailVideoResult, userResult)
 
   useEffect(() => {
     if (videoDetailError) {

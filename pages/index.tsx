@@ -16,7 +16,7 @@ const TopPage: PageWithLayoutType = () => {
     return <TopContainer />
   }
   return (
-    <StreamLayout minimizeLayout>
+    <StreamLayout minimizeLayout loginRequired={false}>
       <VideoLiveStreamContainer />
     </StreamLayout>
   )

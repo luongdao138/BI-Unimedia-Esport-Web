@@ -215,6 +215,7 @@ export type VideoDetailData = {
   unlike_count?: number
   status?: number
   user_nickname?: string
+  user_code?: string
   user_id?: number
   user_avatar?: string
   channel_id?: number

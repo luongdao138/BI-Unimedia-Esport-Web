@@ -87,7 +87,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
-    cursor: 'pointer',
+    '&:hover': {
+      cursor: 'pointer',
+    },
   },
   tagContainer: {
     display: 'flex',

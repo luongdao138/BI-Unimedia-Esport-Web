@@ -8,10 +8,11 @@ type ReactionButtonProps = {
   value?: number
   iconName?: string
   status?: number
+  showPointer?: boolean
 }
 
-const ReactionButton: React.FC<ReactionButtonProps> = ({ onPress, value, iconName, status }) => {
-  const classes = useStyles()
+const ReactionButton: React.FC<ReactionButtonProps> = ({ onPress, value, iconName, status, showPointer }) => {
+  const classes = useStyles({ showPointer: showPointer })
   const isReaction = status === 1
   const activeIcon = { color: isReaction ? 'white' : 'gray' }
 
@@ -24,7 +25,7 @@ const ReactionButton: React.FC<ReactionButtonProps> = ({ onPress, value, iconNam
 }
 
 const useStyles = makeStyles(() => ({
-  container: {
+  container: (props: { showPointer?: boolean }) => ({
     height: 30,
     display: 'flex',
     position: 'relative',
@@ -33,7 +34,10 @@ const useStyles = makeStyles(() => ({
     alignItems: 'center',
     alignContent: 'center',
     marginRight: 24,
-  },
+    '&:hover': props?.showPointer && {
+      cursor: 'pointer',
+    },
+  }),
   textStyle: {
     display: 'flex',
     position: 'relative',
