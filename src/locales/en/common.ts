@@ -411,6 +411,7 @@ export default {
   },
   tournament: {
     card_date: '開　催　日',
+    acceptance_start_date: '開 催 日 時',
     organizer: '主催者',
     entry: 'エントリー',
     entry_number: 'エントリー人数',
@@ -507,10 +508,17 @@ export default {
     },
   },
   arena: {
+    listHeaders: {
+      player: 'プレイヤー',
+      place: '順位',
+      score: 'スコア',
+      time: 'タイム',
+    },
     rules: {
       rule: '{{rule, arena_rule}}',
       single: 'トーナメント',
       battle_royale: 'バトルロイヤル',
+      battle_royale_rule: '{{rule, battle_royale_rule}}',
       score_attack: 'スコアアタック',
       time_attack: 'タイムアタック',
     },

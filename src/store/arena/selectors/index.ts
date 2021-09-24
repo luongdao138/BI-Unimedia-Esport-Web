@@ -98,6 +98,7 @@ export const getSearchFilteredTournaments = createSelector(getRoot, (state) => {
         0
       ),
       startDate: moment(item.attributes.start_date).format('YYYY/MM/DD'),
+      acceptance_start_date: moment(item.attributes.start_date).format('YYYY/MM/DD HH:MM ~'),
     }
   })
 })

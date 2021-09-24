@@ -14,7 +14,6 @@ import { ParticipantsResponse } from '@services/arena.service'
 import BRScoreInput from '../Partials/BRScoreInput'
 import BRList from '../Partials/BRList'
 import { Typography, Box } from '@material-ui/core'
-import _ from 'lodash'
 
 const ArenaBattles: React.FC = () => {
   const router = useRouter()
@@ -63,18 +62,6 @@ const ArenaBattles: React.FC = () => {
     }
   }, [setBattleRoyaleScoresMeta.loaded])
 
-  const getInputColumnName = () => {
-    const rule = _.get(tournament, 'attributes.rule') as string
-    switch (rule) {
-      case 'score_attack':
-        return 'スコア'
-      case 'time_attack':
-        return 'タイム'
-      default:
-        return '順位'
-    }
-  }
-
   const handleSubmitScore = () => setBattleRoyaleScores({ hash_key: tournament.attributes.hash_key, participants: selecteds })
 
   return (
@@ -83,7 +70,7 @@ const ArenaBattles: React.FC = () => {
       <Box pt={3} pb={3} textAlign="center">
         <Typography>スコアを入力してください</Typography>
       </Box>
-      <BRList headers={['プレイヤー', getInputColumnName()]} className={classes.listContainer}>
+      <BRList className={classes.listContainer}>
         {selecteds.map((v, i) => (
           <BRListItem
             key={i}

@@ -29,6 +29,7 @@ const TournamentCard: React.FC<Props> = ({ tournament }) => {
   const startDate = moment(attr.start_date).format('YYYY/MM/DD')
 
   const getMediaScreen = () => {
+    const status = t('common:arena.status.status', { status: tournament.attributes.status })
     const p_type =
       attr.participant_type === 1 ? i18n.t('common:tournament:type_single') : `${attr.participant_type}on${attr.participant_type}`
     return (
@@ -42,6 +43,19 @@ const TournamentCard: React.FC<Props> = ({ tournament }) => {
           padding={1}
         >
           <ESAvatar size={36} src={attr.organizer_avatar} alt={attr.organizer_name} />
+          {status ? (
+            <Chip
+              className={classes.chipSecondary}
+              size="small"
+              variant="outlined"
+              label={
+                <Box color={Colors.grey[300]} justifyContent="flex-start" className={classes.label}>
+                  <Typography variant="overline">{status}</Typography>
+                </Box>
+              }
+            />
+          ) : null}
+
           <Box display="flex" flexDirection="column" alignItems="flex-end">
             <Chip
               className={classes.chipPrimary}
@@ -204,6 +218,21 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: 5,
     backgroundColor: Colors.black_opacity[90],
     borderRadius: 10,
+  },
+  chipSecondary: {
+    width: 64,
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    margin: 5,
+    height: 17,
+    backgroundColor: Colors.black_opacity[90],
+    borderRadius: 4,
+    border: `0.2px solid ${Colors.grey[300]}`,
+  },
+  label: {
+    fontWeight: 'bold',
+    fontSize: 8,
   },
   mediaOverlay: {
     position: 'absolute',
