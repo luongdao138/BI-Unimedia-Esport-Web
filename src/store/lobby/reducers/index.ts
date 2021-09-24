@@ -5,6 +5,7 @@ import _ from 'lodash'
 
 type StateType = {
   participants: ParticipantsData
+  allParticipants: ParticipantsData
   recommendedParticipants: ParticipantsData
   searchLobbies?: Array<LobbyListItem>
   searchLobbiesMeta?: PageMeta
@@ -17,6 +18,7 @@ type StateType = {
 
 const initialState: StateType = {
   participants: [],
+  allParticipants: [],
   recommendedParticipants: [],
   searchLobbies: [],
   lobbyCategories: [],
@@ -47,6 +49,9 @@ export default createReducer(initialState, (builder) => {
     }
     state.participants = _participants
     state.participantsMeta = action.payload.meta
+  })
+  builder.addCase(actions.getAllParticipants.fulfilled, (state, action) => {
+    state.allParticipants = action.payload.data
   })
   builder.addCase(actions.randomizeParticipants.fulfilled, (state, action) => {
     state.recommendedParticipants = action.payload.data
@@ -153,6 +158,9 @@ export default createReducer(initialState, (builder) => {
   builder.addCase(actions.resetParticipants, (state, _) => {
     state.participants = []
     state.recommendedParticipants = []
+  })
+  builder.addCase(actions.resetAllParticipants, (state, _) => {
+    state.allParticipants = []
   })
   builder.addCase(actions.getRecentLobbies.fulfilled, (state, action) => {
     let recentLobbies = action.payload.data

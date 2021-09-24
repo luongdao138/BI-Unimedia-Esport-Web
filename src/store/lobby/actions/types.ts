@@ -4,6 +4,7 @@ export enum LOBBY_ACTION_TYPE {
   LOBBY_CANCEL = 'lobby/cancel',
   LOBBY_UNJOIN = 'lobby/unjoin',
   LOBBY_PARTICIPANTS = 'lobby/participants',
+  LOBBY_ALL_PARTICIPANTS = 'lobby/allParticipants',
   CLEAR_LOBBY_RESULT = 'lobby/clearLobbyResult',
   RESET_SEARCH_LOBBIES = 'lobby/resetSearchsLobbies',
   LOBBY_CREATE = 'lobby/create',
@@ -19,5 +20,6 @@ export enum LOBBY_ACTION_TYPE {
 }
 
 export const RESET_LOBBY_PARTICIPANTS = 'lobby/resetLobbyParticipants'
+export const RESET_LOBBY_ALL_PARTICIPANTS = 'lobby/resetLobbyAllParticipants'
 export const CLEAR_LOBBY_DETAIL = 'lobby/clearLobbyDetail'
 export const CLEAR_LOBBY_RECENTS = 'lobby/clearLobbyRecents'

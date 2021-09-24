@@ -22,10 +22,10 @@ type Props = {
 
 const StepOne: React.FC<Props> = ({ formik, hardwares, editables }) => {
   const classes = useStyles()
-  const { uploadArenaCoverImage, isUploading } = useUploadImage()
+  const { uploadLobbyCoverImage, isUploading } = useUploadImage()
 
   const handleUpload = useCallback((file: File, blob: any) => {
-    uploadArenaCoverImage(file, blob, 1, true, (imageUrl) => {
+    uploadLobbyCoverImage(file, blob, 1, true, (imageUrl) => {
       formik.setFieldValue('stepOne.cover_image_url', imageUrl)
     })
   }, [])
