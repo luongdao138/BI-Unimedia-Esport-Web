@@ -88,20 +88,6 @@ i18n
             default:
               return ''
           }
-        } else if (format === 'battle_royale_rule') {
-          switch (value) {
-            case 'score_attack': {
-              return 'スコア'
-            }
-            case 'time_attack': {
-              return 'タイム'
-            }
-            case '': {
-              return '順位'
-            }
-            default:
-              return ''
-          }
         }
         return value
       },
