@@ -850,6 +850,8 @@ export default {
     discard: {
       title: '内容を破棄します',
       message: '画面を戻ると、現在の入力内容は破棄されます。よろしいですか？',
+      message_part1: '画面を戻ると、現在の入力内容は破棄されます。',
+      message_part2: 'よろしいですか？',
       confirm: '内容を破棄して戻る',
     },
   },
