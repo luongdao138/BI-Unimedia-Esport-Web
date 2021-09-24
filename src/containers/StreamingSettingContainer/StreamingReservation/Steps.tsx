@@ -394,7 +394,14 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik }) => {
               ) : (
                 <>
                   <ESLabel label={i18n.t('common:streaming_setting_screen.label_input_description')} required={true} />
-                  <Linkify>
+                  <Linkify
+                    componentDecorator={(decoratedHref, decoratedText, key) => (
+                      <a target="blank" href={decoratedHref} key={key} className={classes.detectLink}>
+                        {' '}
+                        {decoratedText}
+                      </a>
+                    )}
+                  >
                     <span className={classes.detectLink}> {formik?.values?.stepSettingTwo?.description.trim()}</span>
                   </Linkify>
                 </>
