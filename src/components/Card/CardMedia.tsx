@@ -1,24 +1,30 @@
+import { useState } from 'react'
 import { CardMedia, CardMediaProps, Box } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
-import { CommonHelper } from '@utils/helpers/CommonHelper'
 import _ from 'lodash'
 import { LazyLoadImage } from 'react-lazy-load-image-component'
 
 const ESCardMedia: React.FC<CardMediaProps & { cornerIcon?: any; triangleColor?: string }> = ({ children, ...rest }) => {
+  const image = _.get(rest, 'image', null)
+
+  const [src, setSrc] = useState(image)
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { cornerIcon, triangleColor } = rest
   const classes = useStyles({ triangleColor })
   const IMG_PLACEHOLDER = '/images/default_card.png'
-  const image = _.get(rest, 'image', null)
-  const src = CommonHelper.validateImageUrl(image) ? image : IMG_PLACEHOLDER
+
+  const handleError = () => {
+    setSrc(IMG_PLACEHOLDER)
+  }
 
   return (
     <>
       <Box className={classes.mediaWrap}>
         <CardMedia className={classes.media}>
           <Box className={classes.coverImage}>
-            <LazyLoadImage src={src} className={classes.coverImageInner} alt={'cover-image'} />
+            <LazyLoadImage onError={() => handleError()} src={src} className={classes.coverImageInner} alt={'cover-image'} />
           </Box>
           {children}
         </CardMedia>
