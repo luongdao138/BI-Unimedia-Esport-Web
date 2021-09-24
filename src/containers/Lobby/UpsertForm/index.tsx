@@ -188,8 +188,8 @@ const LobbyCreate: React.FC = () => {
 
   const renderDescription = matches ? (
     <>
-      <Typography>{i18n.t('common:lobby.discard.message_part1')}</Typography>
-      <Typography>{i18n.t('common:lobby.discard.message_part2')}</Typography>
+      <Typography style={{ fontSize: 12 }}>{i18n.t('common:lobby.discard.message_part1')}</Typography>
+      <Typography style={{ fontSize: 12 }}>{i18n.t('common:lobby.discard.message_part2')}</Typography>
     </>
   ) : (
     <>
