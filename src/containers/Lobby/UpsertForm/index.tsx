@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
-import { makeStyles, Theme, Typography, Box } from '@material-ui/core'
+import { makeStyles, Theme, Typography, Box, useMediaQuery, useTheme } from '@material-ui/core'
 import { IconButton } from '@material-ui/core'
 import Icon from '@material-ui/core/Icon'
 import { Colors } from '@theme/colors'
@@ -29,9 +29,9 @@ import { getAction } from '@store/common/selectors'
 import useCheckNgWord from '@utils/hooks/useCheckNgWord'
 import { LobbyHelper } from '@utils/helpers/LobbyHelper'
 import { LobbyUpsertParams } from '@services/lobby.service'
-import { LOBBY_STATUS } from '@constants/lobby.constants'
+import { LOBBY_DIALOGS, LOBBY_STATUS } from '@constants/lobby.constants'
 import withProtected from '@containers/Lobby/utils/withProtected'
-import DiscardDialog from '@containers/Community/Partials/DiscardDialog'
+import { useConfirm } from '@components/Confirm'
 
 let activeTabIndex = 0
 
@@ -49,7 +49,7 @@ const LobbyCreate: React.FC = () => {
   const [isConfirm, setIsConfirm] = useState(false)
   const isEnded = [LOBBY_STATUS.CANCELLED, LOBBY_STATUS.ENDED].includes(_.get(lobby, 'attributes.status', LOBBY_STATUS.ENDED))
   const isFreezed = _.get(lobby, 'attributes.is_freezed', false)
-  const [isDiscard, setIsDiscard] = useState(false)
+  const confirm = useConfirm()
 
   const { checkNgWordFields, checkNgWordByField } = useCheckNgWord()
 
@@ -183,9 +183,33 @@ const LobbyCreate: React.FC = () => {
     )
   }
 
+  const theme = useTheme()
+  const matches = useMediaQuery(theme.breakpoints.down('sm'))
+
+  const renderDescription = matches ? (
+    <>
+      <Typography>{i18n.t('common:lobby.discard.message_part1')}</Typography>
+      <Typography>{i18n.t('common:lobby.discard.message_part2')}</Typography>
+    </>
+  ) : (
+    <>
+      <Typography style={{ fontSize: 12 }}>{i18n.t('common:lobby.discard.message')}</Typography>
+    </>
+  )
+
   const handleBack = () => {
     if (isConfirm) setIsConfirm(false)
-    else isChanged ? setIsDiscard(true) : handleReturn()
+    else if (isChanged) {
+      confirm({ ...LOBBY_DIALOGS.DISCARD_LOBBY, description: renderDescription })
+        .then(() => {
+          handleReturn()
+        })
+        .catch(() => {
+          /* ... */
+        })
+    } else {
+      handleReturn()
+    }
   }
 
   const getFirstError = () => {
@@ -290,14 +314,6 @@ const LobbyCreate: React.FC = () => {
         </form>
         <ESLoader open={meta.pending || updateMeta.pending} />
       </>
-      <DiscardDialog
-        open={isDiscard}
-        onClose={() => setIsDiscard(false)}
-        onSubmit={handleReturn}
-        title={i18n.t('common:lobby.discard.title')}
-        description={i18n.t('common:lobby.discard.message')}
-        confirmTitle={i18n.t('common:lobby.discard.confirm')}
-      />
     </ESStickyFooter>
   )
 }
