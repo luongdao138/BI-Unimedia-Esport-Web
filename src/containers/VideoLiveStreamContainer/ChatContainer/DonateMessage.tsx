@@ -20,7 +20,7 @@ const DonateMessage: React.FC<DonateMessageProps> = ({ message, deleteMess, getM
   const classes = useStyles()
   const { t } = useTranslation('common')
 
-  const bgColor = message.delete_flag ? '#7e7c80' : (message.point ? purchasePoints[`p_${message.point}`].backgroundColor : '#7e7c80')
+  const bgColor = message.delete_flag ? '#7e7c80' : message.point ? purchasePoints[`p_${message.point}`].backgroundColor : '#7e7c80'
 
   const getClassDeletedMess = (): string => {
     if (message.delete_flag) {

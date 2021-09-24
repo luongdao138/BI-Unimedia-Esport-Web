@@ -13,42 +13,45 @@ type ChatContainerProps = {
   getMessageWithoutNgWords: (chatMessContent: string) => ReactNode
 }
 
-const ChatTextMessage =  React.memo<ChatContainerProps>(({ message, deleteMess, getMessageWithoutNgWords, is_streamer }) => {
-  const classes = useStyles()
-  const { t } = useTranslation('common')
-  const getClassDeletedMess = (): string => {
-    if (message.delete_flag) {
-      return 'line_through_text'
-    } else return ''
-  }
+const ChatTextMessage = React.memo<ChatContainerProps>(
+  ({ message, deleteMess, getMessageWithoutNgWords, is_streamer }) => {
+    const classes = useStyles()
+    const { t } = useTranslation('common')
+    const getClassDeletedMess = (): string => {
+      if (message.delete_flag) {
+        return 'line_through_text'
+      } else return ''
+    }
 
-  return (
-    <Box className={classes.chatMessageContainer}>
-      <Box className={classes.container}>
-        <Typography className={classes.chatMessage}>
-          <span className={`${message.delete_flag ? '' : classes.chatMessageUser} ${getClassDeletedMess()}`}>{`${message.owner}: `}</span>
-          {/* <span className={getClassDeletedMess()}>{getMessageWithoutNgWords(message.text) + ' ' + message.video_time + 's'}</span> */}
-          <span className={getClassDeletedMess()}>{getMessageWithoutNgWords(message.text)}</span>
-        </Typography>
-        {is_streamer ? (
-          <ESMenu className={classes.menu_del_mess} iconClass={classes.iconClass}>
-            {message.delete_flag ? (
-              <ESMenuItem disabled className={classes.menu_item_disabled}>
-                {t('live_stream_screen.deleted_message')}
-              </ESMenuItem>
-            ) : (
-              <ESMenuItem onClick={() => deleteMess(message.id)}>{t('live_stream_screen.delete_message')}</ESMenuItem>
-            )}
-          </ESMenu>
-        ) : (
-          ''
-        )}
+    return (
+      <Box className={classes.chatMessageContainer}>
+        <Box className={classes.container}>
+          <Typography className={classes.chatMessage}>
+            <span className={`${message.delete_flag ? '' : classes.chatMessageUser} ${getClassDeletedMess()}`}>{`${message.owner}: `}</span>
+            {/* <span className={getClassDeletedMess()}>{getMessageWithoutNgWords(message.text) + ' ' + message.video_time + 's'}</span> */}
+            <span className={getClassDeletedMess()}>{getMessageWithoutNgWords(message.text)}</span>
+          </Typography>
+          {is_streamer ? (
+            <ESMenu className={classes.menu_del_mess} iconClass={classes.iconClass}>
+              {message.delete_flag ? (
+                <ESMenuItem disabled className={classes.menu_item_disabled}>
+                  {t('live_stream_screen.deleted_message')}
+                </ESMenuItem>
+              ) : (
+                <ESMenuItem onClick={() => deleteMess(message.id)}>{t('live_stream_screen.delete_message')}</ESMenuItem>
+              )}
+            </ESMenu>
+          ) : (
+            ''
+          )}
+        </Box>
       </Box>
-    </Box>
-  )
-}, (prevProps, nextProps) => {
-  return _.isEqual(prevProps.message, nextProps.message)
-})
+    )
+  },
+  (prevProps, nextProps) => {
+    return _.isEqual(prevProps.message, nextProps.message)
+  }
+)
 
 const useStyles = makeStyles(() => ({
   menu_del_mess: {},
