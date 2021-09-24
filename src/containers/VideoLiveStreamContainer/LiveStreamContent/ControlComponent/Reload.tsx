@@ -62,6 +62,7 @@ const useStyles = makeStyles(() => ({
   buttonNormal: {
     alignItems: 'center',
     display: 'flex',
+    cursor: 'pointer',
   },
 }))
 

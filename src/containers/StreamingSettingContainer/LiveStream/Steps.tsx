@@ -128,7 +128,9 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik }) => {
     switch (type) {
       case KEY_TYPE.UUID:
         if (window.navigator.clipboard) {
-          window.navigator.clipboard.writeText(formik?.values?.stepSettingOne?.linkUrl)
+          window.navigator.clipboard.writeText(
+            formik?.values?.stepSettingOne?.linkUrl && `${baseViewingURL}${formik?.values?.stepSettingOne?.linkUrl}`
+          )
         }
         dispatch(commonActions.addToast(t('common:streaming_setting_screen.message_copy')))
         break

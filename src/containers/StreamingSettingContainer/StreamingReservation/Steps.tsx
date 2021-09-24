@@ -76,7 +76,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik }) => {
   useEffect(() => {
     // getLiveSetting()
     checkStatusRecord(scheduleInformation)
-  }, [])
+  }, [scheduleInformation])
 
   // const getLiveSetting = () => {
   //   getScheduleSettingTab({ type: TYPE_SETTING.SCHEDULE }).then((res) => {
@@ -86,7 +86,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik }) => {
   // }
 
   const checkStatusRecord = (data) => {
-    if (!data?.data?.created_at && (data?.data?.status === 1 || !data?.data?.title)) {
+    if (!data?.data?.stream_key || data?.data?.status === 1) {
       // onReNewUrlAndKey(TYPE_SECRET_KEY.URL, TYPE_SECRET_KEY.GET, false)
       setShowReNew(false)
     } else {
@@ -148,7 +148,9 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik }) => {
     switch (type) {
       case KEY_TYPE.UUID:
         if (window.navigator.clipboard) {
-          window.navigator.clipboard.writeText(`${baseViewingURL}${formik?.values?.stepSettingTwo?.uuid}`)
+          window.navigator.clipboard.writeText(
+            formik?.values?.stepSettingTwo?.uuid && `${baseViewingURL}${formik?.values?.stepSettingTwo?.uuid}`
+          )
         }
         dispatch(commonActions.addToast(t('common:streaming_setting_screen.message_copy')))
         break

@@ -30,10 +30,11 @@ import { useAppSelector } from '@store/hooks'
 import { getIsAuthenticated } from '@store/auth/selectors'
 import userProfileStore from '@store/userProfile'
 import { ESRoutes } from '@constants/route.constants'
-import API, { graphqlOperation } from '@aws-amplify/api'
 import { listVideos } from 'src/graphql/queries'
+import { onUpdateVideo } from 'src/graphql/subscriptions'
 import { createVideo } from 'src/graphql/mutations'
 import * as APIt from 'src/types/graphqlAPI'
+import API, { GraphQLResult, graphqlOperation } from '@aws-amplify/api'
 
 enum TABS {
   PROGRAM_INFO = 1,
@@ -85,11 +86,22 @@ const VideosTop: React.FC = () => {
   const isPendingPurchaseTicket = meta_purchase_ticket_super_chat?.pending && purchaseType === PURCHASE_TYPE.PURCHASE_TICKET
   const isLoadingData = isAuthenticated ? !detailVideoResult || !myPointsData || !userResult || !video_id : !detailVideoResult || !video_id
 
+  const subscribeAction = () => {
+    const pubSubClient = API.graphql(graphqlOperation(onUpdateVideo))
+    pubSubClient.subscribe({
+      next: (sub: GraphQLResult<APIt.OnCreateMessageSubscription>) => {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        //@ts-ignore
+        const subMessage = sub?.value
+        console.log('Data onUpdateVideo:' + JSON.stringify(subMessage.data.onUpdateVideo))
+      },
+      error: (error) => console.warn(error),
+    })
+  }
+
   useEffect(() => {
-    if (detailVideoResult.key_video_id && detailVideoResult.arn) {
-      checkVideoExist()
-    }
-  }, [detailVideoResult])
+    subscribeAction()
+  }, [])
 
   const handleCreateVideo = async () => {
     const input = {
@@ -119,7 +131,11 @@ const VideosTop: React.FC = () => {
       console.error(error)
     }
   }
-
+  useEffect(() => {
+    if (detailVideoResult.key_video_id && detailVideoResult.arn) {
+      checkVideoExist()
+    }
+  }, [detailVideoResult])
   useEffect(() => {
     if (isAuthenticated && !myPointsData) {
       getMyPointData({ page: 1, limit: 10 })
