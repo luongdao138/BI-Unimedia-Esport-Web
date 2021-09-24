@@ -18,6 +18,7 @@ export interface TournamentListFiltered extends TournamentListItem {
   total?: number
   participantsLimited?: ParticipantType[]
   startDate?: string
+  acceptance_start_date?: string
 }
 
 interface Props {
@@ -34,6 +35,7 @@ const TournamentHomeCard: React.FC<Props> = ({ tournament }) => {
   const cover = attr.cover ? attr.cover : '/images/default_card.png'
   const organizer = attr.organizer_name ? attr.organizer_name : ''
   const startDate = tournament.startDate
+  const acceptance_start_date = tournament.acceptance_start_date
 
   const getMediaScreen = () => {
     const status = t('common:arena.status.status', { status: tournament.attributes.status })
@@ -175,6 +177,7 @@ const TournamentHomeCard: React.FC<Props> = ({ tournament }) => {
         <Typography className={classes.organizer}>{attr.game_of_title}</Typography>
         <Typography className={classes.organizer}>{`${t('common:tournament.organizer')} ${organizer}`}</Typography>
         {getChippedRow(t('common:tournament.card_date'), startDate)}
+        {getChippedRow(t('common:tournament.acceptance_start_date'), acceptance_start_date)}
         {getChippedRow(t('common:tournament.entry'), tournament.total, `/${attr.max_participants}`, 0.5)}
         {getParticipants()}
       </ESCardContent>

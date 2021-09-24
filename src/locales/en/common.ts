@@ -406,6 +406,7 @@ export default {
   },
   tournament: {
     card_date: '開　催　日',
+    acceptance_start_date: '開 催 日 時',
     organizer: '主催者',
     entry: 'エントリー',
     entry_number: 'エントリー人数',

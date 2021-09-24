@@ -1,22 +1,23 @@
 import { makeStyles } from '@material-ui/core/styles'
 import { Typography } from '@material-ui/core'
+import { TournamentRule } from '@services/arena.service'
 import { ReactNode } from 'hoist-non-react-statics/node_modules/@types/react'
 
 export interface BRListProps {
   children?: ReactNode
-  headers?: string[]
   className?: string
+  rule?: TournamentRule
 }
-function BRList({ children, headers, className }: BRListProps) {
+function BRList({ children, className, rule }: BRListProps) {
   const classes = useStyles()
   return (
     <div className={className || ''}>
-      <div className={classes.header}>
-        {headers.map((header, idx) => (
-          <Typography key={idx} className={classes.headerText}>
-            {header}
-          </Typography>
-        ))}
+      <div className={classes.listHeader}>
+        <Typography className={classes.headerTitle}>順位</Typography>
+        <Typography className={classes.headerTitle}>プレイヤー</Typography>
+        <Typography className={classes.headerTitle}>
+          {rule === 'score_attack' ? 'スコア' : rule === 'time_attack' ? 'タイム' : ''}
+        </Typography>
       </div>
       {children}
     </div>
@@ -50,6 +51,31 @@ const useStyles = makeStyles((theme) => ({
       '&:first-child': {
         paddingLeft: 24,
       },
+    },
+  },
+  listHeader: {
+    background: theme.palette.common.black,
+    borderTopLeftRadius: 12,
+    borderTopRightRadius: 12,
+    width: '100%',
+    marginBottom: theme.spacing(1),
+    paddingBottom: theme.spacing(1),
+    paddingTop: theme.spacing(1),
+    position: 'relative',
+  },
+  headerTitle: {
+    display: 'inline-block',
+    '&:first-child': {
+      paddingLeft: theme.spacing(5),
+    },
+    '&:nth-child(2)': {
+      paddingLeft: theme.spacing(9),
+    },
+    '&:last-child': {
+      position: 'absolute',
+      right: theme.spacing(8),
+      top: '50%',
+      transform: 'translateY(-50%)',
     },
   },
 }))
