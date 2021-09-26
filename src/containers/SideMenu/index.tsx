@@ -82,7 +82,7 @@ const SideMenu: React.FC = () => {
             )}
           </Box>
         </Box>
-        
+
         <Box className={`${classes.menuWrap}`}>
           {isAuthenticated && (
             <Box className={classes.wrap_point}>

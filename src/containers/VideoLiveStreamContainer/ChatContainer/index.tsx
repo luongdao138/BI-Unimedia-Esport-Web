@@ -181,7 +181,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
   const [stateMessages, setStateMessages] = useState(initialFruits)
   console.log('🚀 ~ stateMessages --- 22222', stateMessages)
   const [chatUser, setChatUser] = useState<any>({})
-  console.log("🚀 ~ chatUser", chatUser)
+  console.log('🚀 ~ chatUser', chatUser)
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down(769))
   const { checkNgWord } = useCheckNgWord()
@@ -199,8 +199,12 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
   const { dataPurchaseTicketSuperChat } = usePurchaseTicketSuperChat()
   // const dispatch = useAppDispatch()
 
-  const isEnabledChat = videoType === STATUS_VIDEO.LIVE_STREAM && !liveStreamInfo.is_end_live && +streamingSecond >= 0 
-                        && successGetListMess && successGetListDonateMess
+  const isEnabledChat =
+    videoType === STATUS_VIDEO.LIVE_STREAM &&
+    !liveStreamInfo.is_end_live &&
+    +streamingSecond >= 0 &&
+    successGetListMess &&
+    successGetListDonateMess
   // const isEnabledChat = true
 
   const validationSchema = Yup.object().shape({
@@ -531,7 +535,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
     }
   }
 
-  const updateUserData = async(nickname: string, avatar_url: string, userId: string) => {
+  const updateUserData = async (nickname: string, avatar_url: string, userId: string) => {
     const result = await API.graphql(
       graphqlOperation(updateUser, {
         input: {
@@ -548,7 +552,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
 
   const checkUserExist = async () => {
     try {
-      const {uuid} = userProfile.attributes
+      const { uuid } = userProfile.attributes
       const listQV: APIt.ListUsersQueryVariables = {
         filter: {
           uuid: { eq: uuid },
@@ -560,14 +564,14 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
       if (usersData.length === 0) {
         handleCreateUserDB()
       } else {
-        const foundUser = usersData.find(item => item.uuid === uuid)
-        const {nickname, avatar_url} = userProfile.attributes
+        const foundUser = usersData.find((item) => item.uuid === uuid)
+        const { nickname, avatar_url } = userProfile.attributes
         // update user info if info is changed
-        if(foundUser.user_name !== nickname || foundUser.avatar !== avatar_url) {
+        if (foundUser.user_name !== nickname || foundUser.avatar !== avatar_url) {
           updateUserData(nickname, avatar_url, foundUser.id)
         } else {
           // get and set user exist
-          setChatUser(usersData.find(item => item.uuid === uuid))
+          setChatUser(usersData.find((item) => item.uuid === uuid))
           setSuccessFlagGetAddUSer(true)
         }
       }
