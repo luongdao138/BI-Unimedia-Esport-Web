@@ -1,4 +1,3 @@
-import { useEffect } from 'react'
 import {
   TopicDetail,
   TopicDetailParams,
@@ -15,11 +14,7 @@ import community from '@store/community'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
 import { Meta } from '@store/metadata/actions/types'
 import { createMetaSelector } from '@store/metadata/selectors'
-import { useRouter } from 'next/router'
-import { ESRoutes } from '@constants/route.constants'
-import * as commonActions from '@store/common/actions'
 import { clearMetaData } from '@store/metadata/actions'
-import { useTranslation } from 'react-i18next'
 
 const { selectors, actions } = community
 const getTopicDetailMeta = createMetaSelector(actions.getTopicDetail)
@@ -39,6 +34,7 @@ const useTopicDetail = (): {
   resetCommentDetail: () => void
   resetMeta: () => void
   resetTopicMeta: () => void
+  resetTopicDeleteMeta: () => void
   topicDetailMeta: Meta
   deleteTopicMeta: Meta
   commentDetailMeta: Meta
@@ -51,8 +47,6 @@ const useTopicDetail = (): {
   commentDetail: CommentDetail
 } => {
   const dispatch = useAppDispatch()
-  const { t } = useTranslation(['common'])
-  const router = useRouter()
 
   const topic = useAppSelector(selectors.getTopicDetail)
   const topicDetailMeta = useAppSelector(getTopicDetailMeta)
@@ -81,21 +75,6 @@ const useTopicDetail = (): {
   const commentsList = useAppSelector(selectors.getCommentsList)
   const getCommentsList = (param: CommentsListParams) => dispatch(actions.getCommentsList(param))
 
-  useEffect(() => {
-    if (deleteTopicCommentMeta.loaded) {
-      dispatch(commonActions.addToast(t('common:topic_comment.delete.success_toast')))
-    }
-  }, [deleteTopicCommentMeta])
-
-  useEffect(() => {
-    if (deleteTopicMeta.loaded) {
-      dispatch(commonActions.addToast(t('common:community.topic.delete_success')))
-      router.push(`${ESRoutes.COMMUNITY}/${router.query.hash_key}`)
-      resetTopicMeta()
-      resetTopicDeleteMeta()
-    }
-  }, [deleteTopicMeta])
-
   return {
     getTopicDetail,
     getCommentDetail,
@@ -108,6 +87,7 @@ const useTopicDetail = (): {
     deleteComment,
     resetMeta,
     resetCommentDetail,
+    resetTopicDeleteMeta,
     getCommentsList,
     commentDetailMeta,
     commentsList,
