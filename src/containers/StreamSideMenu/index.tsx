@@ -142,15 +142,17 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
                 passHref
                 as={ESRoutes.VIDEO_STREAMING_SETTING}
               >
-                <ListItem className={classes.list + getAddClass(classes.noMinimizeList, classes.minimizeList)} button disableRipple>
+                <ListItem 
+                  className={classes.list + getAddClass(classes.noMinimizeList, classes.minimizeList)} button disableRipple
+                >
                   <ListItemIcon className={classes.icon}>
-                    <Icon fontSize="small" className="fa fa-video" />
+                    <img src="/images/icons/icon_film.svg" className={`icon_svg ${classes.img_svg}`}/>
                   </ListItemIcon>
                   {/* link to Delivery settings and tab Delivery reservation (配信予約) */}
                   {!minimizeLayout && <ListItemText className={classes.listText} primary={t('common:home.reservation_video')} />}
                 </ListItem>
               </Link>
-            )}
+            )}   
             {!minimizeLayout && <Box paddingBottom={1} />}
             {isStreamer && (
               <Link href={ESRoutes.VIDEO_STREAMING_MANAGEMENT} passHref>
@@ -256,6 +258,8 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
 }
 
 const useStyles = makeStyles((theme) => ({
+  img_svg: {
+  },
   root: {
     width: '100%',
     backgroundColor: 'transparent',
@@ -292,6 +296,9 @@ const useStyles = makeStyles((theme) => ({
     '&:hover $icon': {
       color: Colors.primary,
     },
+    '&:hover $img_svg': {
+      filter: "invert(45%) sepia(49%) saturate(3416%) hue-rotate(313deg) brightness(100%) contrast(104%)"
+    },
     '$list span': {
       fontWeight: 500,
     },
@@ -314,9 +321,10 @@ const useStyles = makeStyles((theme) => ({
     marginTop: '10px',
     alignItems: 'baseline',
     '& .MuiListItemIcon-root': {
-      minWidth: '15px',
+      minWidth: '20px',
       textAlign: 'center',
-      paddingRight: '10px',
+      marginRight: '10px',
+      justifyContent: 'center'
     },
   },
   menu: {
@@ -404,7 +412,7 @@ const useStyles = makeStyles((theme) => ({
     width: '180px',
   },
   menuWrap: {
-    overflowY: 'scroll',
+    overflowY: 'auto',
     height: '100%',
     scrollbarColor: '#222 transparent',
     scrollbarWidth: 'thin',
@@ -472,6 +480,9 @@ const ListItem = withStyles({
   root: {
     '& .MuiListItemIcon-root': {
       color: '#B6B6B6',
+      '& .MuiIcon-root': {
+        width: 'auto'
+      }
     },
     '&$selected': {
       backgroundColor: 'transparent',
@@ -479,6 +490,9 @@ const ListItem = withStyles({
       borderRight: `2px solid ${Colors.primary}`,
       '& .MuiListItemIcon-root': {
         color: Colors.primary,
+        '& .icon_svg': {
+          filter: "invert(45%) sepia(49%) saturate(3416%) hue-rotate(313deg) brightness(100%) contrast(104%)"
+        },
       },
       '& .MuiListItemText-root': {
         color: Colors.primary,

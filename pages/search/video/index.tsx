@@ -46,7 +46,7 @@ const SearchPage: PageWithLayoutType = () => {
   }
 
   return (
-    <StreamLayout minimizeLayout>
+    <StreamLayout minimizeLayout loginRequired={false}>
       <Box className={classes.wrapContainer}>
         <Box py={2} pl={3} display="flex" flexDirection="row" alignItems="center" borderBottom="1px solid #70707070">
           <IconButton className={classes.iconButtonBg} onClick={() => router.back()}>
