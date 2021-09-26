@@ -282,7 +282,7 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: theme.spacing(1),
   },
   menuWrap: {
-    overflowY: 'scroll',
+    overflowY: 'auto',
     height: '100%',
     scrollbarColor: '#222 transparent',
     scrollbarWidth: 'thin',
