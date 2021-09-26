@@ -76,6 +76,7 @@ export default {
     username: 'ユーザー名',
     loading: '読み込み中...',
     no_user_available: '一致するデータが見つかりません',
+    made: 'まで',
   },
   confirm_member: {
     confirm: 'メンバーの確定',
@@ -712,8 +713,8 @@ export default {
   },
   lobby: {
     copy_toast: 'クリップボードにコピーしました',
-    lobby_results: 'ロビー「:key」 の検索結果',
-    lobby_results_all: 'ロビーの検索結果',
+    lobby_results: '募集「:key」の検索結果',
+    lobby_results_all: '募集の検索結果',
     until_deadline: '締め切りまであと',
     until_event: '開催まであと',
     end_from_minutes: '分に受付終了',
@@ -724,6 +725,7 @@ export default {
     detail: {
       label_id: '募集ID：',
       number_of_entries: 'エントリー数',
+      number_of_entries_freezed: '参加数',
       organizer: '開催者',
       entry_period: 'エントリー期間',
       start_date: '開催日時',
@@ -736,7 +738,8 @@ export default {
     },
     cancel_lobby_dialog: {
       title: '募集を中止しますか？',
-      description: '中止した募集は復元することはできません。募集の中止は、メンバーに通知されます。',
+      description1: '中止した募集は復元することはできません。',
+      description2: '募集の中止は、メンバーに通知されます。',
       additionalText: '',
       confirmationText: '中止する',
       cancellationText: 'キャンセル',
@@ -813,6 +816,7 @@ export default {
       entry_decline_failed: 'エントリーを辞退できませんでした',
       randomize_participant: 'ユーザーをランダムに選びました',
       confirm_participant: 'エントリーを締め切りました',
+      edit_status_changed: '募集の開催ステータスが変更されました、編集内容の見直しをお願いします',
     },
     create: {
       submit: 'この内容で作成する',
@@ -839,6 +843,17 @@ export default {
     },
     edit: {
       submit: 'この内容で編集する',
+    },
+    home: {
+      recent_lobbies_title: 'フォローしている人の募集',
+      recent_lobbies_empty: '該当の募集は存在しません',
+    },
+    discard: {
+      title: '内容を破棄します',
+      message: '画面を戻ると、現在の入力内容は破棄されます。よろしいですか？',
+      message_part1: '画面を戻ると、現在の入力内容は破棄されます。',
+      message_part2: 'よろしいですか？',
+      confirm: '内容を破棄して戻る',
     },
   },
   lobbySearchFilters: {
@@ -871,6 +886,10 @@ export default {
     copy_url: '大会URLのコピー',
     report: '通報',
     search_placeholder: 'キーワード検索',
+    nickname: 'ニックネーム・ID',
+    arena: '大会',
+    lobby: '募集',
+    community: 'コミュニティ',
   },
   user_profile: {
     edit_profile: 'プロフィールを編集',
@@ -926,7 +945,7 @@ export default {
     room_not_found: 'ルームが見つかりませんでした',
     delete_chat: '削除',
     see_tournament: '該当の大会をみる',
-    see_lobby: 'ロビーをみる',
+    see_lobby: '該当の募集をみる',
     lets_start: 'メッセージを入力',
     select_destination: '宛先を選んでください',
     already_member: '既にメンバーです',

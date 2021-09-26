@@ -6,30 +6,25 @@ export const searchTypes = {
   USER: 1,
   COMMUNITY: 2,
   TOURNAMENT: 3,
-  RECRUITMENT: 4,
-  LOBBY: 5,
+  LOBBY: 4,
 }
 
 export const searchOptions = [
   {
     value: searchTypes.USER,
-    name: 'ニックネーム・ID',
+    name: i18n.t('common:search.nickname'),
   },
   {
     value: searchTypes.TOURNAMENT,
-    name: '大会',
+    name: i18n.t('common:search.arena'),
   },
-  // {
-  //   value: searchTypes.RECRUITMENT,
-  //   name: 'ロビー',
-  // },
   {
     value: searchTypes.LOBBY,
-    name: 'ロビー',
+    name: i18n.t('common:search.lobby'),
   },
   {
     value: searchTypes.COMMUNITY,
-    name: 'コミュニティ',
+    name: i18n.t('common:search.community'),
   },
 ]
 
@@ -59,7 +54,7 @@ export const HOME_SETTINGS = {
   RECOMMENDED_USER: '1',
   // RECOMMENDED_RECRUITMENT: '2', //TODO skip 2.0
   // RECOMMENDED_EVENT: '3', //TODO skip 2.0
-  // RECRUITMENT_FOLLOW: '4', //TODO skip 2.0
+  LOBBY_FOLLOW: '4',
   TOURNAMENT_FOLLOW: '5',
   TOURNAMENT_RESULT: '6',
   TOPIC_FOLLOW: '7',

@@ -26,6 +26,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: theme.palette.common.white,
   },
   yellow: {
+    fontSize: 14,
     color: Colors.yellow,
   },
 }))

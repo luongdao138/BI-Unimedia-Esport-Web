@@ -27,7 +27,7 @@ const HeaderBar: React.FC<Props> = ({ title, cover, onHandleBack }) => {
           )}
         </div>
       </Box>
-      <Box className={classes.cover} style={{ backgroundImage: `url(${cover || '/images/default_card.png'})` }} mb={3}></Box>
+      <Box className={classes.cover} style={{ backgroundImage: `url(${cover || '/images/default_card.png'})` }}></Box>
     </>
   )
 }
@@ -65,11 +65,17 @@ const useStyles = makeStyles((theme) => ({
     backgroundSize: 'cover',
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'center center',
+    marginBottom: 24,
   },
   [theme.breakpoints.down('sm')]: {
     backContainer: {
       position: 'absolute',
       backgroundColor: 'transparent',
+    },
+  },
+  [theme.breakpoints.down('xs')]: {
+    cover: {
+      marginBottom: 8,
     },
   },
   ['@media (max-width: 960px)']: {

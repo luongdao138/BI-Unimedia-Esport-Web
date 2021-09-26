@@ -6,6 +6,7 @@ const getRoot = (state: RootState) => state.lobby
 
 export const recommendedParticipantsSelector = createSelector(getRoot, (state) => state.recommendedParticipants)
 export const participantSelector = createSelector(getRoot, (state) => state.participants)
+export const allParticipantSelector = createSelector(getRoot, (state) => state.allParticipants)
 export const participantsMeta = createSelector(getRoot, (state) => state.participantsMeta)
 export const getLobbyCategories = createSelector(getRoot, (state) => state.lobbyCategories)
 export const getLobbyDetail = createSelector(getRoot, (state) => state.lobbyDetail)
@@ -20,3 +21,14 @@ export const getSearchLobbies = createSelector(getRoot, (state) => {
     }
   })
 })
+export const getRecentLobbies = createSelector(getRoot, (state) => {
+  return state.recentLobbies.map((item) => {
+    return {
+      ...item,
+      participantsLimited: item.attributes.participants ? item.attributes.participants.slice(0, 3) : [],
+      startDate: DateHelper.formatDate(item.attributes.start_datetime),
+      entryEndDate: DateHelper.formatDate(item.attributes.entry_end_datetime),
+    }
+  })
+})
+export const getRecentLobbiesPageMeta = createSelector(getRoot, (state) => state.recentLobbiesPageMeta)

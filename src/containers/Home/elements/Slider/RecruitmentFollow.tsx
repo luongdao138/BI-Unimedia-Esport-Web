@@ -12,7 +12,7 @@ export const RecruitmentFollow: React.FC<Props> = ({ data }) => {
   return (
     <ESSlider
       title={t('common:home.recruitment_follow')}
-      moreLink={ESRoutes.RECRUITMENT_FOLLOWER}
+      moreLink={ESRoutes.LOBBY_FOLLOWER}
       navigation
       breakpoints={{
         '767': {

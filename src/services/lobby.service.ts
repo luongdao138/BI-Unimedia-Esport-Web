@@ -107,6 +107,10 @@ export type ParticipantsResponse = {
   meta: PageMeta
 }
 
+export type AllParticipantsResponse = {
+  data: ParticipantsData
+}
+
 export type ParticipantType = {
   nickname?: string
   profile_image?: string | null
@@ -205,6 +209,14 @@ export type ParticipantParams = {
   page: number
 }
 
+export type AllParticipantParams = {
+  hash_key: string
+}
+
+export type RecentLobbiesParams = {
+  page?: number
+}
+
 export const entry = async (hash_key: string): Promise<EntryLobbyResponse> => {
   const { data } = await api.post<EntryLobbyResponse>(URI.LOBBY_ENTRY.replace(/:hash_key/gi, hash_key))
   return data
@@ -242,6 +254,11 @@ export const participants = async (params: ParticipantParams): Promise<Participa
   return data
 }
 
+export const getAllParticipants = async (params: AllParticipantParams): Promise<AllParticipantsResponse> => {
+  const { data } = await api.get<AllParticipantsResponse>(`${URI.LOBBY_ALL_PARTICIPANTS.replace(/:hash_key/gi, params.hash_key)}`)
+  return data
+}
+
 export const createLobby = async (params: LobbyUpsertParams): Promise<CreateLobbyResponse> => {
   const { data } = await api.post<CreateLobbyResponse>(URI.LOBBY_CREATE, params)
   return data
@@ -259,5 +276,10 @@ export const getLobbyCategories = async (): Promise<LobbyCategoriesResponse> => 
 
 export const getLobbyDetail = async (hash_key: string | string[]): Promise<LobbyDetailResponse> => {
   const { data } = await api.get<LobbyDetailResponse>(URI.LOBBY_DETAIL.replace(/:hash_key/gi, String(hash_key)))
+  return data
+}
+
+export const getRecentLobbies = async (params: RecentLobbiesParams): Promise<LobbySearchResponse> => {
+  const { data } = await api.post<LobbySearchResponse>(URI.LOBBY_RECENTS, params)
   return data
 }

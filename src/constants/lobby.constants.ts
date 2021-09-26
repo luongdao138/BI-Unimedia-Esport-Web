@@ -100,9 +100,13 @@ export const LOBBY_DIALOGS = {
   },
   CANCEL_LOBBY: {
     title: i18n.t('common:lobby.cancel_lobby_dialog.title'),
-    description: i18n.t('common:lobby.cancel_lobby_dialog.description'),
     additionalText: i18n.t('common:lobby.cancel_lobby_dialog.additionalText'),
     confirmationText: i18n.t('common:lobby.cancel_lobby_dialog.confirmationText'),
+    cancellationText: i18n.t('common:lobby.cancel_lobby_dialog.cancellationText'),
+  },
+  DISCARD_LOBBY: {
+    title: i18n.t('common:lobby.discard.title'),
+    confirmationText: i18n.t('common:lobby.discard.confirm'),
     cancellationText: i18n.t('common:lobby.cancel_lobby_dialog.cancellationText'),
   },
 }
@@ -116,7 +120,7 @@ export const defaultFilterOptions: LobbyFilterItem[] = [
   {
     type: LobbyFilterOption.suggested,
     label: i18n.t('common:lobbySearchFilters.suggested'),
-    loginRequired: false,
+    loginRequired: true,
   },
   {
     type: LobbyFilterOption.recruiting,
