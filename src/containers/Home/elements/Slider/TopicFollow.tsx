@@ -3,9 +3,10 @@ import { ESRoutes } from '@constants/route.constants'
 import { useTranslation } from 'react-i18next'
 import TopicCard from '@components/TopicCard'
 import { SLIDE_LIMIT } from '@constants/common.constants'
+import { FollowersTopicResponse } from '@services/community.service'
 
 interface Props {
-  data: any
+  data: FollowersTopicResponse[]
 }
 
 export const TopicFollow: React.FC<Props> = ({ data }) => {

@@ -247,7 +247,7 @@ export default {
     copy_shared_url: '共有URLをコピー',
     community_results: 'コミュニティ「:key」 の検索結果',
     community_results_all: 'コミュニティの検索結果',
-    copy_shared_url_toast: 'クリップボードにコピーしました。',
+    copy_shared_url_toast: 'クリップボードにコピーしました',
     toast_follow: 'このコミュニティに参加しました',
     toast_unfollowed: 'フォローを解除しました',
     toast_follow_manual_approval: 'フォローを申請しました',

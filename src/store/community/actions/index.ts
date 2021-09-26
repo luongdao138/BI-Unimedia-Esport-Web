@@ -187,7 +187,7 @@ export const memberSubmit = (payload: services.MemberParams) => {
       })
       .then(() => {
         if (!_.isEmpty(payload.cancelParams)) {
-          return dispatch(cancelCommunityMembers({ data: { member_ids: payload.approveParams }, hash_key: payload.hash_key }))
+          return dispatch(cancelCommunityMembers({ data: { member_ids: payload.cancelParams }, hash_key: payload.hash_key }))
         }
       })
       .then(() => {

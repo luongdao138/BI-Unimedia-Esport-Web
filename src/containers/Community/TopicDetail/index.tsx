@@ -38,8 +38,10 @@ const TopicDetailContainer: React.FC = () => {
     commentsListPageMeta,
     deleteComment,
     resetTopicMeta,
+    resetTopicDeleteMeta,
     createCommentMeta,
     deleteTopicCommentMeta,
+    deleteTopicMeta,
   } = useTopicDetail()
   const { getCommunityDetail, communityDetail, isAuthenticated } = useCommunityDetail()
   const { isOwner } = useTopicHelper(topic?.attributes?.owner_user_code)
@@ -68,6 +70,14 @@ const TopicDetailContainer: React.FC = () => {
     deleteComment({ comment_no: selectedCommentNo, topic_hash: String(topic_hash_key) })
     setOpenDelete(false)
   }
+
+  useEffect(() => {
+    if (deleteTopicMeta.loaded) {
+      router.push(`${ESRoutes.COMMUNITY}/${router.query.hash_key}`)
+      resetTopicMeta()
+      resetTopicDeleteMeta()
+    }
+  }, [deleteTopicMeta])
 
   useEffect(() => {
     if (topic_hash_key) {
