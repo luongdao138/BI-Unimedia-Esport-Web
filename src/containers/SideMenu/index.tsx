@@ -77,20 +77,20 @@ const SideMenu: React.FC = () => {
             )}
           </Box>
         </Box>
-        {isAuthenticated && (
-          <Box className={classes.wrap_point}>
-            <Box className={classes.text_point}>{t('common:common.eXe_points')}</Box>
-            <Box className={classes.point}>{totalMyPoints ?? 0}</Box>
-            <Box className={classes.link_point}>
-              {/* redirect to point management */}
-              <Link href={ESRoutes.USER_POINT_MANAGEMENT}>
-                <a>{t('common:common.eXe_point_management')}</a>
-              </Link>
-            </Box>
-          </Box>
-        )}
 
         <Box className={`${classes.menuWrap}`}>
+          {isAuthenticated && (
+            <Box className={classes.wrap_point}>
+              <Box className={classes.text_point}>{t('common:common.eXe_points')}</Box>
+              <Box className={classes.point}>{totalMyPoints ?? 0}</Box>
+              <Box className={classes.link_point}>
+                {/* redirect to point management */}
+                <Link href={ESRoutes.USER_POINT_MANAGEMENT}>
+                  <a>{t('common:common.eXe_point_management')}</a>
+                </Link>
+              </Box>
+            </Box>
+          )}
           <List component="nav" aria-labelledby="nested-list-subheader" className={classes.root}>
             <LoginRequired>
               <Link href={ESRoutes.HOME} passHref>
@@ -337,12 +337,6 @@ const useStyles = makeStyles((theme) => ({
     fontSize: '9px',
     '& a': {
       color: Colors.white_opacity[70],
-    },
-  },
-  [theme.breakpoints.down(475)]: {
-    menu: {
-      overflow: 'scroll',
-      paddingBottom: 200,
     },
   },
 }))

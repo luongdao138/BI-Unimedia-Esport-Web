@@ -9,14 +9,15 @@ import sanitizeHtml from 'sanitize-html'
 import i18n from '@locales/i18n'
 import useStyles from './styles'
 import useCheckNgWord from '@utils/hooks/useCheckNgWord'
-import _, { size } from 'lodash'
+import _ from 'lodash'
 import { useAppSelector } from '@store/hooks'
 // import { useAppDispatch, useAppSelector } from '@store/hooks'
 import userProfileStore from '@store/userProfile'
 import { UserProfile } from '@services/user.service'
 import API, { GraphQLResult, graphqlOperation } from '@aws-amplify/api'
 import { listMessages, listUsers } from 'src/graphql/queries'
-import { createMessage, createUser, updateMessage } from 'src/graphql/mutations'
+import { createMessage, createUser, updateMessage, updateUser } from 'src/graphql/mutations'
+// import { createMessage, deleteMessage } from "src/graphql/mutations";
 import { onCreateMessage, onUpdateMessage } from 'src/graphql/subscriptions'
 import * as APIt from 'src/types/graphqlAPI'
 import useDetailVideo from '../useDetailVideo'
@@ -141,8 +142,8 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
   // const [messageText, setMessageText] = useState<string>('')
   const [purchaseDialogVisible, setPurchaseDialogVisible] = useState<boolean>(false)
   const [messActiveUser, setMessActiveUser] = useState<any>(null)
-  const [allUsers, setAllUsers] = useState([])
-  const [successFlagGetListUSer, setSuccessFlagGetListUSer] = useState(false)
+  const [successGetListMess, setSuccessGetListMess] = useState(false)
+  const [successGetListDonateMess, setSuccessGetListDonateMess] = useState(false)
   const [successFlagGetAddUSer, setSuccessFlagGetAddUSer] = useState(false)
   const [messagesDonate, setMessagesDonate] = useState([])
   const [displaySeeMore, setDisplaySeeMore] = useState(false)
@@ -177,7 +178,8 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
   const initialFruits: APIt.Message[] = []
   const [stateMessages, setStateMessages] = useState(initialFruits)
   console.log('🚀 ~ stateMessages --- 22222', stateMessages)
-  const [chatUser, setChatUser] = useState<any>([])
+  const [chatUser, setChatUser] = useState<any>({})
+  console.log('🚀 ~ chatUser', chatUser)
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down(769))
   const { checkNgWord } = useCheckNgWord()
@@ -195,7 +197,12 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
   const { dataPurchaseTicketSuperChat } = usePurchaseTicketSuperChat()
   // const dispatch = useAppDispatch()
 
-  const isEnabledChat = videoType === STATUS_VIDEO.LIVE_STREAM && !liveStreamInfo.is_end_live && +streamingSecond >= 0
+  const isEnabledChat =
+    videoType === STATUS_VIDEO.LIVE_STREAM &&
+    !liveStreamInfo.is_end_live &&
+    +streamingSecond >= 0 &&
+    successGetListMess &&
+    successGetListDonateMess
   // const isEnabledChat = true
 
   const validationSchema = Yup.object().shape({
@@ -233,7 +240,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
       })
     )
 
-    const abc = await API.graphql(
+    const result = await API.graphql(
       graphqlOperation(createUser, {
         input: {
           // id:userProfile?.id,
@@ -243,27 +250,9 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
         },
       })
     )
-    console.log('abc', abc)
+    console.log('abc-111111', result)
+    setChatUser(result.data.createUser)
     setSuccessFlagGetAddUSer(true)
-  }
-
-  const getListUser = async () => {
-    try {
-      const listQV: APIt.ListMessagesQueryVariables = {}
-      const userReq: any = await API.graphql(graphqlOperation(listUsers, listQV))
-      setAllUsers(userReq.data.listUsers.items)
-      if (size(userReq.data.listUsers.items) > 0) {
-        setTimeout(() => {
-          setSuccessFlagGetListUSer(true)
-        }, 500)
-      } else {
-        setSuccessFlagGetListUSer(true)
-      }
-      // trick: nếu có data thì sau 500ms mới set cờ successFlagGetListUSer=true; để đảm bảo lúc chạy vào checkUserExist lúc nào data AllsUser cũng đã được set dữ liệu
-      console.log('getListUser; ', userReq)
-    } catch (error) {
-      console.error(error)
-    }
   }
 
   const isPremiumChat = (message: any, is_check_time = true, compare_second?: any) => {
@@ -480,7 +469,6 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
   }, [liveStreamInfo.seek_count])
 
   useEffect(() => {
-    getListUser()
     // getUsersDonate()
   }, [])
 
@@ -511,6 +499,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
       // setMessagesDonate(filterMessagesDonate(transformMess, streamingSecond))
       // save mess for use in local
       setSavedDonateMess(transformMess)
+      setSuccessGetListDonateMess(true)
     } catch (error) {
       console.error(error)
     }
@@ -538,43 +527,62 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
       // save mess for use in local
       setSavedMess(transformMess)
       subscribeAction()
+      setSuccessGetListMess(true)
     } catch (error) {
       console.error(error)
     }
   }
 
-  const checkUserExist = (checkedAllUsers: any) => {
-    if (!checkedAllUsers) {
-      console.log('tạo mới tài khoản vì k tồn tại checkedAllUsers')
-      handleCreateUserDB()
-    } else {
-      // console.log(
-      //   'checkedAllUsers; ',
-      //   JSON.stringify(checkedAllUsers),
-      //   '\nuserProfile; ',
-      //   JSON.stringify(userProfile),
-      //   'userProfile.uuid ',
-      //   userProfile?.attributes?.uuid
-      // )
+  const updateUserData = async (nickname: string, avatar_url: string, userId: string) => {
+    const result = await API.graphql(
+      graphqlOperation(updateUser, {
+        input: {
+          id: userId,
+          avatar: avatar_url,
+          user_name: nickname,
+        },
+      })
+    )
+    console.log('mon-111111', result)
+    setChatUser(result.data.updateUser)
+    setSuccessFlagGetAddUSer(true)
+  }
 
-      const currentUser = checkedAllUsers.find((user) => user.uuid === userProfile?.attributes?.uuid)
-      // console.log("🚀 ~ checkUserExist ~ currentUser", currentUser)
-      if (currentUser) {
-        console.log('Tồn tại currentUser ', currentUser)
-        setChatUser(currentUser)
-        setSuccessFlagGetAddUSer(true)
-      } else {
-        console.log('tồn tại checkedAllUsers nhưng  userProfile chưa có trong listUser của DynamoDB nên cần tạo mới', userProfile)
-        handleCreateUserDB()
+  const checkUserExist = async () => {
+    try {
+      const { uuid } = userProfile.attributes
+      const listQV: APIt.ListUsersQueryVariables = {
+        filter: {
+          uuid: { eq: uuid },
+        },
       }
+      const usersResult: any = await API.graphql(graphqlOperation(listUsers, listQV))
+      const usersData = usersResult.data.listUsers.items
+      // create new user if no exist
+      if (usersData.length === 0) {
+        handleCreateUserDB()
+      } else {
+        const foundUser = usersData.find((item) => item.uuid === uuid)
+        const { nickname, avatar_url } = userProfile.attributes
+        // update user info if info is changed
+        if (foundUser.user_name !== nickname || foundUser.avatar !== avatar_url) {
+          updateUserData(nickname, avatar_url, foundUser.id)
+        } else {
+          // get and set user exist
+          setChatUser(usersData.find((item) => item.uuid === uuid))
+          setSuccessFlagGetAddUSer(true)
+        }
+      }
+    } catch (error) {
+      console.error(error)
     }
   }
 
   useEffect(() => {
-    if (userProfile && successFlagGetListUSer) {
-      checkUserExist(allUsers)
+    if (userProfile) {
+      checkUserExist()
     }
-  }, [userProfile, successFlagGetListUSer])
+  }, [userProfile])
 
   useEffect(() => {
     if (key_video_id) {
@@ -662,7 +670,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
   }
 
   const createMess = async (message: string, point = 0): Promise<void> => {
-    if ((successFlagGetAddUSer || chatUser) && message && isEnabledChat) {
+    if (successFlagGetAddUSer && Object.keys(chatUser).length > 0 && message && isEnabledChat) {
       const videoTime = streamingSecond
       let input = {
         // id is auto populated by AWS Amplify

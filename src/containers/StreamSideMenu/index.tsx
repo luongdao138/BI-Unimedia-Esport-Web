@@ -144,7 +144,7 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
               >
                 <ListItem className={classes.list + getAddClass(classes.noMinimizeList, classes.minimizeList)} button disableRipple>
                   <ListItemIcon className={classes.icon}>
-                    <Icon fontSize="small" className="fa fa-video" />
+                    <img src="/images/icons/icon_film.svg" className={`icon_svg ${classes.img_svg}`} />
                   </ListItemIcon>
                   {/* link to Delivery settings and tab Delivery reservation (配信予約) */}
                   {!minimizeLayout && <ListItemText className={classes.listText} primary={t('common:home.reservation_video')} />}
@@ -256,6 +256,7 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
 }
 
 const useStyles = makeStyles((theme) => ({
+  img_svg: {},
   root: {
     width: '100%',
     backgroundColor: 'transparent',
@@ -292,6 +293,9 @@ const useStyles = makeStyles((theme) => ({
     '&:hover $icon': {
       color: Colors.primary,
     },
+    '&:hover $img_svg': {
+      filter: 'invert(45%) sepia(49%) saturate(3416%) hue-rotate(313deg) brightness(100%) contrast(104%)',
+    },
     '$list span': {
       fontWeight: 500,
     },
@@ -314,19 +318,22 @@ const useStyles = makeStyles((theme) => ({
     marginTop: '10px',
     alignItems: 'baseline',
     '& .MuiListItemIcon-root': {
-      minWidth: '15px',
+      minWidth: '20px',
       textAlign: 'center',
-      paddingRight: '10px',
+      marginRight: '10px',
+      justifyContent: 'center',
     },
   },
   menu: {
     width: '100%',
     height: '100%',
-    paddingTop: 72,
     display: 'flex',
     justifyContent: 'center',
     minHeight: '100vh',
     background: '#000000',
+    position: 'relative',
+    paddingBottom: 66,
+    paddingTop: 203,
   },
   noMinimizeMenu: {
     alignItems: 'flex-end',
@@ -341,14 +348,23 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     justifyContent: 'flex-start',
     alignItems: 'center',
+    paddingTop: 72,
   },
   icon: {},
   userInfo: {
-    display: 'flex',
-    flexDirection: 'column',
+    justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: '25px',
-    width: 180,
+    paddingLeft: theme.spacing(0.5),
+    paddingRight: theme.spacing(0.5),
+    width: '100%',
+    display: 'flex',
+    paddingTop: 40,
+    flexDirection: 'column',
+    paddingBottom: 30,
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    maxWidth: 180,
   },
   avatar: {
     zIndex: 30,
@@ -363,7 +379,8 @@ const useStyles = makeStyles((theme) => ({
     textOverflow: 'ellipsis',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
-    maxWidth: 80,
+    maxWidth: '100%',
+    fontSize: 14,
   },
   usercode: {
     color: theme.palette.text.secondary,
@@ -371,7 +388,7 @@ const useStyles = makeStyles((theme) => ({
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
     overflow: 'hidden',
-    maxWidth: 80,
+    maxWidth: 130,
   },
   clickable: {
     cursor: 'pointer',
@@ -392,6 +409,7 @@ const useStyles = makeStyles((theme) => ({
     width: '180px',
   },
   menuWrap: {
+    overflowY: 'auto',
     height: '100%',
     scrollbarColor: '#222 transparent',
     scrollbarWidth: 'thin',
@@ -459,6 +477,9 @@ const ListItem = withStyles({
   root: {
     '& .MuiListItemIcon-root': {
       color: '#B6B6B6',
+      '& .MuiIcon-root': {
+        width: 'auto',
+      },
     },
     '&$selected': {
       backgroundColor: 'transparent',
@@ -466,6 +487,9 @@ const ListItem = withStyles({
       borderRight: `2px solid ${Colors.primary}`,
       '& .MuiListItemIcon-root': {
         color: Colors.primary,
+        '& .icon_svg': {
+          filter: 'invert(45%) sepia(49%) saturate(3416%) hue-rotate(313deg) brightness(100%) contrast(104%)',
+        },
       },
       '& .MuiListItemText-root': {
         color: Colors.primary,
