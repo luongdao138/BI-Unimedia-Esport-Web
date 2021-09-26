@@ -247,7 +247,7 @@ export default {
     copy_shared_url: '共有URLをコピー',
     community_results: 'コミュニティ「:key」 の検索結果',
     community_results_all: 'コミュニティの検索結果',
-    copy_shared_url_toast: 'このコミュニティを共有URLをクリップボードにコピーにしました',
+    copy_shared_url_toast: 'クリップボードにコピーしました。',
     toast_follow: 'このコミュニティに参加しました',
     toast_unfollowed: 'フォローを解除しました',
     toast_follow_manual_approval: 'フォローを申請しました',
@@ -285,6 +285,7 @@ export default {
     topic_creation: 'トピック作成',
     confirm_follow_list: '更新する',
     no_data: '該当のコミュニティはありません',
+    no_data_topics: '該当のトピックは存在しません',
     topic: {
       delete_success: 'トピックを削除しました。',
       view_past_comments: '↑過去のコメントを表示する',
