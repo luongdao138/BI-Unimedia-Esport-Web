@@ -82,6 +82,10 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
     }
   }, [router.query])
 
+  useEffect(() => {
+    setTab(isAutomatic ? TABS.TOPIC_LIST : isNotMember ? TABS.INFO : TABS.TOPIC_LIST)
+  }, [detail])
+
   const setOtherRoleFalse = (setRoleType: string) => {
     if (setRoleType === ROLE_TYPES.IS_ADMIN) {
       setIsCoOrganizer(false)
