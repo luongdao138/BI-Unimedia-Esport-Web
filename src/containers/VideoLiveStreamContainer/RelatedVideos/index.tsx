@@ -139,7 +139,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '100%',
     paddingBottom: 24,
     paddingLeft: 10,
-    paddingRight: 10,
   },
   scrollContainer: {
     display: 'flex',
@@ -150,7 +149,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(0),
     paddingBottom: theme.spacing(2),
     display: 'flex',
-    width: '100%',
   },
   itemContainer: {
     width: '100%',

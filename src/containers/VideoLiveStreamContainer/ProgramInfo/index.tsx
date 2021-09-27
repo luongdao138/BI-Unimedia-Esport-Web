@@ -10,6 +10,7 @@ import useLiveStreamDetail from '../useLiveStreamDetail'
 import { LIMIT_ITEM, TypeVideoArchived } from '@services/liveStreamDetail.service'
 import useDetailVideo from '../useDetailVideo'
 import ESLoader from '@components/Loader'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
 
 type ProgramInfoProps = {
   video_id?: string | string[]
@@ -22,7 +23,7 @@ const ProgramInfo: React.FC<ProgramInfoProps> = ({ video_id }) => {
   const { meta_archived_video_stream, archivedVideoStreamData, getArchivedVideoStream, resetArchivedVideoStream } = useLiveStreamDetail()
   const { detailVideoResult } = useDetailVideo()
   const isLoadingData = meta_archived_video_stream?.pending
-  const getDescription = detailVideoResult?.description
+  const getDescription = CommonHelper.linkifyString(detailVideoResult?.description)
 
   const [descriptionCollapse, setDescriptionCollapse] = useState(true)
   const [page, setPage] = useState<number>(1)
@@ -94,9 +95,10 @@ const ProgramInfo: React.FC<ProgramInfoProps> = ({ video_id }) => {
   const renderDescription = () => {
     return (
       <>
-        <Typography gutterBottom className={classes.label}>
-          {getDescription?.length < 200 ? getDescription : getDescriptionTruncated()}
-        </Typography>
+        <div
+          className={classes.label}
+          dangerouslySetInnerHTML={{ __html: getDescription?.length < 200 ? getDescription : getDescriptionTruncated() }}
+        />
         {getDescription?.length > 200 && (
           <Box onClick={toggleDescriptionCollapse} className={classes.seeMoreContainer}>
             <Typography className={classes.seeMoreTitle}>

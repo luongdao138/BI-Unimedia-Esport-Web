@@ -50,14 +50,22 @@ const VideoSearchContainer: React.FC = () => {
     }
   }
 
+  const getOptimizeWidth = (calWidth) => {
+    if (calWidth > 389 && calWidth < 419) {
+      return calWidth
+    } else {
+      return calWidth < 389 ? 389 : 419
+    }
+  }
+
   const calculateVideoItemStyle = (): any => {
     if (!isWideScreen) {
       return {}
     }
-    const numOfDisplayItem = Math.floor(listDisplayWidth / 465)
+    const numOfDisplayItem = Math.floor(listDisplayWidth / 419)
     const calcWidth = Math.floor(listDisplayWidth / numOfDisplayItem)
     return {
-      maxWidth: Math.max(450, calcWidth),
+      maxWidth: getOptimizeWidth(calcWidth),
     }
   }
 
