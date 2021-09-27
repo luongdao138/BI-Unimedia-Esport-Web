@@ -9,6 +9,7 @@ import ESLoader from '@components/Loader'
 import { TypeVideo } from '@services/videoTop.services'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import useVideoSearch from './useVideoSearch'
+import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
 
 const LIMIT = 9
 const VideoSearchContainer: React.FC = () => {
@@ -21,6 +22,8 @@ const VideoSearchContainer: React.FC = () => {
   const { searchVideosSelector, videoSearch, resetMeta, resetSearchVideo, meta, totalResult } = useSearchVideoResult()
   const [page, setPage] = useState<number>(1)
   const [hasMore, setHasMore] = useState(true)
+  const isWideScreen = useMediaQuery(theme.breakpoints.up(1920))
+  const { width: listDisplayWidth } = useWindowDimensions(244)
 
   useEffect(() => {
     setKeyword(searchKeyword)
@@ -47,6 +50,17 @@ const VideoSearchContainer: React.FC = () => {
     }
   }
 
+  const calculateVideoItemStyle = (): any => {
+    if (!isWideScreen) {
+      return {}
+    }
+    const numOfDisplayItem = Math.floor(listDisplayWidth / 465)
+    const calcWidth = Math.floor(listDisplayWidth / numOfDisplayItem)
+    return {
+      maxWidth: Math.max(450, calcWidth),
+    }
+  }
+
   const renderItem = (item: TypeVideo, index: number) => {
     return (
       <>
@@ -55,7 +69,7 @@ const VideoSearchContainer: React.FC = () => {
             <VideoPreviewItem data={item} key={index} />
           </Box>
         ) : (
-          <Grid item xs={6} lg={6} xl={4} className={classes.itemContainer} key={index}>
+          <Grid item xs={6} lg={6} xl={4} className={classes.itemContainer} key={index} style={calculateVideoItemStyle()}>
             <VideoPreviewItem data={item} key={index} />
           </Grid>
         )}
@@ -121,7 +135,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   [theme.breakpoints.down(769)]: {
     wrapContentContainer: {
-      width: 'calc(100vw - 24px)',
+      width: 'calc(100vw - 48px)',
       overflow: 'auto',
     },
     contentContainer: {
@@ -136,6 +150,22 @@ const useStyles = makeStyles((theme: Theme) => ({
         paddingRight: 0,
       },
       marginBottom: '24px',
+      display: 'flex',
+      justifyContent: 'center',
+    },
+  },
+  [theme.breakpoints.up(960)]: {
+    itemContainer: {
+      flexGrow: '0',
+      maxWidth: '33.333333%',
+      flexBasis: '33.333333%',
+    },
+  },
+  [theme.breakpoints.up(1920)]: {
+    itemContainer: {
+      flexGrow: '0',
+      maxWidth: '465px',
+      flexBasis: '25%',
     },
   },
 }))

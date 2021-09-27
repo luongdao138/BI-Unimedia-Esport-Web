@@ -125,7 +125,12 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
           )}
           <List component="nav" aria-labelledby="nested-list-subheader" className={classes.root}>
             <Link href={ESRoutes.VIDEO_TOP} passHref>
-              <ListItem className={classes.list + getAddClass(classes.noMinimizeList, classes.minimizeList)} button disableRipple>
+              <ListItem
+                className={classes.list + getAddClass(classes.noMinimizeList, classes.minimizeList)}
+                button
+                disableRipple
+                selected={isSelected(ESRoutes.VIDEO_TOP)}
+              >
                 <ListItemIcon className={classes.icon}>
                   <Icon fontSize="small" className="fa fa-heart" />
                 </ListItemIcon>
@@ -142,17 +147,20 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
                 passHref
                 as={ESRoutes.VIDEO_STREAMING_SETTING}
               >
-                <ListItem 
-                  className={classes.list + getAddClass(classes.noMinimizeList, classes.minimizeList)} button disableRipple
+                <ListItem
+                  className={classes.list + getAddClass(classes.noMinimizeList, classes.minimizeList)}
+                  button
+                  disableRipple
+                  selected={isSelected(ESRoutes.VIDEO_STREAMING_SETTING)}
                 >
                   <ListItemIcon className={classes.icon}>
-                    <img src="/images/icons/icon_film.svg" className={`icon_svg ${classes.img_svg}`}/>
+                    <img src="/images/icons/icon_film.svg" className={`icon_svg ${classes.img_svg}`} />
                   </ListItemIcon>
                   {/* link to Delivery settings and tab Delivery reservation (配信予約) */}
                   {!minimizeLayout && <ListItemText className={classes.listText} primary={t('common:home.reservation_video')} />}
                 </ListItem>
               </Link>
-            )}   
+            )}
             {!minimizeLayout && <Box paddingBottom={1} />}
             {isStreamer && (
               <Link href={ESRoutes.VIDEO_STREAMING_MANAGEMENT} passHref>
@@ -258,8 +266,7 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
 }
 
 const useStyles = makeStyles((theme) => ({
-  img_svg: {
-  },
+  img_svg: {},
   root: {
     width: '100%',
     backgroundColor: 'transparent',
@@ -297,7 +304,7 @@ const useStyles = makeStyles((theme) => ({
       color: Colors.primary,
     },
     '&:hover $img_svg': {
-      filter: "invert(45%) sepia(49%) saturate(3416%) hue-rotate(313deg) brightness(100%) contrast(104%)"
+      filter: 'invert(45%) sepia(49%) saturate(3416%) hue-rotate(313deg) brightness(100%) contrast(104%)',
     },
     '$list span': {
       fontWeight: 500,
@@ -324,7 +331,7 @@ const useStyles = makeStyles((theme) => ({
       minWidth: '20px',
       textAlign: 'center',
       marginRight: '10px',
-      justifyContent: 'center'
+      justifyContent: 'center',
     },
   },
   menu: {
@@ -481,8 +488,8 @@ const ListItem = withStyles({
     '& .MuiListItemIcon-root': {
       color: '#B6B6B6',
       '& .MuiIcon-root': {
-        width: 'auto'
-      }
+        width: 'auto',
+      },
     },
     '&$selected': {
       backgroundColor: 'transparent',
@@ -491,7 +498,7 @@ const ListItem = withStyles({
       '& .MuiListItemIcon-root': {
         color: Colors.primary,
         '& .icon_svg': {
-          filter: "invert(45%) sepia(49%) saturate(3416%) hue-rotate(313deg) brightness(100%) contrast(104%)"
+          filter: 'invert(45%) sepia(49%) saturate(3416%) hue-rotate(313deg) brightness(100%) contrast(104%)',
         },
       },
       '& .MuiListItemText-root': {
