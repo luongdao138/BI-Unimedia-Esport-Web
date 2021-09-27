@@ -62,7 +62,7 @@ const VideosList: React.FC<VideoListProps> = ({ setTab, videoItemStyle }) => {
             onPress={() => onClickSeeMorePopular(item)}
           />
         </Box>
-        <Box className={classes.wrapContentContainer} style={{ overflow: 'hidden' }}>
+        <Box className={classes.wrapContentContainer}>
           <Grid container spacing={3} className={classes.contentContainer}>
             {item?.videos.length > 0 ? (
               item?.videos.map((item, index) => renderLiveItem(item, index))
@@ -152,7 +152,7 @@ const VideosList: React.FC<VideoListProps> = ({ setTab, videoItemStyle }) => {
             onPress={onClickSeeMoreLiveStream}
           />
         </Box>
-        <Box className={classes.wrapContentContainer} style={{ overflow: 'hidden' }}>
+        <Box className={classes.wrapContentContainer}>
           <Grid container spacing={3} className={classes.contentContainer}>
             {getDisplayData(videoTop?.live)?.length > 0 ? (
               getDisplayData(videoTop?.live).map(renderLiveItem)
@@ -180,7 +180,7 @@ const VideosList: React.FC<VideoListProps> = ({ setTab, videoItemStyle }) => {
             onPress={onClickSeeMoreSchedule}
           />
         </Box>
-        <Box className={classes.wrapContentContainer} style={{ overflow: 'hidden' }}>
+        <Box className={classes.wrapContentContainer}>
           <Grid container spacing={3} className={classes.contentContainer}>
             {getDisplayData(videoTop?.schedule)?.length > 0 ? (
               getDisplayData(videoTop?.schedule).map(renderLiveItem)
@@ -208,7 +208,7 @@ const VideosList: React.FC<VideoListProps> = ({ setTab, videoItemStyle }) => {
             onPress={onClickSeeMoreArchive}
           />
         </Box>
-        <Box className={classes.wrapContentContainer} style={{ overflow: 'hidden' }}>
+        <Box className={classes.wrapContentContainer}>
           <Grid container spacing={3} className={classes.contentContainer}>
             {getDisplayData(videoTop?.archived)?.length > 0 ? (
               getDisplayData(videoTop?.archived).map(renderLiveItem)
@@ -285,7 +285,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     textAlign: 'center',
   },
   wrapVideos: {},
-  wrapContentContainer: {},
+  wrapContentContainer: {
+    overflow: 'hidden',
+  },
   spViewMore: {
     display: 'none',
   },
@@ -306,7 +308,22 @@ const useStyles = makeStyles((theme: Theme) => ({
   [theme.breakpoints.down(769)]: {
     wrapContentContainer: {
       width: 'calc(100vw - 24px)',
-      overflow: 'auto',
+      overflow: 'scroll',
+      scrollbarColor: '#222 transparent',
+      scrollbarWidth: 'thin',
+      '&::-webkit-scrollbar': {
+        height: 10,
+        opacity: 1,
+        padding: 10,
+      },
+      '&::-webkit-scrollbar-track': {
+        paddingLeft: 1,
+        background: 'rgba(0,0,0,0.5)',
+      },
+      '&::-webkit-scrollbar-thumb': {
+        backgroundColor: '#222222',
+        borderRadius: 6,
+      },
     },
     contentContainer: {
       flexWrap: 'nowrap',
