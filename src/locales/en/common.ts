@@ -599,6 +599,7 @@ export default {
       button: 'トピックを通報',
       title: '通報するトピック',
       reported_topic: 'トピックを通報しました',
+      dialog_title: 'トピックを通報する',
     },
     delete: {
       button: 'トピックの削除',

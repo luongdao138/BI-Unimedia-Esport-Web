@@ -154,6 +154,7 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({
             reportType={REPORT_TYPE.TOPIC}
             target_id={detail?.attributes.hash_key}
             data={detail}
+            title={t('common:topic.report.dialog_title')}
             open={openReport}
             handleClose={() => setOpenReport(false)}
           />
