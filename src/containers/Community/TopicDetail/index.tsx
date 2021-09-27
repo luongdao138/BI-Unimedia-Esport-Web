@@ -180,7 +180,7 @@ const TopicDetailContainer: React.FC = () => {
         {isAuthenticated && reportData && (
           <ESReport
             reportType={REPORT_TYPE.TOPIC_COMMENT}
-            target_id={reportData.attributes.hash_key}
+            target_id={reportData.attributes.id}
             data={reportData}
             title={t('common:topic_comment.report.dialog_title')}
             open={reportData !== null}
