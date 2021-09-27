@@ -58,7 +58,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ reply_param, setPage, setComm
 
   const handleUpload = (file: File) => {
     setUploading(true)
-    uploadCommentImage(file, undefined, 1, true, (imageUrl) => {
+    uploadCommentImage(file, undefined, (imageUrl) => {
       setUploading(false)
       setImageURL(imageUrl)
     })
@@ -113,7 +113,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ reply_param, setPage, setComm
             multiline
             rowsMax={9}
             placeholder={t('common:topic_create.comment_placeholder')}
-            inputProps={{ maxLength: TEXT_INPUT_LIMIT }}
+            inputProps={{ maxLength: TEXT_INPUT_LIMIT, style: { overflow: 'visible' } }}
           />
         </Box>
         <Box className={classes.sendCont}>

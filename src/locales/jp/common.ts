@@ -244,6 +244,8 @@ export default {
   community: {
     report: '通報',
     reported_community: 'コミュニティを通報しました',
+    report_community: 'コミュニティを通報する',
+    community_to_report: '通報するコミュニティ',
     community_id: 'コミュニティID：',
     copy_shared_url: '共有URLをコピー',
     community_results: 'コミュニティ「:key」 の検索結果',
