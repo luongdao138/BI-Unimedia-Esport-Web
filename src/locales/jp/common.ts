@@ -1283,7 +1283,7 @@ export default {
     discard: {
       title: '内容を破棄します',
       message: '画面を戻ると、現在の入力内容は破棄されます。よろしいですか？',
-      confirm: '内容を破棄して戻る',
+      confirm: '作成内容を破棄して戻る',
     },
     create_success: 'トピックを作成しました',
     comment_placeholder: 'コメントを入力…',
