@@ -14,6 +14,8 @@ import { ParticipantsResponse } from '@services/arena.service'
 import BRScoreInput from '../Partials/BRScoreInput'
 import BRList from '../Partials/BRList'
 import { Typography, Box } from '@material-ui/core'
+import StickyFooter from '../Partials/StickyFooter'
+import ButtonPrimary from '@components/ButtonPrimary'
 
 const ArenaBattles: React.FC = () => {
   const router = useRouter()
@@ -65,7 +67,14 @@ const ArenaBattles: React.FC = () => {
   const handleSubmitScore = () => setBattleRoyaleScores({ hash_key: tournament.attributes.hash_key, participants: selecteds })
 
   return (
-    <>
+    <StickyFooter
+      hideFooter={false}
+      primaryButton={
+        <ButtonPrimary type="submit" round fullWidth onClick={handleSubmitScore}>
+          Submit Score
+        </ButtonPrimary>
+      }
+    >
       {detailMeta.loaded && <HeaderWithButton title={tournament.attributes.title} />}
       <Box pt={3} pb={3} textAlign="center">
         <Typography>スコアを入力してください</Typography>
@@ -87,9 +96,8 @@ const ArenaBattles: React.FC = () => {
           </BRListItem>
         ))}
       </BRList>
-      <button onClick={handleSubmitScore}>Submit Score</button>
       <ESLoader open={detailMeta.pending || participantsMeta.pending} />
-    </>
+    </StickyFooter>
   )
 }
 
