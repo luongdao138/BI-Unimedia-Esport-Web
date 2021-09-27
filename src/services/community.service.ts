@@ -345,12 +345,19 @@ export type FollowersTopicResponse = {
   id: string
   type: string
   attributes: {
-    title: string
-    content: string
-    created_at: string
-    avatar: {
-      assets_url: string | null
-    }
+    community_title: string
+    community_hash: string
+    is_official: number
+    cover_image_url: string | null
+    topic_title: string
+    topic_hash: string
+    comment_count: number
+    topic_created_at: string
+    members_avatar: {
+      id: number | null
+      nickname: string
+      profile_image: string | null
+    }[]
   }
 }
 
