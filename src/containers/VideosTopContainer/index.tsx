@@ -81,7 +81,7 @@ const VideosTop: React.FC = () => {
   const getTabs = () => {
     return (
       <Grid item xs={12} className={classes.tabsContainer}>
-        <ESTabs value={tab} onChange={handleFocusTab} className={classes.tabs}>
+        <ESTabs value={tab} onChange={handleFocusTab} className={classes.tabs} scrollButtons="on" variant="scrollable">
           <ESTab className={classes.tabMin} label={t('videos_top_tab.video_list')} value={0} />
           <ESTab className={classes.tabMin} label={t('videos_top_tab.live_stream_video')} value={1} />
           <ESTab className={classes.tabMin} label={t('videos_top_tab.schedule_stream_video')} value={2} />
@@ -168,7 +168,7 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: 100,
   },
   tabs: {
-    overflow: 'hidden',
+    overflowY: 'hidden',
     borderBottomColor: Colors.text[300],
     borderBottomWidth: 1,
     borderBottomStyle: 'solid',
@@ -204,6 +204,9 @@ const useStyles = makeStyles((theme) => ({
     container: {
       paddingRight: '24px',
     },
+    tabs: {
+      overflowY: 'hidden',
+    },
   },
   [theme.breakpoints.down(1281)]: {
     bannerContainer: {
@@ -222,16 +225,6 @@ const useStyles = makeStyles((theme) => ({
     },
     bannerContainer: {
       marginTop: 0,
-    },
-  },
-  [theme.breakpoints.down(375)]: {
-    tabs: {
-      paddingLeft: 0,
-    },
-    tabMin: {
-      '& .MuiTab-wrapper': {
-        fontSize: 12,
-      },
     },
   },
 }))

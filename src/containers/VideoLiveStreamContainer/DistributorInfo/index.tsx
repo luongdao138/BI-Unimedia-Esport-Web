@@ -235,6 +235,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     textAlign: 'center',
   },
   container: {
+    flex: 1,
     display: 'flex',
     justifyContent: 'center',
     marginTop: theme.spacing(2),
@@ -261,6 +262,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: 'row',
     paddingLeft: 10,
     paddingRight: 10,
+    flex: 1,
   },
   label: {},
   seeMoreContainer: {
