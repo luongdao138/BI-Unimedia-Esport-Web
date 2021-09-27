@@ -22,6 +22,7 @@ import { Colors } from '@theme/colors'
 import { ParticipantsResponse } from '@services/arena.service'
 import Avatar from '@components/Avatar'
 import BRList from '../Partials/BRList'
+import BRScoreInput from '@containers/arena/battle_royale/Partials/BRScoreInput'
 
 const participantDefault: ParticipantsResponse = {
   id: undefined,
@@ -162,6 +163,8 @@ const ArenaBattlesEdit: React.FC = () => {
                   }
                 }}
                 highlight={v.highlight}
+                /* eslint-disable-next-line react/no-children-prop */
+                children={<BRScoreInput type={tournament.attributes.rule} />}
               />
             ))}
           </BRList>

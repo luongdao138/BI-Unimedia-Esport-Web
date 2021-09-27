@@ -20,6 +20,7 @@ const BRListItem: React.FC<BRListItemProps> = (props: BRListItemProps) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const avatarClone = cloneElement(props.avatar, { onClick: () => props.onClick(), className: classes.pointer })
+  const scoreInputClone = cloneElement(props.children)
   return (
     <div className={`${classes.root} ${props.highlight ? 'highlight' : ''}`}>
       <div className={classes.contentWrapper}>
@@ -30,7 +31,7 @@ const BRListItem: React.FC<BRListItemProps> = (props: BRListItemProps) => {
           </Typography>
           {props.textSecondary && <Typography className={classes.textSecondary}>{props.textSecondary}</Typography>}
         </div>
-        <div className={classes.rightContent}>{props.children}</div>
+        <div className={classes.rightContent}>{scoreInputClone}</div>
       </div>
     </div>
   )

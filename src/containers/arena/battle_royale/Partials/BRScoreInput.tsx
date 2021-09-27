@@ -2,6 +2,7 @@ import BRInput from './BRInput'
 import { OutlinedInputProps, Box, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { TournamentRule } from '@services/arena.service'
+import BRTimeInput from '@containers/arena/battle_royale/Partials/BRTimeInput'
 
 const BRScoreInput: React.FC<OutlinedInputProps & { type: TournamentRule }> = ({ type, ...props }) => {
   const classes = useStyles()
@@ -16,7 +17,7 @@ const BRScoreInput: React.FC<OutlinedInputProps & { type: TournamentRule }> = ({
       </div>
     )
   } else if (type === 'time_attack') {
-    return <BRInput {...props} placeholder="未入力" />
+    return <BRTimeInput />
   } else {
     return <BRInput {...props} placeholder="未入力" />
   }

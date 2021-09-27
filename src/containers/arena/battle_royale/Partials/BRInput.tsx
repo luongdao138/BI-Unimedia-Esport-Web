@@ -16,6 +16,8 @@ const useStyles = makeStyles(() => ({
   scoreWrap: {
     width: '100%',
     '& .MuiOutlinedInput-inputMarginDense': {
+      paddingLeft: 2,
+      paddingRight: 2,
       paddingTop: 6,
       paddingBottom: 6,
       backgroundColor: Colors.white_opacity['10'],
@@ -27,7 +29,6 @@ const useStyles = makeStyles(() => ({
     '& .MuiOutlinedInput-root': {
       borderRadius: 5,
     },
-
     '& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline': {
       borderWidth: 0,
     },
