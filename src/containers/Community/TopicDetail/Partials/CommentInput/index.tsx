@@ -76,10 +76,11 @@ const Comment: React.FC<CommunityHeaderProps> = ({ reply_param, setPage, setComm
 
   const send = () => {
     if (_.isEmpty(checkNgWord(inputText.trim()))) {
+      const reply_comment_nos = _.map(_.filter(_.split(inputText, REPLY_REGEX)), (c) => Number(c.slice(2)))
       const data = {
         topic_hash: String(topic_hash_key),
         content: isInputEmpty(inputText) ? '' : inputText,
-        reply_to_comment_hash: !_.isEmpty(reply_param) && reply_param.hash_key,
+        reply_to_comment_nos: reply_comment_nos,
         attachments: imageURL,
       }
       if (!createCommentMeta.pending) {
