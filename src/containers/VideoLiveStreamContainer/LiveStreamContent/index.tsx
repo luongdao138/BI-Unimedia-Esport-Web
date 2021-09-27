@@ -25,6 +25,7 @@ import { useRouter } from 'next/router'
 import { useContextualRouting } from 'next-use-contextual-routing'
 import { ESRoutes } from '@constants/route.constants'
 import { getIsAuthenticated } from '@store/auth/selectors'
+import { debounceTime } from '@constants/common.constants'
 
 interface LiveStreamContentProps {
   videoType?: VIDEO_TYPE
@@ -92,7 +93,7 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
         channel_id: channelIdValue,
         follow: followValue,
       })
-    }, 700),
+    }, debounceTime),
     []
   )
 
@@ -104,7 +105,7 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
         like: likeValue,
         unlike: unlikeValue,
       })
-    }, 700),
+    }, debounceTime),
     []
   )
 
@@ -340,18 +341,6 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
                 )}
               </Box>
               <Typography className={classes.device_name}>{detailVideoResult?.category_name}</Typography>
-              {/* {!isMobile ? (
-                <Box className={classes.live_stream_status}>
-                  <ESChip
-                    color={'primary'}
-                    className={classes.statusChip}
-                    label={t('live_stream_screen.live_stream_status')}
-                    onClick={() => ''}
-                  />
-                </Box>
-              ) : (
-                shareButton()
-              )} */}
             </Box>
           )}
 

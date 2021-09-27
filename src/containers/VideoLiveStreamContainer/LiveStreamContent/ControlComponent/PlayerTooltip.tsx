@@ -6,12 +6,20 @@ interface Props {
   id: string
   title: string
   offset?: any
+  place?: 'top' | 'right' | 'bottom' | 'left'
 }
 
-const PlayerTooltip: React.FC<Props> = ({ id, title, offset }) => {
+const PlayerTooltip: React.FC<Props> = ({ id, title, offset, place = 'top' }) => {
   const classes = useStyles()
   return (
-    <ReactTooltip id={id} type="dark" effect="solid" className={classes.playerTooltip} offset={offset || { top: -10, left: 10 }}>
+    <ReactTooltip
+      id={id}
+      type="dark"
+      effect="solid"
+      className={classes.playerTooltip}
+      offset={offset || { top: -10, left: 10 }}
+      place={place}
+    >
       <span>{title}</span>
     </ReactTooltip>
   )
