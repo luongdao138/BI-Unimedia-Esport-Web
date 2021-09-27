@@ -913,7 +913,7 @@ export default {
     community_create_px: '【コミュニティ】',
     community_create_sx: 'を作成しました。',
     community_join_px: '【コミュニティ】',
-    community_join_sx: 'に参加しました。',
+    community_join_sx: 'への参加が許可されました。',
     user_follows_px: '',
     user_follows_sx: 'さんをフォローしました。',
     recruitment_create_px: '【募集】',
