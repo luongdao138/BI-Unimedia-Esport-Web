@@ -434,7 +434,7 @@ export type TopicSearchResponse = {
 export type CommentCreateParams = {
   topic_hash: string
   content: string
-  reply_to_comment_hash: string
+  reply_to_comment_nos: number[]
   attachments: string
 }
 
