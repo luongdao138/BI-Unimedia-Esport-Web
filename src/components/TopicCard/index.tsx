@@ -10,9 +10,10 @@ import { useRouter } from 'next/router'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
 // import _ from 'lodash'
 import React from 'react'
+import { FollowersTopicResponse } from '@services/community.service'
 
 interface Props {
-  topic: any
+  topic: FollowersTopicResponse
 }
 
 const TopicCard: React.FC<Props> = ({ topic }) => {
@@ -74,10 +75,11 @@ const TopicCard: React.FC<Props> = ({ topic }) => {
   return (
     <ESCard
       classes={{ root: classes.cardHover }}
-      onClick={() => router.push(`${ESRoutes.TOPIC.replace(/:id/gi, attr.community_hash)}/${attr.hash_key}`)}
+      // onClick={() => router.push(`${ESRoutes.TOPIC.replace(/:id/gi, attr.community_hash)}/${attr.hash_key}`)}
+      onClick={() => router.push(ESRoutes.COMMUNITY)}
     >
       <Box>
-        <ESCardMedia cornerIcon={<Icon className="fas fa-users" fontSize="small" />} image={attr.cover_image_url} triangleColor={null}>
+        <ESCardMedia cornerIcon={<Icon className="fas fa-users" fontSize="small" />} image={attr.avatar?.assets_url} triangleColor={null}>
           {getMediaScreen()}
         </ESCardMedia>
       </Box>

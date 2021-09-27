@@ -35,6 +35,8 @@ import { CommunityMemberRole } from '@services/community.service'
 const messages = {
   [`${unfollowCommunity.fulfilled}`]: i18n.t('common:community.toast_unfollowed'),
   [`${memberSubmitFulfilled}`]: i18n.t('common:community.change_applying_members_toast'),
+  [`${deleteTopicComment.fulfilled}`]: i18n.t('common:topic_comment.delete.success_toast'),
+  [`${deleteTopic.fulfilled}`]: i18n.t('common:community.topic.delete_success'),
   [`${getTopicList.rejected}`]: i18n.t('common:common.failed_to_get_data'),
   [`${getCommunityList.rejected}`]: i18n.t('common:common.failed_to_get_data'),
   [`${getCommunityListPublic.rejected}`]: i18n.t('common:common.failed_to_get_data'),

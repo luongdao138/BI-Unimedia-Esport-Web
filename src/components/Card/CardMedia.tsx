@@ -24,7 +24,12 @@ const ESCardMedia: React.FC<CardMediaProps & { cornerIcon?: any; triangleColor?:
       <Box className={classes.mediaWrap}>
         <CardMedia className={classes.media}>
           <Box className={classes.coverImage}>
-            <LazyLoadImage onError={() => handleError()} src={src} className={classes.coverImageInner} alt={'cover-image'} />
+            <LazyLoadImage
+              onError={() => handleError()}
+              src={src === null || src === undefined ? IMG_PLACEHOLDER : src}
+              className={classes.coverImageInner}
+              alt={'cover-image'}
+            />
           </Box>
           {children}
         </CardMedia>
