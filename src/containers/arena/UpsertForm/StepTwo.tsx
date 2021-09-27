@@ -62,7 +62,7 @@ const StepTwo: React.FC<Props> = ({ formik, editables }) => {
           <ESSelect
             className={classes.selectWidth}
             name="stepTwo.sort"
-            value={formik.values.stepTwo.sort}
+            value={formik.values.stepTwo.sort_by}
             onChange={formik.handleChange}
             label={i18n.t('common:tournament_create.sorting_method')}
             required={true}

@@ -19,7 +19,6 @@ import ButtonPrimaryOutlined from '@components/ButtonPrimaryOutlined'
 import { ParticipantsResponse } from '@services/arena.service'
 import Avatar from '@components/Avatar'
 import BRList from '../Partials/BRList'
-import BRScoreInput from '@containers/arena/battle_royale/Partials/BRScoreInput'
 import StickyFooter from '../Partials/StickyFooter'
 import useArenaHelper from '@containers/arena/hooks/useArenaHelper'
 
@@ -172,7 +171,7 @@ const ArenaBattlesEdit: React.FC = () => {
           <Box pt={3} pb={3} textAlign="center">
             {tournament.attributes.is_freezed ? null : <Typography>順位を入力してください</Typography>}
           </Box>
-          <BRList rule={tournament.attributes.rule} className={classes.listContainer}>
+          <BRList className={classes.listContainer}>
             {selecteds.map((v, i) => (
               <BRListItem
                 key={i}
@@ -186,8 +185,6 @@ const ArenaBattlesEdit: React.FC = () => {
                   }
                 }}
                 highlight={v.highlight}
-                /* eslint-disable-next-line react/no-children-prop */
-                children={<BRScoreInput type={tournament.attributes.rule} />}
               />
             ))}
           </BRList>
