@@ -83,7 +83,7 @@ const StreamLayout: React.FC<StreamLayoutProps> = ({ children, patternBg, footer
         <>
           <aside className="minimize_aside_left">
             <Box onMouseOver={() => toggleDrawer(true)}>
-              <Box style={{visibility: open ? 'hidden' : 'visible'}}>
+              <Box style={{ visibility: open ? 'hidden' : 'visible' }}>
                 <StreamSideMenu minimizeLayout={minimizeLayout} isStreamer={isStreamer} />
               </Box>
             </Box>

@@ -82,7 +82,12 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
       >
         {minimizeLayout ? (
           <Box>
-            <img src="/images/stream_log.svg" className={classes.logo} />
+            {/* <img src="/images/stream_log.svg" className={classes.logo} /> */}
+            <ESAvatar
+              className={classes.logo}
+              alt={userProfile?.attributes?.nickname}
+              src={userProfile ? userProfile?.attributes?.avatar_url : '/images/avatar.png'}
+            />
           </Box>
         ) : (
           <>

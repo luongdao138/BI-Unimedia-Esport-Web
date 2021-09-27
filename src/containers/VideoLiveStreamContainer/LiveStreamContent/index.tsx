@@ -1,6 +1,5 @@
 import { Box, ButtonBase, Icon, makeStyles, Typography, useMediaQuery, useTheme } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
-import ESChip from '@components/Chip'
 import userProfileStore from '@store/userProfile'
 import ESAvatar from '@components/Avatar'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
@@ -62,6 +61,8 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
   const [likeCount, setLikeCount] = useState(detailVideoResult?.like_count !== null ? detailVideoResult?.like_count : 0)
   const [unlikeCount, setUnlikeCount] = useState(detailVideoResult?.unlike_count !== null ? detailVideoResult?.unlike_count : 0)
   const [subscribe, setSubscribe] = useState(userResult?.follow || 0)
+  // get url browser video live stream
+  const urlVideoLiveStream = window.location.href
 
   const isSubscribed = () => subscribe
 
@@ -171,9 +172,7 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
     <Box className={classes.shareButton}>
       <ButtonBase
         onClick={() =>
-          window
-            .open(`https://twitter.com/intent/tweet?text=${detailVideoResult?.title}\n${detailVideoResult?.archived_url}`, '_blank')
-            ?.focus()
+          window.open(`https://twitter.com/intent/tweet?text=${detailVideoResult?.title}%0a${urlVideoLiveStream}`, '_blank')?.focus()
         }
       >
         <Icon className={`fa fa-share-alt ${classes.icon}`} fontSize="small" />
@@ -316,6 +315,7 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
     //get profile streamer
     dispatch(actions.getMemberProfile(detailVideoResult?.user_code))
   }
+  // detailVideoResult?.status === 1
   return (
     <Box className={classes.container}>
       <Box className={classes.mediaPlayerContainer}>
@@ -331,9 +331,16 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
             <Box className={classes.wrap_movie_info}>
               <Box className={classes.wrap_title}>
                 <Typography className={classes.movie_title}>{detailVideoResult?.title}</Typography>
-                <Typography className={classes.device_name}>{detailVideoResult?.category_name}</Typography>
+                {!isMobile && detailVideoResult?.status === 1 ? (
+                  <Box className={classes.live_stream_status}>
+                    <Typography className={classes.txtVideoStatus}>{t('live_stream_screen.live_stream_status')}</Typography>
+                  </Box>
+                ) : (
+                  isMobile && shareButton()
+                )}
               </Box>
-              {!isMobile ? (
+              <Typography className={classes.device_name}>{detailVideoResult?.category_name}</Typography>
+              {/* {!isMobile ? (
                 <Box className={classes.live_stream_status}>
                   <ESChip
                     color={'primary'}
@@ -344,7 +351,7 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
                 </Box>
               ) : (
                 shareButton()
-              )}
+              )} */}
             </Box>
           )}
 
@@ -356,8 +363,6 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
                 <>
                   <Box className={classes.interactive_info}>
                     <ReactionButton iconName={'fa fa-eye'} value={detailVideoResult?.view_count} status={1} showPointer={false} />
-                    {/* <LoginRequired>
-                      <div onClick={toggleLikeVideo}> */}
                     <ReactionButton
                       onPress={isAuthenticated ? toggleLikeVideo : goToLogin}
                       iconName={'fa fa-thumbs-up'}
@@ -365,10 +370,6 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
                       status={like}
                       showPointer={true}
                     />
-                    {/* </div> */}
-                    {/* </LoginRequired> */}
-                    {/* <LoginRequired>
-                      <div onClick={toggleUnLikeVideo}> */}
                     <ReactionButton
                       onPress={isAuthenticated ? toggleUnLikeVideo : goToLogin}
                       iconName={'fa fa-thumbs-down'}
@@ -376,19 +377,13 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
                       status={unlike}
                       showPointer={true}
                     />
-                    {/* </div> */}
-                    {/* </LoginRequired> */}
                     {!isMobile && shareButton()}
                   </Box>
 
                   {/* report icon */}
-                  <Box ml={1} pr={3} display="flex" flexDirection="row" flexShrink={0}>
+                  <Box ml={1} pr={!isMobile ? 3 : 0} display="flex" flexDirection="row" flexShrink={0}>
                     <ESMenu>
-                      {/* <LoginRequired>
-                        <div onClick={handleReportOpen}> */}
                       <ESMenuItem onClick={isAuthenticated ? handleReportOpen : goToLogin}>{t('tournament.report')}</ESMenuItem>
-                      {/* </div>
-                      </LoginRequired> */}
                     </ESMenu>
                   </Box>
                 </>
@@ -402,7 +397,7 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
           <Box className={classes.streamer_info}>
             <ESAvatar className={classes.avatar} alt={detailVideoResult?.user_nickname} src={detailVideoResult?.user_avatar} />
             <Box className={classes.streamer_data}>
-              {userProfile?.attributes?.nickname && <Box className={classes.streamer_name}>{detailVideoResult?.channel_name}</Box>}
+              {detailVideoResult?.channel_name && <Box className={classes.streamer_name}>{detailVideoResult?.channel_name}</Box>}
               <Box className={classes.registration}>
                 <Typography className={classes.register_person_label}>{t('live_stream_screen.register_person_label')}</Typography>
                 <Typography className={classes.register_person_number}>
@@ -505,13 +500,16 @@ const useStyles = makeStyles((theme) => ({
   wrap_movie_info: {
     display: 'flex',
     width: '100%',
+    flexDirection: 'column',
   },
   wrap_title: {
-    paddingRight: '110px',
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    // justifyContent: 'space-between',
   },
   movie_title: {
-    // maxWidth: '254px',
-    // whiteSpace: 'nowrap',
+    paddingRight: '64px',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     fontSize: '20px',
@@ -522,7 +520,22 @@ const useStyles = makeStyles((theme) => ({
     fontSize: '15px',
     color: '#F7F735',
   },
-  live_stream_status: {},
+  live_stream_status: {
+    display: 'flex',
+    alignItems: 'center',
+    backgroundColor: Colors.primary,
+    borderRadius: 2,
+  },
+  txtVideoStatus: {
+    fontSize: '12px',
+    fontWeight: 'bold',
+    color: '#FFFFFF',
+    textAlign: 'center',
+    paddingLeft: 8,
+    paddingRight: 8,
+    paddingTop: 2,
+    paddingBottom: 2,
+  },
   wrap_interactive_info: {
     display: 'flex',
     color: '#FFFFFF',
@@ -563,16 +576,16 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   statusChip: {
-    width: '84px',
+    // width: '84px',
     height: '20px',
     fontSize: '12px',
     fontWeight: 'bold',
     color: '#FFFFFF',
     borderRadius: '2px',
     maxWidth: 'none',
-    justifyContent: 'flex-start',
+    justifyContent: 'center',
     '& .MuiChip-label': {
-      paddingLeft: '6px',
+      // paddingLeft: '6px',
       paddingRight: 0,
     },
   },
@@ -637,12 +650,17 @@ const useStyles = makeStyles((theme) => ({
     wrapPreLoadReactionButton: {
       width: 'calc(100vw)',
     },
+    live_stream_status: {
+      display: 'flex',
+      justifyContent: 'flex-end',
+      alignItems: 'flex-end',
+    },
     movie_title: {
-      fontSize: '12px',
+      fontSize: '16px',
       maxWidth: '200px',
     },
     device_name: {
-      fontSize: '8px',
+      fontSize: '14px',
     },
     shareButton: {
       '& button': {
@@ -653,6 +671,7 @@ const useStyles = makeStyles((theme) => ({
     wrap_title: {
       paddingRight: 0,
       flex: 1,
+      justifyContent: 'space-between',
     },
     mobileRegisterChannelContainer: {
       backgroundColor: 'black',
