@@ -16,7 +16,7 @@ const useLobbyData = () => {
   const getRecentLobbiesMeta = useAppSelector(_getRecentLobbiesMeta)
   const getRecentLobbies = (params: RecentLobbiesParams) => dispatch(actions.getRecentLobbies(params))
   const reset = () => {
-    dispatch(actions.clearLobbyResult())
+    dispatch(actions.clearLobbyRecents())
     dispatch(clearMetaData(actions.getRecentLobbies.typePrefix))
   }
 

@@ -6,6 +6,7 @@ const getRoot = (state: RootState) => state.lobby
 
 export const recommendedParticipantsSelector = createSelector(getRoot, (state) => state.recommendedParticipants)
 export const participantSelector = createSelector(getRoot, (state) => state.participants)
+export const allParticipantSelector = createSelector(getRoot, (state) => state.allParticipants)
 export const participantsMeta = createSelector(getRoot, (state) => state.participantsMeta)
 export const getLobbyCategories = createSelector(getRoot, (state) => state.lobbyCategories)
 export const getLobbyDetail = createSelector(getRoot, (state) => state.lobbyDetail)

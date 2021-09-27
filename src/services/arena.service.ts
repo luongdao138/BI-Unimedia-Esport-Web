@@ -335,6 +335,7 @@ export type ParticipantsResponse = {
       user_code: string
     }
     position: number | null
+    is_fixed_score?: boolean
   }
   highlight?: boolean
 }
@@ -739,5 +740,14 @@ export const setBattleRoyalScores = async ({ hash_key, participants }: SetBattle
     scores[p.id] = p.attributes.position
   }
   const { data } = await api.post(URI.BATTLE_ROYALE_SET_SCORES.replace(/:id/gi, `${hash_key}`), { scores })
+  return data
+}
+
+export const setBattleRoyalOwnScore = async ({ hash_key, participants }: SetBattleRoyaleScoresParams) => {
+  const scores = {}
+  for (const p of participants) {
+    scores[p.id] = p.attributes.position
+  }
+  const { data } = await api.post(URI.BATTLE_ROYALE_SET_OWN_SCORE.replace(/:id/gi, `${hash_key}`), { scores })
   return data
 }

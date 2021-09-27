@@ -462,3 +462,18 @@ export const setBattleRoyaleScores = createAsyncThunk<void, services.SetBattleRo
     }
   }
 )
+
+export const setBattleRoyaleOwnScore = createAsyncThunk<void, services.SetBattleRoyaleScoresParams>(
+  types.SET_BATTLE_ROYALE_SCORES,
+  async (param, { rejectWithValue }) => {
+    try {
+      const res = await services.setBattleRoyalOwnScore(param)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
