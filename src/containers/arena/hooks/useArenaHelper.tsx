@@ -4,6 +4,7 @@ import { ROLE, RULE, TOURNAMENT_STATUS } from '@constants/tournament.constants'
 import { ESRoutes } from '@constants/route.constants'
 import { useContextualRouting } from 'next-use-contextual-routing'
 import _ from 'lodash'
+import { TournamentHelper } from '@utils/helpers/TournamentHelper'
 
 const useArenaHelper = (
   tournament?: TournamentDetail
@@ -24,6 +25,8 @@ const useArenaHelper = (
   isReady: boolean
   isEntered: boolean
   isUnselected: boolean
+  isMemberSelectable: boolean
+  maxCapacity: number
   toEdit: () => void
   toCreate: () => void
   isAdminJoined: boolean
@@ -52,6 +55,17 @@ const useArenaHelper = (
   const isReady = status === TOURNAMENT_STATUS.READY
   const isEntered = tournament?.attributes?.is_entered
   const isUnselected = isEntered && isFreezed && myRole === ROLE.INTERESTED
+  const joinedCount = tournament ? tournament.attributes.interested_count + tournament.attributes.participant_count : 0
+  const maxCapacity = tournament?.attributes.is_freezed
+    ? tournament?.attributes.participant_count
+    : TournamentHelper.checkStatus(tournament?.attributes.status, TOURNAMENT_STATUS.RECRUITMENT_CLOSED) ||
+      joinedCount > tournament.attributes.max_participants
+    ? tournament?.attributes.max_participants
+    : joinedCount
+  const isMemberSelectable =
+    isModerator &&
+    (tournament.attributes.status === TOURNAMENT_STATUS.RECRUITMENT_CLOSED ||
+      (tournament.attributes.status === TOURNAMENT_STATUS.IN_PROGRESS && !tournament.attributes.is_freezed))
   const checkAdminJoined = () => {
     if (!isModerator) return false
     const myInfoList = _.get(tournament, 'attributes.my_info', [])
@@ -122,6 +136,8 @@ const useArenaHelper = (
     toDetail,
     isEntered,
     toParticipants,
+    maxCapacity,
+    isMemberSelectable,
   }
 }
 

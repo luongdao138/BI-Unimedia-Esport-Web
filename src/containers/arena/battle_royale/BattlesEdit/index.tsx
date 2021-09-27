@@ -6,7 +6,6 @@ import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import useParticipants from '@containers/arena/Detail/Participants/useParticipants'
 import useTournamentDetail from '@containers/arena/hooks/useTournamentDetail'
-import { TournamentHelper } from '@utils/helpers/TournamentHelper'
 import { ROLE } from '@constants/tournament.constants'
 import InterestedList from '@containers/arena/Detail/Partials/SelectParticipantModal/InterestedList'
 import { useTranslation } from 'react-i18next'
@@ -21,6 +20,7 @@ import { ParticipantsResponse } from '@services/arena.service'
 import Avatar from '@components/Avatar'
 import BRList from '../Partials/BRList'
 import StickyFooter from '../Partials/StickyFooter'
+import useArenaHelper from '@containers/arena/hooks/useArenaHelper'
 
 const participantDefault: ParticipantsResponse = {
   id: undefined,
@@ -42,9 +42,9 @@ const ArenaBattlesEdit: React.FC = () => {
   const [showParticipants, setShowParticipants] = useState<{ pid: number | undefined; open: boolean }>({ pid: undefined, open: false })
   const [selecteds, setSelecteds] = useState<ParticipantsResponse[]>([])
   const [clickIndex, setClickIndex] = useState<number>(0)
-  const data = tournament ? TournamentHelper.getDetailData(tournament) : undefined
-  const confirmFreeze = useFreezeDialog(data?.isTeam)
-  const confirmRandomize = useRandomizeDialog(data?.isTeam)
+  const { isTeam, isModerator, maxCapacity, isMemberSelectable } = useArenaHelper(tournament)
+  const confirmFreeze = useFreezeDialog(isTeam)
+  const confirmRandomize = useRandomizeDialog(isTeam)
 
   const handleFreeze = () => {
     confirmFreeze().then(() => {
@@ -54,11 +54,16 @@ const ArenaBattlesEdit: React.FC = () => {
 
   useEffect(() => {
     if (freezeMeta.loaded) {
-      const redirectTo = router.asPath.replace('/edit', '')
-      router.push(redirectTo)
       resetFreezeMeta()
     }
   }, [freezeMeta.loaded])
+
+  useEffect(() => {
+    if (tournament && (tournament.attributes.is_freezed || !isModerator)) {
+      const redirectTo = router.asPath.replace('/edit', '')
+      router.push(redirectTo)
+    }
+  }, [tournament, isModerator])
 
   const handleRandomize = () => {
     confirmRandomize().then(() => {
@@ -143,12 +148,12 @@ const ArenaBattlesEdit: React.FC = () => {
   const [freezable, setFreezable] = useState(false)
   useEffect(() => {
     const selectedLength = getParticipantIds(selecteds).length
-    setFreezable(selectedLength === data?.maxCapacity)
+    setFreezable(selectedLength === maxCapacity)
   }, [selecteds])
 
   return (
     <>
-      {detailMeta.loaded && participantsMeta.loaded && data && (
+      {detailMeta.loaded && participantsMeta.loaded && tournament && (
         <StickyFooter
           hideFooter={tournament.attributes.is_freezed}
           primaryButton={
@@ -174,7 +179,7 @@ const ArenaBattlesEdit: React.FC = () => {
                 text={v.attributes.user?.user_code ? v.attributes.name : v.attributes.team?.data.attributes.name}
                 textSecondary={v.attributes.user?.user_code || ''}
                 onClick={() => {
-                  if (data?.memberSelectable) {
+                  if (isMemberSelectable) {
                     setShowParticipants({ open: true, pid: Number(v.id) })
                     setClickIndex(i)
                   }

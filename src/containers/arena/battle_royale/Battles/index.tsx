@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import useTournamentDetail from '@containers/arena/hooks/useTournamentDetail'
 import HeaderWithButton from '@components/HeaderWithButton'
 import Avatar from '@components/Avatar'
@@ -16,14 +17,24 @@ import BRList from '../Partials/BRList'
 import { Typography, Box } from '@material-ui/core'
 import StickyFooter from '../Partials/StickyFooter'
 import ButtonPrimary from '@components/ButtonPrimary'
+import useArenaHelper from '@containers/arena/hooks/useArenaHelper'
 
 const ArenaBattles: React.FC = () => {
   const router = useRouter()
   const classes = useStyles()
+  const { t } = useTranslation(['common'])
 
   const { tournament, meta: detailMeta } = useTournamentDetail()
+  const { isModerator } = useArenaHelper(tournament)
   const { participants, brMeta: participantsMeta, getBattleRoyaleParticipants, resetMeta } = useParticipants()
-  const { setBattleRoyaleScores, setBattleRoyaleScoresMeta, resetBattleRoyaleScoresMeta } = useBattleRoyaleScore()
+  const {
+    setBattleRoyaleScores,
+    setBattleRoyaleScoresMeta,
+    resetBattleRoyaleScoresMeta,
+    setBattleRoyaleOwnScore,
+    setBattleRoyaleOwnScoreMeta,
+    resetBattleRoyaleOwnScoreMeta,
+  } = useBattleRoyaleScore()
   const [selecteds, setSelecteds] = useState<ParticipantsResponse[]>([])
 
   const { addToast } = useAddToast()
@@ -57,21 +68,28 @@ const ArenaBattles: React.FC = () => {
     })
     setSelecteds(newSelecteds)
   }
-  useEffect(() => {
-    if (setBattleRoyaleScoresMeta.loaded) {
-      resetBattleRoyaleScoresMeta()
-      addToast('結果を反映しました')
-    }
-  }, [setBattleRoyaleScoresMeta.loaded])
 
-  const handleSubmitScore = () => setBattleRoyaleScores({ hash_key: tournament.attributes.hash_key, participants: selecteds })
+  const handleSubmitScore = () => {
+    if (isModerator) {
+      setBattleRoyaleScores({ hash_key: tournament.attributes.hash_key, participants: selecteds })
+    } else {
+      setBattleRoyaleOwnScore({ hash_key: tournament.attributes.hash_key, participants: selecteds })
+    }
+  }
+  useEffect(() => {
+    if (setBattleRoyaleScoresMeta.loaded || setBattleRoyaleOwnScoreMeta.loaded) {
+      resetBattleRoyaleScoresMeta()
+      resetBattleRoyaleOwnScoreMeta()
+      addToast(t('common:arena.br_set_score_success_toast'))
+    }
+  }, [setBattleRoyaleScoresMeta.loaded, setBattleRoyaleOwnScoreMeta.loaded])
 
   return (
     <StickyFooter
       hideFooter={false}
       primaryButton={
         <ButtonPrimary type="submit" round fullWidth onClick={handleSubmitScore}>
-          Submit Score
+          {t('common:arena.br_set_score_btn')}
         </ButtonPrimary>
       }
     >
@@ -80,9 +98,9 @@ const ArenaBattles: React.FC = () => {
         <Typography>スコアを入力してください</Typography>
       </Box>
       <BRList className={classes.listContainer}>
-        {selecteds.map((v, i) => (
+        {selecteds.map((v) => (
           <BRListItem
-            key={i}
+            key={v.id}
             avatar={<Avatar alt={v.attributes.name || ''} src={v.attributes.avatar_url || ''} size={26} />}
             text={v.attributes.user?.user_code ? v.attributes.name : v.attributes.team?.data.attributes.name}
             textSecondary={v.attributes.user?.user_code || ''}
@@ -92,6 +110,7 @@ const ArenaBattles: React.FC = () => {
               value={v.attributes.position || ''}
               onChange={({ target: { value } }) => setScores(Number(value), v.id)}
               type={tournament.attributes.rule}
+              disabled={(!v.highlight && !isModerator) || (v.attributes.is_fixed_score && !isModerator)}
             />
           </BRListItem>
         ))}
