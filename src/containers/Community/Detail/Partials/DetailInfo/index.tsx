@@ -295,6 +295,7 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
           <ESReport
             reportType={REPORT_TYPE.COMMUNITY}
             target_id={data.hash_key}
+            title={t('common:community.report_community')}
             data={detail}
             open={openReport}
             handleClose={() => setOpenReport(false)}

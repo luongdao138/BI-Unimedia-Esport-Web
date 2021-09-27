@@ -17,6 +17,7 @@ import RadioVertical from '@components/RadioVertical'
 import ESLoader from '@components/Loader'
 import ESDialog from '@components/Modal'
 import ESStickyFooter from '@components/StickyFooter'
+import ESLabel from '@components/Label'
 import Avatar from '@components/Avatar'
 import ButtonPrimary from '@components/ButtonPrimary'
 import { ReportParams } from '@services/report.service'
@@ -204,14 +205,17 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
         return <Typography variant="h2">{data.attributes.title}</Typography>
       case REPORT_TYPE.COMMUNITY:
         return (
-          <Box className={classes.userInfoContainer}>
-            <Box display="flex" alignItems="center" mr={2}>
-              <Icon className={`fas fa-users ${classes.communityIcon}`} />
+          <>
+            <ESLabel label={t('community.community_to_report')} size="small" />
+            <Box className={classes.userInfoContainer}>
+              <Box display="flex" alignItems="center" mr={2}>
+                <Icon className={`fas fa-users ${classes.communityIcon}`} />
+              </Box>
+              <Typography variant="h2" className={classes.wordBreak}>
+                {data.attributes.name}
+              </Typography>
             </Box>
-            <Typography variant="h2" className={classes.wordBreak}>
-              {data.attributes.name}
-            </Typography>
-          </Box>
+          </>
         )
       case REPORT_TYPE.TOPIC:
         return (

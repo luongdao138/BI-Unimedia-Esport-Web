@@ -47,8 +47,8 @@ export type ReportData = {
     date: string
     image: string
     number: number
-    hash_key: string
     topic_title?: string
+    id: number
   }
 }
 
@@ -98,6 +98,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
       number: commentData.comment_no,
       hash_key: commentData.hash_key,
       avatar_image: commentData.owner_profile,
+      id: commentData.id,
     },
   }
 
@@ -270,7 +271,6 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
           }}
           style={{
             left: contentRect.left + _theme.spacing(3),
-            top: 60,
           }}
         >
           {!_.isEmpty(commentDetail) &&
