@@ -1,6 +1,6 @@
 import { Box, makeStyles, Theme, Typography, useTheme } from '@material-ui/core'
 import { Pagination } from '@material-ui/lab'
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC, useState } from 'react'
 import { Colors } from '@theme/colors'
 import PointsPurchasedItem from '../PointsPurchasedItem'
 import MyPointsCard from '../MyPointsCard'
@@ -11,9 +11,9 @@ import useMediaQuery from '@material-ui/core/useMediaQuery'
 
 const PointManagementTab: FC = () => {
   const classes = useStyles()
-  const { getMyPointData, meta_my_points, myPointsData, resetMyPointsActive } = usePointsManage()
-  const totalMyPoints = myPointsData?.total_point
-  const listMyPointsData = myPointsData?.aggregate_points
+  const { getMyPointData, meta_my_points, myPointsData } = usePointsManage()
+  // const totalMyPoints = myPointsData?.total_point
+  // const listMyPointsData = myPointsData?.aggregate_points
   const totalPages = Math.ceil(myPointsData?.total / 10)
   const isLoading = meta_my_points.pending
   const theme = useTheme()
@@ -22,29 +22,36 @@ const PointManagementTab: FC = () => {
   const limit = 10
   const [page, setPage] = useState<number>(1)
 
-  const params = {
-    page: page,
-    limit: limit,
-  }
-  useEffect(() => {
-    getMyPointData(params)
-    return () => {
-      resetMyPointsActive()
-    }
-  }, [page])
+  // useEffect(() => {
+  //   if (!myPointsData) {
+  //     getMyPointData({ page: page, limit: limit })
+  //   }
+  //   return () => {
+  //     resetMyPointsActive()
+  //   }
+  // }, [])
+
+  // useEffect(() => {
+  //   getMyPointData({ page: page, limit: limit })
+
+  //   return () => {
+  //     resetMyPointsActive()
+  //   }
+  // }, [page])
 
   const onChangePage = (_event: React.ChangeEvent<unknown>, value: number): void => {
     setPage(value)
+    getMyPointData({ page: value, limit })
   }
   return (
     <Box className={classes.container}>
       <Box>
-        <MyPointsCard my_points={totalMyPoints ? totalMyPoints : 0} />
+        <MyPointsCard my_points={myPointsData?.total_point ? myPointsData?.total_point : 0} />
       </Box>
-      <Box className={`${classes.wrapContent} ${listMyPointsData?.length > 0 && classes.spacingBottom} `}>
-        {listMyPointsData?.length > 0 ? (
+      <Box className={`${classes.wrapContent} ${myPointsData?.aggregate_points?.length > 0 && classes.spacingBottom} `}>
+        {myPointsData?.aggregate_points?.length > 0 ? (
           <>
-            {listMyPointsData.map((item, i) => (
+            {myPointsData?.aggregate_points.map((item, i) => (
               <PointsPurchasedItem data={item} key={i} serialNumber={page > 1 ? (page - 1) * limit + i + 1 : i + 1} />
             ))}
             {totalPages > 1 && (

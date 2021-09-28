@@ -1,7 +1,7 @@
 import { URI } from '@constants/uri.constants'
 import api from './api'
 
-export const baseViewingURL = 'https://exelab.jp/live?vid='
+export const baseViewingURL = `${process.env.NEXT_PUBLIC_API}/?vid=`
 export const TYPE_SETTING = {
   LIVE: 'live',
   SCHEDULE: 'schedule',

@@ -62,6 +62,9 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
   const [likeCount, setLikeCount] = useState(detailVideoResult?.like_count !== null ? detailVideoResult?.like_count : 0)
   const [unlikeCount, setUnlikeCount] = useState(detailVideoResult?.unlike_count !== null ? detailVideoResult?.unlike_count : 0)
   const [subscribe, setSubscribe] = useState(userResult?.follow || 0)
+  const [subscribeCount, setSubscribeCount] = useState(
+    detailVideoResult?.channel_follow_count !== null ? detailVideoResult?.channel_follow_count : 0
+  )
   const [keyVideoPlayer, setKeyVideoPlayer] = useState(0)
   // get url browser video live stream
   const urlVideoLiveStream = window.location.href
@@ -73,12 +76,14 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
   const toggleSubscribeClick = () => {
     if (subscribe === 0) {
       setSubscribe(1)
+      setSubscribeCount(subscribeCount + 1)
       // console.log('enter Subscribe')
       if (detailVideoResult?.channel_id) {
         debouncedHandleSubscribe(1, detailVideoResult?.channel_id, props?.video_id)
       }
     } else {
       setSubscribe(0)
+      setSubscribeCount(subscribeCount - 1)
       // console.log('enter unSubscribe')
       if (detailVideoResult?.channel_id) {
         debouncedHandleSubscribe(0, detailVideoResult?.channel_id, props?.video_id)
@@ -156,6 +161,9 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
     if (detailVideoResult) {
       setLikeCount(detailVideoResult?.like_count !== likeCount ? detailVideoResult?.like_count : likeCount)
       setUnlikeCount(detailVideoResult?.unlike_count !== unlikeCount ? detailVideoResult?.unlike_count : unlikeCount)
+      setSubscribeCount(
+        detailVideoResult?.channel_follow_count !== subscribeCount ? detailVideoResult?.channel_follow_count : subscribeCount
+      )
     }
   }, [userResult, detailVideoResult])
 
@@ -185,7 +193,7 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
 
   const mobileRegisterChannelContainer = () => (
     <Box className={classes.mobileRegisterChannelContainer}>
-      <ESAvatar className={classes.smallAvatar} src={'/images/avatar.png'} />
+      <ESAvatar className={classes.smallAvatar} alt={detailVideoResult?.user_nickname} src={detailVideoResult?.user_avatar} size={24} />
       <Typography className={classes.channelName}>{'配信者の名前がはいります'}</Typography>
       <LoginRequired>
         <div onClick={toggleSubscribeClick}>{registerChannelButton()}</div>
@@ -404,17 +412,13 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
               <Box className={classes.registration}>
                 <Typography className={classes.register_person_label}>{t('live_stream_screen.register_person_label')}</Typography>
                 <Typography className={classes.register_person_number}>
-                  {FormatHelper.japaneseWanFormatter(detailVideoResult?.channel_follow_count && 0)}
+                  {FormatHelper.japaneseWanFormatter(subscribeCount)}
                   {t('common.man')}
                 </Typography>
               </Box>
             </Box>
           </Box>
-          {/* <LoginRequired>
-            <div onClick={toggleSubscribeClick}> */}
           {registerChannelButton()}
-          {/* </div>
-          </LoginRequired> */}
         </Box>
       )}
       {/* Show Report Modal */}

@@ -48,11 +48,7 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
 
   useEffect(() => {
     if (isAuthenticated && !myPointsData) {
-      const params = {
-        page: 1,
-        limit: 10,
-      }
-      getMyPointData(params)
+      getMyPointData({ page: 1, limit: 10 })
     }
   }, [myPointsData])
 
