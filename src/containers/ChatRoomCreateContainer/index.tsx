@@ -26,6 +26,7 @@ import useCheckNgWord from '@utils/hooks/useCheckNgWord'
 import { showDialog } from '@store/common/actions'
 import { NG_WORD_DIALOG_CONFIG, NG_WORD_AREA } from '@constants/common.constants'
 import i18n from '@locales/i18n'
+import { Colors } from '@theme/colors'
 
 const { actions } = chatStore
 
@@ -220,7 +221,9 @@ const ChatRoomCreateContainer: React.FC<ChatRoomCreateContainerProps> = (props) 
     if (!actionPending || !uploadMeta.uploading) {
       return (
         <Box display="flex" flex={1} justifyContent="center" alignItems="center" height={'100%'}>
-          {i18n.t('common:chat.select_destination')}
+          <Typography component="p" className={classes.placeholder} variant="body2">
+            {i18n.t('common:chat.select_destination')}
+          </Typography>
         </Box>
       )
     }
@@ -367,6 +370,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     columnGap: 14,
     padding: '8px 12px',
   },
+  placeholder: {
+    whiteSpace: 'pre-line',
+    textAlign: 'center',
+    color: Colors.white_opacity[30],
+  },
   [theme.breakpoints.down('sm')]: {
     memberSelectContainer: {
       position: 'absolute',
@@ -376,6 +384,11 @@ const useStyles = makeStyles((theme: Theme) => ({
       pointerEvents: 'none',
       right: 0,
       zIndex: 1000,
+    },
+  },
+  [theme.breakpoints.down('xs')]: {
+    placeholder: {
+      fontSize: 10,
     },
   },
 }))
