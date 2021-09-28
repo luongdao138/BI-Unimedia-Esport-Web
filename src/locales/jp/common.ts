@@ -391,6 +391,7 @@ export default {
     twitch: 'TwitchURL',
     instagram: 'InstagramURL',
     discord: 'DiscordTag',
+    tag_up_to: 'タグは５つまで登録できます',
   },
   gender: {
     male: '男性',
