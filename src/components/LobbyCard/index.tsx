@@ -80,7 +80,7 @@ const LobbyCard: React.FC<Props> = ({ lobby }) => {
               size="small"
               variant="outlined"
               label={
-                <Box color={Colors.grey[350]} justifyContent="flex-">
+                <Box color={Colors.grey[350]} justifyContent="flex-start">
                   <Typography variant="overline" className={classes.label}>
                     {statusText[value]}
                   </Typography>
@@ -191,14 +191,14 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(2),
   },
   chipPrimary: {
-    width: 64,
+    minWidth: 64,
     height: 17,
     backgroundColor: Colors.black_opacity[70],
     borderRadius: 4,
     border: `0.2px solid ${Colors.grey[300]}`,
   },
   chipSecondary: {
-    width: 64,
+    minWidth: 64,
     height: 17,
     backgroundColor: Colors.white_opacity[87],
     borderRadius: 4,
