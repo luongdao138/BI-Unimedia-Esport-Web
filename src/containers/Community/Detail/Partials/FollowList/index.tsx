@@ -288,7 +288,7 @@ const FollowList: React.FC<Props> = ({ community }) => {
                   </InfiniteScroll>
                 </Box>
               )}
-              {membersMeta.pending && (
+              {membersList.length === 0 && !membersMeta.loaded && membersMeta.pending && (
                 <Grid item xs={12}>
                   <Box my={4} display="flex" justifyContent="center" alignItems="center">
                     <ESLoader />

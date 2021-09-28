@@ -36,7 +36,7 @@ const TopicListContainer: React.FC = () => {
   return (
     <>
       <Box mt={2} />
-      {topicListMeta.pending ? (
+      {topicList.length === 0 && !topicListMeta.loaded && topicListMeta.pending ? (
         <Box className={classes.loaderBox}>
           <ESLoader />
         </Box>

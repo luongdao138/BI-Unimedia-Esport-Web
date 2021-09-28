@@ -289,7 +289,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
               </Box>
             </Box>
           )}
-          {commentDetailMeta.pending && (
+          {commentDetail === null && !commentDetailMeta.loaded && commentDetailMeta.pending && (
             <Box display="flex" justifyContent="center" alignItems="center">
               <ESLoader />
             </Box>

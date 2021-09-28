@@ -17,8 +17,6 @@ import ESReport from '@containers/Report'
 import { useRouter } from 'next/router'
 import { REPORT_TYPE } from '@constants/common.constants'
 import SearchContainer from '../SearchContainer'
-import TopicCreateButton from '@containers/Community/Partials/TopicCreateButton'
-import { ESRoutes } from '@constants/route.constants'
 import FollowList from '../FollowList'
 import { CommunityDetail, TopicDetailList } from '@services/community.service'
 import useCommunityHelper from '@containers/Community/hooks/useCommunityHelper'
@@ -333,23 +331,12 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
     }
   }
 
-  const toCreateTopic = () => {
-    router.push(ESRoutes.TOPIC_CREATE.replace(/:id/gi, data.hash_key.toString()))
-  }
-
   return (
     <Grid container className={classes.container}>
       <Box color={Colors.grey[300]} width="100%">
         {getHeader()}
         {getTabs()}
         {getContent()}
-        {!isNotMember && (
-          <Box className={classes.commentIconContainer}>
-            <Box>
-              <TopicCreateButton onClick={toCreateTopic} />
-            </Box>
-          </Box>
-        )}
       </Box>
       <DiscardDialog
         open={isDiscard}
@@ -472,15 +459,6 @@ const useStyles = makeStyles((theme) => ({
     letterSpacing: -1,
     margin: theme.spacing(1),
   },
-  commentIconContainer: {
-    zIndex: 50,
-    display: 'flex',
-    justifyContent: 'flex-end',
-    width: 99,
-    left: 'calc(100% - 99px)',
-    position: 'sticky',
-    bottom: theme.spacing(2),
-  },
   boxContainer: {
     display: 'flex',
   },
@@ -506,9 +484,6 @@ const useStyles = makeStyles((theme) => ({
       flexDirection: 'column',
       justifyContent: 'center',
       alignItems: 'center',
-    },
-    commentIconContainer: {
-      bottom: theme.spacing(10),
     },
     menuOuter: {
       marginLeft: theme.spacing(0),

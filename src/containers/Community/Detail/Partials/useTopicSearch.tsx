@@ -16,10 +16,12 @@ const useTopicSearch = (): {
   pages: PageMeta
 } => {
   const dispatch = useAppDispatch()
-  const getTopicList = (params: TopicSearchParams) => dispatch(actions.searchTopic(params))
+
   const topicList = useAppSelector(selectors.getTopicSearchList)
   const topicListMeta = useAppSelector(getTopicMeta)
   const pages = useAppSelector(selectors.getTopicSearchListMeta)
+
+  const getTopicList = (params: TopicSearchParams) => dispatch(actions.searchTopic(params))
 
   useEffect(() => {
     return () => {

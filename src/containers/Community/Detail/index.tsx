@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, createRef } from 'react'
 import BlankLayout from '@layouts/BlankLayout'
 import useCommunityHelper from '../hooks/useCommunityHelper'
 import UpsertForm from '../UpsertForm'
@@ -10,9 +10,26 @@ import { useRouter } from 'next/router'
 import ESLoader from '@components/Loader'
 import { Box, Grid } from '@material-ui/core'
 import _ from 'lodash'
+import TopicCreateButton from '@containers/Community/Partials/TopicCreateButton'
+import { makeStyles } from '@material-ui/core/styles'
+import { ESRoutes } from '@constants/route.constants'
+import styled from 'styled-components'
+import { useRect } from '@utils/hooks/useRect'
+
+let topicCreateRightPx: number
+type StyleParams = {
+  topicCreateRightPx: number
+}
+const StyledBox = styled(Box)``
+const contentRef = createRef<HTMLDivElement>()
 
 const CommunityContainer: React.FC = () => {
   const router = useRouter()
+  const contentRect = useRect(contentRef)
+  topicCreateRightPx = contentRect.left
+
+  const classes = useStyles({ topicCreateRightPx })
+
   const { hash_key } = router.query
   const [showTopicListAndSearchTab, setShowTopicListAndSearchTab] = useState<boolean>(true)
   const { handleBack, communityDetail, getCommunityDetail, topicList, meta } = useCommunityDetail()
@@ -52,7 +69,7 @@ const CommunityContainer: React.FC = () => {
             />
           </>
         )}
-        {meta.pending && (
+        {communityDetail === null && !meta.loaded && meta.pending && (
           <Grid item xs={12}>
             <Box my={4} display="flex" justifyContent="center" alignItems="center">
               <ESLoader />
@@ -63,16 +80,44 @@ const CommunityContainer: React.FC = () => {
     )
   }
 
+  const toCreateTopic = () => {
+    router.push(ESRoutes.TOPIC_CREATE.replace(/:id/gi, communityDetail?.attributes?.hash_key.toString()))
+  }
+
   return (
     <>
-      {renderBody()}
-      <ESModal open={router.asPath.endsWith('/edit')}>
-        <BlankLayout>
-          <UpsertForm communityName={communityDetail?.attributes?.name} />
-        </BlankLayout>
-      </ESModal>
+      <StyledBox ref={contentRef}>
+        {renderBody()}
+        <ESModal open={router.asPath.endsWith('/edit')}>
+          <BlankLayout>
+            <UpsertForm communityName={communityDetail?.attributes?.name} />
+          </BlankLayout>
+        </ESModal>
+        {!isNotMember && (
+          <Box className={classes.topicCreateContainer}>
+            <TopicCreateButton onClick={toCreateTopic} />
+          </Box>
+        )}
+      </StyledBox>
     </>
   )
 }
+
+const useStyles = makeStyles((theme) => ({
+  topicCreateContainer: {
+    zIndex: 50,
+    display: 'flex',
+    justifyContent: 'flex-end',
+    width: 99,
+    right: (props: StyleParams) => props.topicCreateRightPx + 24,
+    position: 'fixed',
+    bottom: theme.spacing(5),
+  },
+  [theme.breakpoints.down('sm')]: {
+    topicCreateContainer: {
+      bottom: theme.spacing(10),
+    },
+  },
+}))
 
 export default CommunityContainer
