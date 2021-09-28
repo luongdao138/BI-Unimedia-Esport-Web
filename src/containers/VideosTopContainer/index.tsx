@@ -20,9 +20,10 @@ import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
 // import LoginRequired from '@containers/LoginRequired'
 import { useAppSelector } from '@store/hooks'
 import { getIsAuthenticated } from '@store/auth/selectors'
-import router from 'next/router'
+import router, { useRouter } from 'next/router'
 import { useContextualRouting } from 'next-use-contextual-routing'
 import { ESRoutes } from '@constants/route.constants'
+import { parseInt } from 'lodash'
 
 enum TABS {
   VIDEOS_LIST = 0,
@@ -51,9 +52,11 @@ const VideosTop: React.FC = () => {
   const isWideScreen = useMediaQuery(theme.breakpoints.up(1920))
   const { width: listDisplayWidth } = useWindowDimensions(244)
   const { makeContextualHref } = useContextualRouting()
+  const _router = useRouter()
+  const defaultTab = _router?.query?.default_tab || '0'
 
   useEffect(() => {
-    setTab(0)
+    setTab(parseInt(defaultTab.toString(), 10) ?? 0)
     bannerTop()
     setFollow(0)
     setLoginPreAction('')
@@ -81,7 +84,7 @@ const VideosTop: React.FC = () => {
   const getTabs = () => {
     return (
       <Grid item xs={12} className={classes.tabsContainer}>
-        <ESTabs value={tab} onChange={handleFocusTab} className={classes.tabs} scrollButtons="on" variant="scrollable">
+        <ESTabs value={tab} onChange={handleFocusTab} className={classes.tabs} scrollButtons="off" variant="scrollable">
           <ESTab className={classes.tabMin} label={t('videos_top_tab.video_list')} value={0} />
           <ESTab className={classes.tabMin} label={t('videos_top_tab.live_stream_video')} value={1} />
           <ESTab className={classes.tabMin} label={t('videos_top_tab.schedule_stream_video')} value={2} />
@@ -92,22 +95,15 @@ const VideosTop: React.FC = () => {
     )
   }
 
-  const getOptimizeWidth = (calWidth) => {
-    if (calWidth > 389 && calWidth < 419) {
-      return calWidth
-    } else {
-      return calWidth < 389 ? 389 : 419
-    }
-  }
   const calculateVideoItemStyle = (): any => {
     if (!isWideScreen) {
       return {}
     }
-    const numOfDisplayItem = Math.floor(listDisplayWidth / 419)
+    const numOfDisplayItem = Math.ceil(listDisplayWidth / 419)
     const calcWidth = Math.floor(listDisplayWidth / numOfDisplayItem)
 
     return {
-      maxWidth: getOptimizeWidth(calcWidth),
+      maxWidth: calcWidth,
     }
   }
 

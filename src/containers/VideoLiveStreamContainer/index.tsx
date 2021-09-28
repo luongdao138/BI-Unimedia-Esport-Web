@@ -4,7 +4,7 @@ import ESTabs from '@components/Tabs'
 import i18n from '@locales/i18n'
 import { Box, Grid, makeStyles, Typography, useMediaQuery, useTheme } from '@material-ui/core'
 import { Colors } from '@theme/colors'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import DistributorInfo from './DistributorInfo'
 import ProgramInfo from './ProgramInfo'
@@ -29,11 +29,12 @@ import { STATUS_VIDEO } from '@services/videoTop.services'
 import { useAppSelector } from '@store/hooks'
 import { getIsAuthenticated } from '@store/auth/selectors'
 import { ESRoutes } from '@constants/route.constants'
-// import { listVideos } from 'src/graphql/queries'
+import { listVideos } from 'src/graphql/queries'
 import { onUpdateVideo } from 'src/graphql/subscriptions'
 // import { createVideo } from 'src/graphql/mutations'
 import * as APIt from 'src/types/graphqlAPI'
 import API, { GraphQLResult, graphqlOperation } from '@aws-amplify/api'
+import {EVENT_LIVE_STATUS} from '@constants/common.constants'
 
 enum TABS {
   PROGRAM_INFO = 1,
@@ -47,6 +48,10 @@ export enum VIDEO_TYPE {
   SCHEDULE = 1,
   ARCHIVED = 2,
 }
+type VIDEO_INFO = {
+  video_status: string|number,
+  process_status: string
+}
 
 const VideoDetail: React.FC = () => {
   const PURCHASE_TYPE = {
@@ -59,11 +64,11 @@ const VideoDetail: React.FC = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down(769))
   const dispatch = useAppDispatch()
   const router = useRouter()
-  const video_id = router.query?.vid // uuid video
+  const video_id = Array.isArray(router.query?.vid) ? router.query.vid[0] : router.query.vid  // uuid video
   // const { selectors } = userProfileStore
   const isAuthenticated = useAppSelector(getIsAuthenticated)
   // const userProfile = useAppSelector(selectors.getUserProfile)
-
+  
   const { getMyPointData, myPointsData } = usePointsManage()
   const { purchaseTicketSuperChat, meta_purchase_ticket_super_chat } = usePurchaseTicketSuperChat()
   const myPoint = myPointsData?.total_point ? Number(myPointsData.total_point) : 0
@@ -79,6 +84,9 @@ const VideoDetail: React.FC = () => {
   const [donatedPoints, setDonatedPoints] = useState<number>(0)
   const [softKeyboardIsShown, setSoftKeyboardIsShown] = useState(false)
   const [errorPurchase, setErrorPurchase] = useState(false)
+  const [videoInfo, setVideoInfo]= useState<VIDEO_INFO>({video_status: STATUS_VIDEO.SCHEDULE, process_status: ''})
+  const [videoStatus, setVideoStatus]= useState(STATUS_VIDEO.SCHEDULE)
+  console.log("🚀 ~ videoStatus", videoStatus)
 
   const { getVideoDetail, detailVideoResult, userResult, videoDetailError, resetVideoDetailError } = useDetailVideo()
 
@@ -116,21 +124,99 @@ const VideoDetail: React.FC = () => {
   //     console.error(error)
   //   }
   // }
+  const getVideoId = () => {
+    return detailVideoResult && detailVideoResult.uuid ? detailVideoResult.uuid : ''
+  }
+
+  const checkVideoStatus = async () => {
+    try {
+      const videoId = detailVideoResult.uuid
+      console.log("🚀 ~ checkVideoStatus ~ 11111", videoId)
+      const listQV: APIt.ListMessagesQueryVariables = {
+        filter: {
+          uuid: { eq: videoId },
+        },
+        limit: 2000
+      }
+      const videoRs: any = await API.graphql(graphqlOperation(listVideos, listQV))
+      console.log('🚀 ~ checkVideoExist ~ videoRs', videoRs)
+      const videoData = videoRs.data.listVideos.items.find(item => item.uuid === videoId)
+      if (videoData) {
+        setVideoInfo(videoData)
+      } else {
+        console.log('🚀 2222', videoRs)
+      }
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  const navigateToArchiveUrl = () => {
+    if(video_id === detailVideoResult.user_id.toString()){
+      router.replace({
+        pathname: ESRoutes.TOP,
+        query: { vid: detailVideoResult.uuid },
+      })
+    }
+  }
 
   useEffect(() => {
-    // if (detailVideoResult.key_video_id && detailVideoResult.arn) {
-    //   checkVideoExist()
-    // }
-  }, [detailVideoResult])
+    if(detailVideoResult.key_video_id) {
+      console.log("🚀 ~ useEffect ~ videoInfo", videoInfo)
+      const {video_status, process_status} = videoInfo
+      if(+video_status === STATUS_VIDEO.SCHEDULE){
+        setVideoStatus(STATUS_VIDEO.SCHEDULE)
+      } else if(+video_status === STATUS_VIDEO.LIVE_STREAM) {
+        if(process_status === EVENT_LIVE_STATUS.STREAM_START) {
+          setVideoStatus(STATUS_VIDEO.LIVE_STREAM)
+          // window.location.reload()
+        } else if(process_status === EVENT_LIVE_STATUS.STREAM_END) {
+          setVideoStatus(STATUS_VIDEO.ARCHIVE)
+          navigateToArchiveUrl()
+          // set end
+        }
+      } else if(+video_status === STATUS_VIDEO.ARCHIVE) {
+        setVideoStatus(STATUS_VIDEO.ARCHIVE)
+        navigateToArchiveUrl()
+      }
+    }
+  }, [JSON.stringify(videoInfo)])
+
+  useEffect(() => {
+    if(detailVideoResult.key_video_id) {
+      console.log("🚀 ~ useEffect ~ detailVideoResult. 222222", detailVideoResult.key_video_id)
+      checkVideoStatus()
+      setVideoStatus(detailVideoResult.status)
+      if(detailVideoResult.status === STATUS_VIDEO.ARCHIVE){
+        navigateToArchiveUrl()
+      }
+    }
+  }, [JSON.stringify(detailVideoResult)])
+
+  const refOnUpdateVideo = useRef(null)
+  const onUpdateVideoData = (updateVideoData) => {
+      console.log("🚀 ~ subscribeAction ~ 111", detailVideoResult)
+      console.log("🚀 ~ subscribeAction ~ 222", detailVideoResult.uuid)
+      console.log("🚀 ~ subscribeAction ~ 333", updateVideoData)
+      console.log("🚀 ~ subscribeAction ~ 4444", updateVideoData.uuid)
+      if(updateVideoData.uuid === detailVideoResult.uuid) {
+        setVideoInfo(updateVideoData)
+      }
+  }
+  refOnUpdateVideo.current = onUpdateVideoData
 
   const subscribeAction = () => {
     const pubSubClient = API.graphql(graphqlOperation(onUpdateVideo))
     pubSubClient.subscribe({
-      next: (sub: GraphQLResult<APIt.OnCreateMessageSubscription>) => {
+      next: (sub: GraphQLResult<APIt.OnUpdateVideoSubscription>) => {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         //@ts-ignore
         const subMessage = sub?.value
         console.log('🚀  Data onUpdateVideo:' + JSON.stringify(subMessage.data))
+        const updateVideoData = subMessage.data.onUpdateVideo
+        if(updateVideoData) {
+          refOnUpdateVideo.current(updateVideoData)
+        }
       },
       error: (error) => console.warn(error),
     })
@@ -191,7 +277,7 @@ const VideoDetail: React.FC = () => {
     await purchaseTicketSuperChat({
       point: donatedPoints,
       type: PURCHASE_TYPE.PURCHASE_SUPER_CHAT,
-      video_id,
+      video_id: getVideoId(),
       handleSuccess: handleCloseConfirmModal,
     })
   }
@@ -223,7 +309,7 @@ const VideoDetail: React.FC = () => {
     await purchaseTicketSuperChat({
       point: detailVideoResult?.ticket_price,
       type: PURCHASE_TYPE.PURCHASE_TICKET,
-      video_id,
+      video_id: getVideoId(),
       handleError: handleShowErrorPurchaseTicketModal,
       handleSuccess: handlePurchaseTicketSuccess,
     })
@@ -245,14 +331,14 @@ const VideoDetail: React.FC = () => {
     switch (tab) {
       case TABS.PROGRAM_INFO:
         return !isScheduleAndNotHaveTicket() ? (
-          <ProgramInfo video_id={video_id} />
+          <ProgramInfo video_id={getVideoId()} />
         ) : (
           <ProgramInfoNoViewingTicket videoInfo={detailVideoResult} />
         )
       case TABS.DISTRIBUTOR_INFO:
-        return <DistributorInfo video_id={video_id} />
+        return <DistributorInfo video_id={getVideoId()} />
       case TABS.RELATED_VIDEOS:
-        return <RelatedVideos video_id={video_id} />
+        return <RelatedVideos video_id={getVideoId()} />
       case TABS.COMMENT:
         return sideChatContainer()
       default:
@@ -276,7 +362,7 @@ const VideoDetail: React.FC = () => {
         key_video_id={detailVideoResult?.key_video_id}
         onPressDonate={confirmDonatePoint}
         userHasViewingTicket={userHasViewingTicket()}
-        videoType={getVideoType()}
+        videoType={+videoStatus}
         freeToWatch={isVideoFreeToWatch()}
         handleKeyboardVisibleState={changeSoftKeyboardVisibleState}
         donateConfirmModalIsShown={modalIsShown}
@@ -297,7 +383,7 @@ const VideoDetail: React.FC = () => {
     </Box>
   )
 
-  const getVideoType = () => detailVideoResult?.status
+  // const getVideoType = () => detailVideoResult?.status
   const isVideoFreeToWatch = () => (detailVideoResult?.use_ticket === 0 ? true : false)
   const isTicketAvailableForSale = () => {
     const current = moment().valueOf()
@@ -308,7 +394,7 @@ const VideoDetail: React.FC = () => {
     return true
   }
   const userHasViewingTicket = () => (userResult ? userResult?.buy_ticket : 0)
-  const isScheduleAndNotHaveTicket = () => getVideoType() === STATUS_VIDEO.SCHEDULE && userResult?.buy_ticket === 0
+  const isScheduleAndNotHaveTicket = () => videoStatus === STATUS_VIDEO.SCHEDULE && userResult?.buy_ticket === 0
   // const getVideoType = () => 1
   // const isVideoFreeToWatch = () => false
   // const isTicketAvailableForSale = () => {
@@ -351,9 +437,9 @@ const VideoDetail: React.FC = () => {
         ) : (
           <>
             <LiveStreamContent
-              video_id={video_id}
+              video_id={getVideoId()}
               userHasViewingTicket={userHasViewingTicket()}
-              videoType={getVideoType()}
+              videoType={videoStatus}
               freeToWatch={isVideoFreeToWatch()}
               ticketAvailableForSale={isTicketAvailableForSale()}
               softKeyboardIsShown={softKeyboardIsShown}

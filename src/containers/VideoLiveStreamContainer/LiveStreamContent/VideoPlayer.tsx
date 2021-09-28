@@ -1,14 +1,14 @@
 /* eslint-disable no-console */
 // import ESLoader from '@components/Loader'
-import { Icon, makeStyles, Theme } from '@material-ui/core'
+import { Icon, makeStyles, Theme, useTheme } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import React, { memo, useEffect, useRef, useState } from 'react'
 // import { Player, ControlBar, BigPlayButton, ProgressControl } from 'video-react'
 import ControlBarPlayer from './ControlBar'
 import SeekBar from './ControlComponent/SeekBar'
 import ReactPlayer from 'react-player'
-import screenfull from 'screenfull'
 import ESLoader from '@components/Loader'
+import screenfull from 'screenfull'
 
 import useDetailVideo from '../useDetailVideo'
 
@@ -17,6 +17,7 @@ interface PlayerProps {
   thumbnail?: string
   statusVideo?: boolean
   mediaOverlayIsShown?: boolean
+  videoType?: any
   onVideoEnd?: () => void
 }
 
@@ -26,7 +27,7 @@ declare global {
   }
 }
 
-const VideoPlayer: React.FC<PlayerProps> = ({ src, statusVideo, mediaOverlayIsShown, onVideoEnd, thumbnail }) => {
+const VideoPlayer: React.FC<PlayerProps> = ({ src, statusVideo, mediaOverlayIsShown, onVideoEnd, thumbnail, videoType }) => {
   const checkStatusVideo = 1
   const classes = useStyles({ checkStatusVideo })
 
@@ -34,7 +35,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({ src, statusVideo, mediaOverlayIsSh
   // const videoEl = useRef(null)
 
   const { IVSPlayer } = window
-  const { isPlayerSupported } = IVSPlayer
+  const isPlayerSupported = IVSPlayer?.isPlayerSupported
   const [durationPlayer, setDurationPlayer] = useState(0)
   const [playedSeconds, setPlayedSeconds] = useState(0)
   const reactPlayerRef = useRef(null)
@@ -124,8 +125,12 @@ const VideoPlayer: React.FC<PlayerProps> = ({ src, statusVideo, mediaOverlayIsSh
   }
 
   useEffect(() => {
-    const { ENDED, PLAYING, READY, BUFFERING } = IVSPlayer.PlayerState
-    const { ERROR } = IVSPlayer.PlayerEventType
+    console.log('getCurrentTime 1122')
+    const ENDED = IVSPlayer?.PlayerState?.ENDED
+    const PLAYING = IVSPlayer?.PlayerState?.PLAYING
+    const READY = IVSPlayer?.PlayerState?.READY
+    const BUFFERING = IVSPlayer?.PlayerState?.BUFFERING
+    const ERROR = IVSPlayer?.PlayerEventType?.ERROR
     if (!isPlayerSupported) {
       console.warn('The current browser does not support the Amazon IVS player.')
 
@@ -137,7 +142,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({ src, statusVideo, mediaOverlayIsSh
       console.warn(
         `Player State - ${playerState} - ${player.current.getDuration()}- src=${src}- getLiveLatency=${player.current.getPosition()}`
       )
-      if (playerState === IVSPlayer.PlayerState.ENDED) {
+      if (playerState === IVSPlayer?.PlayerState?.ENDED) {
         onVideoEnd()
       }
       if (playerState === 'Ended') {
@@ -180,6 +185,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({ src, statusVideo, mediaOverlayIsSh
     IVSPlayer,
     // isPlayerSupported,
     src,
+    videoType
   ])
 
   const handlePauseAndSeekVideo = () => {
@@ -213,6 +219,33 @@ const VideoPlayer: React.FC<PlayerProps> = ({ src, statusVideo, mediaOverlayIsSh
   const onPause = () => {
     setState({ ...state, playing: false })
   }
+
+  const theme = useTheme()
+  const isMobile = theme.breakpoints.down('sm')
+  const [isPortrait, setIsPortrait] = useState<boolean>(!!isMobile)
+  console.log('isPortrait', isPortrait)
+  useEffect(() => {
+    // if (!isPortrait) {
+    // screenfull.request(playerContainerRef.current)
+    // }
+  }, [isPortrait])
+
+  const handleOrientationChange = (event) => {
+    console.log('event::', event)
+    const { orientation } = event.target
+    if (orientation === 90 || orientation === 270) {
+      setIsPortrait(false)
+    } else {
+      setIsPortrait(true)
+    }
+  }
+
+  useEffect(() => {
+    window.addEventListener('orientationchange', handleOrientationChange)
+    return () => {
+      window.removeEventListener('orientationchange', handleOrientationChange)
+    }
+  }, [])
 
   const toggleFullScreen = () => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -269,6 +302,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({ src, statusVideo, mediaOverlayIsSh
       <div ref={playerContainerRef} className={classes.playerContainer}>
         <div style={{ height: '100%' }} onClick={handlePlayPauseOut}>
           <ReactPlayer
+            id={'video-player'}
             ref={reactPlayerRef}
             url={src}
             playsinline
@@ -287,6 +321,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({ src, statusVideo, mediaOverlayIsSh
             config={{
               file: {
                 attributes: {
+                  // autoPlay: true,
                   autoPlay: statusVideo ? !statusVideo : true,
                   muted: muted,
                   volume: volume,

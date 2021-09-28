@@ -15,7 +15,7 @@ import { useAppSelector } from '@store/hooks'
 import userProfileStore from '@store/userProfile'
 import { UserProfile } from '@services/user.service'
 import API, { GraphQLResult, graphqlOperation } from '@aws-amplify/api'
-import { listMessages, listUsers } from 'src/graphql/queries'
+import { listUsers, getMessagesByVideoId } from 'src/graphql/queries'
 import { createMessage, createUser, updateMessage, updateUser } from 'src/graphql/mutations'
 // import { createMessage, deleteMessage } from "src/graphql/mutations";
 import { onCreateMessage, onUpdateMessage } from 'src/graphql/subscriptions'
@@ -479,45 +479,20 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
   //   return foundMessages
   // }
 
-  const getUsersDonate = async () => {
-    try {
-      // point + streaming time
-      const listQV: APIt.ListMessagesQueryVariables = {
-        filter: {
-          // video_id: { eq: "2f1141b031696738c1eb72cc450afadb"},
-          video_id: { eq: key_video_id },
-          is_premium: { eq: true },
-          // delete_flag: { ne: true },
-        },
-        limit: 2000,
-      }
-      const messagesResults: any = await API.graphql(graphqlOperation(listMessages, listQV))
-      console.log('getUsersDonate Results; ', messagesResults)
-      console.log('streamingSecond', streamingSecond)
-      const transformMess = messagesResults.data.listMessages.items.filter((item) => item.parent && +item.point > 300)
-      // comment if no get in initial
-      // setMessagesDonate(filterMessagesDonate(transformMess, streamingSecond))
-      // save mess for use in local
-      setSavedDonateMess(transformMess)
-      setSuccessGetListDonateMess(true)
-    } catch (error) {
-      console.error(error)
-    }
-  }
-
   const getMessages = async () => {
     try {
-      const listQV: APIt.ListMessagesQueryVariables = {
-        filter: {
-          video_id: { eq: key_video_id },
-          // delete_flag: { ne: true },
-        },
+      const listQV: APIt.GetMessagesByVideoIdQueryVariables = {
+        video_id: key_video_id,
+        // filter: {
+        //   video_id: { eq: key_video_id },
+        //   // delete_flag: { ne: true },
+        // },
         limit: 2000,
       }
-      const messagesResults: any = await API.graphql(graphqlOperation(listMessages, listQV))
+      const messagesResults: any = await API.graphql(graphqlOperation(getMessagesByVideoId, listQV))
       // const messagesResults: any = await API.graphql(graphqlOperation(listMessagesNew, listQV))
       console.log('getMessages Results; ', messagesResults)
-      const transformMess = messagesResults.data.listMessages.items.filter((item) => item.parent)
+      const transformMess = messagesResults.data.getMessagesByVideoId.items.filter((item) => item.parent)
       // const transformMess = messagesResults.data.listMessages.items.filter((item) => item.video_id === key_video_id)
       console.log('🚀 ~ getMessages ~ transformMess', transformMess)
       // console.log("🚀 ~ ------111 ~ playedSecond", playedSecond)
@@ -525,9 +500,17 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
       // comment if no get in initial
       // setStateMessages(transformMess)
       // save mess for use in local
-      setSavedMess(transformMess)
-      subscribeAction()
+      setSavedMess([...transformMess])
       setSuccessGetListMess(true)
+
+      const transformDonateMess = transformMess.filter((item) => item.is_premium && +item.point > 300)
+      console.log("🚀 ~ getMessages ~ transformDonateMess", transformDonateMess)
+      // comment if no get in initial
+      // setMessagesDonate(filterMessagesDonate(transformMess, streamingSecond))
+      // save mess for use in local
+      setSavedDonateMess([...transformDonateMess])
+      setSuccessGetListDonateMess(true)
+      subscribeAction()
     } catch (error) {
       console.error(error)
     }
@@ -587,7 +570,6 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
   useEffect(() => {
     if (key_video_id) {
       getMessages()
-      getUsersDonate()
     }
   }, [key_video_id])
 
