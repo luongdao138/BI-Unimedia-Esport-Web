@@ -111,7 +111,7 @@ export type ArenaInfo = {
   id?: number
   team_id?: number
   user_id?: number
-  role?: string
+  role?: ArenaRole
   position?: number
   is_leader?: boolean
   name?: string
@@ -746,7 +746,9 @@ export const setBattleRoyalScores = async ({ hash_key, participants }: SetBattle
 export const setBattleRoyalOwnScore = async ({ hash_key, participants }: SetBattleRoyaleScoresParams) => {
   const scores = {}
   for (const p of participants) {
-    scores[p.id] = p.attributes.position
+    if (p.highlight) {
+      scores[p.id] = p.attributes.position
+    }
   }
   const { data } = await api.post(URI.BATTLE_ROYALE_SET_OWN_SCORE.replace(/:id/gi, `${hash_key}`), { scores })
   return data

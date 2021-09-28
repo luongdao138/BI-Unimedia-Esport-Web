@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
+import _ from 'lodash'
 import { useTranslation } from 'react-i18next'
 import useTournamentDetail from '@containers/arena/hooks/useTournamentDetail'
 import HeaderWithButton from '@components/HeaderWithButton'
@@ -25,7 +26,9 @@ const ArenaBattles: React.FC = () => {
   const { t } = useTranslation(['common'])
 
   const { tournament, meta: detailMeta } = useTournamentDetail()
-  const { isModerator } = useArenaHelper(tournament)
+  const { isModerator, isParticipant } = useArenaHelper(tournament)
+  const [hideFooter, setHideFooter] = useState(true)
+
   const { participants, brMeta: participantsMeta, getBattleRoyaleParticipants, resetMeta } = useParticipants()
   const {
     setBattleRoyaleScores,
@@ -53,7 +56,7 @@ const ArenaBattles: React.FC = () => {
     setSelecteds(participants)
   }, [participants])
 
-  const setScores = (value: number, id: number) => {
+  const setScores = (value: number | null, id: number) => {
     const newSelecteds = selecteds.map((v) => {
       if (v.id == id) {
         return {
@@ -84,11 +87,21 @@ const ArenaBattles: React.FC = () => {
     }
   }, [setBattleRoyaleScoresMeta.loaded, setBattleRoyaleOwnScoreMeta.loaded])
 
+  useEffect(() => {
+    if (isModerator && (tournament?.attributes.status === 'in_progress' || tournament?.attributes.status === 'completed')) {
+      setHideFooter(false)
+    } else if (isParticipant && tournament?.attributes.status === 'in_progress') {
+      setHideFooter(false)
+    }
+  }, [isModerator, isParticipant, tournament])
+
+  const isScoreChanged = useMemo(() => !checkIsScoreChanged(selecteds, participants), [selecteds, participants])
+
   return (
     <StickyFooter
-      hideFooter={false}
+      hideFooter={hideFooter}
       primaryButton={
-        <ButtonPrimary type="submit" round fullWidth onClick={handleSubmitScore}>
+        <ButtonPrimary type="submit" round fullWidth onClick={handleSubmitScore} disabled={!isScoreChanged}>
           {t('common:arena.br_set_score_btn')}
         </ButtonPrimary>
       }
@@ -108,9 +121,9 @@ const ArenaBattles: React.FC = () => {
           >
             <BRScoreInput
               value={v.attributes.position || ''}
-              onChange={({ target: { value } }) => setScores(Number(value), v.id)}
+              onChange={({ target: { value } }) => setScores(value === '' ? null : Number(value), v.id)}
               type={tournament.attributes.rule}
-              disabled={(!v.highlight && !isModerator) || (v.attributes.is_fixed_score && !isModerator)}
+              disabled={(v.attributes.is_fixed_score || !v.highlight) && !isModerator}
             />
           </BRListItem>
         ))}
@@ -136,3 +149,8 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 export default ArenaBattles
+
+const checkIsScoreChanged = (p1: ParticipantsResponse[], p2: ParticipantsResponse[]): boolean => {
+  if (!p1.length || !p2.length) return false
+  return _.isEqual(p1, p2)
+}

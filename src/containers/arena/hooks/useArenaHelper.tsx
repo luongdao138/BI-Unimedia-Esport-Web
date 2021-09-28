@@ -13,6 +13,7 @@ const useArenaHelper = (
   toResults: () => void
   toGroupChat: () => void
   isModerator: boolean
+  isParticipant: boolean
   isInProgress: boolean
   isCancelled: boolean
   isCompleted: boolean
@@ -82,6 +83,7 @@ const useArenaHelper = (
     return _.some(myInfoList, { is_leader: true })
   }
   const isTeamLeader = checkTeamLeader()
+  const isParticipant = checkIsParticipant(tournament)
 
   const toCreate = () => router.push(makeContextualHref({ pathName: '/arena/create' }), '/arena/create', { shallow: true })
   const toEdit = () =>
@@ -123,6 +125,7 @@ const useArenaHelper = (
     isRecruitmentClosed,
     isBattleRoyale,
     isModerator,
+    isParticipant,
     isRecruiting,
     isTeam,
     isEditable,
@@ -140,5 +143,7 @@ const useArenaHelper = (
     isMemberSelectable,
   }
 }
+
+const checkIsParticipant = (arena: TournamentDetail) => _.some(arena?.attributes.my_info || [], { role: 'participant' })
 
 export default useArenaHelper
