@@ -47,7 +47,7 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const [isUploading, setUploading] = useState(false)
-  const { getSuggestedTeamMembers, resetMeta } = useSuggestedTeamMembers()
+  const { resetMeta } = useSuggestedTeamMembers()
   const teamMemberHook = useTeamSelectedMember()
   const { uploadArenaTeamImage } = useUploadImage()
   const { join, joinMeta, updateTeam, updateTeamMeta, resetJoinMeta, resetUpdateTeamMeta } = useEntry()
@@ -58,17 +58,24 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
   const isPending = joinMeta.pending || updateTeamMeta.pending
 
   useEffect(() => {
-    if (joinMeta.loaded) {
-      onClose()
-      reset()
-    }
+    if (joinMeta.loaded) onClose()
   }, [joinMeta.loaded])
 
   useEffect(() => {
-    changeTitle(`${t('common:page_head.arena_entry_title')}｜${tournament?.attributes?.title || ''}`)
+    if (open) {
+      changeTitle(`${t('common:page_head.arena_entry_title')}｜${tournament?.attributes?.title || ''}`)
+    }
 
-    return () => resetTitle()
-  }, [])
+    return () => {
+      if (open) {
+        resetTitle()
+        resetMeta()
+        resetUpdateTeamMeta()
+        resetJoinMeta()
+        formik.setValues({ id: '', team_name: '', team_icon_url: '', members: [] })
+      }
+    }
+  }, [open])
 
   useEffect(() => {
     if (updateTeamMeta.loaded) {
@@ -76,7 +83,6 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
       if (updateTeamMeta.loaded && _.isFunction(updateDone)) {
         updateDone()
       }
-      reset()
     }
   }, [updateTeamMeta.loaded])
 
@@ -101,10 +107,6 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
       teamMemberHook.setSelectedMembers(newMemberSelections)
     }
   }, [isEdit, initialData])
-
-  useEffect(() => {
-    getSuggestedTeamMembers({ page: 1, keyword: '', tournament_id: tournament.id })
-  }, [])
 
   const membersValidationSchema = Yup.object().shape({
     name: Yup.string().required(t('common:common.input_required')).max(40),
@@ -167,18 +169,6 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
     },
   })
 
-  const reset = () => {
-    resetMeta()
-    resetUpdateTeamMeta()
-    resetJoinMeta()
-    formik.setValues({ id: '', team_name: '', team_icon_url: '', members: [] })
-  }
-
-  const handleReturn = () => {
-    reset()
-    onClose()
-  }
-
   const handleActionButton = () => {
     let fields = { [NG_WORD_AREA.team_name]: formik.values.team_name }
 
@@ -221,7 +211,7 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
               returnText={isEdit ? t('common:tournament.update_entry_info') : t('common:tournament.join')}
               actionButtonText={isEdit ? t('common:arena.update_with_content') : t('common:tournament.join_with_this')}
               actionButtonDisabled={!formik.isValid || !isMembersComplete()}
-              onReturnClicked={handleReturn}
+              onReturnClicked={onClose}
               onActionButtonClicked={handleActionButton}
               hideFooterOnMobile={isFocused}
             >

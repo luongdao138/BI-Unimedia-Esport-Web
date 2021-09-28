@@ -11,7 +11,7 @@ export type NotificationBarListParams = {
 
 export type NotificationListResponse = {
   data: Array<NotificationResponse>
-  meta: any
+  meta: Meta
 }
 
 export type NotificationBarListResponse = {
@@ -19,8 +19,26 @@ export type NotificationBarListResponse = {
 }
 
 export type NotificationResponse = {
-  id: number
-  attributes: any
+  attributes: {
+    action_type: number
+    avatar_url: string
+    created_at: string
+    created_user_id: number
+    full_message: string
+    hash_key: null | string
+    id: number
+    message: string
+    nickname: string
+    notification_id: number
+    ntype_id: number
+    room_id: null | string
+    seen: boolean
+    target_id: number
+    user_code: string
+    user_id: number
+  }
+  id: string
+  type: string
 }
 
 export type NotificationBadgeResponse = {

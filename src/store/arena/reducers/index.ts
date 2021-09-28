@@ -61,7 +61,7 @@ export default createReducer(initialState, (builder) => {
   builder.addCase(actions.tournamentSearch.fulfilled, (state, action) => {
     let searchTournaments = action.payload.data
     if (action.payload.meta != undefined && action.payload.meta.current_page > 1) {
-      searchTournaments = state.searchTournaments.concat(action.payload.data)
+      searchTournaments = _.unionBy(state.searchTournaments, action.payload.data, 'attributes.hash_key')
     }
 
     state.searchTournaments = searchTournaments
@@ -122,7 +122,7 @@ export default createReducer(initialState, (builder) => {
   builder.addCase(actions.getSuggestedTeamMembers.fulfilled, (state, action) => {
     let _suggestedTeamMembers = action.payload.data
     if (action.payload.links != undefined && action.payload.links.meta.current_page > 1) {
-      _suggestedTeamMembers = state.suggestedTeamMembers.concat(action.payload.data)
+      _suggestedTeamMembers = _.unionBy(state.suggestedTeamMembers, action.payload.data, 'id')
     }
 
     state.suggestedTeamMembers = _suggestedTeamMembers
@@ -164,7 +164,7 @@ export default createReducer(initialState, (builder) => {
   builder.addCase(actions.getRecommendedUsersByName.fulfilled, (state, action) => {
     let _recommendedUsers = action.payload.data
     if (action.payload.links != undefined && action.payload.links.meta.current_page > 1) {
-      _recommendedUsers = state.recommendedUsers.concat(action.payload.data)
+      _recommendedUsers = _.unionBy(state.recommendedUsers, action.payload.data, 'id')
     }
 
     state.recommendedUsers = _recommendedUsers
@@ -172,6 +172,7 @@ export default createReducer(initialState, (builder) => {
   })
   builder.addCase(actions.clearRecommendedUsers, (state) => {
     state.recommendedUsers = []
+    state.recommendedUsersMeta = undefined
   })
   builder.addCase(actions.clearTournamentResult, (state) => {
     state.searchTournaments = []

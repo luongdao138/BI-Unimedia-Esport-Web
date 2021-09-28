@@ -7,6 +7,7 @@ import {
 } from '@services/settings.service'
 import { MyPageSettingsResponse, MessageSettingsResponse, UserResponse, Meta } from '@services/settings.service'
 import { createReducer } from '@reduxjs/toolkit'
+import _ from 'lodash'
 
 type StateType = {
   userFeatures: UserFeaturesResponse
@@ -43,9 +44,8 @@ export default createReducer(initialState, (builder) => {
     .addCase(actions.getBlockedUsers.fulfilled, (state, action) => {
       let tmpUsers = action.payload.data
       if (action.payload.meta != undefined && action.payload.meta.current_page > 1) {
-        tmpUsers = state.blockedUsers.concat(action.payload.data)
+        tmpUsers = _.unionBy(state.blockedUsers, action.payload.data, 'id')
       }
-
       state.blockedUsers = tmpUsers
       state.blockedUsersMeta = action.payload.meta
     })
@@ -55,7 +55,7 @@ export default createReducer(initialState, (builder) => {
     .addCase(actions.getPurchaseHistory.fulfilled, (state, action) => {
       let tmpPurchaseHistory = action.payload.data
       if (action.payload.links.meta != undefined && action.payload.links.meta.current_page > 1) {
-        tmpPurchaseHistory = state.purchaseHistory.concat(action.payload.data)
+        tmpPurchaseHistory = _.unionBy(state.purchaseHistory, action.payload.data, 'id')
       }
       state.purchaseHistory = tmpPurchaseHistory
       state.purchaseHistoryMeta = action.payload.links.meta
@@ -68,5 +68,13 @@ export default createReducer(initialState, (builder) => {
     })
     .addCase(actions.clearPurchaseHistoryDetail, (state) => {
       state.purchaseHistoryDetail = undefined
+    })
+    .addCase(actions.clearBlockedUsers, (state) => {
+      state.blockedUsersMeta = undefined
+      state.blockedUsers = []
+    })
+    .addCase(actions.clearPurchaseHistory, (state) => {
+      state.purchaseHistory = []
+      state.purchaseHistoryMeta = undefined
     })
 })
