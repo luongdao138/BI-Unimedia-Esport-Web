@@ -1,14 +1,14 @@
 /* eslint-disable no-console */
 // import ESLoader from '@components/Loader'
-import { Icon, makeStyles, Theme } from '@material-ui/core'
+import { Icon, makeStyles, Theme, useTheme } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import React, { memo, useEffect, useRef, useState } from 'react'
 // import { Player, ControlBar, BigPlayButton, ProgressControl } from 'video-react'
 import ControlBarPlayer from './ControlBar'
 import SeekBar from './ControlComponent/SeekBar'
 import ReactPlayer from 'react-player'
-import screenfull from 'screenfull'
 import ESLoader from '@components/Loader'
+import screenfull from 'screenfull'
 
 import useDetailVideo from '../useDetailVideo'
 
@@ -220,6 +220,33 @@ const VideoPlayer: React.FC<PlayerProps> = ({ src, statusVideo, mediaOverlayIsSh
     setState({ ...state, playing: false })
   }
 
+  const theme = useTheme()
+  const isMobile = theme.breakpoints.down('sm')
+  const [isPortrait, setIsPortrait] = useState<boolean>(!!isMobile)
+  console.log('isPortrait', isPortrait)
+  useEffect(() => {
+    // if (!isPortrait) {
+    // screenfull.request(playerContainerRef.current)
+    // }
+  }, [isPortrait])
+
+  const handleOrientationChange = (event) => {
+    console.log('event::', event)
+    const { orientation } = event.target
+    if (orientation === 90 || orientation === 270) {
+      setIsPortrait(false)
+    } else {
+      setIsPortrait(true)
+    }
+  }
+
+  useEffect(() => {
+    window.addEventListener('orientationchange', handleOrientationChange)
+    return () => {
+      window.removeEventListener('orientationchange', handleOrientationChange)
+    }
+  }, [])
+
   const toggleFullScreen = () => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     //@ts-ignore
@@ -275,6 +302,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({ src, statusVideo, mediaOverlayIsSh
       <div ref={playerContainerRef} className={classes.playerContainer}>
         <div style={{ height: '100%' }} onClick={handlePlayPauseOut}>
           <ReactPlayer
+            id={'video-player'}
             ref={reactPlayerRef}
             url={src}
             playsinline

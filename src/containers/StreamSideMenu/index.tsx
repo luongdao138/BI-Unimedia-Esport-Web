@@ -129,7 +129,13 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
             </Box>
           )}
           <List component="nav" aria-labelledby="nested-list-subheader" className={classes.root}>
-            <Link href={ESRoutes.VIDEO_TOP} passHref>
+            <Link
+              passHref
+              href={{
+                pathname: ESRoutes.VIDEO_TOP,
+                query: { default_tab: 4 },
+              }}
+            >
               <ListItem
                 className={classes.list + getAddClass(classes.noMinimizeList, classes.minimizeList)}
                 button

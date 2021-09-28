@@ -88,7 +88,7 @@ const StreamingSettingContainer: React.FC<{ default_tab: any }> = ({ default_tab
     getLiveSettingTab({ type: TYPE_SETTING.LIVE }).then((res) => {
       formikLive.validateForm()
       data = res.payload
-      setTab(data?.data?.channel_id === 0 || !data?.data?.channel_id ? 2 : 0)
+      setTab(data?.data?.channel_id === 0 || !data?.data?.channel_id ? 2 : default_tab)
       setDisable(data?.data?.channel_id === 0 || !data?.data?.channel_id ? true : false)
       data?.data?.channel_id !== 0 && getCategory()
     })

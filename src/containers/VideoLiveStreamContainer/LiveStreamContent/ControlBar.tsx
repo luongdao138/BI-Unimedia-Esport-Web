@@ -7,6 +7,7 @@ import Play from './ControlComponent/Play'
 import PlayerTooltip from './ControlComponent/PlayerTooltip'
 import Reload from './ControlComponent/Reload'
 import TimeBar from './ControlComponent/TimeBar'
+
 interface ControlProps {
   videoRef?: any
   onPlayPause?: () => void
