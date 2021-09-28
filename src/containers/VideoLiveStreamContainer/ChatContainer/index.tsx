@@ -916,9 +916,14 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
           )
         })}   */}
       </Box>
-      {chatInputComponent()}
+      {isMobile ? chatComponentMobile() : chatInputComponent()}
     </Box>
   )
+
+  const chatComponentMobile = () => {
+    return purchaseDialogVisible ? purchaseInfoDialog() : chatInputComponent()
+  }
+
   // const getUserWatchingList = () =>
   //   Array(20)
   //     .fill('')

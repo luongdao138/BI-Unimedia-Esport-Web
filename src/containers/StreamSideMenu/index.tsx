@@ -42,9 +42,9 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
   const totalMyPoints = myPointsData?.total_point
   const theme = useTheme()
   const downSm = useMediaQuery(theme.breakpoints.down('sm'))
-  const isSelected = (routeName: string): boolean => {
-    return router.pathname && router.pathname.startsWith(routeName)
-  }
+  // const isSelected = (routeName: string): boolean => {
+  //   return router.pathname && router.pathname.startsWith(routeName)
+  // }
 
   useEffect(() => {
     if (isAuthenticated && !myPointsData) {
@@ -54,7 +54,7 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
       }
       getMyPointData(params)
     }
-  }, [])
+  }, [myPointsData])
 
   const handleModal = (contentType: string) => {
     setModal(true)
@@ -130,18 +130,14 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
           )}
           <List component="nav" aria-labelledby="nested-list-subheader" className={classes.root}>
             <Link
-              passHref
               href={{
                 pathname: ESRoutes.VIDEO_TOP,
                 query: { default_tab: 4 },
               }}
+              passHref
+              as={ESRoutes.VIDEO_TOP}
             >
-              <ListItem
-                className={classes.list + getAddClass(classes.noMinimizeList, classes.minimizeList)}
-                button
-                disableRipple
-                selected={isSelected(ESRoutes.VIDEO_TOP)}
-              >
+              <ListItem className={classes.list + getAddClass(classes.noMinimizeList, classes.minimizeList)} button disableRipple>
                 <ListItemIcon className={classes.icon}>
                   <Icon fontSize="small" className="fa fa-heart" />
                 </ListItemIcon>
@@ -158,12 +154,7 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
                 passHref
                 as={ESRoutes.VIDEO_STREAMING_SETTING}
               >
-                <ListItem
-                  className={classes.list + getAddClass(classes.noMinimizeList, classes.minimizeList)}
-                  button
-                  disableRipple
-                  selected={isSelected(ESRoutes.VIDEO_STREAMING_SETTING)}
-                >
+                <ListItem className={classes.list + getAddClass(classes.noMinimizeList, classes.minimizeList)} button disableRipple>
                   <ListItemIcon className={classes.icon}>
                     <img src="/images/icons/icon_film.svg" className={`icon_svg ${classes.img_svg}`} />
                   </ListItemIcon>
@@ -175,12 +166,7 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
             {!minimizeLayout && <Box paddingBottom={1} />}
             {isStreamer && (
               <Link href={ESRoutes.VIDEO_STREAMING_MANAGEMENT} passHref>
-                <ListItem
-                  className={classes.list + getAddClass(classes.noMinimizeList, classes.minimizeList)}
-                  button
-                  disableRipple
-                  selected={isSelected(ESRoutes.VIDEO_STREAMING_MANAGEMENT)}
-                >
+                <ListItem className={classes.list + getAddClass(classes.noMinimizeList, classes.minimizeList)} button disableRipple>
                   <ListItemIcon className={classes.icon}>
                     <Icon fontSize="small" className="fa fa-users" />
                   </ListItemIcon>
@@ -196,12 +182,7 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
                 rel="noopener noreferrer"
                 className={classes.linkTag}
               >
-                <ListItem
-                  className={classes.list + getAddClass(classes.noMinimizeList, classes.minimizeList)}
-                  button
-                  disableRipple
-                  selected={isSelected(ESRoutes.TERMS)}
-                >
+                <ListItem className={classes.list + getAddClass(classes.noMinimizeList, classes.minimizeList)} button disableRipple>
                   <ListItemIcon className={classes.icon}>
                     <Icon fontSize="small" className="fa fa-paper-plane" />
                   </ListItemIcon>
@@ -216,12 +197,7 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
               </a>
             )}
             <Link href={ESRoutes.SETTINGS} passHref>
-              <ListItem
-                className={classes.list + getAddClass(classes.noMinimizeList, classes.minimizeList)}
-                button
-                disableRipple
-                selected={isSelected(ESRoutes.SETTINGS)}
-              >
+              <ListItem className={classes.list + getAddClass(classes.noMinimizeList, classes.minimizeList)} button disableRipple>
                 <ListItemIcon className={classes.icon}>
                   <Icon fontSize="small" className="fa fa-cog" />
                 </ListItemIcon>
@@ -235,7 +211,6 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
                   className={classes.list + getAddClass(classes.noMinimizeList + ' ' + classes.listTextHome, classes.minimizeList)}
                   button
                   disableRipple
-                  selected={isSelected(ESRoutes.HOME)}
                 >
                   <ListItemIcon className={classes.icon}>
                     <Icon fontSize="small" className="fa fa-headset" />

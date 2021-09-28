@@ -8,14 +8,14 @@ const _getListVideo = createMetaSelector(actions.getListVideoFavorite)
 const useFavoriteVideos = (): {
   listFavoriteVideo: any
   meta: Meta
-  listLiveVideo: () => void
+  listLiveVideo: (limit: number) => void
 } => {
   const dispatch = useAppDispatch()
   const listFavoriteVideo = useAppSelector(selectors.getAllVideoFavorite)
   const meta = useAppSelector(_getListVideo)
-  const getListVideoFavorite = () => dispatch(actions.getListVideoFavorite())
-  const listLiveVideo = () => {
-    getListVideoFavorite()
+  const getListVideoFavorite = (limit) => dispatch(actions.getListVideoFavorite({ limit }))
+  const listLiveVideo = (limit) => {
+    getListVideoFavorite(limit)
   }
   return {
     listFavoriteVideo,

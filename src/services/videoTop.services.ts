@@ -60,7 +60,7 @@ export type VideoPlayerType = {
 }
 
 export type ListVideoTopParams = {
-  type: string
+  type?: string
   page?: number
   limit?: number
   follow?: number
@@ -301,8 +301,8 @@ export const ListVideoArchived = async (params: ListVideoTopParams): Promise<Vid
   return data
 }
 
-export const ListVideoFavorite = async (): Promise<ListVideoTopResponse> => {
-  const { data } = await api.get<ListVideoTopResponse>(URI.GET_VIDEO_FAVORITE)
+export const ListVideoFavorite = async (params: ListVideoTopParams): Promise<ListVideoTopResponse> => {
+  const { data } = await api.get<ListVideoTopResponse>(URI.GET_VIDEO_FAVORITE, { params })
   return data
 }
 

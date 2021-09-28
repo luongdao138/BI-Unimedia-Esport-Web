@@ -54,7 +54,7 @@ const VideoSearchContainer: React.FC = () => {
     if (!isWideScreen) {
       return {}
     }
-    const numOfDisplayItem = Math.ceil(listDisplayWidth / 419)
+    const numOfDisplayItem = Math.floor(listDisplayWidth / 419)
     const calcWidth = Math.floor(listDisplayWidth / numOfDisplayItem)
     return {
       maxWidth: calcWidth,
