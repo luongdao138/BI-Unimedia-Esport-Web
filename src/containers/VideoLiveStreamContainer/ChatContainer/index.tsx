@@ -504,7 +504,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
       setSuccessGetListMess(true)
 
       const transformDonateMess = transformMess.filter((item) => item.is_premium && +item.point > 300)
-      console.log("🚀 ~ getMessages ~ transformDonateMess", transformDonateMess)
+      console.log('🚀 ~ getMessages ~ transformDonateMess', transformDonateMess)
       // comment if no get in initial
       // setMessagesDonate(filterMessagesDonate(transformMess, streamingSecond))
       // save mess for use in local

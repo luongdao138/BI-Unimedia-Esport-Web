@@ -11,6 +11,7 @@ import ESLoader from '@components/Loader'
 import screenfull from 'screenfull'
 
 import useDetailVideo from '../useDetailVideo'
+import { hhmmss } from '@containers/VideoPlayer/customPlugins/time'
 
 interface PlayerProps {
   src?: string
@@ -19,6 +20,8 @@ interface PlayerProps {
   mediaOverlayIsShown?: boolean
   videoType?: any
   onVideoEnd?: () => void
+  startLive?: number
+  endLive?: string
 }
 
 declare global {
@@ -27,7 +30,16 @@ declare global {
   }
 }
 
-const VideoPlayer: React.FC<PlayerProps> = ({ src, statusVideo, mediaOverlayIsShown, onVideoEnd, thumbnail, videoType }) => {
+const VideoPlayer: React.FC<PlayerProps> = ({
+  src,
+  statusVideo,
+  mediaOverlayIsShown,
+  onVideoEnd,
+  thumbnail,
+  startLive,
+  endLive,
+  videoType,
+}) => {
   const checkStatusVideo = 1
   const classes = useStyles({ checkStatusVideo })
 
@@ -68,18 +80,20 @@ const VideoPlayer: React.FC<PlayerProps> = ({ src, statusVideo, mediaOverlayIsSh
 
   const onProgress = async (event) => {
     setState({ ...state, loading: false })
-    if (isLive) {
-      console.log('🚀 ~ onProgress ~ 1111-----playedSeconds', player.current.getPosition())
-      //live stream => duration = current
-      // setDurationPlayer(event.playedSeconds)
-      // setDurationPlayer(event.playedSeconds)
-      if (Math.floor(event.playedSeconds) > Math.floor(durationPlayer)) {
-        await setDurationPlayer(event.playedSeconds)
-      } else {
-        setDurationPlayer(durationPlayer + 1)
-      }
+    // if (isLive) {
+    //   console.log('🚀 ~ onProgress ~ 1111-----playedSeconds', player.current.getPosition())
+    //   //live stream => duration = current
+    //   // setDurationPlayer(event.playedSeconds)
+    //   // setDurationPlayer(event.playedSeconds)
+    //   if (Math.floor(event.playedSeconds) > Math.floor(durationPlayer)) {
+    //     await setDurationPlayer(event.playedSeconds)
+    //   } else {
+    //     setDurationPlayer(durationPlayer + 1)
+    //   }
+    // }
+    if (!isLive) {
+      setPlayedSeconds(event.playedSeconds)
     }
-    setPlayedSeconds(event.playedSeconds)
 
     // // trigger change streaming second in redux
     // if (Math.floor(event.loadedSeconds) !== streamingSecond) {
@@ -120,7 +134,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({ src, statusVideo, mediaOverlayIsSh
       setDurationPlayer(duration) //video archive
     } else {
       console.log('getCurrentTime====', reactPlayerRef.current.getCurrentTime(), duration)
-      setDurationPlayer(reactPlayerRef.current.getCurrentTime())
+      // setDurationPlayer(reactPlayerRef.current.getCurrentTime())
     }
   }
 
@@ -147,6 +161,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({ src, statusVideo, mediaOverlayIsSh
       }
       if (playerState === 'Ended') {
         changeIsEndLive(true)
+        setState({ ...state, ended: true })
       }
       setIsLive(player.current.getDuration() === Infinity ? true : false)
       // setDurationPlayer(player.current.getDuration() === Infinity && reactPlayerRef.current.getCurrentTime())
@@ -185,7 +200,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({ src, statusVideo, mediaOverlayIsSh
     IVSPlayer,
     // isPlayerSupported,
     src,
-    videoType
+    videoType,
   ])
 
   const handlePauseAndSeekVideo = () => {
@@ -294,6 +309,25 @@ const VideoPlayer: React.FC<PlayerProps> = ({ src, statusVideo, mediaOverlayIsSh
   const onReady = () => {
     setState({ ...state, loading: false })
   }
+
+  //video
+  useEffect(() => {
+    const updTime = () => {
+      const diff = (Date.now() - startLive) / 1000
+      hhmmss(diff)
+      setDurationPlayer(diff)
+      setPlayedSeconds(diff)
+      // console.log('****INTERVAL****', hhmmss(diff))
+    }
+    const interval = setInterval(() => {
+      if (startLive && !state.ended && !endLive) {
+        updTime()
+      }
+    }, 1000)
+    return () => {
+      clearInterval(interval)
+    }
+  }, [startLive, state.ended])
 
   const { playing, muted, volume, ended, loading, errorVideo } = state
   return (

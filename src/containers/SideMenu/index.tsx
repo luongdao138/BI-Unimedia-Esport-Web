@@ -82,7 +82,7 @@ const SideMenu: React.FC = () => {
           {isAuthenticated && (
             <Box className={classes.wrap_point}>
               <Box className={classes.text_point}>{t('common:common.eXe_points')}</Box>
-              <Box className={classes.point}>{totalMyPoints ?? 0}</Box>
+              <Box className={classes.point}>{totalMyPoints?.toLocaleString() ?? 0}</Box>
               <Box className={classes.link_point}>
                 {/* redirect to point management */}
                 <Link href={ESRoutes.USER_POINT_MANAGEMENT}>

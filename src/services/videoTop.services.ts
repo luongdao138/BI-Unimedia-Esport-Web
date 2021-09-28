@@ -228,6 +228,8 @@ export type VideoDetailData = {
   category_name?: string
   key_video_id?: string
   arn?: string
+  live_stream_start_time?: string
+  live_stream_end_time?: string
 }
 
 export type DetailUserData = {
