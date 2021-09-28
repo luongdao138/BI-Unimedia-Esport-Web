@@ -857,6 +857,9 @@ export default {
       message_part2: 'よろしいですか？',
       confirm: '内容を破棄して戻る',
     },
+    validation: {
+      participants_limit: '2~128の数字を入力してください。',
+    },
   },
   lobbySearchFilters: {
     all: 'すべて',
