@@ -10,6 +10,7 @@ import moment from 'moment'
 import { FORMAT_DATE_ARCHIVED } from '@constants/common.constants'
 import { TypeVideoArchived } from '@services/liveStreamDetail.service'
 import ESAvatar from '@components/Avatar'
+import { STATUS_VIDEO } from '@services/videoTop.services'
 
 type VideoPreviewItemProps = {
   data?: TypeVideo | TypeVideoArchived
@@ -20,15 +21,15 @@ const VideoPreviewItem: React.FC<VideoPreviewItemProps> = ({ data }) => {
   const IMG_PLACEHOLDER = '/images/live_stream/exelab_default_card.png'
   //status = 0-schedule|1-live|2-archive
   const router = useRouter()
-  const onNavigateLive = () => {
+  const onNavigateLive = (data) => {
     router.push({
       pathname: ESRoutes.TOP,
-      query: { vid: data?.uuid },
+      query: { vid: data.status === STATUS_VIDEO.LIVE_STREAM ? data?.user_id : data?.uuid},
     })
   }
 
   return (
-    <Box className={classes.container} key={data?.id} onClick={onNavigateLive}>
+    <Box className={classes.container} key={data?.id} onClick={() => onNavigateLive(data)}>
       <Box className={classes.videoContainer}>
         <Box className={classes.video} style={{ backgroundImage: `url(${data?.thumbnail ? data.thumbnail : IMG_PLACEHOLDER})` }} />
         {data?.status === 1 && (
