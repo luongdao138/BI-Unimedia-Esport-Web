@@ -1,18 +1,19 @@
-import { Box, makeStyles, Typography } from '@material-ui/core'
+import { Box, makeStyles, Typography, CircularProgress } from '@material-ui/core'
 import React, { ReactNode } from 'react'
 import { purchasePoints } from './index'
-import * as APIt from 'src/types/graphqlAPI'
+// import * as APIt from 'src/types/graphqlAPI'
 import { FormatHelper } from '@utils/helpers/FormatHelper'
 import { useTranslation } from 'react-i18next'
 import { hexToRgba } from '@utils/helpers/CommonHelper'
 import ESMenuItem from '@components/Menu/MenuItem'
 import ESMenu from '@components/Menu'
 import _ from 'lodash'
+import {STATUS_SEND_MESS} from '@constants/common.constants'
 
 type DonateMessageProps = {
-  message?: APIt.Message
+  message?: any
   is_streamer?: number
-  deleteMess?: (idDelete: string) => void
+  deleteMess: (message: any) => void
   getMessageWithoutNgWords: (chatMessContent: string) => ReactNode
 }
 
@@ -40,14 +41,26 @@ const DonateMessage: React.FC<DonateMessageProps> = ({ message, deleteMess, getM
         <Typography className={classes.accountRemainUnit}>
           <span className={getClassDeletedMess()}>{t('common.eXe_points')}</span>
         </Typography>
-        {is_streamer ? (
+        <Box className={classes.mess_status}>
+          {message.mess_status === STATUS_SEND_MESS.PENDING ? (
+            <CircularProgress size={12} />
+          ) : ''}
+          {/* {message.mess_status === STATUS_SEND_MESS.ERROR ? (
+            <Icon color="primary" className={`fa fa-exclamation-triangle ${classes.icon}`} fontSize="small" />
+          ) : ''} */}
+          {/* {(!message.mess_status || message.mess_status === STATUS_SEND_MESS.LOADED) ? ( */}
+          {/* {(!message.mess_status || message.mess_status === STATUS_SEND_MESS.LOADED) ? (
+            <Icon color="primary" className={`fa fa-check-circle ${classes.icon}`} fontSize="small" />
+          ) : ''} */}
+        </Box>
+        {is_streamer && message.id ? (
           <ESMenu className={classes.menu_del_mess} iconClass={classes.iconClass}>
             {message.delete_flag ? (
               <ESMenuItem disabled className={classes.menu_item_disabled}>
                 {t('live_stream_screen.deleted_message')}
               </ESMenuItem>
             ) : (
-              <ESMenuItem onClick={() => deleteMess(message.id)}>{t('live_stream_screen.delete_message')}</ESMenuItem>
+              <ESMenuItem onClick={() => deleteMess(message)}>{t('live_stream_screen.delete_message')}</ESMenuItem>
             )}
           </ESMenu>
         ) : (
@@ -65,6 +78,17 @@ const DonateMessage: React.FC<DonateMessageProps> = ({ message, deleteMess, getM
 }
 
 const useStyles = makeStyles(() => ({
+  icon: {},
+  mess_status: {
+    // paddingLeft: 4,
+    // alignItems: "center", 
+    // display: "flex", 
+    // marginBottom: "4px",
+    display: 'none',
+    position: 'absolute',
+    right: '16px',
+    top: '16px',
+  },
   menu_del_mess: {
     position: 'absolute',
     right: '5px',
@@ -90,6 +114,9 @@ const useStyles = makeStyles(() => ({
     backgroundColor: 'white',
     borderRadius: 4,
     '&:hover $iconClass': {
+      display: 'inline-flex',
+    },
+    '&:hover $mess_status': {
       display: 'inline-flex',
     },
   },
