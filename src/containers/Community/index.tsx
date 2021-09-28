@@ -217,7 +217,7 @@ const CommunityContainer: React.FC<CommunityContainerProps> = ({ filter }) => {
             </Grid>
           )
         )}
-        {meta.pending && (
+        {!meta.loaded && meta.pending && (
           <Grid item xs={12}>
             <Box my={4} display="flex" justifyContent="center" alignItems="center">
               <ESLoader />

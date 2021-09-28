@@ -67,6 +67,11 @@ const useStyles = makeStyles((theme) => ({
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'center center',
   },
+  ['@media (max-width: 1166px)']: {
+    backContainer: {
+      maxWidth: 660,
+    },
+  },
   ['@media (max-width: 960px)']: {
     backContainer: {
       maxWidth: 'none',
