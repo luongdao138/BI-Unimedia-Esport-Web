@@ -34,7 +34,7 @@ import { onUpdateVideo } from 'src/graphql/subscriptions'
 // import { createVideo } from 'src/graphql/mutations'
 import * as APIt from 'src/types/graphqlAPI'
 import API, { GraphQLResult, graphqlOperation } from '@aws-amplify/api'
-import {EVENT_LIVE_STATUS} from '@constants/common.constants'
+import { EVENT_LIVE_STATUS } from '@constants/common.constants'
 
 enum TABS {
   PROGRAM_INFO = 1,
@@ -49,7 +49,7 @@ export enum VIDEO_TYPE {
   ARCHIVED = 2,
 }
 type VIDEO_INFO = {
-  video_status: string|number,
+  video_status: string | number
   process_status: string
 }
 
@@ -64,11 +64,11 @@ const VideoDetail: React.FC = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down(769))
   const dispatch = useAppDispatch()
   const router = useRouter()
-  const video_id = Array.isArray(router.query?.vid) ? router.query.vid[0] : router.query.vid  // uuid video
+  const video_id = Array.isArray(router.query?.vid) ? router.query.vid[0] : router.query.vid // uuid video
   // const { selectors } = userProfileStore
   const isAuthenticated = useAppSelector(getIsAuthenticated)
   // const userProfile = useAppSelector(selectors.getUserProfile)
-  
+
   const { getMyPointData, myPointsData } = usePointsManage()
   const { purchaseTicketSuperChat, meta_purchase_ticket_super_chat } = usePurchaseTicketSuperChat()
   const myPoint = myPointsData?.total_point ? Number(myPointsData.total_point) : 0
@@ -84,9 +84,9 @@ const VideoDetail: React.FC = () => {
   const [donatedPoints, setDonatedPoints] = useState<number>(0)
   const [softKeyboardIsShown, setSoftKeyboardIsShown] = useState(false)
   const [errorPurchase, setErrorPurchase] = useState(false)
-  const [videoInfo, setVideoInfo]= useState<VIDEO_INFO>({video_status: STATUS_VIDEO.SCHEDULE, process_status: ''})
-  const [videoStatus, setVideoStatus]= useState(STATUS_VIDEO.SCHEDULE)
-  console.log("🚀 ~ videoStatus", videoStatus)
+  const [videoInfo, setVideoInfo] = useState<VIDEO_INFO>({ video_status: STATUS_VIDEO.SCHEDULE, process_status: '' })
+  const [videoStatus, setVideoStatus] = useState(STATUS_VIDEO.SCHEDULE)
+  console.log('🚀 ~ videoStatus', videoStatus)
 
   const { getVideoDetail, detailVideoResult, userResult, videoDetailError, resetVideoDetailError } = useDetailVideo()
 
@@ -131,16 +131,16 @@ const VideoDetail: React.FC = () => {
   const checkVideoStatus = async () => {
     try {
       const videoId = detailVideoResult.uuid
-      console.log("🚀 ~ checkVideoStatus ~ 11111", videoId)
+      console.log('🚀 ~ checkVideoStatus ~ 11111', videoId)
       const listQV: APIt.ListMessagesQueryVariables = {
         filter: {
           uuid: { eq: videoId },
         },
-        limit: 2000
+        limit: 2000,
       }
       const videoRs: any = await API.graphql(graphqlOperation(listVideos, listQV))
       console.log('🚀 ~ checkVideoExist ~ videoRs', videoRs)
-      const videoData = videoRs.data.listVideos.items.find(item => item.uuid === videoId)
+      const videoData = videoRs.data.listVideos.items.find((item) => item.uuid === videoId)
       if (videoData) {
         setVideoInfo(videoData)
       } else {
@@ -152,7 +152,7 @@ const VideoDetail: React.FC = () => {
   }
 
   const navigateToArchiveUrl = () => {
-    if(video_id === detailVideoResult.user_id.toString()){
+    if (video_id === detailVideoResult.user_id.toString()) {
       router.replace({
         pathname: ESRoutes.TOP,
         query: { vid: detailVideoResult.uuid },
@@ -161,21 +161,21 @@ const VideoDetail: React.FC = () => {
   }
 
   useEffect(() => {
-    if(detailVideoResult.key_video_id) {
-      console.log("🚀 ~ useEffect ~ videoInfo", videoInfo)
-      const {video_status, process_status} = videoInfo
-      if(+video_status === STATUS_VIDEO.SCHEDULE){
+    if (detailVideoResult.key_video_id) {
+      console.log('🚀 ~ useEffect ~ videoInfo', videoInfo)
+      const { video_status, process_status } = videoInfo
+      if (+video_status === STATUS_VIDEO.SCHEDULE) {
         setVideoStatus(STATUS_VIDEO.SCHEDULE)
-      } else if(+video_status === STATUS_VIDEO.LIVE_STREAM) {
-        if(process_status === EVENT_LIVE_STATUS.STREAM_START) {
+      } else if (+video_status === STATUS_VIDEO.LIVE_STREAM) {
+        if (process_status === EVENT_LIVE_STATUS.STREAM_START) {
           setVideoStatus(STATUS_VIDEO.LIVE_STREAM)
           // window.location.reload()
-        } else if(process_status === EVENT_LIVE_STATUS.STREAM_END) {
+        } else if (process_status === EVENT_LIVE_STATUS.STREAM_END) {
           setVideoStatus(STATUS_VIDEO.ARCHIVE)
           navigateToArchiveUrl()
           // set end
         }
-      } else if(+video_status === STATUS_VIDEO.ARCHIVE) {
+      } else if (+video_status === STATUS_VIDEO.ARCHIVE) {
         setVideoStatus(STATUS_VIDEO.ARCHIVE)
         navigateToArchiveUrl()
       }
@@ -183,11 +183,11 @@ const VideoDetail: React.FC = () => {
   }, [JSON.stringify(videoInfo)])
 
   useEffect(() => {
-    if(detailVideoResult.key_video_id) {
-      console.log("🚀 ~ useEffect ~ detailVideoResult. 222222", detailVideoResult.key_video_id)
+    if (detailVideoResult.key_video_id) {
+      console.log('🚀 ~ useEffect ~ detailVideoResult. 222222', detailVideoResult.key_video_id)
       checkVideoStatus()
       setVideoStatus(detailVideoResult.status)
-      if(detailVideoResult.status === STATUS_VIDEO.ARCHIVE){
+      if (detailVideoResult.status === STATUS_VIDEO.ARCHIVE) {
         navigateToArchiveUrl()
       }
     }
@@ -195,13 +195,13 @@ const VideoDetail: React.FC = () => {
 
   const refOnUpdateVideo = useRef(null)
   const onUpdateVideoData = (updateVideoData) => {
-      console.log("🚀 ~ subscribeAction ~ 111", detailVideoResult)
-      console.log("🚀 ~ subscribeAction ~ 222", detailVideoResult.uuid)
-      console.log("🚀 ~ subscribeAction ~ 333", updateVideoData)
-      console.log("🚀 ~ subscribeAction ~ 4444", updateVideoData.uuid)
-      if(updateVideoData.uuid === detailVideoResult.uuid) {
-        setVideoInfo(updateVideoData)
-      }
+    console.log('🚀 ~ subscribeAction ~ 111', detailVideoResult)
+    console.log('🚀 ~ subscribeAction ~ 222', detailVideoResult.uuid)
+    console.log('🚀 ~ subscribeAction ~ 333', updateVideoData)
+    console.log('🚀 ~ subscribeAction ~ 4444', updateVideoData.uuid)
+    if (updateVideoData.uuid === detailVideoResult.uuid) {
+      setVideoInfo(updateVideoData)
+    }
   }
   refOnUpdateVideo.current = onUpdateVideoData
 
@@ -214,7 +214,7 @@ const VideoDetail: React.FC = () => {
         const subMessage = sub?.value
         console.log('🚀  Data onUpdateVideo:' + JSON.stringify(subMessage.data))
         const updateVideoData = subMessage.data.onUpdateVideo
-        if(updateVideoData) {
+        if (updateVideoData) {
           refOnUpdateVideo.current(updateVideoData)
         }
       },

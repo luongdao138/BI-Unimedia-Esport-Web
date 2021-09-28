@@ -24,7 +24,7 @@ const VideoPreviewItem: React.FC<VideoPreviewItemProps> = ({ data }) => {
   const onNavigateLive = (data) => {
     router.push({
       pathname: ESRoutes.TOP,
-      query: { vid: data.status === STATUS_VIDEO.LIVE_STREAM ? data?.user_id : data?.uuid},
+      query: { vid: data.status === STATUS_VIDEO.LIVE_STREAM ? data?.user_id : data?.uuid },
     })
   }
 

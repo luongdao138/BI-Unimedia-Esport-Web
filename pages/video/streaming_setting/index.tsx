@@ -18,7 +18,7 @@ const StreamingSettingPage: PageWithLayoutType = () => {
   const userProfile = useAppSelector(selectors.getUserProfile)
 
   useEffect(() => {
-    if(userProfile) {
+    if (userProfile) {
       const originIsStreamer = userProfile?.attributes?.delivery_flag || false
       isAuthenticated && !originIsStreamer && router.push(ESRoutes.NOT_FOUND)
       setIsStreamer(originIsStreamer)

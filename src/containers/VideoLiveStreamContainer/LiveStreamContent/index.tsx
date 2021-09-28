@@ -194,7 +194,7 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
   )
 
   useEffect(() => {
-    setKeyVideoPlayer(oldKey => oldKey + 1)
+    setKeyVideoPlayer((oldKey) => oldKey + 1)
   }, [props.videoType])
 
   const mediaPlayer = () => {
@@ -204,15 +204,22 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
       //   thumbnail={'/images/live_stream/exelab_thumb.png'}
       //   statusVideo={true}
       // />
-      <VideoPlayer
-        key={keyVideoPlayer}
-        src={detailVideoResult?.archived_url}
-        thumbnail={detailVideoResult?.thumbnail}
-        statusVideo={showOverlayOnMediaPlayer() ? true : null}
-        mediaOverlayIsShown={showOverlayOnMediaPlayer()}
-        onVideoEnd={props.onVideoEnd}
-        videoType={props.videoType}
-      />
+      <>
+        {showOverlayOnMediaPlayer() ? (
+          <img src={detailVideoResult?.thumbnail} className={classes.thumb} />
+        ) : (
+          <VideoPlayer
+            key={keyVideoPlayer}
+            src={detailVideoResult?.archived_url}
+            thumbnail={detailVideoResult?.thumbnail}
+            statusVideo={showOverlayOnMediaPlayer() ? true : null}
+            mediaOverlayIsShown={showOverlayOnMediaPlayer()}
+            onVideoEnd={props.onVideoEnd}
+            startLive={Date.parse(detailVideoResult?.live_stream_start_time)}
+            endLive={detailVideoResult?.live_stream_end_time}
+          />
+        )}
+      </>
     )
   }
 
@@ -754,6 +761,10 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  thumb: {
+    width: '100%',
+    height: '100%',
   },
 }))
 export default LiveStreamContent
