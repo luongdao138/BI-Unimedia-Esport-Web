@@ -32,6 +32,7 @@ const ReloadButton: React.FC<Props> = ({ videoRef, typeButton, currentTime }) =>
         newSecond = currentTime + 10
         break
     }
+    // eslint-disable-next-line no-console
     console.log('🚀 ~ onChangeTime ~ newSecond-0909', newSecond)
     changeSeekCount(Math.floor(newSecond))
   }
