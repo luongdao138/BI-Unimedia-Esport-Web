@@ -62,6 +62,7 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
   const [likeCount, setLikeCount] = useState(detailVideoResult?.like_count !== null ? detailVideoResult?.like_count : 0)
   const [unlikeCount, setUnlikeCount] = useState(detailVideoResult?.unlike_count !== null ? detailVideoResult?.unlike_count : 0)
   const [subscribe, setSubscribe] = useState(userResult?.follow || 0)
+  const [keyVideoPlayer, setKeyVideoPlayer] = useState(0)
   // get url browser video live stream
   const urlVideoLiveStream = window.location.href
 
@@ -192,6 +193,10 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
     </Box>
   )
 
+  useEffect(() => {
+    setKeyVideoPlayer(oldKey => oldKey + 1)
+  }, [props.videoType])
+
   const mediaPlayer = () => {
     return (
       // <VideoPlayer
@@ -200,6 +205,7 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
       //   statusVideo={true}
       // />
       <VideoPlayer
+        key={keyVideoPlayer}
         src={detailVideoResult?.archived_url}
         thumbnail={detailVideoResult?.thumbnail}
         statusVideo={showOverlayOnMediaPlayer() ? true : null}
