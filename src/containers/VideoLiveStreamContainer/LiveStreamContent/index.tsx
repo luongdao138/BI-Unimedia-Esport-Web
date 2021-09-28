@@ -205,6 +205,7 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
         statusVideo={showOverlayOnMediaPlayer() ? true : null}
         mediaOverlayIsShown={showOverlayOnMediaPlayer()}
         onVideoEnd={props.onVideoEnd}
+        videoType={props.videoType}
       />
     )
   }
