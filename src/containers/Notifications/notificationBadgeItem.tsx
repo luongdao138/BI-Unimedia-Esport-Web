@@ -29,7 +29,7 @@ const NotificationBadgeItem: React.FC<Props> = ({ data }) => {
           <Typography variant="caption" noWrap className={classes.title}>
             {notification.nickname}
           </Typography>
-          <Typography noWrap>{notification.full_message}</Typography>
+          <Typography className={classes.twoLines}>{notification.full_message}</Typography>
           <Box textAlign="right">
             <Typography variant="caption" noWrap>
               {CommonHelper.staticSmartTime(notification.created_at)}
@@ -55,6 +55,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   title: {
     color: Colors.white,
+  },
+  twoLines: {
+    display: '-webkit-box',
+    boxOrient: 'vertical',
+    lineClamp: 2,
+    wordBreak: 'break-all',
+    overflow: 'hidden',
+    width: '100%',
+    maxHeight: 42,
   },
 }))
 
