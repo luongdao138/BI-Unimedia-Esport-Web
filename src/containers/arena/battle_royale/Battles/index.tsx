@@ -97,7 +97,7 @@ const ArenaBattles: React.FC = () => {
       <Box pt={3} pb={3} textAlign="center">
         <Typography>スコアを入力してください</Typography>
       </Box>
-      <BRList className={classes.listContainer}>
+      <BRList className={classes.listContainer} rule={tournament?.attributes.rule}>
         {selecteds.map((v) => (
           <BRListItem
             key={v.id}
