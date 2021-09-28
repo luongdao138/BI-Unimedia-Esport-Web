@@ -33,7 +33,9 @@ const useStyles = makeStyles(() => ({
     justifyContent: 'center',
     alignItems: 'center',
     alignContent: 'center',
-    marginRight: 24,
+    paddingLeft: 12,
+    paddingRight: 12,
+    marginRight: 6,
     '&:hover': props?.showPointer && {
       cursor: 'pointer',
     },

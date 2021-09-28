@@ -94,7 +94,15 @@ const ControlBarPlayer: React.FC<ControlProps> = ({
         <PlayerTooltip
           id={'toggleFullScreen'}
           title={!isFull ? t('videos_top_tab.full_screen') : t('videos_top_tab.exit_full_screen')}
-          offset={{ top: -10, left: 10 }}
+          offset={
+            !isFull
+              ? { top: -10, left: 10 }
+              : {
+                  top: 0,
+                  left: 0,
+                }
+          }
+          place={!isFull ? 'top' : 'left'}
         />
       </Box>
     </>

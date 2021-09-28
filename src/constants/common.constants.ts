@@ -2,6 +2,7 @@ import i18n from '@locales/i18n'
 import { Dialog } from '@store/common/actions/types'
 import { ConfirmOptions } from '@components/Confirm/types'
 
+export const debounceTime = 700
 export const searchTypes = {
   USER: 1,
   COMMUNITY: 2,
@@ -203,7 +204,7 @@ export const defaultConfirmationOptions: ConfirmOptions = {
 
 export const AVATAR_PATH = '/images/avatar_o.png'
 export const FORMAT_DATE_TIME_JP = 'YYYY年MM月DD日 HH:mm'
-export const FORMAT_SCHEDULE_TIME = 'YYYY年MM月DD日hh時mm分'
+export const FORMAT_SCHEDULE_TIME = 'YYYY年MM月DD日HH時mm分'
 export const FORMAT_DATE_SIMPLE = 'YYYY年MM月DD日'
 export const FORMAT_DATE_ARCHIVED = 'YYYY/MM/DD'
 export const FORMAT_YEAR_MONTH = 'YYYY年MM月'

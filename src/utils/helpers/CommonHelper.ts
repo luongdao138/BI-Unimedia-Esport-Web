@@ -294,6 +294,16 @@ export const getTimeZone = (): string => {
   return mTimeZone.tz.guess()
 }
 
+const regex = {
+  url: /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi,
+}
+
+const linkifyString = (text = ''): string => {
+  return text.replace(regex.url, function (url) {
+    return '<a target="_blank" href="' + url + '">' + url + '</a>'
+  })
+}
+
 export const CommonHelper = {
   validateEmail,
   genRanHex,
@@ -316,4 +326,5 @@ export const CommonHelper = {
   formatDateTimeJP,
   formatTimeVideo,
   validateImageUrl,
+  linkifyString,
 }

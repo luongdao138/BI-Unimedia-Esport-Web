@@ -48,7 +48,7 @@ export enum VIDEO_TYPE {
   ARCHIVED = 2,
 }
 
-const VideosTop: React.FC = () => {
+const VideoDetail: React.FC = () => {
   const PURCHASE_TYPE = {
     PURCHASE_TICKET: 1,
     PURCHASE_SUPER_CHAT: 2,
@@ -231,13 +231,11 @@ const VideosTop: React.FC = () => {
 
   const getTabs = () => {
     return (
-      <Grid item xs={12}>
+      <Grid item xs={12} className={classes.tabsContainer}>
         <ESTabs value={tab} onChange={(_, v) => setTab(v)} className={classes.tabs}>
           {isMobile && <ESTab label={t('live_stream_screen.comment')} value={TABS.COMMENT} className={classes.singleTab} />}
           <ESTab label={t('live_stream_screen.program_info')} value={TABS.PROGRAM_INFO} className={classes.singleTab} />
-          {!isScheduleAndNotHaveTicket() && (
-            <ESTab label={t('live_stream_screen.distributor_info')} value={TABS.DISTRIBUTOR_INFO} className={classes.singleTab} />
-          )}
+          <ESTab label={t('live_stream_screen.distributor_info')} value={TABS.DISTRIBUTOR_INFO} className={classes.singleTab} />
           <ESTab label={t('live_stream_screen.related_videos')} value={TABS.RELATED_VIDEOS} className={classes.singleTab} />
         </ESTabs>
       </Grid>
@@ -363,7 +361,7 @@ const VideosTop: React.FC = () => {
               clickButtonPurchaseTicket={handlePurchaseTicket}
               onVideoEnd={onVideoEnd}
             />
-            <Grid container direction="row" className={classes.tabContainer}>
+            <Grid container direction="row" className={classes.tabContent}>
               {getTabs()}
               {getContent()}
             </Grid>
@@ -417,7 +415,7 @@ const VideosTop: React.FC = () => {
     </Box>
   )
 }
-export default VideosTop
+export default VideoDetail
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -426,7 +424,7 @@ const useStyles = makeStyles((theme) => ({
     position: 'relative',
   },
   tabContainer: {
-    display: 'flex',
+    paddingRight: 122,
   },
   tabs: {
     overflow: 'hidden',
@@ -434,9 +432,6 @@ const useStyles = makeStyles((theme) => ({
     borderBottomWidth: 1,
     borderBottomStyle: 'solid',
     paddingLeft: 24,
-  },
-  singleTab: {
-    minWidth: 0,
   },
   forbiddenMessageContainer: {
     width: '100%',
@@ -470,6 +465,22 @@ const useStyles = makeStyles((theme) => ({
   [theme.breakpoints.down(769)]: {
     wrapChatContainer: {
       width: '100%',
+    },
+  },
+  [theme.breakpoints.down(415)]: {
+    singleTab: {
+      minWidth: 56,
+      marginRight: '12px',
+    },
+  },
+  [theme.breakpoints.down(375)]: {
+    tabs: {
+      paddingLeft: 0,
+    },
+    singleTab: {
+      '& .MuiTab-wrapper': {
+        fontSize: 12,
+      },
     },
   },
 }))
