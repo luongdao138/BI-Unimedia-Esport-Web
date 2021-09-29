@@ -17,6 +17,8 @@ import RegularModal from '@components/RegularModal'
 import ESModal from '@components/Modal'
 import Participants from './Participants'
 import BRStatusReady from './Partials/BRStatusReady'
+import BRStatusRecruiting from './Partials/BRStatusRecruiting'
+import BRStatusRecruitmentClosed from './Partials/BRStatusRecruitmentClosed'
 
 const TournamentDetail: React.FC = () => {
   const { tournament, meta, userProfile, handleBack } = useTournamentDetail()
@@ -35,12 +37,12 @@ const TournamentDetail: React.FC = () => {
 
   const brActionComponent: Record<TournamentStatus, ReactNode> = {
     ready: <BRStatusReady arena={tournament} />,
+    recruiting: <BRStatusRecruiting arena={tournament} userProfile={userProfile} />,
+    recruitment_closed: <BRStatusRecruitmentClosed arena={tournament} userProfile={userProfile} />,
+    ready_to_start: <BRStatusRecruitmentClosed arena={tournament} userProfile={userProfile} />,
     cancelled: <BRStatusReady arena={tournament} />,
     completed: <BRStatusReady arena={tournament} />,
     in_progress: <BRStatusReady arena={tournament} />,
-    ready_to_start: <BRStatusReady arena={tournament} />,
-    recruiting: <BRStatusReady arena={tournament} />,
-    recruitment_closed: <BRStatusReady arena={tournament} />,
   }
 
   return (

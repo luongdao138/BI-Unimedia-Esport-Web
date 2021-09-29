@@ -6,35 +6,7 @@ import { useContextualRouting } from 'next-use-contextual-routing'
 import _ from 'lodash'
 import { TournamentHelper } from '@utils/helpers/TournamentHelper'
 
-const useArenaHelper = (
-  tournament?: TournamentDetail
-): {
-  toMatches: () => void
-  toResults: () => void
-  toGroupChat: () => void
-  isModerator: boolean
-  isParticipant: boolean
-  isInProgress: boolean
-  isCancelled: boolean
-  isCompleted: boolean
-  isRecruitmentClosed: boolean
-  isBattleRoyale: boolean
-  isRecruiting: boolean
-  isTeam: boolean
-  isEditable: boolean
-  isNotHeld: boolean
-  isReady: boolean
-  isEntered: boolean
-  isUnselected: boolean
-  isMemberSelectable: boolean
-  maxCapacity: number
-  toEdit: () => void
-  toCreate: () => void
-  isAdminJoined: boolean
-  isTeamLeader: boolean
-  toDetail: () => void
-  toParticipants: () => void
-} => {
+const useArenaHelper = (tournament?: TournamentDetail) => {
   const router = useRouter()
   const { makeContextualHref } = useContextualRouting()
 
@@ -84,6 +56,7 @@ const useArenaHelper = (
   }
   const isTeamLeader = checkTeamLeader()
   const isParticipant = checkIsParticipant(tournament)
+  const isInterested = checkIsInterested(tournament)
 
   const toCreate = () => router.push(makeContextualHref({ pathName: '/arena/create' }), '/arena/create', { shallow: true })
   const toEdit = () =>
@@ -119,6 +92,7 @@ const useArenaHelper = (
     toGroupChat,
     toMatches,
     toResults,
+    isFreezed,
     isInProgress,
     isCancelled,
     isCompleted,
@@ -141,9 +115,11 @@ const useArenaHelper = (
     toParticipants,
     maxCapacity,
     isMemberSelectable,
+    isInterested,
   }
 }
 
 const checkIsParticipant = (arena: TournamentDetail) => _.some(arena?.attributes.my_info || [], { role: 'participant' })
+const checkIsInterested = (arena: TournamentDetail) => _.some(arena?.attributes.my_info || [], { role: 'interested' })
 
 export default useArenaHelper

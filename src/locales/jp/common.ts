@@ -492,6 +492,7 @@ export default {
     participants: '参加メンバー',
     group_chat: 'グループチャット',
     brackets: '対戦表',
+    select_br_participants: '参加メンバー選択',
     until_deadline: '締め切りまであと',
     until_start_recruit: '受付開始まであと',
     until_event: '開催まであと',
