@@ -20,7 +20,7 @@ export default {
     total: '件',
     error: 'エラー文言が入ります',
     game_display_name_error: '入力必須項目です',
-    too_long: '{{max}}文字以内で入力してください',
+    too_long: '{{max}}文字以内で入力してください。',
     at_least: '2文字以上入力してください。',
     at_least_8: '8文字以上で入力してください',
     contains_ngword: '不適切な文字列が含まれています。',
@@ -317,9 +317,9 @@ export default {
   },
   user_report: {
     title: '通報する',
-    desc_first: '通報いただいた内容は全て運営が確認をいたしますが、',
-    desc_second: 'その際の対応及び返信を行わない場合がある旨、予めご了承ください',
-    desc_third: '及び返信を行わない場合がある旨、予めご了承ください',
+    desc: `通報内容をご確認のうえ必要情報を記載、選択してください。
+また、通報いただいた内容は全て運営が確認をいたしますが、その際の対応及
+び返信を行わない場合がある旨、予めご了承ください。`,
     user_info_title: '通報する内容',
     reason: '通報理由',
     reason_desc: '詳細・補足',
