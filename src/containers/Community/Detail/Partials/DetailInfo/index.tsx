@@ -26,6 +26,7 @@ import { MEMBER_ROLE, JOIN_CONDITION, TABS } from '@constants/community.constant
 import { TwitterShareButton } from 'react-share'
 import _ from 'lodash'
 import { useClearMeta } from './../../useCommunityDetail'
+import * as actions from '@store/community/actions'
 
 const ROLE_TYPES = {
   IS_ADMIN: 'setIsAdmin',
@@ -160,18 +161,24 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
     }
   }, [unfollowCommunityPendingMeta])
 
-  const followHandle = () => {
-    followCommunity(String(hash_key))
-    if (!isCommunityAutomatic) {
-      setIsRequested(true)
+  const followHandle = async () => {
+    const resultAction = await dispatch(actions.getCommunityDetail(String(hash_key)))
+    if (actions.getCommunityDetail.fulfilled.match(resultAction)) {
+      followCommunity(String(hash_key))
+      if (!isCommunityAutomatic) {
+        setIsRequested(true)
+      }
     }
   }
 
-  const unfollowHandle = () => {
-    if (!isCommunityAutomatic) {
-      setIsDiscard(true)
-    } else {
-      unfollowCommunity(String(hash_key))
+  const unfollowHandle = async () => {
+    const resultAction = await dispatch(actions.getCommunityDetail(String(hash_key)))
+    if (actions.getCommunityDetail.fulfilled.match(resultAction)) {
+      if (!isCommunityAutomatic) {
+        setIsDiscard(true)
+      } else {
+        unfollowCommunity(String(hash_key))
+      }
     }
   }
 

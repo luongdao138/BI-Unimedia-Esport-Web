@@ -2,6 +2,7 @@ import React, { useEffect, useState, createRef } from 'react'
 import BlankLayout from '@layouts/BlankLayout'
 import useCommunityHelper from '../hooks/useCommunityHelper'
 import UpsertForm from '../UpsertForm'
+import TopicUpsertForm from '../Topic/UpsertForm'
 import CommunityDetailHeader from './Partials/CommunityDetailHeader'
 import DetailInfo from './Partials/DetailInfo'
 import useCommunityDetail from './useCommunityDetail'
@@ -12,7 +13,6 @@ import { Box, Grid } from '@material-ui/core'
 import _ from 'lodash'
 import TopicCreateButton from '@containers/Community/Partials/TopicCreateButton'
 import { makeStyles } from '@material-ui/core/styles'
-import { ESRoutes } from '@constants/route.constants'
 import styled from 'styled-components'
 import { useRect } from '@utils/hooks/useRect'
 
@@ -49,7 +49,7 @@ const CommunityContainer: React.FC = () => {
     }
   }, [communityDetail])
 
-  const { toEdit } = useCommunityHelper(communityDetail)
+  const { toEdit, toCreateTopic } = useCommunityHelper(communityDetail)
 
   const renderBody = () => {
     return (
@@ -80,10 +80,6 @@ const CommunityContainer: React.FC = () => {
     )
   }
 
-  const toCreateTopic = () => {
-    router.push(ESRoutes.TOPIC_CREATE.replace(/:id/gi, communityDetail?.attributes?.hash_key.toString()))
-  }
-
   return (
     <>
       <StyledBox ref={contentRef}>
@@ -91,6 +87,11 @@ const CommunityContainer: React.FC = () => {
         <ESModal open={router.asPath.endsWith('/edit')}>
           <BlankLayout>
             <UpsertForm communityName={communityDetail?.attributes?.name} />
+          </BlankLayout>
+        </ESModal>
+        <ESModal open={router.asPath.endsWith('/topic/create')}>
+          <BlankLayout isWide={true}>
+            <TopicUpsertForm />
           </BlankLayout>
         </ESModal>
         {!isNotMember && (
