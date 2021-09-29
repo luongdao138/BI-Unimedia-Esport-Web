@@ -1,3 +1,4 @@
+import { ONLY_SPACE_REGEX } from '@constants/community.constants'
 import i18n from '@locales/i18n'
 import * as Yup from 'yup'
 
@@ -5,11 +6,9 @@ export const getValidationScheme = (): any => {
   return Yup.object({
     stepOne: Yup.object({
       name: Yup.string()
-        .strict(true)
-        .trim(i18n.t('common:community_create.input_required'))
+        .matches(ONLY_SPACE_REGEX, i18n.t('common:community_create.input_required'))
         .required(i18n.t('common:common.input_required'))
-        .max(100, i18n.t('common:common.validation.char_limit', { char_limit: 100 }))
-        .min(2, i18n.t('common:common.at_least')),
+        .max(100, i18n.t('common:common.validation.char_limit', { char_limit: 100 })),
       description: Yup.string()
         .nullable()
         .max(5000, i18n.t('common:common.validation.char_limit', { char_limit: 5000 })),
