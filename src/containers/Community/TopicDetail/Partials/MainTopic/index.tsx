@@ -199,7 +199,7 @@ const useStyles = makeStyles((theme) => ({
   },
   userInfoContainer: {
     display: 'flex',
-    width: 'calc(100% - 150px)',
+    width: 'calc(100% - 160px)',
   },
   userInfoContainerNoDate: {
     display: 'flex',
