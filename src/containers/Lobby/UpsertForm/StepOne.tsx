@@ -11,7 +11,6 @@ import CoverUploader from './Partials/CoverUploader'
 import ESSelect from '@components/Select'
 import ESFastInput from '@components/FastInput'
 import ESSwitchIOS from '@components/Switch'
-import ESNumberInput from '@components/NumberInputLobby'
 import i18n from '@locales/i18n'
 
 type Props = {
@@ -114,26 +113,19 @@ const StepOne: React.FC<Props> = ({ formik, hardwares, editables }) => {
         </ESSelect>
       </Box>
       <Box pb={4} display="flex" flexDirection="row" alignItems="center" width={122}>
-        <ESNumberInput
+        <ESFastInput
           id="max_participants"
-          type="text"
-          inputProps={{
-            inputMode: 'numeric',
-            pattern: '[0-9]*',
-          }}
           required={true}
           className={classes.input}
           labelPrimary={i18n.t('common:lobby.create.max_participants')}
           placeholder={i18n.t('common:lobby.create.max_participants_placeholder')}
           name="stepOne.max_participants"
           value={formik.values.stepOne.max_participants === 0 ? '' : formik.values.stepOne.max_participants}
-          onChange={formik.handleBlur}
+          onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           helperText={formik.touched?.stepOne?.max_participants && formik.errors?.stepOne?.max_participants}
           error={formik.touched?.stepOne?.max_participants && !!formik.errors?.stepOne?.max_participants}
           size="small"
-          isNumber={true}
-          formik={formik}
           disabled={!editables.max_participants}
           nowrapHelperText
         />

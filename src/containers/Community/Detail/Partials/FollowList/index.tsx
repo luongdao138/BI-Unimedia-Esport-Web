@@ -12,7 +12,7 @@ import ESStickyFooter from '@components/StickyFooter'
 import ButtonPrimary from '@components/ButtonPrimary'
 import { FormatHelper } from '@utils/helpers/FormatHelper'
 import useCommunityHelper from '@containers/Community/hooks/useCommunityHelper'
-import { CommunityDetail, CommunityMember, CommunityMemberRole, MemberParams } from '@services/community.service'
+import { CommunityDetail, CommunityMember, CommunityMemberRole, ChangeCommunityMemberRoleParams } from '@services/community.service'
 import UserSelectBoxList from '../../../Partials/UserSelectBoxList'
 import useFollowList from './useFollowList'
 import _ from 'lodash'
@@ -35,18 +35,12 @@ enum MemberSection {
   participating,
 }
 
-const initialValue: MemberParams = {
-  approveParams: [],
-  cancelParams: [],
-  removeParams: [],
-  changeRoleToOrganizer: {
-    member_ids: [],
-    member_role: 0,
-  },
-  changeRoleToMember: {
-    member_ids: [],
-    member_role: 0,
-  },
+const initialValue: ChangeCommunityMemberRoleParams = {
+  approve_members: [],
+  cancel_members: [],
+  remove_members: [],
+  to_members: [],
+  to_organizers: [],
   hash_key: '',
 }
 
@@ -59,7 +53,7 @@ const FollowList: React.FC<Props> = ({ community }) => {
   const { getMembers, membersList, pages, resetMembers, membersMeta, submitMembers, resetMeta } = useFollowList()
   const { getCommunityDetail } = useCommunityDetail()
   const [hasChanged, setHasChanged] = useState(false)
-  const [submitParams, setSubmitParams] = useState<MemberParams | null>(initialValue)
+  const [submitParams, setSubmitParams] = useState<ChangeCommunityMemberRoleParams | null>(initialValue)
   const [changedGroupedMembers, setChangedGroupedMembers] = useState<GroupedMembers[]>(null)
   const [groupedMembers, setGroupedMembers] = useState<GroupedMembers[]>([])
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -82,37 +76,31 @@ const FollowList: React.FC<Props> = ({ community }) => {
   const approve = (data: CommunityMember, index) => {
     index == 0
       ? setSubmitParams((prev) => {
-          return { ...prev, approveParams: [...prev?.approveParams, data.attributes.id] }
+          return { ...prev, approve_members: [...prev?.approve_members, data.attributes.id] }
         })
       : setSubmitParams((prev) => {
           return {
             ...prev,
-            changeRoleToMember: {
-              member_ids: [...prev?.changeRoleToMember.member_ids, data.attributes.id],
-              member_role: MEMBER_ROLE.MEMBER,
-            },
+            to_members: [...prev?.to_members, data.attributes.id],
           }
         })
   }
   const cancel = (data: CommunityMember) => {
     setSubmitParams((prev) => {
-      return { ...prev, cancelParams: [...prev?.cancelParams, data.attributes.id] }
+      return { ...prev, cancel_members: [...prev?.cancel_members, data.attributes.id] }
     })
   }
   const changeRole = (data: CommunityMember) => {
     setSubmitParams((prev) => {
       return {
         ...prev,
-        changeRoleToOrganizer: {
-          member_ids: [...prev?.changeRoleToOrganizer.member_ids, data.attributes.id],
-          member_role: MEMBER_ROLE.CO_ORGANIZER,
-        },
+        to_organizers: [...prev?.to_organizers, data.attributes.id],
       }
     })
   }
   const remove = (data: CommunityMember) => {
     setSubmitParams((prev) => {
-      return { ...prev, removeParams: [...prev?.removeParams, data.attributes.id] }
+      return { ...prev, remove_members: [...prev?.remove_members, data.attributes.id] }
     })
   }
   const actionHandler = {
@@ -300,7 +288,7 @@ const FollowList: React.FC<Props> = ({ community }) => {
                   </InfiniteScroll>
                 </Box>
               )}
-              {membersMeta.pending && (
+              {membersList.length === 0 && !membersMeta.loaded && membersMeta.pending && (
                 <Grid item xs={12}>
                   <Box my={4} display="flex" justifyContent="center" alignItems="center">
                     <ESLoader />

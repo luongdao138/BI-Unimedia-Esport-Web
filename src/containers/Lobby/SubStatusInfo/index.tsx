@@ -91,7 +91,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    marginTop: theme.spacing(3),
+    marginTop: 20,
   },
   roundInfoText: {
     fontSize: 24,

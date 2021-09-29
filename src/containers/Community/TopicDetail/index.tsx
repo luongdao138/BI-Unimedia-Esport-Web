@@ -38,8 +38,10 @@ const TopicDetailContainer: React.FC = () => {
     commentsListPageMeta,
     deleteComment,
     resetTopicMeta,
+    resetTopicDeleteMeta,
     createCommentMeta,
     deleteTopicCommentMeta,
+    deleteTopicMeta,
   } = useTopicDetail()
   const { getCommunityDetail, communityDetail, isAuthenticated } = useCommunityDetail()
   const { isOwner } = useTopicHelper(topic?.attributes?.owner_user_code)
@@ -47,6 +49,7 @@ const TopicDetailContainer: React.FC = () => {
 
   const [reply, setReply] = useState<{ hash_key: string; comment_no: number } | any>({})
   const [openDelete, setOpenDelete] = useState(false)
+  const [isOpened, setIsOpened] = useState<boolean>(false)
   const [selectedCommentNo, setSelectedCommentNo] = useState()
   const [reportData, setReportData] = useState<ReportData | null>(null)
   const [page, setPage] = useState(1)
@@ -70,7 +73,16 @@ const TopicDetailContainer: React.FC = () => {
   }
 
   useEffect(() => {
+    if (deleteTopicMeta.loaded) {
+      router.push(`${ESRoutes.COMMUNITY}/${router.query.hash_key}`)
+      resetTopicMeta()
+      resetTopicDeleteMeta()
+    }
+  }, [deleteTopicMeta])
+
+  useEffect(() => {
     if (topic_hash_key) {
+      setIsOpened(true)
       getCommunityDetail(String(hash_key))
       getTopicDetail({ topic_hash: String(topic_hash_key), community_hash: String(hash_key) })
       getCommentsList({ hash_key: String(topic_hash_key) })
@@ -85,7 +97,7 @@ const TopicDetailContainer: React.FC = () => {
   }, [topicDetailMeta])
 
   useEffect(() => {
-    if (topic_hash_key) {
+    if (topic_hash_key && isOpened) {
       getCommentsList({ hash_key: String(topic_hash_key), page: page })
     }
   }, [page])
@@ -170,7 +182,7 @@ const TopicDetailContainer: React.FC = () => {
         {isAuthenticated && reportData && (
           <ESReport
             reportType={REPORT_TYPE.TOPIC_COMMENT}
-            target_id={reportData.attributes.hash_key}
+            target_id={reportData.attributes.id}
             data={reportData}
             title={t('common:topic_comment.report.dialog_title')}
             open={reportData !== null}

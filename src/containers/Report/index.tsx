@@ -17,6 +17,7 @@ import RadioVertical from '@components/RadioVertical'
 import ESLoader from '@components/Loader'
 import ESDialog from '@components/Modal'
 import ESStickyFooter from '@components/StickyFooter'
+import ESLabel from '@components/Label'
 import Avatar from '@components/Avatar'
 import ButtonPrimary from '@components/ButtonPrimary'
 import { ReportParams } from '@services/report.service'
@@ -204,14 +205,17 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
         return <Typography variant="h2">{data.attributes.title}</Typography>
       case REPORT_TYPE.COMMUNITY:
         return (
-          <Box className={classes.userInfoContainer}>
-            <Box display="flex" alignItems="center" mr={2}>
-              <Icon className={`fas fa-users ${classes.communityIcon}`} />
+          <>
+            <ESLabel label={t('community.community_to_report')} size="small" />
+            <Box className={classes.userInfoContainer}>
+              <Box display="flex" alignItems="center" mr={2}>
+                <Icon className={`fas fa-users ${classes.communityIcon}`} />
+              </Box>
+              <Typography variant="h2" className={classes.wordBreak}>
+                {data.attributes.name}
+              </Typography>
             </Box>
-            <Typography variant="h2" className={classes.wordBreak}>
-              {data.attributes.name}
-            </Typography>
-          </Box>
+          </>
         )
       case REPORT_TYPE.TOPIC:
         return (
@@ -274,12 +278,9 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
         <ESStickyFooter
           disabled={false}
           noScroll
+          noBottomSpace
           content={
             <Box display="flex" flexDirection="column" alignItems="center">
-              <Box mb={2} className={classes.desc}>
-                <Typography align="center">{t('user_report.desc_first')}</Typography>
-                <Typography align="center">{t('user_report.desc_second')}</Typography>
-              </Box>
               <DialogActions style={{ justifyContent: 'center' }}>
                 <ButtonPrimary
                   style={{ width: 280 }}
@@ -310,6 +311,9 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
                 <Box pl={2}>
                   <Typography variant="h2">{title || t('user_report.title')}</Typography>
                 </Box>
+              </Box>
+              <Box mt={8}>
+                <Typography className={classes.desc}>{t('user_report.desc')}</Typography>
               </Box>
               <Box py={4}>{attr && reportInfo()}</Box>
               <Grid container>
@@ -436,10 +440,8 @@ const useStyles = makeStyles((theme) => ({
     paddingRight: 10,
   },
   desc: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    color: Colors.grey[400],
+    color: Colors.grey[300],
+    whiteSpace: 'pre-line',
   },
   message: {
     marginLeft: 15,
