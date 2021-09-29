@@ -56,11 +56,13 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ lobby, op
   const { status, max_participants, hash_key, is_owner, is_freezed } = lobby.attributes
 
   const [isInitialPageLoad, setInitialPageLoad] = useState(false)
+  const [isConfirmBtnActive, setConfirmBtnActive] = useState(false)
   const isConfirmable = (status === LOBBY_STATUS.RECRUITING || status === LOBBY_STATUS.ENTRY_CLOSED) && is_owner && !is_freezed
 
   useEffect(() => {
     if (open) {
       setInitialPageLoad(true)
+      setConfirmBtnActive(false)
       getAllParticipants({ hash_key: hash_key })
     }
 
@@ -70,6 +72,7 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ lobby, op
         resetMetaAll()
         setInitialPageLoad(false)
         setSelected([])
+        setConfirmBtnActive(false)
       }
     }
   }, [open])
@@ -79,12 +82,20 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ lobby, op
   }, [confirmParticipantsMeta.loaded])
 
   useEffect(() => {
+    if (!_.isArray(allParticipants)) return
+
     setFiltered(
       allParticipants.map((user: ConfirmParticipantItem) => {
         const item = selected.includes(Number(user.id))
         return { ...user, checked: item }
       })
     )
+
+    if (allParticipants.length >= max_participants) {
+      setConfirmBtnActive(selected.length === max_participants)
+    } else {
+      setConfirmBtnActive(selected.length === allParticipants.length)
+    }
   }, [selected, allParticipants])
 
   useEffect(() => {
@@ -192,7 +203,7 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ lobby, op
                     round
                     fullWidth
                     size="large"
-                    disabled={selected.length === 0}
+                    disabled={!isConfirmBtnActive}
                     onClick={() => {
                       confirm({ ...LOBBY_DIALOGS.CONFIRM_MEMBER.confirm })
                         .then(() => {
