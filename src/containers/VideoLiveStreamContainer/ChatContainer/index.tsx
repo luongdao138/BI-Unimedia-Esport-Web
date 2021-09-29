@@ -831,6 +831,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
             helperText={touched.message && errors?.message}
             error={touched.message && !!errors?.message}
             onKeyPress={handlePressEnter}
+            disabled={!isEnabledChat}
           />
           <LoginRequired>
             {/* <div onClick={handleSubmitChatContent}> */}

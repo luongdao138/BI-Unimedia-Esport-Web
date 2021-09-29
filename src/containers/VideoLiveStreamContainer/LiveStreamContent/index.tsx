@@ -332,7 +332,7 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
     //get profile streamer
     dispatch(actions.getMemberProfile(detailVideoResult?.user_code))
   }
-  // detailVideoResult?.status === 1
+
   return (
     <Box className={classes.container}>
       <Box className={classes.mediaPlayerContainer}>

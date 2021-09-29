@@ -1,5 +1,6 @@
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit'
 import * as services from '@services/points.service'
+import { getTimeZone } from '@utils/helpers/CommonHelper'
 import { POINT_MANAGE_ACTION_TYPE } from './types'
 
 export const resetPointsActive = createAction(POINT_MANAGE_ACTION_TYPE.RESET_LIST_POINTS_ACTIVE)
@@ -11,7 +12,7 @@ export const getMyPointData = createAsyncThunk<services.ListMyPointsResponse, se
   POINT_MANAGE_ACTION_TYPE.GET_LIST_MY_POINTS,
   async (myPointParams, { rejectWithValue }) => {
     try {
-      const res = await services.ListMyPoints(myPointParams)
+      const res = await services.ListMyPoints({ ...myPointParams, timezone: getTimeZone() })
       if (res?.code === 200) {
         return res
       } else {
@@ -31,7 +32,7 @@ export const getListHistoryPoints = createAsyncThunk<services.PointHistoryRespon
   POINT_MANAGE_ACTION_TYPE.GET_LIST_HISTORY_POINTS,
   async (pointHistoryParams, { rejectWithValue }) => {
     try {
-      const res = await services.ListHistoryPoints(pointHistoryParams)
+      const res = await services.ListHistoryPoints({ ...pointHistoryParams, timezone: getTimeZone() })
       if (res?.code === 200) {
         return res
       } else {
@@ -50,7 +51,7 @@ export const getListUsedPoints = createAsyncThunk<services.PointUsedResponse, se
   POINT_MANAGE_ACTION_TYPE.GET_LIST_USED_POINTS,
   async (usedPointParams, { rejectWithValue }) => {
     try {
-      const res = await services.ListUsedPoints(usedPointParams)
+      const res = await services.ListUsedPoints({ ...usedPointParams, timezone: getTimeZone() })
       if (res?.code === 200) {
         return res
       } else {
@@ -70,7 +71,7 @@ export const getDetailUsagePoint = createAsyncThunk<services.PointUsedDetailResp
   POINT_MANAGE_ACTION_TYPE.GET_DETAIL_USAGE_POINTS_HISTORY,
   async (detailParams, { rejectWithValue }) => {
     try {
-      const res = await services.ListUsagePointsHistoryDetail(detailParams)
+      const res = await services.ListUsagePointsHistoryDetail({ ...detailParams, timezone: getTimeZone() })
       if (res?.code === 200) {
         return res
       } else {

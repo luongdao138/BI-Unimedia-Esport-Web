@@ -27,7 +27,11 @@ export default createReducer(initialState, (builder) => {
   })
 
   builder.addCase(actions.setSearchParams, (state, action) => {
-    state.type = action.payload.type
+    if (action.payload.type !== searchTypes.VIDEO) {
+      state.type = action.payload.type
+    } else {
+      state.typeSearchVideo = action.payload.type
+    }
     state.keyword = action.payload.keyword
   })
 

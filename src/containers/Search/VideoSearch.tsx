@@ -63,7 +63,7 @@ const VideoSearchContainer: React.FC = () => {
 
   const renderItem = (item: TypeVideo, index: number) => {
     return (
-      <>
+      <React.Fragment key={item?.uuid || index}>
         {downMd ? (
           <Box className={classes.xsItemContainer} key={index}>
             <VideoPreviewItem data={item} key={index} />
@@ -73,7 +73,7 @@ const VideoSearchContainer: React.FC = () => {
             <VideoPreviewItem data={item} key={index} />
           </Grid>
         )}
-      </>
+      </React.Fragment>
     )
   }
   return (
