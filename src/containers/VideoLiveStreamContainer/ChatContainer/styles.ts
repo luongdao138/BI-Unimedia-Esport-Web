@@ -178,10 +178,10 @@ const useStyles = makeStyles((theme) => ({
       background: 'rgba(247, 247, 53, 0.1)',
     },
     '&.Mui-disabled': {
-      backgroundColor: 'transparent',
-      '& .MuiOutlinedInput-notchedOutline': {
-        borderColor: 'transparent',
-      },
+      // backgroundColor: 'transparent',
+      // '& .MuiOutlinedInput-notchedOutline': {
+      //   borderColor: 'transparent',
+      // },
     },
     '& :-webkit-autofill': {
       WebkitBoxShadow: '0 0 0 100px #000000 inset',

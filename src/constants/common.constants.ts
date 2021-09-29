@@ -102,6 +102,7 @@ export enum REPORT_TYPE {
   TOPIC_COMMENT = 4,
   RECRUITMENT = 5,
   TOURNAMENT = 6,
+  LIVE_STREAM = 7,
 }
 
 export const CHAT_CONSTANTS = {

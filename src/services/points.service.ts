@@ -6,6 +6,7 @@ export type PurchaseTicketParams = {
   point: number
   type: number //1 : mua ticket, 2 : supper chat
   video_id: string | string[]
+  timezone?: string
   handleError?: () => void
   handleSuccess?: () => void
 }
@@ -18,17 +19,20 @@ export type PurchaseTicketResponse = {
 export type ListPointsParams = {
   page?: number
   limit?: number
+  timezone?: string
 }
 export type DetailUsagePointParams = {
   page?: number
   limit?: number
   uuid?: number
+  timezone?: string
 }
 export type HistoryPointsParams = {
   page?: number
   limit?: number
   type: number // purchase_history: 1 - usage_history: 2
   period?: string
+  timezone?: string
 }
 export type ListMyPointsResponse = {
   message?: string

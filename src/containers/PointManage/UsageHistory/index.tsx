@@ -116,11 +116,12 @@ const UsageHistory: FC = () => {
             value={querySelected}
             onChange={handleSelectedQuery}
           >
-            {filterOptions.map((rule, index) => (
-              <option key={index} value={rule.value}>
-                {rule.label}
-              </option>
-            ))}
+            {filterOptions &&
+              filterOptions.map((rule, index) => (
+                <option key={index} value={rule.value}>
+                  {rule.label}
+                </option>
+              ))}
           </ESSelect>
         </Grid>
       )}

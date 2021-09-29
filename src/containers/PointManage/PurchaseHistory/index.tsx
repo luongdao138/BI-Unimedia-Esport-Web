@@ -79,14 +79,12 @@ const PurchaseHistory: FC = () => {
           value={querySelected}
           onChange={handleSelectedQuery}
         >
-          {/* <option disabled value={-1}>
-            {i18n.t('common:point_management_tab.choosing')}
-          </option> */}
-          {filterOptions.map((rule, index) => (
-            <option key={index} value={rule.value}>
-              {rule.label}
-            </option>
-          ))}
+          {filterOptions &&
+            filterOptions.map((rule, index) => (
+              <option key={index} value={rule.value}>
+                {rule.label}
+              </option>
+            ))}
         </ESSelect>
       </Grid>
       <Box className={`${classes.wrapContent} ${listPurchaseHistoryData?.length > 0 && classes.spacingBottom}`}>

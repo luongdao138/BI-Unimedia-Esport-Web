@@ -10,7 +10,7 @@ import useSearch from '@containers/Search/useSearch'
 import StreamLayout from '@layouts/StreamLayout'
 import useVideoSearch from '@containers/Search/useVideoSearch'
 
-const SearchPage: PageWithLayoutType = () => {
+const SearchVideoPage: PageWithLayoutType = () => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const router = useRouter()
@@ -44,12 +44,14 @@ const SearchPage: PageWithLayoutType = () => {
         return <></>
     }
   }
-
+  const handleBackHeader = () => {
+    router.back()
+  }
   return (
     <StreamLayout minimizeLayout loginRequired={false}>
       <Box className={classes.wrapContainer}>
         <Box py={2} pl={3} display="flex" flexDirection="row" alignItems="center" borderBottom="1px solid #70707070">
-          <IconButton className={classes.iconButtonBg} onClick={() => router.back()}>
+          <IconButton className={classes.iconButtonBg} onClick={handleBackHeader}>
             <Icon className={`fa fa-arrow-left ${classes.icon}`} fontSize="small" />
           </IconButton>
           <Typography variant="h2" className={classes.label}>
@@ -98,4 +100,4 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
-export default SearchPage
+export default SearchVideoPage
