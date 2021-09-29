@@ -475,6 +475,7 @@ export default {
     },
     join: 'エントリーする',
     unjoin: 'エントリーを確認',
+    before_entry: 'エントリー受付前',
     decline_entry: 'エントリーを辞退する',
     update_entry_info: 'エントリー情報の更新',
     check_entry: 'エントリーを確認する',

@@ -16,10 +16,11 @@ import { useRouter } from 'next/router'
 import RegularModal from '@components/RegularModal'
 import ESModal from '@components/Modal'
 import Participants from './Participants'
+import BRStatusReady from './Partials/BRStatusReady'
 
 const TournamentDetail: React.FC = () => {
   const { tournament, meta, userProfile, handleBack } = useTournamentDetail()
-  const { toEdit } = useArenaHelper(tournament)
+  const { toEdit, isBattleRoyale } = useArenaHelper(tournament)
   const router = useRouter()
 
   const actionComponent: Record<TournamentStatus, ReactNode> = {
@@ -30,6 +31,16 @@ const TournamentDetail: React.FC = () => {
     ready_to_start: <RecruitmentClosed tournament={tournament} userProfile={userProfile} />, //hourglass
     recruiting: <Recruiting tournament={tournament} userProfile={userProfile} />,
     recruitment_closed: <RecruitmentClosed tournament={tournament} userProfile={userProfile} />, //hourglass
+  }
+
+  const brActionComponent: Record<TournamentStatus, ReactNode> = {
+    ready: <BRStatusReady arena={tournament} />,
+    cancelled: <BRStatusReady arena={tournament} />,
+    completed: <BRStatusReady arena={tournament} />,
+    in_progress: <BRStatusReady arena={tournament} />,
+    ready_to_start: <BRStatusReady arena={tournament} />,
+    recruiting: <BRStatusReady arena={tournament} />,
+    recruitment_closed: <BRStatusReady arena={tournament} />,
   }
 
   return (
@@ -43,7 +54,7 @@ const TournamentDetail: React.FC = () => {
             cover={tournament?.attributes?.cover_image || '/images/default_card.png'}
             onHandleBack={handleBack}
           >
-            {actionComponent[tournament.attributes.status]}
+            {isBattleRoyale ? brActionComponent[tournament.attributes.status] : actionComponent[tournament.attributes.status]}
           </TournamentDetailHeader>
           <DetailInfo toEdit={toEdit} detail={tournament} extended />
           <ESModal open={router.query.modalName === 'participants'}>
