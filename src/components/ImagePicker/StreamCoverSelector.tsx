@@ -206,7 +206,7 @@ const StreamCoverSelector: React.FC<StreamCoverSelectorProps> = ({ src, ratio, c
           <ButtonPrimary round gradient={false} onClick={cancel}>
             {i18n.t('common:common.cancel')}
           </ButtonPrimary>
-          <ButtonPrimary round onClick={update} style={{ marginLeft: 20 }} disabled={file === null || rawFile === null}>
+          <ButtonPrimary round onClick={update} className={classes.buttonUse} disabled={file === null || rawFile === null}>
             {i18n.t('common:button.use')}
           </ButtonPrimary>
         </Box>
@@ -259,6 +259,9 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
       opacity: 0,
       borderRadius: 6,
     },
+  },
+  buttonUse: {
+    marginLeft: 20,
   },
   title: {
     marginTop: 40,

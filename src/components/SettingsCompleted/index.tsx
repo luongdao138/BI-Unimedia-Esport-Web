@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next'
 import Icon from '@material-ui/core/Icon'
 import { Colors } from '@theme/colors'
 import ButtonPrimary from '@components/ButtonPrimary'
-import { TwitterShareButton } from 'react-share'
 
 type Props = {
   title?: string
@@ -14,21 +13,9 @@ type Props = {
   onClose: () => void
   onComplete: () => void
   titleButton?: string
-  isShare?: boolean
-  titlePost?: string
-  contentPost?: string
 }
 
-const SettingsCompleted: React.FC<Props> = ({
-  titleNotification,
-  messageNotification,
-  onClose,
-  onComplete,
-  titleButton,
-  isShare = false,
-  titlePost,
-  contentPost,
-}) => {
+const SettingsCompleted: React.FC<Props> = ({ titleNotification, messageNotification, onClose, onComplete, titleButton }) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   return (
@@ -46,27 +33,11 @@ const SettingsCompleted: React.FC<Props> = ({
           <Typography variant="subtitle1" className={classes.contentStep3}>
             {messageNotification || t('common:streaming_setting_screen.step3_delivery_settings_content')}
           </Typography>
-          {isShare ? (
-            <TwitterShareButton
-              title={titlePost}
-              url={contentPost}
-              onShareWindowClose={onComplete}
-              resetButtonStyle={false}
-              style={{ opacity: 1, backgroundColor: 'transparent', border: 0 }}
-            >
-              <Box className={classes.redirectButton}>
-                <ButtonPrimary fullWidth round>
-                  {titleButton || t('common:streaming_setting_screen.step3_close_btn')}
-                </ButtonPrimary>
-              </Box>
-            </TwitterShareButton>
-          ) : (
-            <Box className={classes.redirectButton} onClick={onComplete}>
-              <ButtonPrimary fullWidth round>
-                {titleButton || t('common:streaming_setting_screen.step3_close_btn')}
-              </ButtonPrimary>
-            </Box>
-          )}
+          <Box className={classes.redirectButton} onClick={onComplete}>
+            <ButtonPrimary fullWidth round>
+              {titleButton || t('common:streaming_setting_screen.step3_close_btn')}
+            </ButtonPrimary>
+          </Box>
         </Box>
       </Box>
     </Box>
@@ -92,13 +63,13 @@ const useStyles = makeStyles((theme) => ({
     fontSize: '24px',
     fontWeight: 'bold',
     textAlign: 'center',
-    color: '#fff',
+    color: '#FFFFFF',
     width: '100%',
     paddingBottom: '30px',
   },
   contentStep3: {
     fontSize: '18px',
-    color: '#fff',
+    color: '#FFFFFF',
     fontWeight: 'normal',
     paddingBottom: '144px',
     textAlign: 'center',

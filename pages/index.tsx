@@ -22,7 +22,7 @@ const TopPage: PageWithLayoutType = () => {
       {!video_id ? (
         <TopContainer />
       ) : (
-        <StreamLayout minimizeLayout loginRequired={false} footer={!!isMobile}>
+        <StreamLayout noTopPadding minimizeLayout loginRequired={false} footer={!!isMobile}>
           <VideoLiveStreamContainer />
         </StreamLayout>
       )}

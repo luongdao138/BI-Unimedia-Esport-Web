@@ -85,7 +85,7 @@ const VideoDetail: React.FC = () => {
   const [softKeyboardIsShown, setSoftKeyboardIsShown] = useState(false)
   const [errorPurchase, setErrorPurchase] = useState(false)
   const [videoInfo, setVideoInfo] = useState<VIDEO_INFO>({ video_status: STATUS_VIDEO.SCHEDULE, process_status: '' })
-  const [videoStatus, setVideoStatus] = useState(STATUS_VIDEO.SCHEDULE)
+  const [videoStatus, setVideoStatus] = useState(null)
   console.log('🚀 ~ videoStatus', videoStatus)
 
   const { getVideoDetail, detailVideoResult, userResult, videoDetailError, resetVideoDetailError } = useDetailVideo()

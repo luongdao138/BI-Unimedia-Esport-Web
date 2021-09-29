@@ -44,6 +44,9 @@ interface StepsProps {
   onNext: (step: number, isShare?: boolean, post?: { title: string; content: string }) => void
   category: GetCategoryResponse
   formik?: FormikProps<FormLiveType>
+  isShare?: boolean
+  titlePost?: string
+  contentPost?: string
 }
 
 const KEY_TYPE = {
@@ -52,7 +55,7 @@ const KEY_TYPE = {
   UUID: 3,
 }
 
-const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik }) => {
+const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, titlePost, contentPost }) => {
   const classes = useStyles()
   const dispatch = useAppDispatch()
   const { t } = useTranslation(['common'])
@@ -280,7 +283,37 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik }) => {
         content: `${baseViewingURL}${stepSettingTwo.uuid}`,
       })
       formik.setFieldValue('stepSettingTwo.step_setting', step + 1)
+      if (isShare) {
+        window
+          .open(
+            getTwitterShareUrl(),
+            '_blank',
+            Object.keys(windowConfigs())
+              .map(function (key) {
+                return key + '=' + windowConfigs[key]
+              })
+              .join(', ')
+          )
+          ?.focus()
+      }
     })
+  }
+
+  const windowConfigs = () => ({
+    width: 550,
+    height: 400,
+    ...getBoxPositionOnWindowCenter(550, 400),
+  })
+
+  const getBoxPositionOnWindowCenter = function (width, height) {
+    return {
+      left: window.outerWidth / 2 + (window.screenX || window.screenLeft || 0) - width / 2,
+      top: window.outerHeight / 2 + (window.screenY || window.screenTop || 0) - height / 2,
+    }
+  }
+
+  const getTwitterShareUrl = () => {
+    return `https://twitter.com/intent/tweet?text=${titlePost}%0a${contentPost}`
   }
 
   return (
@@ -989,7 +1022,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingLeft: 12,
     color: '#FFFFFF30',
     '&:focus': {
-      color: '#ffffff9c',
+      color: '#FFFFFF9C',
     },
     cursor: 'default',
   },
@@ -998,7 +1031,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     // cursor: 'pointer',
     color: '#FFFFFF30',
     '&:focus': {
-      color: '#ffffff9c',
+      color: '#FFFFFF9C',
     },
     cursor: 'default',
   },
@@ -1064,13 +1097,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     border: `1px solid rgba(255,255,255,0.3)`,
   },
   inputAdornment: {
-    color: '#fff',
+    color: '#FFFFFF',
     fontSize: '14px',
   },
   detectLink: {
     whiteSpace: 'pre-line',
     paddingTop: '12px',
-    color: '#ffffffb3',
+    color: '#FFFFFFB3',
     display: 'inline-block',
     fontSize: '14px',
     fontWeight: 400,
@@ -1126,7 +1159,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderRadius: 4,
     '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
       borderWidth: 1,
-      borderColor: '#fff',
+      borderColor: '#FFFFFF',
     },
     '&.Mui-error .MuiOutlinedInput-notchedOutline': {
       background: 'rgba(247, 247, 53, 0.1)',

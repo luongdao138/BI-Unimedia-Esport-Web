@@ -402,7 +402,7 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
           <Box className={classes.streamer_info}>
             <ESAvatar className={classes.avatar} alt={detailVideoResult?.user_nickname} src={detailVideoResult?.user_avatar} />
             <Box className={classes.streamer_data}>
-              {detailVideoResult?.channel_name && <Box className={classes.streamer_name}>{detailVideoResult?.channel_name}</Box>}
+              {detailVideoResult?.user_nickname && <Box className={classes.streamer_name}>{detailVideoResult?.user_nickname}</Box>}
               <Box className={classes.registration}>
                 <Typography className={classes.register_person_label}>{t('live_stream_screen.register_person_label')}</Typography>
                 <Typography className={classes.register_person_number}>
