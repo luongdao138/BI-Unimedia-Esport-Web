@@ -734,9 +734,9 @@ export default {
     },
     card: {
       organizer: '開催者',
-      start_date: '開催日',
-      entry_period: 'エントリー期間',
-      entries: 'エントリー人数',
+      start_date: '開始日時',
+      entry_period: '受付期間',
+      entries: 'エントリー',
     },
     cancel_lobby_dialog: {
       title: '募集を中止しますか？',
