@@ -131,7 +131,6 @@ const VideoDetail: React.FC = () => {
   const checkVideoStatus = async () => {
     try {
       const videoId = detailVideoResult.uuid
-      console.log('🚀 ~ checkVideoStatus ~ 11111', videoId)
       const listQV: APIt.ListMessagesQueryVariables = {
         filter: {
           uuid: { eq: videoId },
@@ -184,7 +183,6 @@ const VideoDetail: React.FC = () => {
 
   useEffect(() => {
     if (detailVideoResult.key_video_id) {
-      console.log('🚀 ~ useEffect ~ detailVideoResult. 222222', detailVideoResult.key_video_id)
       checkVideoStatus()
       setVideoStatus(detailVideoResult.status)
       if (detailVideoResult.status === STATUS_VIDEO.ARCHIVE) {
@@ -195,10 +193,6 @@ const VideoDetail: React.FC = () => {
 
   const refOnUpdateVideo = useRef(null)
   const onUpdateVideoData = (updateVideoData) => {
-    console.log('🚀 ~ subscribeAction ~ 111', detailVideoResult)
-    console.log('🚀 ~ subscribeAction ~ 222', detailVideoResult.uuid)
-    console.log('🚀 ~ subscribeAction ~ 333', updateVideoData)
-    console.log('🚀 ~ subscribeAction ~ 4444', updateVideoData.uuid)
     if (updateVideoData.uuid === detailVideoResult.uuid) {
       setVideoInfo(updateVideoData)
     }
@@ -212,8 +206,8 @@ const VideoDetail: React.FC = () => {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         //@ts-ignore
         const subMessage = sub?.value
-        console.log('🚀  Data onUpdateVideo:' + JSON.stringify(subMessage.data))
         const updateVideoData = subMessage.data.onUpdateVideo
+        console.log("🚀 ~ subscribeAction ~ updateVideoData", updateVideoData)
         if (updateVideoData) {
           refOnUpdateVideo.current(updateVideoData)
         }
