@@ -46,7 +46,15 @@ const StreamingReservationContainer: React.FC<Props> = ({ formik }) => {
 
   return (
     <>
-      <Steps step={formik?.values?.stepSettingTwo?.step_setting} onNext={onChangeStep} category={categoryData} formik={formik} />
+      <Steps
+        step={formik?.values?.stepSettingTwo?.step_setting}
+        onNext={onChangeStep}
+        category={categoryData}
+        formik={formik}
+        isShare={isShare}
+        titlePost={post.title}
+        contentPost={post.content}
+      />
       <ESModal open={modal} handleClose={() => setModal(false)}>
         <BlankLayout>
           <SettingsCompleted
@@ -54,9 +62,6 @@ const StreamingReservationContainer: React.FC<Props> = ({ formik }) => {
             messageNotification={t('common:streaming_setting_screen.tab2_notification_mess')}
             onClose={onClose}
             onComplete={onComplete}
-            isShare={isShare}
-            titlePost={post.title}
-            contentPost={post.content}
           />
         </BlankLayout>
       </ESModal>

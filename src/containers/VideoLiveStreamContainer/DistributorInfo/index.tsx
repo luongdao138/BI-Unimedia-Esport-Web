@@ -12,6 +12,7 @@ import useLiveStreamDetail from '../useLiveStreamDetail'
 import { LIMIT_ITEM, TypeVideoArchived } from '@services/liveStreamDetail.service'
 import ESLoader from '@components/Loader'
 import useDetailVideo from '../useDetailVideo'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
 
 interface dataItem {
   id: number
@@ -30,7 +31,7 @@ const DistributorInfo: React.FC<DistributorInfoProps> = ({ video_id }) => {
   const { meta_archived_video_stream, archivedVideoStreamData, getArchivedVideoStream, resetArchivedVideoStream } = useLiveStreamDetail()
   const isLoadingData = meta_archived_video_stream?.pending
 
-  const getChannelDescriptionText = detailVideoResult?.channel_description
+  const getChannelDescriptionText = CommonHelper.linkifyString(detailVideoResult?.channel_description)
 
   const [descriptionCollapse, setDescriptionCollapse] = useState(true)
   const [page, setPage] = useState<number>(1)
@@ -142,9 +143,12 @@ const DistributorInfo: React.FC<DistributorInfoProps> = ({ video_id }) => {
   const channelDescription = () => {
     return (
       <Box className={classes.channelDescription}>
-        <Typography className={classes.content}>
-          {getChannelDescriptionText?.length < 200 ? getChannelDescriptionText : getDescriptionTruncated()}
-        </Typography>
+        <div
+          className={classes.content}
+          dangerouslySetInnerHTML={{
+            __html: getChannelDescriptionText?.length < 200 ? getChannelDescriptionText : getDescriptionTruncated(),
+          }}
+        />
         {getChannelDescriptionText.length > 200 && collapseButton()}
       </Box>
     )
@@ -170,7 +174,7 @@ const DistributorInfo: React.FC<DistributorInfoProps> = ({ video_id }) => {
         {getChannelDescriptionText.length > 0 && !isLoading ? (
           <>
             <Box className={classes.channelContainer}>
-              <ESAvatar className={classes.avatar} src={'/images/avatar.png'} />
+              <ESAvatar className={classes.avatar} alt={detailVideoResult?.user_nickname} src={detailVideoResult?.user_avatar} />
               <Box className={classes.textContainer}>
                 {/* <Typography className={classes.title}>{'配信者の名前がはいります'}</Typography> */}
                 {detailVideoResult?.channel_name && <Typography className={classes.title}>{detailVideoResult?.channel_name}</Typography>}
@@ -311,6 +315,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   content: {
     fontSize: 14,
     marginTop: 7,
+    whiteSpace: 'pre-wrap',
   },
   socialMediaContainer: {
     display: 'flex',

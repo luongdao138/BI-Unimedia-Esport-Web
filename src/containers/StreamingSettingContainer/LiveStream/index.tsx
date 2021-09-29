@@ -43,16 +43,18 @@ const LiveStreamContainer: React.FC<Props> = ({ formik }) => {
 
   return (
     <>
-      <Steps step={formik?.values?.stepSettingOne?.step_setting} onNext={onChangeStep} category={categoryData} formik={formik} />
+      <Steps
+        step={formik?.values?.stepSettingOne?.step_setting}
+        onNext={onChangeStep}
+        category={categoryData}
+        formik={formik}
+        isShare={isShare}
+        titlePost={post.title}
+        contentPost={post.content}
+      />
       <ESModal open={modal} handleClose={() => setModal(false)}>
         <BlankLayout>
-          <SettingsCompleted
-            onClose={onClose}
-            onComplete={onComplete}
-            isShare={isShare}
-            titlePost={post.title}
-            contentPost={post.content}
-          />
+          <SettingsCompleted onClose={onClose} onComplete={onComplete} />
         </BlankLayout>
       </ESModal>
     </>

@@ -179,6 +179,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: 14,
     color: '#FFFFFF',
     opacity: 0.7,
+    whiteSpace: 'pre-wrap',
   },
   seeMoreContainer: {
     display: 'flex',
