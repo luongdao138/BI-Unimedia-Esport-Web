@@ -278,12 +278,9 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
         <ESStickyFooter
           disabled={false}
           noScroll
+          noBottomSpace
           content={
             <Box display="flex" flexDirection="column" alignItems="center">
-              <Box mb={2} className={classes.desc}>
-                <Typography align="center">{t('user_report.desc_first')}</Typography>
-                <Typography align="center">{t('user_report.desc_second')}</Typography>
-              </Box>
               <DialogActions style={{ justifyContent: 'center' }}>
                 <ButtonPrimary
                   style={{ width: 280 }}
@@ -314,6 +311,9 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
                 <Box pl={2}>
                   <Typography variant="h2">{title || t('user_report.title')}</Typography>
                 </Box>
+              </Box>
+              <Box mt={8}>
+                <Typography className={classes.desc}>{t('user_report.desc')}</Typography>
               </Box>
               <Box py={4}>{attr && reportInfo()}</Box>
               <Grid container>
@@ -440,10 +440,8 @@ const useStyles = makeStyles((theme) => ({
     paddingRight: 10,
   },
   desc: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    color: Colors.grey[400],
+    color: Colors.grey[300],
+    whiteSpace: 'pre-line',
   },
   message: {
     marginLeft: 15,
