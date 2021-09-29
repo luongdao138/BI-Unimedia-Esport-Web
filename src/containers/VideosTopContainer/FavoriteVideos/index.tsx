@@ -20,6 +20,8 @@ const FavoriteVideos: React.FC<FavoriteVideosProps> = ({ setTab, setFollow, vide
   const downMd = useMediaQuery(theme.breakpoints.down(769))
   const classes = useStyles()
   const { listFavoriteVideo, meta, listLiveVideo } = useFavoriteVideos()
+  const up2569 = useMediaQuery(theme.breakpoints.up(2569))
+  const up1920 = useMediaQuery(theme.breakpoints.up(1920))
 
   const renderLiveItem = (item: TypeVideo, index: number) => {
     return (
@@ -38,7 +40,7 @@ const FavoriteVideos: React.FC<FavoriteVideosProps> = ({ setTab, setFollow, vide
   }
 
   useEffect(() => {
-    listLiveVideo()
+    listLiveVideo(10)
   }, [])
 
   const onClickSeeMoreLiveStream = () => {
@@ -73,6 +75,15 @@ const FavoriteVideos: React.FC<FavoriteVideosProps> = ({ setTab, setFollow, vide
     )
   }
 
+  const listLimitData = () => {
+    if (up2569) return 10
+    if (up1920) return 8
+    return 6
+  }
+  const getDisplayData = (fullData) => {
+    return fullData.slice(0, listLimitData())
+  }
+
   return (
     <Box className={classes.container}>
       <Box className={classes.content}>
@@ -92,9 +103,9 @@ const FavoriteVideos: React.FC<FavoriteVideosProps> = ({ setTab, setFollow, vide
         </Box>
         <Box className={classes.wrapContentContainer}>
           <Grid container spacing={3} className={classes.contentContainer}>
-            {listFavoriteVideo?.live?.length > 0 ? (
-              listFavoriteVideo?.live?.map(renderLiveItem)
-            ) : listFavoriteVideo?.live?.length === 0 && meta.pending ? (
+            {getDisplayData(listFavoriteVideo?.live)?.length > 0 ? (
+              getDisplayData(listFavoriteVideo?.live)?.map(renderLiveItem)
+            ) : getDisplayData(listFavoriteVideo?.live)?.length === 0 && meta.pending ? (
               renderPreLoad()
             ) : (
               <Box paddingTop={2} paddingBottom={2} paddingLeft={2}>
@@ -103,7 +114,7 @@ const FavoriteVideos: React.FC<FavoriteVideosProps> = ({ setTab, setFollow, vide
             )}
           </Grid>
         </Box>
-        {listFavoriteVideo?.live?.length > 0 && (
+        {getDisplayData(listFavoriteVideo?.live)?.length > 0 && (
           <Box className={classes.spViewMore} onClick={onClickSeeMoreLiveStream}>
             <Typography className={classes.viewMoreStyle}>{i18n.t('common:videos_top_tab.view_more')}</Typography>
           </Box>
@@ -113,15 +124,15 @@ const FavoriteVideos: React.FC<FavoriteVideosProps> = ({ setTab, setFollow, vide
         <Box className={classes.titleContainer}>
           <TitleSeeMore
             titleText={i18n.t('common:videos_top_tab.title_schedule_videos')}
-            rightText={listFavoriteVideo?.schedule?.length > 0 ? i18n.t('common:videos_top_tab.view_more') : ''}
+            rightText={getDisplayData(listFavoriteVideo?.schedule)?.length > 0 ? i18n.t('common:videos_top_tab.view_more') : ''}
             onPress={onClickSeeMoreSchedule}
           />
         </Box>
         <Box className={classes.wrapContentContainer}>
           <Grid container spacing={3} className={classes.contentContainer}>
-            {listFavoriteVideo?.schedule?.length > 0 ? (
-              listFavoriteVideo?.schedule?.map(renderLiveItem)
-            ) : listFavoriteVideo?.schedule?.length === 0 && meta.pending ? (
+            {getDisplayData(listFavoriteVideo?.schedule)?.length > 0 ? (
+              getDisplayData(listFavoriteVideo?.schedule)?.map(renderLiveItem)
+            ) : getDisplayData(listFavoriteVideo?.schedule)?.length === 0 && meta.pending ? (
               renderPreLoad()
             ) : (
               <Box paddingTop={2} paddingBottom={2} paddingLeft={2}>
@@ -130,7 +141,7 @@ const FavoriteVideos: React.FC<FavoriteVideosProps> = ({ setTab, setFollow, vide
             )}
           </Grid>
         </Box>
-        {listFavoriteVideo?.schedule?.length > 0 && (
+        {getDisplayData(listFavoriteVideo?.schedule)?.length > 0 && (
           <Box className={classes.spViewMore} onClick={onClickSeeMoreSchedule}>
             <Typography className={classes.viewMoreStyle}>{i18n.t('common:videos_top_tab.view_more')}</Typography>
           </Box>
@@ -140,15 +151,15 @@ const FavoriteVideos: React.FC<FavoriteVideosProps> = ({ setTab, setFollow, vide
         <Box className={classes.titleContainer}>
           <TitleSeeMore
             titleText={i18n.t('common:videos_top_tab.title_archived_videos')}
-            rightText={listFavoriteVideo?.archived?.length > 0 ? i18n.t('common:videos_top_tab.view_more') : ''}
+            rightText={getDisplayData(listFavoriteVideo?.archived)?.length > 0 ? i18n.t('common:videos_top_tab.view_more') : ''}
             onPress={onClickSeeMoreArchive}
           />
         </Box>
         <Box className={classes.wrapContentContainer}>
           <Grid container spacing={3} className={classes.contentContainer}>
-            {listFavoriteVideo?.archived?.length > 0 ? (
-              listFavoriteVideo?.archived?.map(renderLiveItem)
-            ) : listFavoriteVideo?.archived?.length === 0 && meta.pending ? (
+            {getDisplayData(listFavoriteVideo?.archived)?.length > 0 ? (
+              getDisplayData(listFavoriteVideo?.archived)?.map(renderLiveItem)
+            ) : getDisplayData(listFavoriteVideo?.archived)?.length === 0 && meta.pending ? (
               renderPreLoad()
             ) : (
               <Box paddingTop={2} paddingBottom={2} paddingLeft={2}>
@@ -157,7 +168,7 @@ const FavoriteVideos: React.FC<FavoriteVideosProps> = ({ setTab, setFollow, vide
             )}
           </Grid>
         </Box>
-        {listFavoriteVideo?.archived?.length > 0 && (
+        {getDisplayData(listFavoriteVideo?.archived)?.length > 0 && (
           <Box className={classes.spViewMore} onClick={onClickSeeMoreArchive}>
             <Typography className={classes.viewMoreStyle}>{i18n.t('common:videos_top_tab.view_more')}</Typography>
           </Box>

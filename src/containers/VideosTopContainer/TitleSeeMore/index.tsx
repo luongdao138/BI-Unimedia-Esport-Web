@@ -1,5 +1,6 @@
 import ESLabel from '@components/Label'
 import { Box, Theme, makeStyles, Typography } from '@material-ui/core'
+
 export type TitleSeeMoreProps = {
   iconSource?: string
   titleText: string
@@ -51,6 +52,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   [theme.breakpoints.down(769)]: {
     viewMoreStyle: {
       display: 'none',
+    },
+  },
+  [theme.breakpoints.up(1920)]: {
+    container: {
+      paddingRight: '20px',
     },
   },
   boxOut: {

@@ -1,4 +1,4 @@
-import { Box, Button, makeStyles, Typography, InputAdornment } from '@material-ui/core'
+import { Box, Button, makeStyles, Typography, InputAdornment, useTheme } from '@material-ui/core'
 import i18n from '@locales/i18n'
 import React, { useEffect, useRef, useState } from 'react'
 import { purchasePoints, sanitizeMess } from './index'
@@ -38,6 +38,8 @@ const PremiumChatBox: React.FC<PremiumChatBoxProps> = ({
   const [purchaseValueSelected, setPurchaseValueSelected] = useState<string>('p_100')
   const [premiumChatValidationError, setPremiumChatValidationError] = useState<string>(null)
   const { dataPurchaseTicketSuperChat } = usePurchaseTicketSuperChat()
+  const theme = useTheme()
+  const isDownMd = theme.breakpoints.down('md')
 
   const ref = useRef<any>()
   const classes = useStyles()
@@ -198,7 +200,7 @@ const PremiumChatBox: React.FC<PremiumChatBoxProps> = ({
           </Typography>
         </Box>
       </Box>
-      <img src="/images/ic_down_triangle.svg" className={classes.downTriangle} />
+      {!isDownMd && <img src="/images/ic_down_triangle.svg" className={classes.downTriangle} />}
     </div>
   )
 }
@@ -217,7 +219,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: '#212121',
     '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
       borderWidth: 1,
-      borderColor: '#fff',
+      borderColor: '#FFFFFF',
     },
     '&.Mui-error .MuiOutlinedInput-notchedOutline': {
       background: 'rgba(247, 247, 53, 0.1)',
@@ -358,12 +360,12 @@ const useStyles = makeStyles((theme) => ({
   ...purchasePoints,
   [theme.breakpoints.down(769)]: {
     purchaseDialogContainer: {
-      width: 475,
-    },
-  },
-  [theme.breakpoints.down(476)]: {
-    purchaseDialogContainer: {
-      width: 318,
+      width: '100%',
+      position: 'fixed',
+      bottom: 0,
+      left: 0,
+      zIndex: 5,
+      marginBottom: 0,
     },
   },
 }))

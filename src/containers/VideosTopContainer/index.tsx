@@ -50,7 +50,7 @@ const VideosTop: React.FC = () => {
   const { bannerTop, listBanner, setLoginPreAction, getLoginPreAction } = useListVideoAll()
   const theme = useTheme()
   const isWideScreen = useMediaQuery(theme.breakpoints.up(1920))
-  const { width: listDisplayWidth } = useWindowDimensions(244)
+  const { width: listDisplayWidth } = useWindowDimensions(146)
   const { makeContextualHref } = useContextualRouting()
   const _router = useRouter()
   const defaultTab = _router?.query?.default_tab || '0'
@@ -99,8 +99,8 @@ const VideosTop: React.FC = () => {
     if (!isWideScreen) {
       return {}
     }
-    const numOfDisplayItem = Math.ceil(listDisplayWidth / 419)
-    const calcWidth = Math.floor(listDisplayWidth / numOfDisplayItem)
+    const numOfDisplayItem = Math.floor(listDisplayWidth / 433.5)
+    const calcWidth = listDisplayWidth / numOfDisplayItem
 
     return {
       maxWidth: calcWidth,
@@ -142,7 +142,7 @@ const VideosTop: React.FC = () => {
         {/* //listBanner */}
         <Box className={classes.bannerContainer}>{listBanner.length > 0 && <BannerCarousel data={listBanner} />}</Box>
       </Box>
-      <Grid container direction="column">
+      <Grid container direction="column" className={classes.contentContainer}>
         {getTabs()}
         <Box className={classes.tabContent}>{getContent()}</Box>
       </Grid>
@@ -153,10 +153,13 @@ export default VideosTop
 
 const useStyles = makeStyles((theme) => ({
   tabsContainer: {
-    paddingRight: 122,
+    paddingRight: '24px',
+  },
+  contentContainer: {
+    flexWrap: 'unset',
   },
   tabContent: {
-    padding: '0 122px 0 24px',
+    padding: '0 24px 8px 24px',
   },
   container: {
     width: '100%',
@@ -169,7 +172,6 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     position: 'relative',
     backgroundColor: '#212121',
-    paddingBottom: 100,
   },
   tabs: {
     overflowY: 'hidden',
@@ -201,6 +203,7 @@ const useStyles = makeStyles((theme) => ({
   [theme.breakpoints.down(1401)]: {
     tabsContainer: {
       paddingRight: '24px',
+      paddingLeft: '24px',
     },
     tabContent: {
       paddingRight: '24px',
@@ -220,6 +223,9 @@ const useStyles = makeStyles((theme) => ({
   [theme.breakpoints.down(769)]: {
     tabContent: {
       paddingRight: 0,
+    },
+    tabs: {
+      paddingLeft: 0,
     },
   },
   [theme.breakpoints.down(415)]: {
