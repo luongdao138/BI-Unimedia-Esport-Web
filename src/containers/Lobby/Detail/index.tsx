@@ -121,7 +121,7 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: 6,
     paddingRight: 6,
     paddingTop: 6,
-    paddingBottom: 24,
+    paddingBottom: 22,
   },
   [theme.breakpoints.down('xs')]: {
     root: {
