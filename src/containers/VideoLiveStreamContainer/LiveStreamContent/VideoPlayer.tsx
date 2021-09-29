@@ -62,6 +62,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     ended: false,
     loading: true,
     errorVideo: false,
+    videoLoaded: false,
   })
 
   const {
@@ -292,7 +293,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   }
   const onBuffer = () => {
     console.log('BUFFER=')
-    setState({ ...state, loading: true })
+    setState({ ...state, loading: true, videoLoaded: true })
   }
   const onSeek = (se) => {
     console.log('SEEK=', se)
@@ -322,7 +323,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     }
   }, [startLive, state.ended, endLive, isLive])
 
-  const { playing, muted, volume, ended, loading, errorVideo } = state
+  const { playing, muted, volume, ended, loading, errorVideo, videoLoaded } = state
   return (
     <div className={classes.videoPlayer}>
       {/* <video ref={videoEl} controls playsinline src={src}></video> */}
@@ -392,7 +393,8 @@ const VideoPlayer: React.FC<PlayerProps> = ({
           <div
             className={classes.loading}
             style={{
-              backgroundImage: `url(${thumbnail ?? '/images/live_stream/exelab_thumb.png'})`,
+              ...(!videoLoaded && { backgroundImage: `url(${thumbnail ?? '/images/live_stream/thumbnail_default.png'})` }),
+              ...(videoLoaded && { background: 'rgba(0, 0, 0, 0.5)' }),
               backgroundSize: 'cover',
             }}
           >
