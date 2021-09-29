@@ -32,6 +32,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: Colors.yellow,
     opacity: 1,
     fontWeight: 'normal',
+    marginTop: 8,
+    marginBottom: 6,
   },
 }))
 
