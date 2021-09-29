@@ -18,7 +18,7 @@ type VideoPreviewItemProps = {
 const VideoPreviewItem: React.FC<VideoPreviewItemProps> = ({ data }) => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
-  const IMG_PLACEHOLDER = '/images/live_stream/exelab_default_card.png'
+  const IMG_PLACEHOLDER = '/images/live_stream/thumbnail_default.png'
   //status = 0-schedule|1-live|2-archive
   const router = useRouter()
   const onNavigateLive = (data) => {

@@ -318,11 +318,14 @@ const useStyles = makeStyles((theme: Theme) => ({
       },
       '&::-webkit-scrollbar-track': {
         paddingLeft: 1,
-        background: 'rgba(0,0,0,0.5)',
+        backgroundColor: '#222222',
       },
       '&::-webkit-scrollbar-thumb': {
-        backgroundColor: '#222222',
         borderRadius: 6,
+        background: 'rgba(0,0,0,0.5)',
+      },
+      '&::-webkit-scrollbar-corner': {
+        backgroundColor: '#222222',
       },
     },
     noDataWrapContentContainer: {
@@ -337,11 +340,14 @@ const useStyles = makeStyles((theme: Theme) => ({
       },
       '&::-webkit-scrollbar-track': {
         paddingLeft: 1,
-        background: 'rgba(0,0,0,0.5)',
+        backgroundColor: '#222222',
       },
       '&::-webkit-scrollbar-thumb': {
-        backgroundColor: '#222222',
+        background: 'rgba(0,0,0,0.5)',
         borderRadius: 6,
+      },
+      '&::-webkit-scrollbar-corner': {
+        backgroundColor: '#222222',
       },
     },
     contentContainer: {

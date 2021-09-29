@@ -57,14 +57,15 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
   const { userReactionVideoStream, userFollowChannel } = useLiveStreamDetail()
   // const isLoadingReaction = meta_reaction_video_stream?.pending
   const isLoadingVideoDetail = meta?.pending
-  const [like, setLike] = useState(userResult ? userResult.like : 0)
-  const [unlike, setUnlike] = useState(userResult ? userResult.unlike : 0)
+  const [like, setLike] = useState(userResult?.like !== null ? userResult.like : 0)
+  const [unlike, setUnlike] = useState(userResult?.unlike !== null ? userResult.unlike : 0)
   const [likeCount, setLikeCount] = useState(detailVideoResult?.like_count !== null ? detailVideoResult?.like_count : 0)
   const [unlikeCount, setUnlikeCount] = useState(detailVideoResult?.unlike_count !== null ? detailVideoResult?.unlike_count : 0)
-  const [subscribe, setSubscribe] = useState(userResult?.follow || 0)
+  const [subscribe, setSubscribe] = useState(userResult?.follow !== null ? userResult?.follow : 0)
   const [subscribeCount, setSubscribeCount] = useState(
     detailVideoResult?.channel_follow_count !== null ? detailVideoResult?.channel_follow_count : 0
   )
+
   const [keyVideoPlayer, setKeyVideoPlayer] = useState(0)
   // get url browser video live stream
   const urlVideoLiveStream = window.location.href
