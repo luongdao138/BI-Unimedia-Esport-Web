@@ -212,22 +212,16 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
       //   thumbnail={'/images/live_stream/exelab_thumb.png'}
       //   statusVideo={true}
       // />
-      <>
-        {showOverlayOnMediaPlayer() ? (
-          <img src={detailVideoResult?.thumbnail} className={classes.thumb} />
-        ) : (
-          <VideoPlayer
-            key={keyVideoPlayer}
-            src={detailVideoResult?.archived_url}
-            thumbnail={detailVideoResult?.thumbnail}
-            statusVideo={showOverlayOnMediaPlayer() ? true : null}
-            mediaOverlayIsShown={showOverlayOnMediaPlayer()}
-            onVideoEnd={props.onVideoEnd}
-            startLive={Date.parse(detailVideoResult?.live_stream_start_time)}
-            endLive={detailVideoResult?.live_stream_end_time}
-          />
-        )}
-      </>
+      <VideoPlayer
+        key={keyVideoPlayer}
+        src={detailVideoResult?.archived_url}
+        thumbnail={detailVideoResult?.thumbnail}
+        statusVideo={showOverlayOnMediaPlayer() ? true : null}
+        mediaOverlayIsShown={showOverlayOnMediaPlayer()}
+        onVideoEnd={props.onVideoEnd}
+        startLive={Date.parse(detailVideoResult?.live_stream_start_time)}
+        endLive={detailVideoResult?.live_stream_end_time}
+      />
     )
   }
 
