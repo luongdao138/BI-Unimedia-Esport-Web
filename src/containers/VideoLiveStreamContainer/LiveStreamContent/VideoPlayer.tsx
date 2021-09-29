@@ -185,10 +185,6 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     player.current.addEventListener(ERROR, onError)
     player.current.addEventListener(BUFFERING, onStateChange)
 
-    // videoEl.current.addEventListener('timeupdate', (event) => {
-    //   console.log('-----', event);
-    // });
-
     return () => {
       player.current.removeEventListener(READY, onStateChange)
       player.current.removeEventListener(PLAYING, onStateChange)
@@ -301,10 +297,6 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   const onSeek = (se) => {
     console.log('SEEK=', se)
     setState({ ...state, loading: true })
-
-    //for live
-
-    // reactPlayerRef.current.seekTo(10,'seconds')
   }
   const onReady = () => {
     setState({ ...state, loading: false })
@@ -312,22 +304,23 @@ const VideoPlayer: React.FC<PlayerProps> = ({
 
   //video
   useEffect(() => {
-    const updTime = () => {
-      const diff = (Date.now() - startLive) / 1000
-      hhmmss(diff)
-      setDurationPlayer(diff)
-      setPlayedSeconds(diff)
-      // console.log('****INTERVAL****', hhmmss(diff))
-    }
-    const interval = setInterval(() => {
-      if (startLive && !state.ended && !endLive) {
-        updTime()
+    if (isLive) {
+      const updTime = () => {
+        const diff = (Date.now() - startLive) / 1000
+        hhmmss(diff)
+        setDurationPlayer(diff)
+        setPlayedSeconds(diff)
       }
-    }, 1000)
-    return () => {
-      clearInterval(interval)
+      const interval = setInterval(() => {
+        if (startLive && !state.ended && !endLive) {
+          updTime()
+        }
+      }, 1000)
+      return () => {
+        clearInterval(interval)
+      }
     }
-  }, [startLive, state.ended])
+  }, [startLive, state.ended, endLive, isLive])
 
   const { playing, muted, volume, ended, loading, errorVideo } = state
   return (
