@@ -113,6 +113,7 @@ const TopicCreate: React.FC = () => {
     <ESStickyFooter
       disabled={false}
       noScroll
+      noBottomSpace
       content={
         <>
           {isConfirm ? (
