@@ -3,7 +3,10 @@ import purchasePoint from '@store/purchasePoint'
 import { createMetaSelector } from '@store/metadata/selectors'
 import * as commonActions from '@store/common/actions'
 import { useTranslation } from 'react-i18next'
+import pointsManage from '@store/pointsManage'
+import { ListPointsParams } from '@services/points.service'
 
+const actionsPointManage = pointsManage.actions
 const { selectors, actions } = purchasePoint
 const getSavedCardsMeta = createMetaSelector(actions.getSavedCards)
 const getDeleteCardMeta = createMetaSelector(actions.deleteCard)
@@ -23,6 +26,7 @@ const usePurchasePointData = () => {
   const purchasePointInfo = useAppSelector(selectors.getPurchasePoint)
 
   const getSavedCards = () => dispatch(actions.getSavedCards())
+  const getMyPointActiveData = (params: ListPointsParams) => dispatch(actionsPointManage.getMyPointData(params))
 
   const deleteSavedCard = async (card_seq) => {
     const resultAction = await dispatch(actions.deleteCard(card_seq))
@@ -39,6 +43,7 @@ const usePurchasePointData = () => {
     const resultAction = await dispatch(actions.purchasePointUseNewCard(purchase_info))
     if (actions.purchasePointUseNewCard.fulfilled.match(resultAction)) {
       dispatch(commonActions.addToast(mess_purchase_point_success))
+      getMyPointActiveData({ page: 1, limit: 10 })
     }
   }
 
@@ -46,6 +51,7 @@ const usePurchasePointData = () => {
     const resultAction = await dispatch(actions.purchasePointUseOldCard(purchase_info))
     if (actions.purchasePointUseOldCard.fulfilled.match(resultAction)) {
       dispatch(commonActions.addToast(mess_purchase_point_success))
+      getMyPointActiveData({ page: 1, limit: 10 })
     }
   }
 

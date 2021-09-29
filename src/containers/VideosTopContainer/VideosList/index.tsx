@@ -152,7 +152,7 @@ const VideosList: React.FC<VideoListProps> = ({ setTab, videoItemStyle }) => {
             onPress={onClickSeeMoreLiveStream}
           />
         </Box>
-        <Box className={classes.wrapContentContainer}>
+        <Box className={getDisplayData(videoTop?.live)?.length > 0 ? classes.wrapContentContainer : classes.noDataWrapContentContainer}>
           <Grid container spacing={3} className={classes.contentContainer}>
             {getDisplayData(videoTop?.live)?.length > 0 ? (
               getDisplayData(videoTop?.live).map(renderLiveItem)
@@ -180,7 +180,7 @@ const VideosList: React.FC<VideoListProps> = ({ setTab, videoItemStyle }) => {
             onPress={onClickSeeMoreSchedule}
           />
         </Box>
-        <Box className={classes.wrapContentContainer}>
+        <Box className={getDisplayData(videoTop?.live)?.length > 0 ? classes.wrapContentContainer : classes.noDataWrapContentContainer}>
           <Grid container spacing={3} className={classes.contentContainer}>
             {getDisplayData(videoTop?.schedule)?.length > 0 ? (
               getDisplayData(videoTop?.schedule).map(renderLiveItem)
@@ -208,7 +208,7 @@ const VideosList: React.FC<VideoListProps> = ({ setTab, videoItemStyle }) => {
             onPress={onClickSeeMoreArchive}
           />
         </Box>
-        <Box className={classes.wrapContentContainer}>
+        <Box className={getDisplayData(videoTop?.live)?.length > 0 ? classes.wrapContentContainer : classes.noDataWrapContentContainer}>
           <Grid container spacing={3} className={classes.contentContainer}>
             {getDisplayData(videoTop?.archived)?.length > 0 ? (
               getDisplayData(videoTop?.archived).map(renderLiveItem)
@@ -309,6 +309,25 @@ const useStyles = makeStyles((theme: Theme) => ({
     wrapContentContainer: {
       width: 'calc(100vw - 24px)',
       overflow: 'scroll',
+      scrollbarColor: '#222 transparent',
+      scrollbarWidth: 'thin',
+      '&::-webkit-scrollbar': {
+        height: 10,
+        opacity: 1,
+        padding: 10,
+      },
+      '&::-webkit-scrollbar-track': {
+        paddingLeft: 1,
+        background: 'rgba(0,0,0,0.5)',
+      },
+      '&::-webkit-scrollbar-thumb': {
+        backgroundColor: '#222222',
+        borderRadius: 6,
+      },
+    },
+    noDataWrapContentContainer: {
+      width: 'calc(100vw - 24px)',
+      overflow: 'hidden',
       scrollbarColor: '#222 transparent',
       scrollbarWidth: 'thin',
       '&::-webkit-scrollbar': {

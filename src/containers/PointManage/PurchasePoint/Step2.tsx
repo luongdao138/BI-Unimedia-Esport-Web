@@ -304,7 +304,7 @@ const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
               <Box className={classes.wrap_all_cards} style={purchasePointInfo.saved_cards.length >= 3 ? { height: 288 } : null}>
                 {purchasePointInfo.saved_cards.map((card, key) => {
                   return (
-                    <>
+                    <React.Fragment key={key}>
                       <Box className={classes.wrap_all_card}>
                         <Box className={classes.wrap_check_box}>
                           <CustomRadio
@@ -334,7 +334,7 @@ const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
                           {t('purchase_point_tab.title_delete_card')}
                         </Box>
                       </Box>
-                    </>
+                    </React.Fragment>
                   )
                 })}
               </Box>

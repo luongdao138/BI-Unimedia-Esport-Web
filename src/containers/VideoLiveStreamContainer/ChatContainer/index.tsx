@@ -152,6 +152,8 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
   console.log('🚀 ~ firstRender', firstRender)
   // const [isMessInBottom, setIsMessInBottom] = useState(false)
 
+  console.log('video type chat container: ', videoType)
+
   const getChatData = () =>
     Array(30)
       .fill('')
@@ -810,7 +812,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
         {purchaseDialogVisible && !isMobile && purchaseInfoDialog()}
         <LoginRequired>
           {/* <div onClick={purchaseIconClick}> */}
-          <IconButton onClick={purchaseIconClick} id="btnOpenPremiumChatDialog" className={classes.iconPurchase}>
+          <IconButton onClick={isEnabledChat ? purchaseIconClick : null} id="btnOpenPremiumChatDialog" className={classes.iconPurchase}>
             <img id="btnOpenPremiumChatDialogImage" src="/images/ic_purchase.svg" />
           </IconButton>
           {/* </div> */}

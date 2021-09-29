@@ -288,6 +288,7 @@ const VideoDetail: React.FC = () => {
       if (myPoint >= detailVideoResult?.ticket_price) {
         setShowPurchaseTicketModal(true)
       } else {
+        setLackedPoint(detailVideoResult?.ticket_price - myPoint)
         dispatch(addToast(i18n.t('common:donate_points.lack_point_mess')))
         setShowModalPurchasePoint(true)
       }
@@ -493,7 +494,7 @@ const VideoDetail: React.FC = () => {
       {showModalPurchasePoint && (
         <DonatePoints
           myPoint={myPoint}
-          lackedPoint={purchaseType === PURCHASE_TYPE.PURCHASE_SUPER_CHAT ? lackedPoint : detailVideoResult?.ticket_price}
+          lackedPoint={lackedPoint}
           showModalPurchasePoint={showModalPurchasePoint}
           setShowModalPurchasePoint={(value) => setShowModalPurchasePoint(value)}
         />

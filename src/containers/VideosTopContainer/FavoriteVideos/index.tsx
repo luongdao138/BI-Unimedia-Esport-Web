@@ -101,7 +101,7 @@ const FavoriteVideos: React.FC<FavoriteVideosProps> = ({ setTab, setFollow, vide
             onPress={onClickSeeMoreLiveStream}
           />
         </Box>
-        <Box className={classes.wrapContentContainer}>
+        <Box className={listFavoriteVideo?.live?.length > 0 ? classes.wrapContentContainer : classes.noDataWrapContentContainer}>
           <Grid container spacing={3} className={classes.contentContainer}>
             {getDisplayData(listFavoriteVideo?.live)?.length > 0 ? (
               getDisplayData(listFavoriteVideo?.live)?.map(renderLiveItem)
@@ -128,7 +128,7 @@ const FavoriteVideos: React.FC<FavoriteVideosProps> = ({ setTab, setFollow, vide
             onPress={onClickSeeMoreSchedule}
           />
         </Box>
-        <Box className={classes.wrapContentContainer}>
+        <Box className={listFavoriteVideo?.schedule?.length > 0 ? classes.wrapContentContainer : classes.noDataWrapContentContainer}>
           <Grid container spacing={3} className={classes.contentContainer}>
             {getDisplayData(listFavoriteVideo?.schedule)?.length > 0 ? (
               getDisplayData(listFavoriteVideo?.schedule)?.map(renderLiveItem)
@@ -155,7 +155,7 @@ const FavoriteVideos: React.FC<FavoriteVideosProps> = ({ setTab, setFollow, vide
             onPress={onClickSeeMoreArchive}
           />
         </Box>
-        <Box className={classes.wrapContentContainer}>
+        <Box className={listFavoriteVideo?.archived?.length > 0 ? classes.wrapContentContainer : classes.noDataWrapContentContainer}>
           <Grid container spacing={3} className={classes.contentContainer}>
             {getDisplayData(listFavoriteVideo?.archived)?.length > 0 ? (
               getDisplayData(listFavoriteVideo?.archived)?.map(renderLiveItem)
@@ -243,6 +243,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     wrapContentContainer: {
       width: 'calc(100vw - 24px)',
       overflow: 'auto',
+    },
+    noDataWrapContentContainer: {
+      overflow: 'hidden',
     },
     contentContainer: {
       flexWrap: 'nowrap',
