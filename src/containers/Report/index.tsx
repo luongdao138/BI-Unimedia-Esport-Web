@@ -141,10 +141,10 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
           flexDirection="column"
           style={{ alignItems: 'flex-start', marginTop: _theme.spacing(1) }}
         >
-          <Box display="flex" mr={2} mb={2}>
+          <Box display="flex" mr={2} mb={2} width="100%">
             <Icon className={'fas fa-comment-alt'} fontSize="small" style={{ color: Colors.white, paddingTop: _theme.spacing(0.5) }} />
-            <Box color={Colors.white} fontSize={14} ml={1}>
-              {attr.topic_title}
+            <Box color={Colors.white} fontSize={14} ml={1} width="calc(100% - 15px)">
+              <Typography className={classes.topicEllipsis}>{attr.topic_title}</Typography>
             </Box>
           </Box>
           {isComment && (
@@ -169,7 +169,9 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
             <Typography variant="body1" style={{ color: Colors.white_opacity[70] }}>
               {attr.date}
             </Typography>
-            <Typography variant="body1">{attr.content}</Typography>
+            <Typography variant="body1" className={classes.wordBreak}>
+              {attr.content}
+            </Typography>
           </Box>
           {attr.image && renderClickableImage(attr.image)}
         </Box>
@@ -399,6 +401,14 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
 }
 
 const useStyles = makeStyles((theme) => ({
+  topicEllipsis: {
+    display: '-webkit-box',
+    WebkitBoxOrient: 'vertical',
+    WebkitLineClamp: 1,
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    wordBreak: 'break-all',
+  },
   wordBreak: {
     wordBreak: 'break-all',
   },
