@@ -8,7 +8,6 @@ import { useRect } from '@utils/hooks/useRect'
 import _ from 'lodash'
 import styled from 'styled-components'
 import { TOPIC_ROW_ITEM_DIVISOR } from '@constants/community.constants'
-import React from 'react'
 
 const StyledBox = styled(Box)``
 export interface TopicRowItemProps {
@@ -185,4 +184,4 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
-export default React.memo(TopicRowItem, () => true)
+export default TopicRowItem

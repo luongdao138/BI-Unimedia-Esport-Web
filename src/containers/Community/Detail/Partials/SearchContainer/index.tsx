@@ -27,6 +27,7 @@ const InfoContainer: React.FC = () => {
   const [page, setPage] = useState(1)
   const [count, setCount] = useState(1)
   const [isSearched, setIsSearched] = useState<boolean>(false)
+  let onlyTitle
 
   useEffect(() => {
     if (!_.isEmpty(value)) {
@@ -44,6 +45,7 @@ const InfoContainer: React.FC = () => {
     getTopicList({ community_hash: hash_key, keyword: value.trim(), only_title: isOnlyTitle.toString(), page: 1 })
     setShowResult(true)
     setIsSearched(true)
+    onlyTitle = isOnlyTitle
   }
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -132,7 +134,7 @@ const InfoContainer: React.FC = () => {
                     comment_count={attr.comment_count}
                     keyword={value}
                     isSearched={isSearched}
-                    isOnlyTitle={isOnlyTitle}
+                    isOnlyTitle={onlyTitle}
                   />
                 )
               })}
