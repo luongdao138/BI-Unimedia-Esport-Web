@@ -1,4 +1,4 @@
-// import { useState } from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Typography, Box } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
@@ -9,36 +9,31 @@ import { Colors } from '@theme/colors'
 import { TournamentDetail } from '@services/arena.service'
 import BRHeaderContent from '../BRHeaderContent'
 import ESButton from '@components/Button'
-import RemainingDate from '../ActionComponent/RemainingDate'
 import useArenaHelper from '@containers/arena/hooks/useArenaHelper'
-// import { UserProfile } from '@services/user.service'
-// import ButtonPrimary from '@components/ButtonPrimary'
-// import LoginRequired from '@containers/LoginRequired'
-
-// import InidividualEntryEditModal from '../ActionComponent/InidividualEntryEditModal'
-// import TeamEntryEditModal from '../ActionComponent/TeamEntryEditModal'
 import ActionLabelButton from '../ActionComponent/ActionLabelButton'
 import { ButtonGroup } from '../BRHeaderContent'
+import useBRStatusComplete from './useBRStatusComplete'
 
-interface BRStatusRecruitingProps {
+import WinnerAvatar from './WinnerAvatar'
+import ESLoader from '@components/FullScreenLoader'
+import ButtonPrimary from '@components/ButtonPrimary'
+import SummaryModal from '../SummaryModal'
+import moment from 'moment'
+
+interface BRStatusBRStatusCompleteProps {
   arena: TournamentDetail
-  // userProfile: UserProfile
 }
-const BRStatusRecruiting: React.FC<BRStatusRecruitingProps> = ({ arena }) => {
+const BRStatusComplete: React.FC<BRStatusBRStatusCompleteProps> = ({ arena }) => {
   const { t } = useTranslation('common')
   const classes = useStyles()
   const dateInterval = `${TournamentHelper.formatDate(arena.attributes.start_date)} ～ ${TournamentHelper.formatDate(
     arena.attributes.end_date
   )}`
-  const { toParticipants, toGroupChat, isModerator, isTeamLeader, toMatches, isFreezed, isParticipant } = useArenaHelper(arena)
+  const { toParticipants, isModerator, isTeamLeader, toMatches, isFreezed, isParticipant, toResults } = useArenaHelper(arena)
+  const { winner, winnerMeta } = useBRStatusComplete()
 
-  // const [open, setOpen] = useState(false)
-  // const handleOpenEntryModal = () => {
-  //   setOpen(true)
-  // }
-  // const handleCloseEntryModal = () => {
-  //   setOpen(false)
-  // }
+  const [showSummaryModal, setShowSummaryModal] = useState(false)
+  if (winnerMeta.pending) return <ESLoader open />
 
   return (
     <BRHeaderContent
@@ -49,78 +44,68 @@ const BRStatusRecruiting: React.FC<BRStatusRecruitingProps> = ({ arena }) => {
         </Typography>
       }
       content={
-        <Box display="flex" flexDirection="column" alignItems="center">
-          <RemainingDate tournament={arena} />
-          <ButtonGroup mt={3}>
-            <ESButton onClick={toParticipants} variant="outlined" fullWidth style={{ maxWidth: 160 }}>
-              {isFreezed ? t('tournament.participants') : t('tournament.entry_members')}
-            </ESButton>
-            {isModerator && !isFreezed ? (
-              <ESButton variant="outlined" fullWidth onClick={toMatches}>
-                {t('tournament.select_br_participants')}
-              </ESButton>
-            ) : null}
-            {isFreezed ? (
-              <ActionLabelButton
-                variant="outlined"
-                fullWidth
-                onClick={toGroupChat}
-                disabled={!((isTeamLeader && isParticipant) || isModerator)}
-                style={{ width: 160 }}
-              >
-                {t('tournament.group_chat')}
-              </ActionLabelButton>
-            ) : (
-              <ActionLabelButton
-                actionLabel={t('arena.temporary')}
-                variant="outlined"
-                fullWidth
-                onClick={toGroupChat}
-                disabled={!(isModerator || isTeamLeader)}
-                style={{ width: 160 }}
-              >
-                {t('tournament.group_chat')}
-              </ActionLabelButton>
-            )}
-            {isModerator || (isTeamLeader && isParticipant) ? (
-              <ActionLabelButton
-                variant="outlined"
-                fullWidth
-                onClick={toMatches}
-                disabled={!(isModerator || isTeamLeader)}
-                style={{ width: 160 }}
-              >
-                {t('arena.input_result')}
-              </ActionLabelButton>
-            ) : null}
-          </ButtonGroup>
-        </Box>
+        isFreezed ? (
+          winnerMeta.loaded && (isTeamLeader || isModerator) ? (
+            <Box display="flex" flexDirection="column" alignItems="center">
+              {winner ? (
+                <WinnerAvatar src={winner.avatar} name={winner.name} user_code={winner.user_code} />
+              ) : (
+                <>
+                  <Box color="#fff">
+                    <Typography variant="h5" gutterBottom>
+                      大会終了
+                    </Typography>
+                  </Box>
+                  <Typography>結果の入力がまだ行われていません</Typography>
+                </>
+              )}
+              <ButtonGroup mt={3}>
+                <ESButton onClick={toParticipants} variant="outlined" fullWidth>
+                  {t('tournament.participants')}
+                </ESButton>
+                {isModerator || (isTeamLeader && isParticipant) ? (
+                  <ActionLabelButton variant="outlined" fullWidth onClick={toMatches} disabled={!(isModerator || isTeamLeader)}>
+                    {t('arena.input_result')}
+                  </ActionLabelButton>
+                ) : null}
+                <ESButton onClick={toResults} variant="outlined" fullWidth disabled={!winner}>
+                  {t('tournament.results')}
+                </ESButton>
+              </ButtonGroup>
+            </Box>
+          ) : (
+            <Box textAlign="center">
+              <Typography color="secondary" variant="body1">
+                結果の入力がまだ行われていません
+              </Typography>
+            </Box>
+          )
+        ) : (
+          <Box textAlign="center">
+            <Typography color="secondary" variant="body1">
+              {t('arena.not_held')}
+            </Typography>
+          </Box>
+        )
       }
       footer={
-        <div className={classes.footerContainer}>
-          {/* <ButtonGroup mb={3}>
-            {isTeamLeader ? (
-              <Box minWidth={256} className={classes.button}>
-                <LoginRequired>
-                  <ButtonPrimary disabled={false} round fullWidth onClick={handleOpenEntryModal}>
-                    {t('tournament.check_entry')}
-                  </ButtonPrimary>
-                </LoginRequired>
-              </Box>
-            ) : null}
-          </ButtonGroup> */}
-          {/* {isModerator && !arena.attributes.is_freezed ? <Typography variant="body2">{t('tournament.confirm_brackets')}</Typography> : null} */}
-
-          {/* Modals */}
-
-          {/* {isTeamLeader ? (
-            isTeam ? (
-              <TeamEntryEditModal tournament={arena} userProfile={userProfile} myTeam open={open} onClose={handleCloseEntryModal} />
-            ) : (
-              <InidividualEntryEditModal tournament={arena} me open={open} onClose={handleCloseEntryModal} />
-            )
-          ) : null} */}
-        </div>
+        isModerator ? (
+          <div className={classes.footerContainer}>
+            <ButtonGroup size="large">
+              <div>
+                <ButtonPrimary
+                  round
+                  fullWidth
+                  onClick={() => setShowSummaryModal(true)}
+                  disabled={!winner && moment(arena.attributes.end_date).isSameOrAfter(moment())}
+                >
+                  {t('tournament.summary')}
+                </ButtonPrimary>
+              </div>
+            </ButtonGroup>
+            <SummaryModal open={showSummaryModal} tournament={arena} handleClose={() => setShowSummaryModal(false)} />
+          </div>
+        ) : null
       }
     />
   )
@@ -149,4 +134,4 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-export default BRStatusRecruiting
+export default BRStatusComplete

@@ -1,7 +1,7 @@
 import { PARTICIPATION_TYPES, RULE, T_TYPE, TOURNAMENT_STATUS, ROLE } from '@constants/tournament.constants'
 import moment from 'moment'
 import _ from 'lodash'
-import { TournamentDetail, TournamentMatchRound, TournamentRule } from '@services/arena.service'
+import { ParticipantsResponse, TournamentDetail, TournamentMatchRound, TournamentRule } from '@services/arena.service'
 import { FormikErrors } from 'formik'
 import { FormType } from '@containers/arena/UpsertForm/FormModel/FormType'
 
@@ -249,6 +249,13 @@ function isBattleRoyale(arena: TournamentDetail) {
   return false
 }
 
+function isBRResultComplete(participants: ParticipantsResponse[]) {
+  for (const p of participants) {
+    if (p.attributes.position === null) return false
+  }
+  return true
+}
+
 export const TournamentHelper = {
   participantTypeText,
   ruleText,
@@ -265,4 +272,5 @@ export const TournamentHelper = {
   getLabelName,
   formatArenaScore,
   isBattleRoyale,
+  isBRResultComplete,
 }

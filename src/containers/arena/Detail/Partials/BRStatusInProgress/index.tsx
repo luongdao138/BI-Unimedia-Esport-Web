@@ -9,7 +9,6 @@ import { Colors } from '@theme/colors'
 import { TournamentDetail } from '@services/arena.service'
 import BRHeaderContent from '../BRHeaderContent'
 import ESButton from '@components/Button'
-import RemainingDate from '../ActionComponent/RemainingDate'
 import useArenaHelper from '@containers/arena/hooks/useArenaHelper'
 // import { UserProfile } from '@services/user.service'
 // import ButtonPrimary from '@components/ButtonPrimary'
@@ -32,6 +31,13 @@ const BRStatusRecruiting: React.FC<BRStatusRecruitingProps> = ({ arena }) => {
   )}`
   const { toParticipants, toGroupChat, isModerator, isTeamLeader, toMatches, isFreezed, isParticipant } = useArenaHelper(arena)
 
+  const statusName = {
+    admin: t('arena.participate_status.ongoing'),
+    co_organizer: t('arena.participate_status.ongoing'),
+    interested: t('arena.participate_status.loss'),
+    participant: t('arena.participate_status.participating'),
+  }
+
   // const [open, setOpen] = useState(false)
   // const handleOpenEntryModal = () => {
   //   setOpen(true)
@@ -50,8 +56,10 @@ const BRStatusRecruiting: React.FC<BRStatusRecruitingProps> = ({ arena }) => {
       }
       content={
         <Box display="flex" flexDirection="column" alignItems="center">
-          <RemainingDate tournament={arena} />
-          <ButtonGroup mt={3}>
+          <Typography variant="h5" gutterBottom>
+            {statusName[arena.attributes.my_role] || t('arena.participate_status.no_entry')}
+          </Typography>
+          <ButtonGroup>
             <ESButton onClick={toParticipants} variant="outlined" fullWidth style={{ maxWidth: 160 }}>
               {isFreezed ? t('tournament.participants') : t('tournament.entry_members')}
             </ESButton>
