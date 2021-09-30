@@ -98,6 +98,9 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
   }, [isChanged])
 
   const unloadCallback = (event) => {
+    if (navigator.userAgent.indexOf('Firefox') > -1) {
+      event.preventDefault()
+    }
     return (event.returnValue = '')
   }
 
