@@ -470,7 +470,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
   },
   menuOuter: {
-    marginLeft: theme.spacing(3),
+    marginLeft: theme.spacing(2),
   },
   [theme.breakpoints.down('sm')]: {
     commentIcon: {
