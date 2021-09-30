@@ -56,7 +56,7 @@ const VideoPreviewItem: React.FC<VideoPreviewItemProps> = ({ data }) => {
         )}
         <Box className={classes.userItemContainer}>
           <Box className={classes.userStyle}>
-            <ESAvatar className={classes.iconStyle} alt={data?.user_nickname} src={data?.user_avatar} />
+            <ESAvatar className={classes.iconStyle} alt={data?.user_nickname} src={data?.user_avatar} size={36} />
             <Box className={classes.nameContainer}>
               <Typography className={classes.userNameStyle}>{data?.user_nickname}</Typography>
             </Box>
