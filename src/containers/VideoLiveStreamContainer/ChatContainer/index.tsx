@@ -353,12 +353,14 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
 
   useEffect(() => {
     console.log('🚀 ~ useEffect ~ playedSecond ---> streamingSecond', playedSecond, streamingSecond)
-    if (playedSecond >= streamingSecond || liveStreamInfo.is_pausing_live) {
+    if ((playedSecond >= streamingSecond || liveStreamInfo.is_pausing_live) && successGetListMess && successGetListDonateMess) {
+      // fix bug streaming second is not true when access url first time
+      const realStreamingSecond = streamingSecond < playedSecond ? playedSecond : streamingSecond
       // check archive video => no use that case
-      if (!firstRender && +streamingSecond > 0) {
+      if (!firstRender && +realStreamingSecond > 0) {
         setFirstRender(true)
-        const newMess = savedMess.filter((item) => +item.video_time <= +streamingSecond)
-        console.log('🚀 ~ 222 ~ newMess', newMess)
+        const newMess = savedMess.filter((item) => +item.video_time <= +realStreamingSecond)
+        console.log("🚀 ~ 222 ~ newMess", newMess)
         const isMessageInBottom = checkMessIsInBottom()
         // render new messages with savedMess
         console.log('🚀 ~ 11111')
@@ -375,13 +377,13 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
 
         console.log('🚀 ~ createMess ~ stateMessages', stateMessages)
         const newMessagesDonate = savedDonateMess.filter(
-          (item) => +item.display_avatar_time >= +streamingSecond && +item.video_time <= +streamingSecond
+          (item) => +item.display_avatar_time >= +realStreamingSecond && +item.video_time <= +realStreamingSecond
         )
         setMessagesDonate(newMessagesDonate)
       } else {
         // only check displaying of user donate icon
         const newMessagesDonate = messagesDonate.filter(
-          (item) => +item.display_avatar_time >= +streamingSecond && +item.video_time <= +streamingSecond
+          (item) => +item.display_avatar_time >= +realStreamingSecond && +item.video_time <= +realStreamingSecond
         )
         // console.log("🚀 ~ useEffect ~ display_avatar_time", display_avatar_time)
         setMessagesDonate(newMessagesDonate)
@@ -719,8 +721,8 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
 
   const createMess = async (message: string, point = 0): Promise<void> => {
     if (successFlagGetAddUSer && Object.keys(chatUser).length > 0 && message && isEnabledChat) {
-      const videoTime = streamingSecond
-      let input: MessInput = {
+      const videoTime = streamingSecond < playedSecond ? playedSecond : streamingSecond
+       let input: MessInput = {
         // id is auto populated by AWS Amplify
         owner: chatUser.user_name,
         text: sanitizeMess(message),

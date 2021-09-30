@@ -164,7 +164,9 @@ const VideoDetail: React.FC = () => {
       console.log('🚀 ~ useEffect ~ videoInfo', videoInfo)
       const { video_status, process_status } = videoInfo
       if (+video_status === STATUS_VIDEO.SCHEDULE) {
-        setVideoStatus(STATUS_VIDEO.SCHEDULE)
+        if(+videoStatus !== STATUS_VIDEO.LIVE_STREAM) {
+          setVideoStatus(STATUS_VIDEO.SCHEDULE)
+        }
       } else if (+video_status === STATUS_VIDEO.LIVE_STREAM) {
         if (process_status === EVENT_LIVE_STATUS.STREAM_START) {
           setVideoStatus(STATUS_VIDEO.LIVE_STREAM)
@@ -184,7 +186,15 @@ const VideoDetail: React.FC = () => {
   useEffect(() => {
     if (detailVideoResult.key_video_id) {
       checkVideoStatus()
-      setVideoStatus(detailVideoResult.status)
+      let statusDetailVideo = detailVideoResult.status
+      console.log("🚀 ~ is Start Live)", moment().isBefore(detailVideoResult.live_stream_start_time, 'second'))
+      // if have not arrive live stream start time => set video status is schedule
+      if(statusDetailVideo === STATUS_VIDEO.LIVE_STREAM && (
+        !detailVideoResult.live_stream_start_time || moment().isBefore(detailVideoResult.live_stream_start_time, 'second')
+      )) {
+        statusDetailVideo = STATUS_VIDEO.SCHEDULE
+      }
+      setVideoStatus(statusDetailVideo)
       if (detailVideoResult.status === STATUS_VIDEO.ARCHIVE) {
         navigateToArchiveUrl()
       }
