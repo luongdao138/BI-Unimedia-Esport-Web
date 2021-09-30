@@ -4,6 +4,7 @@ export enum COMMUNITY_ACTION_TYPE {
   RESET_SEARCH_COMMUNITY = 'community/reset_search',
   GET_COMMUNITY_LIST_BY_USER = 'community/list_by_user',
   GET_FOLLOWERS_TOPIC_LIST = 'community/topic_followers',
+  RESET_FOLLOWERS_TOPIC_LIST = 'community/reset_topic_followers',
   CLEAR_COMMUNITY_LIST = 'community/clearList',
   CLEAR_COMMUNITY_LIST_BY_USER = 'community/clearListByUser',
   CLEAR_COMMUNITY_DETAIL = 'community/clearData',

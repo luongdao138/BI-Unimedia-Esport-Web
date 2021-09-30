@@ -12,8 +12,9 @@ const useTopicData = () => {
   const followersTopicList = useAppSelector(selectors.getTopicFollowersList)
   const followersTopicListMeta = useAppSelector(getFollowersTopicMeta)
   const getFollowersTopicList = () => dispatch(actions.getTopicFollowers({ page: 1 }))
+  const resetFollowersTopicList = () => dispatch(actions.resetTopicFollowers())
 
-  return { followersTopicList, getFollowersTopicList, followersTopicListMeta }
+  return { followersTopicList, getFollowersTopicList, resetFollowersTopicList, followersTopicListMeta }
 }
 
 export default useTopicData
