@@ -9,6 +9,7 @@ import PageWithLayoutType from '@constants/page'
 import useSearch from '@containers/Search/useSearch'
 import StreamLayout from '@layouts/StreamLayout'
 import useVideoSearch from '@containers/Search/useVideoSearch'
+import { useMediaQuery, useTheme } from '@material-ui/core'
 
 const SearchVideoPage: PageWithLayoutType = () => {
   const { t } = useTranslation(['common'])
@@ -18,6 +19,8 @@ const SearchVideoPage: PageWithLayoutType = () => {
   const { searchVideoType } = useVideoSearch()
   const [type, setType] = useState<number>(searchType)
   const [keyword, setKeyword] = useState<string>(searchKeyword)
+  const theme = useTheme()
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
 
   useEffect(() => {
     setType(searchVideoType)
@@ -48,7 +51,7 @@ const SearchVideoPage: PageWithLayoutType = () => {
     router.back()
   }
   return (
-    <StreamLayout minimizeLayout loginRequired={false}>
+    <StreamLayout minimizeLayout loginRequired={false} footer={isMobile}>
       <Box className={classes.wrapContainer}>
         <Box py={2} pl={3} display="flex" flexDirection="row" alignItems="center" borderBottom="1px solid #70707070">
           <IconButton className={classes.iconButtonBg} onClick={handleBackHeader}>
