@@ -156,7 +156,6 @@ const FollowList: React.FC<Props> = ({ community }) => {
   const loadMore = () => {
     if (hasNextPage) {
       getMembers({ hash_key: hash_key, role: CommunityMemberRole.all, page: Number(pages.current_page) + 1 })
-      setHasChanged(false)
     }
   }
 
@@ -181,7 +180,7 @@ const FollowList: React.FC<Props> = ({ community }) => {
       Number(value)
     )
     setChangedGroupedMembers(data)
-    setHasChanged(true)
+    setHasChanged(!_.isEqual(data, groupedMembers))
   }
 
   const userData = (participant) => {
