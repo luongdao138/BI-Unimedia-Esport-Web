@@ -83,7 +83,7 @@ const TopicCreate: React.FC = () => {
   }, [isChanged])
 
   const unloadCallback = (event) => {
-    if (navigator.userAgent.indexOf('Firefox') > -1) {
+    if (navigator.userAgent.indexOf('Firefox') > -1 || navigator.userAgent.indexOf('Safari') > -1) {
       event.preventDefault()
     }
     return (event.returnValue = '')
