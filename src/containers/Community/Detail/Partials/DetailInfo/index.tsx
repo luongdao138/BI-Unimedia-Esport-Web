@@ -74,6 +74,7 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
   const [isFollowing, setIsFollowing] = useState<boolean>(false)
   const [isRequested, setIsRequested] = useState<boolean>(false)
   const [isCommunityAutomatic, setIsCommunityAutomatic] = useState<boolean>(true)
+  const [isButtonLoading, setIsButtonLoading] = useState<boolean>(false)
 
   useEffect(() => {
     if (router?.query) {
@@ -162,22 +163,26 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
   }, [unfollowCommunityPendingMeta])
 
   const followHandle = async () => {
+    setIsButtonLoading(true)
     const resultAction = await dispatch(actions.getCommunityDetail(String(hash_key)))
     if (actions.getCommunityDetail.fulfilled.match(resultAction)) {
-      followCommunity(String(hash_key))
+      await followCommunity(String(hash_key))
       if (!isCommunityAutomatic) {
         setIsRequested(true)
       }
+      setIsButtonLoading(false)
     }
   }
 
   const unfollowHandle = async () => {
+    setIsButtonLoading(true)
     const resultAction = await dispatch(actions.getCommunityDetail(String(hash_key)))
     if (actions.getCommunityDetail.fulfilled.match(resultAction)) {
       if (!isCommunityAutomatic) {
         setIsDiscard(true)
       } else {
-        unfollowCommunity(String(hash_key))
+        await unfollowCommunity(String(hash_key))
+        setIsButtonLoading(false)
       }
     }
   }
@@ -187,8 +192,9 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
     setIsDiscard(false)
   }
 
-  const unfollowApplyingDialogHandle = () => {
-    unfollowCommunityPending(String(hash_key))
+  const unfollowApplyingDialogHandle = async () => {
+    await unfollowCommunityPending(String(hash_key))
+    setIsButtonLoading(false)
   }
   const cancelApplyingHandle = () => {
     setIsDiscardApplying(true)
@@ -211,7 +217,7 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
             variant="outlined"
             color="primary"
             primaryTextColor={true}
-            disabled={unfollowCommunityMeta.pending}
+            disabled={isButtonLoading}
             onClick={cancelApplyingHandle}
           />
         ) : isFollowing ? (
@@ -220,7 +226,7 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
             title={t('common:profile.following')}
             variant="contained"
             color="primary"
-            disabled={unfollowCommunityMeta.pending}
+            disabled={isButtonLoading}
             onClick={unfollowHandle}
           />
         ) : (
@@ -228,7 +234,7 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
             primaryTextColor={false}
             title={t('common:profile.follow_as')}
             variant="outlined"
-            disabled={followCommunityMeta.pending}
+            disabled={isButtonLoading}
             onClick={followHandle}
           />
         )}

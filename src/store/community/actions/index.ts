@@ -92,6 +92,8 @@ export const getTopicFollowers = createAsyncThunk<services.TopicFollowersRespons
   }
 )
 
+export const resetTopicFollowers = createAction(COMMUNITY_ACTION_TYPE.RESET_FOLLOWERS_TOPIC_LIST)
+
 export const clearCommunityData = createAction(COMMUNITY_ACTION_TYPE.CLEAR_COMMUNITY_LIST)
 export const clearCommunityDataByUser = createAction(COMMUNITY_ACTION_TYPE.CLEAR_COMMUNITY_LIST_BY_USER)
 export const clearTopicListData = createAction(COMMUNITY_ACTION_TYPE.CLEAR_TOPIC_LIST)
