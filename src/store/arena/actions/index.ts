@@ -2,6 +2,7 @@ import { createAsyncThunk, createAction } from '@reduxjs/toolkit'
 import * as services from '@services/arena.service'
 import { SEARCH_ACTION_TYPE, TOURNAMENT_ACTION_TYPE, CLEAR_RECOMMENDED_USERS, CLEAR_TOURNAMENT_RESULT } from './types'
 import * as types from './types'
+import { SetBattleRoyaleScoresResponse } from '@services/arena.service'
 
 export const tournamentSearch = createAsyncThunk<services.TournamentSearchResponse, services.TournamentSearchParams>(
   SEARCH_ACTION_TYPE.TOURNAMENT_SEARCH,
@@ -448,7 +449,7 @@ export const teamMemberFollowStageChanged = createAction<{ userId: number; state
   TOURNAMENT_ACTION_TYPE.TEAM_MEMBER_FOLLOW_STATE_CHANGED
 )
 
-export const setBattleRoyaleScores = createAsyncThunk<void, services.SetBattleRoyaleScoresParams>(
+export const setBattleRoyaleScores = createAsyncThunk<SetBattleRoyaleScoresResponse, services.SetBattleRoyaleScoresParams>(
   types.SET_BATTLE_ROYALE_SCORES,
   async (param, { rejectWithValue }) => {
     try {
@@ -463,7 +464,7 @@ export const setBattleRoyaleScores = createAsyncThunk<void, services.SetBattleRo
   }
 )
 
-export const setBattleRoyaleOwnScore = createAsyncThunk<void, services.SetBattleRoyaleScoresParams>(
+export const setBattleRoyaleOwnScore = createAsyncThunk<SetBattleRoyaleScoresResponse, services.SetBattleRoyaleScoresParams>(
   types.SET_BATTLE_ROYALE_SCORES,
   async (param, { rejectWithValue }) => {
     try {

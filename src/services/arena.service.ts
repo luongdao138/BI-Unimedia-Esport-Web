@@ -584,6 +584,9 @@ export type SetBattleRoyaleScoresParams = {
   participants: ParticipantsResponse[]
   hash_key: string
 }
+export type SetBattleRoyaleScoresResponse = {
+  data: ParticipantsResponse[]
+}
 
 export const tournamentSearch = async (params: TournamentSearchParams): Promise<TournamentSearchResponse> => {
   const { data } = await api.post<TournamentSearchResponse>(URI.TOURNAMENTS_SEARCH, params)
@@ -734,13 +737,17 @@ export const updateTournamentTeamDetail = async (params: UpdateTournamentTeamPar
   await api.post<TournamentTeamDetailResponse>(URI.TOURNAMENT_TEAMS.replace(/:id/gi, `${params.id}`), params.data)
 }
 
-export const setBattleRoyalScores = async ({ hash_key, participants }: SetBattleRoyaleScoresParams) => {
+export const setBattleRoyalScores = async ({
+  hash_key,
+  participants,
+}: SetBattleRoyaleScoresParams): Promise<{ data: ParticipantsResponse[] }> => {
   const scores = {}
   for (const p of participants) {
     scores[p.id] = p.attributes.position
   }
   const { data } = await api.post(URI.BATTLE_ROYALE_SET_SCORES.replace(/:id/gi, `${hash_key}`), { scores })
-  return data
+
+  return data as SetBattleRoyaleScoresResponse
 }
 
 export const setBattleRoyalOwnScore = async ({ hash_key, participants }: SetBattleRoyaleScoresParams) => {
@@ -751,5 +758,5 @@ export const setBattleRoyalOwnScore = async ({ hash_key, participants }: SetBatt
     }
   }
   const { data } = await api.post(URI.BATTLE_ROYALE_SET_OWN_SCORE.replace(/:id/gi, `${hash_key}`), { scores })
-  return data
+  return data as SetBattleRoyaleScoresResponse
 }

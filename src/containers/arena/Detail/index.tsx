@@ -19,6 +19,8 @@ import Participants from './Participants'
 import BRStatusReady from './Partials/BRStatusReady'
 import BRStatusRecruiting from './Partials/BRStatusRecruiting'
 import BRStatusRecruitmentClosed from './Partials/BRStatusRecruitmentClosed'
+import BRStatusInProgress from './Partials/BRStatusInProgress'
+import BRStatusComplete from './Partials/BRStatusComplete'
 
 const TournamentDetail: React.FC = () => {
   const { tournament, meta, userProfile, handleBack } = useTournamentDetail()
@@ -40,9 +42,9 @@ const TournamentDetail: React.FC = () => {
     recruiting: <BRStatusRecruiting arena={tournament} userProfile={userProfile} />,
     recruitment_closed: <BRStatusRecruitmentClosed arena={tournament} userProfile={userProfile} />,
     ready_to_start: <BRStatusRecruitmentClosed arena={tournament} userProfile={userProfile} />,
+    in_progress: <BRStatusInProgress arena={tournament} />,
+    completed: <BRStatusComplete arena={tournament} />,
     cancelled: <BRStatusReady arena={tournament} />,
-    completed: <BRStatusReady arena={tournament} />,
-    in_progress: <BRStatusReady arena={tournament} />,
   }
 
   return (
@@ -57,6 +59,7 @@ const TournamentDetail: React.FC = () => {
             onHandleBack={handleBack}
           >
             {isBattleRoyale ? brActionComponent[tournament.attributes.status] : actionComponent[tournament.attributes.status]}
+            {/* {actionComponent[tournament.attributes.status]} */}
           </TournamentDetailHeader>
           <DetailInfo toEdit={toEdit} detail={tournament} extended />
           <ESModal open={router.query.modalName === 'participants'}>

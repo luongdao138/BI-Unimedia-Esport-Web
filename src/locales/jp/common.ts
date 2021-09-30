@@ -510,6 +510,7 @@ export default {
     },
   },
   arena: {
+    rinput_result: '結果の入力',
     br_set_score_btn: '結果を反映する',
     br_set_score_success_toast: '結果を反映しました',
     rules: {

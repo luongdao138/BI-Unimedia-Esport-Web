@@ -1,4 +1,4 @@
-import { useState } from 'react'
+// import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Typography, Box } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
@@ -7,37 +7,38 @@ import { TournamentHelper } from '@utils/helpers/TournamentHelper'
 import { Colors } from '@theme/colors'
 
 import { TournamentDetail } from '@services/arena.service'
-import { UserProfile } from '@services/user.service'
 import BRHeaderContent from '../BRHeaderContent'
-import ButtonPrimary from '@components/ButtonPrimary'
 import ESButton from '@components/Button'
 import RemainingDate from '../ActionComponent/RemainingDate'
 import useArenaHelper from '@containers/arena/hooks/useArenaHelper'
-import LoginRequired from '@containers/LoginRequired'
+// import { UserProfile } from '@services/user.service'
+// import ButtonPrimary from '@components/ButtonPrimary'
+// import LoginRequired from '@containers/LoginRequired'
 
-import InidividualEntryEditModal from '../ActionComponent/InidividualEntryEditModal'
-import TeamEntryEditModal from '../ActionComponent/TeamEntryEditModal'
+// import InidividualEntryEditModal from '../ActionComponent/InidividualEntryEditModal'
+// import TeamEntryEditModal from '../ActionComponent/TeamEntryEditModal'
 import ActionLabelButton from '../ActionComponent/ActionLabelButton'
+import { ButtonGroup } from '../BRHeaderContent'
 
 interface BRStatusRecruitingProps {
   arena: TournamentDetail
-  userProfile: UserProfile
+  // userProfile: UserProfile
 }
-const BRStatusRecruiting: React.FC<BRStatusRecruitingProps> = ({ arena, userProfile }) => {
+const BRStatusRecruiting: React.FC<BRStatusRecruitingProps> = ({ arena }) => {
   const { t } = useTranslation('common')
   const classes = useStyles()
   const dateInterval = `${TournamentHelper.formatDate(arena.attributes.start_date)} ～ ${TournamentHelper.formatDate(
     arena.attributes.end_date
   )}`
-  const { toParticipants, toGroupChat, isTeam, isModerator, isTeamLeader, toMatches, isFreezed, isParticipant } = useArenaHelper(arena)
+  const { toParticipants, toGroupChat, isModerator, isTeamLeader, toMatches, isFreezed, isParticipant } = useArenaHelper(arena)
 
-  const [open, setOpen] = useState(false)
-  const handleOpenEntryModal = () => {
-    setOpen(true)
-  }
-  const handleCloseEntryModal = () => {
-    setOpen(false)
-  }
+  // const [open, setOpen] = useState(false)
+  // const handleOpenEntryModal = () => {
+  //   setOpen(true)
+  // }
+  // const handleCloseEntryModal = () => {
+  //   setOpen(false)
+  // }
 
   return (
     <BRHeaderContent
@@ -50,7 +51,7 @@ const BRStatusRecruiting: React.FC<BRStatusRecruitingProps> = ({ arena, userProf
       content={
         <Box display="flex" flexDirection="column" alignItems="center">
           <RemainingDate tournament={arena} />
-          <Box className={classes.buttonGroup} mt={3}>
+          <ButtonGroup mt={3}>
             <ESButton onClick={toParticipants} variant="outlined" fullWidth style={{ maxWidth: 160 }}>
               {isFreezed ? t('tournament.participants') : t('tournament.entry_members')}
             </ESButton>
@@ -81,12 +82,23 @@ const BRStatusRecruiting: React.FC<BRStatusRecruitingProps> = ({ arena, userProf
                 {t('tournament.group_chat')}
               </ActionLabelButton>
             )}
-          </Box>
+            {isModerator || (isTeamLeader && isParticipant) ? (
+              <ActionLabelButton
+                variant="outlined"
+                fullWidth
+                onClick={toMatches}
+                disabled={!(isModerator || isTeamLeader)}
+                style={{ width: 160 }}
+              >
+                {t('arena.input_result')}
+              </ActionLabelButton>
+            ) : null}
+          </ButtonGroup>
         </Box>
       }
       footer={
         <div className={classes.footerContainer}>
-          <Box className={classes.buttonGroup} mb={3}>
+          {/* <ButtonGroup mb={3}>
             {isTeamLeader ? (
               <Box minWidth={256} className={classes.button}>
                 <LoginRequired>
@@ -96,18 +108,18 @@ const BRStatusRecruiting: React.FC<BRStatusRecruitingProps> = ({ arena, userProf
                 </LoginRequired>
               </Box>
             ) : null}
-          </Box>
-          {isModerator && !arena.attributes.is_freezed ? <Typography variant="body2">{t('tournament.confirm_brackets')}</Typography> : null}
+          </ButtonGroup> */}
+          {/* {isModerator && !arena.attributes.is_freezed ? <Typography variant="body2">{t('tournament.confirm_brackets')}</Typography> : null} */}
 
           {/* Modals */}
 
-          {isTeamLeader ? (
+          {/* {isTeamLeader ? (
             isTeam ? (
               <TeamEntryEditModal tournament={arena} userProfile={userProfile} myTeam open={open} onClose={handleCloseEntryModal} />
             ) : (
               <InidividualEntryEditModal tournament={arena} me open={open} onClose={handleCloseEntryModal} />
             )
-          ) : null}
+          ) : null} */}
         </div>
       }
     />
@@ -127,41 +139,12 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     alignItems: 'center',
   },
-  buttonGroup: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    '& >*': {
-      marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1),
-      width: 160,
-    },
-    '& >*:first-child': {
-      marginLeft: 0,
-    },
-    '& >*:last-child': {
-      marginRight: 0,
-    },
-  },
+
   [theme.breakpoints.down('sm')]: {
     header: {
       '& span': {
         display: 'block',
       },
-    },
-    buttonGroup: {
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'center',
-      '& >*': {
-        marginLeft: 0,
-        marginRight: 0,
-        marginTop: theme.spacing(1),
-        marginBottom: theme.spacing(1),
-      },
-    },
-    buttonRight: {
-      marginLeft: 0,
     },
   },
 }))

@@ -1,16 +1,19 @@
 import { useTranslation } from 'react-i18next'
-import { Typography, Box } from '@material-ui/core'
+import { Typography, Box, Icon } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 
 import { TournamentDetail } from '@services/arena.service'
 import BRHeaderContent from '../BRHeaderContent'
 import { TournamentHelper } from '@utils/helpers/TournamentHelper'
 import { Colors } from '@theme/colors'
-import ButtonPrimary from '@components/ButtonPrimary'
 import ESButton from '@components/Button'
+import useArenaHelper from '@containers/arena/hooks/useArenaHelper'
+import ButtonPrimaryOutlined from '@components/ButtonPrimaryOutlined'
 import RemainingDate from '../ActionComponent/RemainingDate'
 import EntryCount from '../ActionComponent/EntryCount'
-import useArenaHelper from '@containers/arena/hooks/useArenaHelper'
+import ActionLabelButton from '../ActionComponent/ActionLabelButton'
+
+import { ButtonGroup } from '../BRHeaderContent'
 
 interface BRStatusReadyProps {
   arena: TournamentDetail
@@ -21,7 +24,7 @@ const BRStatusReady: React.FC<BRStatusReadyProps> = ({ arena }) => {
   const dateInterval = `${TournamentHelper.formatDate(arena.attributes.acceptance_start_date)} ～ ${TournamentHelper.formatDate(
     arena.attributes.acceptance_end_date
   )}`
-  const { toParticipants, isTeam } = useArenaHelper(arena)
+  const { toParticipants, isTeam, toGroupChat, isModerator } = useArenaHelper(arena)
   return (
     <BRHeaderContent
       header={
@@ -34,18 +37,30 @@ const BRStatusReady: React.FC<BRStatusReadyProps> = ({ arena }) => {
         <Box display="flex" flexDirection="column" alignItems="center">
           <RemainingDate tournament={arena} />
           <EntryCount totalCount={arena.attributes.max_participants} count={0} isTeam={isTeam} />
-          <ESButton onClick={toParticipants} variant="outlined" fullWidth style={{ maxWidth: 160, marginTop: 24 }}>
-            {t('tournament.entry_members')}
-          </ESButton>
+
+          <ButtonGroup mt={3}>
+            <ESButton onClick={toParticipants} variant="outlined" fullWidth>
+              {t('tournament.entry_members')}
+            </ESButton>
+            {isModerator ? (
+              <ActionLabelButton actionLabel={t('arena.temporary')} variant="outlined" fullWidth onClick={toGroupChat} disabled={false}>
+                {t('tournament.group_chat')}
+              </ActionLabelButton>
+            ) : null}
+          </ButtonGroup>
         </Box>
       }
       footer={
-        <Box display="flex" justifyContent="center">
-          <Box width={280}>
-            <ButtonPrimary disabled fullWidth>
-              {t('tournament.before_entry')}
-            </ButtonPrimary>
-          </Box>
+        <Box textAlign="center">
+          {isModerator ? (
+            <ButtonGroup size="large">
+              <div>
+                <ButtonPrimaryOutlined disabled leadingIcon={<Icon className="fas fa-user-slash" fontSize="small" />}>
+                  {t('tournament.close_recruitment.button_text')}
+                </ButtonPrimaryOutlined>
+              </div>
+            </ButtonGroup>
+          ) : null}
         </Box>
       }
     />

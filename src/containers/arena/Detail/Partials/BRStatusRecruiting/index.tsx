@@ -83,16 +83,17 @@ const BRStatusRecruiting: React.FC<BRStatusRecruitingProps> = ({ arena, userProf
               <Box minWidth={260} className={classes.button}>
                 <CloseRecruitmentModal isRecruiting={true} tournament={arena} handleClose={noop} />
               </Box>
-            ) : null}
-            <Box minWidth={256} className={classes.button}>
-              <LoginRequired>
-                <ButtonPrimary disabled={false} round fullWidth onClick={handleOpenEntryModal}>
-                  {isTeamLeader ? t('tournament.check_entry') : t('tournament.join')}
-                </ButtonPrimary>
-              </LoginRequired>
-            </Box>
+            ) : (
+              <Box minWidth={256} className={classes.button}>
+                <LoginRequired>
+                  <ButtonPrimary disabled={false} round fullWidth onClick={handleOpenEntryModal}>
+                    {isTeamLeader ? t('tournament.check_entry') : t('tournament.join')}
+                  </ButtonPrimary>
+                </LoginRequired>
+              </Box>
+            )}
           </Box>
-          {isTeamLeader ? <UnjoinModal tournament={arena} /> : null}
+          {isTeamLeader && !isModerator ? <UnjoinModal tournament={arena} /> : null}
           {isModerator ? <Typography variant="body2">{t('tournament.close_recruitment.description')}</Typography> : null}
 
           {/* Modals */}

@@ -1,6 +1,7 @@
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
 import { ReactNode } from 'hoist-non-react-statics/node_modules/@types/react'
+export { default as ButtonGroup } from './ButtonGroup'
 
 type BRHeaderContentProps = {
   header?: ReactNode

@@ -231,11 +231,6 @@ export default createReducer(initialState, (builder) => {
     })
   })
   builder.addCase(actions.setBattleRoyaleScores.fulfilled, (state, action) => {
-    const { sort_by } = state.tournamentDetail.attributes
-
-    state.tournamentParticipants =
-      sort_by === 'by_desc'
-        ? _.orderBy(action.meta.arg.participants, ['attributes.position'], ['desc'])
-        : _.orderBy(action.meta.arg.participants, ['attributes.position'], ['asc'])
+    state.tournamentParticipants = action.payload.data
   })
 })
