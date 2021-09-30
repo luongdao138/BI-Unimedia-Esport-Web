@@ -26,7 +26,6 @@ const InfoContainer: React.FC = () => {
   const hash_key = String(router.query.hash_key)
   const [page, setPage] = useState(1)
   const [count, setCount] = useState(1)
-  const [isSearched, setIsSearched] = useState<boolean>(false)
 
   useEffect(() => {
     if (!_.isEmpty(value)) {
@@ -43,12 +42,10 @@ const InfoContainer: React.FC = () => {
   const handleSearch = () => {
     getTopicList({ community_hash: hash_key, keyword: value.trim(), only_title: isOnlyTitle.toString(), page: 1 })
     setShowResult(true)
-    setIsSearched(true)
   }
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value)
-    setIsSearched(false)
   }
 
   const onClear = () => {
@@ -132,7 +129,6 @@ const InfoContainer: React.FC = () => {
                     latest_date={latestDate}
                     comment_count={attr.comment_count}
                     keyword={params.keyword}
-                    isSearched={isSearched}
                     isOnlyTitle={params.only_title == 'true'}
                   />
                 )
