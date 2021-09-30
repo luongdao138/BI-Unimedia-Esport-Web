@@ -151,7 +151,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
     return (
       <>
         <Box display="flex" alignItems="flex-start" justifyContent="space-between" mb={1}>
-          <Box className={classes.userInfoContainerMain}>
+          <Box className={classes.userInfoContainer}>
             <Typography className={classes.number}>{replyData.comment_no}</Typography>
             <Box ml={1}>
               <ButtonBase onClick={() => toProfile(replyData.user_code)}>
@@ -390,9 +390,6 @@ const useStyles = makeStyles((theme) => ({
   userInfoContainer: {
     display: 'flex',
     width: 'calc(100% - 150px)',
-  },
-  userInfoContainerMain: {
-    display: 'flex',
   },
   userAvatarBox: {
     display: 'flex',
