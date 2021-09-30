@@ -1,7 +1,7 @@
 import React from 'react'
 import { Box, makeStyles, Typography } from '@material-ui/core'
 import ButtonPrimary from '@components/ButtonPrimary'
-import LoginRequired from '@containers/LoginRequired'
+// import LoginRequired from '@containers/LoginRequired'
 
 interface OverlayContentProps {
   buttonText?: string
@@ -16,13 +16,13 @@ const OverlayContent: React.FC<OverlayContentProps> = (props) => {
 
   return (
     <Box className={classes.container}>
-      <LoginRequired>
-        {buttonText && (
-          <ButtonPrimary className={classes.button} onClick={props?.onClickButton}>
-            {buttonText}
-          </ButtonPrimary>
-        )}
-      </LoginRequired>
+      {/* <LoginRequired> */}
+      {buttonText && (
+        <ButtonPrimary className={classes.button} onClick={props?.onClickButton}>
+          {buttonText}
+        </ButtonPrimary>
+      )}
+      {/* </LoginRequired> */}
       {buttonDescriptionText && <Typography className={classes.buttonDescription}>{buttonDescriptionText}</Typography>}
       {message && <Typography className={classes.message}>{message}</Typography>}
     </Box>
