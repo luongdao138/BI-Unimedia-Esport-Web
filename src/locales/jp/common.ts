@@ -734,9 +734,9 @@ export default {
     },
     card: {
       organizer: '開催者',
-      start_date: '開催日',
-      entry_period: 'エントリー期間',
-      entries: 'エントリー人数',
+      start_date: '開始日時',
+      entry_period: '受付期間',
+      entries: 'エントリー',
     },
     cancel_lobby_dialog: {
       title: '募集を中止しますか？',
@@ -856,6 +856,9 @@ export default {
       message_part1: '画面を戻ると、現在の入力内容は破棄されます。',
       message_part2: 'よろしいですか？',
       confirm: '内容を破棄して戻る',
+    },
+    validation: {
+      participants_limit: '2~128の数字を入力してください。',
     },
   },
   lobbySearchFilters: {
