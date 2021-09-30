@@ -32,7 +32,7 @@ import ESInput from '@components/Input'
 import { STATUS_VIDEO } from '@services/videoTop.services'
 import LoginRequired from '@containers/LoginRequired'
 import moment from 'moment'
-import {STATUS_SEND_MESS} from '@constants/common.constants'
+import { STATUS_SEND_MESS } from '@constants/common.constants'
 
 type ChatContainerProps = {
   onPressDonate?: (donatedPoint: number, purchaseComment: string) => void
@@ -273,9 +273,9 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
 
   const refOnCreateMess = useRef(null)
   const onCreateMess = (createdMessage) => {
-  console.log("🚀 ~ onCreateMess ~ createdMessage----0909", createdMessage)
+    console.log('🚀 ~ onCreateMess ~ createdMessage----0909', createdMessage)
     const foundIndex = findMessUpdated(savedMess, createdMessage, 'local_id')
-    console.log("🚀 ~ subscribeAction ~ foundIndex", foundIndex)
+    console.log('🚀 ~ subscribeAction ~ foundIndex', foundIndex)
     // only add new message if no found message in local
     if (foundIndex === -1) {
       console.log('🚀 ~ subscribeAction ~ 1234', savedMess)
@@ -358,22 +358,22 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
       if (!firstRender && +streamingSecond > 0) {
         setFirstRender(true)
         const newMess = savedMess.filter((item) => +item.video_time <= +streamingSecond)
-        console.log("🚀 ~ 222 ~ newMess", newMess)
+        console.log('🚀 ~ 222 ~ newMess', newMess)
         const isMessageInBottom = checkMessIsInBottom()
         // render new messages with savedMess
-        console.log("🚀 ~ 11111")
+        console.log('🚀 ~ 11111')
         setStateMessages([...newMess])
-        
-        console.log("🚀 ~ 33333")
+
+        console.log('🚀 ~ 33333')
         if (isMessageInBottom) {
           // if(point){
-            setIsChatInBottom(true)
+          setIsChatInBottom(true)
           // } else {
-            // scrollToCurrentMess()
+          // scrollToCurrentMess()
           // }
         }
-        
-        console.log("🚀 ~ createMess ~ stateMessages", stateMessages)
+
+        console.log('🚀 ~ createMess ~ stateMessages', stateMessages)
         const newMessagesDonate = savedDonateMess.filter(
           (item) => +item.display_avatar_time >= +streamingSecond && +item.video_time <= +streamingSecond
         )
@@ -563,11 +563,11 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
 
   const refUpdateMessLocal = useRef(null)
   const handleUpdateMessLocal = (result, local_message) => {
-    console.log("🚀 ~ handleUpdateMessLocal ~ local_message", local_message)
+    console.log('🚀 ~ handleUpdateMessLocal ~ local_message', local_message)
     const updatedMessage = result?.data?.updateMessage
-    console.log("🚀 ~ handleUpdateMessLocal ~ createdMessage", updatedMessage)
+    console.log('🚀 ~ handleUpdateMessLocal ~ createdMessage', updatedMessage)
     console.log('🚀 ~ handleUpdateMessLocal ~ 1234', stateMessages)
-    if(updatedMessage) {
+    if (updatedMessage) {
       updateOldMessData(updatedMessage, {})
     }
   }
@@ -575,17 +575,17 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
 
   const refUpdateMessBeforeCallApi = useRef(null)
   const handleUpdateMessBeforeCallApi = (updatedMessage, local_message) => {
-    console.log("🚀 ~ handleUpdateMessBeforeCallApi ~ local_message", local_message)
-    console.log("🚀 ~ handleUpdateMessBeforeCallApi ~ createdMessage", updatedMessage)
+    console.log('🚀 ~ handleUpdateMessBeforeCallApi ~ local_message', local_message)
+    console.log('🚀 ~ handleUpdateMessBeforeCallApi ~ createdMessage', updatedMessage)
     console.log('🚀 ~ handleUpdateMessBeforeCallApi ~ 1234', stateMessages)
-    if(updatedMessage) {
-      updateOldMessData(updatedMessage, {delete_flag: true})
+    if (updatedMessage) {
+      updateOldMessData(updatedMessage, { delete_flag: true })
     }
   }
   refUpdateMessBeforeCallApi.current = handleUpdateMessBeforeCallApi
 
   async function deleteMsg(message: any) {
-    console.log("🚀 ~ deleteMsg ~ message", message)
+    console.log('🚀 ~ deleteMsg ~ message', message)
     const input = {
       id: message.id,
       delete_flag: true,
@@ -600,8 +600,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
   const sortMessages = (messages, isSortAsc = true) => {
     const new_mess = [...messages]
     const sortFactor = isSortAsc ? 1 : -1
-    return new_mess
-          .sort((a: any, b: any) => sortFactor * (+a.video_time - +b.video_time || a.created_time.localeCompare(b.created_time)))
+    return new_mess.sort((a: any, b: any) => sortFactor * (+a.video_time - +b.video_time || a.created_time.localeCompare(b.created_time)))
   }
 
   // const getChatData = () =>
@@ -654,66 +653,66 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
   }
 
   type MessInput = {
-    id?: string,
-    owner?: string,
-    text?: string,
-    uuid?: string | null,
-    video_id?: string,
-    delete_flag?: boolean | null,
-    video_time?: string,
-    display_avatar_time?: string | null,
-    point?: string | null,
-    use_point_id?: string | null,
-    is_premium?: boolean | null,
-    userId?: string,
-    local_id?: string | null,
-    created_time?: string | null,
+    id?: string
+    owner?: string
+    text?: string
+    uuid?: string | null
+    video_id?: string
+    delete_flag?: boolean | null
+    video_time?: string
+    display_avatar_time?: string | null
+    point?: string | null
+    use_point_id?: string | null
+    is_premium?: boolean | null
+    userId?: string
+    local_id?: string | null
+    created_time?: string | null
     parent?: {
       avatar?: string
       user_name?: string
-    },
+    }
   }
 
   const updateOldMessData = (updatedMessage, objWithNewProps, compareProp = 'id') => {
-    const updatedMessWithNewProp = {...updatedMessage, ...objWithNewProps}
+    const updatedMessWithNewProp = { ...updatedMessage, ...objWithNewProps }
     let foundIndex = findMessUpdated(stateMessages, updatedMessage, compareProp)
-    console.log("🚀 ~ createMess ~ createdMessage", updatedMessage)
-    console.log("🚀 ~ createMess ~ stateMessages", stateMessages)
-    console.log("🚀 ~ createMess ~ foundIndex", foundIndex)
+    console.log('🚀 ~ createMess ~ createdMessage', updatedMessage)
+    console.log('🚀 ~ createMess ~ stateMessages', stateMessages)
+    console.log('🚀 ~ createMess ~ foundIndex', foundIndex)
     if (foundIndex !== -1) {
       const newStateMess = [...stateMessages]
-      newStateMess[foundIndex] = {...updatedMessWithNewProp}
+      newStateMess[foundIndex] = { ...updatedMessWithNewProp }
       setStateMessages(newStateMess)
     }
     foundIndex = findMessUpdated(savedMess, updatedMessage, compareProp)
-    console.log("🚀 ~ updateOldMessData ~ foundIndex savedMess", foundIndex)
+    console.log('🚀 ~ updateOldMessData ~ foundIndex savedMess', foundIndex)
     if (foundIndex !== -1) {
       const newSavedMess = [...savedMess]
-      newSavedMess[foundIndex] = {...updatedMessWithNewProp}
+      newSavedMess[foundIndex] = { ...updatedMessWithNewProp }
       setSavedMess(newSavedMess)
     }
     foundIndex = findMessUpdated(messagesDonate, updatedMessage, compareProp)
     if (foundIndex !== -1) {
       const newDonateMess = [...messagesDonate]
-      newDonateMess[foundIndex] = {...updatedMessWithNewProp}
+      newDonateMess[foundIndex] = { ...updatedMessWithNewProp }
       setMessagesDonate(newDonateMess)
     }
     foundIndex = findMessUpdated(savedDonateMess, updatedMessage, compareProp)
     if (foundIndex !== -1) {
       const newSavedDonateMess = [...savedDonateMess]
-      newSavedDonateMess[foundIndex] = {...updatedMessWithNewProp}
+      newSavedDonateMess[foundIndex] = { ...updatedMessWithNewProp }
       setSavedDonateMess(newSavedDonateMess)
     }
   }
 
   const refCreateMessLocal = useRef(null)
   const handleCreateMessLocal = (result, local_message) => {
-    console.log("🚀 ~ handleCreateMessLocal ~ local_message", local_message)
+    console.log('🚀 ~ handleCreateMessLocal ~ local_message', local_message)
     const createdMessage = result?.data?.createMessage
-    console.log("🚀 ~ handleCreateMessLocal ~ createdMessage", createdMessage)
+    console.log('🚀 ~ handleCreateMessLocal ~ createdMessage', createdMessage)
     console.log('🚀 ~ handleCreateMessLocal ~ 1234', stateMessages)
-    if(createdMessage) {
-      updateOldMessData(createdMessage, {mess_status: STATUS_SEND_MESS.LOADED}, 'local_id')
+    if (createdMessage) {
+      updateOldMessData(createdMessage, { mess_status: STATUS_SEND_MESS.LOADED }, 'local_id')
     }
   }
   refCreateMessLocal.current = handleCreateMessLocal
@@ -721,7 +720,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
   const createMess = async (message: string, point = 0): Promise<void> => {
     if (successFlagGetAddUSer && Object.keys(chatUser).length > 0 && message && isEnabledChat) {
       const videoTime = streamingSecond
-       let input: MessInput = {
+      let input: MessInput = {
         // id is auto populated by AWS Amplify
         owner: chatUser.user_name,
         text: sanitizeMess(message),
@@ -733,7 +732,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
         userId: chatUser.id,
         delete_flag: false,
         local_id: Math.random().toString(20).substr(2, 10) + '_' + moment().format('HHmmss'),
-        created_time: moment().toISOString()
+        created_time: moment().toISOString(),
       }
       if (point) {
         input = {
@@ -749,16 +748,17 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
       console.log('input', input)
 
       let local_message = {
-        ...input, mess_status: STATUS_SEND_MESS.PENDING, 
+        ...input,
+        mess_status: STATUS_SEND_MESS.PENDING,
       }
-      if(point) {
+      if (point) {
         const { nickname, avatar_url } = userProfile.attributes
         local_message = {
-          ...local_message, 
-          parent: {avatar: avatar_url, user_name: nickname}
+          ...local_message,
+          parent: { avatar: avatar_url, user_name: nickname },
         }
       }
-      console.log("🚀 ~ createMess ~ local_message", local_message)
+      console.log('🚀 ~ createMess ~ local_message', local_message)
 
       const is_premium_local_message = isPremiumChat(local_message, false)
       // save mess for local
@@ -772,13 +772,13 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
       if (playedSecond >= streamingSecond || liveStreamInfo.is_pausing_live) {
         const isMessageInBottom = checkMessIsInBottom()
         // render new messages with savedMess
-        console.log("🚀 ~ 11111")
+        console.log('🚀 ~ 11111')
         setStateMessages([...savedMess, local_message])
-        console.log("🚀 ~ createMess ~ stateMessages", stateMessages)
+        console.log('🚀 ~ createMess ~ stateMessages', stateMessages)
 
         // console.log("🚀 ~ 33333")
         if (isMessageInBottom) {
-          if(point){
+          if (point) {
             setIsChatInBottom(true)
           } else {
             scrollToCurrentMess()
@@ -793,8 +793,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
           setMessagesDonate([...newMessDonate, local_message])
         }
       }
-      
-     
+
       const result = await API.graphql(graphqlOperation(createMessage, { input }))
       console.log('createMessage-111111', result)
       refCreateMessLocal.current(result, local_message)
@@ -809,7 +808,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
     // // if scrollbar is not in container bottom
     // // height of scroll to top + max height < height of container
     // if(!isMessInBottom){
-    if(mess_container) {
+    if (mess_container) {
       console.log('🚀 ~ 111 ~ scrollHeight', mess_container.scrollHeight)
       console.log('🚀 ~ 111 ~ offsetHeight', mess_container.offsetHeight)
       console.log('🚀 ~ 1111 ~ scrollTop', mess_container.scrollTop)
@@ -1033,22 +1032,26 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
       <Box className={classes.userWatchingList}>
         {messagesDonate
           // .sort((a: any, b: any) => -(+a.video_time - +b.video_time || a.createdAt.localeCompare(b.createdAt)))
-          .map((item) => !item.delete_flag ? (
-            <Box
-              key={item.id}
-              className={classes.userWatchingItem}
-              style={{
-                backgroundColor: purchasePoints[`p_${item.point}`].backgroundColor,
-                opacity: !messActiveUser ? 1 : item.id === messActiveUser.id ? 1 : 0.5,
-              }}
-              onClick={() => {
-                setDisplayDialogMess(true)
-                setMessActiveUser(item)
-              }}
-            >
-              <ESAvatar src={item?.parent?.avatar} size={32} alt={item.parent.user_name} />
-            </Box>
-          ) : '')}
+          .map((item) =>
+            !item.delete_flag ? (
+              <Box
+                key={item.id}
+                className={classes.userWatchingItem}
+                style={{
+                  backgroundColor: purchasePoints[`p_${item.point}`].backgroundColor,
+                  opacity: !messActiveUser ? 1 : item.id === messActiveUser.id ? 1 : 0.5,
+                }}
+                onClick={() => {
+                  setDisplayDialogMess(true)
+                  setMessActiveUser(item)
+                }}
+              >
+                <ESAvatar src={item?.parent?.avatar} size={32} alt={item.parent.user_name} />
+              </Box>
+            ) : (
+              ''
+            )
+          )}
       </Box>
       {chatBoardComponent()}
     </Box>

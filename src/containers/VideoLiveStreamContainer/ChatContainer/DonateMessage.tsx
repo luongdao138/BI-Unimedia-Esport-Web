@@ -8,7 +8,7 @@ import { hexToRgba } from '@utils/helpers/CommonHelper'
 import ESMenuItem from '@components/Menu/MenuItem'
 import ESMenu from '@components/Menu'
 import _ from 'lodash'
-import {STATUS_SEND_MESS} from '@constants/common.constants'
+import { STATUS_SEND_MESS } from '@constants/common.constants'
 
 type DonateMessageProps = {
   message?: any
@@ -42,9 +42,7 @@ const DonateMessage: React.FC<DonateMessageProps> = ({ message, deleteMess, getM
           <span className={getClassDeletedMess()}>{t('common.eXe_points')}</span>
         </Typography>
         <Box className={classes.mess_status}>
-          {message.mess_status === STATUS_SEND_MESS.PENDING ? (
-            <CircularProgress size={12} />
-          ) : ''}
+          {message.mess_status === STATUS_SEND_MESS.PENDING ? <CircularProgress size={12} /> : ''}
           {/* {message.mess_status === STATUS_SEND_MESS.ERROR ? (
             <Icon color="primary" className={`fa fa-exclamation-triangle ${classes.icon}`} fontSize="small" />
           ) : ''} */}
@@ -81,8 +79,8 @@ const useStyles = makeStyles(() => ({
   icon: {},
   mess_status: {
     // paddingLeft: 4,
-    // alignItems: "center", 
-    // display: "flex", 
+    // alignItems: "center",
+    // display: "flex",
     // marginBottom: "4px",
     display: 'none',
     position: 'absolute',

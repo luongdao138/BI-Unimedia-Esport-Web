@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { Slider } from '@material-ui/core'
+import { Slider, SliderProps } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
 import React, { memo, useEffect, useState } from 'react'
 import useDetailVideo from '../../useDetailVideo'
@@ -14,7 +14,7 @@ interface Props {
 timePlayed: time by 100*/
 }
 
-const SeekBar: React.FC<Props> = ({ currentTime, durationsPlayer, videoRef }) => {
+const SeekBar: React.FC<Props & SliderProps> = ({ currentTime, durationsPlayer, videoRef, ...rest }) => {
   const classes = useStyles()
   // const [currentTimeState, setCurrentTime] = useState(0);
   // const [duration, setDuration] = useState(0)
@@ -78,6 +78,7 @@ const SeekBar: React.FC<Props> = ({ currentTime, durationsPlayer, videoRef }) =>
         className={classes.seekBar}
         onChange={handleChange}
         onChangeCommitted={handleCommit}
+        {...rest}
       />
     </div>
   )

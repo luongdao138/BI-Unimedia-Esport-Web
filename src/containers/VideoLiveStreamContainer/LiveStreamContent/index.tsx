@@ -222,6 +222,7 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
         onVideoEnd={props.onVideoEnd}
         startLive={Date.parse(detailVideoResult?.live_stream_start_time)}
         endLive={detailVideoResult?.live_stream_end_time}
+        type={detailVideoResult?.status}
       />
     )
   }

@@ -22,6 +22,7 @@ interface PlayerProps {
   onVideoEnd?: () => void
   startLive?: number
   endLive?: string
+  type?: number
 }
 
 declare global {
@@ -39,6 +40,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   startLive,
   endLive,
   videoType,
+  type,
 }) => {
   const checkStatusVideo = 1
   const classes = useStyles({ checkStatusVideo })
@@ -140,7 +142,6 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   }
 
   useEffect(() => {
-    console.log('getCurrentTime 1122')
     const ENDED = IVSPlayer?.PlayerState?.ENDED
     const PLAYING = IVSPlayer?.PlayerState?.PLAYING
     const READY = IVSPlayer?.PlayerState?.READY
@@ -148,7 +149,6 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     const ERROR = IVSPlayer?.PlayerEventType?.ERROR
     if (!isPlayerSupported) {
       console.warn('The current browser does not support the Amazon IVS player.')
-
       return
     }
 
@@ -330,7 +330,6 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       <div ref={playerContainerRef} className={classes.playerContainer}>
         <div style={{ height: '100%' }} onClick={handlePlayPauseOut}>
           <ReactPlayer
-            id={'video-player'}
             ref={reactPlayerRef}
             url={src}
             playsinline
@@ -372,7 +371,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
         </div>
 
         <div className={classes.processControl}>
-          <SeekBar videoRef={reactPlayerRef} durationsPlayer={durationPlayer} currentTime={playedSeconds} />
+          <SeekBar videoRef={reactPlayerRef} durationsPlayer={durationPlayer} currentTime={playedSeconds} disabled={isLive} />
           <div className={classes.controlOut}>
             <ControlBarPlayer
               videoRef={reactPlayerRef}
@@ -386,6 +385,8 @@ const VideoPlayer: React.FC<PlayerProps> = ({
               onChangeVol={handleChangeVol}
               onChangeVolDrag={handleChangeVolDrag}
               volume={volume}
+              isLive={isLive}
+              videoStatus={type}
             />
           </div>
         </div>
