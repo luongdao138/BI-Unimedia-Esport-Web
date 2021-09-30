@@ -22,12 +22,11 @@ const InfoContainer: React.FC = () => {
   const classes = useStyles()
   const [showResult, setShowResult] = useState(false)
   const [isOnlyTitle, setIsOnlyTitle] = useState(false)
-  const { topicList, getTopicList, topicListMeta, pages } = useTopicSearch()
+  const { topicList, getTopicList, topicListMeta, pages, params } = useTopicSearch()
   const hash_key = String(router.query.hash_key)
   const [page, setPage] = useState(1)
   const [count, setCount] = useState(1)
   const [isSearched, setIsSearched] = useState<boolean>(false)
-  let onlyTitle
 
   useEffect(() => {
     if (!_.isEmpty(value)) {
@@ -45,7 +44,6 @@ const InfoContainer: React.FC = () => {
     getTopicList({ community_hash: hash_key, keyword: value.trim(), only_title: isOnlyTitle.toString(), page: 1 })
     setShowResult(true)
     setIsSearched(true)
-    onlyTitle = isOnlyTitle
   }
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -73,6 +71,7 @@ const InfoContainer: React.FC = () => {
   useEffect(() => {
     if (topicList) {
       setCount(pages?.total_pages)
+      setPage(pages?.current_page)
     }
   }, [pages])
 
@@ -132,9 +131,9 @@ const InfoContainer: React.FC = () => {
                     last_comment={attr.last_comment.data}
                     latest_date={latestDate}
                     comment_count={attr.comment_count}
-                    keyword={value}
+                    keyword={params.keyword}
                     isSearched={isSearched}
-                    isOnlyTitle={onlyTitle}
+                    isOnlyTitle={params.only_title == 'true'}
                   />
                 )
               })}

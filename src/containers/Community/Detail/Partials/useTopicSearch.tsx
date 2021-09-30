@@ -14,12 +14,14 @@ const useTopicSearch = (): {
   getTopicList: (params: TopicSearchParams) => void
   topicListMeta: Meta
   pages: PageMeta
+  params: TopicSearchParams
 } => {
   const dispatch = useAppDispatch()
 
   const topicList = useAppSelector(selectors.getTopicSearchList)
   const topicListMeta = useAppSelector(getTopicMeta)
   const pages = useAppSelector(selectors.getTopicSearchListMeta)
+  const params = useAppSelector(selectors.getTopicSearchListParams)
 
   const getTopicList = (params: TopicSearchParams) => dispatch(actions.searchTopic(params))
 
@@ -35,6 +37,7 @@ const useTopicSearch = (): {
     getTopicList,
     topicListMeta,
     pages,
+    params,
   }
 }
 
