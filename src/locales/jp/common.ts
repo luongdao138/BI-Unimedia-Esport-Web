@@ -77,6 +77,7 @@ export default {
     loading: '読み込み中...',
     no_user_available: '一致するデータが見つかりません',
     made: 'まで',
+    input_incorrect: '入力内容が適切ではありません。',
   },
   confirm_member: {
     confirm: 'メンバーの確定',
