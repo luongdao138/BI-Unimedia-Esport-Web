@@ -36,13 +36,13 @@ const TopicListContainer: React.FC = () => {
   return (
     <>
       <Box mt={2} />
-      {_.isEmpty(topicList) ? (
-        <Box display="flex" justifyContent="center">
-          <Typography>{t('common:topic_comment.there_is_no_topic')}</Typography>
-        </Box>
-      ) : topicListMeta.pending ? (
+      {topicList.length === 0 && !topicListMeta.loaded && topicListMeta.pending ? (
         <Box className={classes.loaderBox}>
           <ESLoader />
+        </Box>
+      ) : _.isEmpty(topicList) ? (
+        <Box display="flex" justifyContent="center">
+          <Typography>{t('common:topic_comment.there_is_no_topic')}</Typography>
         </Box>
       ) : (
         !!topicList &&

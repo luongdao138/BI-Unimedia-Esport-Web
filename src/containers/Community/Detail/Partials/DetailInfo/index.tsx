@@ -17,8 +17,6 @@ import ESReport from '@containers/Report'
 import { useRouter } from 'next/router'
 import { REPORT_TYPE } from '@constants/common.constants'
 import SearchContainer from '../SearchContainer'
-import TopicCreateButton from '@containers/Community/Partials/TopicCreateButton'
-import { ESRoutes } from '@constants/route.constants'
 import FollowList from '../FollowList'
 import { CommunityDetail, TopicDetailList } from '@services/community.service'
 import useCommunityHelper from '@containers/Community/hooks/useCommunityHelper'
@@ -28,6 +26,7 @@ import { MEMBER_ROLE, JOIN_CONDITION, TABS } from '@constants/community.constant
 import { TwitterShareButton } from 'react-share'
 import _ from 'lodash'
 import { useClearMeta } from './../../useCommunityDetail'
+import * as actions from '@store/community/actions'
 
 const ROLE_TYPES = {
   IS_ADMIN: 'setIsAdmin',
@@ -81,6 +80,10 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
       setTab(isAutomatic ? TABS.TOPIC_LIST : isNotMember ? TABS.INFO : TABS.TOPIC_LIST)
     }
   }, [router.query])
+
+  useEffect(() => {
+    setTab(isAutomatic ? TABS.TOPIC_LIST : isNotMember ? TABS.INFO : TABS.TOPIC_LIST)
+  }, [detail])
 
   const setOtherRoleFalse = (setRoleType: string) => {
     if (setRoleType === ROLE_TYPES.IS_ADMIN) {
@@ -158,18 +161,24 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
     }
   }, [unfollowCommunityPendingMeta])
 
-  const followHandle = () => {
-    followCommunity(String(hash_key))
-    if (!isCommunityAutomatic) {
-      setIsRequested(true)
+  const followHandle = async () => {
+    const resultAction = await dispatch(actions.getCommunityDetail(String(hash_key)))
+    if (actions.getCommunityDetail.fulfilled.match(resultAction)) {
+      followCommunity(String(hash_key))
+      if (!isCommunityAutomatic) {
+        setIsRequested(true)
+      }
     }
   }
 
-  const unfollowHandle = () => {
-    if (!isCommunityAutomatic) {
-      setIsDiscard(true)
-    } else {
-      unfollowCommunity(String(hash_key))
+  const unfollowHandle = async () => {
+    const resultAction = await dispatch(actions.getCommunityDetail(String(hash_key)))
+    if (actions.getCommunityDetail.fulfilled.match(resultAction)) {
+      if (!isCommunityAutomatic) {
+        setIsDiscard(true)
+      } else {
+        unfollowCommunity(String(hash_key))
+      }
     }
   }
 
@@ -295,6 +304,7 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
           <ESReport
             reportType={REPORT_TYPE.COMMUNITY}
             target_id={data.hash_key}
+            title={t('common:community.report_community')}
             data={detail}
             open={openReport}
             handleClose={() => setOpenReport(false)}
@@ -307,7 +317,7 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
   const getTabs = () => {
     return (
       <Grid item xs={12}>
-        <ESTabs value={tab} onChange={(_, v) => setTab(v)} className={classes.tabs}>
+        <ESTabs value={tab} onChange={(_, v) => setTab(v)} className={`${classes.tabs} community-tab`}>
           <ESTab label={t('common:community.info')} value={TABS.INFO} />
           {showTopicListAndSearchTab && <ESTab label={t('common:community.topic_list')} value={TABS.TOPIC_LIST} />}
           {showTopicListAndSearchTab && <ESTab label={t('common:community.search')} value={TABS.SEARCH} />}
@@ -328,23 +338,12 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
     }
   }
 
-  const toCreateTopic = () => {
-    router.push(ESRoutes.TOPIC_CREATE.replace(/:id/gi, data.hash_key.toString()))
-  }
-
   return (
     <Grid container className={classes.container}>
       <Box color={Colors.grey[300]} width="100%">
         {getHeader()}
         {getTabs()}
         {getContent()}
-        {!isNotMember && (
-          <Box className={classes.commentIconContainer}>
-            <Box>
-              <TopicCreateButton onClick={toCreateTopic} />
-            </Box>
-          </Box>
-        )}
       </Box>
       <DiscardDialog
         open={isDiscard}
@@ -467,20 +466,11 @@ const useStyles = makeStyles((theme) => ({
     letterSpacing: -1,
     margin: theme.spacing(1),
   },
-  commentIconContainer: {
-    zIndex: 50,
-    display: 'flex',
-    justifyContent: 'flex-end',
-    width: 99,
-    left: 'calc(100% - 99px)',
-    position: 'sticky',
-    bottom: theme.spacing(2),
-  },
   boxContainer: {
     display: 'flex',
   },
   menuOuter: {
-    marginLeft: theme.spacing(3),
+    marginLeft: theme.spacing(2),
   },
   [theme.breakpoints.down('sm')]: {
     commentIcon: {
@@ -501,9 +491,6 @@ const useStyles = makeStyles((theme) => ({
       flexDirection: 'column',
       justifyContent: 'center',
       alignItems: 'center',
-    },
-    commentIconContainer: {
-      bottom: theme.spacing(10),
     },
     menuOuter: {
       marginLeft: theme.spacing(0),

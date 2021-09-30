@@ -20,7 +20,11 @@ const InfoContainer: React.FC<{ isOfficial: boolean; data: CommunityDetail['attr
   const toProfile = (user_code) => router.push(`${ESRoutes.PROFILE}/${user_code}`)
 
   const newLineText = (text) => {
-    return _.map(_.split(text, '\n'), (str, i) => <Typography key={i}>{str}</Typography>)
+    return _.map(_.split(text, '\n'), (str, i) => (
+      <Typography key={i} className={classes.lineText}>
+        {str}
+      </Typography>
+    ))
   }
 
   return (
@@ -160,6 +164,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   linkify: {
     color: Colors.white,
     textDecoration: 'underline',
+    wordBreak: 'break-all',
+  },
+  lineText: {
     wordBreak: 'break-all',
   },
   label: {

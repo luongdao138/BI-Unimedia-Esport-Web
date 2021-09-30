@@ -51,6 +51,9 @@ const initialState: StateType = {
   topicDetail: null,
   commentsList: [],
   communityDetail: null,
+  communityMembers: [],
+  commentDetail: null,
+  topicSearchList: [],
 }
 
 export default createReducer(initialState, (builder) => {
@@ -145,7 +148,7 @@ export default createReducer(initialState, (builder) => {
     state.communityDetail.attributes.my_role = null
   })
   builder.addCase(COMMUNITY_ACTION_TYPE.RESET_COMMUNITY_MEMBERS, (state) => {
-    state.communityMembers = undefined
+    state.communityMembers = []
   })
   builder.addCase(actions.getTopicComment.fulfilled, (state, action) => {
     state.commentDetail = action.payload.data

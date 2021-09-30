@@ -47,8 +47,8 @@ export type ReportData = {
     date: string
     image: string
     number: number
-    hash_key: string
     topic_title?: string
+    id: number
   }
 }
 
@@ -98,6 +98,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
       number: commentData.comment_no,
       hash_key: commentData.hash_key,
       avatar_image: commentData.owner_profile,
+      id: commentData.id,
     },
   }
 
@@ -150,7 +151,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
     return (
       <>
         <Box display="flex" alignItems="flex-start" justifyContent="space-between" mb={1}>
-          <Box className={classes.userInfoContainerMain}>
+          <Box className={classes.userInfoContainer}>
             <Typography className={classes.number}>{replyData.comment_no}</Typography>
             <Box ml={1}>
               <ButtonBase onClick={() => toProfile(replyData.user_code)}>
@@ -270,7 +271,6 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
           }}
           style={{
             left: contentRect.left + _theme.spacing(3),
-            top: 60,
           }}
         >
           {!_.isEmpty(commentDetail) &&
@@ -289,7 +289,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
               </Box>
             </Box>
           )}
-          {commentDetailMeta.pending && (
+          {commentDetail === null && !commentDetailMeta.loaded && commentDetailMeta.pending && (
             <Box display="flex" justifyContent="center" alignItems="center">
               <ESLoader />
             </Box>
@@ -390,9 +390,6 @@ const useStyles = makeStyles((theme) => ({
   userInfoContainer: {
     display: 'flex',
     width: 'calc(100% - 150px)',
-  },
-  userInfoContainerMain: {
-    display: 'flex',
   },
   userAvatarBox: {
     display: 'flex',

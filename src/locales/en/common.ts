@@ -20,7 +20,7 @@ export default {
     total: '件',
     error: 'エラー文言が入ります',
     game_display_name_error: '入力必須項目です',
-    too_long: '{{max}}文字以内で入力してください',
+    too_long: '{{max}}文字以内で入力してください。',
     at_least: '2文字以上入力してください。',
     at_least_8: '8文字以上で入力してください',
     contains_ngword: '不適切な文字列が含まれています。',
@@ -82,6 +82,7 @@ export default {
     money: '円',
     ten_thousand: '万',
     made: 'まで',
+    input_incorrect: '入力内容が適切ではありません。',
   },
   confirm_member: {
     confirm: 'メンバーの確定',
@@ -257,6 +258,8 @@ export default {
   community: {
     report: '通報',
     reported_community: 'コミュニティを通報しました',
+    report_community: 'コミュニティを通報する',
+    community_to_report: '通報するコミュニティ',
     community_id: 'コミュニティID：',
     copy_shared_url: '共有URLをコピー',
     community_results: 'コミュニティ「:key」 の検索結果',
@@ -279,7 +282,7 @@ export default {
       by_title: 'タイトルのみで検索をかける',
       placeholder: 'キーワードからトピックを検索します',
       result: '検索結果',
-      no_data: '該当するトピックは見つかりませんでした。',
+      no_data: '該当するトピックは見つかりませんでした',
     },
     follow_list: 'フォローリスト',
     member_list: {
@@ -328,11 +331,11 @@ export default {
   },
   user_report: {
     title: '通報する',
-    desc_first: '通報いただいた内容は全て運営が確認をいたしますが、',
-    desc_second: 'その際の対応及び返信を行わない場合がある旨、予めご了承ください',
-    desc_third: '及び返信を行わない場合がある旨、予めご了承ください',
+    desc: `通報内容をご確認のうえ必要情報を記載、選択してください。
+また、通報いただいた内容は全て運営が確認をいたしますが、その際の対応及
+び返信を行わない場合がある旨、予めご了承ください。`,
     user_info_title: '通報する内容',
-    reason: '通報理由',
+    reason: '通報する理由',
     reason_desc: '詳細・補足',
     reason_desc_placeholder: `通報する理由の詳細や補足をご記入ください。
 また、上記で「その他」を選んだ方はその内容をご記入ください。`,
@@ -340,8 +343,7 @@ export default {
     email: 'メールアドレス',
     reporter_email: 'メールアドレスの確認',
     reporter_email_placeholder: 'メールアドレスを入力してください。',
-    reporter_email_confirm: '※通報にはメールアドレスの登録が必要となります。',
-    email_required_text: '通報にはメールアドレスの登録が必要です',
+    email_required_text: '※通報にはメールアドレスの登録が必要となります。',
     btn_text: '通報する',
     report_menu: '通報',
     title_chat: 'Chat',
@@ -614,6 +616,7 @@ export default {
       button: 'トピックを通報',
       title: '通報するトピック',
       reported_topic: 'トピックを通報しました',
+      dialog_title: 'トピックを通報する',
     },
     delete: {
       button: 'トピックの削除',
@@ -749,9 +752,9 @@ export default {
     },
     card: {
       organizer: '開催者',
-      start_date: '開催日',
-      entry_period: 'エントリー期間',
-      entries: 'エントリー人数',
+      start_date: '開始日時',
+      entry_period: '受付期間',
+      entries: 'エントリー',
     },
     cancel_lobby_dialog: {
       title: '募集を中止しますか？',
@@ -872,6 +875,9 @@ export default {
       message_part2: 'よろしいですか？',
       confirm: '内容を破棄して戻る',
     },
+    validation: {
+      participants_limit: '2~128の数字を入力してください。',
+    },
   },
   lobbySearchFilters: {
     all: 'すべて',
@@ -927,7 +933,7 @@ export default {
     community_create_px: '【コミュニティ】',
     community_create_sx: 'を作成しました。',
     community_join_px: '【コミュニティ】',
-    community_join_sx: 'に参加しました。',
+    community_join_sx: 'への参加が許可されました。',
     user_follows_px: '',
     user_follows_sx: 'さんをフォローしました。',
     recruitment_create_px: '【募集】',
@@ -1153,7 +1159,7 @@ export default {
   ng_word_area: {
     chat_section: 'メッセージテキストボックス',
     room_name_title: 'グループ名',
-    comment_section: 'メッセージテキストボックス',
+    comment_section: 'コメントテキストボックス',
   },
   page_head: {
     default_desc:
@@ -1248,7 +1254,7 @@ export default {
     game: 'ゲーム',
     game_placeholder: '選択されていません',
     area: 'エリア',
-    area_detail: 'エリア詳細',
+    area_detail: 'エリア',
     area_name_placeholder: 'エリア情報を記載',
     public_or_private: 'コミュニティ公開設定',
     public: '公開',
@@ -1287,8 +1293,8 @@ export default {
       一度解散したコミュニティのトピックやアップロードした画像は復元できません。`,
       disbanded_toast: 'コミュニティを解散しました。',
     },
-    community_created_toast: 'コミュニティを作成しました',
-    community_updated_toast: 'コミュニティを編集しました',
+    community_created_toast: 'コミュニティを作成しました。',
+    community_updated_toast: 'コミュニティを編集しました。',
     title_already_in_use: 'コミュニティ名が既に使用中です。',
   },
   topic_create: {

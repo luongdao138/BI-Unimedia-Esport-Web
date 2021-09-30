@@ -191,11 +191,11 @@ const useStyles = makeStyles((theme) => ({
   [theme.breakpoints.down(320)]: {
     container: {
       height: 'auto',
-      padding: '4px 0'
+      padding: '4px 0',
     },
     wrap_money: {
       marginLeft: 76,
-      height: 20
-    }
+      height: 20,
+    },
   },
 }))

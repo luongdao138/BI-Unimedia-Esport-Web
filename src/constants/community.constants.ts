@@ -78,6 +78,8 @@ export const TOPIC_ROW_ITEM_DIVISOR = {
 
 export const REPLY_REGEX = /(>>[0-9]+)/g
 
+export const ONLY_SPACE_REGEX = /^(?!\s+$)/
+
 export const CARD_TAG = {
   THREE_DOT_SPACE: 21,
 }

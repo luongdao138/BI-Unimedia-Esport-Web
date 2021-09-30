@@ -54,6 +54,7 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
     getCreateCommunityMeta,
     getUpdateCommunityMeta,
     communityFeatures,
+    resetCreateUpdateMeta,
   } = useCommunityCreate()
   const [detailFeatures, setDetailFeatures] = useState([])
   const initialValues = getInitialValues(isEdit ? community : undefined, isEdit && detailFeatures)
@@ -88,6 +89,22 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
   const isChanged = !_.isEqual(formik.values, initialValues)
 
   useEffect(() => {
+    if (isChanged) {
+      window.addEventListener('beforeunload', unloadCallback, { capture: true })
+    } else {
+      window.removeEventListener('beforeunload', unloadCallback, { capture: true })
+    }
+    return () => window.removeEventListener('beforeunload', unloadCallback, { capture: true })
+  }, [isChanged])
+
+  const unloadCallback = (event) => {
+    if (navigator.userAgent.indexOf('Firefox') > -1) {
+      event.preventDefault()
+    }
+    return (event.returnValue = '')
+  }
+
+  useEffect(() => {
     if (community) {
       formik.validateForm()
     }
@@ -99,6 +116,7 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
     } else if ((isEdit ? getUpdateCommunityMeta : getCreateCommunityMeta).error) {
       renderFailedDataToast()
     }
+    resetCreateUpdateMeta()
   }, [getCreateCommunityMeta, getUpdateCommunityMeta])
 
   useEffect(() => {

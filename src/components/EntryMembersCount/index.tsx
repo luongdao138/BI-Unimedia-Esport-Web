@@ -13,7 +13,7 @@ const EntryMembersCount: React.FC<Props> = ({ label, entryCount, maxCount, unit 
   const classes = useStyles()
 
   return (
-    <Box display="flex" flexDirection="row" color={Colors.grey[300]} alignItems="baseline">
+    <Box display="flex" flexDirection="row" color={Colors.grey[300]} alignItems="baseline" mt={1.5}>
       <Typography className={classes.entryMembersInfoText}>{label}</Typography>
       <Box mr={2} />
       <Typography className={classes.highlightedNumber}>{entryCount}</Typography>

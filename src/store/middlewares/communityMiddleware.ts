@@ -11,10 +11,7 @@ import {
   getCommunityDetail,
   getCommunityFeatures,
   getCommunityMembers,
-  approveCommunityMembers,
-  cancelCommunityMembers,
   changeCommunityMemberRole,
-  removeCommunityMember,
   closeCommunity,
   createTopic,
   getTopicDetail,
@@ -25,7 +22,6 @@ import {
   unfollowCommunityPending,
   followCommunity,
   getCommentsList,
-  memberSubmitFulfilled,
   resetCommunityMembers,
 } from '@store/community/actions/index'
 import i18n from '@locales/i18n'
@@ -34,7 +30,7 @@ import { CommunityMemberRole } from '@services/community.service'
 
 const messages = {
   [`${unfollowCommunity.fulfilled}`]: i18n.t('common:community.toast_unfollowed'),
-  [`${memberSubmitFulfilled}`]: i18n.t('common:community.change_applying_members_toast'),
+  [`${changeCommunityMemberRole.fulfilled}`]: i18n.t('common:community.change_applying_members_toast'),
   [`${deleteTopicComment.fulfilled}`]: i18n.t('common:topic_comment.delete.success_toast'),
   [`${deleteTopic.fulfilled}`]: i18n.t('common:community.topic.delete_success'),
   [`${getTopicList.rejected}`]: i18n.t('common:common.failed_to_get_data'),
@@ -45,10 +41,7 @@ const messages = {
   [`${getCommunityDetail.rejected}`]: i18n.t('common:common.failed_to_get_data'),
   [`${getCommunityFeatures.rejected}`]: i18n.t('common:common.failed_to_get_data'),
   [`${getCommunityMembers.rejected}`]: i18n.t('common:common.failed_to_get_data'),
-  [`${approveCommunityMembers.rejected}`]: i18n.t('common:common.failed_to_get_data'),
-  [`${cancelCommunityMembers.rejected}`]: i18n.t('common:common.failed_to_get_data'),
   [`${changeCommunityMemberRole.rejected}`]: i18n.t('common:common.failed_to_get_data'),
-  [`${removeCommunityMember.rejected}`]: i18n.t('common:common.failed_to_get_data'),
   [`${closeCommunity.rejected}`]: i18n.t('common:common.failed_to_get_data'),
   [`${createTopic.rejected}`]: i18n.t('common:common.failed_to_get_data'),
   [`${getTopicDetail.rejected}`]: i18n.t('common:common.failed_to_get_data'),
@@ -76,7 +69,7 @@ const fetchMembers = (store: StoreType) => {
 
 const actions = {
   [`${createTopicComment.fulfilled}`]: fetchCommentsList,
-  [`${memberSubmitFulfilled}`]: fetchMembers,
+  [`${changeCommunityMemberRole.fulfilled}`]: fetchMembers,
 }
 
 export const communityMiddleware: Middleware = (store: StoreType) => (next: AppDispatch) => <A extends Action>(action: A): A => {

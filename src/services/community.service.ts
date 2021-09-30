@@ -169,46 +169,18 @@ export type CommunityMember = {
   }
 }
 
-export type MemberParams = {
-  approveParams: number[]
-  cancelParams: number[]
-  changeRoleToOrganizer: {
-    member_ids: number[]
-    member_role: number
-  }
-  changeRoleToMember: {
-    member_ids: number[]
-    member_role: number
-  }
-  removeParams: number[]
+export type ChangeCommunityMemberRoleParams = {
+  approve_members: number[]
+  cancel_members: number[]
+  remove_members: number[]
+  to_members: number[]
+  to_organizers: number[]
   hash_key: string
 }
 
 export type CommunityMembersResponse = {
   data: CommunityMember[]
   meta: PageMeta
-}
-
-export type CommunityMembersApproveCancelParams = {
-  data: {
-    member_ids: number[]
-  }
-  hash_key: string
-}
-
-export type CommunityMemberChangeRoleParams = {
-  data: {
-    member_ids: number[]
-    member_role: number
-  }
-  hash_key: string
-}
-
-export type CommunityMemberRemoveParams = {
-  data: {
-    member_ids: number[]
-  }
-  hash_key: string
 }
 
 export type TopicGameTitle = {
@@ -345,11 +317,18 @@ export type FollowersTopicResponse = {
   id: string
   type: string
   attributes: {
-    title: string
-    content: string
-    created_at: string
-    avatar: {
-      assets_url: string | null
+    community_title: string
+    community_hash: string
+    is_official: number
+    cover_image_url: string | null
+    topic_title: string
+    topic_hash: string
+    comment_count: number
+    topic_created_at: string
+    members_avatar: {
+      id: number | null
+      nickname: string
+      profile_image: string | null
     }
   }
 }
@@ -427,7 +406,7 @@ export type TopicSearchResponse = {
 export type CommentCreateParams = {
   topic_hash: string
   content: string
-  reply_to_comment_hash: string
+  reply_to_comment_nos: number[]
   attachments: string
 }
 
@@ -558,23 +537,8 @@ export const getCommunityMembers = async (params: CommunityMembersParams): Promi
   return data
 }
 
-export const approveCommunityMembers = async (params: CommunityMembersApproveCancelParams): Promise<void> => {
-  const { data } = await api.post<void>(URI.COMMUNITY_MEMBERS_APPROVE.replace(/:id/gi, params.hash_key), params.data)
-  return data
-}
-
-export const cancelCommunityMembers = async (params: CommunityMembersApproveCancelParams): Promise<void> => {
-  const { data } = await api.post<void>(URI.COMMUNITY_MEMBERS_CANCEL.replace(/:id/gi, params.hash_key), params.data)
-  return data
-}
-
-export const changeCommunityMemberRole = async (params: CommunityMemberChangeRoleParams): Promise<void> => {
-  const { data } = await api.put<void>(URI.COMMUNITY_MEMBER_CHANGE_ROLE.replace(/:id/gi, params.hash_key), params.data)
-  return data
-}
-
-export const removeCommunityMember = async (params: CommunityMemberRemoveParams): Promise<void> => {
-  const { data } = await api.post<void>(URI.COMMUNITY_MEMBER_REMOVE.replace(/:id/gi, params.hash_key), params.data)
+export const changeCommunityMemberRole = async (params: ChangeCommunityMemberRoleParams): Promise<void> => {
+  const { data } = await api.put<void>(URI.COMMUNITY_MEMBER_CHANGE_ROLE.replace(/:id/gi, params.hash_key), params)
   return data
 }
 
