@@ -126,6 +126,7 @@ const useStyles = makeStyles(() => ({
     height: 120,
     alignItems: 'center',
     justifyContent: 'center',
+    border: `1px dashed ${Colors.text[200]}`,
     '&:hover': {
       cursor: 'pointer',
     },
