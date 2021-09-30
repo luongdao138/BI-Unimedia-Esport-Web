@@ -106,11 +106,14 @@ export default createReducer(initialState, (builder) => {
   builder.addCase(actions.getTopicFollowers.fulfilled, (state, action) => {
     let tmpTopicFollowersList = action.payload.data
     if (action.payload.meta != undefined && action.payload.meta.current_page > 1) {
-      //Unused reducer     ref: Home Page
-      tmpTopicFollowersList = state.topicFollowersList.concat(action.payload.data)
+      tmpTopicFollowersList = _.unionBy(state.topicFollowersList, action.payload.data, 'id')
     }
     state.topicFollowersList = tmpTopicFollowersList
     state.topicFollowersListMeta = action.payload.meta
+  })
+  builder.addCase(actions.resetTopicFollowers, (state) => {
+    state.topicFollowersList = []
+    state.topicFollowersListMeta = undefined
   })
   builder.addCase(actions.getCommunityDetail.fulfilled, (state, action) => {
     state.communityDetail = action.payload.data

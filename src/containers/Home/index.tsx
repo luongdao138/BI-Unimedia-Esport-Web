@@ -29,7 +29,7 @@ const HomeContainer: React.FC = () => {
     tournamentFollowersMeta,
     tournamentResultsMeta,
   } = useTournamentData()
-  const { followersTopicList, getFollowersTopicList } = useTopicData()
+  const { followersTopicList, followersTopicListMeta, getFollowersTopicList, resetFollowersTopicList } = useTopicData()
 
   useEffect(() => {
     getUserProfile()
@@ -40,6 +40,9 @@ const HomeContainer: React.FC = () => {
     getTournamentFollowers()
     getTournamentResults()
     getFollowersTopicList()
+    return () => {
+      resetFollowersTopicList()
+    }
   }, [])
 
   const renderItem = (value: string, index: number) => {
@@ -57,7 +60,7 @@ const HomeContainer: React.FC = () => {
       case HOME_SETTINGS.TOURNAMENT_RESULT:
         return <TournamentResult data={tournamentResults} key={index} meta={tournamentResultsMeta} />
       case HOME_SETTINGS.TOPIC_FOLLOW:
-        return <TopicFollow data={followersTopicList} key={index} />
+        return <TopicFollow data={followersTopicList} key={index} meta={followersTopicListMeta} />
       default:
         return ''
     }
