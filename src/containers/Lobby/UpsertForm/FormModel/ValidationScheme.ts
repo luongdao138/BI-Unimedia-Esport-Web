@@ -19,7 +19,12 @@ export const getValidationScheme = (data: LobbyDetail, editables: EditableTypes)
     stepOne: Yup.object({
       title: Yup.string()
         .required(i18n.t('common:common.input_required'))
-        .max(60, i18n.t('common:common.validation.char_limit', { char_limit: 60 })),
+        .max(191, i18n.t('common:common.validation.char_limit', { char_limit: 191 }))
+        .min(2, i18n.t('common:common.at_least'))
+        .test('empty-check', i18n.t('common:common.input_incorrect'), (val) => {
+          if (val && val.length > 1 && val.trim().length === 0) return false
+          return true
+        }),
       message: Yup.string()
         .nullable()
         .max(5000, i18n.t('common:common.validation.char_limit', { char_limit: 5000 })),
