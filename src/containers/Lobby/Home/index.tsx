@@ -1,4 +1,4 @@
-import { Grid, Box, makeStyles, useMediaQuery, Theme } from '@material-ui/core'
+import { Grid, Box, makeStyles, useMediaQuery, Theme, Typography } from '@material-ui/core'
 import { LobbyFilterOption } from '@services/lobby.service'
 import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
@@ -12,6 +12,7 @@ import Header from './Header'
 import { AutoSizer, WindowScroller, List, CellMeasurer, CellMeasurerCache } from 'react-virtualized'
 import useReturnHref from '@utils/hooks/useReturnHref'
 import _ from 'lodash'
+import i18n from '@locales/i18n'
 
 const cache = new CellMeasurerCache({
   fixedWidth: true,
@@ -24,15 +25,15 @@ interface LobbyHomeProps {
 
 const LobbyHome: React.FC<LobbyHomeProps> = ({ filter }) => {
   const classes = useStyles()
-  const { lobbies, meta, loadMore, onFilterChange } = useLobbyHome()
-  const router = useRouter()
-  const { toCreate } = useLobbyHelper()
-
   const listRef = useRef<any>(null)
-  const [itemsPerRow, setPerRow] = useState<number>(4)
-  const rowCount = Math.ceil(lobbies.length / itemsPerRow)
+  const router = useRouter()
+  const { lobbies, meta, loadMore, onFilterChange } = useLobbyHome()
+  const { toCreate } = useLobbyHelper()
   const { hasUCRReturnHref } = useReturnHref()
+  const [itemsPerRow, setPerRow] = useState<number>(4)
+  const [isFilterSuggested, setIsSuggested] = useState<boolean>(false)
 
+  const rowCount = Math.ceil(lobbies.length / itemsPerRow)
   const matchesXL = useMediaQuery((theme: Theme) => theme.breakpoints.up('xl'))
   const matchesLG = useMediaQuery((theme: Theme) => theme.breakpoints.up('lg'))
   const matchesSM = useMediaQuery((theme: Theme) => theme.breakpoints.up('sm'))
@@ -75,7 +76,11 @@ const LobbyHome: React.FC<LobbyHomeProps> = ({ filter }) => {
 
     if (_.has(router.query, 'filter')) {
       const queryFilterVal = _.get(router.query, 'filter') as LobbyFilterOption
-      if (Object.values(LobbyFilterOption).includes(queryFilterVal)) filterVal = queryFilterVal
+      if (Object.values(LobbyFilterOption).includes(queryFilterVal)) {
+        filterVal = queryFilterVal
+
+        setIsSuggested(queryFilterVal === LobbyFilterOption.suggested)
+      }
     }
 
     onFilterChange(filterVal)
@@ -147,6 +152,12 @@ const LobbyHome: React.FC<LobbyHomeProps> = ({ filter }) => {
           </WindowScroller>
         </InfiniteScroll>
       </div>
+      {meta && meta.loaded && !lobbies.length && (
+        <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" py={3} px={2}>
+          <Typography style={{ textAlign: 'center' }}>{i18n.t('common:lobby.search.empty')}</Typography>
+          {isFilterSuggested && <Typography style={{ textAlign: 'center' }}>{i18n.t('common:lobby.search.empty_suggested')}</Typography>}
+        </Box>
+      )}
       {meta.pending && (
         <Grid item xs={12}>
           <Box my={4} display="flex" justifyContent="center" alignItems="center">

@@ -861,6 +861,10 @@ export default {
     validation: {
       participants_limit: '2~128の数字を入力してください。',
     },
+    search: {
+      empty: '該当の募集が存在しませんでした',
+      empty_suggested: 'おすすめの募集ではプロフィールで設定された「好きなゲーム」と一致する募集が表示されます',
+    },
   },
   lobbySearchFilters: {
     all: 'すべて',
