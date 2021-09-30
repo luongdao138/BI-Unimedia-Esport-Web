@@ -145,7 +145,7 @@ const InfoContainer: React.FC = () => {
           {topicListMeta.loaded && topicList.length == 0 && (
             <Typography variant="body1">{t('common:community.detail_search.no_data')}</Typography>
           )}
-          {topicList.length === 0 && !topicListMeta.loaded && topicListMeta.pending && (
+          {!topicListMeta.loaded && topicListMeta.pending && (
             <Grid item xs={12}>
               <Box my={4} display="flex" justifyContent="center" alignItems="center">
                 <ESLoader />
