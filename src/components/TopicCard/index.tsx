@@ -68,24 +68,13 @@ const TopicCard: React.FC<Props> = ({ topic }) => {
     )
   }
 
-  const getParticipants = () => {
-    const participants = attr.members_avatar
+  const getParticipant = () => {
+    const participant = attr.members_avatar
     return (
       <Box display="flex" justifyContent="flex-end" alignItems="center" className={classes.avatarContainer}>
-        {participants && participants.length > 0
-          ? attr.members_avatar
-              .slice(0, 3)
-              .map((participant, i) => (
-                <ESAvatar
-                  size={20}
-                  key={`participants${i}`}
-                  style={{ zIndex: participants.length - i }}
-                  className={classes.pAvatar}
-                  src={participant.profile_image}
-                  alt={String(participant.nickname)}
-                />
-              ))
-          : null}
+        {participant ? (
+          <ESAvatar size={20} className={classes.pAvatar} src={participant.profile_image} alt={String(participant.nickname)} />
+        ) : null}
       </Box>
     )
   }
@@ -107,7 +96,7 @@ const TopicCard: React.FC<Props> = ({ topic }) => {
         {getTitle()}
         {getDescription(attr.topic_title, attr.comment_count)}
         <Typography className={classes.bottom}>{time}</Typography>
-        {getParticipants()}
+        {getParticipant()}
       </ESCardContent>
     </ESCard>
   )

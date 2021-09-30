@@ -329,7 +329,7 @@ export type FollowersTopicResponse = {
       id: number | null
       nickname: string
       profile_image: string | null
-    }[]
+    }
   }
 }
 
