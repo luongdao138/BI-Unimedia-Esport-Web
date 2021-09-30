@@ -864,14 +864,18 @@ export default {
     search: {
       empty: '該当の募集が存在しませんでした',
       empty_suggested: 'おすすめの募集ではプロフィールで設定された「好きなゲーム」と一致する募集が表示されます',
+      filter: {
+        all: 'すべて',
+        suggested: 'おすすめの募集',
+        ready: '受付前',
+        recruiting: '受付中',
+        entry_closed: '受付締切',
+        in_progress: '開催中',
+        ended: '終了',
+        joined: 'エントリー中の募集',
+        organized: 'あなたが作成した募集',
+      },
     },
-  },
-  lobbySearchFilters: {
-    all: 'すべて',
-    suggested: 'おすすめの募集',
-    beforeStart: 'エントリー受付中',
-    inProgress: 'エントリー中の募集',
-    organized: 'あなたが作成した募集',
   },
   communitySearchFilters: {
     joined: '参加しているコミュニティ',

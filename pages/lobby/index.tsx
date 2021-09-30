@@ -36,12 +36,11 @@ const LobbyPage: PageWithLayoutType = () => {
   )
 }
 
-function formatFilter(filterText: string) {
+const formatFilter = (filterText: string) => {
   if (!_.isString(filterText)) return LobbyFilterOption.all
-  const possibleFilters = ['all', 'suggested', 'recruiting', 'joined', 'organized']
-  if (possibleFilters.includes(filterText)) {
-    return filterText as LobbyFilterOption
-  }
+
+  const filterVal = filterText as LobbyFilterOption
+  if (Object.values(LobbyFilterOption).includes(filterVal)) return filterVal
   return LobbyFilterOption.all
 }
 

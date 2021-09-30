@@ -19,7 +19,11 @@ export type LobbySearchParams = {
 export enum LobbyFilterOption {
   all = 'all',
   suggested = 'suggested',
+  ready = 'ready',
   recruiting = 'recruiting',
+  entry_closed = 'entry_closed',
+  in_progress = 'in_progress',
+  ended = 'ended',
   joined = 'joined',
   organized = 'organized',
 }
