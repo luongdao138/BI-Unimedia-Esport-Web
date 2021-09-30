@@ -188,4 +188,14 @@ const useStyles = makeStyles((theme) => ({
       width: '100%',
     },
   },
+  [theme.breakpoints.down(320)]: {
+    container: {
+      height: 'auto',
+      padding: '4px 0'
+    },
+    wrap_money: {
+      marginLeft: 76,
+      height: 20
+    }
+  },
 }))

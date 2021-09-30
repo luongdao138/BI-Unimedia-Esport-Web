@@ -283,27 +283,18 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
         content: `${baseViewingURL}${stepSettingTwo.uuid}`,
       })
       formik.setFieldValue('stepSettingTwo.step_setting', step + 1)
+      const { left, top } = getBoxPositionOnWindowCenter(550, 400)
       if (isShare) {
         window
           .open(
             getTwitterShareUrl(),
-            '_blank',
-            Object.keys(windowConfigs())
-              .map(function (key) {
-                return key + '=' + windowConfigs[key]
-              })
-              .join(', ')
+            '',
+            `width=550,height=400,location=no,toolbar=no,status=no,directories=no,menubar=no,scrollbars=yes,resizable=no,centerscreen=yes,chrome=yes,left=${left},top=${top}`
           )
           ?.focus()
       }
     })
   }
-
-  const windowConfigs = () => ({
-    width: 550,
-    height: 400,
-    ...getBoxPositionOnWindowCenter(550, 400),
-  })
 
   const getBoxPositionOnWindowCenter = function (width, height) {
     return {

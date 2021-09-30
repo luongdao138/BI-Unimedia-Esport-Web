@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 // import ESLoader from '@components/Loader'
-import { Icon, makeStyles, Theme, useTheme } from '@material-ui/core'
+import { Icon, makeStyles, Theme, useMediaQuery, useTheme } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import React, { memo, useEffect, useRef, useState } from 'react'
 // import { Player, ControlBar, BigPlayButton, ProgressControl } from 'video-react'
@@ -12,6 +12,7 @@ import screenfull from 'screenfull'
 
 import useDetailVideo from '../useDetailVideo'
 import { hhmmss } from '@containers/VideoPlayer/customPlugins/time'
+import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
 
 interface PlayerProps {
   src?: string
@@ -44,6 +45,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
 }) => {
   const checkStatusVideo = 1
   const classes = useStyles({ checkStatusVideo })
+  const { width: videoDisplayWidth } = useWindowDimensions(0)
 
   const player = useRef(null)
   // const videoEl = useRef(null)
@@ -234,6 +236,10 @@ const VideoPlayer: React.FC<PlayerProps> = ({
 
   const theme = useTheme()
   const isMobile = theme.breakpoints.down('sm')
+  const isDownMd = useMediaQuery(theme.breakpoints.down(769))
+  const isDown1100 = useMediaQuery(theme.breakpoints.down(1100))
+  const isDown960 = useMediaQuery(theme.breakpoints.down(960))
+
   const [isPortrait, setIsPortrait] = useState<boolean>(!!isMobile)
   console.log('isPortrait', isPortrait)
   useEffect(() => {
@@ -324,6 +330,21 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   }, [startLive, state.ended, endLive, isLive])
 
   const { playing, muted, volume, ended, loading, errorVideo, videoLoaded } = state
+  const chatBoardWidth = () => {
+    if (!isDown1100) return 482
+    if (!isDownMd) return 350
+    return 0
+  }
+  const sizeMenuWidth = () => {
+    if (!isDown960) return 98
+    return 0
+  }
+
+  const calculateVideoHeight = () => {
+    const videoWidth = videoDisplayWidth - (chatBoardWidth() + sizeMenuWidth())
+    return (videoWidth * 9) / 16
+  }
+
   return (
     <div className={classes.videoPlayer}>
       {/* <video ref={videoEl} controls playsinline src={src}></video> */}
@@ -334,7 +355,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
             url={src}
             playsinline
             width="100%"
-            height={'100%'}
+            height={calculateVideoHeight()}
             playing={playing}
             onProgress={onProgress}
             onDuration={onDuration}
