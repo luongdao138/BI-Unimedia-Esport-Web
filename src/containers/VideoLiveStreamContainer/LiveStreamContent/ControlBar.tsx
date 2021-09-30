@@ -2,7 +2,6 @@ import { Box, Icon, makeStyles, Slider } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import React, { memo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { VIDEO_TYPE } from '..'
 import Play from './ControlComponent/Play'
 import PlayerTooltip from './ControlComponent/PlayerTooltip'
 import Reload from './ControlComponent/Reload'
@@ -20,6 +19,8 @@ interface ControlProps {
   onChangeVol?: (_, value) => void
   onChangeVolDrag?: (_, value) => void
   volume?: number
+  isLive?: boolean
+  videoStatus?: number
 }
 
 const ControlBarPlayer: React.FC<ControlProps> = ({
@@ -34,6 +35,8 @@ const ControlBarPlayer: React.FC<ControlProps> = ({
   onChangeVol,
   onChangeVolDrag,
   volume,
+  isLive,
+  videoStatus,
 }) => {
   const classes = useStyles()
   const { t } = useTranslation('common')
@@ -57,7 +60,7 @@ const ControlBarPlayer: React.FC<ControlProps> = ({
     <>
       <div className={classes.controlLeft}>
         <Play onPlayPause={onPlayPause} playing={playing} />
-        <Reload videoRef={videoRef} typeButton={'reload'} />
+        <Reload videoRef={videoRef} typeButton={'reload'} isLive={isLive} />
         <Box className={classes.buttonVolume}>
           <Box className={classes.boxIconVolume} onClick={onMute} data-tip data-for="mute">
             {!muted ? (
@@ -81,10 +84,10 @@ const ControlBarPlayer: React.FC<ControlProps> = ({
         </Box>
 
         <div className={classes.time}>
-          <TimeBar statusVideo={VIDEO_TYPE.LIVE_STREAM} currentTime={currentTime} durationsPlayer={durationsPlayer} />
+          <TimeBar statusVideo={videoStatus} currentTime={currentTime} durationsPlayer={durationsPlayer} />
         </div>
-        <Reload videoRef={videoRef} typeButton={'previous'} currentTime={currentTime} durationsPlayer={durationsPlayer} />
-        <Reload videoRef={videoRef} typeButton={'next'} currentTime={currentTime} durationsPlayer={durationsPlayer} />
+        <Reload videoRef={videoRef} typeButton={'previous'} currentTime={currentTime} durationsPlayer={durationsPlayer} isLive={isLive} />
+        <Reload videoRef={videoRef} typeButton={'next'} currentTime={currentTime} durationsPlayer={durationsPlayer} isLive={isLive} />
       </div>
       <Box pr={2} className={classes.buttonNormal} onClick={toggleFullScreen} data-tip data-for="toggleFullScreen" id={'fullscreenRef'}>
         {!isFull ? (

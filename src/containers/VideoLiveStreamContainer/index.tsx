@@ -207,7 +207,7 @@ const VideoDetail: React.FC = () => {
         //@ts-ignore
         const subMessage = sub?.value
         const updateVideoData = subMessage.data.onUpdateVideo
-        console.log("🚀 ~ subscribeAction ~ updateVideoData", updateVideoData)
+        console.log('🚀 ~ subscribeAction ~ updateVideoData', updateVideoData)
         if (updateVideoData) {
           refOnUpdateVideo.current(updateVideoData)
         }

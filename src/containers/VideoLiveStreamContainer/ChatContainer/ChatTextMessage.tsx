@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import ESMenu from '@components/Menu'
 // import * as APIt from 'src/types/graphqlAPI'
 import _ from 'lodash'
-import {STATUS_SEND_MESS} from '@constants/common.constants'
+import { STATUS_SEND_MESS } from '@constants/common.constants'
 
 type ChatContainerProps = {
   message?: any
@@ -33,9 +33,7 @@ const ChatTextMessage = React.memo<ChatContainerProps>(
             <span className={getClassDeletedMess()}>{getMessageWithoutNgWords(message.text)}</span>
           </Typography>
           <Box className={classes.mess_status}>
-            {message.mess_status === STATUS_SEND_MESS.PENDING ? (
-              <CircularProgress size={12} />
-            ) : ''}
+            {message.mess_status === STATUS_SEND_MESS.PENDING ? <CircularProgress size={12} /> : ''}
             {/* {message.mess_status === STATUS_SEND_MESS.ERROR ? (
               <Icon color="primary" className={`fa fa-exclamation-triangle ${classes.icon}`} fontSize="small" />
             ) : ''} */}
@@ -70,9 +68,9 @@ const useStyles = makeStyles(() => ({
   icon: {},
   mess_status: {
     paddingLeft: 4,
-    alignItems: "center", 
-    // display: "flex", 
-    marginBottom: "4px",
+    alignItems: 'center',
+    // display: "flex",
+    marginBottom: '4px',
     display: 'none',
   },
   menu_del_mess: {},
