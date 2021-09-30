@@ -1,14 +1,11 @@
 import { useEffect } from 'react'
 import { Header } from './elements/Header'
 import { RecommendedUser } from './elements/Slider/RecommendedUser'
-// import { RecommendedRecruitment } from './elements/Slider/RecommendedRecruitment'
 // import { RecommendedEvent } from './elements/Slider/RecommendedEvent'
-// import { RecruitmentFollow } from './elements/Slider/RecruitmentFollow'
 import { TournamentFollow } from './elements/Slider/TournamentFollow'
 import { TournamentResult } from './elements/Slider/TournamentResult'
 import { TopicFollow } from './elements/Slider/TopicFollow'
 import useUserData from './useUserData'
-// import uesRecruitmentData from './useRecruitmentData'
 // import useEventData from './useEventData'
 import { Box } from '@material-ui/core'
 import useTournamentData from './useTournamentData'
@@ -16,10 +13,10 @@ import useTopicData from './useTopicData'
 import { HOME_SETTINGS } from '@constants/common.constants'
 import ESLoader from '@components/FullScreenLoader'
 import { RecentLobbies } from '@containers/Home/elements/Slider/RecentLobbies'
+import { RecommendedLobbies } from './elements/Slider/RecommendedLobbies'
 
 const HomeContainer: React.FC = () => {
   const { recommendedUsers, getUserRecommendations, homeSettings, getUserProfile, metaHomeSettings } = useUserData()
-  // const { recruitmentFollow, getRecruitmentFollow } = uesRecruitmentData()
   // const { recommendedEventList, getRecommendedEventList } = useEventData()
   const {
     tournamentFollowers,
@@ -34,9 +31,7 @@ const HomeContainer: React.FC = () => {
   useEffect(() => {
     getUserProfile()
     getUserRecommendations()
-    // getRecruitmentRecommendations()
     // getRecommendedEventList()
-    // getRecruitmentFollow()
     getTournamentFollowers()
     getTournamentResults()
     getFollowersTopicList()
@@ -46,8 +41,8 @@ const HomeContainer: React.FC = () => {
     switch (value) {
       case HOME_SETTINGS.RECOMMENDED_USER:
         return <RecommendedUser users={recommendedUsers} key={index} />
-      // case HOME_SETTINGS.RECOMMENDED_RECRUITMENT:
-      //   return <RecommendedRecruitment data={recommendedRecruitments} key={index} />
+      case HOME_SETTINGS.LOBBY_RECOMMENDED:
+        return <RecommendedLobbies key={index} />
       // case HOME_SETTINGS.RECOMMENDED_EVENT:
       //   return <RecommendedEvent data={recommendedEventList} key={index} />
       case HOME_SETTINGS.LOBBY_FOLLOW:

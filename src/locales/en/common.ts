@@ -850,6 +850,8 @@ export default {
     home: {
       recent_lobbies_title: 'フォローしている人の募集',
       recent_lobbies_empty: '該当の募集は存在しません',
+      recommended_lobbies_title: 'おすすめの募集',
+      recommended_lobbies_empty: '該当の募集は存在しません',
     },
     discard: {
       title: '内容を破棄します',
