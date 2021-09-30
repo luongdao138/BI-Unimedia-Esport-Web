@@ -67,12 +67,22 @@ const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
     }
   }, [purchasePointInfo.purchase_success])
 
+  const handlePurchaseError = () => {
+    setIsPurchasingPoint(false)
+    setHasError(true)
+  }
+
   useEffect(() => {
-    if (metaPurchaseUseOldCardMeta.error || metaPurchaseUseNewCardMeta.error) {
-      setIsPurchasingPoint(false)
-      setHasError(true)
+    if (metaPurchaseUseNewCardMeta.error) {
+      handlePurchaseError()
     }
-  }, [metaPurchaseUseNewCardMeta, metaPurchaseUseOldCardMeta])
+  }, [metaPurchaseUseNewCardMeta])
+
+  useEffect(() => {
+    if (metaPurchaseUseOldCardMeta.error) {
+      handlePurchaseError()
+    }
+  }, [metaPurchaseUseOldCardMeta])
 
   const isLoading =
     metaDeleteCardMeta.pending || isPurchasingPoint || metaPurchaseUseNewCardMeta.pending || metaPurchaseUseOldCardMeta.pending
