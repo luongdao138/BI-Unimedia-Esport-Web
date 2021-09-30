@@ -26,11 +26,13 @@ export const getValidationScheme = (data: LobbyDetail, editables: EditableTypes)
       categories: Yup.array(),
       game_title_id: Yup.array().nullable(),
       game_hardware_id: Yup.number().nullable().integer(i18n.t('common:common.integer')),
-      max_participants: Yup.number()
+      max_participants: Yup.string()
         .required(i18n.t('common:common.input_required'))
-        .min(2, i18n.t('common:arena.participants_limit'))
-        .max(128, i18n.t('common:arena.participants_limit'))
-        .integer(i18n.t('common:common.integer')),
+        .matches(/^-?(0|[1-9]\d*)$/, { excludeEmptyString: false, message: i18n.t('common:common.validation.only_digit') })
+        .test('participant_boundary', i18n.t('common:lobby.validation.participants_limit'), (val) => {
+          const num = parseInt(val)
+          return num >= 2 && num <= 128
+        }),
       organizer_participated: Yup.boolean(),
     }),
     stepTwo: Yup.object({

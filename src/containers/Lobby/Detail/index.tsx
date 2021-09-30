@@ -27,7 +27,7 @@ const LobbyDetailBody: React.FC = () => {
   const [openList, setList] = useState<boolean>(false)
   const [openConfirmList, setConfirmList] = useState<boolean>(false)
   const classes = useStyles()
-  const { unjoin, entry } = useLobbyActions()
+  const { unjoin, entry, entryMeta, unjoinMeta } = useLobbyActions()
   const confirm = useConfirm()
   const { handleBack, lobby } = useLobbyDetail()
   const { status, title, cover_image_url } = _.get(lobby, 'attributes', { status: -1, title: '', cover_image_url: null })
@@ -95,7 +95,7 @@ const LobbyDetailBody: React.FC = () => {
 
   return (
     <div>
-      <ESLoader open={lobby === undefined} />
+      <ESLoader open={lobby === undefined || entryMeta.pending || unjoinMeta.pending} />
       {lobby && renderBody()}
       <ESModal open={isEditable && router.asPath.endsWith('/edit')}>
         <BlankLayout>
@@ -121,7 +121,7 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: 6,
     paddingRight: 6,
     paddingTop: 6,
-    paddingBottom: 24,
+    paddingBottom: 22,
   },
   [theme.breakpoints.down('xs')]: {
     root: {

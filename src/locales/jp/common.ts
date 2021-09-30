@@ -321,7 +321,7 @@ export default {
 また、通報いただいた内容は全て運営が確認をいたしますが、その際の対応及
 び返信を行わない場合がある旨、予めご了承ください。`,
     user_info_title: '通報する内容',
-    reason: '通報理由',
+    reason: '通報する理由',
     reason_desc: '詳細・補足',
     reason_desc_placeholder: `通報する理由の詳細や補足をご記入ください。
 また、上記で「その他」を選んだ方はその内容をご記入ください。`,
@@ -734,9 +734,9 @@ export default {
     },
     card: {
       organizer: '開催者',
-      start_date: '開催日',
-      entry_period: 'エントリー期間',
-      entries: 'エントリー人数',
+      start_date: '開始日時',
+      entry_period: '受付期間',
+      entries: 'エントリー',
     },
     cancel_lobby_dialog: {
       title: '募集を中止しますか？',
@@ -856,6 +856,9 @@ export default {
       message_part1: '画面を戻ると、現在の入力内容は破棄されます。',
       message_part2: 'よろしいですか？',
       confirm: '内容を破棄して戻る',
+    },
+    validation: {
+      participants_limit: '2~128の数字を入力してください。',
     },
   },
   lobbySearchFilters: {

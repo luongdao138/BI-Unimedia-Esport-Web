@@ -16,8 +16,8 @@ export const getSearchLobbies = createSelector(getRoot, (state) => {
     return {
       ...item,
       participantsLimited: item.attributes.participants ? item.attributes.participants.slice(0, 3) : [],
-      startDate: DateHelper.formatDate(item.attributes.start_datetime),
-      entryEndDate: DateHelper.formatDate(item.attributes.entry_end_datetime),
+      startDate: DateHelper.formatLobbyCardDate(item.attributes.start_datetime),
+      entryEndDate: DateHelper.formatLobbyCardDate(item.attributes.entry_end_datetime),
     }
   })
 })
@@ -26,8 +26,8 @@ export const getRecentLobbies = createSelector(getRoot, (state) => {
     return {
       ...item,
       participantsLimited: item.attributes.participants ? item.attributes.participants.slice(0, 3) : [],
-      startDate: DateHelper.formatDate(item.attributes.start_datetime),
-      entryEndDate: DateHelper.formatDate(item.attributes.entry_end_datetime),
+      startDate: DateHelper.formatLobbyCardDate(item.attributes.start_datetime),
+      entryEndDate: DateHelper.formatLobbyCardDate(item.attributes.entry_end_datetime),
     }
   })
 })
