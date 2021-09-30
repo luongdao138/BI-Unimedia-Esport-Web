@@ -38,6 +38,7 @@ const useCommunityCreate = (): {
   getCreateCommunityMeta: Meta
   getUpdateCommunityMeta: Meta
   getCommunityFeatures: () => void
+  resetCreateUpdateMeta: () => void
 } => {
   const { t } = useTranslation(['common'])
   const router = useRouter()
@@ -60,6 +61,11 @@ const useCommunityCreate = (): {
     open_range: true,
     address: true,
     cover_image_url: true,
+  }
+
+  const resetCreateUpdateMeta = () => {
+    dispatch(clearMetaData(actions.createCommunity.typePrefix))
+    dispatch(clearMetaData(actions.updateCommunity.typePrefix))
   }
 
   const resetMeta = () => dispatch(clearMetaData(actions.createCommunity.typePrefix))
@@ -99,6 +105,7 @@ const useCommunityCreate = (): {
     getCommunityFeatures,
     getCreateCommunityMeta,
     getUpdateCommunityMeta,
+    resetCreateUpdateMeta,
   }
 }
 
