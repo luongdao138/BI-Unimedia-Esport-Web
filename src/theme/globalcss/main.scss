@@ -646,7 +646,7 @@ body.has-sticky-div .sticky-div {
 }
 
 @media (max-width: 720px) {
-  button.MuiTab-root {
+  .community-tab button.MuiTab-root {
     min-width: 160px;
   }
 }
@@ -714,12 +714,12 @@ body.has-sticky-div .sticky-div {
     }
   }
   @media (max-width: 720px) {
-    button.MuiTab-root {
+    .community-tab button.MuiTab-root {
       min-width: 120px;
     }
   }
   @media (max-width: 570px) {
-    button.MuiTab-root {
+    .community-tab button.MuiTab-root {
       min-width: 90px;
     }
   }

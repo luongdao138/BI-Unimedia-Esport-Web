@@ -317,7 +317,7 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
   const getTabs = () => {
     return (
       <Grid item xs={12}>
-        <ESTabs value={tab} onChange={(_, v) => setTab(v)} className={classes.tabs}>
+        <ESTabs value={tab} onChange={(_, v) => setTab(v)} className={`${classes.tabs} community-tab`}>
           <ESTab label={t('common:community.info')} value={TABS.INFO} />
           {showTopicListAndSearchTab && <ESTab label={t('common:community.topic_list')} value={TABS.TOPIC_LIST} />}
           {showTopicListAndSearchTab && <ESTab label={t('common:community.search')} value={TABS.SEARCH} />}
