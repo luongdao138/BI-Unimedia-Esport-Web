@@ -28,9 +28,6 @@ const CommunityDetailHeader: React.FC<CommunityDetailHeaderProps> = ({ title, co
         style={{
           backgroundImage: `url(${cover || '/images/default_card.png'})`,
           paddingTop: '30.21756647864625%',
-          backgroundSize: 'cover',
-          backgroundRepeat: 'no-repeat',
-          backgroundPosition: 'center center',
         }}
       />
     </>
