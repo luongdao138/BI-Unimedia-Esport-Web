@@ -850,6 +850,8 @@ export default {
     home: {
       recent_lobbies_title: 'フォローしている人の募集',
       recent_lobbies_empty: '該当の募集は存在しません',
+      recommended_lobbies_title: 'おすすめの募集',
+      recommended_lobbies_empty: '該当の募集は存在しません',
     },
     discard: {
       title: '内容を破棄します',
@@ -861,13 +863,21 @@ export default {
     validation: {
       participants_limit: '2~128の数字を入力してください。',
     },
-  },
-  lobbySearchFilters: {
-    all: 'すべて',
-    suggested: 'おすすめの募集',
-    beforeStart: 'エントリー受付中',
-    inProgress: 'エントリー中の募集',
-    organized: 'あなたが作成した募集',
+    search: {
+      empty: '該当の募集が存在しませんでした',
+      empty_suggested: 'おすすめの募集ではプロフィールで設定された「好きなゲーム」と一致する募集が表示されます',
+      filter: {
+        all: 'すべて',
+        suggested: 'おすすめの募集',
+        ready: '受付前',
+        recruiting: '受付中',
+        entry_closed: '受付締切',
+        in_progress: '開催中',
+        ended: '終了',
+        joined: 'エントリー中の募集',
+        organized: 'あなたが作成した募集',
+      },
+    },
   },
   communitySearchFilters: {
     joined: '参加しているコミュニティ',

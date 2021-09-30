@@ -20,7 +20,7 @@ export const ESRoutes = {
   MESSAGE: '/message/',
   MESSAGE_PATHNAME: '/message',
   MESSAGE_ROOM_CREATE: '/message/create',
-  RECRUITMENT_RECOMMENDED: '/recruitment/recommended',
+  LOBBY_RECOMMENDED: '/lobby/recommended',
   LOBBY_FOLLOWER: '/lobby/follower',
   EVENT_RECOMMENDED: '/event/recommended',
   TOURNAMENT_FOLLOWER_ENTERING: '/arena/follower/entering',
