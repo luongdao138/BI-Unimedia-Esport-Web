@@ -157,11 +157,13 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
               <Avatar className={classes.topicAvatar} alt={attr.nickname} src={attr.avatar_image} />
             </ButtonBase>
 
-            <Box className={classes.userInfoBox} ml={1} maxWidth="77%">
-              <Typography variant="h3" style={{ color: Colors.white }}>
+            <Box ml={1} maxWidth="100%">
+              <Typography variant="h3" className={classes.topicEllipsis} style={{ color: Colors.white }}>
                 {attr.nickname}
               </Typography>
-              <Typography variant="body2">{'@' + attr.user_code}</Typography>
+              <Typography className={classes.topicEllipsis} variant="body2">
+                {'@' + attr.user_code}
+              </Typography>
             </Box>
           </Box>
 
