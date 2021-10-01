@@ -5,7 +5,7 @@ import UpsertForm from '../UpsertForm'
 import TopicUpsertForm from '../Topic/UpsertForm'
 import CommunityDetailHeader from './Partials/CommunityDetailHeader'
 import DetailInfo from './Partials/DetailInfo'
-import useCommunityDetail from './useCommunityDetail'
+import useCommunityDetail, { useClearMeta } from './useCommunityDetail'
 import ESModal from '@components/Modal'
 import { useRouter } from 'next/router'
 import ESLoader from '@components/Loader'
@@ -31,6 +31,8 @@ const CommunityContainer: React.FC = () => {
   topicCreateRightPx = contentRect.left
 
   const classes = useStyles({ topicCreateRightPx })
+
+  useClearMeta()
 
   const { hash_key, from } = router.query
   const [showTopicListAndSearchTab, setShowTopicListAndSearchTab] = useState<boolean>(true)

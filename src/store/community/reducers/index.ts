@@ -103,7 +103,7 @@ export default createReducer(initialState, (builder) => {
     state.communitiesListByUserMeta = undefined
   })
   builder.addCase(actions.clearCommunityDetail, (state) => {
-    state.communityDetail = undefined
+    state.communityDetail = null
   })
   builder.addCase(actions.getTopicFollowers.fulfilled, (state, action) => {
     let tmpTopicFollowersList = action.payload.data
