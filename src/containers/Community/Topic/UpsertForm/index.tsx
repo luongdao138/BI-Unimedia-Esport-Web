@@ -50,6 +50,7 @@ const TopicCreate: React.FC = () => {
     validationSchema: getValidationScheme(),
     enableReinitialize: true,
     onSubmit: (values) => {
+      window.removeEventListener('beforeunload', unloadCallback, { capture: true })
       const data: TopicParams = {
         ...values.stepOne,
         community_hash: String(router.query.hash_key),
@@ -78,8 +79,6 @@ const TopicCreate: React.FC = () => {
   useEffect(() => {
     if (isChanged) {
       window.addEventListener('beforeunload', unloadCallback, { capture: true })
-    } else {
-      window.removeEventListener('beforeunload', unloadCallback, { capture: true })
     }
     return () => window.removeEventListener('beforeunload', unloadCallback, { capture: true })
   }, [isChanged])
