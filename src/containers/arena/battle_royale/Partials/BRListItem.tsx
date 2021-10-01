@@ -19,9 +19,11 @@ interface BRListItemProps {
 const BRListItem: React.FC<BRListItemProps> = (props: BRListItemProps) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
-  const avatarClone = cloneElement(props.avatar, { onClick: () => props.onClick(), className: classes.pointer })
+  const avatarClone = cloneElement(props.avatar, {
+    className: classes.pointer,
+  })
   return (
-    <div className={`${classes.root} ${props.highlight ? 'highlight' : ''}`}>
+    <div className={`${classes.root}  ${props.highlight ? 'highlight' : ''}`} onClick={props.onClick && props.onClick}>
       <div className={classes.contentWrapper}>
         {avatarClone}
         <div className={classes.textContent}>
@@ -30,7 +32,7 @@ const BRListItem: React.FC<BRListItemProps> = (props: BRListItemProps) => {
           </Typography>
           {props.textSecondary && <Typography className={classes.textSecondary}>{props.textSecondary}</Typography>}
         </div>
-        <div className={classes.rightContent}>{props.children}</div>
+        {props.children ? <div className={classes.rightContent}>{props.children}</div> : <></>}
       </div>
     </div>
   )
@@ -52,6 +54,11 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'center',
     '&.highlight': {
       border: `1px solid ${Colors.yellow}`,
+    },
+    cursor: 'pointer',
+    '&:hover': {
+      backgroundColor: '#111',
+      transition: 'all 0.3s ease',
     },
   },
   contentWrapper: {

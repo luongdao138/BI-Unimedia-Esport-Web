@@ -46,18 +46,22 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
-        '& >*': {
+        '& > *': {
           marginLeft: 0,
           marginRight: 0,
           marginTop: theme.spacing(1),
           marginBottom: theme.spacing(1),
           width,
         },
-        '& >*:first-child': {
+        '& > *:first-child': {
           marginTop: 0,
+          marginLeft: 0,
+          marginRight: 0,
         },
-        '& >*:last-child': {
+        '& > *:last-child': {
           marginBottom: 0,
+          marginLeft: 0,
+          marginRight: 0,
         },
       }
     },
