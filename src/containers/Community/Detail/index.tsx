@@ -9,7 +9,7 @@ import useCommunityDetail from './useCommunityDetail'
 import ESModal from '@components/Modal'
 import { useRouter } from 'next/router'
 import ESLoader from '@components/Loader'
-import { Box, Grid } from '@material-ui/core'
+import { Box, Grid, useMediaQuery, useTheme } from '@material-ui/core'
 import _ from 'lodash'
 import TopicCreateButton from '@containers/Community/Partials/TopicCreateButton'
 import { makeStyles } from '@material-ui/core/styles'
@@ -50,6 +50,9 @@ const CommunityContainer: React.FC = () => {
   }, [communityDetail])
 
   const { toEdit, toCreateTopic } = useCommunityHelper(communityDetail)
+
+  const _theme = useTheme()
+  const isMobile = useMediaQuery(_theme.breakpoints.down('sm'))
 
   const renderBody = () => {
     return (
@@ -96,7 +99,7 @@ const CommunityContainer: React.FC = () => {
         </ESModal>
         {!isNotMember && (
           <Box className={classes.topicCreateContainer}>
-            <TopicCreateButton onClick={toCreateTopic} />
+            <TopicCreateButton onClick={toCreateTopic} isMobile={isMobile} />
           </Box>
         )}
       </StyledBox>
