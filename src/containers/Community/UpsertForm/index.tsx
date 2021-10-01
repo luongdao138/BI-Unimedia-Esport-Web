@@ -1,6 +1,6 @@
 import ESStickyFooter from '@components/StickyFooter'
 import ButtonPrimary from '@components/ButtonPrimary'
-import { makeStyles, Theme, Box, IconButton, Typography } from '@material-ui/core'
+import { makeStyles, Theme, Box, IconButton, Typography, useTheme, useMediaQuery } from '@material-ui/core'
 import Icon from '@material-ui/core/Icon'
 import { Colors } from '@theme/colors'
 import i18n from '@locales/i18n'
@@ -20,7 +20,6 @@ import { useAppDispatch } from '@store/hooks'
 import { FIELD_TITLES } from './FormModel/field_titles.constants'
 import { showDialog } from '@store/common/actions'
 import { NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
-import DiscardDialog from '../Partials/DiscardDialog'
 import useCommonData from './useCommonData'
 import CancelDialog from './Partials/CancelDialog'
 import { useTranslation } from 'react-i18next'
@@ -28,6 +27,8 @@ import { CommunityFeature } from '@services/community.service'
 import { GameTitle } from '@services/game.service'
 import { useRouter } from 'next/router'
 import * as commonActions from '@store/common/actions'
+import { useConfirm } from '@components/Confirm'
+import { COMMUNITY_DIALOGS } from '@constants/community.constants'
 
 type CommunityCreateProps = {
   communityName?: string
@@ -44,6 +45,7 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
   const [isConfirm, setIsConfirm] = useState(false)
   const [hasError, setHasError] = useState(true)
   const isFirstRun = useRef(true)
+  const confirm = useConfirm()
   const {
     editables,
     isEdit,
@@ -58,7 +60,6 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
   } = useCommunityCreate()
   const [detailFeatures, setDetailFeatures] = useState([])
   const initialValues = getInitialValues(isEdit ? community : undefined, isEdit && detailFeatures)
-  const [isDiscard, setIsDiscard] = useState(false)
 
   const [isAlreadyUsedTitle, setIsAlreadyUsedTitle] = useState(false)
 
@@ -175,14 +176,39 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
     )
   }
 
+  const theme = useTheme()
+  const matches = useMediaQuery(theme.breakpoints.down('sm'))
+
+  const renderDescription = matches ? (
+    <>
+      <Typography style={{ fontSize: 12 }}>{i18n.t('common:community_create.discard.message_part1')}</Typography>
+      <Typography style={{ fontSize: 12 }}>{i18n.t('common:community_create.discard.message_part2')}</Typography>
+    </>
+  ) : (
+    <Typography style={{ fontSize: 12 }}>{i18n.t('common:community_create.discard.message')}</Typography>
+  )
+
   const handleBack = () => {
     if (isConfirm) {
       setIsConfirm(false)
       setIsAlreadyUsedTitle(false)
-    } else isChanged ? setIsDiscard(true) : handleReturn()
+    } else
+      isChanged
+        ? confirm({
+            ...COMMUNITY_DIALOGS.DISCARD_CHANGED_COMMUNITY,
+            description: renderDescription,
+          })
+            .then(() => {
+              handleReturn()
+            })
+            .catch(() => {
+              /* ... */
+            })
+        : handleReturn()
   }
 
-  const handleSetConfirm = () => {
+  const handleSetConfirm = (e) => {
+    e.preventDefault()
     formik.validateForm().then(() => {
       const { stepOne } = formik.values
 
@@ -239,7 +265,13 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
                 <ButtonPrimary onClick={handleUnsetConfirm} gradient={false} className={`${classes.footerButton} ${classes.cancelButton}`}>
                   {i18n.t('common:common.cancel')}
                 </ButtonPrimary>
-                <ButtonPrimary type="submit" onClick={handleSetConfirm} round disabled={hasError} className={classes.footerButton}>
+                <ButtonPrimary
+                  type="submit"
+                  onClick={handleSetConfirm}
+                  round
+                  disabled={hasError || getCreateCommunityMeta.pending || getUpdateCommunityMeta.pending}
+                  className={classes.footerButton}
+                >
                   {isEdit ? i18n.t('common:community_create.confirm.submit_edit') : i18n.t('common:community_create.confirm.submit')}
                 </ButtonPrimary>
               </Box>
@@ -292,16 +324,6 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
           </Box>
         </form>
       </>
-      <DiscardDialog
-        open={isDiscard}
-        onClose={() => {
-          setIsDiscard(false)
-        }}
-        onSubmit={handleReturn}
-        title={isEdit ? t('common:community_create.discard.edit_title') : t('common:community_create.discard.title')}
-        description={isEdit ? t('common:community_create.discard.edit_message') : t('common:community_create.discard.message')}
-        confirmTitle={isEdit ? t('common:community_create.discard.edit_confirm') : t('common:community_create.discard.confirm')}
-      />
     </ESStickyFooter>
   )
 }

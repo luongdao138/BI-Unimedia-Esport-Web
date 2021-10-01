@@ -13,9 +13,10 @@ import { FollowersTopicResponse } from '@services/community.service'
 
 interface Props {
   topic: FollowersTopicResponse
+  from?: string
 }
 
-const TopicCard: React.FC<Props> = ({ topic }) => {
+const TopicCard: React.FC<Props> = ({ topic, from }) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const router = useRouter()
@@ -81,7 +82,12 @@ const TopicCard: React.FC<Props> = ({ topic }) => {
   return (
     <ESCard
       classes={{ root: classes.cardHover }}
-      onClick={() => router.push(`${ESRoutes.TOPIC.replace(/:id/gi, attr.community_hash)}/${attr.topic_hash}`)}
+      onClick={() =>
+        router.push({
+          pathname: `${ESRoutes.TOPIC.replace(/:id/gi, attr.community_hash)}/${attr.topic_hash}`,
+          query: { from: from },
+        })
+      }
     >
       <Box>
         <ESCardMedia

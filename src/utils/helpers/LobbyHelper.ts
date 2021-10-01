@@ -165,7 +165,7 @@ const getLabelName = (field: string): string => {
   return ''
 }
 
-function correctStatus(startDateTime: string, status: LOBBY_STATUS) {
+const correctStatus = (startDateTime: string, status: LOBBY_STATUS): number => {
   if (!startDateTime) return status
   const startDate = moment(moment(startDateTime).format('YYYY-MM-DD'), 'YYYY-MM-DD')
   const now = moment()
