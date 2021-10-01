@@ -54,7 +54,7 @@ const TopicDetailContainer: React.FC = () => {
   const [reportData, setReportData] = useState<ReportData | null>(null)
   const [page, setPage] = useState(1)
   const [count, setCount] = useState(1)
-  const [commentCount, setCommentCount] = useState<number>()
+  const [commentCount, setCommentCount] = useState<number>(0)
   const [render, setRender] = useState<boolean>(false)
   const { changeTitle } = useDocTitle()
 

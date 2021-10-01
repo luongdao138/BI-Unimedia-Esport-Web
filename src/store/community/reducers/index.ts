@@ -15,6 +15,7 @@ import {
   TopicSearchItem,
   TopicDetailList,
   CommentDetail,
+  TopicSearchParams,
 } from '@services/community.service'
 
 type StateType = {
@@ -37,6 +38,7 @@ type StateType = {
   commentsList?: CommentsResponse[]
   commentsListMeta?: PageMeta
   topicSearchList?: TopicSearchItem[]
+  topicSearchParams?: TopicSearchParams
   topicSearchListMeta?: PageMeta
   topicListMeta?: PageMeta
 }
@@ -137,6 +139,7 @@ export default createReducer(initialState, (builder) => {
   })
   builder.addCase(actions.searchTopic.fulfilled, (state, action) => {
     state.topicSearchList = action.payload.data
+    state.topicSearchParams = action.meta.arg
     state.topicSearchListMeta = action.payload.meta
   })
   builder.addCase(actions.clearSearchTopic, (state) => {
