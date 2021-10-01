@@ -1,4 +1,4 @@
-import { Box, IconButton, OutlinedInput, Icon, Button, Typography, Grid } from '@material-ui/core'
+import { Box, IconButton, OutlinedInput, Icon, Button, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
 import _ from 'lodash'
@@ -11,7 +11,7 @@ import useTopicSearch from '../useTopicSearch'
 import moment from 'moment'
 import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
-import ESLoader from '@components/Loader'
+import ESLoader from '@components/FullScreenLoader'
 import Pagination from '@containers/Community/Partials/Pagination'
 
 const InfoContainer: React.FC = () => {
@@ -142,13 +142,8 @@ const InfoContainer: React.FC = () => {
           {topicListMeta.loaded && topicList.length == 0 && (
             <Typography variant="body1">{t('common:community.detail_search.no_data')}</Typography>
           )}
-          {!topicListMeta.loaded && topicListMeta.pending && (
-            <Grid item xs={12}>
-              <Box my={4} display="flex" justifyContent="center" alignItems="center">
-                <ESLoader />
-              </Box>
-            </Grid>
-          )}
+
+          <ESLoader open={!topicListMeta.loaded && topicListMeta.pending} />
         </>
       )}
     </Box>

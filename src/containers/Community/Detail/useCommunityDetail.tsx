@@ -48,11 +48,11 @@ const useCommunityDetail = (): {
   const unfollowCommunityPendingMeta = useAppSelector(getUnfollowCommunityMetaPending)
 
   const handleBack = () => back()
+  const getTopicList = (params: TopicListParams) => dispatch(actions.getTopicList(params))
   const getCommunityDetail = (hash_key: string) => dispatch(actions.getCommunityDetail(hash_key))
   const followCommunity = (hash_key: string) => dispatch(actions.followCommunity(hash_key))
   const unfollowCommunity = (hash_key: string) => dispatch(actions.unfollowCommunity(hash_key))
   const unfollowCommunityPending = (hash_key: string) => dispatch(actions.unfollowCommunityPending(hash_key))
-  const getTopicList = (params: TopicListParams) => dispatch(actions.getTopicList(params))
 
   return {
     handleBack,

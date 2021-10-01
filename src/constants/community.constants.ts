@@ -1,3 +1,5 @@
+import i18n from '@locales/i18n'
+
 export const PARTICIPANT_TYPE = {
   HOME: 'home',
   GUEST: 'guest',
@@ -84,6 +86,41 @@ export const CARD_TAG = {
   THREE_DOT_SPACE: 21,
 }
 
+export const COMMUNITY_DIALOGS = {
+  UNFOLLOW: {
+    title: i18n.t('common:community.unfollow_dialog.title'),
+    description: i18n.t('common:community.unfollow_dialog.description'),
+    confirmationText: i18n.t('common:community.unfollow_dialog.submit_title'),
+    cancellationText: i18n.t('common:common.cancel'),
+  },
+  JOIN_PENDING: {
+    title: i18n.t('common:community.unfollow_dialog_applying.title'),
+    description: i18n.t('common:community.unfollow_dialog_applying.description'),
+    confirmationText: i18n.t('common:community.unfollow_dialog_applying.submit_title'),
+    cancellationText: i18n.t('common:common.cancel'),
+  },
+  DISCARD_CHANGED_TOPIC: {
+    title: i18n.t('common:topic_create.discard.title'),
+    confirmationText: i18n.t('common:topic_create.discard.confirm'),
+    cancellationText: i18n.t('common:common.cancel'),
+  },
+  DISCARD_CHANGED_COMMUNITY: {
+    title: i18n.t('common:community_create.discard.title'),
+    confirmationText: i18n.t('common:community_create.discard.confirm'),
+    cancellationText: i18n.t('common:common.cancel'),
+  },
+  DELETE_TOPIC: {
+    description: i18n.t('common:topic.delete.description'),
+    confirmationText: i18n.t('common:topic.delete.submit'),
+    cancellationText: i18n.t('common:common.cancel'),
+  },
+  DELETE_COMMENT: {
+    title: i18n.t('common:topic_comment.delete.title'),
+    description: i18n.t('common:topic_comment.delete.description'),
+    confirmationText: i18n.t('common:topic_comment.delete.submit'),
+    cancellationText: i18n.t('common:common.cancel'),
+  },
+}
 export const ROUTE_FROM = {
   HOME: 'home',
   FOLLOWERS: 'followers',
