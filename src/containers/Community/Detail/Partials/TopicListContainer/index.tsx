@@ -1,13 +1,11 @@
 import { Box, Typography } from '@material-ui/core'
-import { makeStyles } from '@material-ui/core/styles'
 import TopicRowItem from '@components/TopicRowItem'
-import { Colors } from '@theme/colors'
 import { useState, useEffect } from 'react'
 import moment from 'moment'
 import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
 import useCommunityDetail from '../../useCommunityDetail'
-import ESLoader from '@components/Loader'
+import ESLoader from '@components/FullScreenLoader'
 import { TOPIC_STATUS } from '@constants/community.constants'
 import { useTranslation } from 'react-i18next'
 import _ from 'lodash'
@@ -16,7 +14,6 @@ import Pagination from '@containers/Community/Partials/Pagination'
 const TopicListContainer: React.FC = () => {
   const [page, setPage] = useState(1)
   const [count, setCount] = useState(1)
-  const classes = useStyles()
   const { t } = useTranslation(['common'])
   const router = useRouter()
 
@@ -36,11 +33,8 @@ const TopicListContainer: React.FC = () => {
   return (
     <>
       <Box mt={2} />
-      {topicList.length === 0 && !topicListMeta.loaded && topicListMeta.pending ? (
-        <Box className={classes.loaderBox}>
-          <ESLoader />
-        </Box>
-      ) : _.isEmpty(topicList) ? (
+      <ESLoader open={!topicListMeta.loaded && topicListMeta.pending} />
+      {topicListMeta.loaded && _.isEmpty(topicList) ? (
         <Box display="flex" justifyContent="center">
           <Typography>{t('common:topic_comment.there_is_no_topic')}</Typography>
         </Box>
@@ -70,33 +64,5 @@ const TopicListContainer: React.FC = () => {
     </>
   )
 }
-const useStyles = makeStyles(() => ({
-  loaderBox: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  pagination: {
-    zIndex: 1,
-    '& .MuiPaginationItem-root': {
-      color: Colors.white,
-      borderRadius: 4,
-    },
-    '& .MuiPaginationItem-outlined': {
-      borderColor: Colors.primary,
-    },
-    '& .Mui-selected': {
-      backgroundColor: Colors.primary,
-      color: Colors.white,
-    },
-    '& .MuiPaginationItem-ellipsis': {
-      height: 32,
-      border: '1px solid',
-      borderColor: Colors.primary,
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-  },
-}))
+
 export default TopicListContainer
