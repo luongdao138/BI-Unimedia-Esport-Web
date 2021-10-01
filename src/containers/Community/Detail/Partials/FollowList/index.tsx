@@ -12,7 +12,7 @@ import ESStickyFooter from '@components/StickyFooter'
 import ButtonPrimary from '@components/ButtonPrimary'
 import { FormatHelper } from '@utils/helpers/FormatHelper'
 import useCommunityHelper from '@containers/Community/hooks/useCommunityHelper'
-import { CommunityDetail, CommunityMember, CommunityMemberRole, ChangeCommunityMemberRoleParams } from '@services/community.service'
+import { CommunityDetail, CommunityMember, ChangeCommunityMemberRoleParams } from '@services/community.service'
 import UserSelectBoxList from '../../../Partials/UserSelectBoxList'
 import useFollowList from './useFollowList'
 import _ from 'lodash'
@@ -144,7 +144,7 @@ const FollowList: React.FC<Props> = ({ community }) => {
   useEffect(() => {
     if (open) {
       setSubmitParams({ ...initialValue, hash_key: hash_key })
-      getMembers({ hash_key: hash_key, role: CommunityMemberRole.all, page: 1 })
+      getMembers({ hash_key: hash_key, page: 1 })
     } else {
       resetMembers()
       resetMeta()
@@ -155,7 +155,7 @@ const FollowList: React.FC<Props> = ({ community }) => {
 
   const loadMore = () => {
     if (hasNextPage) {
-      getMembers({ hash_key: hash_key, role: CommunityMemberRole.all, page: Number(pages.current_page) + 1 })
+      getMembers({ hash_key: hash_key, page: Number(pages.current_page) + 1 })
     }
   }
 
@@ -273,7 +273,7 @@ const FollowList: React.FC<Props> = ({ community }) => {
                 </Box>
               </Box>
               {!_.isEmpty(groupedMembers) && !_.isEmpty(membersList) && (
-                <Box id="scrollableDiv" style={{ height: 600, paddingRight: 10 }} className={`${classes.scroll} ${classes.list}`}>
+                <Box id="scrollableDiv" pr={10 / 8} className={`${classes.scroll} ${classes.list} ${classes.scrollableHeight}`}>
                   <InfiniteScroll
                     dataLength={membersList.length}
                     next={loadMore}
@@ -358,6 +358,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   loader: {
     textAlign: 'center',
   },
+  scrollableHeight: {
+    height: 'calc(100vh - 163px - 60px - 72px)',
+  },
+  [theme.breakpoints.down('md')]: {
+    scrollableHeight: {
+      height: 'calc(100vh - 80px - 60px - 72px)',
+    },
+  },
   [theme.breakpoints.down('sm')]: {
     container: {
       paddingLeft: 0,
@@ -365,6 +373,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     topContainer: {
       paddingTop: 0,
+    },
+    scrollableHeight: {
+      height: 'calc(100vh - 80px - 72px)',
     },
   },
 }))

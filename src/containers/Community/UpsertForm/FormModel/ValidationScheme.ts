@@ -20,7 +20,7 @@ export const getValidationScheme = (): any => {
       area_id: Yup.number(),
       address: Yup.string()
         .nullable()
-        .max(191, i18n.t('common:common.validation.char_limit', { char_limit: 191 })),
+        .max(5000, i18n.t('common:common.validation.char_limit', { char_limit: 5000 })),
       join_condition: Yup.number().min(0, i18n.t('common:common.input_required')).integer(i18n.t('common:common.integer')),
     }),
   })
