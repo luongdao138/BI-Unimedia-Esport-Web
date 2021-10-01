@@ -726,6 +726,12 @@ export default {
     group_chat: 'グループチャット',
     temporary: 'Temporary',
     cancel: '募集を中止する',
+    edit_button: '編集',
+    report: '通報',
+    copy_shared_url: '共有URLをコピー',
+    venue: '開催場所',
+    game: 'ゲーム',
+    game_hardware: 'ゲームハード',
     detail: {
       label_id: '募集ID：',
       number_of_entries: 'エントリー数',
