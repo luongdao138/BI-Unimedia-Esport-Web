@@ -22,6 +22,7 @@ import IndividualEntryModal from '../ActionComponent/IndividualEntryModal'
 import TeamEntryEditModal from '../ActionComponent/TeamEntryEditModal'
 import TeamEntryModal from '../ActionComponent/TeamEntryModal'
 import ActionLabelButton from '../ActionComponent/ActionLabelButton'
+import { ButtonGroup } from '../BRHeaderContent'
 import UnjoinModal from './UnjoinModal'
 
 interface BRStatusRecruitingProps {
@@ -57,7 +58,7 @@ const BRStatusRecruiting: React.FC<BRStatusRecruitingProps> = ({ arena, userProf
         <Box display="flex" flexDirection="column" alignItems="center">
           <RemainingDate tournament={arena} />
           <EntryCount totalCount={arena.attributes.max_participants} count={entryMembersCount} isTeam={isTeam} />
-          <Box className={classes.buttonGroup} mt={3}>
+          <ButtonGroup mt={3}>
             <ESButton onClick={toParticipants} variant="outlined" fullWidth style={{ maxWidth: 160 }}>
               {t('tournament.entry_members')}
             </ESButton>
@@ -73,12 +74,12 @@ const BRStatusRecruiting: React.FC<BRStatusRecruitingProps> = ({ arena, userProf
                 {t('tournament.group_chat')}
               </ActionLabelButton>
             ) : null}
-          </Box>
+          </ButtonGroup>
         </Box>
       }
       footer={
         <div className={classes.footerContainer}>
-          <Box className={classes.buttonGroup} mb={3}>
+          <ButtonGroup mb={3}>
             {isModerator ? (
               <Box minWidth={260} className={classes.button}>
                 <CloseRecruitmentModal isRecruiting={true} tournament={arena} handleClose={noop} />
@@ -92,7 +93,7 @@ const BRStatusRecruiting: React.FC<BRStatusRecruitingProps> = ({ arena, userProf
                 </LoginRequired>
               </Box>
             )}
-          </Box>
+          </ButtonGroup>
           {isTeamLeader && !isModerator ? <UnjoinModal tournament={arena} /> : null}
           {isModerator ? <Typography variant="body2">{t('tournament.close_recruitment.description')}</Typography> : null}
 
@@ -131,22 +132,6 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     alignItems: 'center',
   },
-  buttonGroup: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    '& >*': {
-      marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1),
-      width: 160,
-    },
-    '& >*:first-child': {
-      marginLeft: 0,
-    },
-    '& >*:last-child': {
-      marginRight: 0,
-    },
-  },
   button: {
     marginRight: 8,
     marginLeft: 8,
@@ -155,17 +140,6 @@ const useStyles = makeStyles((theme) => ({
     header: {
       '& span': {
         display: 'block',
-      },
-    },
-    buttonGroup: {
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'center',
-      '& >*': {
-        marginLeft: 0,
-        marginRight: 0,
-        marginTop: theme.spacing(1),
-        marginBottom: theme.spacing(1),
       },
     },
     button: {
