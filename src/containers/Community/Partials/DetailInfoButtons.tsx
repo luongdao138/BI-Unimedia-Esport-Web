@@ -34,6 +34,7 @@ const useStyles = makeStyles(() => ({
   button: {
     color: (props: { primaryTextColor?: boolean }) => props.primaryTextColor && Colors.primary,
     borderColor: (props: { primaryTextColor?: boolean }) => props.primaryTextColor && Colors.primary,
+    height: 36,
     paddingTop: 2,
     paddingBottom: 2,
     paddingLeft: 5,
