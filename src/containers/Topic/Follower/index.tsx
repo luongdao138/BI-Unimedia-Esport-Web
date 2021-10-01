@@ -8,6 +8,9 @@ import InfiniteScroll from 'react-infinite-scroll-component'
 import ESLoader from '@components/Loader'
 import { WindowScroller, List, CellMeasurer, AutoSizer, CellMeasurerCache } from 'react-virtualized'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
+import useReturnHref from '@utils/hooks/useReturnHref'
+import _ from 'lodash'
+import { ROUTE_FROM } from '@constants/community.constants'
 
 const cache = new CellMeasurerCache({
   fixedWidth: true,
@@ -19,7 +22,7 @@ const TopicFollowerContainer: React.FC = () => {
   const classes = useStyles()
   const { handleClick, followersTopicList, getFollowersTopicList, pages, meta, resetMeta } = useFollower()
   const [itemsPerRow, setPerRow] = useState<number>(4)
-  const [hasMore, setHasMore] = useState(true)
+  const { hasUCRReturnHref } = useReturnHref()
 
   const rowCount = Math.ceil(followersTopicList.length / itemsPerRow)
   const matchesXL = useMediaQuery((theme: Theme) => theme.breakpoints.up('xl'))
@@ -56,14 +59,19 @@ const TopicFollowerContainer: React.FC = () => {
     return () => window.removeEventListener('resize', updateSize)
   }, [])
 
-  const fetchMoreData = () => {
-    if (pages.current_page >= pages.total_pages) {
-      setHasMore(false)
-      return
+  useEffect(() => {
+    if (!hasUCRReturnHref && !_.isEmpty(followersTopicList)) {
+      if (document.documentElement.scrollHeight > document.documentElement.clientHeight) return
+      loadMore()
     }
-    getFollowersTopicList({
-      page: pages.current_page + 1,
-    })
+  }, [followersTopicList])
+
+  const loadMore = () => {
+    if (pages && pages.current_page < pages.total_pages) {
+      getFollowersTopicList({
+        page: pages.current_page + 1,
+      })
+    }
   }
 
   const rowRenderer = ({ index, key, style, parent }) => {
@@ -76,7 +84,7 @@ const TopicFollowerContainer: React.FC = () => {
 
       items.push(
         <Grid key={i} item sm={12} lg={4} xl={3} xs={12} className={classes.card}>
-          <TopicCard topic={data} />
+          <TopicCard topic={data} from={ROUTE_FROM.FOLLOWERS} />
         </Grid>
       )
     }
@@ -106,8 +114,8 @@ const TopicFollowerContainer: React.FC = () => {
         <div className={classes.container}>
           <InfiniteScroll
             dataLength={followersTopicList.length}
-            next={!meta.pending && fetchMoreData}
-            hasMore={hasMore}
+            next={!meta.pending && loadMore}
+            hasMore={!hasUCRReturnHref}
             loader={null}
             scrollThreshold={'1px'}
             endMessage={

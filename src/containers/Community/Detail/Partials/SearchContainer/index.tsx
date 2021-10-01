@@ -1,4 +1,4 @@
-import { Box, IconButton, OutlinedInput, Icon, Button, Typography, Grid } from '@material-ui/core'
+import { Box, IconButton, OutlinedInput, Icon, Button, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
 import _ from 'lodash'
@@ -11,7 +11,7 @@ import useTopicSearch from '../useTopicSearch'
 import moment from 'moment'
 import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
-import ESLoader from '@components/Loader'
+import ESLoader from '@components/FullScreenLoader'
 import Pagination from '@containers/Community/Partials/Pagination'
 
 const InfoContainer: React.FC = () => {
@@ -22,11 +22,10 @@ const InfoContainer: React.FC = () => {
   const classes = useStyles()
   const [showResult, setShowResult] = useState(false)
   const [isOnlyTitle, setIsOnlyTitle] = useState(false)
-  const { topicList, getTopicList, topicListMeta, pages } = useTopicSearch()
+  const { topicList, getTopicList, topicListMeta, pages, params } = useTopicSearch()
   const hash_key = String(router.query.hash_key)
   const [page, setPage] = useState(1)
   const [count, setCount] = useState(1)
-  const [isSearched, setIsSearched] = useState<boolean>(false)
 
   useEffect(() => {
     if (!_.isEmpty(value)) {
@@ -43,12 +42,10 @@ const InfoContainer: React.FC = () => {
   const handleSearch = () => {
     getTopicList({ community_hash: hash_key, keyword: value.trim(), only_title: isOnlyTitle.toString(), page: 1 })
     setShowResult(true)
-    setIsSearched(true)
   }
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value)
-    setIsSearched(false)
   }
 
   const onClear = () => {
@@ -71,6 +68,7 @@ const InfoContainer: React.FC = () => {
   useEffect(() => {
     if (topicList) {
       setCount(pages?.total_pages)
+      setPage(pages?.current_page)
     }
   }, [pages])
 
@@ -114,11 +112,11 @@ const InfoContainer: React.FC = () => {
       </Box>
       {showResult && (
         <>
-          <Box mb={2}>
-            <ESLabel label={t('common:community.detail_search.result')} bold />
-          </Box>
           {!!topicList && topicList.length > 0 && topicListMeta.loaded && (
             <>
+              <Box mb={2}>
+                <ESLabel label={t('common:community.detail_search.result')} bold />
+              </Box>
               {topicList.map((d, i) => {
                 const attr = d.attributes
                 const latestDate = moment(attr.created_at).isSameOrAfter(attr.last_comment_date) ? attr.created_at : attr.last_comment_date
@@ -130,9 +128,8 @@ const InfoContainer: React.FC = () => {
                     last_comment={attr.last_comment.data}
                     latest_date={latestDate}
                     comment_count={attr.comment_count}
-                    keyword={value}
-                    isSearched={isSearched}
-                    isOnlyTitle={isOnlyTitle}
+                    keyword={params.keyword}
+                    isOnlyTitle={params.only_title == 'true'}
                   />
                 )
               })}
@@ -145,13 +142,8 @@ const InfoContainer: React.FC = () => {
           {topicListMeta.loaded && topicList.length == 0 && (
             <Typography variant="body1">{t('common:community.detail_search.no_data')}</Typography>
           )}
-          {topicList.length === 0 && !topicListMeta.loaded && topicListMeta.pending && (
-            <Grid item xs={12}>
-              <Box my={4} display="flex" justifyContent="center" alignItems="center">
-                <ESLoader />
-              </Box>
-            </Grid>
-          )}
+
+          <ESLoader open={!topicListMeta.loaded && topicListMeta.pending} />
         </>
       )}
     </Box>

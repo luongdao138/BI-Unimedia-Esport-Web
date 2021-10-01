@@ -52,7 +52,7 @@ const useUploadImage = (): {
       {
         type: UPLOADER_TYPE.LOBBY,
         fileName: file.name,
-        contentType: file.type,
+        contentType: file.type == 'image/gif' ? 'image/png' : file.type,
         room: id,
         action_type: isCreate ? ACTION_TYPE.CREATE : ACTION_TYPE.UPDATE,
       },

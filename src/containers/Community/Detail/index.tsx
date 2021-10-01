@@ -5,16 +5,18 @@ import UpsertForm from '../UpsertForm'
 import TopicUpsertForm from '../Topic/UpsertForm'
 import CommunityDetailHeader from './Partials/CommunityDetailHeader'
 import DetailInfo from './Partials/DetailInfo'
-import useCommunityDetail from './useCommunityDetail'
+import useCommunityDetail, { useClearMeta } from './useCommunityDetail'
 import ESModal from '@components/Modal'
 import { useRouter } from 'next/router'
 import ESLoader from '@components/Loader'
-import { Box, Grid } from '@material-ui/core'
+import { Box, Grid, useMediaQuery, useTheme } from '@material-ui/core'
 import _ from 'lodash'
 import TopicCreateButton from '@containers/Community/Partials/TopicCreateButton'
 import { makeStyles } from '@material-ui/core/styles'
 import styled from 'styled-components'
 import { useRect } from '@utils/hooks/useRect'
+import { ESRoutes } from '@constants/route.constants'
+import { ROUTE_FROM } from '@constants/community.constants'
 
 let topicCreateRightPx: number
 type StyleParams = {
@@ -27,10 +29,14 @@ const CommunityContainer: React.FC = () => {
   const router = useRouter()
   const contentRect = useRect(contentRef)
   topicCreateRightPx = contentRect.left
+  const _theme = useTheme()
+  const isMobile = useMediaQuery(_theme.breakpoints.down('sm'), { noSsr: true })
 
   const classes = useStyles({ topicCreateRightPx })
 
-  const { hash_key } = router.query
+  useClearMeta()
+
+  const { hash_key, from } = router.query
   const [showTopicListAndSearchTab, setShowTopicListAndSearchTab] = useState<boolean>(true)
   const { handleBack, communityDetail, getCommunityDetail, topicList, meta } = useCommunityDetail()
   const { isAutomatic, isNotMember } = useCommunityHelper(communityDetail)
@@ -51,6 +57,14 @@ const CommunityContainer: React.FC = () => {
 
   const { toEdit, toCreateTopic } = useCommunityHelper(communityDetail)
 
+  const goToTopicFollower = () => {
+    router.push(ESRoutes.TOPIC_FOLLOWER)
+  }
+
+  const goToHomeTopic = () => {
+    router.push(ESRoutes.HOME)
+  }
+
   const renderBody = () => {
     return (
       <>
@@ -59,7 +73,7 @@ const CommunityContainer: React.FC = () => {
             <CommunityDetailHeader
               title={communityDetail.attributes.name}
               cover={communityDetail.attributes.cover_image_url}
-              onHandleBack={handleBack}
+              onHandleBack={from === ROUTE_FROM.HOME ? goToHomeTopic : from === ROUTE_FROM.FOLLOWERS ? goToTopicFollower : handleBack}
             />
             <DetailInfo
               detail={communityDetail}
@@ -96,7 +110,7 @@ const CommunityContainer: React.FC = () => {
         </ESModal>
         {!isNotMember && (
           <Box className={classes.topicCreateContainer}>
-            <TopicCreateButton onClick={toCreateTopic} />
+            <TopicCreateButton onClick={toCreateTopic} isMobile={isMobile} />
           </Box>
         )}
       </StyledBox>
@@ -116,7 +130,7 @@ const useStyles = makeStyles((theme) => ({
   },
   [theme.breakpoints.down('sm')]: {
     topicCreateContainer: {
-      bottom: theme.spacing(10),
+      bottom: theme.spacing(3),
     },
   },
 }))

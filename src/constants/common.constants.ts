@@ -52,7 +52,7 @@ export const ACTIVITY_ACTION_TYPE = {
 
 export const HOME_SETTINGS = {
   RECOMMENDED_USER: '1',
-  // RECOMMENDED_RECRUITMENT: '2', //TODO skip 2.0
+  LOBBY_RECOMMENDED: '2',
   // RECOMMENDED_EVENT: '3', //TODO skip 2.0
   LOBBY_FOLLOW: '4',
   TOURNAMENT_FOLLOW: '5',
@@ -89,7 +89,7 @@ export enum REPORT_TYPE {
   TOPIC = 2,
   CHAT = 3,
   TOPIC_COMMENT = 4,
-  RECRUITMENT = 5,
+  LOBBY = 5,
   TOURNAMENT = 6,
 }
 

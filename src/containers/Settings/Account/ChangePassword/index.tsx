@@ -39,7 +39,7 @@ const AccountSettingsChangePasswordContainer: React.FC = () => {
         setScore(tempScore)
         return tempScore > 40
       })
-      .required(t('common.error')),
+      .required(t('common.input_required')),
     //TODO password_must_match translate
     confirm_new_password: Yup.string().test('password-match', t('error.password_must_match'), function (value) {
       return this.parent.new_password === value

@@ -20,13 +20,12 @@ import SearchContainer from '../SearchContainer'
 import FollowList from '../FollowList'
 import { CommunityDetail, TopicDetailList } from '@services/community.service'
 import useCommunityHelper from '@containers/Community/hooks/useCommunityHelper'
-import DiscardDialog from '@containers/Community/Partials/DiscardDialog'
 import DetailInfoButtons from '../../../Partials/DetailInfoButtons'
-import { MEMBER_ROLE, JOIN_CONDITION, TABS } from '@constants/community.constants'
+import { MEMBER_ROLE, TABS, COMMUNITY_DIALOGS } from '@constants/community.constants'
 import { TwitterShareButton } from 'react-share'
 import _ from 'lodash'
-import { useClearMeta } from './../../useCommunityDetail'
 import * as actions from '@store/community/actions'
+import { useConfirm } from '@components/Confirm'
 
 const ROLE_TYPES = {
   IS_ADMIN: 'setIsAdmin',
@@ -46,21 +45,18 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
   const dispatch = useAppDispatch()
   const { t } = useTranslation(['common'])
 
-  useClearMeta()
-
   const classes = useStyles()
   const [openReport, setOpenReport] = useState(false)
   const [tab, setTab] = useState(0)
-  const [isDiscard, setIsDiscard] = useState(false)
-  const [isDiscardApplying, setIsDiscardApplying] = useState(false)
   const data = detail.attributes
+  const confirm = useConfirm()
   const { isNotMember, isPublic, isOfficial, isAutomatic } = useCommunityHelper(detail)
 
   const {
     isAuthenticated,
     followCommunity,
-    unfollowCommunity,
     followCommunityMeta,
+    unfollowCommunity,
     unfollowCommunityMeta,
     unfollowCommunityPending,
     unfollowCommunityPendingMeta,
@@ -73,7 +69,6 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
   const [isCoOrganizer, setIsCoOrganizer] = useState<boolean>(false)
   const [isFollowing, setIsFollowing] = useState<boolean>(false)
   const [isRequested, setIsRequested] = useState<boolean>(false)
-  const [isCommunityAutomatic, setIsCommunityAutomatic] = useState<boolean>(true)
 
   useEffect(() => {
     if (router?.query) {
@@ -130,19 +125,15 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
     } else if (data.my_role === MEMBER_ROLE.REQUESTED) {
       handleChangeRole(ROLE_TYPES.IS_REQUESTED, true)
     }
-    if (data.join_condition === JOIN_CONDITION.AUTOMATIC) {
-      setIsCommunityAutomatic(true)
-    } else if (data.join_condition === JOIN_CONDITION.MANUAL) {
-      setIsCommunityAutomatic(false)
-    }
-  }, [])
+  }, [detail])
 
   useEffect(() => {
-    if (followCommunityMeta.loaded && isCommunityAutomatic) {
+    if (followCommunityMeta.loaded && isAutomatic) {
       handleChangeRole(ROLE_TYPES.IS_FOLLOWING, true)
       dispatch(commonActions.addToast(t('common:community.toast_follow')))
     }
-    if (followCommunityMeta.loaded && !isCommunityAutomatic) {
+    if (followCommunityMeta.loaded && !isAutomatic) {
+      setIsRequested(true)
       dispatch(commonActions.addToast(t('common:community.toast_follow_manual_approval')))
     }
   }, [followCommunityMeta])
@@ -157,7 +148,6 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
     if (unfollowCommunityPendingMeta.loaded) {
       handleChangeRole(ROLE_TYPES.IS_FOLLOWING, false)
       dispatch(commonActions.addToast(t('common:community.toast_cancel_follow_request')))
-      setIsDiscardApplying(false)
     }
   }, [unfollowCommunityPendingMeta])
 
@@ -165,33 +155,34 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
     const resultAction = await dispatch(actions.getCommunityDetail(String(hash_key)))
     if (actions.getCommunityDetail.fulfilled.match(resultAction)) {
       followCommunity(String(hash_key))
-      if (!isCommunityAutomatic) {
-        setIsRequested(true)
-      }
     }
   }
 
   const unfollowHandle = async () => {
     const resultAction = await dispatch(actions.getCommunityDetail(String(hash_key)))
     if (actions.getCommunityDetail.fulfilled.match(resultAction)) {
-      if (!isCommunityAutomatic) {
-        setIsDiscard(true)
+      if (!isAutomatic) {
+        confirm({ ...COMMUNITY_DIALOGS.UNFOLLOW })
+          .then(() => {
+            unfollowCommunity(String(hash_key))
+          })
+          .catch(() => {
+            /* ... */
+          })
       } else {
         unfollowCommunity(String(hash_key))
       }
     }
   }
 
-  const unfollowDialogHandle = () => {
-    unfollowCommunity(String(hash_key))
-    setIsDiscard(false)
-  }
-
-  const unfollowApplyingDialogHandle = () => {
-    unfollowCommunityPending(String(hash_key))
-  }
   const cancelApplyingHandle = () => {
-    setIsDiscardApplying(true)
+    confirm({ ...COMMUNITY_DIALOGS.JOIN_PENDING })
+      .then(() => {
+        unfollowCommunityPending(String(hash_key))
+      })
+      .catch(() => {
+        /* ... */
+      })
   }
 
   const DetailInfoButton = () => {
@@ -211,7 +202,7 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
             variant="outlined"
             color="primary"
             primaryTextColor={true}
-            disabled={unfollowCommunityMeta.pending}
+            disabled={unfollowCommunityPendingMeta.pending}
             onClick={cancelApplyingHandle}
           />
         ) : isFollowing ? (
@@ -317,7 +308,7 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
   const getTabs = () => {
     return (
       <Grid item xs={12}>
-        <ESTabs value={tab} onChange={(_, v) => setTab(v)} className={classes.tabs}>
+        <ESTabs value={tab} onChange={(_, v) => setTab(v)} className={`${classes.tabs} community-tab`}>
           <ESTab label={t('common:community.info')} value={TABS.INFO} />
           {showTopicListAndSearchTab && <ESTab label={t('common:community.topic_list')} value={TABS.TOPIC_LIST} />}
           {showTopicListAndSearchTab && <ESTab label={t('common:community.search')} value={TABS.SEARCH} />}
@@ -345,26 +336,6 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
         {getTabs()}
         {getContent()}
       </Box>
-      <DiscardDialog
-        open={isDiscard}
-        onClose={() => {
-          setIsDiscard(false)
-        }}
-        onSubmit={unfollowDialogHandle}
-        title={t('common:community.unfollow_dialog.title')}
-        description={t('common:community.unfollow_dialog.description')}
-        confirmTitle={t('common:community.unfollow_dialog.submit_title')}
-      />
-      <DiscardDialog
-        open={isDiscardApplying}
-        onClose={() => {
-          setIsDiscardApplying(false)
-        }}
-        onSubmit={unfollowApplyingDialogHandle}
-        title={t('common:community.unfollow_dialog_applying.title')}
-        description={t('common:community.unfollow_dialog_applying.description')}
-        confirmTitle={t('common:community.unfollow_dialog_applying.submit_title')}
-      />
     </Grid>
   )
 }
@@ -439,13 +410,8 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'row',
     flexShrink: 0,
+    alignItems: 'center',
     height: '36px',
-  },
-  button: {
-    paddingTop: 2,
-    paddingBottom: 2,
-    paddingLeft: 5,
-    paddingRight: 5,
   },
   commentIcon: {
     '&:hover': {
@@ -470,7 +436,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
   },
   menuOuter: {
-    marginLeft: theme.spacing(3),
+    marginLeft: theme.spacing(0),
   },
   [theme.breakpoints.down('sm')]: {
     commentIcon: {

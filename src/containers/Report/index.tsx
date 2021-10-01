@@ -74,11 +74,11 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
 
   const validationSchema = Yup.object().shape({
     user_email: Yup.string()
-      .test('email-validation', t('common.input_is_incorrect'), (value) => {
+      .test('email-validation', t('user_report.email_test_result'), (value) => {
         return CommonHelper.validateEmail(value)
       })
       .required(t('common.input_required')),
-    description: Yup.string().required(t('common.input_required')).max(1000),
+    description: Yup.string().required(t('common.input_required')).max(5000),
     reason_id: Yup.number()
       .test('reason_id', '', (value) => {
         return value !== -1
@@ -141,10 +141,10 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
           flexDirection="column"
           style={{ alignItems: 'flex-start', marginTop: _theme.spacing(1) }}
         >
-          <Box display="flex" mr={2} mb={2}>
+          <Box display="flex" mr={2} mb={2} width="100%">
             <Icon className={'fas fa-comment-alt'} fontSize="small" style={{ color: Colors.white, paddingTop: _theme.spacing(0.5) }} />
-            <Box color={Colors.white} fontSize={14} ml={1}>
-              {attr.topic_title}
+            <Box color={Colors.white} fontSize={14} ml={1} width="calc(100% - 15px)">
+              <Typography className={classes.topicEllipsis}>{attr.topic_title}</Typography>
             </Box>
           </Box>
           {isComment && (
@@ -157,11 +157,13 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
               <Avatar className={classes.topicAvatar} alt={attr.nickname} src={attr.avatar_image} />
             </ButtonBase>
 
-            <Box className={classes.userInfoBox} ml={1} maxWidth="77%">
-              <Typography variant="h3" style={{ color: Colors.white }}>
+            <Box ml={1} maxWidth="100%">
+              <Typography variant="h3" className={classes.topicEllipsis} style={{ color: Colors.white }}>
                 {attr.nickname}
               </Typography>
-              <Typography variant="body2">{'@' + attr.user_code}</Typography>
+              <Typography className={classes.topicEllipsis} variant="body2">
+                {'@' + attr.user_code}
+              </Typography>
             </Box>
           </Box>
 
@@ -169,7 +171,9 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
             <Typography variant="body1" style={{ color: Colors.white_opacity[70] }}>
               {attr.date}
             </Typography>
-            <Typography variant="body1">{attr.content}</Typography>
+            <Typography variant="body1" className={classes.wordBreak}>
+              {attr.content}
+            </Typography>
           </Box>
           {attr.image && renderClickableImage(attr.image)}
         </Box>
@@ -399,6 +403,14 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
 }
 
 const useStyles = makeStyles((theme) => ({
+  topicEllipsis: {
+    display: '-webkit-box',
+    WebkitBoxOrient: 'vertical',
+    WebkitLineClamp: 1,
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    wordBreak: 'break-all',
+  },
   wordBreak: {
     wordBreak: 'break-all',
   },

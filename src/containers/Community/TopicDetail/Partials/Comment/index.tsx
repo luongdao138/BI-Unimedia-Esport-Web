@@ -23,6 +23,7 @@ import styled from 'styled-components'
 import { useRect } from '@utils/hooks/useRect'
 import { REPLY_REGEX } from '@constants/community.constants'
 import moment from 'moment'
+import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
 
 let currentReplyNumberRectLeft: number
 const StyledBox = styled(Box)``
@@ -30,6 +31,7 @@ const contentRef = createRef<HTMLDivElement>()
 
 type StyleParams = {
   currentReplyNumberRectLeft: number
+  isBottom: boolean
 }
 
 type MenuParams = {
@@ -60,8 +62,11 @@ type CommunityHeaderProps = {
   setSelectedCommentNo?: Dispatch<SetStateAction<number>>
   onReport?: (comment: ReportData) => void
 }
+
 const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleReply, setOpenDelete, setSelectedCommentNo, onReport }) => {
-  const classes = useStyles({ currentReplyNumberRectLeft })
+  const [isBottom, setIsBottom] = useState<boolean>(false)
+  const classes = useStyles({ currentReplyNumberRectLeft, isBottom })
+  const windowDimensions = useWindowDimensions()
   const { query } = useRouter()
   const { topic_hash_key } = query
   const { t } = useTranslation(['common'])
@@ -76,8 +81,14 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
 
   const handleClickReply = (event, content) => {
     getCommentDetail({ topic_hash: topic_hash_key, comment_no: content.slice(2) })
-    setReplyAnchorEl(event.currentTarget)
+    const anchor = event.currentTarget.getBoundingClientRect()
+    if (windowDimensions.height / 2 < anchor.top) {
+      setIsBottom(false)
+    } else {
+      setIsBottom(true)
+    }
     currentReplyNumberRectLeft = event.currentTarget.getBoundingClientRect().left - contentRect.left
+    setReplyAnchorEl(event.currentTarget)
   }
 
   const handleCloseReply = () => {
@@ -132,17 +143,19 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
         {_.map(
           _.filter(_.split(str, REPLY_REGEX), (el) => !_.isEmpty(el)),
           (content, index) => {
-            return content.match(REPLY_REGEX) && !isReply ? renderPopover(content, index) : content
+            return content.match(REPLY_REGEX) && !isReply ? renderPopover(content, index, i) : content
           }
         )}
       </Typography>
     ))
   }
 
-  const renderPopover = (content, index) => {
+  const renderPopover = (content, index, i) => {
     return (
-      <Link id={index} onClick={(e) => handleClickReply(e, content)} className={classes.reply}>
-        <Typography className={classes.replied_id}>{content}</Typography>
+      <Link key={`${index}-${i}`} onClick={(e) => handleClickReply(e, content)} className={classes.reply}>
+        <Typography component="span" className={classes.replied_id}>
+          {content}
+        </Typography>
       </Link>
     )
   }
@@ -151,7 +164,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
     return (
       <>
         <Box display="flex" alignItems="flex-start" justifyContent="space-between" mb={1}>
-          <Box className={classes.userInfoContainerMain}>
+          <Box className={classes.userInfoContainer}>
             <Typography className={classes.number}>{replyData.comment_no}</Typography>
             <Box ml={1}>
               <ButtonBase onClick={() => toProfile(replyData.user_code)}>
@@ -171,17 +184,15 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
           </Box>
         </Box>
         <Box mb={3}>
-          <Typography className={classes.content}>
-            <Linkify
-              componentDecorator={(decoratedHref, decoratedText, key) => (
-                <a target="_blank" rel="noopener noreferrer" href={decoratedHref} key={key} className={classes.linkify}>
-                  {decoratedText}
-                </a>
-              )}
-            >
-              <Typography>{newLineText(replyData.content, true)}</Typography>
-            </Linkify>
-          </Typography>
+          <Linkify
+            componentDecorator={(decoratedHref, decoratedText, key) => (
+              <a target="_blank" rel="noopener noreferrer" href={decoratedHref} key={key} className={classes.linkify}>
+                {decoratedText}
+              </a>
+            )}
+          >
+            {newLineText(replyData.content, true)}
+          </Linkify>
           {replyData.attachments &&
             replyData.attachments[0]?.assets_url &&
             renderClickableImage(replyData.attachments[0]?.assets_url, true)}
@@ -262,11 +273,11 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
           className={classes.mainComment}
           onClose={handleCloseReply}
           anchorOrigin={{
-            vertical: 'top',
+            vertical: isBottom ? 'bottom' : 'top',
             horizontal: 'left',
           }}
           transformOrigin={{
-            vertical: 'bottom',
+            vertical: isBottom ? 'top' : 'bottom',
             horizontal: 'right',
           }}
           style={{
@@ -391,9 +402,6 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     width: 'calc(100% - 150px)',
   },
-  userInfoContainerMain: {
-    display: 'flex',
-  },
   userAvatarBox: {
     display: 'flex',
     borderRadius: 30,
@@ -488,6 +496,10 @@ const useStyles = makeStyles((theme) => ({
   content: {
     color: Colors.grey[300],
     wordBreak: 'break-word',
+    '&:before': {
+      content: '" "',
+      whiteSpace: 'pre',
+    },
   },
   number: {
     fontSize: 10,
@@ -510,7 +522,9 @@ const useStyles = makeStyles((theme) => ({
       '&:before': {
         content: "''",
         position: 'absolute',
-        top: 'Calc(100% + 3px)',
+        top: (props: StyleParams) => (props.isBottom ? 'auto' : 'Calc(100% + 3px)'),
+        bottom: (props: StyleParams) => (props.isBottom ? 'Calc(100% + 2px)' : 'auto'),
+        transform: (props: StyleParams) => (props.isBottom ? 'rotate(180deg)' : 'none'),
         left: (props: StyleParams) => props.currentReplyNumberRectLeft - 12,
         marginLeft: -5,
         borderWidth: 5,

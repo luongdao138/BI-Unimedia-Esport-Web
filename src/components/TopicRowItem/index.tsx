@@ -17,13 +17,12 @@ export interface TopicRowItemProps {
   comment_count?: number
   handleClick?: () => void
   keyword?: string
-  isSearched?: boolean
   isOnlyTitle?: boolean
 }
 
-const Highlight = ({ search = '', children = '', isSearched = false, contentRect = undefined, isTitle = false }) => {
+const Highlight = ({ search = '', children = '', contentRect = undefined, isTitle = false }) => {
   const classes = useStyles()
-  if (search && isSearched) {
+  if (search) {
     let parts
     const keyword = new RegExp(`(${_.escapeRegExp(search)})`, 'i')
     if (isTitle) {
@@ -66,7 +65,6 @@ const TopicRowItem: React.FC<TopicRowItemProps> = ({
   comment_count,
   handleClick,
   keyword,
-  isSearched,
   isOnlyTitle = false,
 }) => {
   const classes = useStyles()
@@ -83,7 +81,7 @@ const TopicRowItem: React.FC<TopicRowItemProps> = ({
       isOnlyTitle ? (
         lastCommentData.content
       ) : (
-        <Highlight search={keyword} isSearched={isSearched} contentRect={contentRect}>
+        <Highlight search={keyword} contentRect={contentRect}>
           {lastCommentData.content}
         </Highlight>
       )
@@ -99,13 +97,14 @@ const TopicRowItem: React.FC<TopicRowItemProps> = ({
       <Box mt={1} display="flex" alignItems="flex-start" width="100%" onClick={handleClick}>
         <Box display="flex" overflow="hidden" justifyContent="space-between" className={classes.wrap}>
           <Box className={classes.container}>
-            <Box display="flex" flexDirection="row" width="100%" mb={0.25}>
+            <Box display="flex" flexDirection="row" width="100%">
               <Typography className={classes.title}>
-                <Highlight isTitle={true} isSearched={isSearched} search={keyword}>
+                <Highlight isTitle={true} search={keyword}>
                   {title}
                 </Highlight>
               </Typography>
             </Box>
+            <Box height={0.25} />
             <StyledBox display="flex" flexDirection="row" width="100%" ref={contentRef}>
               <Typography className={classes.last_comment}>{renderContent(contentRect)}</Typography>
             </StyledBox>
