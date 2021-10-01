@@ -423,12 +423,6 @@ const useStyles = makeStyles((theme) => ({
     flexShrink: 0,
     height: '36px',
   },
-  button: {
-    paddingTop: 2,
-    paddingBottom: 2,
-    paddingLeft: 5,
-    paddingRight: 5,
-  },
   commentIcon: {
     '&:hover': {
       outline: 'none',

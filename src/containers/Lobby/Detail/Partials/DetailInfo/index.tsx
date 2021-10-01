@@ -1,4 +1,4 @@
-import { ReactNode, useState } from 'react'
+import { useState } from 'react'
 import { Grid, Box, makeStyles, Typography, Theme, Icon, ButtonBase } from '@material-ui/core'
 import ESChip from '@components/Chip'
 import { Colors } from '@theme/colors'
@@ -26,17 +26,17 @@ interface Props {
   detail: LobbyDetail
   extended?: boolean
   toEdit?: () => void
-  bottomButton?: ReactNode
 }
 
-const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton }) => {
+const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit }) => {
   const dispatch = useAppDispatch()
   const router = useRouter()
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const data = detail.attributes
-  const game = _.get(data, 'game_title.data.attributes.display_name', '')
-  const hardware = _.get(data, 'game_hardware.data.attributes.name', '')
+  const gameChip = _.get(data, 'game_title.data.attributes.display_name', '')
+  const game = _.get(data, 'game_title.data.attributes.display_name', t('common:common.dash'))
+  const hardware = _.get(data, 'game_hardware.data.attributes.name', t('common:common.dash'))
   const [openReport, setOpenReport] = useState(false)
   const helper = useLobbyHelper(detail)
   const isAuthenticated = useAppSelector(getIsAuthenticated)
@@ -66,13 +66,13 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
               {helper.isEditable && toEdit && (
                 <LoginRequired>
                   <ButtonPrimary className={classes.editButton} size="small" gradient={false} onClick={toEdit}>
-                    {t('common:arena.edit_arena_info')}
+                    {t('common:lobby.edit_button')}
                   </ButtonPrimary>
                 </LoginRequired>
               )}
               <ESMenu>
                 <LoginRequired>
-                  <ESMenuItem onClick={handleReportOpen}>{t('common:tournament.report')}</ESMenuItem>
+                  <ESMenuItem onClick={handleReportOpen}>{t('common:lobby.report')}</ESMenuItem>
                 </LoginRequired>
               </ESMenu>
             </Box>
@@ -84,7 +84,7 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
             <>
               <Box display="flex" justifyContent="flex-end" className={classes.urlCopy} onClick={handleCopy}>
                 <Icon className={`fa fa-link ${classes.link}`} fontSize="small" />
-                <Typography>{t('common:tournament.copy_shared_url')}</Typography>
+                <Typography>{t('common:lobby.copy_shared_url')}</Typography>
               </Box>
               <TwitterShareButton url={window.location.toString()} title={_.defaultTo(detail.attributes.title, '')}>
                 <img className={classes.twitter_logo} src="/images/twitter_logo.png" />
@@ -92,9 +92,9 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
             </>
           )}
         </Box>
-        {!_.isEmpty(game) ? (
+        {!_.isEmpty(gameChip) ? (
           <Box marginTop={2}>
-            <ESChip className={classes.gameChip} label={game} />
+            <ESChip className={classes.gameChip} label={gameChip} />
           </Box>
         ) : null}
 
@@ -113,22 +113,30 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
         {/* entry period */}
         <Box display="flex" flexDirection="row" alignContent="flex-start" marginTop={extended ? 2 : 3}>
           <Box className={classes.label}>
-            <Typography>{t('common:tournament.entry_period')}</Typography>
+            <Typography>{t('common:lobby.detail.entry_period')}</Typography>
           </Box>
           <Box className={classes.value}>
-            <Typography>
-              {LobbyHelper.formatDate(data.entry_start_datetime)} ~ {LobbyHelper.formatDate(data.entry_end_datetime)}
-            </Typography>
+            {data.entry_start_datetime && data.entry_end_datetime ? (
+              <Typography>
+                {LobbyHelper.formatDate(data.entry_start_datetime)} ~ {LobbyHelper.formatDate(data.entry_end_datetime)}
+              </Typography>
+            ) : (
+              <Typography>{t('common:common.dash')}</Typography>
+            )}
           </Box>
         </Box>
 
         {/* holding period */}
         <Box display="flex" flexDirection="row" alignContent="flex-start" marginTop={1}>
           <Box className={classes.label}>
-            <Typography>{t('common:recruitment.date_time')}</Typography>
+            <Typography>{t('common:lobby.detail.start_date')}</Typography>
           </Box>
           <Box className={classes.value}>
-            <Typography>{LobbyHelper.formatDate(data.start_datetime)}</Typography>
+            {data.start_datetime ? (
+              <Typography>{LobbyHelper.formatDate(data.start_datetime)}</Typography>
+            ) : (
+              <Typography>{t('common:common.dash')}</Typography>
+            )}
           </Box>
         </Box>
         {extended && (
@@ -136,10 +144,10 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
             {/* venue */}
             <Box display="flex" flexDirection="row" alignContent="flex-start" marginTop={1}>
               <Box className={classes.label}>
-                <Typography>{t('common:tournament.venue')}</Typography>
+                <Typography>{t('common:lobby.venue')}</Typography>
               </Box>
               <Box className={classes.value} flexDirection="column">
-                <Typography>{data.area_name ? data.area_name : '-'}</Typography>
+                <Typography>{data.area_name ? data.area_name : t('common:common.dash')}</Typography>
                 <Linkify
                   componentDecorator={(decoratedHref, decoratedText, key) => (
                     <a target="_blank" rel="noopener noreferrer" href={decoratedHref} key={key} className={classes.linkify}>
@@ -162,7 +170,7 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
                   <Box display="flex" flexDirection="row" alignItems="center">
                     <LoginRequired>
                       <ButtonBase onClick={() => toProfile(data.organizer.user_code)}>
-                        <ESAvatar alt={data.organizer.nickname} src={data.organizer_avatar} />
+                        <ESAvatar alt={data.organizer.nickname} src={data.organizer_avatar} size={35} />
                       </ButtonBase>
                     </LoginRequired>
                     <Typography className={classes.breakWord}>{data.organizer.nickname}</Typography>
@@ -174,7 +182,7 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
             {/* game */}
             <Box display="flex" flexDirection="row" alignContent="flex-start" marginTop={1}>
               <Box className={classes.label}>
-                <Typography>{t('common:tournament.game')}</Typography>
+                <Typography>{t('common:lobby.game')}</Typography>
               </Box>
               <Box className={classes.value}>
                 <Typography>{game}</Typography>
@@ -184,7 +192,7 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
             {/* hardware  */}
             <Box display="flex" flexDirection="row" alignContent="flex-start" marginTop={1}>
               <Box className={classes.label}>
-                <Typography>{t('common:tournament.game_hardware')}</Typography>
+                <Typography>{t('common:lobby.game_hardware')}</Typography>
               </Box>
               <Box className={classes.value}>
                 <Typography>{hardware}</Typography>
@@ -199,26 +207,10 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
             <ESChip className={classes.tagChip} label={category.name} key={key} />
           ))}
         </Box>
-
-        {!extended && (
-          <Box display="flex" flexDirection="row" flexWrap="wrap" marginTop={2}>
-            <Box mt={1} mr={1}>
-              <ESChip label={data.area_name == t('common:tournament.online') ? data.area_name : t('common:tournament.offline')} />
-            </Box>
-            <Box mt={1}>
-              <ESChip label={hardware} />
-            </Box>
-          </Box>
-        )}
-        {!bottomButton ? null : (
-          <Box textAlign="center" mt={2}>
-            {bottomButton}
-          </Box>
-        )}
       </Box>
       {isAuthenticated && (
         <ESReport
-          reportType={REPORT_TYPE.TOURNAMENT}
+          reportType={REPORT_TYPE.LOBBY}
           target_id={Number(detail.id)}
           data={detail}
           open={openReport}

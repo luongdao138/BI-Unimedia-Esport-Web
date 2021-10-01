@@ -16,6 +16,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import styled from 'styled-components'
 import { useRect } from '@utils/hooks/useRect'
 import { ESRoutes } from '@constants/route.constants'
+import { ROUTE_FROM } from '@constants/community.constants'
 
 let topicCreateRightPx: number
 type StyleParams = {
@@ -31,7 +32,7 @@ const CommunityContainer: React.FC = () => {
 
   const classes = useStyles({ topicCreateRightPx })
 
-  const { hash_key, topicFollower } = router.query
+  const { hash_key, from } = router.query
   const [showTopicListAndSearchTab, setShowTopicListAndSearchTab] = useState<boolean>(true)
   const { handleBack, communityDetail, getCommunityDetail, topicList, meta } = useCommunityDetail()
   const { isAutomatic, isNotMember } = useCommunityHelper(communityDetail)
@@ -56,6 +57,10 @@ const CommunityContainer: React.FC = () => {
     router.push(ESRoutes.TOPIC_FOLLOWER)
   }
 
+  const goToHomeTopic = () => {
+    router.push(ESRoutes.HOME)
+  }
+
   const _theme = useTheme()
   const isMobile = useMediaQuery(_theme.breakpoints.down('sm'))
 
@@ -67,7 +72,7 @@ const CommunityContainer: React.FC = () => {
             <CommunityDetailHeader
               title={communityDetail.attributes.name}
               cover={communityDetail.attributes.cover_image_url}
-              onHandleBack={topicFollower ? goToTopicFollower : handleBack}
+              onHandleBack={from === ROUTE_FROM.HOME ? goToHomeTopic : from === ROUTE_FROM.FOLLOWERS ? goToTopicFollower : handleBack}
             />
             <DetailInfo
               detail={communityDetail}

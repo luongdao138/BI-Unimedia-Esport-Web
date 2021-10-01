@@ -10,6 +10,7 @@ import { WindowScroller, List, CellMeasurer, AutoSizer, CellMeasurerCache } from
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import useReturnHref from '@utils/hooks/useReturnHref'
 import _ from 'lodash'
+import { ROUTE_FROM } from '@constants/community.constants'
 
 const cache = new CellMeasurerCache({
   fixedWidth: true,
@@ -83,7 +84,7 @@ const TopicFollowerContainer: React.FC = () => {
 
       items.push(
         <Grid key={i} item sm={12} lg={4} xl={3} xs={12} className={classes.card}>
-          <TopicCard topic={data} />
+          <TopicCard topic={data} from={ROUTE_FROM.FOLLOWERS} />
         </Grid>
       )
     }

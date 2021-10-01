@@ -210,7 +210,8 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
         : handleReturn()
   }
 
-  const handleSetConfirm = () => {
+  const handleSetConfirm = (e) => {
+    e.preventDefault()
     formik.validateForm().then(() => {
       const { stepOne } = formik.values
 
@@ -267,7 +268,13 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
                 <ButtonPrimary onClick={handleUnsetConfirm} gradient={false} className={`${classes.footerButton} ${classes.cancelButton}`}>
                   {i18n.t('common:common.cancel')}
                 </ButtonPrimary>
-                <ButtonPrimary type="submit" onClick={handleSetConfirm} round disabled={hasError} className={classes.footerButton}>
+                <ButtonPrimary
+                  type="submit"
+                  onClick={handleSetConfirm}
+                  round
+                  disabled={hasError || getCreateCommunityMeta.pending || getUpdateCommunityMeta.pending}
+                  className={classes.footerButton}
+                >
                   {isEdit ? i18n.t('common:community_create.confirm.submit_edit') : i18n.t('common:community_create.confirm.submit')}
                 </ButtonPrimary>
               </Box>

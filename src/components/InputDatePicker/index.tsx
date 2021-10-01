@@ -43,6 +43,10 @@ const useStyles = makeStyles(() => ({
   root: {
     backgroundColor: Colors.black,
     borderRadius: 4,
+    '& .MuiInputBase-inputMultiline': {
+      overflow: 'hidden',
+      resize: 'none',
+    },
     '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
       borderWidth: 1,
       borderColor: '#fff',

@@ -121,3 +121,7 @@ export const COMMUNITY_DIALOGS = {
     cancellationText: i18n.t('common:common.cancel'),
   },
 }
+export const ROUTE_FROM = {
+  HOME: 'home',
+  FOLLOWERS: 'followers',
+}
