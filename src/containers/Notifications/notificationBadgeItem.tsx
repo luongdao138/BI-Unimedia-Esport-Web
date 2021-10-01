@@ -6,6 +6,7 @@ import NOTIFICATION_ACTION_TYPES from '@store/notification/actions/types'
 
 interface Props {
   data: any
+  onClick: () => void
 }
 
 const NotificationBadgeItem: React.FC<Props> = ({ data }) => {
@@ -24,7 +25,7 @@ const NotificationBadgeItem: React.FC<Props> = ({ data }) => {
     }
   }
   return (
-    <Box margin={2} display="flex" justifyContent="space-between">
+    <Box margin={1} display="flex" justifyContent="space-between">
       <Box display="flex" overflow="hidden" className={classes.notificationWrap}>
         {renderAvatar()}
         <Box overflow="hidden" textOverflow="ellipsis" ml={2} display="flex" flexDirection="column" justifyContent="center" width="100%">
@@ -45,9 +46,8 @@ const NotificationBadgeItem: React.FC<Props> = ({ data }) => {
 
 const useStyles = makeStyles((theme: Theme) => ({
   notificationWrap: {
-    maxWidth: 370,
     cursor: 'pointer',
-    width: '100%',
+    width: 370,
     padding: theme.spacing(1),
     borderRadius: '6px',
     '&:hover': {
