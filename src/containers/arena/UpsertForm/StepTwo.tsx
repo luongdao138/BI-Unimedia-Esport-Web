@@ -13,6 +13,7 @@ import React, { useEffect } from 'react'
 import Icon from '@material-ui/core/Icon'
 import { Colors } from '@theme/colors'
 import { UseSortInfoDialog } from '@containers/arena/UpsertForm/Partials/useSortInfoDialog'
+import { useArenaTypeInfoDialog } from '@containers/arena/UpsertForm/Partials/useArenaTypeInfoDialog'
 
 type Props = {
   formik: FormikProps<FormType>
@@ -21,9 +22,17 @@ type Props = {
 
 const StepTwo: React.FC<Props> = ({ formik, editables }) => {
   const classes = useStyles()
-  const confirmFreeze = UseSortInfoDialog()
+  const sortInfo = UseSortInfoDialog()
+  const arenaTypeInfo = useArenaTypeInfoDialog()
+
   const handleSortInfo = () => {
-    confirmFreeze().then(() => {
+    sortInfo().then(() => {
+      return
+    })
+  }
+
+  const handleArenaTypeInfo = () => {
+    arenaTypeInfo().then(() => {
       return
     })
   }
@@ -149,7 +158,13 @@ const StepTwo: React.FC<Props> = ({ formik, editables }) => {
         />
       </Box>
       <Box pb={4}>
-        <ESLabel label={i18n.t('common:tournament_create.public_or_private')} size="small" />
+        <Box display="flex" alignItems="center">
+          <ESLabel label={i18n.t('common:tournament_create.public_or_private')} size="small" />
+          <Typography className={classes.publicArenaInfo} variant="body2" onClick={handleArenaTypeInfo}>
+            <Icon className={`fa fa-info-circle ${classes.iconMargin}`} fontSize="small" />{' '}
+            {i18n.t('common:tournament_create.public_arena_info_title')}
+          </Typography>
+        </Box>
         <ESCheckbox
           disableRipple
           checked={TournamentHelper.getTypeValue(formik.values.stepTwo.t_type)}
@@ -192,14 +207,17 @@ const useStyles = makeStyles((theme) => ({
     display: 'inline-flex',
   },
   sortInfo: {
+    width: '100%',
+    position: 'relative',
     marginTop: 10,
-    marginLeft: -70,
     color: Colors.secondary,
     cursor: 'pointer',
-    '&::after': {
-      marginTop: 10,
-      marginLeft: -70,
-    },
+  },
+  publicArenaInfo: {
+    position: 'relative',
+    color: Colors.secondary,
+    cursor: 'pointer',
+    marginLeft: theme.spacing(2),
   },
   iconMargin: {
     marginRight: theme.spacing(1 / 2),
