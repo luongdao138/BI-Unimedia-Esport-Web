@@ -45,10 +45,7 @@ export const URI = {
   COMMUNITY_FOLLOW: '/v2/communities/:id/join',
   COMMUNITY_UNFOLLOW: '/v2/communities/:id/leave',
   COMMUNITY_MEMBERS: '/v2/communities/:id/members',
-  COMMUNITY_MEMBERS_APPROVE: '/v2/communities/:id/approve',
-  COMMUNITY_MEMBERS_CANCEL: '/v2/communities/:id/cancel',
   COMMUNITY_MEMBER_CHANGE_ROLE: '/v2/communities/:id/change_role',
-  COMMUNITY_MEMBER_REMOVE: '/v2/communities/:id/remove_members',
   COMMUNITY_CLOSE: '/v2/communities/:id/close',
   COMMUNITY_COMMENTS_LIST: '/v2/comments/list',
   COMMUNITY_SEARCH: '/v2/communities/search',
@@ -147,4 +144,5 @@ export const URI = {
   LOBBY_RANDOMIZE_PARTICIPANTS: '/v2/recruitments/:hash_key/randomize_participants',
   LOBBY_CONFIRM_PARTICIPANTS: '/v2/recruitments/:hash_key/do_member_confirm',
   LOBBY_RECENTS: '/v2/recruitments/recent',
+  LOBBY_RECOMMENDED: '/v2/recruitments/recommendations',
 }

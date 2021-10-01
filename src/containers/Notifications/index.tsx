@@ -97,6 +97,11 @@ const NotificationContainer: React.FC = () => {
                     router.push(`${ESRoutes.COMMUNITY_DETAIL.replace(/:id/gi, notification.attributes.hash_key)}`)
                     break
                   }
+                  case NOTIFICATION_ACTION_TYPES.NOTIFICATION_TYPE_COMMENT: {
+                    seenNotificationBadge()
+                    router.push(`${ESRoutes.TOPIC.replace(/:id/gi, notification.attributes.hash_key)}/${notification.attributes.hash_key2}`)
+                    break
+                  }
                   default: {
                     break
                   }

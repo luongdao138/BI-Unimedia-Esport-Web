@@ -15,6 +15,7 @@ import {
   TopicSearchItem,
   TopicDetailList,
   CommentDetail,
+  TopicSearchParams,
 } from '@services/community.service'
 
 type StateType = {
@@ -37,6 +38,7 @@ type StateType = {
   commentsList?: CommentsResponse[]
   commentsListMeta?: PageMeta
   topicSearchList?: TopicSearchItem[]
+  topicSearchParams?: TopicSearchParams
   topicSearchListMeta?: PageMeta
   topicListMeta?: PageMeta
 }
@@ -51,6 +53,9 @@ const initialState: StateType = {
   topicDetail: null,
   commentsList: [],
   communityDetail: null,
+  communityMembers: [],
+  commentDetail: null,
+  topicSearchList: [],
 }
 
 export default createReducer(initialState, (builder) => {
@@ -103,11 +108,14 @@ export default createReducer(initialState, (builder) => {
   builder.addCase(actions.getTopicFollowers.fulfilled, (state, action) => {
     let tmpTopicFollowersList = action.payload.data
     if (action.payload.meta != undefined && action.payload.meta.current_page > 1) {
-      //Unused reducer     ref: Home Page
-      tmpTopicFollowersList = state.topicFollowersList.concat(action.payload.data)
+      tmpTopicFollowersList = _.unionBy(state.topicFollowersList, action.payload.data, 'id')
     }
     state.topicFollowersList = tmpTopicFollowersList
     state.topicFollowersListMeta = action.payload.meta
+  })
+  builder.addCase(actions.resetTopicFollowers, (state) => {
+    state.topicFollowersList = []
+    state.topicFollowersListMeta = undefined
   })
   builder.addCase(actions.getCommunityDetail.fulfilled, (state, action) => {
     state.communityDetail = action.payload.data
@@ -131,10 +139,12 @@ export default createReducer(initialState, (builder) => {
   })
   builder.addCase(actions.searchTopic.fulfilled, (state, action) => {
     state.topicSearchList = action.payload.data
+    state.topicSearchParams = action.meta.arg
     state.topicSearchListMeta = action.payload.meta
   })
   builder.addCase(actions.clearSearchTopic, (state) => {
     state.topicSearchList = []
+    state.topicSearchParams = undefined
     state.topicSearchListMeta = undefined
   })
   builder.addCase(actions.followCommunity.fulfilled, (state, action) => {
@@ -145,7 +155,7 @@ export default createReducer(initialState, (builder) => {
     state.communityDetail.attributes.my_role = null
   })
   builder.addCase(COMMUNITY_ACTION_TYPE.RESET_COMMUNITY_MEMBERS, (state) => {
-    state.communityMembers = undefined
+    state.communityMembers = []
   })
   builder.addCase(actions.getTopicComment.fulfilled, (state, action) => {
     state.commentDetail = action.payload.data

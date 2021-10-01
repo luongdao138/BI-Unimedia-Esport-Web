@@ -93,7 +93,7 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
           <ESChip className={classes.gameChip} label={game} />
         </Box>
 
-        <Box marginTop={2}>
+        <Box marginTop={2} marginBottom={2}>
           <Linkify
             componentDecorator={(decoratedHref, decoratedText, key) => (
               <a target="_blank" rel="noopener noreferrer" href={decoratedHref} key={key} className={classes.linkify}>

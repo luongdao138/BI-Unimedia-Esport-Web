@@ -7,7 +7,7 @@ const useUploadImage = (): {
   uploadArenaTeamImage: (file: File, blob: any, id: number, isCreate: boolean, onSuccess: (imageUrl: string) => void) => void
   uploadArenaCoverImage: (file: File, blob: any, id: number, isCreate: boolean, onSuccess: (imageUrl: string) => void) => void
   uploadArenaSummaryImage: (file: File, blob: any, id: number, isCreate: boolean, onSuccess: (imageUrl: string) => void) => void
-  uploadCommentImage: (file: File, blob: any, id: number, isCreate: boolean, onSuccess: (imageUrl: string) => void) => void
+  uploadCommentImage: (file: File, blob: any, onSuccess: (imageUrl: string) => void) => void
   uploadLobbyCoverImage: (file: File, blob: any, id: number, isCreate: boolean, onSuccess: (imageUrl: string) => void) => void
   isUploading: boolean
   hasError: boolean
@@ -52,7 +52,7 @@ const useUploadImage = (): {
       {
         type: UPLOADER_TYPE.LOBBY,
         fileName: file.name,
-        contentType: file.type,
+        contentType: file.type == 'image/gif' ? 'image/png' : file.type,
         room: id,
         action_type: isCreate ? ACTION_TYPE.CREATE : ACTION_TYPE.UPDATE,
       },
@@ -75,16 +75,16 @@ const useUploadImage = (): {
     )
   }
 
-  const uploadCommentImage = async (file, blob, id, isCreate, onSuccess) => {
+  const uploadCommentImage = async (file, blob, onSuccess) => {
     await uploadImage(
       file,
       blob,
       {
-        type: UPLOADER_TYPE.TOURNAMENT,
+        type: UPLOADER_TYPE.POST,
         fileName: file.name,
         contentType: file.type,
-        room: id,
-        action_type: isCreate ? ACTION_TYPE.CREATE : ACTION_TYPE.UPDATE,
+        room: '',
+        action_type: ACTION_TYPE.CREATE,
       },
       onSuccess
     )

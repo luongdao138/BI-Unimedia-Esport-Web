@@ -1,6 +1,13 @@
 import { createAsyncThunk, createAction } from '@reduxjs/toolkit'
 import * as services from '@services/lobby.service'
-import { CLEAR_LOBBY_DETAIL, CLEAR_LOBBY_RECENTS, LOBBY_ACTION_TYPE, RESET_LOBBY_ALL_PARTICIPANTS, RESET_LOBBY_PARTICIPANTS } from './types'
+import {
+  CLEAR_LOBBY_DETAIL,
+  CLEAR_LOBBY_RECENTS,
+  CLEAR_LOBBY_RECOMMENDED,
+  LOBBY_ACTION_TYPE,
+  RESET_LOBBY_ALL_PARTICIPANTS,
+  RESET_LOBBY_PARTICIPANTS,
+} from './types'
 import { follow, FollowActionResponse, FollowParams, unfollow, UnFollowResponse } from '@services/user.service'
 import { UnblockParams, UnblockResponse, unblockUser } from '@services/block.service'
 import { AppDispatch } from '@store/store'
@@ -275,5 +282,20 @@ export const getRecentLobbies = createAsyncThunk<services.LobbySearchResponse, s
     }
   }
 )
-
 export const clearLobbyRecents = createAction(CLEAR_LOBBY_RECENTS)
+
+export const getRecommendedLobbies = createAsyncThunk<services.LobbySearchResponse, services.RecommendedLobbiesParams>(
+  LOBBY_ACTION_TYPE.LOBBY_RECOMMENDED,
+  async (params, { rejectWithValue }) => {
+    try {
+      const res = await services.getRecommendedLobbies(params)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+export const clearLobbyRecommended = createAction(CLEAR_LOBBY_RECOMMENDED)

@@ -2,12 +2,14 @@ import { useRouter } from 'next/router'
 import { useContextualRouting } from 'next-use-contextual-routing'
 import { CommunityDetail } from '@services/community.service'
 import { JOIN_CONDITION, OPEN_RANGE, MEMBER_ROLE, OFFICIAL } from '@constants/community.constants'
+import { ESRoutes } from '@constants/route.constants'
 
 const useCommunityHelper = (
   community?: CommunityDetail
 ): {
   toEdit: () => void
   toCreate: () => void
+  toCreateTopic: () => void
   isModerator: boolean
   isNotMember: boolean
   isAutomatic: boolean
@@ -33,9 +35,16 @@ const useCommunityHelper = (
     })
   }
 
+  const toCreateTopic = () => {
+    router.push(makeContextualHref({ hash_key: hash_key }), ESRoutes.TOPIC_CREATE.replace(/:id/, hash_key), {
+      shallow: true,
+    })
+  }
+
   return {
     toEdit,
     toCreate,
+    toCreateTopic,
     isModerator,
     isNotMember,
     isAutomatic,

@@ -19,10 +19,6 @@ const InfoContainer: React.FC<{ isOfficial: boolean; data: CommunityDetail['attr
 
   const toProfile = (user_code) => router.push(`${ESRoutes.PROFILE}/${user_code}`)
 
-  const newLineText = (text) => {
-    return _.map(_.split(text, '\n'), (str, i) => <Typography key={i}>{str}</Typography>)
-  }
-
   return (
     <>
       {(!_.isEmpty(data.game_titles) || !_.isEmpty(data.features)) && (
@@ -48,7 +44,7 @@ const InfoContainer: React.FC<{ isOfficial: boolean; data: CommunityDetail['attr
             </a>
           )}
         >
-          {newLineText(data.description)}
+          <Typography className={classes.multiline}>{data.description}</Typography>
         </Linkify>
       </Box>
 
@@ -67,7 +63,7 @@ const InfoContainer: React.FC<{ isOfficial: boolean; data: CommunityDetail['attr
                   </a>
                 )}
               >
-                {newLineText(data.address)}
+                <Typography className={classes.multiline}>{data.address}</Typography>
               </Linkify>
             ) : (
               <Typography>{t('common:common.dash_separator')}</Typography>
@@ -115,7 +111,7 @@ const InfoContainer: React.FC<{ isOfficial: boolean; data: CommunityDetail['attr
                   <ESAvatar src={'/images/avatar.png'} />
                 ) : (
                   <ButtonBase onClick={() => toProfile(data.admin.user_code)}>
-                    <ESAvatar alt={data.admin.nickname} src={data.admin.avatar_image_url} />
+                    <ESAvatar alt={data.admin.nickname} src={data.admin.avatar_image_url} size={35} />
                   </ButtonBase>
                 )}
                 <Typography className={classes.ellipsis}>{data.admin.nickname}</Typography>
@@ -136,7 +132,7 @@ const InfoContainer: React.FC<{ isOfficial: boolean; data: CommunityDetail['attr
               <Box key={i} display="flex" flexDirection="row" alignItems="center" mt={0} mb={1}>
                 <LoginRequired>
                   <ButtonBase onClick={() => toProfile(organizer.user_code)}>
-                    <ESAvatar alt={organizer.nickname} src={organizer.avatar_image_url} />
+                    <ESAvatar alt={organizer.nickname} src={organizer.avatar_image_url} size={35} />
                   </ButtonBase>
 
                   <Typography className={classes.ellipsis}>{organizer.nickname}</Typography>
@@ -156,6 +152,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   chip: {
     marginRight: theme.spacing(1),
     marginBottom: theme.spacing(1),
+  },
+  multiline: {
+    whiteSpace: 'pre-wrap',
+    wordBreak: 'break-word',
   },
   linkify: {
     color: Colors.white,
