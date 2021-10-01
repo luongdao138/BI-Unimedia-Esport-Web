@@ -9,7 +9,7 @@ interface Props {
   onClick: () => void
 }
 
-const NotificationBadgeItem: React.FC<Props> = ({ data }) => {
+const NotificationBadgeItem: React.FC<Props> = ({ data, onClick }) => {
   const notification = data.attributes
   const classes = useStyles()
   const renderAvatar = () => {
@@ -25,7 +25,7 @@ const NotificationBadgeItem: React.FC<Props> = ({ data }) => {
     }
   }
   return (
-    <Box margin={1} display="flex" justifyContent="space-between">
+    <Box margin={1} display="flex" justifyContent="space-between" onClick={onClick}>
       <Box display="flex" overflow="hidden" className={classes.notificationWrap}>
         {renderAvatar()}
         <Box overflow="hidden" textOverflow="ellipsis" ml={2} display="flex" flexDirection="column" justifyContent="center" width="100%">
