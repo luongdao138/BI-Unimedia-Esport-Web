@@ -112,6 +112,11 @@ const TopicFollowerContainer: React.FC = () => {
       </Box>
       <div>
         <div className={classes.container}>
+          {meta && meta.loaded && !followersTopicList.length && (
+            <Box display="flex" py={3} justifyContent="center" alignItems="center">
+              <Typography>{t('common:community.no_data_topics')}</Typography>
+            </Box>
+          )}
           <InfiniteScroll
             dataLength={followersTopicList.length}
             next={!meta.pending && loadMore}
