@@ -112,11 +112,11 @@ const InfoContainer: React.FC = () => {
       </Box>
       {showResult && (
         <>
-          <Box mb={2}>
-            <ESLabel label={t('common:community.detail_search.result')} bold />
-          </Box>
           {!!topicList && topicList.length > 0 && topicListMeta.loaded && (
             <>
+              <Box mb={2}>
+                <ESLabel label={t('common:community.detail_search.result')} bold />
+              </Box>
               {topicList.map((d, i) => {
                 const attr = d.attributes
                 const latestDate = moment(attr.created_at).isSameOrAfter(attr.last_comment_date) ? attr.created_at : attr.last_comment_date
