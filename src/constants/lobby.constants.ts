@@ -111,30 +111,50 @@ export const LOBBY_DIALOGS = {
   },
 }
 
-export const defaultFilterOptions: LobbyFilterItem[] = [
+export const lobbyFilterOptions: LobbyFilterItem[] = [
   {
     type: LobbyFilterOption.all,
-    label: i18n.t('common:arenaSearchFilters.all'),
+    label: i18n.t('common:lobby.search.filter.all'),
+    loginRequired: false,
+  },
+  {
+    type: LobbyFilterOption.ready,
+    label: i18n.t('common:lobby.search.filter.ready'),
+    loginRequired: false,
+  },
+  {
+    type: LobbyFilterOption.recruiting,
+    label: i18n.t('common:lobby.search.filter.recruiting'),
+    loginRequired: false,
+  },
+  {
+    type: LobbyFilterOption.entry_closed,
+    label: i18n.t('common:lobby.search.filter.entry_closed'),
+    loginRequired: false,
+  },
+  {
+    type: LobbyFilterOption.in_progress,
+    label: i18n.t('common:lobby.search.filter.in_progress'),
+    loginRequired: false,
+  },
+  {
+    type: LobbyFilterOption.ended,
+    label: i18n.t('common:lobby.search.filter.ended'),
     loginRequired: false,
   },
   {
     type: LobbyFilterOption.suggested,
-    label: i18n.t('common:lobbySearchFilters.suggested'),
+    label: i18n.t('common:lobby.search.filter.suggested'),
     loginRequired: true,
   },
   {
-    type: LobbyFilterOption.recruiting,
-    label: i18n.t('common:lobbySearchFilters.beforeStart'),
-    loginRequired: false,
-  },
-  {
     type: LobbyFilterOption.joined,
-    label: i18n.t('common:lobbySearchFilters.inProgress'),
+    label: i18n.t('common:lobby.search.filter.joined'),
     loginRequired: true,
   },
   {
     type: LobbyFilterOption.organized,
-    label: i18n.t('common:lobbySearchFilters.organized'),
+    label: i18n.t('common:lobby.search.filter.organized'),
     loginRequired: true,
   },
 ]

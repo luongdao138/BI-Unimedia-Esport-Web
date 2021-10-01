@@ -19,7 +19,10 @@ const useFollower = () => {
   const meta = useAppSelector(getTopicFollowersMeta)
 
   const getFollowersTopicList = (params: TopicFollowersParams) => dispatch(actions.getTopicFollowers(params))
-  const resetMeta = () => dispatch(clearMetaData(actions.getTopicFollowers.typePrefix))
+  const resetMeta = () => {
+    dispatch(clearMetaData(actions.getTopicFollowers.typePrefix))
+    dispatch(actions.resetTopicFollowers())
+  }
 
   return { handleClick, followersTopicList, getFollowersTopicList, pages, meta, resetMeta }
 }

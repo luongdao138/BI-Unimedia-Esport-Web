@@ -17,6 +17,7 @@ import RadioVertical from '@components/RadioVertical'
 import ESLoader from '@components/Loader'
 import ESDialog from '@components/Modal'
 import ESStickyFooter from '@components/StickyFooter'
+import ESLabel from '@components/Label'
 import Avatar from '@components/Avatar'
 import ButtonPrimary from '@components/ButtonPrimary'
 import { ReportParams } from '@services/report.service'
@@ -73,11 +74,11 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
 
   const validationSchema = Yup.object().shape({
     user_email: Yup.string()
-      .test('email-validation', t('common.input_is_incorrect'), (value) => {
+      .test('email-validation', t('user_report.email_test_result'), (value) => {
         return CommonHelper.validateEmail(value)
       })
       .required(t('common.input_required')),
-    description: Yup.string().required(t('common.input_required')).max(1000),
+    description: Yup.string().required(t('common.input_required')).max(5000),
     reason_id: Yup.number()
       .test('reason_id', '', (value) => {
         return value !== -1
@@ -140,10 +141,10 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
           flexDirection="column"
           style={{ alignItems: 'flex-start', marginTop: _theme.spacing(1) }}
         >
-          <Box display="flex" mr={2} mb={2}>
+          <Box display="flex" mr={2} mb={2} width="100%">
             <Icon className={'fas fa-comment-alt'} fontSize="small" style={{ color: Colors.white, paddingTop: _theme.spacing(0.5) }} />
-            <Box color={Colors.white} fontSize={14} ml={1}>
-              {attr.topic_title}
+            <Box color={Colors.white} fontSize={14} ml={1} width="calc(100% - 15px)">
+              <Typography className={classes.topicEllipsis}>{attr.topic_title}</Typography>
             </Box>
           </Box>
           {isComment && (
@@ -156,11 +157,13 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
               <Avatar className={classes.topicAvatar} alt={attr.nickname} src={attr.avatar_image} />
             </ButtonBase>
 
-            <Box className={classes.userInfoBox} ml={1} maxWidth="77%">
-              <Typography variant="h3" style={{ color: Colors.white }}>
+            <Box ml={1} maxWidth="100%">
+              <Typography variant="h3" className={classes.topicEllipsis} style={{ color: Colors.white }}>
                 {attr.nickname}
               </Typography>
-              <Typography variant="body2">{'@' + attr.user_code}</Typography>
+              <Typography className={classes.topicEllipsis} variant="body2">
+                {'@' + attr.user_code}
+              </Typography>
             </Box>
           </Box>
 
@@ -168,7 +171,9 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
             <Typography variant="body1" style={{ color: Colors.white_opacity[70] }}>
               {attr.date}
             </Typography>
-            <Typography variant="body1">{attr.content}</Typography>
+            <Typography variant="body1" className={classes.wordBreak}>
+              {attr.content}
+            </Typography>
           </Box>
           {attr.image && renderClickableImage(attr.image)}
         </Box>
@@ -204,14 +209,17 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
         return <Typography variant="h2">{data.attributes.title}</Typography>
       case REPORT_TYPE.COMMUNITY:
         return (
-          <Box className={classes.userInfoContainer}>
-            <Box display="flex" alignItems="center" mr={2}>
-              <Icon className={`fas fa-users ${classes.communityIcon}`} />
+          <>
+            <ESLabel label={t('community.community_to_report')} size="small" />
+            <Box className={classes.userInfoContainer}>
+              <Box display="flex" alignItems="center" mr={2}>
+                <Icon className={`fas fa-users ${classes.communityIcon}`} />
+              </Box>
+              <Typography variant="h2" className={classes.wordBreak}>
+                {data.attributes.name}
+              </Typography>
             </Box>
-            <Typography variant="h2" className={classes.wordBreak}>
-              {data.attributes.name}
-            </Typography>
-          </Box>
+          </>
         )
       case REPORT_TYPE.TOPIC:
         return (
@@ -274,12 +282,9 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
         <ESStickyFooter
           disabled={false}
           noScroll
+          noBottomSpace
           content={
             <Box display="flex" flexDirection="column" alignItems="center">
-              <Box mb={2} className={classes.desc}>
-                <Typography align="center">{t('user_report.desc_first')}</Typography>
-                <Typography align="center">{t('user_report.desc_second')}</Typography>
-              </Box>
               <DialogActions style={{ justifyContent: 'center' }}>
                 <ButtonPrimary
                   style={{ width: 280 }}
@@ -310,6 +315,9 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
                 <Box pl={2}>
                   <Typography variant="h2">{title || t('user_report.title')}</Typography>
                 </Box>
+              </Box>
+              <Box mt={8}>
+                <Typography className={classes.desc}>{t('user_report.desc')}</Typography>
               </Box>
               <Box py={4}>{attr && reportInfo()}</Box>
               <Grid container>
@@ -395,6 +403,14 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
 }
 
 const useStyles = makeStyles((theme) => ({
+  topicEllipsis: {
+    display: '-webkit-box',
+    WebkitBoxOrient: 'vertical',
+    WebkitLineClamp: 1,
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    wordBreak: 'break-all',
+  },
   wordBreak: {
     wordBreak: 'break-all',
   },
@@ -436,10 +452,8 @@ const useStyles = makeStyles((theme) => ({
     paddingRight: 10,
   },
   desc: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    color: Colors.grey[400],
+    color: Colors.grey[300],
+    whiteSpace: 'pre-line',
   },
   message: {
     marginLeft: 15,

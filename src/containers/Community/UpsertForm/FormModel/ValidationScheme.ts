@@ -5,11 +5,13 @@ export const getValidationScheme = (): any => {
   return Yup.object({
     stepOne: Yup.object({
       name: Yup.string()
-        .strict(true)
-        .trim(i18n.t('common:community_create.input_required'))
         .required(i18n.t('common:common.input_required'))
         .max(100, i18n.t('common:common.validation.char_limit', { char_limit: 100 }))
-        .min(2, i18n.t('common:common.at_least')),
+        .min(2, i18n.t('common:common.at_least'))
+        .test('empty-check', i18n.t('common:common.input_incorrect'), (val) => {
+          if (val && val.length > 1 && val.trim().length === 0) return false
+          return true
+        }),
       description: Yup.string()
         .nullable()
         .max(5000, i18n.t('common:common.validation.char_limit', { char_limit: 5000 })),

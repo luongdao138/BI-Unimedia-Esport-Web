@@ -18,6 +18,7 @@ import LoginRequired from '@containers/LoginRequired'
 import InidividualEntryEditModal from '../ActionComponent/InidividualEntryEditModal'
 import TeamEntryEditModal from '../ActionComponent/TeamEntryEditModal'
 import ActionLabelButton from '../ActionComponent/ActionLabelButton'
+import { ButtonGroup } from '../BRHeaderContent'
 
 interface BRStatusRecruitingProps {
   arena: TournamentDetail
@@ -50,7 +51,7 @@ const BRStatusRecruiting: React.FC<BRStatusRecruitingProps> = ({ arena, userProf
       content={
         <Box display="flex" flexDirection="column" alignItems="center">
           <RemainingDate tournament={arena} />
-          <Box className={classes.buttonGroup} mt={3}>
+          <ButtonGroup mt={3}>
             <ESButton onClick={toParticipants} variant="outlined" fullWidth style={{ maxWidth: 160 }}>
               {isFreezed ? t('tournament.participants') : t('tournament.entry_members')}
             </ESButton>
@@ -81,13 +82,13 @@ const BRStatusRecruiting: React.FC<BRStatusRecruitingProps> = ({ arena, userProf
                 {t('tournament.group_chat')}
               </ActionLabelButton>
             )}
-          </Box>
+          </ButtonGroup>
         </Box>
       }
       footer={
         <div className={classes.footerContainer}>
-          <Box className={classes.buttonGroup} mb={3}>
-            {isTeamLeader ? (
+          {isTeamLeader ? (
+            <ButtonGroup mb={3}>
               <Box minWidth={256} className={classes.button}>
                 <LoginRequired>
                   <ButtonPrimary disabled={false} round fullWidth onClick={handleOpenEntryModal}>
@@ -95,9 +96,11 @@ const BRStatusRecruiting: React.FC<BRStatusRecruitingProps> = ({ arena, userProf
                   </ButtonPrimary>
                 </LoginRequired>
               </Box>
-            ) : null}
-          </Box>
-          {isModerator && !arena.attributes.is_freezed ? <Typography variant="body2">{t('tournament.confirm_brackets')}</Typography> : null}
+            </ButtonGroup>
+          ) : null}
+          {isModerator && !arena.attributes.is_freezed ? (
+            <Typography variant="body2">{t('tournament.confirm_participants')}</Typography>
+          ) : null}
 
           {/* Modals */}
 
@@ -127,37 +130,10 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     alignItems: 'center',
   },
-  buttonGroup: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    '& >*': {
-      marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1),
-      width: 160,
-    },
-    '& >*:first-child': {
-      marginLeft: 0,
-    },
-    '& >*:last-child': {
-      marginRight: 0,
-    },
-  },
   [theme.breakpoints.down('sm')]: {
     header: {
       '& span': {
         display: 'block',
-      },
-    },
-    buttonGroup: {
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'center',
-      '& >*': {
-        marginLeft: 0,
-        marginRight: 0,
-        marginTop: theme.spacing(1),
-        marginBottom: theme.spacing(1),
       },
     },
     buttonRight: {

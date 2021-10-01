@@ -71,9 +71,27 @@ const TopicCreate: React.FC = () => {
     }
   }, [formik.errors])
 
+  const isChanged = !_.isEqual(formik.values, initialValues)
+
+  useEffect(() => {
+    if (isChanged) {
+      window.addEventListener('beforeunload', unloadCallback, { capture: true })
+    } else {
+      window.removeEventListener('beforeunload', unloadCallback, { capture: true })
+    }
+    return () => window.removeEventListener('beforeunload', unloadCallback, { capture: true })
+  }, [isChanged])
+
+  const unloadCallback = (event) => {
+    if (navigator.userAgent.indexOf('Firefox') > -1 || navigator.userAgent.indexOf('Safari') > -1) {
+      event.preventDefault()
+    }
+    return (event.returnValue = '')
+  }
+
   const handleBack = () => {
     if (isConfirm) setIsConfirm(false)
-    else _.isEqual(formik.values, initialValues) ? handleReturn() : setIsDiscard(true)
+    else isChanged ? setIsDiscard(true) : handleReturn()
   }
 
   const handleSetConfirm = () => {
@@ -113,6 +131,7 @@ const TopicCreate: React.FC = () => {
     <ESStickyFooter
       disabled={false}
       noScroll
+      noBottomSpace
       content={
         <>
           {isConfirm ? (

@@ -10,6 +10,7 @@ import {
 } from '@store/lobby/selectors'
 import { PageMeta, ParticipantsItem, ParticipantParams, AllParticipantParams } from '@services/lobby.service'
 import { clearMetaData } from '@store/metadata/actions'
+import { useEffect } from 'react'
 
 const entryMetaSelector = createMetaSelector(actions.entryLobby)
 const cancelMetaSelector = createMetaSelector(actions.cancelLobby)
@@ -102,6 +103,13 @@ const useLobbyActions = (): {
 
   const resetMetaAll = () => dispatch(clearMetaData(actions.getAllParticipants.typePrefix))
   const resetAllParticipants = () => dispatch(actions.resetAllParticipants())
+
+  useEffect(() => {
+    return () => {
+      dispatch(clearMetaData(actions.entryLobby.typePrefix))
+      dispatch(clearMetaData(actions.unjoinLobby.typePrefix))
+    }
+  }, [])
 
   return {
     entryMeta,

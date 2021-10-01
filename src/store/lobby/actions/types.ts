@@ -17,9 +17,11 @@ export enum LOBBY_ACTION_TYPE {
   LOBBY_UNFOLLOW = 'lobby/unFollow',
   LOBBY_UNBLOCK = 'lobby/unBlock',
   LOBBY_RECENTS = 'lobby/recents',
+  LOBBY_RECOMMENDED = 'lobby/recommended',
 }
 
 export const RESET_LOBBY_PARTICIPANTS = 'lobby/resetLobbyParticipants'
 export const RESET_LOBBY_ALL_PARTICIPANTS = 'lobby/resetLobbyAllParticipants'
 export const CLEAR_LOBBY_DETAIL = 'lobby/clearLobbyDetail'
 export const CLEAR_LOBBY_RECENTS = 'lobby/clearLobbyRecents'
+export const CLEAR_LOBBY_RECOMMENDED = 'lobby/clearLobbyRecommended'

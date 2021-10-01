@@ -58,13 +58,17 @@ const LobbyCreate: React.FC = () => {
     validationSchema: getValidationScheme(lobby, editables),
     enableReinitialize: true,
     onSubmit: (values) => {
-      const { game_title_id, game_hardware_id } = values.stepOne
+      const { title, message, game_title_id, game_hardware_id } = values.stepOne
+      const { address } = values.stepTwo
       const selectedGameId = game_title_id.length > 0 ? game_title_id[0].id : null
       const gameHardwareId = game_hardware_id !== -1 ? game_hardware_id : null
 
       const data: LobbyUpsertParams = {
         ...values.stepOne,
         ...values.stepTwo,
+        title: title.trim(),
+        message: message.trim(),
+        address: address.trim(),
         game_title_id: selectedGameId,
         game_hardware_id: gameHardwareId,
       }

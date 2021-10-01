@@ -162,7 +162,7 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
                   <Box display="flex" flexDirection="row" alignItems="center">
                     <LoginRequired>
                       <ButtonBase onClick={() => toProfile(data.organizer.user_code)}>
-                        <ESAvatar alt={data.organizer.nickname} src={data.organizer_avatar} />
+                        <ESAvatar alt={data.organizer.nickname} src={data.organizer_avatar} size={35} />
                       </ButtonBase>
                     </LoginRequired>
                     <Typography className={classes.breakWord}>{data.organizer.nickname}</Typography>

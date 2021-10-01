@@ -1,7 +1,6 @@
 import { Box, Icon, IconButton, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
-import { isMobile } from 'react-device-detect'
 
 type CommunityDetailHeaderProps = {
   title: string
@@ -28,7 +27,7 @@ const CommunityDetailHeader: React.FC<CommunityDetailHeaderProps> = ({ title, co
         className={classes.background}
         style={{
           backgroundImage: `url(${cover || '/images/default_card.png'})`,
-          paddingTop: isMobile ? '45.41%' : '30.29%',
+          paddingTop: '30.21756647864625%',
         }}
       />
     </>
@@ -66,6 +65,11 @@ const useStyles = makeStyles((theme) => ({
     backgroundSize: 'cover',
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'center center',
+  },
+  ['@media (max-width: 1166px)']: {
+    backContainer: {
+      maxWidth: 660,
+    },
   },
   ['@media (max-width: 960px)']: {
     backContainer: {

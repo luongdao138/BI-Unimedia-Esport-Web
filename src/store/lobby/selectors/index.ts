@@ -16,19 +16,32 @@ export const getSearchLobbies = createSelector(getRoot, (state) => {
     return {
       ...item,
       participantsLimited: item.attributes.participants ? item.attributes.participants.slice(0, 3) : [],
-      startDate: DateHelper.formatDate(item.attributes.start_datetime),
-      entryEndDate: DateHelper.formatDate(item.attributes.entry_end_datetime),
+      startDate: DateHelper.formatLobbyCardDate(item.attributes.start_datetime),
+      entryEndDate: DateHelper.formatLobbyCardDate(item.attributes.entry_end_datetime),
     }
   })
 })
+
 export const getRecentLobbies = createSelector(getRoot, (state) => {
   return state.recentLobbies.map((item) => {
     return {
       ...item,
       participantsLimited: item.attributes.participants ? item.attributes.participants.slice(0, 3) : [],
-      startDate: DateHelper.formatDate(item.attributes.start_datetime),
-      entryEndDate: DateHelper.formatDate(item.attributes.entry_end_datetime),
+      startDate: DateHelper.formatLobbyCardDate(item.attributes.start_datetime),
+      entryEndDate: DateHelper.formatLobbyCardDate(item.attributes.entry_end_datetime),
     }
   })
 })
 export const getRecentLobbiesPageMeta = createSelector(getRoot, (state) => state.recentLobbiesPageMeta)
+
+export const getRecommendedLobbies = createSelector(getRoot, (state) => {
+  return state.recommendedLobbies.map((item) => {
+    return {
+      ...item,
+      participantsLimited: item.attributes.participants ? item.attributes.participants.slice(0, 3) : [],
+      startDate: DateHelper.formatLobbyCardDate(item.attributes.start_datetime),
+      entryEndDate: DateHelper.formatLobbyCardDate(item.attributes.entry_end_datetime),
+    }
+  })
+})
+export const getRecommendedLobbiesPageMeta = createSelector(getRoot, (state) => state.recommendedLobbiesPageMeta)

@@ -47,8 +47,8 @@ export type ReportData = {
     date: string
     image: string
     number: number
-    hash_key: string
     topic_title?: string
+    id: number
   }
 }
 
@@ -60,6 +60,7 @@ type CommunityHeaderProps = {
   setSelectedCommentNo?: Dispatch<SetStateAction<number>>
   onReport?: (comment: ReportData) => void
 }
+
 const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleReply, setOpenDelete, setSelectedCommentNo, onReport }) => {
   const classes = useStyles({ currentReplyNumberRectLeft })
   const { query } = useRouter()
@@ -98,6 +99,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
       number: commentData.comment_no,
       hash_key: commentData.hash_key,
       avatar_image: commentData.owner_profile,
+      id: commentData.id,
     },
   }
 
@@ -131,17 +133,19 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
         {_.map(
           _.filter(_.split(str, REPLY_REGEX), (el) => !_.isEmpty(el)),
           (content, index) => {
-            return content.match(REPLY_REGEX) && !isReply ? renderPopover(content, index) : content
+            return content.match(REPLY_REGEX) && !isReply ? renderPopover(content, index, i) : content
           }
         )}
       </Typography>
     ))
   }
 
-  const renderPopover = (content, index) => {
+  const renderPopover = (content, index, i) => {
     return (
-      <Link id={index} onClick={(e) => handleClickReply(e, content)} className={classes.reply}>
-        <Typography className={classes.replied_id}>{content}</Typography>
+      <Link key={`${index}-${i}`} onClick={(e) => handleClickReply(e, content)} className={classes.reply}>
+        <Typography component="span" className={classes.replied_id}>
+          {content}
+        </Typography>
       </Link>
     )
   }
@@ -150,7 +154,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
     return (
       <>
         <Box display="flex" alignItems="flex-start" justifyContent="space-between" mb={1}>
-          <Box className={classes.userInfoContainerMain}>
+          <Box className={classes.userInfoContainer}>
             <Typography className={classes.number}>{replyData.comment_no}</Typography>
             <Box ml={1}>
               <ButtonBase onClick={() => toProfile(replyData.user_code)}>
@@ -170,17 +174,15 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
           </Box>
         </Box>
         <Box mb={3}>
-          <Typography className={classes.content}>
-            <Linkify
-              componentDecorator={(decoratedHref, decoratedText, key) => (
-                <a target="_blank" rel="noopener noreferrer" href={decoratedHref} key={key} className={classes.linkify}>
-                  {decoratedText}
-                </a>
-              )}
-            >
-              <Typography>{newLineText(replyData.content, true)}</Typography>
-            </Linkify>
-          </Typography>
+          <Linkify
+            componentDecorator={(decoratedHref, decoratedText, key) => (
+              <a target="_blank" rel="noopener noreferrer" href={decoratedHref} key={key} className={classes.linkify}>
+                {decoratedText}
+              </a>
+            )}
+          >
+            {newLineText(replyData.content, true)}
+          </Linkify>
           {replyData.attachments &&
             replyData.attachments[0]?.assets_url &&
             renderClickableImage(replyData.attachments[0]?.assets_url, true)}
@@ -270,7 +272,6 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
           }}
           style={{
             left: contentRect.left + _theme.spacing(3),
-            top: 60,
           }}
         >
           {!_.isEmpty(commentDetail) &&
@@ -289,7 +290,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
               </Box>
             </Box>
           )}
-          {commentDetailMeta.pending && (
+          {commentDetail === null && !commentDetailMeta.loaded && commentDetailMeta.pending && (
             <Box display="flex" justifyContent="center" alignItems="center">
               <ESLoader />
             </Box>
@@ -391,9 +392,6 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     width: 'calc(100% - 150px)',
   },
-  userInfoContainerMain: {
-    display: 'flex',
-  },
   userAvatarBox: {
     display: 'flex',
     borderRadius: 30,
@@ -488,6 +486,10 @@ const useStyles = makeStyles((theme) => ({
   content: {
     color: Colors.grey[300],
     wordBreak: 'break-word',
+    '&:before': {
+      content: '" "',
+      whiteSpace: 'pre',
+    },
   },
   number: {
     fontSize: 10,

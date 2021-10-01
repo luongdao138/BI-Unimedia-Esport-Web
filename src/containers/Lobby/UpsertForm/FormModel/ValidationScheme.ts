@@ -19,18 +19,25 @@ export const getValidationScheme = (data: LobbyDetail, editables: EditableTypes)
     stepOne: Yup.object({
       title: Yup.string()
         .required(i18n.t('common:common.input_required'))
-        .max(60, i18n.t('common:common.validation.char_limit', { char_limit: 60 })),
+        .max(191, i18n.t('common:common.validation.char_limit', { char_limit: 191 }))
+        .min(2, i18n.t('common:common.at_least'))
+        .test('empty-check', i18n.t('common:common.input_incorrect'), (val) => {
+          if (val && val.length > 1 && val.trim().length === 0) return false
+          return true
+        }),
       message: Yup.string()
         .nullable()
         .max(5000, i18n.t('common:common.validation.char_limit', { char_limit: 5000 })),
       categories: Yup.array(),
       game_title_id: Yup.array().nullable(),
       game_hardware_id: Yup.number().nullable().integer(i18n.t('common:common.integer')),
-      max_participants: Yup.number()
+      max_participants: Yup.string()
         .required(i18n.t('common:common.input_required'))
-        .min(2, i18n.t('common:arena.participants_limit'))
-        .max(128, i18n.t('common:arena.participants_limit'))
-        .integer(i18n.t('common:common.integer')),
+        .matches(/^-?(0|[1-9]\d*)$/, { excludeEmptyString: false, message: i18n.t('common:common.validation.only_digit') })
+        .test('participant_boundary', i18n.t('common:lobby.validation.participants_limit'), (val) => {
+          const num = parseInt(val)
+          return num >= 2 && num <= 128
+        }),
       organizer_participated: Yup.boolean(),
     }),
     stepTwo: Yup.object({
@@ -62,7 +69,7 @@ export const getValidationScheme = (data: LobbyDetail, editables: EditableTypes)
       }),
       acceptance_end_start_date: Yup.string().when(['entry_end_datetime', 'start_datetime'], {
         is: (entry_end_datetime, start_datetime) => {
-          return Date.parse(entry_end_datetime) > Date.parse(start_datetime)
+          return Date.parse(entry_end_datetime) >= Date.parse(start_datetime)
         },
         then: Yup.string().required(i18n.t('common:common.validation.before_start_date')),
       }),

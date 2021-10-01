@@ -1,4 +1,5 @@
 import { createContext, useContext } from 'react'
+import { useTranslation } from 'react-i18next'
 import { makeStyles, Typography } from '@material-ui/core'
 import { TournamentRule } from '@services/arena.service'
 import { ReactNode } from 'hoist-non-react-statics/node_modules/@types/react'
@@ -9,13 +10,14 @@ ArenaResultContext.displayName = 'ArenaResultContext'
 
 function ResultList(props: { rule: TournamentRule; children: ReactNode }) {
   const classes = useStyles()
+  const { t } = useTranslation('common')
   return (
     <ArenaResultContext.Provider value={props.rule}>
       <div className={classes.listHeader}>
-        <Typography className={classes.headerTitle}>順位</Typography>
-        <Typography className={classes.headerTitle}>プレイヤー</Typography>
+        <Typography className={classes.headerTitle}>{t('arena.listHeaders.place')}</Typography>
+        <Typography className={classes.headerTitle}>{t('arena.listHeaders.player')}</Typography>
         <Typography className={classes.headerTitle}>
-          {props.rule === 'score_attack' ? 'スコア' : props.rule === 'time_attack' ? 'タイム' : ''}
+          {props.rule === 'score_attack' ? t('arena.listHeaders.score') : props.rule === 'time_attack' ? t('arena.listHeaders.time') : ''}
         </Typography>
       </div>
       <div className={classes.listWrapper}>{props.children}</div>

@@ -19,7 +19,11 @@ export type LobbySearchParams = {
 export enum LobbyFilterOption {
   all = 'all',
   suggested = 'suggested',
+  ready = 'ready',
   recruiting = 'recruiting',
+  entry_closed = 'entry_closed',
+  in_progress = 'in_progress',
+  ended = 'ended',
   joined = 'joined',
   organized = 'organized',
 }
@@ -217,6 +221,10 @@ export type RecentLobbiesParams = {
   page?: number
 }
 
+export type RecommendedLobbiesParams = {
+  page?: number
+}
+
 export const entry = async (hash_key: string): Promise<EntryLobbyResponse> => {
   const { data } = await api.post<EntryLobbyResponse>(URI.LOBBY_ENTRY.replace(/:hash_key/gi, hash_key))
   return data
@@ -281,5 +289,10 @@ export const getLobbyDetail = async (hash_key: string | string[]): Promise<Lobby
 
 export const getRecentLobbies = async (params: RecentLobbiesParams): Promise<LobbySearchResponse> => {
   const { data } = await api.post<LobbySearchResponse>(URI.LOBBY_RECENTS, params)
+  return data
+}
+
+export const getRecommendedLobbies = async (params: RecommendedLobbiesParams): Promise<LobbySearchResponse> => {
+  const { data } = await api.post<LobbySearchResponse>(URI.LOBBY_RECOMMENDED, params)
   return data
 }
