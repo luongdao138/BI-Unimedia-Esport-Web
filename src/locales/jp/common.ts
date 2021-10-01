@@ -392,6 +392,7 @@ export default {
     twitch: 'TwitchURL',
     instagram: 'InstagramURL',
     discord: 'DiscordTag',
+    tag_up_to: 'タグは５つまで登録できます',
   },
   gender: {
     male: '男性',
@@ -963,7 +964,8 @@ export default {
     see_tournament: '該当の大会をみる',
     see_lobby: '該当の募集をみる',
     lets_start: 'メッセージを入力',
-    select_destination: '宛先を選んでください',
+    select_destination: `宛先を選んでください 
+     宛先選択した上でメッセージを送るとグループが確定します`,
     already_member: '既にメンバーです',
     chat_copied: 'メッセージ内容をコピーしました',
     member_add_placeholder: 'ニックネーム',

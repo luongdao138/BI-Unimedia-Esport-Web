@@ -45,7 +45,12 @@ const roomListUpdate = (roomList: ChatDataType[] | undefined, message: MessageTy
       } else {
         updatedRoom = _.map(clonedList, function (a: ChatDataType) {
           return a.chatRoomId === msg.chatRoomId
-            ? { ...a, lastMsgAt: msg.createdAt, lastMsg: msg.formattedMsg, unseenCount: a.unseenCount + 1 }
+            ? {
+                ...a,
+                lastMsgAt: msg.createdAt,
+                lastMsg: msg.formattedMsg,
+                unseenCount: _.get(msg, 'isMe', false) === true ? a.unseenCount : a.unseenCount + 1,
+              }
             : a
         })
       }
