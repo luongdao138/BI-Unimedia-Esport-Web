@@ -53,11 +53,10 @@ const FollowList: React.FC<Props> = ({ community }) => {
   const _theme = useTheme()
   const isMD = useMediaQuery(_theme.breakpoints.down('md'))
   const isSM = useMediaQuery(_theme.breakpoints.down('sm'))
-  const containerHeight = use100vh()
   const mdHeight = use100vh() - 115 - 60 - 72
   const smHeight = use100vh() - 115 - 72
   const desktopHeight = use100vh() - 163 - 60 - 72
-  const height = isMD ? mdHeight : isSM ? smHeight : desktopHeight
+  const height = isSM ? smHeight : isMD ? mdHeight : desktopHeight
 
   const [open, setOpen] = useState(false)
   const { isModerator } = useCommunityHelper(community)
@@ -274,7 +273,7 @@ const FollowList: React.FC<Props> = ({ community }) => {
           }
         >
           <BlankLayout>
-            <Box pt={7.5} className={classes.topContainer} style={{ height: containerHeight }}>
+            <Box pt={7.5} className={classes.topContainer}>
               <Box py={2} display="flex" flexDirection="row" alignItems="center">
                 <IconButton className={classes.iconButtonBg} onClick={handleClose}>
                   <Icon className="fa fa-arrow-left" fontSize="small" />
