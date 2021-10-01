@@ -29,6 +29,8 @@ const CommunityContainer: React.FC = () => {
   const router = useRouter()
   const contentRect = useRect(contentRef)
   topicCreateRightPx = contentRect.left
+  const _theme = useTheme()
+  const isMobile = useMediaQuery(_theme.breakpoints.down('sm'), { noSsr: true })
 
   const classes = useStyles({ topicCreateRightPx })
 
@@ -60,9 +62,6 @@ const CommunityContainer: React.FC = () => {
   const goToHomeTopic = () => {
     router.push(ESRoutes.HOME)
   }
-
-  const _theme = useTheme()
-  const isMobile = useMediaQuery(_theme.breakpoints.down('sm'))
 
   const renderBody = () => {
     return (
