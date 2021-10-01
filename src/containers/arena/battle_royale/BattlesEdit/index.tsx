@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import { makeStyles } from '@material-ui/core/styles'
-import { Box, Icon, Typography } from '@material-ui/core'
+import { Box, Icon } from '@material-ui/core'
 import BRListItem from '@containers/arena/battle_royale/Partials/BRListItem'
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
@@ -169,7 +169,7 @@ const ArenaBattlesEdit: React.FC = () => {
         >
           <HeaderWithButton title={tournament.attributes.title} />
           <Box pt={3} pb={3} textAlign="center">
-            {tournament.attributes.is_freezed ? null : <Typography>順位を入力してください</Typography>}
+            {/* {tournament.attributes.is_freezed ? null : <Typography>順位を入力してください</Typography>} */}
           </Box>
           <BRList className={classes.listContainer}>
             {selecteds.map((v, i) => (
