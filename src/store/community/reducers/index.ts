@@ -144,6 +144,7 @@ export default createReducer(initialState, (builder) => {
   })
   builder.addCase(actions.clearSearchTopic, (state) => {
     state.topicSearchList = []
+    state.topicSearchParams = undefined
     state.topicSearchListMeta = undefined
   })
   builder.addCase(actions.followCommunity.fulfilled, (state, action) => {
