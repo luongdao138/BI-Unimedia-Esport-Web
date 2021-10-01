@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Box, Typography, IconButton, Icon, Theme, Button, Grid } from '@material-ui/core'
+import { Box, Typography, IconButton, Icon, Theme, Button, Grid, useMediaQuery, useTheme } from '@material-ui/core'
 import ESModal from '@components/Modal'
 import UserListItem from '@components/UserItem'
 import { useTranslation } from 'react-i18next'
@@ -19,6 +19,7 @@ import _ from 'lodash'
 import ESLoader from '@components/Loader'
 import { MEMBER_ROLE } from '@constants/community.constants'
 import useCommunityDetail from '../../useCommunityDetail'
+import { use100vh } from 'react-div-100vh'
 
 type Props = {
   community: CommunityDetail
@@ -48,6 +49,16 @@ const FollowList: React.FC<Props> = ({ community }) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const hash_key = community.attributes.hash_key
+
+  const _theme = useTheme()
+  const isMD = useMediaQuery(_theme.breakpoints.down('md'))
+  const isSM = useMediaQuery(_theme.breakpoints.down('sm'))
+  const containerHeight = use100vh()
+  const mdHeight = use100vh() - 115 - 60 - 72
+  const smHeight = use100vh() - 115 - 72
+  const desktopHeight = use100vh() - 163 - 60 - 72
+  const height = isMD ? mdHeight : isSM ? smHeight : desktopHeight
+
   const [open, setOpen] = useState(false)
   const { isModerator } = useCommunityHelper(community)
   const { getMembers, membersList, pages, resetMembers, membersMeta, submitMembers, resetMeta } = useFollowList()
@@ -201,7 +212,7 @@ const FollowList: React.FC<Props> = ({ community }) => {
 
   const renderAdminMemberList = () => {
     return (
-      <Box mt={4} height="100%" className={`${classes.scroll} ${classes.list}`}>
+      <Box mt={4} className={`${classes.scroll} ${classes.list}`}>
         {_.isArray(groupedMembers) &&
           groupedMembers
             .filter((g) => !_.isEmpty(g.value))
@@ -263,7 +274,7 @@ const FollowList: React.FC<Props> = ({ community }) => {
           }
         >
           <BlankLayout>
-            <Box pt={7.5} className={classes.topContainer}>
+            <Box pt={7.5} className={classes.topContainer} style={{ height: containerHeight }}>
               <Box py={2} display="flex" flexDirection="row" alignItems="center">
                 <IconButton className={classes.iconButtonBg} onClick={handleClose}>
                   <Icon className="fa fa-arrow-left" fontSize="small" />
@@ -273,7 +284,7 @@ const FollowList: React.FC<Props> = ({ community }) => {
                 </Box>
               </Box>
               {!_.isEmpty(groupedMembers) && !_.isEmpty(membersList) && (
-                <Box id="scrollableDiv" pr={10 / 8} className={`${classes.scroll} ${classes.list} ${classes.scrollableHeight}`}>
+                <Box id="scrollableDiv" style={{ height: height }} pr={10 / 8} className={`${classes.scroll} ${classes.list}`}>
                   <InfiniteScroll
                     dataLength={membersList.length}
                     next={loadMore}
@@ -347,6 +358,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   list: {
     overflow: 'auto',
     overflowX: 'hidden',
+    margin: 0,
+  },
+  topContainer: {
+    margin: 0,
   },
   linkUnapproved: {
     textDecoration: 'underline',
@@ -358,14 +373,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   loader: {
     textAlign: 'center',
   },
-  scrollableHeight: {
-    height: 'calc(100vh - 163px - 60px - 72px)',
-  },
-  [theme.breakpoints.down('md')]: {
-    scrollableHeight: {
-      height: 'calc(100vh - 115px - 60px - 72px)',
-    },
-  },
   [theme.breakpoints.down('sm')]: {
     container: {
       paddingLeft: 0,
@@ -373,9 +380,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     topContainer: {
       paddingTop: 0,
-    },
-    scrollableHeight: {
-      height: 'calc(100vh - 115px - 72px)',
     },
   },
 }))
