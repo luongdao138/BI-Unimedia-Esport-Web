@@ -111,16 +111,11 @@ export const LOBBY_DIALOGS = {
   },
 }
 
-export const defaultFilterOptions: LobbyFilterItem[] = [
+export const lobbyFilterOptions: LobbyFilterItem[] = [
   {
     type: LobbyFilterOption.all,
     label: i18n.t('common:lobby.search.filter.all'),
     loginRequired: false,
-  },
-  {
-    type: LobbyFilterOption.suggested,
-    label: i18n.t('common:lobby.search.filter.suggested'),
-    loginRequired: true,
   },
   {
     type: LobbyFilterOption.ready,
@@ -146,6 +141,11 @@ export const defaultFilterOptions: LobbyFilterItem[] = [
     type: LobbyFilterOption.ended,
     label: i18n.t('common:lobby.search.filter.ended'),
     loginRequired: false,
+  },
+  {
+    type: LobbyFilterOption.suggested,
+    label: i18n.t('common:lobby.search.filter.suggested'),
+    loginRequired: true,
   },
   {
     type: LobbyFilterOption.joined,
