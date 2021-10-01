@@ -444,10 +444,12 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: theme.spacing(1),
     display: 'flex',
     flexDirection: 'row',
+    alignItems: 'center',
     flexShrink: 0,
     height: '36px',
   },
   button: {
+    height: 36,
     paddingTop: 2,
     paddingBottom: 2,
     paddingLeft: 5,
@@ -476,7 +478,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
   },
   menuOuter: {
-    marginLeft: theme.spacing(2),
+    marginLeft: theme.spacing(0),
   },
   [theme.breakpoints.down('sm')]: {
     commentIcon: {
