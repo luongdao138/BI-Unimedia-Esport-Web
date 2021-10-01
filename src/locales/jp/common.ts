@@ -1246,6 +1246,7 @@ export default {
     organizer_unjoin: '含めない',
   },
   community_create: {
+    input_required: '入力内容が適切ではありません',
     title: 'コミュニティを作成する',
     edit_title: '募集を作成する',
     name: 'コミュニティ名',
