@@ -23,6 +23,7 @@ import styled from 'styled-components'
 import { useRect } from '@utils/hooks/useRect'
 import { REPLY_REGEX } from '@constants/community.constants'
 import moment from 'moment'
+import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
 
 let currentReplyNumberRectLeft: number
 const StyledBox = styled(Box)``
@@ -30,6 +31,7 @@ const contentRef = createRef<HTMLDivElement>()
 
 type StyleParams = {
   currentReplyNumberRectLeft: number
+  isBottom: boolean
 }
 
 type MenuParams = {
@@ -62,7 +64,9 @@ type CommunityHeaderProps = {
 }
 
 const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleReply, setOpenDelete, setSelectedCommentNo, onReport }) => {
-  const classes = useStyles({ currentReplyNumberRectLeft })
+  const [isBottom, setIsBottom] = useState<boolean>(false)
+  const classes = useStyles({ currentReplyNumberRectLeft, isBottom })
+  const windowDimensions = useWindowDimensions()
   const { query } = useRouter()
   const { topic_hash_key } = query
   const { t } = useTranslation(['common'])
@@ -77,8 +81,14 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
 
   const handleClickReply = (event, content) => {
     getCommentDetail({ topic_hash: topic_hash_key, comment_no: content.slice(2) })
-    setReplyAnchorEl(event.currentTarget)
+    const anchor = event.currentTarget.getBoundingClientRect()
+    if (windowDimensions.height / 2 < anchor.top) {
+      setIsBottom(false)
+    } else {
+      setIsBottom(true)
+    }
     currentReplyNumberRectLeft = event.currentTarget.getBoundingClientRect().left - contentRect.left
+    setReplyAnchorEl(event.currentTarget)
   }
 
   const handleCloseReply = () => {
@@ -263,11 +273,11 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
           className={classes.mainComment}
           onClose={handleCloseReply}
           anchorOrigin={{
-            vertical: 'top',
+            vertical: isBottom ? 'bottom' : 'top',
             horizontal: 'left',
           }}
           transformOrigin={{
-            vertical: 'bottom',
+            vertical: isBottom ? 'top' : 'bottom',
             horizontal: 'right',
           }}
           style={{
@@ -512,7 +522,9 @@ const useStyles = makeStyles((theme) => ({
       '&:before': {
         content: "''",
         position: 'absolute',
-        top: 'Calc(100% + 3px)',
+        top: (props: StyleParams) => (props.isBottom ? 'auto' : 'Calc(100% + 3px)'),
+        bottom: (props: StyleParams) => (props.isBottom ? 'Calc(100% + 2px)' : 'auto'),
+        transform: (props: StyleParams) => (props.isBottom ? 'rotate(180deg)' : 'none'),
         left: (props: StyleParams) => props.currentReplyNumberRectLeft - 12,
         marginLeft: -5,
         borderWidth: 5,
