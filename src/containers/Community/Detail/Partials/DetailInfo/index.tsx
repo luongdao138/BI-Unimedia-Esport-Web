@@ -125,7 +125,7 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
     } else if (data.my_role === MEMBER_ROLE.REQUESTED) {
       handleChangeRole(ROLE_TYPES.IS_REQUESTED, true)
     }
-  }, [])
+  }, [detail])
 
   useEffect(() => {
     if (followCommunityMeta.loaded && isAutomatic) {
