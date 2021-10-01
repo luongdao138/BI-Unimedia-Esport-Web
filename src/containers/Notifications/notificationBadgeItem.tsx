@@ -62,7 +62,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: '-webkit-box',
     boxOrient: 'vertical',
     lineClamp: 2,
-    wordBreak: 'break-all',
     overflow: 'hidden',
     width: '100%',
     maxHeight: 42,
