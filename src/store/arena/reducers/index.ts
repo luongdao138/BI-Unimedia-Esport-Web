@@ -63,7 +63,6 @@ export default createReducer(initialState, (builder) => {
     if (action.payload.meta != undefined && action.payload.meta.current_page > 1) {
       searchTournaments = state.searchTournaments.concat(action.payload.data)
     }
-
     state.searchTournaments = searchTournaments
     state.searchTournamentsMeta = action.payload.meta
   })

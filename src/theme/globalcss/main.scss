@@ -5,9 +5,6 @@
   width: 100%;
   padding-top: 60px;
   position: relative;
-  transform: translateZ(0);
-  -webkit-transform: translateZ(0);
-  will-change: transform;
 }
 
 body {
@@ -648,6 +645,12 @@ body.has-sticky-div .sticky-div {
   }
 }
 
+@media (max-width: 720px) {
+  .community-tab button.MuiTab-root {
+    min-width: 160px;
+  }
+}
+
 @media (max-width: 960px) {
   .aside-left {
     display: none;
@@ -708,6 +711,16 @@ body.has-sticky-div .sticky-div {
   @media (max-width: 414px) {
     .logo {
       width: 80px;
+    }
+  }
+  @media (max-width: 720px) {
+    .community-tab button.MuiTab-root {
+      min-width: 120px;
+    }
+  }
+  @media (max-width: 570px) {
+    .community-tab button.MuiTab-root {
+      min-width: 90px;
     }
   }
 }
