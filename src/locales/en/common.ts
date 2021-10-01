@@ -807,7 +807,7 @@ export default {
       ready: '受付前',
       recruiting: '受付中',
       entry_closed: '受付締切',
-      in_progress: '本日開催',
+      in_progress: '開催中',
       ended: '終了',
     },
     toasts: {
