@@ -29,7 +29,7 @@ const ChatSideBar: React.FC<ChatSideBarProps> = ({ toggleChatBar, expand }) => {
     dispatch(socketCreators.cleanRoom())
   }, [])
 
-  const debouncedHandleMouseEnter = debounce(() => toggleChatBar(true), 500)
+  const debouncedHandleMouseEnter = debounce(() => toggleChatBar(true), 300)
 
   const handlOnMouseLeave = () => {
     toggleChatBar(false)
