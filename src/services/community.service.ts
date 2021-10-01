@@ -138,21 +138,8 @@ export type PageMeta = {
   total_pages: number
 }
 
-export enum CommunityMemberRole {
-  all = 'all',
-  admin = 'admin',
-  member = 'member',
-  co_organizer = 'moderator',
-  leave = 'leave',
-  requested = 'requested',
-  reported = 'reported',
-  system = 'system',
-  moderator_member = 'moderator_member',
-}
-
 export type CommunityMembersParams = {
   hash_key: string
-  role: CommunityMemberRole
   page?: number
 }
 
@@ -392,7 +379,7 @@ export type TopicSearchItem = {
     last_comment: LastComment
     is_mine: boolean
     sequence_no: any
-    member_role: CommunityMemberRole
+    member_role: number
     is_new: boolean
     can_remove: boolean
   }
