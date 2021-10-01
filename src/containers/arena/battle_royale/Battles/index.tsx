@@ -15,10 +15,10 @@ import useAddToast from '@utils/hooks/useAddToast'
 import { ParticipantsResponse } from '@services/arena.service'
 import BRScoreInput from '../Partials/BRScoreInput'
 import BRList from '../Partials/BRList'
-import { Typography, Box } from '@material-ui/core'
 import StickyFooter from '../Partials/StickyFooter'
 import ButtonPrimary from '@components/ButtonPrimary'
 import useArenaHelper from '@containers/arena/hooks/useArenaHelper'
+import RuleHeader from './RuleHeader'
 
 const ArenaBattles: React.FC = () => {
   const router = useRouter()
@@ -107,9 +107,9 @@ const ArenaBattles: React.FC = () => {
       }
     >
       {detailMeta.loaded && <HeaderWithButton title={tournament.attributes.title} />}
-      <Box pt={3} pb={3} textAlign="center">
-        <Typography>スコアを入力してください</Typography>
-      </Box>
+
+      <RuleHeader textAlign="center" pt={3} pb={3} rule={'time_attack'} />
+
       <BRList className={classes.listContainer} rule={tournament?.attributes.rule}>
         {selecteds.map((v) => (
           <BRListItem
@@ -122,7 +122,7 @@ const ArenaBattles: React.FC = () => {
             <BRScoreInput
               value={v.attributes.position || ''}
               onChange={({ target: { value } }) => setScores(value === '' ? null : Number(value), v.id)}
-              type={tournament.attributes.rule}
+              type={'time_attack'}
               disabled={(v.attributes.is_fixed_score || !v.highlight) && !isModerator}
             />
           </BRListItem>

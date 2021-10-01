@@ -17,7 +17,7 @@ const BRScoreInput: React.FC<OutlinedInputProps & { type: TournamentRule }> = ({
       </div>
     )
   } else if (type === 'time_attack') {
-    return <BRTimeInput />
+    return <BRTimeInput {...props} />
   } else {
     return <BRInput {...props} placeholder="未入力" />
   }

@@ -8,6 +8,7 @@ import { clearMetaData } from '@store/metadata/actions'
 import * as commonActions from '@store/common/actions'
 import { useTranslation } from 'react-i18next'
 import { useRouter } from 'next/router'
+import { ESRoutes } from '@constants/route.constants'
 
 const _setParticipantMeta = createMetaSelector(actions.setParticipant)
 const _setParticipantsMeta = createMetaSelector(actions.setParticipants)
@@ -63,6 +64,7 @@ const useModeratorActions = (): {
     if (freezeMeta.loaded) {
       dispatch(commonActions.addToast(t('common:arena.br_freeze_success')))
       resetFreezeMeta()
+      if (router.query.hash_key) router.push(`${ESRoutes.ARENA}/${router.query.hash_key}`)
     }
   }, [freezeMeta.loaded])
 
