@@ -596,6 +596,7 @@ export default {
   },
   topic: {
     topic_follower_list: 'フォローしている人の書き込みトピック',
+    topic_not_found: 'トピック情報を取得出来ませんでした',
     report: {
       button: 'トピックを通報',
       title: '通報するトピック',
@@ -1269,6 +1270,8 @@ export default {
     discard: {
       title: '内容を破棄します',
       message: '画面を戻ると、現在の入力内容は破棄されます。よろしいですか？',
+      message_part1: '画面を戻ると、現在の入力内容は破棄されます。',
+      message_part2: 'よろしいですか？',
       confirm: '内容を破棄して戻る',
       edit_title: '内容を破棄します',
       edit_confirm: '内容を破棄して戻る',
@@ -1307,6 +1310,8 @@ export default {
     discard: {
       title: '内容を破棄します',
       message: '画面を戻ると、現在の入力内容は破棄されます。よろしいですか？',
+      message_part1: '画面を戻ると、現在の入力内容は破棄されます。',
+      message_part2: 'よろしいですか？',
       confirm: '内容を破棄して戻る',
     },
     create_success: 'トピックを作成しました',

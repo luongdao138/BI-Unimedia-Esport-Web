@@ -6,10 +6,11 @@ import React, { useEffect, useState, Dispatch, SetStateAction } from 'react'
 import useUploadImage from '@utils/hooks/useUploadImage'
 import { useTranslation } from 'react-i18next'
 import ImageUploader from '../ImageUploader'
-import { useRouter } from 'next/router'
+import router, { useRouter } from 'next/router'
 import _ from 'lodash'
 import useCheckNgWord from '@utils/hooks/useCheckNgWord'
 import { useAppDispatch } from '@store/hooks'
+import * as commonActions from '@store/common/actions'
 import { showDialog } from '@store/common/actions'
 import { NG_WORD_AREA, NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
 import useTopicDetail from '../../useTopicDetail'
@@ -31,7 +32,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ reply_param, setPage, setComm
   const { t } = useTranslation(['common'])
   const dispatch = useAppDispatch()
   const { checkNgWord } = useCheckNgWord()
-  const { createComment, createCommentMeta } = useTopicDetail()
+  const { createComment, createCommentMeta, resetCommentCreateMeta } = useTopicDetail()
   const { uploadCommentImage } = useUploadImage()
 
   const [isUploading, setUploading] = useState(false)
@@ -53,7 +54,11 @@ const Comment: React.FC<CommunityHeaderProps> = ({ reply_param, setPage, setComm
       setImageURL('')
       setPage(1)
       setCommentCount(commentCount + 1)
+    } else if (!createCommentMeta.pending && createCommentMeta.error) {
+      dispatch(commonActions.addToast(t('common:topic.topic_not_found')))
+      router.back()
     }
+    resetCommentCreateMeta()
   }, [createCommentMeta])
 
   const handleUpload = (file: File) => {
