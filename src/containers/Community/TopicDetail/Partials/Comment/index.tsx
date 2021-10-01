@@ -60,6 +60,7 @@ type CommunityHeaderProps = {
   setSelectedCommentNo?: Dispatch<SetStateAction<number>>
   onReport?: (comment: ReportData) => void
 }
+
 const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleReply, setOpenDelete, setSelectedCommentNo, onReport }) => {
   const classes = useStyles({ currentReplyNumberRectLeft })
   const { query } = useRouter()
@@ -132,17 +133,19 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
         {_.map(
           _.filter(_.split(str, REPLY_REGEX), (el) => !_.isEmpty(el)),
           (content, index) => {
-            return content.match(REPLY_REGEX) && !isReply ? renderPopover(content, index) : content
+            return content.match(REPLY_REGEX) && !isReply ? renderPopover(content, index, i) : content
           }
         )}
       </Typography>
     ))
   }
 
-  const renderPopover = (content, index) => {
+  const renderPopover = (content, index, i) => {
     return (
-      <Link id={index} onClick={(e) => handleClickReply(e, content)} className={classes.reply}>
-        <Typography className={classes.replied_id}>{content}</Typography>
+      <Link key={`${index}-${i}`} onClick={(e) => handleClickReply(e, content)} className={classes.reply}>
+        <Typography component="span" className={classes.replied_id}>
+          {content}
+        </Typography>
       </Link>
     )
   }
@@ -171,17 +174,15 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
           </Box>
         </Box>
         <Box mb={3}>
-          <Typography className={classes.content}>
-            <Linkify
-              componentDecorator={(decoratedHref, decoratedText, key) => (
-                <a target="_blank" rel="noopener noreferrer" href={decoratedHref} key={key} className={classes.linkify}>
-                  {decoratedText}
-                </a>
-              )}
-            >
-              <Typography>{newLineText(replyData.content, true)}</Typography>
-            </Linkify>
-          </Typography>
+          <Linkify
+            componentDecorator={(decoratedHref, decoratedText, key) => (
+              <a target="_blank" rel="noopener noreferrer" href={decoratedHref} key={key} className={classes.linkify}>
+                {decoratedText}
+              </a>
+            )}
+          >
+            {newLineText(replyData.content, true)}
+          </Linkify>
           {replyData.attachments &&
             replyData.attachments[0]?.assets_url &&
             renderClickableImage(replyData.attachments[0]?.assets_url, true)}
@@ -485,6 +486,10 @@ const useStyles = makeStyles((theme) => ({
   content: {
     color: Colors.grey[300],
     wordBreak: 'break-word',
+    '&:before': {
+      content: '" "',
+      whiteSpace: 'pre',
+    },
   },
   number: {
     fontSize: 10,
