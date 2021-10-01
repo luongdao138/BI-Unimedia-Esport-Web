@@ -26,7 +26,7 @@ const TopicDetailContainer: React.FC = () => {
   const classes = useStyles()
   const router = useRouter()
   const { back } = useRouter()
-  const { topic_hash_key, hash_key } = router.query
+  const { topic_hash_key, hash_key, from } = router.query
   const {
     getTopicDetail,
     topic,
@@ -117,7 +117,7 @@ const TopicDetailContainer: React.FC = () => {
 
   useEffect(() => {
     if (communityDetail && !isAutomatic && isNotMember) {
-      router.push({ pathname: ESRoutes.COMMUNITY_DETAIL.replace(/:id/gi, String(hash_key)), query: { topicFollower: true } })
+      router.push({ pathname: ESRoutes.COMMUNITY_DETAIL.replace(/:id/gi, String(hash_key)), query: { from: from } })
     } else {
       setRender(true)
     }

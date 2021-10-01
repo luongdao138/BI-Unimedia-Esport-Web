@@ -83,3 +83,8 @@ export const ONLY_SPACE_REGEX = /^(?!\s+$)/
 export const CARD_TAG = {
   THREE_DOT_SPACE: 21,
 }
+
+export const ROUTE_FROM = {
+  HOME: 'home',
+  FOLLOWERS: 'followers',
+}
