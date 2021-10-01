@@ -32,7 +32,7 @@ export const UseSortInfoDialog = (): (() => Promise<void>) => {
     return confirm({
       title: t('common:tournament_create.sort_info_title'),
       content: <SortInfoDialogContent />,
-      confirmationText: t('common:arena.close'),
+      confirmationText: t('common:tournament_create.close'),
     })
   }
 }
