@@ -117,7 +117,7 @@ const TopicDetailContainer: React.FC = () => {
 
   useEffect(() => {
     if (communityDetail && !isAutomatic && isNotMember) {
-      router.push(ESRoutes.COMMUNITY_DETAIL.replace(/:id/gi, String(hash_key)))
+      router.push({ pathname: ESRoutes.COMMUNITY_DETAIL.replace(/:id/gi, String(hash_key)), query: { topicFollower: true } })
     } else {
       setRender(true)
     }

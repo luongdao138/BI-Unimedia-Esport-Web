@@ -15,6 +15,7 @@ import TopicCreateButton from '@containers/Community/Partials/TopicCreateButton'
 import { makeStyles } from '@material-ui/core/styles'
 import styled from 'styled-components'
 import { useRect } from '@utils/hooks/useRect'
+import { ESRoutes } from '@constants/route.constants'
 
 let topicCreateRightPx: number
 type StyleParams = {
@@ -30,7 +31,7 @@ const CommunityContainer: React.FC = () => {
 
   const classes = useStyles({ topicCreateRightPx })
 
-  const { hash_key } = router.query
+  const { hash_key, topicFollower } = router.query
   const [showTopicListAndSearchTab, setShowTopicListAndSearchTab] = useState<boolean>(true)
   const { handleBack, communityDetail, getCommunityDetail, topicList, meta } = useCommunityDetail()
   const { isAutomatic, isNotMember } = useCommunityHelper(communityDetail)
@@ -51,6 +52,10 @@ const CommunityContainer: React.FC = () => {
 
   const { toEdit, toCreateTopic } = useCommunityHelper(communityDetail)
 
+  const goToTopicFollower = () => {
+    router.push(ESRoutes.TOPIC_FOLLOWER)
+  }
+
   const renderBody = () => {
     return (
       <>
@@ -59,7 +64,7 @@ const CommunityContainer: React.FC = () => {
             <CommunityDetailHeader
               title={communityDetail.attributes.name}
               cover={communityDetail.attributes.cover_image_url}
-              onHandleBack={handleBack}
+              onHandleBack={topicFollower ? goToTopicFollower : handleBack}
             />
             <DetailInfo
               detail={communityDetail}
