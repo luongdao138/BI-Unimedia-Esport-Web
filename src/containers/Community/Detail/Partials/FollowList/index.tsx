@@ -273,7 +273,7 @@ const FollowList: React.FC<Props> = ({ community }) => {
                 </Box>
               </Box>
               {!_.isEmpty(groupedMembers) && !_.isEmpty(membersList) && (
-                <Box id="scrollableDiv" style={{ height: 600, paddingRight: 10 }} className={`${classes.scroll} ${classes.list}`}>
+                <Box id="scrollableDiv" pr={10 / 8} className={`${classes.scroll} ${classes.list} ${classes.scrollableHeight}`}>
                   <InfiniteScroll
                     dataLength={membersList.length}
                     next={loadMore}
@@ -358,6 +358,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   loader: {
     textAlign: 'center',
   },
+  scrollableHeight: {
+    height: 'calc(100vh - 163px - 60px - 72px)',
+  },
+  [theme.breakpoints.down('md')]: {
+    scrollableHeight: {
+      height: 'calc(100vh - 80px - 60px - 72px)',
+    },
+  },
   [theme.breakpoints.down('sm')]: {
     container: {
       paddingLeft: 0,
@@ -365,6 +373,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     topContainer: {
       paddingTop: 0,
+    },
+    scrollableHeight: {
+      height: 'calc(100vh - 80px - 72px)',
     },
   },
 }))
