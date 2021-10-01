@@ -37,7 +37,7 @@ export default {
     yes: 'あり',
     no: 'なし',
     man: '人',
-    integer: '数字のみ入力してください。',
+    integer: '数字のみ入力してください',
     unregistered: '未登録',
     validation: {
       acceptance_dates: 'エントリー終了日時はエントリー開始日時より後ろでなければなりません',
@@ -869,7 +869,7 @@ export default {
       confirm: '内容を破棄して戻る',
     },
     validation: {
-      participants_limit: '2~128の数字を入力してください。',
+      participants_limit: '2~128の数字を入力してください',
     },
     search: {
       empty: '該当の募集が存在しませんでした',
