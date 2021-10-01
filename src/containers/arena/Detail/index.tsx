@@ -44,7 +44,7 @@ const TournamentDetail: React.FC = () => {
     ready_to_start: <BRStatusRecruitmentClosed arena={tournament} userProfile={userProfile} />,
     in_progress: <BRStatusInProgress arena={tournament} />,
     completed: <BRStatusComplete arena={tournament} />,
-    cancelled: <BRStatusReady arena={tournament} />,
+    cancelled: <Cancelled tournament={tournament} userProfile={userProfile} />,
   }
 
   return (
