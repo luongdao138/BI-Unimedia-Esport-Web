@@ -595,6 +595,7 @@ export default {
   },
   topic: {
     topic_follower_list: 'フォローしている人の書き込みトピック',
+    topic_not_found: 'トピック情報を取得出来ませんでした',
     report: {
       button: 'トピックを通報',
       title: '通報するトピック',
