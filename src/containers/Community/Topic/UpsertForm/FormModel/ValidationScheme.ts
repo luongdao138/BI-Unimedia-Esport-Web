@@ -14,7 +14,7 @@ export const getValidationScheme = (): any => {
           return true
         }),
       content: Yup.string()
-        .matches(ONLY_SPACE_REGEX, i18n.t('common:common.input_required'))
+        .matches(ONLY_SPACE_REGEX, i18n.t('common:common.input_incorrect'))
         .required(i18n.t('common:common.input_required'))
         .max(5000, i18n.t('common:common.validation.char_limit', { char_limit: 5000 })),
     }),
