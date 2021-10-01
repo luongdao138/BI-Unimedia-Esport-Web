@@ -27,7 +27,7 @@ export const getValidationScheme = (data: TournamentDetail, editables: EditableT
         .min(2, i18n.t('common:common.at_least')),
       overview: Yup.string()
         .nullable()
-        .max(191, i18n.t('common:common.validation.char_limit', { char_limit: 191 })),
+        .max(5000, i18n.t('common:common.validation.char_limit', { char_limit: 5000 })),
       has_prize: Yup.boolean(),
       prize_amount: Yup.string().when('has_prize', {
         is: true,
@@ -58,10 +58,10 @@ export const getValidationScheme = (data: TournamentDetail, editables: EditableT
         }),
       terms_of_participation: Yup.string()
         .nullable()
-        .max(190, i18n.t('common:common.validation.char_limit', { char_limit: 190 })),
+        .max(5000, i18n.t('common:common.validation.char_limit', { char_limit: 5000 })),
       notes: Yup.string()
         .nullable()
-        .max(191, i18n.t('common:common.validation.char_limit', { char_limit: 191 })),
+        .max(5000, i18n.t('common:common.validation.char_limit', { char_limit: 5000 })),
     }),
     stepThree: Yup.object({
       start_date: Yup.date()
@@ -91,7 +91,7 @@ export const getValidationScheme = (data: TournamentDetail, editables: EditableT
         .notOneOf([-1], i18n.t('common:common.input_required')),
       address: Yup.string()
         .nullable()
-        .max(60, i18n.t('common:common.validation.char_limit', { char_limit: 60 })),
+        .max(5000, i18n.t('common:common.validation.char_limit', { char_limit: 5000 })),
       // for cross-fields validations
       recruit_date: Yup.string().when(['acceptance_start_date'], {
         is: (acceptance_start_date) => {
