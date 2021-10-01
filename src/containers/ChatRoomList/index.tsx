@@ -113,9 +113,6 @@ const useStyles = makeStyles(() => ({
     overflow: 'hidden !important',
     scrollbarColor: '#222 transparent',
     scrollbarWidth: 'thin',
-    '&:hover ': {
-      overflow: 'auto !important',
-    },
     '&::-webkit-scrollbar': {
       width: 8,
       padding: 2,

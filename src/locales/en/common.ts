@@ -18,7 +18,6 @@ export default {
     at: '@',
     search_results: '検索結果',
     total: '件',
-    error: 'エラー文言が入ります',
     game_display_name_error: '入力必須項目です',
     too_long: '{{max}}文字以内で入力してください。',
     at_least: '2文字以上入力してください。',
@@ -336,6 +335,7 @@ export default {
     title_chat: 'Chat',
     user_report_done: 'User Reported',
     reported: 'Reported!',
+    email_test_result: '入力内容が適切ではありません',
   },
   profile: {
     prefectures: '都道府県',
@@ -392,6 +392,7 @@ export default {
     twitch: 'TwitchURL',
     instagram: 'InstagramURL',
     discord: 'DiscordTag',
+    tag_up_to: 'タグは５つまで登録できます',
   },
   gender: {
     male: '男性',
@@ -725,6 +726,12 @@ export default {
     group_chat: 'グループチャット',
     temporary: 'Temporary',
     cancel: '募集を中止する',
+    edit_button: '編集',
+    report: '通報',
+    copy_shared_url: '共有URLをコピー',
+    venue: '開催場所',
+    game: 'ゲーム',
+    game_hardware: 'ゲームハード',
     detail: {
       label_id: '募集ID：',
       number_of_entries: 'エントリー数',
@@ -963,7 +970,8 @@ export default {
     see_tournament: '該当の大会をみる',
     see_lobby: '該当の募集をみる',
     lets_start: 'メッセージを入力',
-    select_destination: '宛先を選んでください',
+    select_destination: `宛先を選んでください 
+     宛先選択した上でメッセージを送るとグループが確定します`,
     already_member: '既にメンバーです',
     chat_copied: 'メッセージ内容をコピーしました',
     member_add_placeholder: 'ニックネーム',
