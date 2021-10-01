@@ -5,7 +5,7 @@ import { AddRounded } from '@material-ui/icons'
 import ESChip from '@components/Chip'
 import LoginRequired from '@containers/LoginRequired'
 import i18n from '@locales/i18n'
-import { defaultFilterOptions } from '@constants/lobby.constants'
+import { lobbyFilterOptions } from '@constants/lobby.constants'
 import { LobbyFilterItem, LobbyFilterOption } from '@services/lobby.service'
 
 interface HeaderAreaProps {
@@ -28,6 +28,14 @@ const Header: React.FC<HeaderAreaProps> = ({ onFilter, toCreate, filter }) => {
     />
   )
 
+  const renderFilterItem = (option: LobbyFilterItem) => {
+    return option.loginRequired ? (
+      <LoginRequired key={option.type}>{filterItem(option)}</LoginRequired>
+    ) : (
+      <Box key={option.type}>{filterItem(option)}</Box>
+    )
+  }
+
   return (
     <>
       <div className={classes.header}>
@@ -41,14 +49,9 @@ const Header: React.FC<HeaderAreaProps> = ({ onFilter, toCreate, filter }) => {
       </div>
       <Grid container className={classes.filtersContainer}>
         <Box className={classes.filters}>
-          {defaultFilterOptions.map((option) =>
-            option.loginRequired ? (
-              <LoginRequired key={option.type}>{filterItem(option)}</LoginRequired>
-            ) : (
-              <Box key={option.type}>{filterItem(option)}</Box>
-            )
-          )}
+          {lobbyFilterOptions.filter((o) => !o.loginRequired).map((option) => renderFilterItem(option))}
         </Box>
+        <Box className={classes.filters}>{lobbyFilterOptions.filter((o) => o.loginRequired).map((option) => renderFilterItem(option))}</Box>
       </Grid>
     </>
   )
