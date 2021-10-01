@@ -1,5 +1,4 @@
 import _ from 'lodash'
-import { makeStyles } from '@material-ui/core/styles'
 import { Box, Icon } from '@material-ui/core'
 import BRListItem from '@containers/arena/battle_royale/Partials/BRListItem'
 import React, { useEffect, useState } from 'react'
@@ -33,7 +32,6 @@ const getParticipantIds = (participants: ReturnType<typeof getDefaultParticipant
 
 const ArenaBattlesEdit: React.FC = () => {
   const { t } = useTranslation(['common'])
-  const classes = useStyles()
   const router = useRouter()
   const { tournament, meta: detailMeta } = useTournamentDetail()
   const { participants, brMeta: participantsMeta, getBattleRoyaleParticipants, resetMeta } = useParticipants()
@@ -112,14 +110,7 @@ const ArenaBattlesEdit: React.FC = () => {
   const selectedHandler = (participant: ParticipantsResponse) => {
     const newSelecteds = selecteds.map((v, i) => {
       if (i === clickIndex) {
-        return {
-          id: participant.id,
-          attributes: {
-            avatar_url: participant.attributes.avatar_url,
-            name: participant.attributes.name,
-            position: null,
-          },
-        }
+        return participant
       }
       return v
     })
@@ -171,7 +162,7 @@ const ArenaBattlesEdit: React.FC = () => {
           <Box pt={3} pb={3} textAlign="center">
             {/* {tournament.attributes.is_freezed ? null : <Typography>順位を入力してください</Typography>} */}
           </Box>
-          <BRList className={classes.listContainer}>
+          <BRList marginX={3}>
             {selecteds.map((v, i) => (
               <BRListItem
                 key={i}
@@ -204,56 +195,5 @@ const ArenaBattlesEdit: React.FC = () => {
     </>
   )
 }
-
-const useStyles = makeStyles((theme) => ({
-  listContainer: {
-    paddingBottom: 80,
-    paddingLeft: theme.spacing(3),
-    paddingRight: theme.spacing(10),
-  },
-  root: {
-    backgroundColor: '#212121',
-    paddingTop: 60,
-    background: 'url("/images/pattern.png") center 60px repeat-x #212121 fixed',
-  },
-  appbar: {
-    top: 60,
-    backgroundColor: '#000000',
-    borderBottom: '1px solid #FFFFFF30',
-    borderTop: '1px solid #FFFFFF30',
-  },
-  toolbar: {
-    paddingLeft: 0,
-  },
-  content: {
-    paddingTop: 24,
-  },
-  backButton: {
-    backgroundColor: '#4D4D4D',
-    padding: 7,
-    marginRight: 16,
-    '&:hover': {
-      backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    },
-  },
-  buttonHolder: {
-    marginBottom: theme.spacing(3),
-  },
-  [theme.breakpoints.down('sm')]: {
-    actionButtonContainer: {
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      position: 'absolute',
-      paddingTop: theme.spacing(2),
-      paddingBottom: theme.spacing(2),
-    },
-    listContainer: {
-      paddingBottom: 120,
-      paddingLeft: theme.spacing(2),
-      paddingRight: theme.spacing(2),
-    },
-  },
-}))
 
 export default ArenaBattlesEdit

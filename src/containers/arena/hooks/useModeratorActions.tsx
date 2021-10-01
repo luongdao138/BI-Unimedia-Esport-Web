@@ -61,7 +61,7 @@ const useModeratorActions = (): {
 
   useEffect(() => {
     if (freezeMeta.loaded) {
-      dispatch(commonActions.addToast(t('common:arena.freeze_success')))
+      dispatch(commonActions.addToast(t('common:arena.br_freeze_success')))
       resetFreezeMeta()
     }
   }, [freezeMeta.loaded])

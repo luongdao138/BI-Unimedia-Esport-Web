@@ -530,6 +530,7 @@ export default {
     freeze_br_button: '対戦表を確定する',
     randomize_success: 'ユーザーをランダムに配置しました',
     freeze_success: 'トーナメント表が確定しました',
+    br_freeze_success: 'メンバーを確定しました',
     join_success: ' エントリー完了しました',
     leave_success: 'エントリーを辞退しました',
     close_entry_success: 'エントリーを締め切りました。',

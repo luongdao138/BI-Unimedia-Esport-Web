@@ -1,33 +1,27 @@
 import { makeStyles } from '@material-ui/core/styles'
-import { Typography } from '@material-ui/core'
+import { Box, Typography, BoxProps } from '@material-ui/core'
 import { TournamentRule } from '@services/arena.service'
 import { useTranslation } from 'react-i18next'
 import { ReactNode } from 'hoist-non-react-statics/node_modules/@types/react'
 
-export interface BRListProps {
+export interface BRListProps extends BoxProps {
   children?: ReactNode
   className?: string
   rule?: TournamentRule
 }
-function BRList({ children, className, rule }: BRListProps) {
+const BRList: React.FC<BRListProps> = ({ children, rule, ...props }) => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
   return (
-    <div className={className || ''}>
+    <Box {...props}>
       <div className={classes.listHeader}>
-        <Typography className={classes.headerTitle}>プレイヤー</Typography>
-        {!rule ? null : (
-          <Typography className={classes.headerTitle}>
-            {rule === 'score_attack'
-              ? t('common:arena.listHeaders.score')
-              : rule === 'time_attack'
-              ? t('common:arena.listHeaders.time')
-              : ''}
-          </Typography>
-        )}
+        <Typography className={classes.headerTitle}>{t('common:arena.listHeaders.player')}</Typography>
+        <Typography className={classes.headerTitle}>
+          {rule === 'score_attack' ? t('common:arena.listHeaders.score') : rule === 'time_attack' ? t('common:arena.listHeaders.time') : ''}
+        </Typography>
       </div>
       {children}
-    </div>
+    </Box>
   )
 }
 
@@ -73,7 +67,7 @@ const useStyles = makeStyles((theme) => ({
   headerTitle: {
     display: 'inline-block',
     '&:first-child': {
-      paddingLeft: theme.spacing(5),
+      paddingLeft: 54,
     },
     '&:nth-child(2)': {
       paddingLeft: theme.spacing(9),

@@ -3,6 +3,7 @@ import { Box } from '@material-ui/core'
 import { use100vh } from 'react-div-100vh'
 import { ReactNode } from 'hoist-non-react-statics/node_modules/@types/react'
 import { Colors } from '@theme/colors'
+import { ButtonGroup } from '@containers/arena/Detail/Partials/BRHeaderContent'
 
 interface StickyFooterProps {
   primaryButton?: JSX.Element
@@ -12,7 +13,7 @@ interface StickyFooterProps {
   hideFooter: boolean
 }
 
-function StickyFooter({ primaryButton, secondaryButton, children, headerHeight = 60, hideFooter = true }: StickyFooterProps) {
+const StickyFooter: React.FC<StickyFooterProps> = ({ primaryButton, secondaryButton, children, headerHeight = 60, hideFooter = true }) => {
   const classes = useStyles()
   const height = use100vh()
   return (
@@ -20,8 +21,10 @@ function StickyFooter({ primaryButton, secondaryButton, children, headerHeight =
       {children}
       {hideFooter ? null : (
         <Box className={classes.actionButtonContainer}>
-          {secondaryButton ? <Box className={classes.actionButton}>{secondaryButton}</Box> : null}
-          <Box className={classes.actionButton}>{primaryButton}</Box>
+          <ButtonGroup size="large">
+            {secondaryButton ? <Box>{secondaryButton}</Box> : null}
+            <Box>{primaryButton}</Box>
+          </ButtonGroup>
         </Box>
       )}
     </div>
@@ -60,8 +63,7 @@ const useStyles = makeStyles((theme) => ({
     borderTop: `1px solid ${Colors.white_opacity['15']}`,
   },
   actionButton: {
-    width: theme.spacing(35),
-    margin: 8,
+    width: '100%',
   },
 }))
 
