@@ -72,6 +72,7 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
     validationSchema: getValidationScheme(),
     enableReinitialize: true,
     onSubmit: (values) => {
+      window.removeEventListener('beforeunload', unloadCallback, { capture: true })
       const data = {
         ...values.stepOne,
         features: (values.stepOne.features as CommunityFeature[]).map((feature) => Number(feature.id)),

@@ -48,6 +48,7 @@ const TopicCreate: React.FC = () => {
     validationSchema: getValidationScheme(),
     enableReinitialize: true,
     onSubmit: (values) => {
+      window.removeEventListener('beforeunload', unloadCallback, { capture: true })
       const data: TopicParams = {
         ...values.stepOne,
         community_hash: String(router.query.hash_key),
