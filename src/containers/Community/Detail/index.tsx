@@ -116,7 +116,7 @@ const useStyles = makeStyles((theme) => ({
   },
   [theme.breakpoints.down('sm')]: {
     topicCreateContainer: {
-      bottom: theme.spacing(10),
+      bottom: theme.spacing(3),
     },
   },
 }))

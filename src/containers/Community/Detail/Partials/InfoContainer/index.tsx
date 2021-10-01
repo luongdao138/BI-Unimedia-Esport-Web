@@ -111,7 +111,7 @@ const InfoContainer: React.FC<{ isOfficial: boolean; data: CommunityDetail['attr
                   <ESAvatar src={'/images/avatar.png'} />
                 ) : (
                   <ButtonBase onClick={() => toProfile(data.admin.user_code)}>
-                    <ESAvatar alt={data.admin.nickname} src={data.admin.avatar_image_url} />
+                    <ESAvatar alt={data.admin.nickname} src={data.admin.avatar_image_url} size={35} />
                   </ButtonBase>
                 )}
                 <Typography className={classes.ellipsis}>{data.admin.nickname}</Typography>
@@ -132,7 +132,7 @@ const InfoContainer: React.FC<{ isOfficial: boolean; data: CommunityDetail['attr
               <Box key={i} display="flex" flexDirection="row" alignItems="center" mt={0} mb={1}>
                 <LoginRequired>
                   <ButtonBase onClick={() => toProfile(organizer.user_code)}>
-                    <ESAvatar alt={organizer.nickname} src={organizer.avatar_image_url} />
+                    <ESAvatar alt={organizer.nickname} src={organizer.avatar_image_url} size={35} />
                   </ButtonBase>
 
                   <Typography className={classes.ellipsis}>{organizer.nickname}</Typography>
