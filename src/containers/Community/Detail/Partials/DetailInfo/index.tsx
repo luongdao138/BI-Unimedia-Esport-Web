@@ -21,10 +21,9 @@ import FollowList from '../FollowList'
 import { CommunityDetail, TopicDetailList } from '@services/community.service'
 import useCommunityHelper from '@containers/Community/hooks/useCommunityHelper'
 import DetailInfoButtons from '../../../Partials/DetailInfoButtons'
-import { MEMBER_ROLE, JOIN_CONDITION, TABS, COMMUNITY_DIALOGS } from '@constants/community.constants'
+import { MEMBER_ROLE, TABS, COMMUNITY_DIALOGS } from '@constants/community.constants'
 import { TwitterShareButton } from 'react-share'
 import _ from 'lodash'
-import { useClearMeta } from './../../useCommunityDetail'
 import * as actions from '@store/community/actions'
 import { useConfirm } from '@components/Confirm'
 
@@ -45,8 +44,6 @@ type Props = {
 const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListAndSearchTab }) => {
   const dispatch = useAppDispatch()
   const { t } = useTranslation(['common'])
-
-  useClearMeta()
 
   const classes = useStyles()
   const [openReport, setOpenReport] = useState(false)
@@ -72,7 +69,6 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
   const [isCoOrganizer, setIsCoOrganizer] = useState<boolean>(false)
   const [isFollowing, setIsFollowing] = useState<boolean>(false)
   const [isRequested, setIsRequested] = useState<boolean>(false)
-  const [isCommunityAutomatic, setIsCommunityAutomatic] = useState<boolean>(true)
 
   useEffect(() => {
     if (router?.query) {
@@ -129,19 +125,15 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
     } else if (data.my_role === MEMBER_ROLE.REQUESTED) {
       handleChangeRole(ROLE_TYPES.IS_REQUESTED, true)
     }
-    if (data.join_condition === JOIN_CONDITION.AUTOMATIC) {
-      setIsCommunityAutomatic(true)
-    } else if (data.join_condition === JOIN_CONDITION.MANUAL) {
-      setIsCommunityAutomatic(false)
-    }
   }, [])
 
   useEffect(() => {
-    if (followCommunityMeta.loaded && isCommunityAutomatic) {
+    if (followCommunityMeta.loaded && isAutomatic) {
       handleChangeRole(ROLE_TYPES.IS_FOLLOWING, true)
       dispatch(commonActions.addToast(t('common:community.toast_follow')))
     }
-    if (followCommunityMeta.loaded && !isCommunityAutomatic) {
+    if (followCommunityMeta.loaded && !isAutomatic) {
+      setIsRequested(true)
       dispatch(commonActions.addToast(t('common:community.toast_follow_manual_approval')))
     }
   }, [followCommunityMeta])
@@ -163,16 +155,13 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
     const resultAction = await dispatch(actions.getCommunityDetail(String(hash_key)))
     if (actions.getCommunityDetail.fulfilled.match(resultAction)) {
       followCommunity(String(hash_key))
-      if (!isCommunityAutomatic) {
-        setIsRequested(true)
-      }
     }
   }
 
   const unfollowHandle = async () => {
     const resultAction = await dispatch(actions.getCommunityDetail(String(hash_key)))
     if (actions.getCommunityDetail.fulfilled.match(resultAction)) {
-      if (!isCommunityAutomatic) {
+      if (!isAutomatic) {
         confirm({ ...COMMUNITY_DIALOGS.UNFOLLOW })
           .then(() => {
             unfollowCommunity(String(hash_key))
