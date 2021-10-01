@@ -363,7 +363,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   [theme.breakpoints.down('md')]: {
     scrollableHeight: {
-      height: 'calc(100vh - 80px - 60px - 72px)',
+      height: 'calc(100vh - 115px - 60px - 72px)',
     },
   },
   [theme.breakpoints.down('sm')]: {
@@ -375,7 +375,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       paddingTop: 0,
     },
     scrollableHeight: {
-      height: 'calc(100vh - 80px - 72px)',
+      height: 'calc(100vh - 115px - 72px)',
     },
   },
 }))
