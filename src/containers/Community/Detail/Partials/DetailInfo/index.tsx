@@ -421,6 +421,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'row',
     flexShrink: 0,
+    alignItems: 'center',
     height: '36px',
   },
   commentIcon: {
@@ -446,7 +447,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
   },
   menuOuter: {
-    marginLeft: theme.spacing(2),
+    marginLeft: theme.spacing(0),
   },
   [theme.breakpoints.down('sm')]: {
     commentIcon: {
