@@ -572,7 +572,7 @@ export default {
         '※エントリーしているユーザーであっても、対戦表に反映されていないまま確定を行った場合は残りの枠数を問わず落選となります。',
       freeze_warn: '確定以降の参加枠の変更はできません。',
     },
-    no_match_result: '対戦結果が出ていません',
+    no_match_result: '対戦結果が未入力です',
     edit_match_result: '対戦結果を編集する',
     win: 'WIN',
     please_select_winner: '勝者を選択してください',
