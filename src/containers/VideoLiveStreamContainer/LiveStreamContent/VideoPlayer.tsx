@@ -34,7 +34,7 @@ declare global {
 
 const VideoPlayer: React.FC<PlayerProps> = ({
   src,
-  statusVideo,
+  // statusVideo,
   mediaOverlayIsShown,
   onVideoEnd,
   thumbnail,
@@ -57,16 +57,18 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   const reactPlayerRef = useRef(null)
   const playerContainerRef = useRef(null)
   const [isLive, setIsLive] = useState(false)
+  const [playState, setPlayState] = useState()
 
   //As of Chrome 66, videos must be muted in order to play automatically
   const [state, setState] = useState({
-    playing: false,
+    playing: true,
     muted: true,
     volume: 0,
     ended: false,
-    loading: true,
+    loading: false,
     errorVideo: false,
-    videoLoaded: false,
+    videoLoaded: false, //check lai khi live
+    begin: true,
   })
 
   const {
@@ -84,7 +86,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   } = useDetailVideo()
 
   const onProgress = async (event) => {
-    setState({ ...state, loading: false })
+    // setState({ ...state, loading: false, begin: false })
     // if (isLive) {
     //   console.log('🚀 ~ onProgress ~ 1111-----playedSeconds', player.current.getPosition())
     //   //live stream => duration = current
@@ -98,7 +100,11 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     // }
     if (!isLive) {
       setPlayedSeconds(event.playedSeconds)
+      if (event.playedSeconds === 0 && playState === 'Ready') {
+        setState({ ...state, begin: true })
+      }
     }
+    setState({ ...state, loading: false, begin: false })
 
     // // trigger change streaming second in redux
     // if (Math.floor(event.loadedSeconds) !== streamingSecond) {
@@ -159,6 +165,8 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       console.warn(
         `Player State - ${playerState} - ${player.current.getDuration()}- src=${src}- getLiveLatency=${player.current.getPosition()}`
       )
+      setPlayState(playerState)
+
       if (playerState === IVSPlayer?.PlayerState?.ENDED) {
         onVideoEnd()
       }
@@ -166,13 +174,16 @@ const VideoPlayer: React.FC<PlayerProps> = ({
         changeIsEndLive(true)
         setState({ ...state, ended: true })
       }
+      // if(playerState === 'Ready'){
+      //   setState({ ...state, videoLoaded:true, loading:false })
+      // }
       setIsLive(player.current.getDuration() === Infinity ? true : false)
       // setDurationPlayer(player.current.getDuration() === Infinity && reactPlayerRef.current.getCurrentTime())
       setDurationPlayer(player.current.getDuration() === Infinity ? reactPlayerRef.current.getCurrentTime() : player.current.getDuration())
     }
     const onError = (err) => {
       console.warn('Player Event - ERROR:', err)
-      setState({ ...state, errorVideo: true, loading: false })
+      setState({ ...state, errorVideo: true, loading: false, begin: true })
     }
 
     player.current = IVSPlayer.create() //MediaPlayer
@@ -294,7 +305,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   const onError = (error, data) => {
     console.warn('onError player', error, data)
     // if (data.response === 404) {
-    //   setState({ ...state, errorVideo: true, loading: false })
+    setState({ ...state, loading: true, videoLoaded: true })
     // }
   }
   const onBuffer = () => {
@@ -306,7 +317,8 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     setState({ ...state, loading: true })
   }
   const onReady = () => {
-    setState({ ...state, loading: false })
+    console.log('READY---')
+    setState({ ...state, begin: true, videoLoaded: false })
   }
 
   //video
@@ -329,7 +341,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     }
   }, [startLive, state.ended, endLive, isLive])
 
-  const { playing, muted, volume, ended, loading, errorVideo, videoLoaded } = state
+  const { playing, muted, volume, ended, loading, errorVideo, videoLoaded, begin } = state
   const chatBoardWidth = () => {
     if (!isDown1100) return 482
     if (!isDownMd) return 350
@@ -369,8 +381,8 @@ const VideoPlayer: React.FC<PlayerProps> = ({
             config={{
               file: {
                 attributes: {
-                  // autoPlay: true,
-                  autoPlay: statusVideo ? !statusVideo : true,
+                  autoPlay: true,
+                  // autoPlay: statusVideo ? !statusVideo : true,
                   muted: muted,
                   volume: volume,
                 },
@@ -386,7 +398,18 @@ const VideoPlayer: React.FC<PlayerProps> = ({
             (ended ||
               (!playing && (
                 <div className={classes.playOverView}>
-                  <Icon className={`fas fa-play ${classes.fontSizeLarge}`} />
+                  {begin && (
+                    <div
+                      className={classes.thumbBegin}
+                      style={{
+                        backgroundImage: `url(${thumbnail ?? '/images/live_stream/thumbnail_default.png'})`,
+                        backgroundSize: 'cover',
+                      }}
+                    >
+                      <div className={classes.loadingThumbBlur} />
+                    </div>
+                  )}
+                  {durationPlayer !== Infinity ? <Icon className={`fas fa-play ${classes.fontSizeLarge}`} /> : <ESLoader />}
                 </div>
               )))}
         </div>
@@ -415,8 +438,10 @@ const VideoPlayer: React.FC<PlayerProps> = ({
           <div
             className={classes.loading}
             style={{
-              ...(!videoLoaded && { backgroundImage: `url(${thumbnail ?? '/images/live_stream/thumbnail_default.png'})` }),
-              ...(videoLoaded && { background: 'rgba(0, 0, 0, 0.5)' }),
+              ...((!videoLoaded || playState === 'Buffering') && {
+                backgroundImage: `url(${thumbnail ?? '/images/live_stream/thumbnail_default.png'})`,
+              }),
+              ...(videoLoaded && { backgroundImage: `url(${thumbnail ?? '/images/live_stream/thumbnail_default.png'})` }),
               backgroundSize: 'cover',
             }}
           >
@@ -522,6 +547,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   fontSizeLarge: {
     fontSize: 100,
     color: Colors.white,
+    zIndex: 2,
   },
   blurBackground: {
     backgroundColor: 'rgba(4,4,4,0.71)',
@@ -592,6 +618,25 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSizeLarge: {
       fontSize: '50px',
     },
+  },
+  thumbBegin: {
+    width: '100%',
+    height: '100%',
+    zIndex: 1,
+    position: 'absolute',
+  },
+  loadingThumbBlur: {
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    height: '100%',
+    width: '100%',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 99,
+    backdropFilter: 'blur(5px)',
   },
 }))
 

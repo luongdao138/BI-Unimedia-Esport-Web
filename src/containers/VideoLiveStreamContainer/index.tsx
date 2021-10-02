@@ -94,7 +94,7 @@ const VideoDetail: React.FC = () => {
 
   const isPendingPurchaseSuperChat = meta_purchase_ticket_super_chat.pending && purchaseType === PURCHASE_TYPE.PURCHASE_SUPER_CHAT
 
-  const isLoadingData = isAuthenticated ? !detailVideoResult || !myPointsData || !userResult || !video_id : !detailVideoResult || !video_id
+  // const isLoadingData = isAuthenticated ? !detailVideoResult || !myPointsData || !userResult || !video_id : !detailVideoResult || !video_id
 
   // const handleCreateVideo = async () => {
   //   const input = {
@@ -164,7 +164,7 @@ const VideoDetail: React.FC = () => {
       console.log('🚀 ~ useEffect ~ videoInfo', videoInfo)
       const { video_status, process_status } = videoInfo
       if (+video_status === STATUS_VIDEO.SCHEDULE) {
-        if(+videoStatus !== STATUS_VIDEO.LIVE_STREAM) {
+        if (+videoStatus !== STATUS_VIDEO.LIVE_STREAM) {
           setVideoStatus(STATUS_VIDEO.SCHEDULE)
         }
       } else if (+video_status === STATUS_VIDEO.LIVE_STREAM) {
@@ -187,11 +187,12 @@ const VideoDetail: React.FC = () => {
     if (detailVideoResult.key_video_id) {
       checkVideoStatus()
       let statusDetailVideo = detailVideoResult.status
-      console.log("🚀 ~ is Start Live)", moment().isBefore(detailVideoResult.live_stream_start_time, 'second'))
+      console.log('🚀 ~ is Start Live)', moment().isBefore(detailVideoResult.live_stream_start_time, 'second'))
       // if have not arrive live stream start time => set video status is schedule
-      if(statusDetailVideo === STATUS_VIDEO.LIVE_STREAM && (
-        !detailVideoResult.live_stream_start_time || moment().isBefore(detailVideoResult.live_stream_start_time, 'second')
-      )) {
+      if (
+        statusDetailVideo === STATUS_VIDEO.LIVE_STREAM &&
+        (!detailVideoResult.live_stream_start_time || moment().isBefore(detailVideoResult.live_stream_start_time, 'second'))
+      ) {
         statusDetailVideo = STATUS_VIDEO.SCHEDULE
       }
       setVideoStatus(statusDetailVideo)
@@ -424,7 +425,7 @@ const VideoDetail: React.FC = () => {
       {isPendingPurchaseTicket && <ESLoader />}
       {isPendingPurchaseSuperChat && <FullESLoader open={isPendingPurchaseSuperChat} />}
       <Box className={classes.container}>
-        {isLoadingData ? (
+        {!detailVideoResult?.archived_url ? (
           <Box
             style={{
               backgroundColor: '#6A6A6C',
@@ -468,7 +469,7 @@ const VideoDetail: React.FC = () => {
           />
         )}
       </Box>
-      {isLoadingData ? (
+      {!detailVideoResult?.archived_url ? (
         <Box
           style={{
             display: 'flex',

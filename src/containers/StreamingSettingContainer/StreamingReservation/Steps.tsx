@@ -139,7 +139,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
         setCategoryName(h.name)
       }
     })
-  }, [formik?.values?.stepSettingTwo?.category])
+  }, [formik?.values?.stepSettingTwo?.category, category?.data])
 
   const { uploadLiveStreamThumbnailImage, isUploading } = useUploadImage()
   const handleUpload = useCallback((file: File, blob: any) => {
