@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Box, ButtonBase, Icon, makeStyles, Typography, useMediaQuery, useTheme } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
 import userProfileStore from '@store/userProfile'
@@ -13,8 +14,6 @@ import VideoPlayer from './VideoPlayer'
 import useLiveStreamDetail from '../useLiveStreamDetail'
 import ReactionButton from './ReactionButton'
 import useDetailVideo from '../useDetailVideo'
-import PreloadButtonReaction from '../PreloadContainer/PreloadButtonReaction'
-import PreloadVideoInfo from '../PreloadContainer/PreloadVideoInfo'
 import { STATUS_VIDEO } from '@services/videoTop.services'
 import _ from 'lodash'
 import ESReport from '@containers/Report'
@@ -26,6 +25,8 @@ import { useContextualRouting } from 'next-use-contextual-routing'
 import { ESRoutes } from '@constants/route.constants'
 import { getIsAuthenticated } from '@store/auth/selectors'
 import { debounceTime } from '@constants/common.constants'
+import ESLoader from '@components/Loader'
+import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
 
 interface LiveStreamContentProps {
   videoType?: VIDEO_TYPE
@@ -52,11 +53,11 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
   const streamerProfile = useAppSelector(selectors.getLastSeenUserData)
 
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
-  const downMd = useMediaQuery(theme.breakpoints.down(769))
-  const { detailVideoResult, meta, userResult } = useDetailVideo()
+  // const downMd = useMediaQuery(theme.breakpoints.down(769))
+  const { detailVideoResult, userResult } = useDetailVideo()
   const { userReactionVideoStream, userFollowChannel } = useLiveStreamDetail()
   // const isLoadingReaction = meta_reaction_video_stream?.pending
-  const isLoadingVideoDetail = meta?.pending
+  // const isLoadingVideoDetail = meta?.pending
   const [like, setLike] = useState(userResult?.like !== null ? userResult.like : 0)
   const [unlike, setUnlike] = useState(userResult?.unlike !== null ? userResult.unlike : 0)
   const [likeCount, setLikeCount] = useState(detailVideoResult?.like_count !== null ? detailVideoResult?.like_count : 0)
@@ -213,17 +214,26 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
       //   thumbnail={'/images/live_stream/exelab_thumb.png'}
       //   statusVideo={true}
       // />
-      <VideoPlayer
-        key={keyVideoPlayer}
-        src={detailVideoResult?.archived_url}
-        thumbnail={detailVideoResult?.thumbnail}
-        statusVideo={showOverlayOnMediaPlayer() ? true : null}
-        mediaOverlayIsShown={showOverlayOnMediaPlayer()}
-        onVideoEnd={props.onVideoEnd}
-        startLive={Date.parse(detailVideoResult?.live_stream_start_time)}
-        endLive={detailVideoResult?.live_stream_end_time}
-        type={detailVideoResult?.status}
-      />
+      <>
+        {showOverlayOnMediaPlayer() ? (
+          <img
+            src={detailVideoResult?.thumbnail ? detailVideoResult?.thumbnail : '/images/live_stream/thumbnail_default.png'}
+            className={classes.thumb}
+          />
+        ) : (
+          <VideoPlayer
+            key={keyVideoPlayer}
+            src={detailVideoResult?.archived_url}
+            thumbnail={detailVideoResult?.thumbnail}
+            statusVideo={showOverlayOnMediaPlayer() ? true : null}
+            mediaOverlayIsShown={showOverlayOnMediaPlayer()}
+            onVideoEnd={props.onVideoEnd}
+            startLive={Date.parse(detailVideoResult?.live_stream_start_time)}
+            endLive={detailVideoResult?.live_stream_end_time}
+            type={detailVideoResult?.status}
+          />
+        )}
+      </>
     )
   }
 
@@ -278,37 +288,6 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
       </Box>
     )
   }
-  const renderPreloadButtonReaction = () => {
-    return (
-      <>
-        {downMd ? (
-          <Box className={classes.wrapPreLoadReactionButton}>
-            <PreloadButtonReaction />
-          </Box>
-        ) : (
-          <Box style={{ width: '100%', height: 100 }}>
-            <PreloadButtonReaction />
-          </Box>
-        )}
-      </>
-    )
-  }
-
-  const renderPreloadVideoInfo = () => {
-    return (
-      <>
-        {downMd ? (
-          <Box className={classes.wrapPreLoadReactionButton}>
-            <PreloadVideoInfo />
-          </Box>
-        ) : (
-          <Box style={{ width: '100%', height: 100 }}>
-            <PreloadVideoInfo />
-          </Box>
-        )}
-      </>
-    )
-  }
 
   const showOverlayOnMediaPlayer = () => {
     const { userHasViewingTicket, videoType, freeToWatch, ticketAvailableForSale } = props
@@ -321,7 +300,11 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
     if (videoType === STATUS_VIDEO.SCHEDULE && !freeToWatch && userHasViewingTicket) {
       return true
     }
-    return !freeToWatch && !userHasViewingTicket
+    if (!freeToWatch && !userHasViewingTicket) {
+      return true
+    }
+    // return !freeToWatch && !userHasViewingTicket
+    return null
   }
 
   const liveBasicContentVisible = () => !isMobile || !props.softKeyboardIsShown
@@ -335,67 +318,99 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
     dispatch(actions.getMemberProfile(detailVideoResult?.user_code))
   }
 
+  //calc height load video
+  const isDownMd = useMediaQuery(theme.breakpoints.down(769))
+  const isDown1100 = useMediaQuery(theme.breakpoints.down(1100))
+  const isDown960 = useMediaQuery(theme.breakpoints.down(960))
+  const { width: videoDisplayWidth } = useWindowDimensions(0)
+  const chatBoardWidth = () => {
+    if (!isDown1100) return 482
+    if (!isDownMd) return 350
+    return 0
+  }
+  const sizeMenuWidth = () => {
+    if (!isDown960) return 98
+    return 0
+  }
+
+  const calculateVideoHeight = () => {
+    const videoWidth = videoDisplayWidth - (chatBoardWidth() + sizeMenuWidth())
+    return (videoWidth * 9) / 16
+  }
+
+  const renderReloadPlayer = () => {
+    return (
+      <Box
+        style={{
+          backgroundColor: '#6A6A6C',
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          textAlign: 'center',
+        }}
+      >
+        <ESLoader />
+      </Box>
+    )
+  }
+
   return (
     <Box className={classes.container}>
-      <Box className={classes.mediaPlayerContainer}>
-        {mediaPlayer()}
-        {showOverlayOnMediaPlayer() && mediaOverlayPurchaseTicketView()}
-      </Box>
+      {!detailVideoResult?.archived_url ? (
+        <Box className={classes.containerLoad} style={{ height: calculateVideoHeight() }}>
+          {renderReloadPlayer()}
+        </Box>
+      ) : (
+        <Box className={classes.mediaPlayerContainer}>
+          {mediaPlayer()}
+          {showOverlayOnMediaPlayer() && mediaOverlayPurchaseTicketView()}
+        </Box>
+      )}
       {mobileRegisterChannelVisible() && mobileRegisterChannelContainer()}
       {liveBasicContentVisible() && (
         <Box className={classes.wrap_info}>
-          {!detailVideoResult ? (
-            <>{renderPreloadVideoInfo()}</>
-          ) : (
-            <Box className={classes.wrap_movie_info}>
-              <Box className={classes.wrap_title}>
-                <Typography className={classes.movie_title}>{detailVideoResult?.title}</Typography>
-                {!isMobile && detailVideoResult?.status === 1 ? (
-                  <Box className={classes.live_stream_status}>
-                    <Typography className={classes.txtVideoStatus}>{t('live_stream_screen.live_stream_status')}</Typography>
-                  </Box>
-                ) : (
-                  isMobile && shareButton()
-                )}
-              </Box>
-              <Typography className={classes.device_name}>{detailVideoResult?.category_name}</Typography>
+          <Box className={classes.wrap_movie_info}>
+            <Box className={classes.wrap_title}>
+              <Typography className={classes.movie_title}>{detailVideoResult?.title}</Typography>
+              {!isMobile && detailVideoResult?.status === 1 ? (
+                <Box className={classes.live_stream_status}>
+                  <Typography className={classes.txtVideoStatus}>{t('live_stream_screen.live_stream_status')}</Typography>
+                </Box>
+              ) : (
+                isMobile && shareButton()
+              )}
             </Box>
-          )}
+            <Typography className={classes.device_name}>{detailVideoResult?.category_name}</Typography>
+          </Box>
 
           <Box className={classes.wrap_interactive_info}>
-            {!detailVideoResult && isLoadingVideoDetail ? (
-              <>{renderPreloadButtonReaction()}</>
-            ) : (
-              detailVideoResult !== '' && (
-                <>
-                  <Box className={classes.interactive_info}>
-                    <ReactionButton iconName={'fa fa-eye'} value={detailVideoResult?.view_count} status={1} showPointer={false} />
-                    <ReactionButton
-                      onPress={isAuthenticated ? toggleLikeVideo : goToLogin}
-                      iconName={'fa fa-thumbs-up'}
-                      value={likeCount}
-                      status={like}
-                      showPointer={true}
-                    />
-                    <ReactionButton
-                      onPress={isAuthenticated ? toggleUnLikeVideo : goToLogin}
-                      iconName={'fa fa-thumbs-down'}
-                      value={unlikeCount}
-                      status={unlike}
-                      showPointer={true}
-                    />
-                    {!isMobile && shareButton()}
-                  </Box>
+            <Box className={classes.interactive_info}>
+              <ReactionButton iconName={'fa fa-eye'} value={detailVideoResult?.view_count} status={1} showPointer={false} />
+              <ReactionButton
+                onPress={isAuthenticated ? toggleLikeVideo : goToLogin}
+                iconName={'fa fa-thumbs-up'}
+                value={likeCount}
+                status={like}
+                showPointer={true}
+              />
+              <ReactionButton
+                onPress={isAuthenticated ? toggleUnLikeVideo : goToLogin}
+                iconName={'fa fa-thumbs-down'}
+                value={unlikeCount}
+                status={unlike}
+                showPointer={true}
+              />
+              {!isMobile && shareButton()}
+            </Box>
 
-                  {/* report icon */}
-                  <Box ml={1} pr={!isMobile ? 3 : 0} display="flex" flexDirection="row" flexShrink={0}>
-                    <ESMenu>
-                      <ESMenuItem onClick={isAuthenticated ? handleReportOpen : goToLogin}>{t('tournament.report')}</ESMenuItem>
-                    </ESMenu>
-                  </Box>
-                </>
-              )
-            )}
+            {/* report icon */}
+            <Box ml={1} pr={!isMobile ? 3 : 0} display="flex" flexDirection="row" flexShrink={0}>
+              <ESMenu>
+                <ESMenuItem onClick={isAuthenticated ? handleReportOpen : goToLogin}>{t('tournament.report')}</ESMenuItem>
+              </ESMenu>
+            </Box>
           </Box>
         </Box>
       )}
@@ -427,6 +442,7 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
           handleClose={() => setShowReportMenu(false)}
         />
       )}
+      {/* </>} */}
     </Box>
   )
 }
@@ -438,6 +454,13 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     flexWrap: 'wrap',
     background: '#000000',
+    height: '100%',
+  },
+  containerLoad: {
+    display: 'flex',
+    flexDirection: 'column',
+    width: '100%',
+    background: '#6A6A6C',
   },
   dropDownMenu: {
     position: 'relative',
@@ -495,6 +518,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'center',
     flexDirection: 'column',
     zIndex: 100,
+    backdropFilter: 'blur(5px)',
   },
   wrap_info: {
     padding: '16px 16px 16px 24px',

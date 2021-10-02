@@ -360,7 +360,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
       if (!firstRender && +realStreamingSecond > 0) {
         setFirstRender(true)
         const newMess = savedMess.filter((item) => +item.video_time <= +realStreamingSecond)
-        console.log("🚀 ~ 222 ~ newMess", newMess)
+        console.log('🚀 ~ 222 ~ newMess', newMess)
         const isMessageInBottom = checkMessIsInBottom()
         // render new messages with savedMess
         console.log('🚀 ~ 11111')
@@ -722,7 +722,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
   const createMess = async (message: string, point = 0): Promise<void> => {
     if (successFlagGetAddUSer && Object.keys(chatUser).length > 0 && message && isEnabledChat) {
       const videoTime = streamingSecond < playedSecond ? playedSecond : streamingSecond
-       let input: MessInput = {
+      let input: MessInput = {
         // id is auto populated by AWS Amplify
         owner: chatUser.user_name,
         text: sanitizeMess(message),

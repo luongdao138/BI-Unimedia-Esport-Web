@@ -92,7 +92,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
         setCategoryName(h.name)
       }
     })
-  }, [formik?.values?.stepSettingOne?.category])
+  }, [formik?.values?.stepSettingOne?.category, category?.data])
 
   // const removeField = () => {
   //   if (counter <= 1 && isLive) {
