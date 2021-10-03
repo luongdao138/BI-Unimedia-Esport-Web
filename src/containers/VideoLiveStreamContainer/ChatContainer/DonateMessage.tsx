@@ -1,4 +1,4 @@
-import { Box, makeStyles, Typography, CircularProgress } from '@material-ui/core'
+import { Box, makeStyles, Typography, CircularProgress, Icon } from '@material-ui/core'
 import React, { ReactNode } from 'react'
 import { purchasePoints } from './index'
 // import * as APIt from 'src/types/graphqlAPI'
@@ -9,15 +9,19 @@ import ESMenuItem from '@components/Menu/MenuItem'
 import ESMenu from '@components/Menu'
 import _ from 'lodash'
 import { STATUS_SEND_MESS } from '@constants/common.constants'
+import { STATUS_VIDEO } from '@services/videoTop.services'
 
 type DonateMessageProps = {
   message?: any
   is_streamer?: number
+  videoType?: number
   deleteMess: (message: any) => void
+  resendMess: (message: any) => void
+  reDeleteMess: (message: any) => void
   getMessageWithoutNgWords: (chatMessContent: string) => ReactNode
 }
 
-const DonateMessage: React.FC<DonateMessageProps> = ({ message, deleteMess, getMessageWithoutNgWords, is_streamer }) => {
+const DonateMessage: React.FC<DonateMessageProps> = ({ message, deleteMess, getMessageWithoutNgWords, is_streamer, resendMess, reDeleteMess, videoType }) => {
   const classes = useStyles()
   const { t } = useTranslation('common')
 
@@ -43,15 +47,24 @@ const DonateMessage: React.FC<DonateMessageProps> = ({ message, deleteMess, getM
         </Typography>
         <Box className={classes.mess_status}>
           {message.mess_status === STATUS_SEND_MESS.PENDING ? <CircularProgress size={12} /> : ''}
-          {/* {message.mess_status === STATUS_SEND_MESS.ERROR ? (
-            <Icon color="primary" className={`fa fa-exclamation-triangle ${classes.icon}`} fontSize="small" />
-          ) : ''} */}
+          {(message.mess_status === STATUS_SEND_MESS.ERROR_SEND || message.mess_status === STATUS_SEND_MESS.ERROR_DELETE) ? (
+              <Icon 
+                color="primary" className={`fa fa-exclamation-triangle ${classes.resendIcon}`} fontSize="small"
+                onClick={() => {
+                  if(message.mess_status === STATUS_SEND_MESS.ERROR_SEND) {
+                    resendMess(message)
+                  } else {
+                    reDeleteMess(message)
+                  }
+                }} 
+              />
+            ) : ''}
           {/* {(!message.mess_status || message.mess_status === STATUS_SEND_MESS.LOADED) ? ( */}
           {/* {(!message.mess_status || message.mess_status === STATUS_SEND_MESS.LOADED) ? (
             <Icon color="primary" className={`fa fa-check-circle ${classes.icon}`} fontSize="small" />
           ) : ''} */}
         </Box>
-        {is_streamer && message.id ? (
+        {videoType === STATUS_VIDEO.LIVE_STREAM && is_streamer && message.id ? (
           <ESMenu className={classes.menu_del_mess} iconClass={classes.iconClass}>
             {message.delete_flag ? (
               <ESMenuItem disabled className={classes.menu_item_disabled}>
@@ -77,6 +90,9 @@ const DonateMessage: React.FC<DonateMessageProps> = ({ message, deleteMess, getM
 
 const useStyles = makeStyles(() => ({
   icon: {},
+  resendIcon: {
+    cursor: 'pointer',
+  },
   mess_status: {
     // paddingLeft: 4,
     // alignItems: "center",

@@ -15,7 +15,7 @@ import { useAppSelector } from '@store/hooks'
 import userProfileStore from '@store/userProfile'
 import { UserProfile } from '@services/user.service'
 import API, { GraphQLResult, graphqlOperation } from '@aws-amplify/api'
-import { listUsers, getMessagesByVideoId } from 'src/graphql/queries'
+import { getUsersByUuid, getMessagesByVideoId } from 'src/graphql/queries'
 import { createMessage, createUser, updateMessage, updateUser } from 'src/graphql/mutations'
 // import { createMessage, deleteMessage } from "src/graphql/mutations";
 import { onCreateMessage, onUpdateMessage } from 'src/graphql/subscriptions'
@@ -151,7 +151,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
   const [displaySeeMore, setDisplaySeeMore] = useState(false)
   const [displayDialogMess, setDisplayDialogMess] = useState(false)
   const [firstRender, setFirstRender] = useState(false)
-  // const [isMessInBottom, setIsMessInBottom] = useState(false)
+  const [allMess, setAllMess] = useState([])
 
   console.log('video type chat container: ', videoType)
 
@@ -292,7 +292,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
         // render new users donate
         if (isPremiumChat(createdMessage, false)) {
           let newMessDonate = [...savedDonateMess]
-          newMessDonate = newMessDonate.filter((item) => +item.display_avatar_time >= +streamingSecond)
+          newMessDonate = newMessDonate.filter((item) => +item.display_avatar_time > +streamingSecond)
           // render user donate icon by time of local
           setMessagesDonate([...newMessDonate, createdMessage])
         }
@@ -377,13 +377,13 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
 
         console.log('🚀 ~ createMess ~ stateMessages', stateMessages)
         const newMessagesDonate = savedDonateMess.filter(
-          (item) => +item.display_avatar_time >= +realStreamingSecond && +item.video_time <= +realStreamingSecond
+          (item) => +item.display_avatar_time > +realStreamingSecond && +item.video_time <= +realStreamingSecond
         )
         setMessagesDonate(newMessagesDonate)
       } else {
         // only check displaying of user donate icon
         const newMessagesDonate = messagesDonate.filter(
-          (item) => +item.display_avatar_time >= +realStreamingSecond && +item.video_time <= +realStreamingSecond
+          (item) => +item.display_avatar_time > +realStreamingSecond && +item.video_time <= +realStreamingSecond
         )
         // console.log("🚀 ~ useEffect ~ display_avatar_time", display_avatar_time)
         setMessagesDonate(newMessagesDonate)
@@ -417,7 +417,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
     }
     let newMessDonate = [...savedDonateMess]
     newMessDonate = newMessDonate.filter(
-      (item) => +item.display_avatar_time >= +new_played_second && +item.video_time <= +new_played_second
+      (item) => +item.display_avatar_time > +new_played_second && +item.video_time <= +new_played_second
     )
     // render user donate icon by time of local
     setMessagesDonate(newMessDonate)
@@ -461,7 +461,32 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
   //   return foundMessages
   // }
 
-  const getMessages = async () => {
+  const refTransformListMess = useRef(null)
+  const handleTransformListMess = () => {
+    const transformMess = [...allMess]
+
+    const transformMessAsc = sortMessages(transformMess)
+    // const transformMess = messagesResults.data.listMessages.items.filter((item) => item.video_id === key_video_id)
+    // console.log("🚀 ~ ------111 ~ playedSecond", playedSecond)
+    // console.log("🚀 ~ ------222 ~ streamingSecond", streamingSecond)
+    // comment if no get in initial
+    // setStateMessages(transformMessAsc)
+    // save mess for use in local
+    setSavedMess([...transformMessAsc])
+    setSuccessGetListMess(true)
+
+    const transformDonateMess = transformMess.filter((item) => item.is_premium && +item.point > 300)
+    const transformDonateMessAsc = sortMessages(transformDonateMess)
+    // comment if no get in initial
+    // setMessagesDonate(filterMessagesDonate(transformMess, streamingSecond))
+    // save mess for use in local
+    setSavedDonateMess([...transformDonateMessAsc])
+    setSuccessGetListDonateMess(true)
+    subscribeAction()
+  }
+  refTransformListMess.current = handleTransformListMess
+
+  const getMessages = async (nextToken = null) => {
     try {
       const listQV: APIt.GetMessagesByVideoIdQueryVariables = {
         video_id: key_video_id,
@@ -470,32 +495,20 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
         //   // delete_flag: { ne: true },
         // },
         limit: 2000,
+        nextToken
       }
       const messagesResults: any = await API.graphql(graphqlOperation(getMessagesByVideoId, listQV))
       // const messagesResults: any = await API.graphql(graphqlOperation(listMessagesNew, listQV))
-      console.log('getMessages Results; ', messagesResults)
-      const transformMess = messagesResults.data.getMessagesByVideoId.items.filter((item) => item.parent)
-
-      const transformMessAsc = sortMessages(transformMess)
-      // const transformMess = messagesResults.data.listMessages.items.filter((item) => item.video_id === key_video_id)
-      console.log('🚀 ~ getMessages ~ transformMessAsc', transformMessAsc)
-      // console.log("🚀 ~ ------111 ~ playedSecond", playedSecond)
-      // console.log("🚀 ~ ------222 ~ streamingSecond", streamingSecond)
-      // comment if no get in initial
-      // setStateMessages(transformMessAsc)
-      // save mess for use in local
-      setSavedMess([...transformMessAsc])
-      setSuccessGetListMess(true)
-
-      const transformDonateMess = transformMess.filter((item) => item.is_premium && +item.point > 300)
-      const transformDonateMessAsc = sortMessages(transformDonateMess, false)
-      console.log('🚀 ~ getMessages ~ transformDonateMessAsc', transformDonateMessAsc)
-      // comment if no get in initial
-      // setMessagesDonate(filterMessagesDonate(transformMess, streamingSecond))
-      // save mess for use in local
-      setSavedDonateMess([...transformDonateMessAsc])
-      setSuccessGetListDonateMess(true)
-      subscribeAction()
+      const messagesInfo = messagesResults.data.getMessagesByVideoId
+      const newMess = messagesInfo.items.filter((item) => item.parent)
+      // get addition messages if has more messages using nextToken to get paginated mess
+      if(messagesInfo.nextToken) {
+        setAllMess(messages => [...messages, ...newMess])
+        getMessages(messagesInfo.nextToken)
+      } else {
+        setAllMess(messages => [...messages, ...newMess])
+        refTransformListMess.current()
+      }
     } catch (error) {
       console.error(error)
     }
@@ -518,13 +531,12 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
   const checkUserExist = async () => {
     try {
       const { uuid } = userProfile.attributes
-      const listQV: APIt.ListUsersQueryVariables = {
-        filter: {
-          uuid: { eq: uuid },
-        },
+      const listQV: APIt.GetUsersByUuidQueryVariables = {
+        uuid,
+        limit: 2000,
       }
-      const usersResult: any = await API.graphql(graphqlOperation(listUsers, listQV))
-      const usersData = usersResult.data.listUsers.items
+      const usersResult: any = await API.graphql(graphqlOperation(getUsersByUuid, listQV))
+      const usersData = usersResult.data.getUsersByUuid.items
       // create new user if no exist
       if (usersData.length === 0) {
         handleCreateUserDB()
@@ -564,24 +576,24 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
   }, [dataPurchaseTicketSuperChat])
 
   const refUpdateMessLocal = useRef(null)
-  const handleUpdateMessLocal = (result, local_message) => {
-    console.log('🚀 ~ handleUpdateMessLocal ~ local_message', local_message)
-    const updatedMessage = result?.data?.updateMessage
-    console.log('🚀 ~ handleUpdateMessLocal ~ createdMessage', updatedMessage)
-    console.log('🚀 ~ handleUpdateMessLocal ~ 1234', stateMessages)
-    if (updatedMessage) {
-      updateOldMessData(updatedMessage, {})
+  const handleUpdateMessLocal = (result, local_message, error = false) => {
+    if(error) {
+      updateOldMessData(local_message, { mess_status: STATUS_SEND_MESS.ERROR_DELETE }, 'local_id')
+    } else {
+      const updatedMessage = result?.data?.updateMessage
+      if (updatedMessage) {
+        updateOldMessData(updatedMessage, {})
+      }
     }
   }
   refUpdateMessLocal.current = handleUpdateMessLocal
 
   const refUpdateMessBeforeCallApi = useRef(null)
-  const handleUpdateMessBeforeCallApi = (updatedMessage, local_message) => {
-    console.log('🚀 ~ handleUpdateMessBeforeCallApi ~ local_message', local_message)
+  const handleUpdateMessBeforeCallApi = (updatedMessage, newPropsObj) => {
     console.log('🚀 ~ handleUpdateMessBeforeCallApi ~ createdMessage', updatedMessage)
     console.log('🚀 ~ handleUpdateMessBeforeCallApi ~ 1234', stateMessages)
     if (updatedMessage) {
-      updateOldMessData(updatedMessage, { delete_flag: true })
+      updateOldMessData(updatedMessage, {...newPropsObj})
     }
   }
   refUpdateMessBeforeCallApi.current = handleUpdateMessBeforeCallApi
@@ -593,10 +605,33 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
       delete_flag: true,
     }
     console.log('start delete-111111')
-    refUpdateMessBeforeCallApi.current(message, '123')
-    const result = await API.graphql(graphqlOperation(updateMessage, { input: input }))
-    console.log('deleteMsg-111111', result)
-    refUpdateMessLocal.current(result, message)
+    refUpdateMessBeforeCallApi.current(message, {...message, delete_flag: true, mess_status: STATUS_SEND_MESS.PENDING})
+    try {
+      const result = await API.graphql(graphqlOperation(updateMessage, { input }))
+      refUpdateMessLocal.current(result, {...message, delete_flag: true})
+    } catch (errors) {
+      if(errors && errors.errors.length !== 0) {
+        refUpdateMessLocal.current([], {...message, delete_flag: true}, true)
+      }
+    }
+  }
+
+  const reDeleteMess = async(message: any) => {
+    const input = {
+      id: message.id,
+      delete_flag: true,
+    }
+    let newMess = {...message, delete_flag: true,}
+    delete newMess.mess_status
+    refUpdateMessBeforeCallApi.current(newMess, {delete_flag: true, mess_status: STATUS_SEND_MESS.PENDING})
+
+    try {
+      const result = await API.graphql(graphqlOperation(updateMessage, { input }))
+      refUpdateMessLocal.current(result, newMess)
+    } catch (errors) {
+      if(errors && errors.errors.length !== 0)
+      refUpdateMessLocal.current([], newMess, true)
+    }
   }
 
   const sortMessages = (messages, isSortAsc = true) => {
@@ -708,16 +743,35 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
   }
 
   const refCreateMessLocal = useRef(null)
-  const handleCreateMessLocal = (result, local_message) => {
-    console.log('🚀 ~ handleCreateMessLocal ~ local_message', local_message)
-    const createdMessage = result?.data?.createMessage
-    console.log('🚀 ~ handleCreateMessLocal ~ createdMessage', createdMessage)
-    console.log('🚀 ~ handleCreateMessLocal ~ 1234', stateMessages)
-    if (createdMessage) {
-      updateOldMessData(createdMessage, { mess_status: STATUS_SEND_MESS.LOADED }, 'local_id')
+  const handleCreateMessLocal = (result, local_message, error = false) => {
+    if(error) {
+      updateOldMessData(local_message, { mess_status: STATUS_SEND_MESS.ERROR_SEND }, 'local_id')
+    } else {
+      const createdMessage = result?.data?.createMessage
+      if (createdMessage) {
+        updateOldMessData(createdMessage, { mess_status: STATUS_SEND_MESS.LOADED }, 'local_id')
+      }
     }
   }
   refCreateMessLocal.current = handleCreateMessLocal
+
+  const resendMess = async(message: any) => {
+    const videoTime = streamingSecond < playedSecond ? playedSecond : streamingSecond
+    let newMess = {...message, video_time: videoTime.toString()}
+    if(message.point) {
+      newMess = {...newMess, display_avatar_time: videoTime + purchasePoints[`p_${message.point}`].displayTime}
+    }
+    delete newMess.mess_status
+    refUpdateMessBeforeCallApi.current(newMess, {mess_status: STATUS_SEND_MESS.PENDING})
+
+    try {
+      const result = await API.graphql(graphqlOperation(createMessage, { input: newMess }))
+      refCreateMessLocal.current(result, newMess)
+    } catch (errors) {
+      if(errors && errors.errors.length !== 0)
+      refCreateMessLocal.current([], newMess, true)
+    }
+  }
 
   const createMess = async (message: string, point = 0): Promise<void> => {
     if (successFlagGetAddUSer && Object.keys(chatUser).length > 0 && message && isEnabledChat) {
@@ -728,7 +782,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
         text: sanitizeMess(message),
         uuid: chatUser.uuid,
         video_id: key_video_id,
-        video_time: videoTime + '',
+        video_time: videoTime.toString(),
         // point: 500,//optional : show when Post is use pOint
         is_premium: false,
         userId: chatUser.id,
@@ -790,15 +844,20 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
         // render new users donate
         if (is_premium_local_message) {
           let newMessDonate = [...savedDonateMess]
-          newMessDonate = newMessDonate.filter((item) => +item.display_avatar_time >= +streamingSecond)
+          newMessDonate = newMessDonate.filter((item) => +item.display_avatar_time > +streamingSecond)
           // render user donate icon by time of local
           setMessagesDonate([...newMessDonate, local_message])
         }
       }
 
-      const result = await API.graphql(graphqlOperation(createMessage, { input }))
-      console.log('createMessage-111111', result)
-      refCreateMessLocal.current(result, local_message)
+      try {
+        const result = await API.graphql(graphqlOperation(createMessage, { input }))
+        refCreateMessLocal.current(result, local_message)
+      } catch (errors) {
+        if(errors && errors.errors.length !== 0)
+        refCreateMessLocal.current([], local_message, true)
+        console.error(errors)
+      }
     }
   }
 
@@ -934,10 +993,13 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
         <Box className={`${classes.dialogMess} ${messActiveUser ? classes.dialogMessShow : ''}`}>
           {messActiveUser && (
             <DonateMessage
+              videoType={videoType}
               message={messActiveUser}
               deleteMess={deleteMsg}
               getMessageWithoutNgWords={getMessageWithoutNgWords}
               is_streamer={0}
+              resendMess={resendMess}
+              reDeleteMess={reDeleteMess}
             />
           )}
           <Box
@@ -960,18 +1022,24 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
                   // key={msg?.id || i}
                   key={i}
                   message={msg}
+                  videoType={videoType}
                   deleteMess={deleteMsg}
                   getMessageWithoutNgWords={getMessageWithoutNgWords}
                   is_streamer={userResult?.streamer}
+                  resendMess={resendMess}
+                  reDeleteMess={reDeleteMess}
                 />
               ) : (
                 <ChatTextMessage
                   // key={msg?.id || i}
                   key={i}
                   message={msg}
+                  videoType={videoType}
                   getMessageWithoutNgWords={getMessageWithoutNgWords}
                   deleteMess={deleteMsg}
                   is_streamer={userResult?.streamer}
+                  resendMess={resendMess}
+                  reDeleteMess={reDeleteMess}
                 />
               )
             ) : (
@@ -1033,6 +1101,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
       {/* <Button onClick={scrollToCurrentMess}>Scroll to chat mess</Button> */}
       <Box className={classes.userWatchingList}>
         {messagesDonate
+          .slice().reverse()
           // .sort((a: any, b: any) => -(+a.video_time - +b.video_time || a.createdAt.localeCompare(b.createdAt)))
           .map((item) =>
             !item.delete_flag ? (

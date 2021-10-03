@@ -317,5 +317,6 @@ export const EVENT_LIVE_STATUS = {
 export const STATUS_SEND_MESS = {
   PENDING: 1,
   LOADED: 2,
-  ERROR: 3,
+  ERROR_SEND: 3,
+  ERROR_DELETE: 4,
 }
