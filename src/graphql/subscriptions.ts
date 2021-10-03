@@ -17,7 +17,7 @@ export const onCreateUser = /* GraphQL */ `
       updatedAt
     }
   }
-`
+`;
 export const onUpdateUser = /* GraphQL */ `
   subscription OnUpdateUser {
     onUpdateUser {
@@ -33,7 +33,7 @@ export const onUpdateUser = /* GraphQL */ `
       updatedAt
     }
   }
-`
+`;
 export const onDeleteUser = /* GraphQL */ `
   subscription OnDeleteUser {
     onDeleteUser {
@@ -49,7 +49,7 @@ export const onDeleteUser = /* GraphQL */ `
       updatedAt
     }
   }
-`
+`;
 export const onCreateMessage = /* GraphQL */ `
   subscription OnCreateMessage {
     onCreateMessage {
@@ -80,7 +80,7 @@ export const onCreateMessage = /* GraphQL */ `
       updatedAt
     }
   }
-`
+`;
 export const onUpdateMessage = /* GraphQL */ `
   subscription OnUpdateMessage {
     onUpdateMessage {
@@ -111,7 +111,7 @@ export const onUpdateMessage = /* GraphQL */ `
       updatedAt
     }
   }
-`
+`;
 export const onDeleteMessage = /* GraphQL */ `
   subscription OnDeleteMessage {
     onDeleteMessage {
@@ -142,7 +142,7 @@ export const onDeleteMessage = /* GraphQL */ `
       updatedAt
     }
   }
-`
+`;
 export const onCreateVideo = /* GraphQL */ `
   subscription OnCreateVideo {
     onCreateVideo {
@@ -156,7 +156,7 @@ export const onCreateVideo = /* GraphQL */ `
       updatedAt
     }
   }
-`
+`;
 export const onUpdateVideo = /* GraphQL */ `
   subscription OnUpdateVideo {
     onUpdateVideo {
@@ -170,7 +170,7 @@ export const onUpdateVideo = /* GraphQL */ `
       updatedAt
     }
   }
-`
+`;
 export const onDeleteVideo = /* GraphQL */ `
   subscription OnDeleteVideo {
     onDeleteVideo {
@@ -184,4 +184,4 @@ export const onDeleteVideo = /* GraphQL */ `
       updatedAt
     }
   }
-`
+`;
