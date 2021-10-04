@@ -3,7 +3,7 @@
 import BRInput from './BRInput'
 import { OutlinedInputProps } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
-import { useState } from 'hoist-non-react-statics/node_modules/@types/react'
+import { useState } from 'react'
 
 const BRTimeInput: React.FC<OutlinedInputProps> = () => {
   const classes = useStyles()
