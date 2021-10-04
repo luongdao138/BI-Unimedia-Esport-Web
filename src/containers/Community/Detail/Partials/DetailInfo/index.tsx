@@ -233,7 +233,6 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
             variant="outlined"
             color="primary"
             primaryTextColor={true}
-            // disabled={unfollowCommunityPendingMeta.pending}
             disabled={isLoading}
             onClick={cancelApplyingHandle}
           />
@@ -243,7 +242,6 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
             title={t('common:profile.following')}
             variant="contained"
             color="primary"
-            // disabled={unfollowCommunityMeta.pending}
             disabled={isLoading}
             onClick={unfollowHandle}
           />
@@ -252,7 +250,6 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
             primaryTextColor={false}
             title={t('common:profile.follow_as')}
             variant="outlined"
-            // disabled={followCommunityMeta.pending}
             disabled={isLoading}
             onClick={followHandle}
           />
