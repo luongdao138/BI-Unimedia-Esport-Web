@@ -207,6 +207,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'inline-flex',
   },
   sortInfo: {
+    height: 0,
     width: '100%',
     position: 'relative',
     marginTop: 10,
