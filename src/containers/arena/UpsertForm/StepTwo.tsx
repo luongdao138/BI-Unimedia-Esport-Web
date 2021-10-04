@@ -1,6 +1,6 @@
-import { Box, makeStyles } from '@material-ui/core'
+import { Box, makeStyles, Typography } from '@material-ui/core'
 import { TournamentHelper } from '@utils/helpers/TournamentHelper'
-import { PARTICIPATION_TYPES, RULES } from '@constants/tournament.constants'
+import { PARTICIPATION_TYPES, RULES, SORTING_METHOD } from '@constants/tournament.constants'
 import { FormType } from './FormModel/FormType'
 import { FormikProps } from 'formik'
 import { EditableTypes } from './useTournamentCreate'
@@ -9,7 +9,11 @@ import ESCheckbox from '@components/Checkbox'
 import ESSelect from '@components/Select'
 import ESLabel from '@components/Label'
 import i18n from '@locales/i18n'
-import { useEffect } from 'react'
+import React, { useEffect } from 'react'
+import Icon from '@material-ui/core/Icon'
+import { Colors } from '@theme/colors'
+import { UseSortInfoDialog } from '@containers/arena/UpsertForm/Partials/useSortInfoDialog'
+import { useArenaTypeInfoDialog } from '@containers/arena/UpsertForm/Partials/useArenaTypeInfoDialog'
 
 type Props = {
   formik: FormikProps<FormType>
@@ -18,6 +22,20 @@ type Props = {
 
 const StepTwo: React.FC<Props> = ({ formik, editables }) => {
   const classes = useStyles()
+  const sortInfo = UseSortInfoDialog()
+  const arenaTypeInfo = useArenaTypeInfoDialog()
+
+  const handleSortInfo = () => {
+    sortInfo().then(() => {
+      return
+    })
+  }
+
+  const handleArenaTypeInfo = () => {
+    arenaTypeInfo().then(() => {
+      return
+    })
+  }
 
   useEffect(() => {
     if (formik.values.stepTwo.rule !== 'single') {
@@ -48,6 +66,29 @@ const StepTwo: React.FC<Props> = ({ formik, editables }) => {
           ))}
         </ESSelect>
       </Box>
+      {(formik.values.stepTwo.rule === 'score_attack' || formik.values.stepTwo.rule === 'time_attack') && (
+        <Box className={classes.sortWrap}>
+          <ESSelect
+            className={classes.selectWidth}
+            name="stepTwo.sort_by"
+            value={formik.values.stepTwo.sort_by}
+            onChange={formik.handleChange}
+            label={i18n.t('common:tournament_create.sorting_method')}
+            required={true}
+            size="small"
+          >
+            {SORTING_METHOD.map((sorting_method, index) => (
+              <option key={index} value={sorting_method.value}>
+                {sorting_method.label}
+              </option>
+            ))}
+          </ESSelect>
+          <Typography className={classes.sortInfo} variant="body2" onClick={handleSortInfo}>
+            <Icon className={`fa fa-info-circle ${classes.iconMargin}`} fontSize="small" />{' '}
+            {i18n.t('common:tournament_create.sort_info_title')}
+          </Typography>
+        </Box>
+      )}
       <Box pb={4}>
         {formik.values.stepTwo.rule === 'single' && (
           <ESCheckbox
@@ -117,7 +158,13 @@ const StepTwo: React.FC<Props> = ({ formik, editables }) => {
         />
       </Box>
       <Box pb={4}>
-        <ESLabel label={i18n.t('common:tournament_create.public_or_private')} size="small" />
+        <Box display="flex" alignItems="center">
+          <ESLabel label={i18n.t('common:tournament_create.public_or_private')} size="small" />
+          <Typography className={classes.publicArenaInfo} variant="body2" onClick={handleArenaTypeInfo}>
+            <Icon className={`fa fa-info-circle ${classes.iconMargin}`} fontSize="small" />{' '}
+            {i18n.t('common:tournament_create.public_arena_info_title')}
+          </Typography>
+        </Box>
         <ESCheckbox
           disableRipple
           checked={TournamentHelper.getTypeValue(formik.values.stepTwo.t_type)}
@@ -155,7 +202,26 @@ const StepTwo: React.FC<Props> = ({ formik, editables }) => {
   )
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
+  sortWrap: {
+    display: 'inline-flex',
+  },
+  sortInfo: {
+    width: '100%',
+    position: 'relative',
+    marginTop: 10,
+    color: Colors.secondary,
+    cursor: 'pointer',
+  },
+  publicArenaInfo: {
+    position: 'relative',
+    color: Colors.secondary,
+    cursor: 'pointer',
+    marginLeft: theme.spacing(2),
+  },
+  iconMargin: {
+    marginRight: theme.spacing(1 / 2),
+  },
   selectWidth: {
     width: 200,
   },

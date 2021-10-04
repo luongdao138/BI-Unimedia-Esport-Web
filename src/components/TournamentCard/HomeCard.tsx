@@ -10,14 +10,17 @@ import { ESRoutes } from '@constants/route.constants'
 import { Colors } from '@theme/colors'
 import { ParticipantType, TournamentListItem } from '@services/arena.service'
 import { useTranslation } from 'react-i18next'
-import { TOURNAMENT_STATUS as TS, TOURNAMENT_RULE as TR } from '@constants/common.constants'
+import { TOURNAMENT_STATUS as TS } from '@constants/common.constants'
 import i18n from '@locales/i18n'
 import _ from 'lodash'
+
+import StatusChip from './StatusChip'
 
 export interface TournamentListFiltered extends TournamentListItem {
   total?: number
   participantsLimited?: ParticipantType[]
   startDate?: string
+  acceptance_start_date?: string
 }
 
 interface Props {
@@ -34,8 +37,10 @@ const TournamentHomeCard: React.FC<Props> = ({ tournament }) => {
   const cover = attr.cover ? attr.cover : '/images/default_card.png'
   const organizer = attr.organizer_name ? attr.organizer_name : ''
   const startDate = tournament.startDate
+  const acceptance_start_date = tournament.acceptance_start_date
 
   const getMediaScreen = () => {
+    const status = t('common:arena.status.status', { status: tournament.attributes.status })
     const p_type =
       attr.participant_type === 1 ? i18n.t('common:tournament:type_single') : `${attr.participant_type}on${attr.participant_type}`
     return (
@@ -49,6 +54,12 @@ const TournamentHomeCard: React.FC<Props> = ({ tournament }) => {
           padding={1}
         >
           <ESAvatar size={36} src={attr.organizer_avatar} alt={attr.organizer_name} />
+          {status ? (
+            <Box position="absolute" top={0} right={0} margin={0.6}>
+              <StatusChip label={status} color={tournament.attributes.status === TS.COMPLETED ? 'black' : 'white'} />
+            </Box>
+          ) : null}
+
           <Box display="flex" flexDirection="column" alignItems="flex-end">
             <Chip
               className={classes.chipPrimary}
@@ -56,7 +67,8 @@ const TournamentHomeCard: React.FC<Props> = ({ tournament }) => {
               label={
                 <Box color={Colors.white} justifyContent="flex-">
                   <Typography variant="overline">
-                    {attr.rule === TR.BATTLE_ROYAL ? i18n.t('common:tournament:rule_battle') : i18n.t('common:tournament:rule_tournament')}
+                    {t('common:arena.rules.rule', { rule: attr.rule })}
+                    {/* {attr.rule === TR.BATTLE_ROYAL ? i18n.t('common:tournament:rule_battle') : i18n.t('common:tournament:rule_tournament')} */}
                   </Typography>
                 </Box>
               }
@@ -160,6 +172,7 @@ const TournamentHomeCard: React.FC<Props> = ({ tournament }) => {
         <Typography className={classes.organizer}>{attr.game_of_title}</Typography>
         <Typography className={classes.organizer}>{`${t('common:tournament.organizer')} ${organizer}`}</Typography>
         {getChippedRow(t('common:tournament.card_date'), startDate)}
+        {getChippedRow(t('common:tournament.acceptance_start_date'), acceptance_start_date)}
         {getChippedRow(t('common:tournament.entry'), tournament.total, `/${attr.max_participants}`, 0.5)}
         {getParticipants()}
       </ESCardContent>
@@ -193,6 +206,21 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: 5,
     backgroundColor: Colors.black_opacity[90],
     borderRadius: 10,
+  },
+  chipSecondary: {
+    width: 64,
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    margin: 5,
+    height: 17,
+    backgroundColor: Colors.black_opacity[90],
+    borderRadius: 4,
+    border: `0.2px solid ${Colors.grey[300]}`,
+  },
+  label: {
+    fontWeight: 'bold',
+    fontSize: 8,
   },
   mediaOverlay: {
     position: 'absolute',

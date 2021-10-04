@@ -2,6 +2,7 @@ import { createAsyncThunk, createAction } from '@reduxjs/toolkit'
 import * as services from '@services/arena.service'
 import { SEARCH_ACTION_TYPE, TOURNAMENT_ACTION_TYPE, CLEAR_RECOMMENDED_USERS, CLEAR_TOURNAMENT_RESULT } from './types'
 import * as types from './types'
+import { SetBattleRoyaleScoresResponse } from '@services/arena.service'
 
 export const tournamentSearch = createAsyncThunk<services.TournamentSearchResponse, services.TournamentSearchParams>(
   SEARCH_ACTION_TYPE.TOURNAMENT_SEARCH,
@@ -151,6 +152,21 @@ export const getTournamentParticipants = createAsyncThunk<services.GetParticipan
   async (param, { rejectWithValue }) => {
     try {
       const res = await services.getTournamentParticipants(param)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
+export const getBattleRoyaleParticipants = createAsyncThunk<services.GetParticipantsResponse, services.GetParticipantsParams>(
+  types.GET_BATTLE_ROYALE_PARTICIPANTS,
+  async (param, { rejectWithValue }) => {
+    try {
+      const res = await services.getBattleRoyaleParticipants(param)
       return res
     } catch (error) {
       if (!error.response) {
@@ -431,4 +447,34 @@ export const updateTournamentTeamDetail = createAsyncThunk<void, services.Update
 
 export const teamMemberFollowStageChanged = createAction<{ userId: number; state: number }>(
   TOURNAMENT_ACTION_TYPE.TEAM_MEMBER_FOLLOW_STATE_CHANGED
+)
+
+export const setBattleRoyaleScores = createAsyncThunk<SetBattleRoyaleScoresResponse, services.SetBattleRoyaleScoresParams>(
+  types.SET_BATTLE_ROYALE_SCORES,
+  async (param, { rejectWithValue }) => {
+    try {
+      const res = await services.setBattleRoyalScores(param)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
+export const setBattleRoyaleOwnScore = createAsyncThunk<SetBattleRoyaleScoresResponse, services.SetBattleRoyaleScoresParams>(
+  types.SET_BATTLE_ROYALE_SCORES,
+  async (param, { rejectWithValue }) => {
+    try {
+      const res = await services.setBattleRoyalOwnScore(param)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
 )
