@@ -108,7 +108,7 @@ const ArenaBattles: React.FC = () => {
     >
       {detailMeta.loaded && <HeaderWithButton title={tournament.attributes.title} />}
 
-      <RuleHeader textAlign="center" pt={3} pb={3} rule={'time_attack'} />
+      <RuleHeader textAlign="center" pt={3} pb={3} rule={tournament?.attributes.rule} />
 
       <BRList className={classes.listContainer} rule={tournament?.attributes.rule}>
         {selecteds.map((v) => (
@@ -122,7 +122,7 @@ const ArenaBattles: React.FC = () => {
             <BRScoreInput
               value={v.attributes.position || ''}
               onChange={({ target: { value } }) => setScores(value === '' ? null : Number(value), v.id)}
-              type={'time_attack'}
+              type={tournament?.attributes.rule}
               disabled={(v.attributes.is_fixed_score || !v.highlight) && !isModerator}
             />
           </BRListItem>

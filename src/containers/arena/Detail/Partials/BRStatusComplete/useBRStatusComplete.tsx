@@ -9,19 +9,19 @@ import { useAppDispatch, useAppSelector } from '@store/hooks'
 const getBattleRoyaleParticipantsMeta = createMetaSelector(actions.getBattleRoyaleParticipants)
 
 const useBRStatusComplete = () => {
-  const { query } = useRouter()
+  const router = useRouter()
   const dispatch = useAppDispatch()
   const winner = useAppSelector(selectors.getBattleRoyaleFirstPlace)
   const winnerMeta = useAppSelector(getBattleRoyaleParticipantsMeta)
 
   useEffect(() => {
-    if (query.hash_key) {
-      dispatch(actions.getBattleRoyaleParticipants({ hash_key: String(query.hash_key), page: 1, role: 'participant' }))
+    if (router.query.hash_key) {
+      dispatch(actions.getBattleRoyaleParticipants({ hash_key: String(router.query.hash_key), page: 1, role: 'participant' }))
     }
     return () => {
       dispatch(clearMetaData(actions.getArenaWinners.typePrefix))
     }
-  }, [])
+  }, [router])
 
   return { winner, winnerMeta }
 }
