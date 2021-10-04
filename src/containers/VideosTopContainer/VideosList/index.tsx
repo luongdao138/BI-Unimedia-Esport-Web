@@ -73,6 +73,11 @@ const VideosList: React.FC<VideoListProps> = ({ setTab, videoItemStyle }) => {
             )}
           </Grid>
         </Box>
+        {getDisplayData(item?.videos)?.length > 0 && (
+          <Box className={classes.spViewMore} onClick={() => onClickSeeMorePopular(item)}>
+            <Typography className={classes.viewMoreStyle}>{i18n.t('common:videos_top_tab.view_more')}</Typography>
+          </Box>
+        )}
         <Box paddingTop={3} />
       </React.Fragment>
     )

@@ -450,6 +450,13 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
 
   useEffect(() => {
     // getUsersDonate()
+    document.getElementsByClassName('content-wrapper')[0]['style'].willChange = 'opacity'
+    return () => {
+      const container = document.getElementsByClassName('content-wrapper')
+      if (container && container.length > 0) {
+        document.getElementsByClassName('content-wrapper')[0]['style'].willChange = 'transform'
+      }
+    }
   }, [])
 
   // const filterMessagesDonate = (messages: any, compare_second?: any) => {
