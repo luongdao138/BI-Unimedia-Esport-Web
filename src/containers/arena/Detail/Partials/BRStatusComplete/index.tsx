@@ -97,7 +97,7 @@ const BRStatusComplete: React.FC<BRStatusBRStatusCompleteProps> = ({ arena }) =>
                   round
                   fullWidth
                   onClick={() => setShowSummaryModal(true)}
-                  disabled={!winner && moment(arena.attributes.end_date).isSameOrAfter(moment())}
+                  disabled={!winner || !moment().isSameOrAfter(moment(arena.attributes.end_date))}
                 >
                   {t('tournament.summary')}
                 </ButtonPrimary>
