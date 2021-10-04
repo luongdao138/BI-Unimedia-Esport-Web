@@ -1,200 +1,192 @@
-import { makeStyles } from '@material-ui/core/styles'
-import { AppBar, Container, IconButton, Toolbar, Typography } from '@material-ui/core'
-import { ArrowBack } from '@material-ui/icons'
-import BRListItem from '@containers/arena/battle_royale/Battles/BRListItem'
-import { useState, useEffect } from 'react'
+import _ from 'lodash'
+import { Box, Icon } from '@material-ui/core'
+import BRListItem from '@containers/arena/battle_royale/Partials/BRListItem'
+import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import useParticipants from '@containers/arena/Detail/Participants/useParticipants'
 import useTournamentDetail from '@containers/arena/hooks/useTournamentDetail'
-import { TournamentHelper } from '@utils/helpers/TournamentHelper'
 import { ROLE } from '@constants/tournament.constants'
 import InterestedList from '@containers/arena/Detail/Partials/SelectParticipantModal/InterestedList'
-import ESStickyFooter from '@components/StickyFooter'
 import { useTranslation } from 'react-i18next'
-import RandomizeDialog from '@containers/arena/tournament/MatchesEdit/Partials/RandomizeDialog'
+import { useRandomizeDialog } from '../Partials/RandomizeDialog'
+import { useFreezeDialog } from '../Partials/FreezeDialog'
 import ESLoader from '@components/FullScreenLoader'
 import useModeratorActions from '@containers/arena/hooks/useModeratorActions'
-import { ESRoutes } from '@constants/route.constants'
+import HeaderWithButton from '@components/HeaderWithButton'
+import ButtonPrimary from '@components/ButtonPrimary'
+import ButtonPrimaryOutlined from '@components/ButtonPrimaryOutlined'
+import { ParticipantsResponse } from '@services/arena.service'
+import Avatar from '@components/Avatar'
+import BRList from '../Partials/BRList'
+import StickyFooter from '../Partials/StickyFooter'
+import useArenaHelper from '@containers/arena/hooks/useArenaHelper'
+
+const participantDefault: ParticipantsResponse = {
+  id: undefined,
+  attributes: { avatar_url: null, name: '', position: null },
+}
+
+const getDefaultParticipants = (length: number) => Array.from({ length: length }, (_, i) => i).map((_) => participantDefault)
+
+const getParticipantIds = (participants: ReturnType<typeof getDefaultParticipants>) => _.compact(participants.map((p) => Number(p.id)))
 
 const ArenaBattlesEdit: React.FC = () => {
   const { t } = useTranslation(['common'])
-  const [score, setScore] = useState('')
-  const classes = useStyles()
   const router = useRouter()
   const { tournament, meta: detailMeta } = useTournamentDetail()
-  const { participants, meta: participantsMeta, getParticipants, resetMeta } = useParticipants()
-  const { freeze, randomize, setParticipants, randomizeMeta, freezeMeta, setParticipantsMeta } = useModeratorActions()
+  const { participants, brMeta: participantsMeta, getBattleRoyaleParticipants, resetMeta } = useParticipants()
+  const { freeze, randomize, setParticipants, randomizeMeta, freezeMeta, setParticipantsMeta, resetFreezeMeta } = useModeratorActions()
 
-  useEffect(() => {
-    if (router.query.hash_key) router.push(ESRoutes.ARENA_DETAIL.replace(/:id/gi, String(router.query.hash_key)))
-  }, [router])
-
-  const [data, setData] = useState<any>()
-  const [showParticipants, setShowParticipants] = useState<boolean>(false)
-  const [showRandomize, setShowRandomize] = useState(false)
-  const [selecteds, setSelecteds] = useState(participants)
-  const [targetParticipant, setTargetParticipant] = useState()
+  const [showParticipants, setShowParticipants] = useState<{ pid: number | undefined; open: boolean }>({ pid: undefined, open: false })
+  const [selecteds, setSelecteds] = useState<ParticipantsResponse[]>([])
   const [clickIndex, setClickIndex] = useState<number>(0)
+  const { isTeam, maxCapacity, isMemberSelectable } = useArenaHelper(tournament)
+  const confirmFreeze = useFreezeDialog(isTeam)
+  const confirmRandomize = useRandomizeDialog(isTeam)
+
+  const handleFreeze = () => {
+    confirmFreeze().then(() => {
+      freeze({ hash_key: tournament.attributes.hash_key, matches: getParticipantIds(selecteds) })
+    })
+  }
 
   useEffect(() => {
-    if (tournament) {
-      setData(TournamentHelper.getDetailData(tournament))
+    if (freezeMeta.loaded) {
+      resetFreezeMeta()
     }
-  }, [tournament])
+  }, [freezeMeta.loaded])
+
+  const handleRandomize = () => {
+    confirmRandomize().then(() => {
+      randomize(tournament.attributes.hash_key)
+    })
+  }
+
+  const closeParticipantsDialog = () => {
+    setShowParticipants((prev) => ({
+      ...prev,
+      pid: undefined,
+      open: false,
+    }))
+  }
+
+  useEffect(() => () => resetMeta(), [])
 
   useEffect(() => {
-    if (participants) {
-      setSelecteds(participants)
+    if (participantsMeta.loaded) {
+      setSelecteds(
+        _.slice(
+          [...participants, ...getDefaultParticipants(tournament.attributes.max_participants)],
+          0,
+          tournament.attributes.max_participants
+        )
+      )
     }
-  }, [participants])
+  }, [participantsMeta])
 
   useEffect(() => {
-    if (router.query.hash_key) getParticipants({ page: 1, hash_key: router.query.hash_key, role: ROLE.PARTICIPANT })
+    if (router.query.hash_key && detailMeta.loaded) {
+      getBattleRoyaleParticipants({ page: 1, hash_key: router.query.hash_key, role: ROLE.PARTICIPANT })
+    }
 
     return () => {
       resetMeta()
     }
-  }, [router.query.hash_key])
+  }, [router.query.hash_key, detailMeta.loaded])
 
   useEffect(() => {
     if (randomizeMeta.loaded) {
-      getParticipants({ page: 1, hash_key: router.query.hash_key, role: ROLE.PARTICIPANT })
+      getBattleRoyaleParticipants({ page: 1, hash_key: router.query.hash_key, role: ROLE.PARTICIPANT })
     }
   }, [randomizeMeta.loaded])
 
-  useEffect(() => {
-    const _selected = [...selecteds]
-    _selected[clickIndex] = targetParticipant
-    setSelecteds(_selected)
-    setShowParticipants(false)
-  }, [setParticipantsMeta.loaded])
-
-  const selectedHandler = (participant) => {
-    setTargetParticipant(participant)
-    const _selecteds = [...selecteds]
-    if (clickIndex >= _selecteds.length) _selecteds.push(participant)
-    else _selecteds[clickIndex] = participant
-    setParticipants({ hash_key: data.hash_key, pids: _selecteds.map((p) => p.id) })
-  }
-
-  const renderItems = () => {
-    const diff = data.maxCapacity - selecteds.length
-    const items = [...selecteds]
-    for (let i = 0; i < diff; i++) {
-      items.push(null)
-    }
-
-    return items.map((participant, i) => {
-      return (
-        <div
-          className={classes.pointer}
-          key={i}
-          onClick={() => {
-            if (data.memberSelectable) {
-              setShowParticipants(true)
-              setClickIndex(i)
-            }
-          }}
-        >
-          <BRListItem
-            index={`${i + 1}`}
-            avatar={participant?.attributes?.avatar_url}
-            label={participant?.attributes?.name}
-            editable={false}
-            onChange={(value) => setScore(value)}
-            score={score}
-          />
-        </div>
-      )
+  const selectedHandler = (participant: ParticipantsResponse) => {
+    const newSelecteds = selecteds.map((v, i) => {
+      if (i === clickIndex) {
+        return participant
+      }
+      return v
+    })
+    setParticipants({ hash_key: tournament.attributes.hash_key, pids: getParticipantIds(newSelecteds) }, () => {
+      setSelecteds(newSelecteds)
+      closeParticipantsDialog()
     })
   }
 
-  const body = () => {
-    const freezable = selecteds.length == data.maxCapacity
-
-    return (
-      <ESStickyFooter
-        disabled={false}
-        title={freezable ? t('common:arena.freeze_button') : t('common:arena.randomize_button')}
-        onClick={freezable ? () => freeze({ hash_key: tournament.attributes.hash_key, matches: null }) : () => setShowRandomize(true)}
-        show={data.memberSelectable}
-        noScroll
-        classes={{ nextBtnHolder: classes.buttonHolder }}
-      >
-        <AppBar className={classes.appbar}>
-          <Container maxWidth="lg">
-            <Toolbar className={classes.toolbar}>
-              <IconButton className={classes.backButton} onClick={() => router.back()}>
-                <ArrowBack />
-              </IconButton>
-              <Typography variant="h2">{tournament.attributes.title}</Typography>
-            </Toolbar>
-          </Container>
-        </AppBar>
-        <div className={classes.content}>
-          <Container maxWidth="lg">{data && participants && renderItems()}</Container>
-        </div>
-        <InterestedList
-          tournament={tournament}
-          open={showParticipants}
-          handleClose={() => setShowParticipants(false)}
-          onSelect={(participant) => selectedHandler(participant)}
-          handleUnset={() => null}
-        />
-        <RandomizeDialog
-          open={showRandomize}
-          onClose={() => setShowRandomize(false)}
-          onAction={() => {
-            setShowRandomize(false)
-            randomize(tournament.attributes.hash_key)
-          }}
-        />
-      </ESStickyFooter>
-    )
+  const removeHandler = () => {
+    const newSelecteds = selecteds.map((v, i) => {
+      if (i === clickIndex) {
+        return participantDefault
+      }
+      return v
+    })
+    setParticipants({ hash_key: tournament.attributes.hash_key, pids: getParticipantIds(newSelecteds) }, () => {
+      setSelecteds(newSelecteds)
+      setShowParticipants((prev) => ({
+        ...prev,
+        pid: undefined,
+      }))
+    })
   }
+
+  const [freezable, setFreezable] = useState(false)
+  useEffect(() => {
+    const selectedLength = getParticipantIds(selecteds).length
+    setFreezable(selectedLength === maxCapacity)
+  }, [selecteds])
 
   return (
     <>
-      {data && participants && body()}
+      {detailMeta.loaded && participantsMeta.loaded && tournament && (
+        <StickyFooter
+          hideFooter={tournament.attributes.is_freezed}
+          primaryButton={
+            <ButtonPrimary type="submit" round fullWidth disabled={!freezable} onClick={handleFreeze}>
+              {t('common:arena.freeze_br_button')}
+            </ButtonPrimary>
+          }
+          secondaryButton={
+            <ButtonPrimaryOutlined onClick={handleRandomize} leadingIcon={<Icon className="fas fa-random" fontSize="small" />}>
+              {t('common:arena.randomize_button')}
+            </ButtonPrimaryOutlined>
+          }
+        >
+          <HeaderWithButton title={tournament.attributes.title} />
+          <Box pt={3} pb={3} textAlign="center">
+            {/* {tournament.attributes.is_freezed ? null : <Typography>順位を入力してください</Typography>} */}
+          </Box>
+          <BRList marginX={3}>
+            {selecteds.map((v, i) => (
+              <BRListItem
+                key={i}
+                avatar={<Avatar alt={v.attributes.name || ''} src={v.attributes.avatar_url || ''} size={26} />}
+                text={v.attributes.user?.user_code ? v.attributes.name : v.attributes.team?.data.attributes.name}
+                textSecondary={v.attributes.user?.user_code || ''}
+                onClick={() => {
+                  if (isMemberSelectable) {
+                    setShowParticipants({ open: true, pid: Number(v.id) })
+                    setClickIndex(i)
+                  }
+                }}
+                highlight={v.highlight}
+              />
+            ))}
+          </BRList>
+          <InterestedList
+            pid={showParticipants.pid}
+            tournament={tournament}
+            open={showParticipants.open}
+            handleClose={closeParticipantsDialog}
+            onSelect={(participant) => selectedHandler(participant)}
+            handleUnset={removeHandler}
+          />
+        </StickyFooter>
+      )}
       <ESLoader
         open={detailMeta.pending || participantsMeta.pending || randomizeMeta.pending || freezeMeta.pending || setParticipantsMeta.pending}
       />
     </>
   )
 }
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    backgroundColor: '#212121',
-    paddingTop: 60,
-    background: 'url("/images/pattern.png") center 60px repeat-x #212121 fixed',
-  },
-  appbar: {
-    top: 60,
-    backgroundColor: '#000000',
-    borderBottom: '1px solid #FFFFFF30',
-    borderTop: '1px solid #FFFFFF30',
-  },
-  toolbar: {
-    paddingLeft: 0,
-  },
-  content: {
-    paddingTop: 128,
-  },
-  backButton: {
-    backgroundColor: '#4D4D4D',
-    padding: 7,
-    marginRight: 16,
-    '&:hover': {
-      backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    },
-  },
-  pointer: {
-    cursor: 'pointer',
-  },
-  buttonHolder: {
-    marginBottom: theme.spacing(3),
-  },
-}))
 
 export default ArenaBattlesEdit

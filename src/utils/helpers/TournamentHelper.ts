@@ -1,7 +1,7 @@
 import { PARTICIPATION_TYPES, RULE, T_TYPE, TOURNAMENT_STATUS, ROLE } from '@constants/tournament.constants'
 import moment from 'moment'
 import _ from 'lodash'
-import { TournamentDetail, TournamentMatchRound } from '@services/arena.service'
+import { ParticipantsResponse, TournamentDetail, TournamentMatchRound, TournamentRule } from '@services/arena.service'
 import { FormikErrors } from 'formik'
 import { FormType } from '@containers/arena/UpsertForm/FormModel/FormType'
 
@@ -92,7 +92,7 @@ const checkRoles = (roles, role): boolean => {
   return roles.includes(role)
 }
 
-const getDetailData = (tournament: TournamentDetail): any => {
+const getDetailData = (tournament: TournamentDetail) => {
   const _data = { ...tournament.attributes }
   const isTeam = _data.participant_type > 1
   const isAdmin = _data.my_role === ROLE.ADMIN || _data.my_role === ROLE.CO_ORGANIZER
@@ -237,6 +237,25 @@ const getLabelName = (field: string): string => {
   return ''
 }
 
+const formatArenaScore = (score: number, rule: TournamentRule): string => {
+  if (rule === 'time_attack') return moment.unix(score).format('HH:mm:ss:SSS')
+  return String(score)
+}
+
+function isBattleRoyale(arena: TournamentDetail) {
+  if (arena.attributes.rule === 'battle_royale') return true
+  if (arena.attributes.rule === 'score_attack') return true
+  if (arena.attributes.rule === 'time_attack') return true
+  return false
+}
+
+function isBRResultComplete(participants: ParticipantsResponse[]) {
+  for (const p of participants) {
+    if (p.attributes.position === null) return false
+  }
+  return true
+}
+
 export const TournamentHelper = {
   participantTypeText,
   ruleText,
@@ -251,4 +270,7 @@ export const TournamentHelper = {
   isStatusPassed,
   checkRequiredFields,
   getLabelName,
+  formatArenaScore,
+  isBattleRoyale,
+  isBRResultComplete,
 }

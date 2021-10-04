@@ -14,10 +14,16 @@ export const PARTICIPATION_TYPES = [
   { label: '10on10', value: 10 },
 ]
 
-// TEMPORARY: battle royale removed
 export const RULES = [
   { label: 'トーナメント', value: 'single' },
-  // { label: 'バトルロイヤル', value: 'battle_royale' },
+  { label: 'バトルロイヤル', value: 'battle_royale' },
+  { label: 'スコアアタック', value: 'score_attack' },
+  { label: 'タイムアタック', value: 'time_attack' },
+]
+
+export const SORTING_METHOD = [
+  { label: '昇順', value: 'by_asc' },
+  { label: '降順', value: 'by_desc' },
 ]
 export const LIVE_CATEGORIES = [
   { label: 'カテゴリーを選択', value: 1 },
@@ -34,6 +40,8 @@ export const T_TYPES = [
 export const RULE = {
   SINGLE: 'single',
   BATTLE_ROYALE: 'battle_royale',
+  SCORE_ATTACK: 'score_attack',
+  TIME_ATTACK: 'time_attack',
 }
 
 export const PARTICIPANT_TYPE = {

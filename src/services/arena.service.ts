@@ -105,8 +105,17 @@ export type ResultsResponse = {
 }
 
 export type TournamentStatus = 'ready' | 'recruiting' | 'recruitment_closed' | 'ready_to_start' | 'in_progress' | 'completed' | 'cancelled'
-export type TournamentRule = 'single' | 'double' | 'battle_royale'
+export type TournamentRule = 'single' | 'double' | 'battle_royale' | 'score_attack' | 'time_attack'
 export type ArenaRole = 'admin' | 'participant' | 'interested' | 'co_organizer'
+export type ArenaInfo = {
+  id?: number
+  team_id?: number
+  user_id?: number
+  role?: ArenaRole
+  position?: number
+  is_leader?: boolean
+  name?: string
+}
 export type TournamentDetail = {
   id: string
   type: 'tournament_details'
@@ -115,6 +124,7 @@ export type TournamentDetail = {
     overview: string
     notes: string
     rule: TournamentRule
+    sort_by: 'by_asc' | 'by_desc'
     max_participants: number
     status: TournamentStatus
     is_freezed: boolean
@@ -164,7 +174,7 @@ export type TournamentDetail = {
     interested_count: number
     participant_count: number
     my_role: null | ArenaRole
-    my_info: { team_id: number }[] | any
+    my_info: ArenaInfo[]
     my_position: null | string
     hash_key: string
     is_entered?: boolean
@@ -246,7 +256,7 @@ export type FreezeMatchItem = {
 
 export type FreezeMatchParams = {
   hash_key: string
-  matches: FreezeMatchItem[]
+  matches: FreezeMatchItem[] | number[]
 }
 
 export type TournamentDetailResponse = {
@@ -292,10 +302,11 @@ export type TournamentMatchResponse = {
   third_place_match: TournamentMatchRound
 }
 
+export type ArenaParticipantRole = 'admin' | 'co_organizer' | 'participant' | 'interested'
 export type GetParticipantsParams = {
   page: number
   hash_key: string
-  role?: string
+  role?: ArenaParticipantRole
   p_id?: number
 }
 
@@ -306,7 +317,27 @@ export type GetParticipantsResponse = {
 
 export type ParticipantsResponse = {
   id: number
-  attributes: any
+  attributes: {
+    avatar_url: string | null
+    name: string
+    team?: {
+      data: {
+        attributes: {
+          members: {
+            user_id: number
+          }[]
+          name: string
+        }
+        id: string
+      }
+    }
+    user?: {
+      user_code: string
+    }
+    position: number | null
+    is_fixed_score?: boolean
+  }
+  highlight?: boolean
 }
 
 export interface TeamMemberBase {
@@ -398,6 +429,7 @@ export type SetParticipantsParams = {
 
 export type PlacementItem = {
   id: number
+  team_id?: number
   user_id: number
   position: number
   name: string
@@ -411,6 +443,7 @@ export type PlacementItem = {
     user_code: string
     bio: null | string
   }
+  highlight?: boolean
 }
 export type ArenaWinners = Record<string, PlacementItem[]>
 
@@ -546,6 +579,15 @@ export type TournamentTeamDetailResponse = {
 
 export type UpdateTournamentResponse = void
 
+export type BattleRoyaleScoreRecord = Record<number, number>
+export type SetBattleRoyaleScoresParams = {
+  participants: ParticipantsResponse[]
+  hash_key: string
+}
+export type SetBattleRoyaleScoresResponse = {
+  data: ParticipantsResponse[]
+}
+
 export const tournamentSearch = async (params: TournamentSearchParams): Promise<TournamentSearchResponse> => {
   const { data } = await api.post<TournamentSearchResponse>(URI.TOURNAMENTS_SEARCH, params)
   return data
@@ -573,6 +615,11 @@ export const getTournamentDetail = async (hash_key: string | string[]): Promise<
 
 export const getTournamentParticipants = async (params: GetParticipantsParams): Promise<GetParticipantsResponse> => {
   const { data } = await api.post<GetParticipantsResponse>(URI.TOURNAMENTS_MEMBERS.replace(/:id/gi, params.hash_key), params)
+  return data
+}
+
+export const getBattleRoyaleParticipants = async (params: GetParticipantsParams): Promise<GetParticipantsResponse> => {
+  const { data } = await api.post<GetParticipantsResponse>(URI.BATTLE_ROYALE_MEMBERS.replace(/:id/gi, params.hash_key), params)
   return data
 }
 
@@ -688,4 +735,28 @@ export const getTournamentTeamDetail = async (teamId: number): Promise<Tournamen
 
 export const updateTournamentTeamDetail = async (params: UpdateTournamentTeamParams): Promise<void> => {
   await api.post<TournamentTeamDetailResponse>(URI.TOURNAMENT_TEAMS.replace(/:id/gi, `${params.id}`), params.data)
+}
+
+export const setBattleRoyalScores = async ({
+  hash_key,
+  participants,
+}: SetBattleRoyaleScoresParams): Promise<{ data: ParticipantsResponse[] }> => {
+  const scores = {}
+  for (const p of participants) {
+    scores[p.id] = p.attributes.position
+  }
+  const { data } = await api.post(URI.BATTLE_ROYALE_SET_SCORES.replace(/:id/gi, `${hash_key}`), { scores })
+
+  return data as SetBattleRoyaleScoresResponse
+}
+
+export const setBattleRoyalOwnScore = async ({ hash_key, participants }: SetBattleRoyaleScoresParams) => {
+  const scores = {}
+  for (const p of participants) {
+    if (p.highlight) {
+      scores[p.id] = p.attributes.position
+    }
+  }
+  const { data } = await api.post(URI.BATTLE_ROYALE_SET_OWN_SCORE.replace(/:id/gi, `${hash_key}`), { scores })
+  return data as SetBattleRoyaleScoresResponse
 }

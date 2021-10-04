@@ -432,6 +432,7 @@ export default {
   },
   tournament: {
     card_date: '開　催　日',
+    acceptance_start_date: '開 催 日 時',
     organizer: '主催者',
     entry: 'エントリー',
     entry_number: 'エントリー人数',
@@ -495,6 +496,7 @@ export default {
     },
     join: 'エントリーする',
     unjoin: 'エントリーを確認',
+    before_entry: 'エントリー受付前',
     decline_entry: 'エントリーを辞退する',
     update_entry_info: 'エントリー情報の更新',
     check_entry: 'エントリーを確認する',
@@ -511,6 +513,7 @@ export default {
     participants: '参加メンバー',
     group_chat: 'グループチャット',
     brackets: '対戦表',
+    select_br_participants: '参加メンバー選択',
     until_deadline: '締め切りまであと',
     until_start_recruit: '受付開始まであと',
     until_event: '開催まであと',
@@ -519,6 +522,7 @@ export default {
     recruit_start_from_minutes: '分から受付開始',
     current_round: '{{round_number}}回戦目 対戦中',
     confirm_brackets: '大会開始前に対戦表を確定してください',
+    confirm_participants: '大会開始前に参加メンバーを確定してください',
     confirm_brackets_desc_tail: 'が確定していない場合はエントリーが無効となるのでご注意ください',
     results: '大会結果',
     summary: '大会の総括',
@@ -528,21 +532,77 @@ export default {
     },
   },
   arena: {
+    input_result: '結果の入力',
+    br_set_score_btn: '結果を反映する',
+    br_set_score_success_toast: '結果を反映しました',
+    listHeaders: {
+      player: 'プレイヤー',
+      place: '順位',
+      score: 'スコア',
+      time: 'タイム',
+    },
+    rules: {
+      rule: '{{rule, arena_rule}}',
+      single: 'トーナメント',
+      battle_royale: 'バトルロイヤル',
+      battle_royale_rule: '{{rule, battle_royale_rule}}',
+      score_attack: 'スコアアタック',
+      time_attack: 'タイムアタック',
+    },
+    rules_title: {
+      battle_royale: '順位を入力してください',
+      score_attack: 'スコアを入力してください',
+      time_attack: `タイムを入力してください
+      例）「01:23:45:678」`,
+    },
+    status: {
+      status: '{{status, status_rule}}',
+      ready: '受付前',
+      recruiting: '受付中',
+      recruitment_closed: '開催前',
+      ready_to_start: '開催前',
+      in_progress: '開催中',
+      completed: '大会終了',
+    },
+    result_incomplete: '結果の入力がまだ行われていません',
+    not_entered: '未入力',
     match_not_yet: 'まだ作成されていません',
     third_place: '（3位決定戦あり）',
     no_third_place: '（3位決定戦なし）',
     randomize_button: 'ランダムに配置する',
     freeze_button: 'トーナメント表を確定する',
+    freeze_br_button: '対戦表を確定する',
     randomize_success: 'ユーザーをランダムに配置しました',
     freeze_success: 'トーナメント表が確定しました',
+    br_freeze_success: 'メンバーを確定しました',
     join_success: ' エントリー完了しました',
     leave_success: 'エントリーを辞退しました',
     close_entry_success: 'エントリーを締め切りました。',
     edit_entry_success: 'エントリー情報を編集しました',
     failed_to_update_match: '対戦表の更新に失敗しました',
+    battles: {
+      randomize_confirmation_dialog: {
+        title: '{{isTeam, participation_type}}をランダムに配置します',
+        subtitle: '現在エントリーしている{{isTeam, participation_type}}を対戦表の空欄になっている枠へランダムに配置します',
+        description: `※エントリーしている{{isTeam, participation_type}}数が参加枠数よりも多い場合は、選択されなかったユーザーは落選となります。
+        
+                      ※落選する{{isTeam, participation_type}}を出したくない場合は、大会管理から参加枠数を変更した後に配置を行ってください。`,
+        additionalText: 'この時点ではまだエントリー表は確定しません',
+        confirmationText: '配置する',
+        cancellationText: 'キャンセル',
+      },
+      freeze_confirmation_dialog: {
+        title: '{{isTeam, participation_type}}をランダムに配置します',
+        description: '現在エントリーしている{{isTeam, participation_type}}を対戦表の空欄になっている枠へランダムに配置します',
+        additionalText: `※エントリーしている{{isTeam, participation_type}}数が参加枠数よりも多い場合は、選択されなかった{{isTeam, participation_type}}は落選となります。
+                         ※落選する{{isTeam, participation_type}}を出したくない場合は、大会管理から参加枠数を変更した後に配置を行ってください。`,
+        confirmationText: 'エントリー',
+        cancellationText: 'キャンセル',
+      },
+    },
     dialog: {
       randomize_title: '{{isTeam, participation_type}}をランダムに配置します',
-      randomize_desc: '現在エントリーしている{{isTeam, participation_type}}をトーナメント表の空欄になっている枠へランダムに配置します',
+      randomize_desc: '現在エントリーしている{{isTeam, participation_type}}を{{isBattle}}の空欄になっている枠へランダムに配置します',
       randomize_sub1:
         '※エントリーしている{{isTeam, participation_type}}数が参加枠数よりも多い場合は、選択されなかった{{isTeam, participation_type}}は落選となります。',
       randomize_sub2:
@@ -558,7 +618,7 @@ export default {
         '※エントリーしているユーザーであっても、対戦表に反映されていないまま確定を行った場合は残りの枠数を問わず落選となります。',
       freeze_warn: '確定以降の参加枠の変更はできません。',
     },
-    no_match_result: '対戦結果が出ていません',
+    no_match_result: '対戦結果が未入力です',
     edit_match_result: '対戦結果を編集する',
     win: 'WIN',
     please_select_winner: '勝者を選択してください',
@@ -671,6 +731,30 @@ export default {
     overview: '概要',
     please_enter: '入力してください',
     holding_format: '開催形式',
+    sorting_method: 'ソート方法',
+    sort_info_title: 'ソート方法について',
+    public_arena_info_title: '公開設定について',
+    /* eslint-disable no-irregular-whitespace */
+    sort_info_content: `
+昇順　入力値（スコアやタイム等）が小さい順に順位を決定します。
+　　　例：入力値と順位の関係は下記のようになります。
+　　　100→1位、200→2位、300→3位
+降順　入力値（スコアやタイム等）が大きい順に順位を決定します。
+　　　例：入力値と順位の関係は下記のようになります。
+　　　300→1位、200→2位、100→3位`,
+    close: '閉じる',
+    publishing_settings: '公開設定',
+    /* eslint-disable no-irregular-whitespace */
+    publishing_settings_info: `
+    eXeLABで作成した大会は、公開範囲を設定することができます。
+    
+公開　　　公開設定では全てのユーザーが大会を参照可能となります。
+
+限定公開　限定公開設定では大会のURLを知っているユーザーのみ参照/エントリー
+　　　　　が可能となります。アリーナ一覧や検索には表示されません。大会を特定
+　　　　　のユーザーに共有する場合は大会詳細画面の「共有URLをコピー」より
+　　　　　URLの連携をお願いいたします。　　　　
+　　　　`,
     has_third_place: '3位決定戦あり',
     participation: '参加形式',
     participation_term: '参加条件・ルール',

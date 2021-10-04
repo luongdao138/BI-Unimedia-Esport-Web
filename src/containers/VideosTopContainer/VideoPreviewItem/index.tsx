@@ -23,7 +23,7 @@ const VideoPreviewItem: React.FC<VideoPreviewItemProps> = ({ data }) => {
   const router = useRouter()
   const onNavigateLive = (data) => {
     let vid = data?.uuid
-    if(data.status === STATUS_VIDEO.LIVE_STREAM && data.scheduled_flag === LIVE_VIDEO_TYPE.LIVE) {
+    if (data.status === STATUS_VIDEO.LIVE_STREAM && data.scheduled_flag === LIVE_VIDEO_TYPE.LIVE) {
       vid = data?.user_id
     }
     router.push({

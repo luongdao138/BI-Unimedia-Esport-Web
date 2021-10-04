@@ -67,7 +67,7 @@ const ProfileMainContainer: React.FC<Props> = ({ userProfile, isOthers }) => {
           {gender ? <Iconic text={gender} icon="fas fa-user" /> : null}
           {bod ? <Iconic text={bod} icon="fa fa-birthday-cake" /> : null}
         </Box>
-        <Box display="flex" className={classes.marginTop20}>
+        <Box display="flex" mt={2}>
           <ESButtonDiscordCircle className={classes.marginRight} link={attr.discord_link} />
           <ESButtonFacebookCircle className={classes.marginRight} link={attr.facebook_link} />
           <ESButtonTwitterCircle className={classes.marginRight} link={attr.twitter_link} />
@@ -106,7 +106,7 @@ const ProfileMainContainer: React.FC<Props> = ({ userProfile, isOthers }) => {
                     <ESChip
                       isGameList={true}
                       key={i}
-                      className={`${classes.marginTop20} ${classes.marginRight20}`}
+                      className={`${classes.marginTop16} ${classes.marginRight16}`}
                       label={g.display_name}
                     />
                   )
@@ -163,6 +163,12 @@ const useStyles = makeStyles((theme) => ({
   },
   marginRight: {
     marginRight: 8,
+  },
+  marginTop16: {
+    marginTop: theme.spacing(2),
+  },
+  marginRight16: {
+    marginRight: theme.spacing(2),
   },
   card: {
     paddingTop: 0,
