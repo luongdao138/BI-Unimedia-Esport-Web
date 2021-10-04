@@ -40,7 +40,7 @@ const ArenaBattlesEdit: React.FC = () => {
   const [showParticipants, setShowParticipants] = useState<{ pid: number | undefined; open: boolean }>({ pid: undefined, open: false })
   const [selecteds, setSelecteds] = useState<ParticipantsResponse[]>([])
   const [clickIndex, setClickIndex] = useState<number>(0)
-  const { isTeam, isModerator, maxCapacity, isMemberSelectable } = useArenaHelper(tournament)
+  const { isTeam, maxCapacity, isMemberSelectable } = useArenaHelper(tournament)
   const confirmFreeze = useFreezeDialog(isTeam)
   const confirmRandomize = useRandomizeDialog(isTeam)
 
@@ -55,13 +55,6 @@ const ArenaBattlesEdit: React.FC = () => {
       resetFreezeMeta()
     }
   }, [freezeMeta.loaded])
-
-  useEffect(() => {
-    if (tournament && (tournament.attributes.is_freezed || !isModerator)) {
-      const redirectTo = router.asPath.replace('/edit', '')
-      router.push(redirectTo)
-    }
-  }, [tournament, isModerator])
 
   const handleRandomize = () => {
     confirmRandomize().then(() => {

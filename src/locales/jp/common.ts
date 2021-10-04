@@ -532,6 +532,12 @@ export default {
       score_attack: 'スコアアタック',
       time_attack: 'タイムアタック',
     },
+    rules_title: {
+      battle_royale: '順位を入力してください',
+      score_attack: 'スコアを入力してください',
+      time_attack: `タイムを入力してください
+      例）「01:23:45:678」`,
+    },
     status: {
       status: '{{status, status_rule}}',
       ready: '受付前',

@@ -39,6 +39,16 @@ const useStyles = makeStyles(() => ({
     '& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline': {
       borderWidth: 0,
     },
+    '& .MuiOutlinedInput-root .MuiInputBase-input.Mui-disabled': {
+      paddingTop: '6px',
+      paddingLeft: '2px',
+      borderRadius: '5px',
+      paddingRight: '2px',
+      paddingBottom: '6px',
+      backgroundColor: 'transparent',
+      color: 'rgba(255, 255, 255, 0.7)',
+      fontSize: 16,
+    },
   },
 }))
 
