@@ -5,6 +5,7 @@ import { clearMetaData } from '@store/metadata/actions'
 import searchStore from '@store/lobby'
 import { PageMeta, LobbyFilterOption, LobbySearchParams, LobbyListItem } from '@services/lobby.service'
 import { Meta } from '@store/metadata/actions/types'
+import { DateHelper } from '@utils/helpers/DateHelper'
 
 const { selectors, actions } = searchStore
 const getTournamentSearchMeta = createMetaSelector(actions.searchLobby)
@@ -30,14 +31,14 @@ const useLobbyHome = (): {
   }
   const loadMore = () => {
     if (page && page.current_page < page.total_pages) {
-      lobbySearch({ page: page.current_page + 1, keyword: '', filter: selectedFilter })
+      lobbySearch({ page: page.current_page + 1, keyword: '', filter: selectedFilter, timezone: DateHelper.getTimezone() })
     }
   }
 
   const onFilterChange = (filter: LobbyFilterOption) => {
     setSelectedFilter(filter)
     dispatch(actions.clearLobbyResult())
-    lobbySearch({ page: 1, keyword: '', filter: filter })
+    lobbySearch({ page: 1, keyword: '', filter: filter, timezone: DateHelper.getTimezone() })
   }
 
   useEffect(() => {

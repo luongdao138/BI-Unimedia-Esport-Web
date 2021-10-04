@@ -14,7 +14,7 @@ const SettingsPage: PageWithLayoutType = () => {
   return (
     <MainLayout loginRequired={false}>
       <div>
-        <HeaderWithButton title={t('settings.title')} />
+        <HeaderWithButton withBackButton={false} title={t('settings.title')} />
         <Box>
           <LoginRequired>
             <div

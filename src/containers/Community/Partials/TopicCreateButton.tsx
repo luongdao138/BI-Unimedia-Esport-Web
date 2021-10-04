@@ -1,17 +1,16 @@
-import { Box, ButtonBase, makeStyles, Typography, useMediaQuery, useTheme } from '@material-ui/core'
+import { Box, ButtonBase, makeStyles, Typography } from '@material-ui/core'
 import AddCommentIcon from '@material-ui/icons/AddComment'
 import { useTranslation } from 'react-i18next'
 import { Colors } from '@theme/colors'
 
 type Props = {
-  onClick?: () => void
+  onClick: () => void
+  isMobile: boolean
 }
 
-const TopicCreateButton: React.FC<Props> = ({ onClick }) => {
+const TopicCreateButton: React.FC<Props> = ({ onClick, isMobile }) => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
-  const _theme = useTheme()
-  const isMobile = useMediaQuery(_theme.breakpoints.down('sm'))
 
   return (
     <Box>

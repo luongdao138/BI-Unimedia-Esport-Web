@@ -15,6 +15,7 @@ import {
   TopicSearchItem,
   TopicDetailList,
   CommentDetail,
+  TopicSearchParams,
 } from '@services/community.service'
 
 type StateType = {
@@ -37,6 +38,7 @@ type StateType = {
   commentsList?: CommentsResponse[]
   commentsListMeta?: PageMeta
   topicSearchList?: TopicSearchItem[]
+  topicSearchParams?: TopicSearchParams
   topicSearchListMeta?: PageMeta
   topicListMeta?: PageMeta
 }
@@ -101,16 +103,19 @@ export default createReducer(initialState, (builder) => {
     state.communitiesListByUserMeta = undefined
   })
   builder.addCase(actions.clearCommunityDetail, (state) => {
-    state.communityDetail = undefined
+    state.communityDetail = null
   })
   builder.addCase(actions.getTopicFollowers.fulfilled, (state, action) => {
     let tmpTopicFollowersList = action.payload.data
     if (action.payload.meta != undefined && action.payload.meta.current_page > 1) {
-      //Unused reducer     ref: Home Page
-      tmpTopicFollowersList = state.topicFollowersList.concat(action.payload.data)
+      tmpTopicFollowersList = _.unionBy(state.topicFollowersList, action.payload.data, 'id')
     }
     state.topicFollowersList = tmpTopicFollowersList
     state.topicFollowersListMeta = action.payload.meta
+  })
+  builder.addCase(actions.resetTopicFollowers, (state) => {
+    state.topicFollowersList = []
+    state.topicFollowersListMeta = undefined
   })
   builder.addCase(actions.getCommunityDetail.fulfilled, (state, action) => {
     state.communityDetail = action.payload.data
@@ -134,10 +139,12 @@ export default createReducer(initialState, (builder) => {
   })
   builder.addCase(actions.searchTopic.fulfilled, (state, action) => {
     state.topicSearchList = action.payload.data
+    state.topicSearchParams = action.meta.arg
     state.topicSearchListMeta = action.payload.meta
   })
   builder.addCase(actions.clearSearchTopic, (state) => {
     state.topicSearchList = []
+    state.topicSearchParams = undefined
     state.topicSearchListMeta = undefined
   })
   builder.addCase(actions.followCommunity.fulfilled, (state, action) => {

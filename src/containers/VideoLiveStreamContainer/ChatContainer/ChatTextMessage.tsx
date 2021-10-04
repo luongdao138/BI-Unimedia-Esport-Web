@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react'
-import { Box, makeStyles, Typography, CircularProgress, Icon} from '@material-ui/core'
+import { Box, makeStyles, Typography, CircularProgress, Icon } from '@material-ui/core'
 import ESMenuItem from '@components/Menu/MenuItem'
 import { useTranslation } from 'react-i18next'
 import ESMenu from '@components/Menu'
@@ -38,18 +38,22 @@ const ChatTextMessage = React.memo<ChatContainerProps>(
           </Typography>
           <Box className={classes.mess_status}>
             {message.mess_status === STATUS_SEND_MESS.PENDING ? <CircularProgress size={12} /> : ''}
-            {(message.mess_status === STATUS_SEND_MESS.ERROR_SEND || message.mess_status === STATUS_SEND_MESS.ERROR_DELETE) ? (
-              <Icon 
-                color="primary" className={`fa fa-exclamation-triangle ${classes.resendIcon}`} fontSize="small"
+            {message.mess_status === STATUS_SEND_MESS.ERROR_SEND || message.mess_status === STATUS_SEND_MESS.ERROR_DELETE ? (
+              <Icon
+                color="primary"
+                className={`fa fa-exclamation-triangle ${classes.resendIcon}`}
+                fontSize="small"
                 onClick={() => {
-                  if(message.mess_status === STATUS_SEND_MESS.ERROR_SEND) {
+                  if (message.mess_status === STATUS_SEND_MESS.ERROR_SEND) {
                     resendMess(message)
                   } else {
                     reDeleteMess(message)
                   }
-                }} 
+                }}
               />
-            ) : ''}
+            ) : (
+              ''
+            )}
             {/* {(!message.mess_status || message.mess_status === STATUS_SEND_MESS.LOADED) ? ( */}
             {/* {(!message.mess_status || message.mess_status === STATUS_SEND_MESS.LOADED) ? (
               <Icon color="primary" className={`fa fa-check-circle ${classes.icon}`} fontSize="small" />

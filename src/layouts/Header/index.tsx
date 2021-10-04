@@ -145,7 +145,7 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
               </div>
             </div>
             <Link href={isAuthenticated ? '/home' : '/'}>
-              <img style={{ cursor: 'pointer' }} src="/images/logo.svg" />
+              <img className={classes.logo} style={{ cursor: 'pointer' }} src="/images/logo.svg" />
             </Link>
             <div className={classes.search + ' search-area'}>
               <SearchArea userCode={userCode} isLoggedIn={isAuthenticated} selectData={searchOptions} onSearch={onSearch} />
@@ -263,6 +263,7 @@ const useStyles = makeStyles((theme) => ({
   button: {
     padding: 10,
   },
+  logo: {},
   [theme.breakpoints.down('md')]: {
     icon: {
       fontSize: 18,
@@ -275,6 +276,12 @@ const useStyles = makeStyles((theme) => ({
         display: 'none',
       },
     },
+    logo: {
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      margin: '0 auto',
+    },
   },
   [theme.breakpoints.down('xs')]: {
     icon: {
@@ -282,6 +289,9 @@ const useStyles = makeStyles((theme) => ({
     },
     button: {
       padding: 8,
+    },
+    logo: {
+      maxWidth: 85,
     },
   },
 }))

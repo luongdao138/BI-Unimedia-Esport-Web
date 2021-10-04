@@ -168,4 +168,5 @@ export const URI = {
   PURCHASE_TICKET_SUPER_CHAT: '/v2/purchase/use_points',
   VIDEOS: '/v2/videos/',
   FOLLOW_CHANNEL: '/v2/channels/follow',
+  LOBBY_RECOMMENDED: '/v2/recruitments/recommendations',
 }

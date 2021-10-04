@@ -26,7 +26,7 @@ const NameInfo: React.FC<NameInfoProps> = ({ profile, onDataChange, handleError 
   const { nickname, bio } = profile
 
   const validationSchema = Yup.object().shape({
-    bio: Yup.string().max(250).min(2, t('common:common.at_least')).trim(),
+    bio: Yup.string().max(5000).min(2, t('common:common.at_least')).trim(),
     nickname: Yup.string().required(t('common:common.input_required')).max(50).min(2, t('common:common.at_least')).trim(),
   })
 

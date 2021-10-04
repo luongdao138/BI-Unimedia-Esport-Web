@@ -62,9 +62,9 @@ const CancelDialog: React.FC<CancelDialogProps> = ({ communityName }) => {
 
   const renderDetailContainer = () => {
     return (
-      <Box py={4} className={classes.detailContainer}>
+      <Box pt={8} className={classes.detailContainer}>
         <ESLabel label={t('common:community_create.disband.disband_community')} size="small" />
-        <Box className={classes.userInfoContainer} mb={4}>
+        <Box className={classes.userInfoContainer}>
           <Box display="flex" alignItems="center" mr={2}>
             <Icon className={`fas fa-users ${classes.communityIcon}`} />
           </Box>
@@ -72,7 +72,9 @@ const CancelDialog: React.FC<CancelDialogProps> = ({ communityName }) => {
             {communityName}
           </Typography>
         </Box>
-        <ESLabel label={t('common:community_create.disband.description')} size="small" />
+        <Typography variant="body1" className={classes.description}>
+          {t('common:community_create.disband.description')}
+        </Typography>
       </Box>
     )
   }
@@ -80,7 +82,6 @@ const CancelDialog: React.FC<CancelDialogProps> = ({ communityName }) => {
   return (
     <>
       <Box mt={3}>
-        {/* //TODO check if disbanded */}
         <LinkButton onClick={() => setModal(true)}>{t('common:community_create.edit.disband_button')}</LinkButton>
       </Box>
       <ESModal open={modal} handleClose={handleClose}>
@@ -100,7 +101,8 @@ const CancelDialog: React.FC<CancelDialogProps> = ({ communityName }) => {
 const useStyles = makeStyles((theme: Theme) => ({
   userInfoContainer: {
     backgroundColor: Colors.black,
-    marginTop: theme.spacing(3),
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(4),
     padding: theme.spacing(2),
     borderStyle: 'solid',
     borderColor: Colors.grey[400],
@@ -116,6 +118,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   communityTitle: {
     color: Colors.white,
     wordBreak: 'break-all',
+  },
+  description: {
+    whiteSpace: 'pre-line',
   },
   confirmButton: {},
   cancelButton: {},

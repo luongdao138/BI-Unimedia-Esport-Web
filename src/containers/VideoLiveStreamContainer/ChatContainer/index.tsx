@@ -416,9 +416,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
       // scrollToCurrentMess()
     }
     let newMessDonate = [...savedDonateMess]
-    newMessDonate = newMessDonate.filter(
-      (item) => +item.display_avatar_time > +new_played_second && +item.video_time <= +new_played_second
-    )
+    newMessDonate = newMessDonate.filter((item) => +item.display_avatar_time > +new_played_second && +item.video_time <= +new_played_second)
     // render user donate icon by time of local
     setMessagesDonate(newMessDonate)
     // scrollToCurrentMess()
@@ -495,18 +493,18 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
         //   // delete_flag: { ne: true },
         // },
         limit: 2000,
-        nextToken
+        nextToken,
       }
       const messagesResults: any = await API.graphql(graphqlOperation(getMessagesByVideoId, listQV))
       // const messagesResults: any = await API.graphql(graphqlOperation(listMessagesNew, listQV))
       const messagesInfo = messagesResults.data.getMessagesByVideoId
       const newMess = messagesInfo.items.filter((item) => item.parent)
       // get addition messages if has more messages using nextToken to get paginated mess
-      if(messagesInfo.nextToken) {
-        setAllMess(messages => [...messages, ...newMess])
+      if (messagesInfo.nextToken) {
+        setAllMess((messages) => [...messages, ...newMess])
         getMessages(messagesInfo.nextToken)
       } else {
-        setAllMess(messages => [...messages, ...newMess])
+        setAllMess((messages) => [...messages, ...newMess])
         refTransformListMess.current()
       }
     } catch (error) {
@@ -577,7 +575,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
 
   const refUpdateMessLocal = useRef(null)
   const handleUpdateMessLocal = (result, local_message, error = false) => {
-    if(error) {
+    if (error) {
       updateOldMessData(local_message, { mess_status: STATUS_SEND_MESS.ERROR_DELETE }, 'local_id')
     } else {
       const updatedMessage = result?.data?.updateMessage
@@ -593,7 +591,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
     console.log('🚀 ~ handleUpdateMessBeforeCallApi ~ createdMessage', updatedMessage)
     console.log('🚀 ~ handleUpdateMessBeforeCallApi ~ 1234', stateMessages)
     if (updatedMessage) {
-      updateOldMessData(updatedMessage, {...newPropsObj})
+      updateOldMessData(updatedMessage, { ...newPropsObj })
     }
   }
   refUpdateMessBeforeCallApi.current = handleUpdateMessBeforeCallApi
@@ -605,32 +603,31 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
       delete_flag: true,
     }
     console.log('start delete-111111')
-    refUpdateMessBeforeCallApi.current(message, {...message, delete_flag: true, mess_status: STATUS_SEND_MESS.PENDING})
+    refUpdateMessBeforeCallApi.current(message, { ...message, delete_flag: true, mess_status: STATUS_SEND_MESS.PENDING })
     try {
       const result = await API.graphql(graphqlOperation(updateMessage, { input }))
-      refUpdateMessLocal.current(result, {...message, delete_flag: true})
+      refUpdateMessLocal.current(result, { ...message, delete_flag: true })
     } catch (errors) {
-      if(errors && errors.errors.length !== 0) {
-        refUpdateMessLocal.current([], {...message, delete_flag: true}, true)
+      if (errors && errors.errors.length !== 0) {
+        refUpdateMessLocal.current([], { ...message, delete_flag: true }, true)
       }
     }
   }
 
-  const reDeleteMess = async(message: any) => {
+  const reDeleteMess = async (message: any) => {
     const input = {
       id: message.id,
       delete_flag: true,
     }
-    let newMess = {...message, delete_flag: true,}
+    let newMess = { ...message, delete_flag: true }
     delete newMess.mess_status
-    refUpdateMessBeforeCallApi.current(newMess, {delete_flag: true, mess_status: STATUS_SEND_MESS.PENDING})
+    refUpdateMessBeforeCallApi.current(newMess, { delete_flag: true, mess_status: STATUS_SEND_MESS.PENDING })
 
     try {
       const result = await API.graphql(graphqlOperation(updateMessage, { input }))
       refUpdateMessLocal.current(result, newMess)
     } catch (errors) {
-      if(errors && errors.errors.length !== 0)
-      refUpdateMessLocal.current([], newMess, true)
+      if (errors && errors.errors.length !== 0) refUpdateMessLocal.current([], newMess, true)
     }
   }
 
@@ -744,7 +741,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
 
   const refCreateMessLocal = useRef(null)
   const handleCreateMessLocal = (result, local_message, error = false) => {
-    if(error) {
+    if (error) {
       updateOldMessData(local_message, { mess_status: STATUS_SEND_MESS.ERROR_SEND }, 'local_id')
     } else {
       const createdMessage = result?.data?.createMessage
@@ -755,21 +752,20 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
   }
   refCreateMessLocal.current = handleCreateMessLocal
 
-  const resendMess = async(message: any) => {
+  const resendMess = async (message: any) => {
     const videoTime = streamingSecond < playedSecond ? playedSecond : streamingSecond
-    let newMess = {...message, video_time: videoTime.toString()}
-    if(message.point) {
-      newMess = {...newMess, display_avatar_time: videoTime + purchasePoints[`p_${message.point}`].displayTime}
+    let newMess = { ...message, video_time: videoTime.toString() }
+    if (message.point) {
+      newMess = { ...newMess, display_avatar_time: videoTime + purchasePoints[`p_${message.point}`].displayTime }
     }
     delete newMess.mess_status
-    refUpdateMessBeforeCallApi.current(newMess, {mess_status: STATUS_SEND_MESS.PENDING})
+    refUpdateMessBeforeCallApi.current(newMess, { mess_status: STATUS_SEND_MESS.PENDING })
 
     try {
       const result = await API.graphql(graphqlOperation(createMessage, { input: newMess }))
       refCreateMessLocal.current(result, newMess)
     } catch (errors) {
-      if(errors && errors.errors.length !== 0)
-      refCreateMessLocal.current([], newMess, true)
+      if (errors && errors.errors.length !== 0) refCreateMessLocal.current([], newMess, true)
     }
   }
 
@@ -854,8 +850,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
         const result = await API.graphql(graphqlOperation(createMessage, { input }))
         refCreateMessLocal.current(result, local_message)
       } catch (errors) {
-        if(errors && errors.errors.length !== 0)
-        refCreateMessLocal.current([], local_message, true)
+        if (errors && errors.errors.length !== 0) refCreateMessLocal.current([], local_message, true)
         console.error(errors)
       }
     }
@@ -1101,7 +1096,8 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
       {/* <Button onClick={scrollToCurrentMess}>Scroll to chat mess</Button> */}
       <Box className={classes.userWatchingList}>
         {messagesDonate
-          .slice().reverse()
+          .slice()
+          .reverse()
           // .sort((a: any, b: any) => -(+a.video_time - +b.video_time || a.createdAt.localeCompare(b.createdAt)))
           .map((item) =>
             !item.delete_flag ? (

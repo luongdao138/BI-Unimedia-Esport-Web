@@ -18,10 +18,9 @@ export default {
     at: '@',
     search_results: '検索結果',
     total: '件',
-    error: 'エラー文言が入ります',
     game_display_name_error: '入力必須項目です',
     too_long: '{{max}}文字以内で入力してください。',
-    at_least: '2文字以上入力してください。',
+    at_least: '2文字以上入力してください',
     at_least_8: '8文字以上で入力してください',
     contains_ngword: '不適切な文字列が含まれています。',
     user_code_invalid: 'ユーザーIDには（英数字、_、-）のみ入力可能です',
@@ -38,7 +37,7 @@ export default {
     yes: 'あり',
     no: 'なし',
     man: '人',
-    integer: '数字のみ入力してください。',
+    integer: '数字のみ入力してください',
     unregistered: '未登録',
     validation: {
       acceptance_dates: 'エントリー終了日時はエントリー開始日時より後ろでなければなりません',
@@ -46,7 +45,7 @@ export default {
       start_end_date: '開催終了日時は開催日時より後ろでなければなりません',
       min_date: '日時は現在の日時より後でなければなりません',
       prize_non_cash: '※現金等を副賞とするのはご遠慮ください。',
-      char_limit: '{{char_limit}}文字以内で入力してください。',
+      char_limit: '{{char_limit}}文字以内で入力してください',
       only_single_byte: '半角英数以外が入力されています',
       only_digit: '半角数字以外が入力されています',
       before_entry_end_date: 'エントリー開始日時はエントリー終了日時より前にしてください',
@@ -82,7 +81,7 @@ export default {
     money: '円',
     ten_thousand: '万',
     made: 'まで',
-    input_incorrect: '入力内容が適切ではありません。',
+    input_incorrect: '入力内容が適切ではありません',
   },
   confirm_member: {
     confirm: 'メンバーの確定',
@@ -349,6 +348,7 @@ export default {
     title_chat: 'Chat',
     user_report_done: 'User Reported',
     reported: 'Reported!',
+    email_test_result: '入力内容が適切ではありません',
   },
   profile: {
     prefectures: '都道府県',
@@ -405,6 +405,7 @@ export default {
     twitch: 'TwitchURL',
     instagram: 'InstagramURL',
     discord: 'DiscordTag',
+    tag_up_to: 'タグは５つまで登録できます',
   },
   gender: {
     male: '男性',
@@ -612,6 +613,7 @@ export default {
   },
   topic: {
     topic_follower_list: 'フォローしている人の書き込みトピック',
+    topic_not_found: 'トピック情報を取得出来ませんでした',
     report: {
       button: 'トピックを通報',
       title: '通報するトピック',
@@ -742,6 +744,12 @@ export default {
     group_chat: 'グループチャット',
     temporary: 'Temporary',
     cancel: '募集を中止する',
+    edit_button: '編集',
+    report: '通報',
+    copy_shared_url: '共有URLをコピー',
+    venue: '開催場所',
+    game: 'ゲーム',
+    game_hardware: 'ゲームハード',
     detail: {
       label_id: '募集ID：',
       number_of_entries: 'エントリー数',
@@ -824,7 +832,7 @@ export default {
       ready: '受付前',
       recruiting: '受付中',
       entry_closed: '受付締切',
-      in_progress: '本日開催',
+      in_progress: '開催中',
       ended: '終了',
     },
     toasts: {
@@ -867,6 +875,8 @@ export default {
     home: {
       recent_lobbies_title: 'フォローしている人の募集',
       recent_lobbies_empty: '該当の募集は存在しません',
+      recommended_lobbies_title: 'おすすめの募集',
+      recommended_lobbies_empty: '該当の募集は存在しません',
     },
     discard: {
       title: '内容を破棄します',
@@ -876,15 +886,23 @@ export default {
       confirm: '内容を破棄して戻る',
     },
     validation: {
-      participants_limit: '2~128の数字を入力してください。',
+      participants_limit: '2~128の数字を入力してください',
     },
-  },
-  lobbySearchFilters: {
-    all: 'すべて',
-    suggested: 'おすすめの募集',
-    beforeStart: 'エントリー受付中',
-    inProgress: 'エントリー中の募集',
-    organized: 'あなたが作成した募集',
+    search: {
+      empty: '該当の募集が存在しませんでした',
+      empty_suggested: 'おすすめの募集ではプロフィールで設定された「好きなゲーム」と一致する募集が表示されます',
+      filter: {
+        all: 'すべて',
+        suggested: 'おすすめの募集',
+        ready: '受付前',
+        recruiting: '受付中',
+        entry_closed: '受付締切',
+        in_progress: '開催中',
+        ended: '終了',
+        joined: 'エントリー中の募集',
+        organized: 'あなたが作成した募集',
+      },
+    },
   },
   communitySearchFilters: {
     joined: '参加しているコミュニティ',
@@ -970,7 +988,8 @@ export default {
     see_tournament: '該当の大会をみる',
     see_lobby: '該当の募集をみる',
     lets_start: 'メッセージを入力',
-    select_destination: '宛先を選んでください',
+    select_destination: `宛先を選んでください 
+     宛先選択した上でメッセージを送るとグループが確定します`,
     already_member: '既にメンバーです',
     chat_copied: 'メッセージ内容をコピーしました',
     member_add_placeholder: 'ニックネーム',
@@ -1246,7 +1265,6 @@ export default {
   },
   community_create: {
     title: 'コミュニティを作成する',
-    input_required: '入力内容が適切ではありません。',
     edit_title: '募集を作成する',
     name: 'コミュニティ名',
     introduction: 'コミュニティ紹介文',
@@ -1269,6 +1287,8 @@ export default {
     discard: {
       title: '内容を破棄します',
       message: '画面を戻ると、現在の入力内容は破棄されます。よろしいですか？',
+      message_part1: '画面を戻ると、現在の入力内容は破棄されます。',
+      message_part2: 'よろしいですか？',
       confirm: '内容を破棄して戻る',
       edit_title: '内容を破棄します',
       edit_confirm: '内容を破棄して戻る',
@@ -1307,6 +1327,8 @@ export default {
     discard: {
       title: '内容を破棄します',
       message: '画面を戻ると、現在の入力内容は破棄されます。よろしいですか？',
+      message_part1: '画面を戻ると、現在の入力内容は破棄されます。',
+      message_part2: 'よろしいですか？',
       confirm: '内容を破棄して戻る',
     },
     create_success: 'トピックを作成しました',
