@@ -47,9 +47,11 @@ const ConfirmationDialog = ({ open, options, onCancel, onConfirm, onClose }: Con
           </DialogContent>
         )}
         <DialogActions className={classes.dialogActions}>
-          <ESButton {...cancellationButtonProps} className={classes.secondary} onClick={onCancel}>
-            {cancellationText}
-          </ESButton>
+          {cancellationText ? (
+            <ESButton {...cancellationButtonProps} className={classes.secondary} onClick={onCancel}>
+              {cancellationText}
+            </ESButton>
+          ) : null}
           <ButtonPrimary {...confirmationButtonProps} onClick={onConfirm}>
             {confirmationText}
           </ButtonPrimary>
