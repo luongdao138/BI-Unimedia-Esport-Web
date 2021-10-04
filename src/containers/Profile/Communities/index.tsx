@@ -51,7 +51,7 @@ const CommunityContainer: React.FC<Props> = ({ userCode }) => {
           </Box>
         </Grid>
       )}
-      {hasNextPage && (
+      {hasNextPage && !meta.pending && meta.loaded && (
         <Grid item xs={12} className={classes.loadMoreContainer} onClick={loadMore}>
           <Box display="flex" alignItems="center" justifyContent="center" mt={2} mb={2}>
             <Typography className={classes.loadMore}>{t('common:profile.read_more')}</Typography>
