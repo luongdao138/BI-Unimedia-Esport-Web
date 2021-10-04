@@ -441,7 +441,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
               ...((!videoLoaded || playState === 'Buffering') && {
                 backgroundImage: `url(${thumbnail ?? '/images/live_stream/thumbnail_default.png'})`,
               }),
-              ...(videoLoaded && { backgroundImage: `url(${thumbnail ?? '/images/live_stream/thumbnail_default.png'})` }),
+              ...(videoLoaded && { backgroundImage: '' }),
               backgroundSize: 'cover',
             }}
           >

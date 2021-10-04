@@ -269,6 +269,7 @@ export type VideoDetailResponse = {
 
 export type CategoryPopularParams = {
   timezone?: string
+  limit?: number
 }
 
 export const ListVideoAll = async (params: ListVideoTopParams): Promise<ListVideoTopResponse> => {

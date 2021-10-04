@@ -11,7 +11,7 @@ import InfiniteScroll from 'react-infinite-scroll-component'
 import useVideoSearch from './useVideoSearch'
 import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
 
-const LIMIT = 9
+const LIMIT = 12
 const VideoSearchContainer: React.FC = () => {
   const classes = useStyles()
   const { searchKeyword, searchCategoryID } = useVideoSearch()
