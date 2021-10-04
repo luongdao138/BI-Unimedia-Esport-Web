@@ -29,7 +29,7 @@ import { STATUS_VIDEO } from '@services/videoTop.services'
 import { useAppSelector } from '@store/hooks'
 import { getIsAuthenticated } from '@store/auth/selectors'
 import { ESRoutes } from '@constants/route.constants'
-import { getVideosByUuid } from 'src/graphql/queries'
+import { getVideoByUuid } from 'src/graphql/queries'
 import { onUpdateVideo } from 'src/graphql/subscriptions'
 // import { createVideo } from 'src/graphql/mutations'
 import * as APIt from 'src/types/graphqlAPI'
@@ -122,9 +122,9 @@ const VideoDetail: React.FC = () => {
   //         uuid: { eq: detailVideoResult.key_video_id },
   //       },
   //     }
-  //     const videoRs: any = await API.graphql(graphqlOperation(getVideosByUuid, listQV))
+  //     const videoRs: any = await API.graphql(graphqlOperation(getVideoByUuid, listQV))
   //     console.log('🚀 ~ checkVideoExist ~ videoRs', videoRs)
-  //     const videoData = videoRs.data.getVideosByUuid.items
+  //     const videoData = videoRs.data.getVideoByUuid.items
   //     if (videoData.length === 0) {
   //       handleCreateVideo()
   //     } else {
@@ -141,13 +141,13 @@ const VideoDetail: React.FC = () => {
   const checkVideoStatus = async () => {
     try {
       const videoId = detailVideoResult.uuid
-      const listQV: APIt.GetVideosByUuidQueryVariables = {
+      const listQV: APIt.GetVideoByUuidQueryVariables = {
         uuid: videoId,
         limit: 2000,
       }
-      const videoRs: any = await API.graphql(graphqlOperation(getVideosByUuid, listQV))
+      const videoRs: any = await API.graphql(graphqlOperation(getVideoByUuid, listQV))
       console.log('🚀 ~ checkVideoExist ~ videoRs', videoRs)
-      const videoData = videoRs.data.getVideosByUuid.items.find((item) => item.uuid === videoId)
+      const videoData = videoRs.data.getVideoByUuid.items.find((item) => item.uuid === videoId)
       if (videoData) {
         setVideoInfo(videoData)
       } else {

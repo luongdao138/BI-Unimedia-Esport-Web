@@ -7,7 +7,7 @@ import { FormatHelper } from '@utils/helpers/FormatHelper'
 import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
 import moment from 'moment'
-import { FORMAT_DATE_ARCHIVED } from '@constants/common.constants'
+import { FORMAT_DATE_ARCHIVED, LIVE_VIDEO_TYPE } from '@constants/common.constants'
 import { TypeVideoArchived } from '@services/liveStreamDetail.service'
 import ESAvatar from '@components/Avatar'
 import { STATUS_VIDEO } from '@services/videoTop.services'
@@ -22,9 +22,13 @@ const VideoPreviewItem: React.FC<VideoPreviewItemProps> = ({ data }) => {
   //status = 0-schedule|1-live|2-archive
   const router = useRouter()
   const onNavigateLive = (data) => {
+    let vid = data?.uuid
+    if(data.status === STATUS_VIDEO.LIVE_STREAM && data.scheduled_flag === LIVE_VIDEO_TYPE.LIVE) {
+      vid = data?.user_id
+    }
     router.push({
       pathname: ESRoutes.TOP,
-      query: { vid: data.status === STATUS_VIDEO.LIVE_STREAM ? data?.user_id : data?.uuid },
+      query: { vid },
     })
   }
 
