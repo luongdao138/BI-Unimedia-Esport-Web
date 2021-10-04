@@ -1,18 +1,29 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-empty-function */
 import BRInput from './BRInput'
 import { OutlinedInputProps } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
+import { useState } from 'react'
 
-const BRTimeInput: React.FC<OutlinedInputProps> = ({ ...props }) => {
+const BRTimeInput: React.FC<OutlinedInputProps> = () => {
   const classes = useStyles()
+
+  const [time] = useState({ hour: '', minute: '', second: '', millis: '' })
+
+  const handleHourChange = () => {}
+  const handleMinuteChange = () => {}
+  const handleSecondChange = () => {}
+  const handleMillisChange = () => {}
+
   return (
     <>
-      <BRInput {...props} placeholder="時" />
+      <BRInput value={time.hour} onChange={handleHourChange} placeholder="時" />
       <span className={classes.colon}>:</span>
-      <BRInput {...props} placeholder="分" />
+      <BRInput value={time.minute} onChange={handleMinuteChange} placeholder="分" />
       <span className={classes.colon}>:</span>
-      <BRInput {...props} placeholder="秒" />
+      <BRInput value={time.second} onChange={handleSecondChange} placeholder="秒" />
       <span className={classes.colon}>:</span>
-      <BRInput {...props} placeholder="ミリ秒" />
+      <BRInput value={time.second} onChange={handleMillisChange} placeholder="ミリ秒" />
     </>
   )
 }

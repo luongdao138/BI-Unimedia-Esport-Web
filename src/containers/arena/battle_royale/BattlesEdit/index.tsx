@@ -3,7 +3,7 @@ import { Box, Icon } from '@material-ui/core'
 import BRListItem from '@containers/arena/battle_royale/Partials/BRListItem'
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import useParticipants from '@containers/arena/Detail/Participants/useParticipants'
+import useBRParticipants from '@containers/arena/hooks/useBRParticipants'
 import useTournamentDetail from '@containers/arena/hooks/useTournamentDetail'
 import { ROLE } from '@constants/tournament.constants'
 import InterestedList from '@containers/arena/Detail/Partials/SelectParticipantModal/InterestedList'
@@ -34,7 +34,7 @@ const ArenaBattlesEdit: React.FC = () => {
   const { t } = useTranslation(['common'])
   const router = useRouter()
   const { tournament, meta: detailMeta } = useTournamentDetail()
-  const { participants, brMeta: participantsMeta, getBattleRoyaleParticipants, resetMeta } = useParticipants()
+  const { participants, meta: participantsMeta, getBattleRoyaleParticipants, resetMeta } = useBRParticipants()
   const { freeze, randomize, setParticipants, randomizeMeta, freezeMeta, setParticipantsMeta, resetFreezeMeta } = useModeratorActions()
 
   const [showParticipants, setShowParticipants] = useState<{ pid: number | undefined; open: boolean }>({ pid: undefined, open: false })

@@ -5,8 +5,6 @@ import useTournamentDetail from '@containers/arena/hooks/useTournamentDetail'
 import HeaderWithButton from '@components/HeaderWithButton'
 import Avatar from '@components/Avatar'
 import ESLoader from '@components/FullScreenLoader'
-import useParticipants from '@containers/arena/Detail/Participants/useParticipants'
-import { ROLE } from '@constants/tournament.constants'
 import { useRouter } from 'next/router'
 import BRListItem from '@containers/arena/battle_royale/Partials/BRListItem'
 import { makeStyles } from '@material-ui/core/styles'
@@ -19,6 +17,7 @@ import StickyFooter from '../Partials/StickyFooter'
 import ButtonPrimary from '@components/ButtonPrimary'
 import useArenaHelper from '@containers/arena/hooks/useArenaHelper'
 import RuleHeader from './RuleHeader'
+import useBRParticipants from '@containers/arena/hooks/useBRParticipants'
 
 const ArenaBattles: React.FC = () => {
   const router = useRouter()
@@ -29,7 +28,6 @@ const ArenaBattles: React.FC = () => {
   const { isModerator, isParticipant } = useArenaHelper(tournament)
   const [hideFooter, setHideFooter] = useState(true)
 
-  const { participants, brMeta: participantsMeta, getBattleRoyaleParticipants, resetMeta } = useParticipants()
   const {
     setBattleRoyaleScores,
     setBattleRoyaleScoresMeta,
@@ -38,17 +36,25 @@ const ArenaBattles: React.FC = () => {
     setBattleRoyaleOwnScoreMeta,
     resetBattleRoyaleOwnScoreMeta,
   } = useBattleRoyaleScore()
+
+  const {
+    participants,
+    getBattleRoyaleParticipantsSorted,
+    resetMeta,
+    resetParticipants,
+    metaSorted: participantsMeta,
+  } = useBRParticipants()
   const [selecteds, setSelecteds] = useState<ParticipantsResponse[]>([])
 
   const { addToast } = useAddToast()
 
   useEffect(() => {
     if (router.query.hash_key && detailMeta.loaded) {
-      getBattleRoyaleParticipants({ page: 1, hash_key: router.query.hash_key, role: ROLE.PARTICIPANT })
+      getBattleRoyaleParticipantsSorted(router.query.hash_key)
     }
-
     return () => {
       resetMeta()
+      resetParticipants()
     }
   }, [router.query.hash_key, detailMeta.loaded])
 
