@@ -57,7 +57,6 @@ const DonatePointsConfirmModal: React.FC<ModalProps> = ({
           )}
           {!hasError && (
             <Box className={classes.content}>
-              <Typography className={classes.contentMsg}>{t('donate_points.title_send_message')}</Typography>
               <Typography className={classes.contentMsg}>{msgContent}</Typography>
             </Box>
           )}

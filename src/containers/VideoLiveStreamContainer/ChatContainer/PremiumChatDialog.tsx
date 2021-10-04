@@ -42,6 +42,8 @@ const PremiumChatBox: React.FC<PremiumChatBoxProps> = ({
   const isDownMd = theme.breakpoints.down('md')
 
   const ref = useRef<any>()
+  const premiumMessageRef = useRef<any>()
+
   const classes = useStyles()
   const validationSchema = Yup.object().shape({
     message: Yup.string()
@@ -67,6 +69,10 @@ const PremiumChatBox: React.FC<PremiumChatBoxProps> = ({
       }
     },
   })
+
+  useEffect(() => {
+    document.getElementById('premium_message').focus()
+  }, [])
 
   useEffect(() => {
     if (dataPurchaseTicketSuperChat?.code === 200 && values.message) {
@@ -138,7 +144,8 @@ const PremiumChatBox: React.FC<PremiumChatBoxProps> = ({
         <Typography className={classes.dialogTitle}>{i18n.t('common:live_stream_screen.premium_comment')}</Typography>
         <Box className={classes.purchaseCommentInputContainer}>
           <ESInput
-            id="message"
+            ref={premiumMessageRef}
+            id="premium_message"
             name="message"
             multiline
             rows={5}
