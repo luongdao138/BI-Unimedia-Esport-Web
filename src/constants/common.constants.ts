@@ -320,3 +320,8 @@ export const STATUS_SEND_MESS = {
   ERROR_SEND: 3,
   ERROR_DELETE: 4,
 }
+
+export const LIVE_VIDEO_TYPE = {
+  LIVE: 0,
+  SCHEDULE: 1,
+}
