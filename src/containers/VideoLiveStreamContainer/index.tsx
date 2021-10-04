@@ -35,6 +35,7 @@ import { onUpdateVideo } from 'src/graphql/subscriptions'
 import * as APIt from 'src/types/graphqlAPI'
 import API, { GraphQLResult, graphqlOperation } from '@aws-amplify/api'
 import { EVENT_LIVE_STATUS } from '@constants/common.constants'
+import DialogLoginContainer from '@containers/DialogLogin'
 
 enum TABS {
   PROGRAM_INFO = 1,
@@ -74,6 +75,7 @@ const VideoDetail: React.FC = () => {
   const myPoint = myPointsData?.total_point ? Number(myPointsData.total_point) : 0
 
   const [tab, setTab] = useState(TABS.PROGRAM_INFO)
+  const [showDialogLogin, setShowDialogLogin] = useState<boolean>(false)
 
   const [showConfirmModal, setShowConfirmModal] = useState(false)
   const [showModalPurchasePoint, setShowModalPurchasePoint] = useState(false)
@@ -95,6 +97,14 @@ const VideoDetail: React.FC = () => {
   const isPendingPurchaseSuperChat = meta_purchase_ticket_super_chat.pending && purchaseType === PURCHASE_TYPE.PURCHASE_SUPER_CHAT
 
   // const isLoadingData = isAuthenticated ? !detailVideoResult || !myPointsData || !userResult || !video_id : !detailVideoResult || !video_id
+
+  const handleShowDialogLogin = () => {
+    setShowDialogLogin(true)
+  }
+
+  const handleCloseDialogLogin = () => {
+    setShowDialogLogin(false)
+  }
 
   // const handleCreateVideo = async () => {
   //   const input = {
@@ -295,6 +305,8 @@ const VideoDetail: React.FC = () => {
         dispatch(addToast(i18n.t('common:donate_points.lack_point_mess')))
         setShowModalPurchasePoint(true)
       }
+    } else {
+      handleShowDialogLogin()
     }
   }
   // show modal error purchase ticket
@@ -466,6 +478,7 @@ const VideoDetail: React.FC = () => {
             handlePurchaseTicket={doConfirmPurchaseTicket}
           />
         )}
+        {showDialogLogin && <DialogLoginContainer showDialogLogin={showDialogLogin} onCloseDialogLogin={handleCloseDialogLogin} />}
       </Box>
       {!detailVideoResult?.archived_url ? (
         <Box
