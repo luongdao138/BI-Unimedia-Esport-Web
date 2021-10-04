@@ -29,7 +29,7 @@ const useListVideoAll = (): {
   // const page = useAppSelector(selectors.getListVideoTop)
   const meta = useAppSelector(_getListVideoAll)
   const getListVideoTop = (params: ListVideoTopParams) => dispatch(actions.getListVideoAll(params))
-  const getListVideoPopular = () => dispatch(actions.getCategoryPopularVideo({ timezone: getTimeZone() }))
+  const getListVideoPopular = () => dispatch(actions.getCategoryPopularVideo({ timezone: getTimeZone(), limit: 5 }))
   const bannerTop = () => dispatch(actions.getBannerTop())
   const setLoginPreAction = (action) => dispatch(authActions.setLoginPreAction({ action: action }))
   const getLoginPreAction = useAppSelector(authSelectors.getPreLoginAction)

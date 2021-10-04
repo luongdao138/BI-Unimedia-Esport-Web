@@ -65,7 +65,7 @@ const VideosList: React.FC<VideoListProps> = ({ setTab, videoItemStyle }) => {
         <Box className={classes.wrapContentContainer}>
           <Grid container spacing={3} className={classes.contentContainer}>
             {item?.videos.length > 0 ? (
-              item?.videos.map((item, index) => renderLiveItem(item, index))
+              getDisplayData(item?.videos, true).map((item, index) => renderLiveItem(item, index))
             ) : (
               <Box paddingTop={2} paddingBottom={2} paddingLeft={2}>
                 <Typography className={classes.viewMoreStyle}>{i18n.t('common:videos_top_tab.no_data_text')}</Typography>
@@ -130,13 +130,14 @@ const VideosList: React.FC<VideoListProps> = ({ setTab, videoItemStyle }) => {
     )
   }
 
-  const listLimitData = () => {
-    if (up2569) return 10
-    if (up1920) return 8
-    return 6
+  const listLimitData = (categoryList) => {
+    if (up2569) return categoryList ? 5 : 10
+    if (up1920) return categoryList ? 4 : 8
+    return categoryList ? 3 : 6
   }
-  const getDisplayData = (fullData) => {
-    return fullData.slice(0, listLimitData())
+
+  const getDisplayData = (fullData, categoryList = false) => {
+    return fullData.slice(0, listLimitData(categoryList))
   }
 
   return (
