@@ -15,12 +15,13 @@ interface Props {
   formik?: FormikProps<FormLiveType>
 }
 
-const DistributorInformationContainer: React.FC<Props> = ({ hasChannel, formik }) => {
+const DistributorInformationContainer: React.FC<Props> = ({ formik }) => {
   // const [step, setStep] = useState(1)
   const router = useRouter()
   const { channelInfo } = useLiveSetting()
   const [modal, setModal] = useState(false)
   const { t } = useTranslation(['common'])
+  const hasChannel = formik?.values?.stepSettingThree?.id === 0 ? false : true
 
   const onChangeStep = (step: number): void => {
     // setStep(step)

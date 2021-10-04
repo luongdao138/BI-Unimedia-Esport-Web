@@ -82,6 +82,8 @@ export default {
     ten_thousand: '万',
     made: 'まで',
     input_incorrect: '入力内容が適切ではありません',
+    title_error_modal: 'システムエラー',
+    error_message_content: 'データの取得に失敗しました',
   },
   confirm_member: {
     confirm: 'メンバーの確定',

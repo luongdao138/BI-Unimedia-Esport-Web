@@ -14,3 +14,5 @@ export const getDialog = createSelector(getRoot, (state) => state.dialog)
 export const getNotFound = createSelector(getRoot, (state) => state.notFound)
 
 export const getAction = createSelector(getRoot, (state) => state.action)
+
+export const getErrorModal = createSelector(getRoot, (state) => state.errorModal)

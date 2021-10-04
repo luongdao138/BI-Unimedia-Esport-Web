@@ -247,6 +247,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     noDataWrapContentContainer: {
       overflow: 'hidden',
     },
+    wrapPreLoadContainer: {
+      width: 290,
+    },
     contentContainer: {
       flexWrap: 'nowrap',
       margin: '0px',
