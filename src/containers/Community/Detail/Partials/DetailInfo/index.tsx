@@ -162,10 +162,8 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
     const resultAction = await dispatch(actions.getCommunityDetail(String(hash_key)))
     if (actions.getCommunityDetail.fulfilled.match(resultAction)) {
       await followCommunity(String(hash_key))
-      setLoading(false)
-    } else {
-      setLoading(false)
     }
+    setLoading(false)
   }
 
   const unfollowHandle = async () => {
