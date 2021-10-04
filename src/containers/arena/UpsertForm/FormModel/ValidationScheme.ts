@@ -44,7 +44,10 @@ export const getValidationScheme = (data: TournamentDetail, editables: EditableT
     stepTwo: Yup.object({
       rule: Yup.string()
         .required(i18n.t('common:common.input_required'))
-        .matches(/single|battle_royale/, { excludeEmptyString: false, message: i18n.t('common:common.input_required') }),
+        .matches(/single|battle_royale|score_attack|time_attack/, {
+          excludeEmptyString: false,
+          message: i18n.t('common:common.input_required'),
+        }),
       participant_type: Yup.number()
         .min(1, i18n.t('common:common.input_required'))
         .integer(i18n.t('common:common.integer'))

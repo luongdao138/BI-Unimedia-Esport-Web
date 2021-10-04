@@ -19,7 +19,6 @@ import useTopicHelper from '../../useTopicHelper'
 import useCommunityHelper from '@containers/Community/hooks/useCommunityHelper'
 import { FormatHelper } from '@utils/helpers/FormatHelper'
 import moment from 'moment'
-import _ from 'lodash'
 import Linkify from 'react-linkify'
 import { useConfirm } from '@components/Confirm'
 import { COMMUNITY_DIALOGS } from '@constants/community.constants'
@@ -94,10 +93,6 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({
     )
   }
 
-  const newLineText = (text) => {
-    return _.map(_.split(text, '\n'), (str, i) => <Typography key={i}>{str}</Typography>)
-  }
-
   return (
     <>
       <Box className={isConfirm ? classes.containerConfirm : classes.container}>
@@ -142,7 +137,7 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({
                 </a>
               )}
             >
-              {newLineText(isConfirm ? content : topicData?.content)}
+              <Typography className={classes.multiline}> {isConfirm ? content : topicData?.content}</Typography>
             </Linkify>
           </Box>
           {(isConfirm ? image : !!topicData?.attachments && topicData.attachments[0]?.assets_url) && renderClickableImage()}
@@ -284,6 +279,10 @@ const useStyles = makeStyles((theme) => ({
     maxHeight: 300,
     maxWidth: 300,
     objectFit: 'contain',
+  },
+  multiline: {
+    whiteSpace: 'pre-wrap',
+    wordBreak: 'break-word',
   },
   menuWrapper: {
     marginRight: -12,

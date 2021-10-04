@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react'
-import { Box, Typography, Slider, Link, Theme } from '@material-ui/core'
+import { Box, Typography, Slider, Theme } from '@material-ui/core'
 import getCroppedImg from './Partials/cropImage'
 import { calculateDimensionsCover } from './Partials/calculateDimensions'
 import ESDialog from '@components/Dialog'
@@ -13,6 +13,7 @@ import i18n from '@locales/i18n'
 import { makeStyles, withStyles } from '@material-ui/core/styles'
 import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
 import { REMOVE_TYPE } from '@constants/image.constants'
+import LinkButton from '@components/LinkButton'
 
 interface CoverSelectorProps {
   src?: string
@@ -223,9 +224,7 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ src, ratio, is_required, 
           </ButtonPrimary>
         </Box>
         <Box className={classes.linkContainer}>
-          <Link className={classes.link} onClick={reset}>
-            {i18n.t('common:profile.reset')}
-          </Link>
+          <LinkButton onClick={reset}>{i18n.t('common:profile.reset')}</LinkButton>
         </Box>
         {uploading ? (
           <Box className={classes.loader}>
@@ -288,14 +287,6 @@ const useStyles = makeStyles<Theme, StyleProps>(() => ({
   linkContainer: {
     marginTop: 50,
     marginBottom: 20,
-  },
-  link: {
-    color: '#FFFFFF30',
-    '&:focus': {
-      color: '#ffffff9c',
-    },
-    cursor: 'pointer',
-    textDecoration: 'underline',
   },
   linkDisabled: {
     color: '#FFFFFF30',

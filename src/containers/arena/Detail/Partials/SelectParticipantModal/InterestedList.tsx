@@ -40,6 +40,7 @@ const InterestedList: React.FC<InterestedListProps> = ({ pid, tournament, open, 
   }, [open])
 
   const fetchMoreData = () => {
+    return setHasMore(false)
     if (page.current_page >= page.total_pages) {
       setHasMore(false)
       return
