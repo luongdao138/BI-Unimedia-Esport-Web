@@ -60,6 +60,8 @@ export type DistributorStepSetting = {
 }
 
 export type LiveStreamSettingResponse = {
+  code?: number
+  message?: string
   data?: {
     id: number
     uuid: string

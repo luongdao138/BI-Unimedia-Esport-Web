@@ -36,6 +36,7 @@ import 'src/containers/VideoPlayer/customPlugins/plugin.scss'
 import 'src/theme/globalcss/layout.scss'
 import Script from 'react-load-script'
 import Amplify from 'aws-amplify'
+import ErrorModalContainer from '@containers/ErrorModalContainer'
 
 const AWS_PROJECT_REGION = process.env.NEXT_PUBLIC_AWS_PROJECT_REGION
 const AWS_APPSYNC_GRAPHQLENDPOINT = process.env.NEXT_PUBLIC_AWS_APPSYNC_GRAPHQLENDPOINT
@@ -123,6 +124,7 @@ const App = ({ Component, pageProps }: Props) => {
             <ESLoader open={loader} />
             <ToastContainer />
             <DialogContainer />
+            <ErrorModalContainer />
             <SimpleReactLightbox>
               <ConfirmProvider defaultOptions={defaultConfirmationOptions}>
                 <Layout>

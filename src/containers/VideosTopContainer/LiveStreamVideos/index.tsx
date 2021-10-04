@@ -8,7 +8,7 @@ import React, { useEffect, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import useLiveVideos from './useLiveVideos'
 import { LIMIT_ITEM, TypeVideo, TYPE_VIDEO_TOP } from '@services/videoTop.services'
-import ESLoader from '@components/Loader'
+// import ESLoader from '@components/Loader'
 import PreLoadContainer from '../PreLoadContainer'
 
 interface Props {
@@ -115,13 +115,13 @@ const LiveStreamVideos: React.FC<Props> = ({ follow, setFollow, videoItemStyle }
           )}
         </InfiniteScroll>
       </Box>
-      {meta.pending && (
+      {/* {meta.pending && (
         <Grid item xs={12}>
           <Box my={4} display="flex" justifyContent="center" alignItems="center">
             <ESLoader />
           </Box>
         </Grid>
-      )}
+      )} */}
     </Box>
   )
 }
@@ -188,6 +188,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       margin: '0px',
       paddingBottom: '0px',
       overflow: 'auto',
+    },
+    wrapPreLoadContainer: {
+      width: 290,
     },
     xsItemContainer: {
       paddingRight: '24px',

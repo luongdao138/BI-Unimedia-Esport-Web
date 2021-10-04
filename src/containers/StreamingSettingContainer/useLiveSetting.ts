@@ -2,8 +2,10 @@ import { LiveStreamSettingParams, SetChannelParams, SetLiveStreamParams, StreamU
 import { useAppDispatch, useAppSelector } from '@store/hooks'
 import { createMetaSelector } from '@store/metadata/selectors'
 import stream from '@store/stream'
+import common from '@store/common'
 
 const { selectors, actions } = stream
+const commonActions = common.actions
 const _getMeta = createMetaSelector(actions.getLiveSettingInfo)
 const _getStreamUrlAndKeyMeta = createMetaSelector(actions.getStreamUrlAndKeyInfo)
 const _getChannelMeta = createMetaSelector(actions.getChannel)
@@ -11,7 +13,21 @@ const _getChannelMeta = createMetaSelector(actions.getChannel)
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const useLiveSetting = () => {
   const dispatch = useAppDispatch()
-  const getLiveSettingTab = (param: LiveStreamSettingParams) => dispatch(actions.getLiveSettingInfo(param))
+  // const getLiveSettingTab = (param: LiveStreamSettingParams) => dispatch(actions.getLiveSettingInfo(param))
+
+  const getLiveSettingTab = async (param: LiveStreamSettingParams) => {
+    const result = await dispatch(actions.getLiveSettingInfo(param))
+    if (!actions.getLiveSettingInfo.fulfilled.match(result) || result?.payload?.code !== 200) {
+      dispatch(
+        commonActions.showErrorModal({
+          showModal: true,
+        })
+      )
+    } else {
+      return result
+    }
+  }
+
   const getScheduleSettingTab = (param: LiveStreamSettingParams) => dispatch(actions.getScheduleSettingInfo(param))
   const liveSettingInformation = useAppSelector(selectors.getLiveStreamSetting)
   const scheduleInformation = useAppSelector(selectors.getScheduleSetting)

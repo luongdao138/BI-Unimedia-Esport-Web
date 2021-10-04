@@ -38,7 +38,6 @@ const StreamingSettingContainer: React.FC<{ default_tab: any }> = ({ default_tab
   const router = useRouter()
   const [tab, setTab] = useState(default_tab)
   const [disable, setDisable] = useState(false)
-
   //TODO: check call api
   const {
     liveSettingInformation,
@@ -87,10 +86,19 @@ const StreamingSettingContainer: React.FC<{ default_tab: any }> = ({ default_tab
     let data: LiveStreamSettingResponse = null
     getLiveSettingTab({ type: TYPE_SETTING.LIVE }).then((res) => {
       formikLive.validateForm()
-      data = res.payload
-      setTab(data?.data?.channel_id === 0 || !data?.data?.channel_id ? 2 : default_tab)
-      setDisable(data?.data?.channel_id === 0 || !data?.data?.channel_id ? true : false)
-      data?.data?.channel_id !== 0 && getCategory()
+      data = res?.payload
+      if (!data?.data) {
+        setTab(default_tab)
+      } else if (data?.data?.channel_id === 0) {
+        setTab(TABS.DISTRIBUTOR)
+        setDisable(true)
+      } else {
+        setTab(default_tab)
+        getCategory()
+      }
+      // setTab(data?.data?.channel_id === 0 || !data?.data?.channel_id ? 2 : default_tab)
+      // setDisable(data?.data?.channel_id === 0 || !data?.data?.channel_id ? true : false)
+      // data?.data?.channel_id !== 0 && getCategory()
     })
   }, [])
 
@@ -138,7 +146,7 @@ const StreamingSettingContainer: React.FC<{ default_tab: any }> = ({ default_tab
       case TABS.STREAMING_RESERVATION:
         return <StreamingReservationContainer formik={formikSchedule} />
       case TABS.DISTRIBUTOR:
-        return <DistributorInformationContainer hasChannel={!disable} formik={formikDistributor} />
+        return <DistributorInformationContainer formik={formikDistributor} />
       default:
         break
     }

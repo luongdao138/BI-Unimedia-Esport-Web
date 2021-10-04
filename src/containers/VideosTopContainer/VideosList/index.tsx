@@ -356,6 +356,9 @@ const useStyles = makeStyles((theme: Theme) => ({
         backgroundColor: '#222222',
       },
     },
+    wrapPreLoadContainer: {
+      width: 290,
+    },
     contentContainer: {
       flexWrap: 'nowrap',
       margin: '0px',

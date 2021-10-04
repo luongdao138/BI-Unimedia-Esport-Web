@@ -7,7 +7,7 @@ import { useTheme } from '@material-ui/core/styles'
 import useArchivedVideos from './useArchivedVideos'
 import React, { useEffect, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
-import ESLoader from '@components/Loader'
+// import ESLoader from '@components/Loader'
 import { LIMIT_ITEM, TypeVideo, TYPE_VIDEO_TOP } from '@services/videoTop.services'
 import PreLoadContainer from '../PreLoadContainer'
 
@@ -115,13 +115,13 @@ const ArchivedVideos: React.FC<Props> = ({ follow, setFollow, videoItemStyle }) 
           )}
         </InfiniteScroll>
       </Box>
-      {meta.pending && (
+      {/* {meta.pending && (
         <Grid item xs={12}>
           <Box my={4} display="flex" justifyContent="center" alignItems="center">
             <ESLoader />
           </Box>
         </Grid>
-      )}
+      )} */}
     </Box>
   )
 }
@@ -198,6 +198,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     wrapContentContainer: {
       width: 'calc(100vw - 24px)',
       overflow: 'auto',
+    },
+    wrapPreLoadContainer: {
+      width: 290,
     },
     contentContainer: {
       flexWrap: 'nowrap',

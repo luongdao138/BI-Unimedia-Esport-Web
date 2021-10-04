@@ -56,5 +56,6 @@ export type FormLiveType = {
     instagram_link?: string
     //check step
     step_setting?: number
+    id?: number
   }
 }
