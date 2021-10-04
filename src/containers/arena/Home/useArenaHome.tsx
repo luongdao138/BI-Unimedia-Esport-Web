@@ -2,24 +2,13 @@ import { useAppDispatch, useAppSelector } from '@store/hooks'
 import { createMetaSelector } from '@store/metadata/selectors'
 import { clearMetaData } from '@store/metadata/actions'
 import searchStore from '@store/arena'
-import { TournamentSearchParams, PageMeta, TournamentFilterOption, TournamentListItem } from '@services/arena.service'
-import { TournamentListFiltered } from '@components/TournamentCard/HomeCard'
+import { TournamentSearchParams, TournamentFilterOption } from '@services/arena.service'
 import { useEffect, useState } from 'react'
-import { Meta } from '@store/metadata/actions/types'
 
 const { selectors, actions } = searchStore
 const getTournamentSearchMeta = createMetaSelector(actions.tournamentSearch)
 
-const useArenaHome = (): {
-  arenas: TournamentListItem[]
-  arenasFiltered: TournamentListFiltered[]
-  meta: Meta
-  page: PageMeta
-  loadMore: () => void
-  onFilterChange: (filter: TournamentFilterOption) => void
-  selectedFilter: TournamentFilterOption
-  setSelectedFilter: (filter: TournamentFilterOption) => void
-} => {
+const useArenaHome = () => {
   const dispatch = useAppDispatch()
   const arenas = useAppSelector(selectors.getSearchTournaments)
   const arenasFiltered = useAppSelector(selectors.getSearchFilteredTournaments)
@@ -37,7 +26,7 @@ const useArenaHome = (): {
   const onFilterChange = (filter: TournamentFilterOption) => {
     setSelectedFilter(filter)
     dispatch(actions.clearTournamentResult())
-    tournamentSearch({ page: 1, keyword: '', filter: filter })
+    return tournamentSearch({ page: 1, keyword: '', filter: filter })
   }
 
   useEffect(() => {

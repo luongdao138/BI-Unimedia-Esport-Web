@@ -79,7 +79,11 @@ const ArenaHome: React.FC<ArenaHomeProps> = ({ filter }) => {
       if (Object.values(TournamentFilterOption).includes(queryFilterVal)) filterVal = queryFilterVal
     }
 
-    onFilterChange(filterVal)
+    const promise = onFilterChange(filterVal)
+
+    return () => {
+      promise.abort()
+    }
   }, [router.query])
 
   const onFilter = (filter: TournamentFilterOption) => {
