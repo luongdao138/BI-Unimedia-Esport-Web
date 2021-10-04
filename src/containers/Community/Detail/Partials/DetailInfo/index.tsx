@@ -69,6 +69,12 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
   const [isCoOrganizer, setIsCoOrganizer] = useState<boolean>(false)
   const [isFollowing, setIsFollowing] = useState<boolean>(false)
   const [isRequested, setIsRequested] = useState<boolean>(false)
+  const [mounted, setMounted] = useState<boolean>(true)
+  const [isLoading, setLoading] = useState<boolean>(false)
+
+  useEffect(() => {
+    return () => setMounted(false)
+  }, [])
 
   useEffect(() => {
     if (router?.query) {
@@ -152,36 +158,61 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
   }, [unfollowCommunityPendingMeta])
 
   const followHandle = async () => {
+    setLoading(true)
     const resultAction = await dispatch(actions.getCommunityDetail(String(hash_key)))
     if (actions.getCommunityDetail.fulfilled.match(resultAction)) {
-      followCommunity(String(hash_key))
+      await followCommunity(String(hash_key))
+      setLoading(false)
+    } else {
+      setLoading(false)
     }
   }
 
   const unfollowHandle = async () => {
+    setLoading(true)
     const resultAction = await dispatch(actions.getCommunityDetail(String(hash_key)))
     if (actions.getCommunityDetail.fulfilled.match(resultAction)) {
       if (!isAutomatic) {
         confirm({ ...COMMUNITY_DIALOGS.UNFOLLOW })
-          .then(() => {
-            unfollowCommunity(String(hash_key))
+          .then(async () => {
+            await unfollowCommunity(String(hash_key))
+            if (mounted) {
+              setLoading(false)
+            }
           })
           .catch(() => {
-            /* ... */
+            if (mounted) {
+              setLoading(false)
+            }
           })
       } else {
-        unfollowCommunity(String(hash_key))
+        try {
+          await unfollowCommunity(String(hash_key))
+          if (mounted) {
+            setLoading(false)
+          }
+        } catch (error) {
+          if (mounted) {
+            setLoading(false)
+          }
+        }
       }
     }
   }
 
   const cancelApplyingHandle = () => {
+    setLoading(true)
     confirm({ ...COMMUNITY_DIALOGS.JOIN_PENDING })
-      .then(() => {
-        unfollowCommunityPending(String(hash_key))
+      .then(async () => {
+        await unfollowCommunityPending(String(hash_key))
+        if (mounted) {
+          setLoading(false)
+        }
       })
       .catch(() => {
-        /* ... */
+        if (mounted) {
+          setLoading(false)
+        }
       })
   }
 
@@ -202,7 +233,7 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
             variant="outlined"
             color="primary"
             primaryTextColor={true}
-            disabled={unfollowCommunityPendingMeta.pending}
+            disabled={isLoading}
             onClick={cancelApplyingHandle}
           />
         ) : isFollowing ? (
@@ -211,7 +242,7 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
             title={t('common:profile.following')}
             variant="contained"
             color="primary"
-            disabled={unfollowCommunityMeta.pending}
+            disabled={isLoading}
             onClick={unfollowHandle}
           />
         ) : (
@@ -219,7 +250,7 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
             primaryTextColor={false}
             title={t('common:profile.follow_as')}
             variant="outlined"
-            disabled={followCommunityMeta.pending}
+            disabled={isLoading}
             onClick={followHandle}
           />
         )}
