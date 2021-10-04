@@ -564,27 +564,27 @@ export default {
     failed_to_update_match: '対戦表の更新に失敗しました',
     battles: {
       randomize_confirmation_dialog: {
-        title: '{{isTeam}}をランダムに配置します',
-        subtitle: '現在エントリーしている{{isTeam}}を対戦表の空欄になっている枠へランダムに配置します',
-        description: `※エントリーしている{{isTeam}}数が参加枠数よりも多い場合は、選択されなかったユーザーは落選となります。
+        title: '{{isTeam, participation_type}}をランダムに配置します',
+        subtitle: '現在エントリーしている{{isTeam, participation_type}}を対戦表の空欄になっている枠へランダムに配置します',
+        description: `※エントリーしている{{isTeam, participation_type}}数が参加枠数よりも多い場合は、選択されなかったユーザーは落選となります。
         
-                      ※落選する{{isTeam}}を出したくない場合は、大会管理から参加枠数を変更した後に配置を行ってください。`,
+                      ※落選する{{isTeam, participation_type}}を出したくない場合は、大会管理から参加枠数を変更した後に配置を行ってください。`,
         additionalText: 'この時点ではまだエントリー表は確定しません',
         confirmationText: '配置する',
         cancellationText: 'キャンセル',
       },
       freeze_confirmation_dialog: {
-        title: 'チームをランダムに配置します',
-        description: '現在エントリーしているチームを対戦表の空欄になっている枠へランダムに配置します',
-        additionalText: `※エントリーしているチーム数が参加枠数よりも多い場合は、選択されなかったチームは落選となります。
-                         ※落選するチームを出したくない場合は、大会管理から参加枠数を変更した後に配置を行ってください。`,
+        title: '{{isTeam, participation_type}}をランダムに配置します',
+        description: '現在エントリーしている{{isTeam, participation_type}}を対戦表の空欄になっている枠へランダムに配置します',
+        additionalText: `※エントリーしている{{isTeam, participation_type}}数が参加枠数よりも多い場合は、選択されなかった{{isTeam, participation_type}}は落選となります。
+                         ※落選する{{isTeam, participation_type}}を出したくない場合は、大会管理から参加枠数を変更した後に配置を行ってください。`,
         confirmationText: 'エントリー',
         cancellationText: 'キャンセル',
       },
     },
     dialog: {
       randomize_title: '{{isTeam, participation_type}}をランダムに配置します',
-      randomize_desc: '現在エントリーしている{{isTeam, participation_type}}をトーナメント表の空欄になっている枠へランダムに配置します',
+      randomize_desc: '現在エントリーしている{{isTeam, participation_type}}を{{isBattle}}の空欄になっている枠へランダムに配置します',
       randomize_sub1:
         '※エントリーしている{{isTeam, participation_type}}数が参加枠数よりも多い場合は、選択されなかった{{isTeam, participation_type}}は落選となります。',
       randomize_sub2:
@@ -713,16 +713,29 @@ export default {
     please_enter: '入力してください',
     holding_format: '開催形式',
     sorting_method: 'ソート方法',
-    sort_info_title: '昇順・降順について',
+    sort_info_title: 'ソート方法について',
+    public_arena_info_title: '公開設定について',
     /* eslint-disable no-irregular-whitespace */
     sort_info_content: `
 昇順　入力値（スコアやタイム等）が小さい順に順位を決定します。
 　　　例：入力値と順位の関係は下記のようになります。
 　　　100→1位、200→2位、300→3位
-
 降順　入力値（スコアやタイム等）が大きい順に順位を決定します。
 　　　例：入力値と順位の関係は下記のようになります。
 　　　300→1位、200→2位、100→3位`,
+    close: '閉じる',
+    publishing_settings: '公開設定',
+    /* eslint-disable no-irregular-whitespace */
+    publishing_settings_info: `
+    eXeLABで作成した大会は、公開範囲を設定することができます。
+    
+公開　　　公開設定では全てのユーザーが大会を参照可能となります。
+
+限定公開　限定公開設定では大会のURLを知っているユーザーのみ参照/エントリー
+　　　　　が可能となります。アリーナ一覧や検索には表示されません。大会を特定
+　　　　　のユーザーに共有する場合は大会詳細画面の「共有URLをコピー」より
+　　　　　URLの連携をお願いいたします。　　　　
+　　　　`,
     has_third_place: '3位決定戦あり',
     participation: '参加形式',
     participation_term: '参加条件・ルール',

@@ -713,7 +713,8 @@ export default {
     please_enter: '入力してください',
     holding_format: '開催形式',
     sorting_method: 'ソート方法',
-    sort_info_title: '昇順・降順について',
+    sort_info_title: 'ソート方法について',
+    public_arena_info_title: '公開設定について',
     /* eslint-disable no-irregular-whitespace */
     sort_info_content: `
 昇順　入力値（スコアやタイム等）が小さい順に順位を決定します。
@@ -722,6 +723,19 @@ export default {
 降順　入力値（スコアやタイム等）が大きい順に順位を決定します。
 　　　例：入力値と順位の関係は下記のようになります。
 　　　300→1位、200→2位、100→3位`,
+    close: '閉じる',
+    publishing_settings: '公開設定',
+    /* eslint-disable no-irregular-whitespace */
+    publishing_settings_info: `
+    eXeLABで作成した大会は、公開範囲を設定することができます。
+    
+公開　　　公開設定では全てのユーザーが大会を参照可能となります。
+
+限定公開　限定公開設定では大会のURLを知っているユーザーのみ参照/エントリー
+　　　　　が可能となります。アリーナ一覧や検索には表示されません。大会を特定
+　　　　　のユーザーに共有する場合は大会詳細画面の「共有URLをコピー」より
+　　　　　URLの連携をお願いいたします。　　　　
+　　　　`,
     has_third_place: '3位決定戦あり',
     participation: '参加形式',
     participation_term: '参加条件・ルール',
