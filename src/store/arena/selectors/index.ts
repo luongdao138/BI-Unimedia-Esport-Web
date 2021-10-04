@@ -23,7 +23,7 @@ export const getBattleRoyaleParticipants = createSelector(getRoot, getTournament
     : (arena?.attributes.my_info || []).map((a) => String(a.id))
   return state.tournamentParticipants.map((participant) => ({
     ...participant,
-    highlight: isTeam ? ids.includes(participant.attributes.team.data.id) : ids.includes(String(participant.id)),
+    highlight: isTeam ? ids.includes(participant.attributes.team?.data?.id) : ids.includes(String(participant?.id)),
   }))
 })
 export const getSortedBRParticipants = createSelector(getBattleRoyaleParticipants, getTournamentDetail, (participants, arena) => {
@@ -110,8 +110,8 @@ export const getBattleRoyaleFirstPlace = createSelector(getTournamentDetail, get
       const isTeam = arena.attributes.participant_type > 1
       return {
         avatar: participants[0].attributes.avatar_url,
-        name: isTeam ? participants[0].attributes.team?.data.attributes.name : participants[0].attributes.name,
-        user_code: isTeam ? '' : participants[0].attributes.user.user_code,
+        name: isTeam ? participants[0].attributes.team?.data?.attributes?.name : participants[0].attributes?.name,
+        user_code: isTeam ? '' : participants[0].attributes?.user?.user_code,
       }
     }
   }

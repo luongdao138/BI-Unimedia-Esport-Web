@@ -15,7 +15,7 @@ interface CompletedProps {
 
 const Completed: React.FC<CompletedProps> = (props) => {
   const classes = useStyles()
-  const { fetchWinners, winner } = useWinners(false)
+  const { arenaWinners, fetchWinners } = useWinners(false)
   const { tournament } = props
   const { t } = useTranslation(['common'])
 
@@ -25,12 +25,24 @@ const Completed: React.FC<CompletedProps> = (props) => {
 
   return (
     <ActionComponent {...props}>
-      {tournament.attributes.is_freezed && winner ? (
-        <Box className={classes.body}>
-          <div className={classes.winnerAvatarWrapper} onClick={() => {}}>
-            <ArenaAvatar src={winner.avatar} name={winner.name} user_code={winner.user_code} win leaf nameWhite size="small" />
-          </div>
-        </Box>
+      {tournament.attributes.is_freezed && tournament.attributes.participant_count > 1 ? (
+        arenaWinners &&
+        arenaWinners['1'] &&
+        arenaWinners['1'][0] && (
+          <Box className={classes.body}>
+            <div className={classes.winnerAvatarWrapper} onClick={() => {}}>
+              <ArenaAvatar
+                src={arenaWinners['1'][0].avatar}
+                name={arenaWinners['1'][0].name}
+                user_code={arenaWinners['1'][0].user?.user_code}
+                win
+                leaf
+                nameWhite
+                size="small"
+              />
+            </div>
+          </Box>
+        )
       ) : (
         <Box className={classes.body}>
           <Box display="flex" flexDirection="row">

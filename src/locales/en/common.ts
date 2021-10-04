@@ -547,6 +547,7 @@ export default {
       in_progress: '開催中',
       completed: '大会終了',
     },
+    result_incomplete: '結果の入力がまだ行われていません',
     not_entered: '未入力',
     match_not_yet: 'まだ作成されていません',
     third_place: '（3位決定戦あり）',

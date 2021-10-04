@@ -83,7 +83,7 @@ i18n
               return '開催中'
             }
             case 6: {
-              return '大会終了'
+              return '終了'
             }
             default:
               return ''

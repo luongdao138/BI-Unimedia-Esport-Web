@@ -53,10 +53,10 @@ const BRStatusComplete: React.FC<BRStatusBRStatusCompleteProps> = ({ arena }) =>
                 <>
                   <Box color="#fff">
                     <Typography variant="h5" gutterBottom>
-                      大会終了
+                      {t('arena.status.completed')}
                     </Typography>
                   </Box>
-                  <Typography>結果の入力がまだ行われていません</Typography>
+                  <Typography>{t('arena.result_incomplete')}</Typography>
                 </>
               )}
               <ButtonGroup mt={3}>
@@ -76,7 +76,7 @@ const BRStatusComplete: React.FC<BRStatusBRStatusCompleteProps> = ({ arena }) =>
           ) : (
             <Box textAlign="center">
               <Typography color="secondary" variant="body1">
-                結果の入力がまだ行われていません
+                {t('arena.result_incomplete')}
               </Typography>
             </Box>
           )
