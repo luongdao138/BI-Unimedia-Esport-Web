@@ -315,7 +315,7 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
               <ESChip label={TournamentHelper.participantTypeText(data.participant_type)} />
             </Box>
             <Box mt={1} mr={1}>
-              <ESChip label={TournamentHelper.ruleText(data.rule)} />
+              <ESChip label={t('common:arena.rules.rule', { rule: data.rule })} />
             </Box>
             {!!data.has_prize && (
               <Box mt={1} mr={1}>
