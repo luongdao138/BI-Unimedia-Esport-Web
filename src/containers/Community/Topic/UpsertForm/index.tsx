@@ -26,6 +26,7 @@ import { useRouter } from 'next/router'
 import useDocTitle from '@utils/hooks/useDocTitle'
 import { useConfirm } from '@components/Confirm'
 import { COMMUNITY_DIALOGS } from '@constants/community.constants'
+import useUnload from '@utils/hooks/useUnload'
 
 const TopicCreate: React.FC = () => {
   const dispatch = useAppDispatch()
@@ -33,6 +34,7 @@ const TopicCreate: React.FC = () => {
   const { handleReturn } = useReturnHref()
   const [isConfirm, setIsConfirm] = useState(false)
   const [hasError, setHasError] = useState(true)
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const isFirstRun = useRef(true)
   const initialValues = getInitialValues(undefined)
   const { submit } = useTopicCreate()
@@ -50,7 +52,7 @@ const TopicCreate: React.FC = () => {
     validationSchema: getValidationScheme(),
     enableReinitialize: true,
     onSubmit: (values) => {
-      window.removeEventListener('beforeunload', unloadCallback, { capture: true })
+      setIsSubmitting(() => true)
       const data: TopicParams = {
         ...values.stepOne,
         community_hash: String(router.query.hash_key),
@@ -76,19 +78,16 @@ const TopicCreate: React.FC = () => {
 
   const isChanged = !_.isEqual(formik.values, initialValues)
 
-  useEffect(() => {
-    if (isChanged) {
-      window.addEventListener('beforeunload', unloadCallback, { capture: true })
-    }
-    return () => window.removeEventListener('beforeunload', unloadCallback, { capture: true })
-  }, [isChanged])
-
-  const unloadCallback = (event) => {
-    if (navigator.userAgent.indexOf('Firefox') > -1 || navigator.userAgent.indexOf('Safari') > -1) {
-      event.preventDefault()
-    }
-    return (event.returnValue = '')
+  const unloadCallback = (e) => {
+    e.preventDefault()
+    return (e.returnValue = '')
   }
+
+  useEffect(() => {
+    return () => window.removeEventListener('beforeunload', unloadCallback, { capture: true })
+  }, [isSubmitting])
+
+  useUnload(unloadCallback, isChanged)
 
   const theme = useTheme()
   const matches = useMediaQuery(theme.breakpoints.down('sm'))
