@@ -40,7 +40,7 @@ const useWinners = (isImmediately = true) => {
         case 'battle_royale':
         case 'score_attack':
         case 'time_attack':
-          dispatch(actions.getBattleRoyaleParticipants({ page: 1, hash_key: String(router.query.hash_key), role: 'participant' }))
+          dispatch(actions.getBattleRoyaleWinners(String(router.query.hash_key)))
           break
         case 'single':
         case 'double':

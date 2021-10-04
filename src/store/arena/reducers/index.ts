@@ -233,4 +233,7 @@ export default createReducer(initialState, (builder) => {
   builder.addCase(actions.setBattleRoyaleScores.fulfilled, (state, action) => {
     state.tournamentParticipants = action.payload.data
   })
+  builder.addCase(actions.getBattleRoyaleWinners.fulfilled, (state, action) => {
+    state.tournamentParticipants = action.payload.data
+  })
 })
