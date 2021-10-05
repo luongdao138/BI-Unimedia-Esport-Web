@@ -152,6 +152,13 @@ const useStyles = makeStyles((theme) => ({
       paddingRight: theme.spacing(2),
     },
   },
+  [theme.breakpoints.down('xs')]: {
+    listContainer: {
+      paddingBottom: 120,
+      paddingLeft: theme.spacing(1),
+      paddingRight: theme.spacing(1),
+    },
+  },
 }))
 
 export default ArenaBattles
