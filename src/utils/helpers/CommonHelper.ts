@@ -300,7 +300,7 @@ const regex = {
 
 const linkifyString = (text = ''): string => {
   return text.replace(regex.url, function (url) {
-    return '<a target="_blank" href="' + url + '">' + url + '</a>'
+    return '<a target="_blank" href="' + url + '" style="color:#FFF">' + url + '</a>'
   })
 }
 

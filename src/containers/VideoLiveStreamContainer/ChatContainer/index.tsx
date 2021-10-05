@@ -459,6 +459,13 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
     }
   }, [])
 
+  useEffect(() => {
+    const container = document.getElementsByClassName('content-wrapper')
+    if (container && container.length > 0) {
+      document.getElementsByClassName('content-wrapper')[0]['style'].willChange = purchaseDialogVisible ? 'transform' : 'opacity'
+    }
+  }, [purchaseDialogVisible])
+
   // const filterMessagesDonate = (messages: any, compare_second?: any) => {
   //   const foundMessages = messages.filter((item) => {
   //     return isPremiumChat(item, true, compare_second)
@@ -1099,7 +1106,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
   }
 
   const chatContent = () => (
-    <Box className={classes.chatContent}>
+    <Box className={classes.chatContent} style={isMobile ? { paddingBottom: purchaseDialogVisible ? 325 : 120 } : {}}>
       {/* <Button onClick={scrollToCurrentMess}>Scroll to chat mess</Button> */}
       <Box className={classes.userWatchingList}>
         {messagesDonate
