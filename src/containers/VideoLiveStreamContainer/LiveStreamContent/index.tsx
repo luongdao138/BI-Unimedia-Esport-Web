@@ -18,7 +18,6 @@ import { STATUS_VIDEO } from '@services/videoTop.services'
 import _ from 'lodash'
 import ESReport from '@containers/Report'
 import { REPORT_TYPE } from '@constants/common.constants'
-import LoginRequired from '@containers/LoginRequired'
 import ESMenu from '@components/Menu'
 import { useRouter } from 'next/router'
 import { useContextualRouting } from 'next-use-contextual-routing'
@@ -154,6 +153,10 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
     }
   }
 
+  const handleShare = () => {
+    window.open(`https://twitter.com/intent/tweet?text=${detailVideoResult?.title}%0a${urlVideoLiveStream}`, '_blank')?.focus()
+  }
+
   useEffect(() => {
     if (userResult) {
       setLike(userResult?.like !== like ? userResult?.like : like)
@@ -182,11 +185,7 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
 
   const shareButton = () => (
     <Box className={classes.shareButton}>
-      <ButtonBase
-        onClick={() =>
-          window.open(`https://twitter.com/intent/tweet?text=${detailVideoResult?.title}%0a${urlVideoLiveStream}`, '_blank')?.focus()
-        }
-      >
+      <ButtonBase onClick={handleShare}>
         <Icon className={`fa fa-share-alt ${classes.icon}`} fontSize="small" />
         <Box pl={1}>{t('live_stream_screen.share_btn')}</Box>
       </ButtonBase>
@@ -195,11 +194,9 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
 
   const mobileRegisterChannelContainer = () => (
     <Box className={classes.mobileRegisterChannelContainer}>
-      <ESAvatar className={classes.smallAvatar} alt={detailVideoResult?.user_nickname} src={detailVideoResult?.user_avatar} size={24} />
-      <Typography className={classes.channelName}>{'配信者の名前がはいります'}</Typography>
-      <LoginRequired>
-        <div onClick={toggleSubscribeClick}>{registerChannelButton()}</div>
-      </LoginRequired>
+      <ESAvatar className={classes.smallAvatar} alt={detailVideoResult?.user_nickname} src={detailVideoResult?.user_avatar} size={36} />
+      <Typography className={classes.channelName}>{detailVideoResult?.user_nickname}</Typography>
+      {registerChannelButton()}
     </Box>
   )
 
@@ -433,7 +430,7 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
         </Box>
       )}
       {/* Show Report Modal */}
-      {showReportMenu && (
+      {isAuthenticated && (
         <ESReport
           reportType={REPORT_TYPE.USER_LIST}
           target_id={userProfile?.attributes?.user_code}
@@ -442,15 +439,12 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
           handleClose={() => setShowReportMenu(false)}
         />
       )}
-      {/* </>} */}
     </Box>
   )
 }
 const useStyles = makeStyles((theme) => ({
   container: {
     display: 'flex',
-    // justifyContent: 'center',
-    // maxWidth: 1100,
     width: '100%',
     flexWrap: 'wrap',
     background: '#000000',
@@ -531,9 +525,11 @@ const useStyles = makeStyles((theme) => ({
   },
   wrap_title: {
     display: 'flex',
+    position: 'relative',
     flexDirection: 'row',
     alignItems: 'center',
     // justifyContent: 'space-between',
+    marginRight: 24,
   },
   movie_title: {
     paddingRight: '64px',
@@ -599,21 +595,6 @@ const useStyles = makeStyles((theme) => ({
       padding: '6px',
       width: '80px',
       height: '30px',
-      justifyContent: 'flex-start',
-    },
-  },
-  statusChip: {
-    // width: '84px',
-    height: '20px',
-    fontSize: '12px',
-    fontWeight: 'bold',
-    color: '#FFFFFF',
-    borderRadius: '2px',
-    maxWidth: 'none',
-    justifyContent: 'center',
-    '& .MuiChip-label': {
-      // paddingLeft: '6px',
-      paddingRight: 0,
     },
   },
   icon: {},
@@ -691,7 +672,6 @@ const useStyles = makeStyles((theme) => ({
     },
     shareButton: {
       '& button': {
-        marginRight: '8px',
         width: '100px',
       },
     },
@@ -706,7 +686,7 @@ const useStyles = makeStyles((theme) => ({
       flexDirection: 'row',
       alignItems: 'center',
       paddingLeft: '24px',
-      paddingTop: '5px',
+      paddingTop: '16px',
       paddingBottom: '5px',
       width: '100%',
     },
@@ -718,12 +698,12 @@ const useStyles = makeStyles((theme) => ({
       marginRight: '11px',
     },
     smallAvatar: {
-      width: '24px',
-      height: '24px',
-      borderRadius: '12px',
+      width: '36px',
+      height: '36px',
+      borderRadius: '18px',
     },
     channelName: {
-      fontSize: '12px',
+      fontSize: '14px',
       fontWeight: 'bold',
       whiteSpace: 'nowrap',
       overflow: 'hidden',

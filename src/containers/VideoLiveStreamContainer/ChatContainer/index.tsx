@@ -938,41 +938,41 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
   const chatInputComponent = () => (
     <Box className={classes.chatInputMobileContainer}>
       {purchaseDialogVisible && isMobile && purchaseInfoDialog()}
-      <Box className={classes.chatInputContainer}>
-        {purchaseDialogVisible && !isMobile && purchaseInfoDialog()}
-        <LoginRequired>
-          {/* <div onClick={purchaseIconClick}> */}
-          <IconButton onClick={isEnabledChat ? purchaseIconClick : null} id="btnOpenPremiumChatDialog" className={classes.iconPurchase}>
-            <img id="btnOpenPremiumChatDialogImage" src="/images/ic_purchase.svg" />
-          </IconButton>
-          {/* </div> */}
-        </LoginRequired>
-        <Box className={classes.chatBox}>
-          <ESInput
-            id={'message'}
-            name="message"
-            onChange={handleChange}
-            placeholder={i18n.t('common:live_stream_screen.message_placeholder')}
-            value={values.message}
-            classes={{ root: classes.input, input: classes.chatTextInput }}
-            margin="dense"
-            onFocus={handleChatInputOnFocus}
-            onBlur={handleChatInputOnBlur}
-            helperText={touched.message && errors?.message}
-            error={touched.message && !!errors?.message}
-            onKeyPress={handlePressEnter}
-            disabled={!isEnabledChat}
-          />
+      {isEnabledChat && (
+        <Box className={classes.chatInputContainer}>
+          {purchaseDialogVisible && !isMobile && purchaseInfoDialog()}
           <LoginRequired>
-            {/* <div onClick={handleSubmitChatContent}> */}
-            <Button onClick={handleSubmitChatContent} className={classes.iconButtonBg} disabled={!isEnabledChat}>
-              <Icon className={`fa fa-paper-plane ${classes.sendIcon}`} fontSize="small" />
-            </Button>
-            {/* </div> */}
+            {/* <IconButton onClick={isEnabledChat ? purchaseIconClick : null} id="btnOpenPremiumChatDialog" className={classes.iconPurchase}> */}
+            <IconButton onClick={purchaseIconClick} id="btnOpenPremiumChatDialog" className={classes.iconPurchase}>
+              <img id="btnOpenPremiumChatDialogImage" src="/images/ic_purchase.svg" />
+            </IconButton>
           </LoginRequired>
+          <Box className={classes.chatBox}>
+            <ESInput
+              id={'message'}
+              name="message"
+              onChange={handleChange}
+              placeholder={i18n.t('common:live_stream_screen.message_placeholder')}
+              value={values.message}
+              classes={{ root: classes.input, input: classes.chatTextInput }}
+              margin="dense"
+              onFocus={handleChatInputOnFocus}
+              onBlur={handleChatInputOnBlur}
+              helperText={touched.message && errors?.message}
+              error={touched.message && !!errors?.message}
+              onKeyPress={handlePressEnter}
+              // disabled={!isEnabledChat}
+            />
+            <LoginRequired>
+              {/* <Button onClick={handleSubmitChatContent} className={classes.iconButtonBg} disabled={!isEnabledChat}> */}
+              <Button onClick={handleSubmitChatContent} className={classes.iconButtonBg}>
+                <Icon className={`fa fa-paper-plane ${classes.sendIcon}`} fontSize="small" />
+              </Button>
+            </LoginRequired>
+          </Box>
+          {/* {errors.message && <Typography className={classes.chatInputErrorText}>{errors.message}</Typography>} */}
         </Box>
-        {/* {errors.message && <Typography className={classes.chatInputErrorText}>{errors.message}</Typography>} */}
-      </Box>
+      )}
     </Box>
   )
 
