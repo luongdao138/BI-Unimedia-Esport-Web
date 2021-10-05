@@ -1,38 +1,44 @@
 import React from 'react'
 import { useConfirm } from '@components/Confirm'
 import { useTranslation } from 'react-i18next'
-import { makeStyles, Theme, Typography } from '@material-ui/core'
+import { Box } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 
 function SortInfoDialogContent() {
-  const { t } = useTranslation(['common'])
-  const classes = useStyles()
+  const { t } = useTranslation('common')
   return (
-    <>
-      <Typography variant="h2" className={classes.content}>
-        {t('common:tournament_create.sort_info_content')}
-      </Typography>
-    </>
+    <Box color={Colors.white_opacity['70']}>
+      <Box display="flex" mb={2}>
+        <Box minWidth={72}>{t('tournament_create.sort_info_modal.row1col1')}</Box>
+        <Box>{t('tournament_create.sort_info_modal.row1col2')}</Box>
+      </Box>
+      <Box display="flex">
+        <Box minWidth={72}>{t('tournament_create.sort_info_modal.row1col1')}</Box>
+        <Box>{t('tournament_create.sort_info_modal.row1col2')}</Box>
+      </Box>
+    </Box>
   )
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
-  content: {
-    fontSize: 12,
-    color: Colors.white_opacity[70],
-    marginBottom: theme.spacing(2),
-    whiteSpace: 'pre',
-  },
-}))
-
-export const UseSortInfoDialog = (): (() => Promise<void>) => {
+export const UseSortInfoDialog = () => {
   const confirm = useConfirm()
   const { t } = useTranslation(['common'])
-  return (): Promise<void> => {
+  return () => {
     return confirm({
       title: t('common:tournament_create.sort_info_title'),
       content: <SortInfoDialogContent />,
       confirmationText: t('common:tournament_create.close'),
+      cancellationButtonProps: {
+        style: {
+          display: 'none',
+        },
+      },
+      confirmationButtonProps: {
+        style: {
+          maxWidth: 160,
+          margin: '0 auto',
+        },
+      },
     })
   }
 }
