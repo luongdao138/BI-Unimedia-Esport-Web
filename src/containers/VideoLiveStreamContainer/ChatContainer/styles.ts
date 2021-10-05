@@ -8,6 +8,10 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     alignItems: 'center',
     width: 482,
+    marginLeft: '16px',
+    marginRight: '16px',
+    border: `1px solid rgba(255, 255, 255, 0.3)`,
+    paddingBottom: '116.5px',
   },
   chatMessageContainer: {
     display: 'flex',
@@ -102,6 +106,8 @@ const useStyles = makeStyles((theme) => ({
   },
   chatBoardContainer: {
     position: 'relative',
+    paddingTop: '16px',
+    paddingLeft: '16px',
   },
   chatMessageUser: {
     fontSize: 14,
@@ -137,8 +143,6 @@ const useStyles = makeStyles((theme) => ({
   chatContent: {
     display: 'flex',
     flexDirection: 'column',
-    paddingTop: 16,
-    paddingLeft: 16,
     paddingRight: 0,
     width: '100%',
   },
@@ -259,7 +263,7 @@ const useStyles = makeStyles((theme) => ({
   },
   dialogMess: {
     position: 'absolute',
-    background: '#000000ab',
+    background: '#000000AB',
     height: '100%',
     zIndex: 18,
     right: 0,
@@ -326,8 +330,17 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   [theme.breakpoints.down(769)]: {
+    userWatchingList: {
+      marginLeft: '16px',
+      marginRight: '16px',
+      marginTop: '16px',
+    },
     container: {
       width: '100%',
+      border: 'unset',
+      paddingBottom: 'unset',
+      marginRight: 'unset',
+      marginLeft: 'unset',
     },
     chatBoard: {
       height: 253,
