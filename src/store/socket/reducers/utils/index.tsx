@@ -176,6 +176,16 @@ const addListForceDate = (state: ChatDataType[], room: ChatDataType): ChatDataTy
   return data
 }
 
+const updateAvatar = (roomList: ChatDataType[], imgUrl: string, chatRoomId: string): ChatDataType[] => {
+  if (roomList !== undefined) {
+    return _.map(roomList, (o) => {
+      return o.chatRoomId === chatRoomId ? { ...o, roomImg: imgUrl } : o
+    })
+  } else {
+    return []
+  }
+}
+
 export const ChatHelper = {
   messagesMerge,
   roomListUpdate,
@@ -186,5 +196,6 @@ export const ChatHelper = {
   roomListAddRemove,
   roomUpdateWithUnseen,
   addList,
+  updateAvatar,
   addListForceDate,
 }

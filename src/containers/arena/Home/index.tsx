@@ -63,7 +63,7 @@ const ArenaHome: React.FC<ArenaHomeProps> = ({ filter }) => {
   }, [])
 
   useEffect(() => {
-    if (!hasUCRReturnHref) {
+    if (!hasUCRReturnHref && !_.isEmpty(arenasFiltered)) {
       if (document.documentElement.scrollHeight > document.documentElement.clientHeight) return
       loadMore()
     }
@@ -87,7 +87,9 @@ const ArenaHome: React.FC<ArenaHomeProps> = ({ filter }) => {
   }, [router.query])
 
   const onFilter = (filter: TournamentFilterOption) => {
-    router.push(`${ESRoutes.ARENA}?filter=${filter}`, undefined, { shallow: true })
+    if (!meta.pending) {
+      router.push(`${ESRoutes.ARENA}?filter=${filter}`, undefined, { shallow: true })
+    }
     return null
   }
 

@@ -30,6 +30,7 @@ const ArenaWinners: React.FC = () => {
     winner,
     winnersMeta,
     brWinnersMeta,
+    resetMeta,
   } = useArenaWinners()
   const classes = useStyles()
   const [showSummary, setShowSummary] = useState(false)
@@ -44,6 +45,8 @@ const ArenaWinners: React.FC = () => {
       const backButtonBottomOffset = getClientRect(backButtonRef).bottom
       setUpdate(winnerListTopOffset < 620 || backButtonBottomOffset > 60)
     }
+
+    return () => resetMeta()
   }, [])
 
   const getClientRect = (ref) => {
