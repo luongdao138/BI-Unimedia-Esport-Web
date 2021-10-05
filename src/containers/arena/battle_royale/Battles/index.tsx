@@ -10,6 +10,7 @@ import { ROLE } from '@constants/tournament.constants'
 import { useRouter } from 'next/router'
 import BRListItem from '@containers/arena/battle_royale/Partials/BRListItem'
 import { makeStyles } from '@material-ui/core/styles'
+import { Box, Typography } from '@material-ui/core'
 import useBattleRoyaleScore from '@containers/arena/hooks/useBattleRoyaleScore'
 import useAddToast from '@utils/hooks/useAddToast'
 import { ParticipantsResponse } from '@services/arena.service'
@@ -19,6 +20,8 @@ import StickyFooter from '../Partials/StickyFooter'
 import ButtonPrimary from '@components/ButtonPrimary'
 import useArenaHelper from '@containers/arena/hooks/useArenaHelper'
 import RuleHeader from './RuleHeader'
+import { Colors } from '@theme/colors'
+import i18n from '@locales/i18n'
 
 const ArenaBattles: React.FC = () => {
   const router = useRouter()
@@ -28,6 +31,7 @@ const ArenaBattles: React.FC = () => {
   const { tournament, meta: detailMeta } = useTournamentDetail()
   const { isModerator, isParticipant } = useArenaHelper(tournament)
   const [hideFooter, setHideFooter] = useState(true)
+  const [errors, setErrors] = useState<Record<string, boolean>>({})
 
   const { participants, brMeta: participantsMeta, getBattleRoyaleParticipants, resetMeta } = useParticipants()
   const {
@@ -96,19 +100,34 @@ const ArenaBattles: React.FC = () => {
   }, [isModerator, isParticipant, tournament])
 
   const isScoreChanged = useMemo(() => !checkIsScoreChanged(selecteds, participants), [selecteds, participants])
+  const hasError = !!Object.keys(errors).length
+
+  const handleTimeAttackError = (value: boolean, idx: number) => {
+    if (value) {
+      setErrors({ ...errors, [idx]: value })
+    } else {
+      setErrors(_.omit(errors, [String(idx)]))
+    }
+  }
 
   return (
     <StickyFooter
       hideFooter={hideFooter}
       primaryButton={
-        <ButtonPrimary type="submit" round fullWidth onClick={handleSubmitScore} disabled={!isScoreChanged}>
+        <ButtonPrimary type="submit" round fullWidth onClick={handleSubmitScore} disabled={!isScoreChanged || hasError}>
           {t('common:arena.br_set_score_btn')}
         </ButtonPrimary>
       }
     >
       {detailMeta.loaded && <HeaderWithButton title={tournament.attributes.title} />}
 
-      <RuleHeader textAlign="center" pt={3} pb={3} rule={tournament?.attributes.rule} />
+      <RuleHeader textAlign="center" pt={3} rule={tournament?.attributes.rule} />
+
+      <Box textAlign="center" pb={3}>
+        {hasError ? (
+          <Typography style={{ color: Colors.secondary }}>{i18n.t('common:arena.rules_title.time_attack_error')}</Typography>
+        ) : null}
+      </Box>
 
       <BRList className={classes.listContainer} rule={tournament?.attributes.rule}>
         {selecteds.map((v) => (
@@ -120,8 +139,9 @@ const ArenaBattles: React.FC = () => {
             highlight={v.highlight}
           >
             <BRScoreInput
-              value={v.attributes.position || ''}
+              value={v.attributes.attack_score || null}
               onChange={({ target: { value } }) => setScores(value === '' ? null : Number(value), v.id)}
+              onAttackError={(val) => handleTimeAttackError(val, v.id)}
               type={tournament?.attributes.rule}
               disabled={(v.attributes.is_fixed_score || !v.highlight) && !isModerator}
             />
