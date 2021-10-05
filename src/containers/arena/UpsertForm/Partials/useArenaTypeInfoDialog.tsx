@@ -4,29 +4,32 @@ import { useTranslation } from 'react-i18next'
 import { Box } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 
-function SortInfoDialogContent() {
+function TypeInfoDialogContent() {
   const { t } = useTranslation('common')
   return (
     <Box color={Colors.white_opacity['70']}>
-      <Box display="flex" mb={2}>
-        <Box minWidth={72}>{t('tournament_create.sort_info_modal.row1col1')}</Box>
-        <Box>{t('tournament_create.sort_info_modal.row1col2')}</Box>
+      <Box textAlign="center" pb={2}>
+        {t('tournament_create.public_setting_modal.row')}
+      </Box>
+      <Box display="flex" pb={2}>
+        <Box minWidth={64}>{t('tournament_create.public_setting_modal.row1col1')}</Box>
+        <Box>{t('tournament_create.public_setting_modal.row1col2')}</Box>
       </Box>
       <Box display="flex">
-        <Box minWidth={72}>{t('tournament_create.sort_info_modal.row1col1')}</Box>
-        <Box>{t('tournament_create.sort_info_modal.row1col2')}</Box>
+        <Box minWidth={64}>{t('tournament_create.public_setting_modal.row2col1')}</Box>
+        <Box>{t('tournament_create.public_setting_modal.row2col2')}</Box>
       </Box>
     </Box>
   )
 }
 
-export const UseSortInfoDialog = () => {
+export const useArenaTypeInfoDialog = (): (() => Promise<void>) => {
   const confirm = useConfirm()
   const { t } = useTranslation(['common'])
-  return () => {
+  return (): Promise<void> => {
     return confirm({
-      title: t('common:tournament_create.sort_info_title'),
-      content: <SortInfoDialogContent />,
+      title: t('common:tournament_create.publishing_settings'),
+      content: <TypeInfoDialogContent />,
       confirmationText: t('common:tournament_create.close'),
       cancellationButtonProps: {
         style: {

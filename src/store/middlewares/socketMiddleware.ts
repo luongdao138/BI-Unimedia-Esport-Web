@@ -65,6 +65,8 @@ const onMessage = (store: StoreType) => (event: MessageEvent) => {
             roomId: message.chatRoomId,
           })
         )
+      } else if (message.chatRoomId && message.type === ENTRY_TYPE.UPDATE) {
+        store.dispatch({ type: CHAT_ACTION_TYPE.UPDATE_AVATAR, data: message })
       } else {
         // this case is removed member
         store.dispatch({ type: message.action, data: message })

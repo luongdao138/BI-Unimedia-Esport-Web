@@ -14,6 +14,8 @@ import { TOURNAMENT_STATUS as TS } from '@constants/common.constants'
 import i18n from '@locales/i18n'
 import _ from 'lodash'
 
+import StatusChip from './StatusChip'
+
 export interface TournamentListFiltered extends TournamentListItem {
   total?: number
   participantsLimited?: ParticipantType[]
@@ -53,16 +55,9 @@ const TournamentHomeCard: React.FC<Props> = ({ tournament }) => {
         >
           <ESAvatar size={36} src={attr.organizer_avatar} alt={attr.organizer_name} />
           {status ? (
-            <Chip
-              className={classes.chipSecondary}
-              size="small"
-              variant="outlined"
-              label={
-                <Box color={Colors.grey[300]} justifyContent="flex-start" className={classes.label}>
-                  <Typography variant="overline">{status}</Typography>
-                </Box>
-              }
-            />
+            <Box position="absolute" top={0} right={0} margin={0.6} zIndex={3}>
+              <StatusChip label={status} color={tournament.attributes.status === TS.COMPLETED ? 'black' : 'white'} />
+            </Box>
           ) : null}
 
           <Box display="flex" flexDirection="column" alignItems="flex-end">
@@ -89,7 +84,7 @@ const TournamentHomeCard: React.FC<Props> = ({ tournament }) => {
             />
           </Box>
         </Box>
-        {participant?.position && attr.status === TS.COMPLETED && (
+        {attr.status === TS.COMPLETED && (
           <Box
             zIndex={2}
             className={`${classes.mediaOverlay} ${classes.blurOverlay}`}
@@ -98,29 +93,33 @@ const TournamentHomeCard: React.FC<Props> = ({ tournament }) => {
             flexDirection="column"
             alignItems="center"
           >
-            <span
-              className={`${classes.text} ${participant.position === 1 && classes.first} ${participant.position === 2 && classes.second} ${
-                participant.position === 3 && classes.third
-              }`}
-            >
-              {participant.position}
-              {participant.position === 1 && <span>st</span>}
-              {participant.position === 2 && <span>nd</span>}
-              {participant.position === 3 && <span>rd</span>}
-            </span>
-            <ESAvatar
-              onClick={() => {
-                participant?.user_code ? router.push(`${ESRoutes.PROFILE}/${participant.user_code}`) : null
-              }}
-              className={classes.marginV}
-              alt={participant?.name}
-              src={participant?.profile_image}
-            />
-            <Box className={classes.captionTitle}>
-              <Typography noWrap variant="overline">
-                {participant?.name}
-              </Typography>
-            </Box>
+            {participant?.position ? (
+              <>
+                <span
+                  className={`${classes.text} ${participant.position === 1 && classes.first} ${
+                    participant.position === 2 && classes.second
+                  } ${participant.position === 3 && classes.third}`}
+                >
+                  {participant.position}
+                  {participant.position === 1 && <span>st</span>}
+                  {participant.position === 2 && <span>nd</span>}
+                  {participant.position === 3 && <span>rd</span>}
+                </span>
+                <ESAvatar
+                  onClick={() => {
+                    participant?.user_code ? router.push(`${ESRoutes.PROFILE}/${participant.user_code}`) : null
+                  }}
+                  className={classes.marginV}
+                  alt={participant?.name}
+                  src={participant?.profile_image}
+                />
+                <Box className={classes.captionTitle}>
+                  <Typography noWrap variant="overline">
+                    {participant?.name}
+                  </Typography>
+                </Box>
+              </>
+            ) : null}
           </Box>
         )}
       </>

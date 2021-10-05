@@ -29,6 +29,7 @@ import { useRouter } from 'next/router'
 import * as commonActions from '@store/common/actions'
 import { useConfirm } from '@components/Confirm'
 import { COMMUNITY_DIALOGS } from '@constants/community.constants'
+import useUnload from '@utils/hooks/useUnload'
 
 type CommunityCreateProps = {
   communityName?: string
@@ -44,6 +45,7 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
   const { handleReturn } = useReturnHref()
   const [isConfirm, setIsConfirm] = useState(false)
   const [hasError, setHasError] = useState(true)
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const isFirstRun = useRef(true)
   const confirm = useConfirm()
   const {
@@ -73,6 +75,7 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
     validationSchema: getValidationScheme(),
     enableReinitialize: true,
     onSubmit: (values) => {
+      setIsSubmitting(() => true)
       const data = {
         ...values.stepOne,
         features: (values.stepOne.features as CommunityFeature[]).map((feature) => Number(feature.id)),
@@ -90,20 +93,15 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
   const isChanged = !_.isEqual(formik.values, initialValues)
 
   useEffect(() => {
-    if (isChanged) {
-      window.addEventListener('beforeunload', unloadCallback, { capture: true })
-    } else {
-      window.removeEventListener('beforeunload', unloadCallback, { capture: true })
-    }
     return () => window.removeEventListener('beforeunload', unloadCallback, { capture: true })
-  }, [isChanged])
+  }, [isSubmitting])
 
-  const unloadCallback = (event) => {
-    if (navigator.userAgent.indexOf('Firefox') > -1 || navigator.userAgent.indexOf('Safari') > -1) {
-      event.preventDefault()
-    }
-    return (event.returnValue = '')
+  const unloadCallback = (e) => {
+    e.preventDefault()
+    return (e.returnValue = '')
   }
+
+  useUnload(unloadCallback, isChanged)
 
   useEffect(() => {
     if (community) {

@@ -23,6 +23,7 @@ export type EditableTypes = {
   overview: boolean
   notes: boolean
   rule: boolean
+  sort_by: boolean
   max_participants: boolean
   start_date: boolean
   end_date: boolean
@@ -76,6 +77,7 @@ const useTournamentCreate = (): {
     organizer_name: true,
     // always not editable
     rule: true, // rule, has_third_place
+    sort_by: true,
     participant_type: true,
     game_title: true,
     // conditional editable
@@ -164,6 +166,7 @@ const useTournamentCreate = (): {
           _editables.acceptance_end_date = true
           _editables.start_date = true
           _editables.end_date = true
+          _editables.sort_by = true
         } else if (_status === TOURNAMENT_STATUS.RECRUITMENT_CLOSED || _status === TOURNAMENT_STATUS.READY_TO_START) {
           // max_participants, retain_history,
           // acceptance_start_date, acceptance_end_date are already false on top

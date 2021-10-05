@@ -13,6 +13,8 @@ import { TOURNAMENT_STATUS as TS, TOURNAMENT_RULE as TR } from '@constants/commo
 import i18n from '@locales/i18n'
 import moment from 'moment'
 
+import StatusChip from './StatusChip'
+
 interface Props {
   tournament: TournamentListItem
 }
@@ -44,16 +46,9 @@ const TournamentCard: React.FC<Props> = ({ tournament }) => {
         >
           <ESAvatar size={36} src={attr.organizer_avatar} alt={attr.organizer_name} />
           {status ? (
-            <Chip
-              className={classes.chipSecondary}
-              size="small"
-              variant="outlined"
-              label={
-                <Box color={Colors.grey[300]} justifyContent="flex-start" className={classes.label}>
-                  <Typography variant="overline">{status}</Typography>
-                </Box>
-              }
-            />
+            <Box position="absolute" top={0} right={0} margin={0.6}>
+              <StatusChip label={status} color={tournament.attributes.status === TS.COMPLETED ? 'black' : 'white'} />
+            </Box>
           ) : null}
 
           <Box display="flex" flexDirection="column" alignItems="flex-end">

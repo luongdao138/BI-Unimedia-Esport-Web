@@ -126,11 +126,20 @@ export type BlockedUsersParams = {
 
 export type BlockedUsersResponse = {
   data: Array<UserResponse>
-  meta: any
+  meta: Meta
 }
 
 export type UserResponse = {
-  attributes: any
+  id: string
+  type: string
+  attributes: {
+    user_code: string
+    nickname: null | string
+    nickname2?: null | string
+    avatar: null | string
+    features: any[]
+    game_titles: any[]
+  }
 }
 
 export type Meta = {
