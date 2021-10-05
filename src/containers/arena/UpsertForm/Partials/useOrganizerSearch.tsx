@@ -15,6 +15,7 @@ const useOrganizerSearch = (): {
   getRecommendedUsersByName: (keyword: string, page: number) => void
   recommendedUsers: RecommendedUsers[]
   page: PageMeta
+  clearRecommendedUsers: () => void
 } => {
   const dispatch = useAppDispatch()
   const meta = useAppSelector(getMeta)
@@ -27,6 +28,10 @@ const useOrganizerSearch = (): {
     }, 500),
     []
   )
+  const clearRecommendedUsers = () => {
+    dispatch(clearMetaData(actions.getRecommendedUsersByName.typePrefix))
+    dispatch(actions.clearRecommendedUsers())
+  }
 
   useEffect(() => {
     return function () {
@@ -39,6 +44,7 @@ const useOrganizerSearch = (): {
     getRecommendedUsersByName,
     recommendedUsers,
     page,
+    clearRecommendedUsers,
   }
 }
 
