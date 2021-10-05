@@ -28,7 +28,7 @@ const BRListItem: React.FC<BRListItemProps> = (props: BRListItemProps) => {
         {avatarClone}
         <div className={classes.textContent}>
           <Typography className={`${classes.text} ${props.highlight ? 'highlight' : ''}`} noWrap>
-            {props.text || t('common:common.not_sure')}asdsa
+            {props.text || t('common:common.not_sure')}
           </Typography>
           {props.textSecondary && (
             <Typography className={classes.textSecondary} noWrap>
