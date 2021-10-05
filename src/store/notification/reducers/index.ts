@@ -1,6 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit'
 import * as actions from '../actions'
 import { NotificationResponse, Meta, NotificationBadgeResponse, NotificationDetailResponse } from '@services/notification.service'
+import _ from 'lodash'
 
 type StateType = {
   notifications?: Array<NotificationResponse>
@@ -16,7 +17,7 @@ export default createReducer(initialState, (builder) => {
   builder.addCase(actions.getNotifications.fulfilled, (state, action) => {
     let tmpNotifications = action.payload.data
     if (action.payload.meta != undefined && action.payload.meta.current_page > 1) {
-      tmpNotifications = state.notifications.concat(action.payload.data)
+      tmpNotifications = _.unionBy(state.notifications, action.payload.data, 'id')
     }
     state.notifications = tmpNotifications
     state.notificationsMeta = action.payload.meta
@@ -44,5 +45,9 @@ export default createReducer(initialState, (builder) => {
 
   builder.addCase(actions.getNotificationBadgeList.fulfilled, (state, action) => {
     state.notificationBarList = action.payload.data
+  })
+  builder.addCase(actions.clearNotificationList, (state) => {
+    state.notifications = []
+    state.notificationsMeta = undefined
   })
 })
