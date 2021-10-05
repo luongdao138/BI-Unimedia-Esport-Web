@@ -5,8 +5,9 @@ import * as selectors from '@store/arena/selectors'
 import * as actions from '@store/arena/actions'
 import { createMetaSelector } from '@store/metadata/selectors'
 import useArenaHelper from '@containers/arena/hooks/useArenaHelper'
-import { ArenaWinners } from '@services/arena.service'
 import useGetProfile from '@utils/hooks/useGetProfile'
+import { ArenaWinners } from '@services/arena.service'
+import { clearMetaData } from '@store/metadata/actions'
 
 const getWinnersMeta = createMetaSelector(actions.getArenaWinners)
 const getArenaMeta = createMetaSelector(actions.getTournamentDetail)
@@ -64,6 +65,10 @@ const useWinners = (isImmediately = true) => {
   const handleBack = () => router.back()
 
   const hasWinners = useMemo(() => hasWinnersData(arenaWinners), [arenaWinners])
+  const resetMeta = () => {
+    dispatch(clearMetaData(actions.getArenaWinners.typePrefix))
+    dispatch(clearMetaData(actions.getTournamentDetail.typePrefix))
+  }
 
   return {
     arenaWinners,
@@ -80,6 +85,7 @@ const useWinners = (isImmediately = true) => {
     arenaBRWinners,
     isBattleRoyale,
     winner: isBattleRoyale ? brFirstPlace : trFirstPlace,
+    resetMeta,
   }
 }
 

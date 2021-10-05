@@ -31,12 +31,6 @@ const IndividualEntryModal: React.FC<IndividualEntryModalProps> = ({ tournament,
   const { t } = useTranslation(['common'])
   const { join, joinMeta, resetJoinMeta } = useEntry()
   const { resetTitle, changeTitle } = useDocTitle()
-
-  useEffect(() => {
-    if (joinMeta.loaded) {
-      handleClose()
-    }
-  }, [joinMeta.loaded])
   const { checkNgWord } = useCheckNgWord()
   const dispatch = useAppDispatch()
 
@@ -65,17 +59,18 @@ const IndividualEntryModal: React.FC<IndividualEntryModalProps> = ({ tournament,
       setFieldValue('nickname', userProfile ? userProfile.attributes.nickname : '')
       changeTitle(`${t('common:page_head.arena_entry_title')}｜${tournament?.attributes?.title || ''}`)
     }
+
+    return () => {
+      if (open) {
+        resetTitle()
+        resetJoinMeta()
+      }
+    }
   }, [open])
 
   useEffect(() => {
-    return () => resetTitle()
-  }, [])
-
-  const handleClose = () => {
-    resetJoinMeta()
-    resetTitle()
-    onClose()
-  }
+    if (joinMeta.loaded) onClose()
+  }, [joinMeta.loaded])
 
   return (
     <FocusContextProvider>
@@ -87,7 +82,7 @@ const IndividualEntryModal: React.FC<IndividualEntryModalProps> = ({ tournament,
               returnText={t('common:tournament.join')}
               actionButtonText={t('common:tournament.join_with_this')}
               actionButtonDisabled={!isValid}
-              onReturnClicked={handleClose}
+              onReturnClicked={onClose}
               onActionButtonClicked={handleSubmit}
               hideFooterOnMobile={isFocused}
             >

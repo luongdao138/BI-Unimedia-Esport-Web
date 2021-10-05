@@ -26,7 +26,6 @@ import {
 } from '@store/community/actions/index'
 import i18n from '@locales/i18n'
 import { addToast } from '@store/common/actions'
-import { CommunityMemberRole } from '@services/community.service'
 
 const messages = {
   [`${unfollowCommunity.fulfilled}`]: i18n.t('common:community.toast_unfollowed'),
@@ -63,7 +62,7 @@ const fetchMembers = (store: StoreType) => {
   const hashKey = store.getState().community.communityDetail?.attributes?.hash_key
   if (hashKey) {
     store.dispatch(resetCommunityMembers())
-    store.dispatch(getCommunityMembers({ hash_key: hashKey, role: CommunityMemberRole.all, page: 1 }))
+    store.dispatch(getCommunityMembers({ hash_key: hashKey, page: 1 }))
   }
 }
 

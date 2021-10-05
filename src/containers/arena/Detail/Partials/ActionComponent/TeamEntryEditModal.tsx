@@ -42,7 +42,7 @@ const TeamEntryEditModal: React.FC<EntryEditModalProps> = ({
 }) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
-  const { teamDetail, isPending, getTeamDetail } = useTeamDetail()
+  const { teamDetail, isPending, getTeamDetail, resetTeamDetail } = useTeamDetail()
   const { isRecruiting } = useArenaHelper(tournament)
   const [editMode, setEditMode] = useState(false)
   const isPreview = previewMode === true
@@ -54,11 +54,15 @@ const TeamEntryEditModal: React.FC<EntryEditModalProps> = ({
       fetch()
       changeTitle(`${t('common:page_head.arena_entry_title')}｜${tournament?.attributes?.title || ''}`)
     }
-  }, [open])
 
-  useEffect(() => {
-    return () => resetTitle()
-  }, [])
+    return () => {
+      if (open) {
+        setEditMode(false)
+        resetTitle()
+        resetTeamDetail()
+      }
+    }
+  }, [open])
 
   useEffect(() => {
     if (isPreview) fetch()
@@ -133,11 +137,6 @@ const TeamEntryEditModal: React.FC<EntryEditModalProps> = ({
     }
   }
 
-  const handleClose = () => {
-    resetTitle()
-    onClose()
-  }
-
   return (
     <Box>
       <StickyActionModal
@@ -145,7 +144,7 @@ const TeamEntryEditModal: React.FC<EntryEditModalProps> = ({
         returnText={t('common:arena.entry_information')}
         actionButtonText={editMode ? t('common:tournament.join_with_this') : t('common:tournament.update_entry_info')}
         actionButtonDisabled={false}
-        onReturnClicked={handleClose}
+        onReturnClicked={onClose}
         onActionButtonClicked={onSubmit}
         hideFooter={!myTeam || !isRecruiting}
       >
@@ -155,13 +154,7 @@ const TeamEntryEditModal: React.FC<EntryEditModalProps> = ({
               detail={tournament}
               bottomButton={
                 <LoginRequired>
-                  <ESButton
-                    className={classes.bottomButton}
-                    variant="outlined"
-                    round
-                    size="large"
-                    onClick={toDetail ? toDetail : handleClose}
-                  >
+                  <ESButton className={classes.bottomButton} variant="outlined" round size="large" onClick={toDetail ? toDetail : onClose}>
                     {t('common:tournament.tournament_detail')}
                   </ESButton>
                 </LoginRequired>

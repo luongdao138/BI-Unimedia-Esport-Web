@@ -1,6 +1,6 @@
 import ESStickyFooter from '@components/StickyFooter'
 import ButtonPrimary from '@components/ButtonPrimary'
-import { makeStyles, Theme, Box, IconButton, Typography } from '@material-ui/core'
+import { makeStyles, Theme, Box, IconButton, Typography, useMediaQuery, useTheme } from '@material-ui/core'
 import Icon from '@material-ui/core/Icon'
 import { Colors } from '@theme/colors'
 import i18n from '@locales/i18n'
@@ -19,12 +19,14 @@ import _ from 'lodash'
 import { useAppDispatch } from '@store/hooks'
 import { FIELD_TITLES } from './FormModel/field_titles.constants'
 import { showDialog } from '@store/common/actions'
-import DiscardDialog from '../../Partials/DiscardDialog'
 import { NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
 import { useTranslation } from 'react-i18next'
 import { TopicParams } from '@services/community.service'
 import { useRouter } from 'next/router'
 import useDocTitle from '@utils/hooks/useDocTitle'
+import { useConfirm } from '@components/Confirm'
+import { COMMUNITY_DIALOGS } from '@constants/community.constants'
+import useUnload from '@utils/hooks/useUnload'
 
 const TopicCreate: React.FC = () => {
   const dispatch = useAppDispatch()
@@ -32,13 +34,15 @@ const TopicCreate: React.FC = () => {
   const { handleReturn } = useReturnHref()
   const [isConfirm, setIsConfirm] = useState(false)
   const [hasError, setHasError] = useState(true)
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const isFirstRun = useRef(true)
   const initialValues = getInitialValues(undefined)
   const { submit } = useTopicCreate()
-  const [isDiscard, setIsDiscard] = useState(false)
+
   const { t } = useTranslation(['common'])
   const router = useRouter()
   const { changeTitle } = useDocTitle()
+  const confirm = useConfirm()
 
   changeTitle(t('common:page_head.community_topic_default_title'))
   const { checkNgWordFields, checkNgWordByField } = useCheckNgWord()
@@ -48,6 +52,7 @@ const TopicCreate: React.FC = () => {
     validationSchema: getValidationScheme(),
     enableReinitialize: true,
     onSubmit: (values) => {
+      setIsSubmitting(() => true)
       const data: TopicParams = {
         ...values.stepOne,
         community_hash: String(router.query.hash_key),
@@ -73,25 +78,41 @@ const TopicCreate: React.FC = () => {
 
   const isChanged = !_.isEqual(formik.values, initialValues)
 
-  useEffect(() => {
-    if (isChanged) {
-      window.addEventListener('beforeunload', unloadCallback, { capture: true })
-    } else {
-      window.removeEventListener('beforeunload', unloadCallback, { capture: true })
-    }
-    return () => window.removeEventListener('beforeunload', unloadCallback, { capture: true })
-  }, [isChanged])
-
-  const unloadCallback = (event) => {
-    if (navigator.userAgent.indexOf('Firefox') > -1 || navigator.userAgent.indexOf('Safari') > -1) {
-      event.preventDefault()
-    }
-    return (event.returnValue = '')
+  const unloadCallback = (e) => {
+    e.preventDefault()
+    return (e.returnValue = '')
   }
+
+  useEffect(() => {
+    return () => window.removeEventListener('beforeunload', unloadCallback, { capture: true })
+  }, [isSubmitting])
+
+  useUnload(unloadCallback, isChanged)
+
+  const theme = useTheme()
+  const matches = useMediaQuery(theme.breakpoints.down('sm'))
+
+  const renderDescription = matches ? (
+    <>
+      <Typography style={{ fontSize: 12 }}>{i18n.t('common:topic_create.discard.message_part1')}</Typography>
+      <Typography style={{ fontSize: 12 }}>{i18n.t('common:topic_create.discard.message_part2')}</Typography>
+    </>
+  ) : (
+    <Typography style={{ fontSize: 12 }}>{i18n.t('common:topic_create.discard.message')}</Typography>
+  )
 
   const handleBack = () => {
     if (isConfirm) setIsConfirm(false)
-    else isChanged ? setIsDiscard(true) : handleReturn()
+    else
+      isChanged
+        ? confirm({ ...COMMUNITY_DIALOGS.DISCARD_CHANGED_TOPIC, description: renderDescription })
+            .then(() => {
+              handleReturn()
+            })
+            .catch(() => {
+              /* ... */
+            })
+        : handleReturn()
   }
 
   const handleSetConfirm = () => {
@@ -183,16 +204,6 @@ const TopicCreate: React.FC = () => {
           </Box>
         </form>
       </Box>
-      <DiscardDialog
-        open={isDiscard}
-        onClose={() => {
-          setIsDiscard(false)
-        }}
-        onSubmit={handleReturn}
-        title={t('common:topic_create.discard.title')}
-        description={t('common:topic_create.discard.message')}
-        confirmTitle={t('common:topic_create.discard.confirm')}
-      />
     </ESStickyFooter>
   )
 }

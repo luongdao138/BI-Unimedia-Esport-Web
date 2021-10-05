@@ -10,7 +10,6 @@ import useCommunityDetail from '@containers/Community/Detail/useCommunityDetail'
 import { useState } from 'react'
 import { REPORT_TYPE } from '@constants/common.constants'
 import ESReport from '@containers/Report'
-import DiscardDialog from '@containers/Community/Partials/DiscardDialog'
 import { SRLWrapper } from 'simple-react-lightbox'
 import { LIGHTBOX_OPTIONS } from '@constants/common.constants'
 import { CommunityDetail, TopicDetail } from '@services/community.service'
@@ -20,8 +19,9 @@ import useTopicHelper from '../../useTopicHelper'
 import useCommunityHelper from '@containers/Community/hooks/useCommunityHelper'
 import { FormatHelper } from '@utils/helpers/FormatHelper'
 import moment from 'moment'
-import _ from 'lodash'
 import Linkify from 'react-linkify'
+import { useConfirm } from '@components/Confirm'
+import { COMMUNITY_DIALOGS } from '@constants/community.constants'
 
 type CommunityHeaderProps = {
   user_avatar?: string
@@ -52,10 +52,10 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({
   const { t } = useTranslation(['common'])
   const { isAuthenticated } = useCommunityDetail()
   const [openReport, setOpenReport] = useState(false)
-  const [openDelete, setOpenDelete] = useState(false)
   const topicData = topic?.attributes
   const { isOwner } = useTopicHelper(topicData?.owner_user_code)
   const { isModerator, isPublic, isNotMember } = useCommunityHelper(community)
+  const confirm = useConfirm()
   const detail = {
     attributes: {
       nickname: topicData?.owner_name,
@@ -73,7 +73,16 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({
     setOpenReport(true)
   }
   const handleDeleteOpen = () => {
-    setOpenDelete(true)
+    confirm({
+      ...COMMUNITY_DIALOGS.DELETE_TOPIC,
+      title: topicData?.title + t('common:topic.delete.title'),
+    })
+      .then(() => {
+        handleDelete()
+      })
+      .catch(() => {
+        /* ... */
+      })
   }
 
   const renderClickableImage = () => {
@@ -82,10 +91,6 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({
         <img className={classes.imageBox} src={isConfirm ? image : !!topicData?.attachments && topicData.attachments[0]?.assets_url} />
       </SRLWrapper>
     )
-  }
-
-  const newLineText = (text) => {
-    return _.map(_.split(text, '\n'), (str, i) => <Typography key={i}>{str}</Typography>)
   }
 
   return (
@@ -132,7 +137,7 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({
                 </a>
               )}
             >
-              {newLineText(isConfirm ? content : topicData?.content)}
+              <Typography className={classes.multiline}> {isConfirm ? content : topicData?.content}</Typography>
             </Linkify>
           </Box>
           {(isConfirm ? image : !!topicData?.attachments && topicData.attachments[0]?.assets_url) && renderClickableImage()}
@@ -157,14 +162,6 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({
             title={t('common:topic.report.dialog_title')}
             open={openReport}
             handleClose={() => setOpenReport(false)}
-          />
-          <DiscardDialog
-            title={topicData?.title + t('common:topic.delete.title')}
-            open={openDelete}
-            onClose={() => setOpenDelete(false)}
-            onSubmit={handleDelete}
-            description={t('common:topic.delete.description')}
-            confirmTitle={t('common:topic.delete.submit')}
           />
         </>
       )}
@@ -282,6 +279,10 @@ const useStyles = makeStyles((theme) => ({
     maxHeight: 300,
     maxWidth: 300,
     objectFit: 'contain',
+  },
+  multiline: {
+    whiteSpace: 'pre-wrap',
+    wordBreak: 'break-word',
   },
   menuWrapper: {
     marginRight: -12,

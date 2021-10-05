@@ -5,6 +5,7 @@ import TopicCard from '@components/TopicCard'
 import { SLIDE_LIMIT } from '@constants/common.constants'
 import { FollowersTopicResponse } from '@services/community.service'
 import { Meta } from '@store/metadata/actions/types'
+import { ROUTE_FROM } from '@constants/community.constants'
 
 interface Props {
   data: FollowersTopicResponse[]
@@ -27,7 +28,7 @@ export const TopicFollow: React.FC<Props> = ({ data, meta }) => {
         },
       }}
       items={data.slice(0, SLIDE_LIMIT).map((topic, i: number) => (
-        <TopicCard key={i} topic={topic} />
+        <TopicCard key={i} topic={topic} from={ROUTE_FROM.HOME} />
       ))}
     />
   )
