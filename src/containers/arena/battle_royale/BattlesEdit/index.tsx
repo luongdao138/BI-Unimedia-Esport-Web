@@ -23,7 +23,7 @@ import useArenaHelper from '@containers/arena/hooks/useArenaHelper'
 
 const participantDefault: ParticipantsResponse = {
   id: undefined,
-  attributes: { avatar_url: null, name: '', position: null },
+  attributes: { avatar_url: null, name: '', position: null, attack_score: null },
 }
 
 const getDefaultParticipants = (length: number) => Array.from({ length: length }, (_, i) => i).map((_) => participantDefault)
