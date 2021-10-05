@@ -96,7 +96,9 @@ const SideMenu: React.FC = () => {
               <Link href={ESRoutes.HOME} passHref>
                 <ListItem className={classes.list} button disableRipple selected={isSelected(ESRoutes.HOME)}>
                   <ListItemIcon className={classes.icon}>
-                    <Icon fontSize="small" className="fa fa-home" />
+                    <Box className={classes.iconContainer}>
+                      <Icon fontSize="small" className={`fa fa-home ${classes.faIcon}`} />
+                    </Box>
                   </ListItemIcon>
                   <ListItemText className={classes.listText} primary={t('common:home.home')} />
                 </ListItem>
@@ -105,7 +107,9 @@ const SideMenu: React.FC = () => {
             <Link href={ESRoutes.ARENA} passHref>
               <ListItem className={classes.list} button disableRipple selected={isSelected(ESRoutes.ARENA)}>
                 <ListItemIcon className={classes.icon}>
-                  <Icon fontSize="small" className="fa fa-trophy" />
+                  <Box className={classes.iconContainer}>
+                    <Icon fontSize="small" className={`fa fa-trophy ${classes.faIcon}`} />
+                  </Box>
                 </ListItemIcon>
                 <ListItemText className={classes.listText} primary={t('common:home.tournament')} />
               </ListItem>
@@ -113,7 +117,9 @@ const SideMenu: React.FC = () => {
             <Link href={ESRoutes.LOBBY} passHref>
               <ListItem className={classes.list} button disableRipple selected={isSelected(ESRoutes.LOBBY)}>
                 <ListItemIcon className={classes.icon}>
-                  <Icon fontSize="small" className="fa fa-university" />
+                  <Box className={classes.iconContainer}>
+                    <Icon fontSize="small" className={`fa fa-university ${classes.faIcon}`} />
+                  </Box>
                 </ListItemIcon>
                 <ListItemText className={classes.listText} primary={t('common:home.lobby')} />
               </ListItem>
@@ -121,7 +127,9 @@ const SideMenu: React.FC = () => {
             <Link href={ESRoutes.COMMUNITY} passHref>
               <ListItem className={classes.list} button disableRipple selected={isSelected(ESRoutes.COMMUNITY)}>
                 <ListItemIcon className={classes.icon}>
-                  <Icon fontSize="small" className="fa fa-users" />
+                  <Box className={classes.iconContainer}>
+                    <Icon fontSize="small" className={`fa fa-users ${classes.faIcon}`} />
+                  </Box>
                 </ListItemIcon>
                 <ListItemText className={classes.listText} primary={t('common:home.community')} />
               </ListItem>
@@ -237,6 +245,15 @@ const useStyles = makeStyles((theme) => ({
   },
   icon: {
     minWidth: 30,
+  },
+  faIcon: {
+    width: 'auto',
+  },
+  iconContainer: {
+    width: 15,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   userInfo: {
     justifyContent: 'center',

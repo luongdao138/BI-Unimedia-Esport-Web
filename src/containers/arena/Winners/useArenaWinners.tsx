@@ -10,11 +10,13 @@ import useGetProfile from '@utils/hooks/useGetProfile'
 
 const getWinnersMeta = createMetaSelector(actions.getArenaWinners)
 const getArenaMeta = createMetaSelector(actions.getTournamentDetail)
+const getBattleRoyaleWinnersMeta = createMetaSelector(actions.getBattleRoyaleWinners)
 
 const useWinners = (isImmediately = true) => {
   const router = useRouter()
   const dispatch = useAppDispatch()
   const winnersMeta = useAppSelector(getWinnersMeta)
+  const brWinnersMeta = useAppSelector(getBattleRoyaleWinnersMeta)
   const arenaMeta = useAppSelector(getArenaMeta)
   const arena = useAppSelector(selectors.getTournamentDetail)
   const arenaWinners = useAppSelector(selectors.getArenaWinners)
@@ -40,7 +42,7 @@ const useWinners = (isImmediately = true) => {
         case 'battle_royale':
         case 'score_attack':
         case 'time_attack':
-          dispatch(actions.getBattleRoyaleParticipants({ page: 1, hash_key: String(router.query.hash_key), role: 'participant' }))
+          dispatch(actions.getBattleRoyaleWinners(String(router.query.hash_key)))
           break
         case 'single':
         case 'double':
@@ -66,6 +68,7 @@ const useWinners = (isImmediately = true) => {
   return {
     arenaWinners,
     winnersMeta,
+    brWinnersMeta,
     arenaMeta,
     arena,
     fetchWinners,
