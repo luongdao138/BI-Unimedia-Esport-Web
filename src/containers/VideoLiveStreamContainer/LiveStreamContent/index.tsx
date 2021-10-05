@@ -220,6 +220,7 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
         ) : (
           <VideoPlayer
             key={keyVideoPlayer}
+            videoType={props.videoType}
             src={detailVideoResult?.archived_url}
             thumbnail={detailVideoResult?.thumbnail}
             statusVideo={showOverlayOnMediaPlayer() ? true : null}

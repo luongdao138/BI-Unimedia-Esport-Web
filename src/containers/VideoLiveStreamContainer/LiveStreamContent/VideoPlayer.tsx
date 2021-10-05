@@ -13,6 +13,7 @@ import screenfull from 'screenfull'
 import useDetailVideo from '../useDetailVideo'
 import { hhmmss } from '@containers/VideoPlayer/customPlugins/time'
 import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
+import { STATUS_VIDEO } from '@services/videoTop.services'
 
 interface PlayerProps {
   src?: string
@@ -132,7 +133,8 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     // if (isViewingStream !== is_viewing_video) {
     //   changeIsViewingStream(is_viewing_video)
     // }
-    changeVideoTime(Math.floor(durationPlayer), Math.floor(playedSeconds))
+    const livingSeconds = videoType === STATUS_VIDEO.LIVE_STREAM ? Math.floor(playedSeconds) : Math.floor(durationPlayer)
+    changeVideoTime(livingSeconds, Math.floor(playedSeconds))
     // changeStreamingSecond(Math.floor(durationPlayer))
     // }
     // if (Math.floor(playedSeconds) !== playedSecond) {
@@ -155,6 +157,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     const READY = IVSPlayer?.PlayerState?.READY
     const BUFFERING = IVSPlayer?.PlayerState?.BUFFERING
     const ERROR = IVSPlayer?.PlayerEventType?.ERROR
+    const IDLE = IVSPlayer?.PlayerState?.IDLE
     if (!isPlayerSupported) {
       console.warn('The current browser does not support the Amazon IVS player.')
       return
@@ -198,6 +201,8 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     player.current.addEventListener(ENDED, onStateChange)
     player.current.addEventListener(ERROR, onError)
     player.current.addEventListener(BUFFERING, onStateChange)
+    player.current.addEventListener(IDLE, onStateChange)
+    console.log("🚀 ~ useEffect ~ player.current-----11111", player.current)
 
     return () => {
       player.current.removeEventListener(READY, onStateChange)
@@ -205,12 +210,12 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       player.current.removeEventListener(ENDED, onStateChange)
       player.current.removeEventListener(ERROR, onError)
       player.current.removeEventListener(BUFFERING, onStateChange)
+      player.current.removeEventListener(IDLE, onStateChange)
     }
   }, [
     IVSPlayer,
     // isPlayerSupported,
     src,
-    videoType,
   ])
 
   const handlePauseAndSeekVideo = () => {

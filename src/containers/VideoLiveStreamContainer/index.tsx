@@ -34,7 +34,7 @@ import { onUpdateVideo } from 'src/graphql/subscriptions'
 // import { createVideo } from 'src/graphql/mutations'
 import * as APIt from 'src/types/graphqlAPI'
 import API, { GraphQLResult, graphqlOperation } from '@aws-amplify/api'
-import { EVENT_LIVE_STATUS } from '@constants/common.constants'
+import { EVENT_LIVE_STATUS, LIVE_VIDEO_TYPE } from '@constants/common.constants'
 import DialogLoginContainer from '@containers/DialogLogin'
 
 enum TABS {
@@ -158,8 +158,16 @@ const VideoDetail: React.FC = () => {
     }
   }
 
+  const refChatContainer = useRef<any>(null)
   const navigateToArchiveUrl = () => {
-    if (video_id === detailVideoResult.user_id.toString()) {
+    // reload page if schedule video is living
+    if(+videoStatus === STATUS_VIDEO.LIVE_STREAM && detailVideoResult.scheduled_flag === LIVE_VIDEO_TYPE.SCHEDULE){
+      window.location.reload()
+    }
+    if (video_id === detailVideoResult.user_id.toString() && detailVideoResult.scheduled_flag === LIVE_VIDEO_TYPE.LIVE) {
+      if(refChatContainer && refChatContainer.current){
+        refChatContainer.current.resetStates()
+      }
       router.replace({
         pathname: ESRoutes.TOP,
         query: { vid: detailVideoResult.uuid },
@@ -171,6 +179,14 @@ const VideoDetail: React.FC = () => {
     if (detailVideoResult.key_video_id) {
       console.log('🚀 ~ useEffect ~ videoInfo', videoInfo)
       const { video_status, process_status } = videoInfo
+      
+      if (videoStatus !== STATUS_VIDEO.ARCHIVE 
+          && video_status === EVENT_LIVE_STATUS.RECORDING_ARCHIVED
+          && process_status === EVENT_LIVE_STATUS.RECORDING_END
+        ) {
+        setVideoStatus(STATUS_VIDEO.ARCHIVE)
+        navigateToArchiveUrl()
+      }
       if (+video_status === STATUS_VIDEO.SCHEDULE) {
         if (+videoStatus !== STATUS_VIDEO.LIVE_STREAM) {
           setVideoStatus(STATUS_VIDEO.SCHEDULE)
@@ -180,14 +196,10 @@ const VideoDetail: React.FC = () => {
           setVideoStatus(STATUS_VIDEO.LIVE_STREAM)
           // window.location.reload()
         } else if (process_status === EVENT_LIVE_STATUS.STREAM_END) {
-          setVideoStatus(STATUS_VIDEO.ARCHIVE)
-          navigateToArchiveUrl()
-          // set end
+          // setVideoStatus(STATUS_VIDEO.ARCHIVE)
+          // navigateToArchiveUrl()
         }
-      } else if (+video_status === STATUS_VIDEO.ARCHIVE) {
-        setVideoStatus(STATUS_VIDEO.ARCHIVE)
-        navigateToArchiveUrl()
-      }
+      } 
     }
   }, [JSON.stringify(videoInfo)])
 
@@ -195,6 +207,7 @@ const VideoDetail: React.FC = () => {
     if (detailVideoResult.key_video_id) {
       checkVideoStatus()
       let statusDetailVideo = detailVideoResult.status
+      console.log("🚀 ~ useEffect ~ detailVideoResult", detailVideoResult)
       console.log('🚀 ~ is Start Live)', moment().isBefore(detailVideoResult.live_stream_start_time, 'second'))
       // if have not arrive live stream start time => set video status is schedule
       if (
@@ -204,7 +217,7 @@ const VideoDetail: React.FC = () => {
         statusDetailVideo = STATUS_VIDEO.SCHEDULE
       }
       setVideoStatus(statusDetailVideo)
-      if (detailVideoResult.status === STATUS_VIDEO.ARCHIVE) {
+      if (detailVideoResult.status === STATUS_VIDEO.ARCHIVE && detailVideoResult.scheduled_flag === LIVE_VIDEO_TYPE.LIVE) {
         navigateToArchiveUrl()
       }
     }
@@ -373,10 +386,11 @@ const VideoDetail: React.FC = () => {
   const modalIsShown = () => {
     return showConfirmModal || showPurchaseTicketModal || showModalPurchasePoint
   }
-
-  const sideChatContainer = () => (
-    <Box className={classes.wrapChatContainer}>
+// const refAbc = useRef(null)
+  const sideChatContainer = () => {
+    return <Box className={classes.wrapChatContainer}>
       <ChatContainer
+        ref={refChatContainer}
         myPoint={myPoint}
         key_video_id={detailVideoResult?.key_video_id}
         onPressDonate={confirmDonatePoint}
@@ -400,7 +414,7 @@ const VideoDetail: React.FC = () => {
         }}
       />
     </Box>
-  )
+  }
 
   // const getVideoType = () => detailVideoResult?.status
   const isVideoFreeToWatch = () => (detailVideoResult?.use_ticket === 0 ? true : false)
@@ -429,7 +443,7 @@ const VideoDetail: React.FC = () => {
 
   const onVideoEnd = () => {
     if (video_id) {
-      getVideoDetail({ video_id: `${video_id}` })
+      // getVideoDetail({ video_id: `${video_id}` })
     }
   }
 
