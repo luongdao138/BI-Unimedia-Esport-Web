@@ -36,6 +36,7 @@ export type NotificationResponse = {
     target_id: number
     user_code: string
     user_id: number
+    hash_key2: null | string
   }
   id: string
   type: string
