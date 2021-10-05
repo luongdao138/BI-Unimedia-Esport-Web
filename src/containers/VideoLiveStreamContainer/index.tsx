@@ -240,6 +240,9 @@ const VideoDetail: React.FC = () => {
   }, [])
 
   useEffect(() => {
+    if (!isAuthenticated) {
+      handleShowDialogLogin()
+    }
     if (isAuthenticated && !myPointsData) {
       getMyPointData({ page: 1, limit: 10 })
     }
@@ -469,16 +472,29 @@ const VideoDetail: React.FC = () => {
             </Grid>
           </>
         )}
-        {showPurchaseTicketModal && (
-          <PurchaseTicketSuperChat
-            myPoints={myPoint}
-            donatedPoints={detailVideoResult?.ticket_price}
-            showModal={showPurchaseTicketModal}
-            setShowModal={setShowPurchaseTicketModal}
-            handlePurchaseTicket={doConfirmPurchaseTicket}
-          />
-        )}
-        {showDialogLogin && <DialogLoginContainer showDialogLogin={showDialogLogin} onCloseDialogLogin={handleCloseDialogLogin} />}
+        <PurchaseTicketSuperChat
+          myPoints={myPoint}
+          donatedPoints={detailVideoResult?.ticket_price}
+          showModal={showPurchaseTicketModal}
+          setShowModal={setShowPurchaseTicketModal}
+          handlePurchaseTicket={doConfirmPurchaseTicket}
+        />
+        <DialogLoginContainer showDialogLogin={showDialogLogin} onCloseDialogLogin={handleCloseDialogLogin} />
+        <DonatePointsConfirmModal
+          hasError={errorPurchase}
+          showConfirmModal={showConfirmModal}
+          handleClose={handleCloseConfirmModal}
+          myPoint={myPoint}
+          ticketPoint={detailVideoResult?.ticket_price}
+          msgContent={purchaseComment}
+          handleConfirm={handleConfirmPurchaseSuperChat}
+        />
+        <DonatePoints
+          myPoint={myPoint}
+          lackedPoint={lackedPoint}
+          showModalPurchasePoint={showModalPurchasePoint}
+          setShowModalPurchasePoint={(value) => setShowModalPurchasePoint(value)}
+        />
       </Box>
       {!detailVideoResult?.archived_url ? (
         <Box
@@ -498,7 +514,7 @@ const VideoDetail: React.FC = () => {
       ) : (
         !isMobile && sideChatContainer()
       )}
-      <DonatePointsConfirmModal
+      {/* <DonatePointsConfirmModal
         hasError={errorPurchase}
         showConfirmModal={showConfirmModal}
         handleClose={handleCloseConfirmModal}
@@ -507,14 +523,12 @@ const VideoDetail: React.FC = () => {
         msgContent={purchaseComment}
         handleConfirm={handleConfirmPurchaseSuperChat}
       />
-      {showModalPurchasePoint && (
-        <DonatePoints
-          myPoint={myPoint}
-          lackedPoint={lackedPoint}
-          showModalPurchasePoint={showModalPurchasePoint}
-          setShowModalPurchasePoint={(value) => setShowModalPurchasePoint(value)}
-        />
-      )}
+      <DonatePoints
+        myPoint={myPoint}
+        lackedPoint={lackedPoint}
+        showModalPurchasePoint={showModalPurchasePoint}
+        setShowModalPurchasePoint={(value) => setShowModalPurchasePoint(value)}
+      /> */}
     </Box>
   )
 }
@@ -525,6 +539,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: '#212121',
     display: 'flex',
     position: 'relative',
+    width: '100%',
   },
   tabContainer: {
     paddingRight: 122,

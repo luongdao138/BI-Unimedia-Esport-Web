@@ -1,6 +1,6 @@
 import { Box, makeStyles, Theme, Typography, useTheme } from '@material-ui/core'
 import { Pagination } from '@material-ui/lab'
-import React, { FC, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { Colors } from '@theme/colors'
 import PointsPurchasedItem from '../PointsPurchasedItem'
 import MyPointsCard from '../MyPointsCard'
@@ -31,17 +31,13 @@ const PointManagementTab: FC = () => {
   //   }
   // }, [])
 
-  // useEffect(() => {
-  //   getMyPointData({ page: page, limit: limit })
-
-  //   return () => {
-  //     resetMyPointsActive()
-  //   }
-  // }, [page])
+  useEffect(() => {
+    getMyPointData({ page: page, limit: limit })
+  }, [page])
 
   const onChangePage = (_event: React.ChangeEvent<unknown>, value: number): void => {
     setPage(value)
-    getMyPointData({ page: value, limit })
+    // getMyPointData({ page: value, limit })
   }
   return (
     <Box className={classes.container}>
