@@ -39,7 +39,7 @@ export default createReducer(initialState, (builder) => {
       },
     }))
     if (_action.payload.meta != undefined && _action.payload.meta.current_page > 1) {
-      searchLobbies = _.unionBy(_state.searchLobbies, _action.payload.data, 'attributes.hash_key')
+      searchLobbies = _.unionBy(_state.searchLobbies, searchLobbies, 'attributes.hash_key')
     }
 
     _state.searchLobbies = searchLobbies
@@ -188,7 +188,7 @@ export default createReducer(initialState, (builder) => {
       },
     }))
     if (action.payload.meta != undefined && action.payload.meta.current_page > 1) {
-      recentLobbies = _.unionBy(state.recentLobbies, action.payload.data, 'attributes.hash_key')
+      recentLobbies = _.unionBy(state.recentLobbies, recentLobbies, 'attributes.hash_key')
     }
     state.recentLobbies = recentLobbies
     state.recentLobbiesPageMeta = action.payload.meta
@@ -206,7 +206,7 @@ export default createReducer(initialState, (builder) => {
       },
     }))
     if (action.payload.meta != undefined && action.payload.meta.current_page > 1) {
-      recommendedLobbies = _.unionBy(state.recommendedLobbies, action.payload.data, 'attributes.hash_key')
+      recommendedLobbies = _.unionBy(state.recommendedLobbies, recommendedLobbies, 'attributes.hash_key')
     }
     state.recommendedLobbies = recommendedLobbies
     state.recommendedLobbiesPageMeta = action.payload.meta

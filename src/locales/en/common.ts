@@ -23,7 +23,7 @@ export default {
     total: '件',
     game_display_name_error: '入力必須項目です',
     too_long: '{{max}}文字以内で入力してください。',
-    at_least: '2文字以上入力してください。',
+    at_least: '2文字以上入力してください',
     at_least_8: '8文字以上で入力してください',
     contains_ngword: '不適切な文字列が含まれています。',
     user_code_invalid: 'ユーザーIDには（英数字、_、-）のみ入力可能です',
@@ -40,7 +40,7 @@ export default {
     yes: 'あり',
     no: 'なし',
     man: '人',
-    integer: '数字のみ入力してください。',
+    integer: '数字のみ入力してください',
     unregistered: '未登録',
     validation: {
       acceptance_dates: 'エントリー終了日時はエントリー開始日時より後ろでなければなりません',
@@ -48,7 +48,7 @@ export default {
       start_end_date: '開催終了日時は開催日時より後ろでなければなりません',
       min_date: '日時は現在の日時より後でなければなりません',
       prize_non_cash: '※現金等を副賞とするのはご遠慮ください。',
-      char_limit: '{{char_limit}}文字以内で入力してください。',
+      char_limit: '{{char_limit}}文字以内で入力してください',
       only_single_byte: '半角英数以外が入力されています',
       only_digit: '半角数字以外が入力されています',
       before_entry_end_date: 'エントリー開始日時はエントリー終了日時より前にしてください',
@@ -79,7 +79,7 @@ export default {
     loading: '読み込み中...',
     no_user_available: '一致するデータが見つかりません',
     made: 'まで',
-    input_incorrect: '入力内容が適切ではありません。',
+    input_incorrect: '入力内容が適切ではありません',
   },
   confirm_member: {
     confirm: 'メンバーの確定',
@@ -660,6 +660,7 @@ export default {
   },
   topic: {
     topic_follower_list: 'フォローしている人の書き込みトピック',
+    topic_not_found: 'トピック情報を取得出来ませんでした',
     report: {
       button: 'トピックを通報',
       title: '通報するトピック',
@@ -721,26 +722,25 @@ export default {
     sort_info_title: 'ソート方法について',
     public_arena_info_title: '公開設定について',
     /* eslint-disable no-irregular-whitespace */
-    sort_info_content: `
-昇順　入力値（スコアやタイム等）が小さい順に順位を決定します。
-　　　例：入力値と順位の関係は下記のようになります。
-　　　100→1位、200→2位、300→3位
-降順　入力値（スコアやタイム等）が大きい順に順位を決定します。
-　　　例：入力値と順位の関係は下記のようになります。
-　　　300→1位、200→2位、100→3位`,
+    sort_info_modal: {
+      row1col1: '昇順',
+      row1col2:
+        '入力値（スコアやタイム等）が小さい順に順位を決定します。\n例：入力値と順位の関係は下記のようになります。\n100→1位、200→2位、300→3位',
+      row2col1: '降順',
+      row2col2:
+        '入力値（スコアやタイム等）が大きい順に順位を決定します。\n例：入力値と順位の関係は下記のようになります。\n300→1位、200→2位、100→3位',
+    },
     close: '閉じる',
     publishing_settings: '公開設定',
     /* eslint-disable no-irregular-whitespace */
-    publishing_settings_info: `
-    eXeLABで作成した大会は、公開範囲を設定することができます。
-    
-公開　　　公開設定では全てのユーザーが大会を参照可能となります。
-
-限定公開　限定公開設定では大会のURLを知っているユーザーのみ参照/エントリー
-　　　　　が可能となります。アリーナ一覧や検索には表示されません。大会を特定
-　　　　　のユーザーに共有する場合は大会詳細画面の「共有URLをコピー」より
-　　　　　URLの連携をお願いいたします。　　　　
-　　　　`,
+    public_setting_modal: {
+      row: 'eXeLABで作成した大会は、公開範囲を設定することができます。',
+      row1col1: '公開',
+      row1col2: '公開設定では全てのユーザーが大会を参照可能となります。',
+      row2col1: '限定公開',
+      row2col2:
+        '限定公開設定では大会のURLを知っているユーザーのみ参照/エントリーが可能となります。アリーナ一覧や検索には表示されません。大会を特定のユーザーに共有する場合は大会詳細画面の「共有URLをコピー」よりURLの連携をお願いいたします。',
+    },
     has_third_place: '3位決定戦あり',
     participation: '参加形式',
     participation_term: '参加条件・ルール',
@@ -814,6 +814,12 @@ export default {
     group_chat: 'グループチャット',
     temporary: 'Temporary',
     cancel: '募集を中止する',
+    edit_button: '編集',
+    report: '通報',
+    copy_shared_url: '共有URLをコピー',
+    venue: '開催場所',
+    game: 'ゲーム',
+    game_hardware: 'ゲームハード',
     detail: {
       label_id: '募集ID：',
       number_of_entries: 'エントリー数',
@@ -950,7 +956,7 @@ export default {
       confirm: '内容を破棄して戻る',
     },
     validation: {
-      participants_limit: '2~128の数字を入力してください。',
+      participants_limit: '2~128の数字を入力してください',
     },
     search: {
       empty: '該当の募集が存在しませんでした',
@@ -1328,7 +1334,6 @@ export default {
   },
   community_create: {
     title: 'コミュニティを作成する',
-    input_required: '入力内容が適切ではありません。',
     edit_title: '募集を作成する',
     name: 'コミュニティ名',
     introduction: 'コミュニティ紹介文',
@@ -1351,6 +1356,8 @@ export default {
     discard: {
       title: '内容を破棄します',
       message: '画面を戻ると、現在の入力内容は破棄されます。よろしいですか？',
+      message_part1: '画面を戻ると、現在の入力内容は破棄されます。',
+      message_part2: 'よろしいですか？',
       confirm: '内容を破棄して戻る',
       edit_title: '内容を破棄します',
       edit_confirm: '内容を破棄して戻る',
@@ -1389,6 +1396,8 @@ export default {
     discard: {
       title: '内容を破棄します',
       message: '画面を戻ると、現在の入力内容は破棄されます。よろしいですか？',
+      message_part1: '画面を戻ると、現在の入力内容は破棄されます。',
+      message_part2: 'よろしいですか？',
       confirm: '内容を破棄して戻る',
     },
     create_success: 'トピックを作成しました',

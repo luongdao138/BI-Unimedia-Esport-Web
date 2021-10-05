@@ -28,6 +28,9 @@ const ArenaWinners: React.FC = () => {
     isBattleRoyale,
     arenaBRWinners,
     winner,
+    winnersMeta,
+    brWinnersMeta,
+    resetMeta,
   } = useArenaWinners()
   const classes = useStyles()
   const [showSummary, setShowSummary] = useState(false)
@@ -42,6 +45,8 @@ const ArenaWinners: React.FC = () => {
       const backButtonBottomOffset = getClientRect(backButtonRef).bottom
       setUpdate(winnerListTopOffset < 620 || backButtonBottomOffset > 60)
     }
+
+    return () => resetMeta()
   }, [])
 
   const getClientRect = (ref) => {
@@ -79,11 +84,10 @@ const ArenaWinners: React.FC = () => {
         <Divider />
         <Box position="relative">
           <div className={`${classes.winnerAvatarWrapper} ${!winner && classes.winnerFull}`} onClick={() => setShowSummary(!showSummary)}>
-            {winner ? (
-              <ArenaAvatar src={winner.avatar} name={winner.name} user_code={winner.user_code} win leaf nameWhite />
-            ) : (
+            {winner ? <ArenaAvatar src={winner.avatar} name={winner.name} user_code={winner.user_code} win leaf nameWhite /> : null}
+            {!winner && (winnersMeta.loaded || brWinnersMeta.loaded) ? (
               <Typography variant="h3">{t('common:arena.result_not_decided')}</Typography>
-            )}
+            ) : null}
           </div>
         </Box>
       </div>

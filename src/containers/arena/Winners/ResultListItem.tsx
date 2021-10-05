@@ -13,7 +13,7 @@ interface ResultListItemProps {
   score?: number
 }
 
-export default function ResultListItem({ position, avatar, onClickAvatar, name, nameSecondary, score }: ResultListItemProps) {
+const ResultListItem: React.FC<ResultListItemProps> = ({ position, avatar, onClickAvatar, name, nameSecondary, score }) => {
   const classes = useStyles()
   const rule = useArenaResult()
   return (
@@ -35,11 +35,11 @@ export default function ResultListItem({ position, avatar, onClickAvatar, name, 
           {avatar}
         </ButtonBase>
         <div className={classes.nameWrapper}>
-          <Typography variant="h3" component="p">
+          <Typography variant="h3" component="p" noWrap>
             {name}
           </Typography>
           {nameSecondary && (
-            <Typography variant="body2" className={classes.user_code}>
+            <Typography variant="body2" className={classes.user_code} noWrap>
               {nameSecondary}
             </Typography>
           )}
@@ -71,6 +71,7 @@ const useStyles = makeStyles((theme) => ({
   placementWrapper: {
     minWidth: 55,
     marginRight: theme.spacing(1),
+    marginLeft: theme.spacing(1),
   },
   itemAvatar: {
     width: 40,
@@ -80,7 +81,7 @@ const useStyles = makeStyles((theme) => ({
     fontFamily: 'Futura Lt BT',
     fontWeight: 300,
     fontStyle: 'normal',
-    textAlign: 'center',
+    textAlign: 'left',
     '& span': {
       fontSize: '0.5em',
     },
@@ -122,9 +123,11 @@ const useStyles = makeStyles((theme) => ({
   second: {},
   third: {},
   nameWrapper: {
+    overflow: 'hidden',
     color: Colors.white,
     paddingLeft: theme.spacing(2),
     flex: 1,
+    paddingRight: theme.spacing(1),
   },
   breakWord: {
     wordBreak: 'break-word',
@@ -145,4 +148,29 @@ const useStyles = makeStyles((theme) => ({
       paddingLeft: 0,
     },
   },
+  [theme.breakpoints.down('xs')]: {
+    itemAvatar: {
+      width: 30,
+      '& .MuiAvatar-root': {
+        width: 30,
+        height: 30,
+      },
+    },
+    text: {
+      fontSize: '20px !important',
+    },
+    placementWrapper: {
+      minWidth: 30,
+      marginRight: 6,
+    },
+    nameWrapper: {
+      paddingLeft: theme.spacing(1),
+      overflow: 'hidden',
+    },
+    score: {
+      fontSize: 14,
+    },
+  },
 }))
+
+export default ResultListItem

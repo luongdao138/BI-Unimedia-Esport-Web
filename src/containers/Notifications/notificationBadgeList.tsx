@@ -1,4 +1,3 @@
-import { Grid } from '@material-ui/core'
 import React, { useEffect } from 'react'
 import useNotificationList from './useNotificationList'
 import NotificationBadgeItem from './notificationBadgeItem'
@@ -65,20 +64,17 @@ const NotificationBadgeListContainer: React.FC = () => {
   }
 
   return (
-    <div>
+    <>
       {badgeNotifications.map((notification, i) => (
-        <Grid
-          item
-          xs={12}
+        <NotificationBadgeItem
           key={i}
+          data={notification}
           onClick={() => {
             handleClick(notification)
           }}
-        >
-          <NotificationBadgeItem data={notification} />
-        </Grid>
+        />
       ))}
-    </div>
+    </>
   )
 }
 

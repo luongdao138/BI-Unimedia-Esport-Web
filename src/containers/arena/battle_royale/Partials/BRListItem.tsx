@@ -27,10 +27,14 @@ const BRListItem: React.FC<BRListItemProps> = (props: BRListItemProps) => {
       <div className={classes.contentWrapper}>
         {avatarClone}
         <div className={classes.textContent}>
-          <Typography className={`${classes.text} ${props.highlight ? 'highlight' : ''}`}>
+          <Typography className={`${classes.text} ${props.highlight ? 'highlight' : ''}`} noWrap>
             {props.text || t('common:common.not_sure')}
           </Typography>
-          {props.textSecondary && <Typography className={classes.textSecondary}>{props.textSecondary}</Typography>}
+          {props.textSecondary && (
+            <Typography className={classes.textSecondary} noWrap>
+              {props.textSecondary}
+            </Typography>
+          )}
         </div>
         {props.children ? <div className={classes.rightContent}>{props.children}</div> : <></>}
       </div>
@@ -85,6 +89,7 @@ const useStyles = makeStyles((theme) => ({
   textContent: {
     paddingLeft: theme.spacing(1),
     flex: 'auto',
+    overflow: 'hidden',
   },
   text: {
     fontSize: 12,
@@ -108,8 +113,9 @@ const useStyles = makeStyles((theme) => ({
       paddingBottom: 8,
     },
     textContent: {
-      padding: 'unset',
       textAlign: 'center',
+      width: '100%',
+      padding: '0 5px',
     },
     rightContent: {
       width: 180,

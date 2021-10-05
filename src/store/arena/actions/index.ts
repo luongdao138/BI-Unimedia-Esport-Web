@@ -478,3 +478,18 @@ export const setBattleRoyaleOwnScore = createAsyncThunk<SetBattleRoyaleScoresRes
     }
   }
 )
+
+export const getBattleRoyaleWinners = createAsyncThunk<services.GetParticipantsResponse, string>(
+  types.GET_BATTLE_ROYALE_WINNERS,
+  async (param, { rejectWithValue }) => {
+    try {
+      const res = await services.getBattleRoyalWinners(param)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)

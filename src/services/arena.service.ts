@@ -761,3 +761,8 @@ export const setBattleRoyalOwnScore = async ({ hash_key, participants }: SetBatt
   const { data } = await api.post(URI.BATTLE_ROYALE_SET_OWN_SCORE.replace(/:id/gi, `${hash_key}`), { scores })
   return data as SetBattleRoyaleScoresResponse
 }
+
+export const getBattleRoyalWinners = async (hash_key: string) => {
+  const { data } = await api.post(URI.BATTLE_ROYALE_WINNERS.replace(/:id/gi, `${hash_key}`))
+  return data as GetParticipantsResponse
+}

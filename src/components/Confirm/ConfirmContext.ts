@@ -1,3 +1,4 @@
 import { createContext } from 'react'
+import { ConfirmOptions } from './types'
 
-export default createContext(null)
+export default createContext<(options: ConfirmOptions) => Promise<void> | null>(null)

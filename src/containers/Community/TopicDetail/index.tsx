@@ -15,18 +15,19 @@ import useTopicHelper from './useTopicHelper'
 import _ from 'lodash'
 import { ESRoutes } from '@constants/route.constants'
 import { REPORT_TYPE } from '@constants/common.constants'
-
-import DiscardDialog from '@containers/Community/Partials/DiscardDialog'
 import { useTranslation } from 'react-i18next'
 import ESReport from '@containers/Report'
 import useDocTitle from '@utils/hooks/useDocTitle'
+import { useConfirm } from '@components/Confirm'
+import { COMMUNITY_DIALOGS } from '@constants/community.constants'
 
 const TopicDetailContainer: React.FC = () => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const router = useRouter()
   const { back } = useRouter()
-  const { topic_hash_key, hash_key } = router.query
+  const confirm = useConfirm()
+  const { topic_hash_key, hash_key, from } = router.query
   const {
     getTopicDetail,
     topic,
@@ -69,7 +70,6 @@ const TopicDetailContainer: React.FC = () => {
 
   const handleDeleteComment = () => {
     deleteComment({ comment_no: selectedCommentNo, topic_hash: String(topic_hash_key) })
-    setOpenDelete(false)
   }
 
   useEffect(() => {
@@ -79,6 +79,21 @@ const TopicDetailContainer: React.FC = () => {
       resetTopicDeleteMeta()
     }
   }, [deleteTopicMeta])
+
+  useEffect(() => {
+    if (isAuthenticated && openDelete) {
+      confirm({
+        ...COMMUNITY_DIALOGS.DELETE_COMMENT,
+      })
+        .then(() => {
+          handleDeleteComment()
+        })
+        .catch(() => {
+          /* ... */
+        })
+    }
+    setOpenDelete(false)
+  }, [openDelete])
 
   useEffect(() => {
     if (topic_hash_key) {
@@ -117,7 +132,7 @@ const TopicDetailContainer: React.FC = () => {
 
   useEffect(() => {
     if (communityDetail && !isAutomatic && isNotMember) {
-      router.push({ pathname: ESRoutes.COMMUNITY_DETAIL.replace(/:id/gi, String(hash_key)), query: { topicFollower: true } })
+      router.push({ pathname: ESRoutes.COMMUNITY_DETAIL.replace(/:id/gi, String(hash_key)), query: { from: from } })
     } else {
       setRender(true)
     }
@@ -187,16 +202,6 @@ const TopicDetailContainer: React.FC = () => {
             title={t('common:topic_comment.report.dialog_title')}
             open={reportData !== null}
             handleClose={() => setReportData(null)}
-          />
-        )}
-        {isAuthenticated && (
-          <DiscardDialog
-            title={t('common:topic_comment.delete.title')}
-            open={openDelete}
-            onClose={() => setOpenDelete(false)}
-            onSubmit={handleDeleteComment}
-            description={t('common:topic_comment.delete.description')}
-            confirmTitle={t('common:topic_comment.delete.submit')}
           />
         )}
       </Box>

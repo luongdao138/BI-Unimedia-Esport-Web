@@ -60,7 +60,55 @@ const BRStatusRecruiting: React.FC<BRStatusRecruitingProps> = ({ arena }) => {
             {statusName[arena.attributes.my_role] || t('arena.participate_status.no_entry')}
           </Typography>
           <ButtonGroup>
-            <ESButton onClick={toParticipants} variant="outlined" fullWidth style={{ maxWidth: 160 }}>
+            {isFreezed ? (
+              <>
+                <ESButton onClick={toParticipants} variant="outlined" fullWidth>
+                  {t('tournament.participants')}
+                </ESButton>
+                <ActionLabelButton
+                  variant="outlined"
+                  fullWidth
+                  onClick={toGroupChat}
+                  disabled={!((isTeamLeader && isParticipant) || isModerator)}
+                  style={{ width: 160 }}
+                >
+                  {t('tournament.group_chat')}
+                </ActionLabelButton>
+                {isModerator || (isTeamLeader && isParticipant) ? (
+                  <ActionLabelButton
+                    variant="outlined"
+                    fullWidth
+                    onClick={toMatches}
+                    disabled={!(isModerator || isTeamLeader)}
+                    style={{ width: 160 }}
+                  >
+                    {t('arena.input_result')}
+                  </ActionLabelButton>
+                ) : null}
+              </>
+            ) : (
+              <>
+                <ESButton onClick={toParticipants} variant="outlined" fullWidth>
+                  {t('tournament.entry_members')}
+                </ESButton>
+                {isModerator ? (
+                  <ESButton variant="outlined" fullWidth onClick={toMatches}>
+                    {t('tournament.select_br_participants')}
+                  </ESButton>
+                ) : null}
+                <ActionLabelButton
+                  actionLabel={t('arena.temporary')}
+                  variant="outlined"
+                  fullWidth
+                  onClick={toGroupChat}
+                  disabled={!((isTeamLeader && isParticipant) || isModerator)}
+                  style={{ width: 160 }}
+                >
+                  {t('tournament.group_chat')}
+                </ActionLabelButton>
+              </>
+            )}
+            {/* <ESButton onClick={toParticipants} variant="outlined" fullWidth style={{ maxWidth: 160 }}>
               {isFreezed ? t('tournament.participants') : t('tournament.entry_members')}
             </ESButton>
             {isModerator && !isFreezed ? (
@@ -90,7 +138,7 @@ const BRStatusRecruiting: React.FC<BRStatusRecruitingProps> = ({ arena }) => {
                 {t('tournament.group_chat')}
               </ActionLabelButton>
             )}
-            {isModerator || (isTeamLeader && isParticipant) ? (
+            {isFreezed && (isModerator || (isTeamLeader && isParticipant)) ? (
               <ActionLabelButton
                 variant="outlined"
                 fullWidth
@@ -100,7 +148,7 @@ const BRStatusRecruiting: React.FC<BRStatusRecruitingProps> = ({ arena }) => {
               >
                 {t('arena.input_result')}
               </ActionLabelButton>
-            ) : null}
+            ) : null} */}
           </ButtonGroup>
         </Box>
       }

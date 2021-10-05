@@ -89,7 +89,7 @@ export enum REPORT_TYPE {
   TOPIC = 2,
   CHAT = 3,
   TOPIC_COMMENT = 4,
-  RECRUITMENT = 5,
+  LOBBY = 5,
   TOURNAMENT = 6,
 }
 

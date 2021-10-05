@@ -6,6 +6,7 @@ export enum NOTIFICATION_ACTION_TYPE {
   CLEAR_NOTIFICATION = 'notification/clear',
   CLEAR_NOTIFICATION_BADGE = 'notification/clear_badge',
   SEEN_NOTIFICATION_BADGE = 'notification/seen_badge',
+  CLEAR_NOTIFICATION_LIST = 'notification/clear_list',
 
   NOTIFICATION_TYPE_FOLLOW = 1,
   NOTIFICATION_TYPE_FOLLOW_ACTION_FOLLOW = 1,

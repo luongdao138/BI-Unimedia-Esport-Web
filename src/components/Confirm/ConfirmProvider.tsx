@@ -2,8 +2,9 @@
 import React, { useState, useCallback, Fragment } from 'react'
 import ConfirmContext from './ConfirmContext'
 import ConfirmationDialog from './ConfirmationDialog'
+import { ConfirmOptions } from './types'
 
-const DEFAULT_OPTIONS = {
+const DEFAULT_OPTIONS: ConfirmOptions = {
   title: 'Are you sure?',
   description: '',
   content: null,
@@ -14,7 +15,7 @@ const DEFAULT_OPTIONS = {
   cancellationButtonProps: {},
 }
 
-const buildOptions = (defaultOptions, options) => {
+const buildOptions = (defaultOptions, options): ConfirmOptions => {
   const dialogProps = {
     ...(defaultOptions.dialogProps || DEFAULT_OPTIONS.dialogProps),
     ...(options.dialogProps || {}),
@@ -39,11 +40,11 @@ const buildOptions = (defaultOptions, options) => {
 }
 
 const ConfirmProvider = ({ children, defaultOptions = {} }) => {
-  const [options, setOptions] = useState({ ...DEFAULT_OPTIONS, ...defaultOptions })
+  const [options, setOptions] = useState<ConfirmOptions>({ ...DEFAULT_OPTIONS, ...defaultOptions })
   const [resolveReject, setResolveReject] = useState([])
   const [resolve, reject] = resolveReject
 
-  const confirm = useCallback((options = {}) => {
+  const confirm = useCallback((options: ConfirmOptions = {}): Promise<void> => {
     return new Promise((resolve, reject) => {
       setOptions(buildOptions(defaultOptions, options))
       setResolveReject([resolve, reject])
