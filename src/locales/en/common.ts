@@ -516,6 +516,16 @@ export default {
       followers_entering: '該当の大会は存在しません',
       followers_entering_results: '該当の大会結果は存在しません',
     },
+    discard: {
+      title: '内容を破棄します',
+      message: '画面を戻ると、現在の入力内容は破棄されます。よろしいですか？',
+      message_part1: '画面を戻ると、現在の入力内容は破棄されます。',
+      message_part2: 'よろしいですか？',
+      confirm: '内容を破棄して戻る',
+      edit_title: '内容を破棄します',
+      edit_confirm: '内容を破棄して戻る',
+      edit_message: '画面を戻ると、現在の入力内容は破棄されます。よろしいですか？',
+    },
   },
   arena: {
     input_result: '結果の入力',
