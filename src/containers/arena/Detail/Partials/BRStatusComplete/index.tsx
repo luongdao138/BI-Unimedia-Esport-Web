@@ -45,7 +45,7 @@ const BRStatusComplete: React.FC<BRStatusBRStatusCompleteProps> = ({ arena }) =>
       }
       content={
         isFreezed ? (
-          winnerMeta.loaded && (isTeamLeader || isModerator) ? (
+          winnerMeta.loaded ? (
             <Box display="flex" flexDirection="column" alignItems="center">
               {winner ? (
                 <WinnerAvatar src={winner.avatar} name={winner.name} user_code={winner.user_code} />
@@ -73,13 +73,7 @@ const BRStatusComplete: React.FC<BRStatusBRStatusCompleteProps> = ({ arena }) =>
                 </ESButton>
               </ButtonGroup>
             </Box>
-          ) : (
-            <Box textAlign="center">
-              <Typography color="secondary" variant="body1">
-                {t('arena.result_incomplete')}
-              </Typography>
-            </Box>
-          )
+          ) : null
         ) : (
           <Box textAlign="center">
             <Typography color="secondary" variant="body1">

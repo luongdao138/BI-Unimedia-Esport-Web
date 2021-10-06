@@ -6,6 +6,7 @@ import { Colors } from '@theme/colors'
 import _ from 'lodash'
 import { DATE_TIME } from '@constants/battleroyale.constants'
 import i18n from '@locales/i18n'
+import { TournamentHelper } from '@utils/helpers/TournamentHelper'
 
 const validateNumber = (value: string | number, type: string): boolean => {
   let res = false
@@ -20,41 +21,22 @@ const validateNumber = (value: string | number, type: string): boolean => {
   return res
 }
 
-interface timeProps {
+interface TimeProps {
   hours: string | number
   minutes: string | number
   seconds: string | number
   millis: string | number
 }
 
-const millisToTime = (duration: number | null) => {
-  if (duration === null) {
-    return { hours: '', minutes: '', seconds: '', millis: '' }
-  }
-
-  const millis: string | number = Math.floor(duration % 1000)
-  const seconds: string | number = Math.floor((duration / 1000) % 60)
-  const minutes: string | number = Math.floor((duration / (1000 * 60)) % 60)
-  const hours: string | number = Math.floor(duration / (1000 * 60 * 60))
-
-  return { hours: Number(hours), minutes: minutes, seconds: seconds, millis: millis }
-}
-
-const timeToMillis = (time: timeProps) => {
-  const { hours, minutes, seconds, millis } = time
-  const result = Number(hours) * 60 * 60 * 1000 + Number(minutes) * 60 * 1000 + Number(seconds) * 1000 + Number(millis) * 1
-  return result
-}
-
 const BRTimeInput: React.FC<
   OutlinedInputProps & { value: number | null; onAttackError: (error: boolean) => void; onChange: ({ target: { value: string } }) => void }
 > = ({ value, onChange, onAttackError }) => {
   const classes = useStyles()
-  const [time, setTime] = useState<timeProps>(() => millisToTime(value))
+  const [time, setTime] = useState<TimeProps>(() => TournamentHelper.millisToTime(value))
   const [error, setError] = useState<boolean>(false)
 
   useEffect(() => {
-    const result = timeToMillis(time)
+    const result = TournamentHelper.timeToMillis(time)
 
     if (isNaN(Number(result)) || !validateNumber(time.minutes, DATE_TIME.MINUTES) || !validateNumber(time.seconds, DATE_TIME.SECONDS)) {
       setError(true)

@@ -5,6 +5,13 @@ import { ParticipantsResponse, TournamentDetail, TournamentMatchRound, Tournamen
 import { FormikErrors } from 'formik'
 import { FormType } from '@containers/arena/UpsertForm/FormModel/FormType'
 
+interface TimeProps {
+  hours: string | number
+  minutes: string | number
+  seconds: string | number
+  millis: string | number
+}
+
 const participantTypeText = (participant_type: number): string => {
   const type = PARTICIPATION_TYPES.filter((t) => t.value === participant_type)[0]
 
@@ -238,7 +245,13 @@ const getLabelName = (field: string): string => {
 }
 
 const formatArenaScore = (score: number, rule: TournamentRule): string => {
-  if (rule === 'time_attack') return moment.unix(score).format('HH:mm:ss:SSS')
+  if (rule === 'time_attack') {
+    const { hours, minutes, seconds, millis } = millisToTime(score)
+    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}:${String(
+      millis
+    ).padStart(3, '0')}`
+  } else if (rule === 'score_attack') return new Intl.NumberFormat().format(score)
+
   return String(score)
 }
 
@@ -251,12 +264,35 @@ function isBattleRoyale(arena: TournamentDetail) {
 
 function isBRResultComplete(participants: ParticipantsResponse[]) {
   for (const p of participants) {
-    if (p.attributes.position === null) return false
+    if (p.attributes.attack_score === null) return false
   }
   return true
 }
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+const millisToTime = (duration: number | null) => {
+  if (duration === null) {
+    return { hours: '', minutes: '', seconds: '', millis: '' }
+  }
+
+  const millis: string | number = Math.floor(duration % 1000)
+  const seconds: string | number = Math.floor((duration / 1000) % 60)
+  const minutes: string | number = Math.floor((duration / (1000 * 60)) % 60)
+  const hours: string | number = Math.floor(duration / (1000 * 60 * 60))
+
+  return { hours: Number(hours), minutes: minutes, seconds: seconds, millis: millis }
+}
+
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+const timeToMillis = (time: TimeProps) => {
+  const { hours, minutes, seconds, millis } = time
+  const result = Number(hours) * 60 * 60 * 1000 + Number(minutes) * 60 * 1000 + Number(seconds) * 1000 + Number(millis) * 1
+  return result
+}
+
 export const TournamentHelper = {
+  millisToTime,
+  timeToMillis,
   participantTypeText,
   ruleText,
   formatDate,
