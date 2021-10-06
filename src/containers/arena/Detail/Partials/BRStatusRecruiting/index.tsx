@@ -94,7 +94,7 @@ const BRStatusRecruiting: React.FC<BRStatusRecruitingProps> = ({ arena, userProf
               </Box>
             )}
           </ButtonGroup>
-          {isTeamLeader && !isModerator ? <UnjoinModal tournament={arena} /> : null}
+          <UnjoinModal tournament={arena} showButton={isTeamLeader && !isModerator} />
           {isModerator ? <Typography variant="body2">{t('tournament.close_recruitment.description')}</Typography> : null}
 
           {/* Modals */}
