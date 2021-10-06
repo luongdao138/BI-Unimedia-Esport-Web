@@ -251,7 +251,7 @@ function isBattleRoyale(arena: TournamentDetail) {
 
 function isBRResultComplete(participants: ParticipantsResponse[]) {
   for (const p of participants) {
-    if (p.attributes.position === null) return false
+    if (p.attributes.attack_score === null) return false
   }
   return true
 }
