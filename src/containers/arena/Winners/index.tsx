@@ -133,12 +133,12 @@ const ArenaWinners: React.FC = () => {
             {arenaBRWinners.map((p, idx) => (
               <ResultListItem
                 key={idx}
-                position={idx + 1}
+                position={p.attributes.position}
                 avatar={<Avatar src={p.attributes.avatar_url} alt={p.attributes.name} />}
                 onClickAvatar={() => selectBRParticipant(p)}
                 name={p.attributes.team ? p.attributes.team.data.attributes.name : p.attributes.name}
                 nameSecondary={p.attributes.user ? `@${p.attributes.user.user_code}` : ''}
-                score={p.attributes.position}
+                score={p.attributes.attack_score}
               />
             ))}
           </ResultList>
