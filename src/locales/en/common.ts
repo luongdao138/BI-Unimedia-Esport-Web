@@ -258,6 +258,7 @@ export default {
     delivery_management: '配信管理',
     video_distribution_application: '動画配信申請',
     eXeLAB_link: 'eXeLABへ',
+    stream_menu_video_top: '動画TOPへ',
   },
   community: {
     report: '通報',
@@ -1635,6 +1636,7 @@ export default {
     not_begin_sell_ticket: '本配信のチケット販売はまだ開始されていません',
     show_more_mess: '新しいコメントを見る ',
     chat_will_available_on_time: 'Liveチャットはライブ配信中のみ有効です',
+    discord_id_copied: 'DiscordのIDをクリップボードにコピーしました。',
   },
   video_search: {
     video_results: '動画「:key」 の検索結果',

@@ -34,6 +34,7 @@ const DonatePoints: React.FC<DonatePointsProps> = ({ showModalPurchasePoint, set
 
   const onCloseModal = () => {
     setShowModalPurchasePoint(false)
+    setStage(1)
   }
 
   const onClickPurchaseLackedPoint = () => {

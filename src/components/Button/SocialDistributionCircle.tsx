@@ -1,5 +1,7 @@
+import i18n from '@locales/i18n'
 import { Avatar, SvgIcon, IconButton, IconButtonProps } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
+import useToast from '@utils/hooks/useToast'
 
 const getIconBackgroundColor = (social) => {
   switch (social) {
@@ -98,14 +100,36 @@ interface SocialProps {
 
 const SocialDistributionCircle: React.FC<IconButtonProps & SocialProps> = ({ link, onlyIcon, className, social }) => {
   const disabled = !link || link.length === 0
+  const { addToast } = useToast()
   const classes = useStyles({ disabled: onlyIcon ? false : disabled, social })
+
+  function copyToClipboard() {
+    const dummy = document.createElement('textarea')
+    document.body.appendChild(dummy)
+    dummy.value = link
+    dummy.select()
+    document.execCommand('copy')
+    document.body.removeChild(dummy)
+    addToast(i18n.t('common:live_stream_screen.discord_id_copied'))
+  }
   return (
-    <IconButton href={link} target="_blank" disabled={disabled} classes={{ root: classes.iconRoot }} className={className}>
-      <div className="esbutton-hover" />
-      <Avatar classes={{ root: classes.root }} className={classes.avatar}>
-        {getPath(social, classes)}
-      </Avatar>
-    </IconButton>
+    <>
+      {social !== 'discord' ? (
+        <IconButton href={link} target={'_blank'} disabled={disabled} classes={{ root: classes.iconRoot }} className={className}>
+          <div className="esbutton-hover" />
+          <Avatar classes={{ root: classes.root }} className={classes.avatar}>
+            {getPath(social, classes)}
+          </Avatar>
+        </IconButton>
+      ) : (
+        <IconButton onClick={copyToClipboard} disabled={disabled} classes={{ root: classes.iconRoot }} className={className}>
+          <div className="esbutton-hover" />
+          <Avatar classes={{ root: classes.root }} className={classes.avatar}>
+            {getPath(social, classes)}
+          </Avatar>
+        </IconButton>
+      )}
+    </>
   )
 }
 

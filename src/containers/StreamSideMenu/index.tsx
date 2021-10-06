@@ -125,6 +125,24 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
             </Box>
           )}
           <List component="nav" aria-labelledby="nested-list-subheader" className={classes.root}>
+            {/* Videos Top Tab */}
+            <Link
+              href={{
+                pathname: ESRoutes.VIDEO_TOP,
+                query: { default_tab: 0 },
+              }}
+              passHref
+              as={ESRoutes.VIDEO_TOP}
+            >
+              <ListItem className={classes.list + getAddClass(classes.noMinimizeList, classes.minimizeList)} button disableRipple>
+                <ListItemIcon className={classes.icon}>
+                  <Icon fontSize="small" className="fab fa-youtube" />
+                </ListItemIcon>
+                {/* link to top video page and videos top tab(お気に入り) is selected*/}
+                {!minimizeLayout && <ListItemText className={classes.listText} primary={t('common:home.stream_menu_video_top')} />}
+              </ListItem>
+            </Link>
+            {/* Favorite Tab */}
             <Link
               href={{
                 pathname: ESRoutes.VIDEO_TOP,
@@ -341,6 +359,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'flex-start',
     alignItems: 'center',
     paddingTop: 72,
+    // width: 50,
   },
   icon: {},
   userInfo: {

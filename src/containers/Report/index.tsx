@@ -243,6 +243,9 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
         break
     }
   }
+  const reportVideo = () => {
+    return <Box className={classes.videoInfoContainer}>{data?.title && <Typography variant="h2">{data.title}</Typography>}</Box>
+  }
 
   useEffect(() => {
     if (meta.loaded && !meta.error) {
@@ -319,7 +322,7 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
               <Box mt={8}>
                 <Typography className={classes.desc}>{t('user_report.desc')}</Typography>
               </Box>
-              <Box py={4}>{attr && reportInfo()}</Box>
+              <Box py={4}>{attr ? reportInfo : REPORT_TYPE.VIDEO_STREAM && reportVideo}</Box>
               <Grid container>
                 <Hidden xsDown smDown>
                   <Box style={{ minWidth: 24 }}></Box>
@@ -439,6 +442,18 @@ const useStyles = makeStyles((theme) => ({
   userInfoContainer: {
     backgroundColor: Colors.black,
     marginTop: theme.spacing(3),
+    padding: theme.spacing(2),
+    borderStyle: 'solid',
+    borderColor: Colors.grey[400],
+    borderRadius: 4,
+    borderWidth: 0.5,
+    display: 'flex',
+    alignItems: 'center',
+  },
+  videoInfoContainer: {
+    backgroundColor: Colors.black,
+    marginTop: theme.spacing(3),
+    marginBottom: theme.spacing(3),
     padding: theme.spacing(2),
     borderStyle: 'solid',
     borderColor: Colors.grey[400],
