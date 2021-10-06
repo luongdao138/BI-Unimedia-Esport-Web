@@ -72,7 +72,7 @@ const SubActionButtons: React.FC<Props> = ({ lobby, openChat, openMemberList }) 
       status !== LOBBY_STATUS.READY &&
       status !== LOBBY_STATUS.DELETED &&
       status !== LOBBY_STATUS.CANCELLED &&
-      !afterClosed.includes(status) &&
+      status !== LOBBY_STATUS.ENDED &&
       participantStatus === LOBBY_PARTICIPANT_STATUS.ENTERED
     ) {
       return (

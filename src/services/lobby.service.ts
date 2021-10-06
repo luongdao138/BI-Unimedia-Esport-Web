@@ -14,7 +14,6 @@ export type LobbySearchParams = {
   page: number
   keyword: string
   filter?: LobbyFilterOption
-  timezone?: string
 }
 
 export enum LobbyFilterOption {
