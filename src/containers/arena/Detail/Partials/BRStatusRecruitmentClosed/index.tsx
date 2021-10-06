@@ -19,6 +19,7 @@ import InidividualEntryEditModal from '../ActionComponent/InidividualEntryEditMo
 import TeamEntryEditModal from '../ActionComponent/TeamEntryEditModal'
 import ActionLabelButton from '../ActionComponent/ActionLabelButton'
 import { ButtonGroup } from '../BRHeaderContent'
+import useEntry from '../ActionComponent/useEntry'
 
 interface BRStatusRecruitingProps {
   arena: TournamentDetail
@@ -31,7 +32,7 @@ const BRStatusRecruiting: React.FC<BRStatusRecruitingProps> = ({ arena, userProf
     arena.attributes.end_date
   )}`
   const { toParticipants, toGroupChat, isTeam, isModerator, isTeamLeader, toMatches, isFreezed, isParticipant } = useArenaHelper(arena)
-
+  useEntry()
   const [open, setOpen] = useState(false)
   const handleOpenEntryModal = () => {
     setOpen(true)
