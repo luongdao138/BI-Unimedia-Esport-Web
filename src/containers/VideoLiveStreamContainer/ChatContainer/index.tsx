@@ -4,7 +4,7 @@
 import { Box, Typography, Icon, Button, IconButton, useTheme, useMediaQuery, ButtonBase, ClickAwayListener } from '@material-ui/core'
 // import { useTranslation } from 'react-i18next'
 // import i18n from '@locales/i18n'
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, forwardRef, useImperativeHandle } from 'react'
 import sanitizeHtml from 'sanitize-html'
 import i18n from '@locales/i18n'
 import useStyles from './styles'
@@ -34,7 +34,7 @@ import LoginRequired from '@containers/LoginRequired'
 import moment from 'moment'
 import { STATUS_SEND_MESS } from '@constants/common.constants'
 
-type ChatContainerProps = {
+export type ChatContainerProps = {
   onPressDonate?: (donatedPoint: number, purchaseComment: string) => void
   onCloseChatPanel?: () => void
   userHasViewingTicket?: boolean | number
@@ -45,6 +45,7 @@ type ChatContainerProps = {
   openPurchasePointModal?: (point: any) => void
   videoType?: number
   freeToWatch?: boolean
+  ref: any
 }
 
 export const purchasePoints = {
@@ -129,17 +130,18 @@ export const sanitizeMess = (content: string): string =>
     allowedAttributes: {},
   })
 
-const ChatContainer: React.FC<ChatContainerProps> = ({
-  onPressDonate,
-  userHasViewingTicket,
-  key_video_id,
-  myPoint,
-  handleKeyboardVisibleState,
-  donateConfirmModalIsShown,
-  openPurchasePointModal,
-  videoType,
-  freeToWatch,
-}) => {
+const ChatContainer: React.FC<ChatContainerProps> = forwardRef((
+  {
+    onPressDonate,
+    userHasViewingTicket,
+    key_video_id,
+    myPoint,
+    handleKeyboardVisibleState,
+    donateConfirmModalIsShown,
+    openPurchasePointModal,
+    videoType,
+    freeToWatch,
+  }, ref) => {
   // const { t } = useTranslation('common')
   // const [messageText, setMessageText] = useState<string>('')
   const [purchaseDialogVisible, setPurchaseDialogVisible] = useState<boolean>(false)
@@ -223,6 +225,16 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
     },
   })
   const classes = useStyles({ chatValidationError: !!errors.message })
+
+  const resetStates = () => {
+    setStateMessages([])
+  }
+  
+  useImperativeHandle(ref, () => {
+     return {
+      resetStates: resetStates
+     }
+  });
 
   const handleCreateUserDB = async () => {
     console.log(
@@ -984,6 +996,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
   )
 
   const closeDialogActiveUser = () => {
+    // prevent close modal when click user icon first time
     if (messActiveUser && !displayDialogMess) {
       setMessActiveUser(null)
     }
@@ -1123,8 +1136,14 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
                   opacity: !messActiveUser ? 1 : item.id === messActiveUser.id ? 1 : 0.5,
                 }}
                 onClick={() => {
-                  setDisplayDialogMess(true)
-                  setMessActiveUser(item)
+                  // close modal user icon if click icon of user is showed
+                  if(messActiveUser && (messActiveUser.id === item.id || messActiveUser.local_id === item.local_id)) {
+                    setMessActiveUser(null)
+                    setDisplayDialogMess(false)
+                  } else{
+                    setDisplayDialogMess(true)
+                    setMessActiveUser(item)
+                  }
                 }}
               >
                 <ESAvatar src={item?.parent?.avatar} size={32} alt={item.parent.user_name} />
@@ -1152,6 +1171,6 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
       {displayChatContent() ? chatContent() : userDoesNotHaveViewingTicketView()}
     </Box>
   )
-}
+})
 
 export default ChatContainer
