@@ -232,9 +232,9 @@ const VideoDetail: React.FC = () => {
   }
   refOnUpdateVideo.current = onUpdateVideoData
 
-  const subscribeAction = () => {
-    const pubSubClient = API.graphql(graphqlOperation(onUpdateVideo))
-    pubSubClient.subscribe({
+  const subscribeUpdateVideoAction = () => {
+    let updateVideoSubscription = API.graphql(graphqlOperation(onUpdateVideo))
+    updateVideoSubscription = updateVideoSubscription.subscribe({
       next: (sub: GraphQLResult<APIt.OnUpdateVideoSubscription>) => {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         //@ts-ignore
@@ -247,10 +247,16 @@ const VideoDetail: React.FC = () => {
       },
       error: (error) => console.warn(error),
     })
+    return updateVideoSubscription
   }
 
   useEffect(() => {
-    subscribeAction()
+    const updateVideoSubscription = subscribeUpdateVideoAction()
+    return () => {
+      if (updateVideoSubscription) {
+        updateVideoSubscription.unsubscribe()
+      }
+    }
   }, [])
 
   useEffect(() => {
