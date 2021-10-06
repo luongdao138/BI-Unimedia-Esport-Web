@@ -186,7 +186,7 @@ const VideosList: React.FC<VideoListProps> = ({ setTab, videoItemStyle }) => {
             onPress={onClickSeeMoreSchedule}
           />
         </Box>
-        <Box className={getDisplayData(videoTop?.live)?.length > 0 ? classes.wrapContentContainer : classes.noDataWrapContentContainer}>
+        <Box className={getDisplayData(videoTop?.schedule)?.length > 0 ? classes.wrapContentContainer : classes.noDataWrapContentContainer}>
           <Grid container spacing={3} className={classes.contentContainer}>
             {getDisplayData(videoTop?.schedule)?.length > 0 ? (
               getDisplayData(videoTop?.schedule).map(renderLiveItem)
@@ -214,7 +214,7 @@ const VideosList: React.FC<VideoListProps> = ({ setTab, videoItemStyle }) => {
             onPress={onClickSeeMoreArchive}
           />
         </Box>
-        <Box className={getDisplayData(videoTop?.live)?.length > 0 ? classes.wrapContentContainer : classes.noDataWrapContentContainer}>
+        <Box className={getDisplayData(videoTop?.archived)?.length > 0 ? classes.wrapContentContainer : classes.noDataWrapContentContainer}>
           <Grid container spacing={3} className={classes.contentContainer}>
             {getDisplayData(videoTop?.archived)?.length > 0 ? (
               getDisplayData(videoTop?.archived).map(renderLiveItem)

@@ -10,7 +10,7 @@ const useStyles = makeStyles((theme) => ({
     width: 482,
     marginLeft: '16px',
     marginRight: '16px',
-    border: `1px solid rgba(255, 255, 255, 0.3)`,
+    border: `1px solid #FFFFFF4D`,
     paddingBottom: '116.5px',
   },
   chatMessageContainer: {

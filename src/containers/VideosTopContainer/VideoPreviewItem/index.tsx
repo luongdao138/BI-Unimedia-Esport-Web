@@ -14,8 +14,9 @@ import { STATUS_VIDEO } from '@services/videoTop.services'
 
 type VideoPreviewItemProps = {
   data?: TypeVideo | TypeVideoArchived
+  containerStyle?: any
 }
-const VideoPreviewItem: React.FC<VideoPreviewItemProps> = ({ data }) => {
+const VideoPreviewItem: React.FC<VideoPreviewItemProps> = ({ data, containerStyle = {} }) => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
   const IMG_PLACEHOLDER = '/images/live_stream/thumbnail_default.png'
@@ -33,7 +34,7 @@ const VideoPreviewItem: React.FC<VideoPreviewItemProps> = ({ data }) => {
   }
 
   return (
-    <Box className={classes.container} key={data?.id} onClick={() => onNavigateLive(data)}>
+    <Box className={classes.container} key={data?.id} onClick={() => onNavigateLive(data)} style={containerStyle}>
       <Box className={classes.videoContainer}>
         <Box className={classes.video} style={{ backgroundImage: `url(${data?.thumbnail ? data.thumbnail : IMG_PLACEHOLDER})` }} />
         {data?.status === 1 && (
