@@ -1,47 +1,60 @@
+import { useState, useEffect, ChangeEvent } from 'react'
 import BRInput from './BRInput'
-import { OutlinedInputProps, Box, Typography } from '@material-ui/core'
-import { makeStyles } from '@material-ui/core/styles'
-import { TournamentRule } from '@services/arena.service'
-import BRTimeInput from '@containers/arena/battle_royale/Partials/BRTimeInput'
+import i18n from '@locales/i18n'
+import { Colors } from '@theme/colors'
+import _ from 'lodash'
 
-const BRScoreInput: React.FC<
-  OutlinedInputProps & {
-    type: TournamentRule
-    onAttackError: (error: boolean) => void
-    onChange: ({ target: { value: string } }) => void
-    value: number | null
+const validateNumber = (value: string | number): boolean => {
+  let res = false
+  if ((_.isNumber(Number(value)) && !isNaN(Number(value))) || _.isEmpty(value)) {
+    res = true
   }
-> = ({ type, onAttackError, onChange, ...props }) => {
-  const classes = useStyles()
 
-  if (type === 'battle_royale') {
-    return (
-      <div className={classes.scoreInputWrap}>
-        <BRInput {...props} placeholder="未入力" />
-        <Box className={classes.rankTextHolder}>
-          <Typography className={classes.sign}>位</Typography>
-        </Box>
-      </div>
-    )
-  } else if (type === 'time_attack') {
-    return <BRTimeInput {...props} value={props.value} onAttackError={onAttackError} onChange={onChange} />
-  } else {
-    return <BRInput {...props} placeholder="未入力" />
-  }
+  return res
 }
 
-const useStyles = makeStyles(() => ({
-  scoreInputWrap: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-  rankTextHolder: {
-    paddingRight: 12,
-    paddingLeft: 12,
-  },
-  sign: {
-    fontWeight: 'bold',
-  },
-}))
+interface ScoreProps {
+  value: string | number
+}
+
+const BRScoreInput: React.FC<{
+  value: number | null
+  onAttackError: (error: boolean) => void
+  onChange: ({ target: { value: string } }) => void
+}> = ({ value, onChange, onAttackError }) => {
+  const [score, setScore] = useState<ScoreProps>({ value: value })
+  const [error, setError] = useState<boolean>(false)
+
+  useEffect(() => {
+    if (!validateNumber(score.value)) {
+      setError(true)
+    } else {
+      setError(false)
+    }
+
+    onChange({ target: { value: String(score.value) } })
+  }, [score])
+
+  useEffect(() => {
+    onAttackError(error)
+  }, [error])
+
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setScore((prevState) => ({
+      ...prevState,
+      value: event.target.value,
+    }))
+  }
+
+  return (
+    <BRInput
+      value={score.value}
+      inputProps={{ maxLength: 8 }}
+      style={{ color: validateNumber(score.value) ? Colors.white_opacity[70] : Colors.secondary }}
+      onChange={handleChange}
+      placeholder={i18n.t('common:arena.not_entered')}
+    />
+  )
+}
 
 export default BRScoreInput
