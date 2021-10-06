@@ -31,7 +31,10 @@ const useReturnHref = () => {
       router.push(ESRoutes.HOME)
     } else if (previousRoute === ESRoutes.VIDEO_TOP) {
       router.push(returnHref, undefined, { shallow: true })
-      dispatch(authActions.setLoginPreAction({ action: 'favorite_tab' }))
+      const { favoriteTabClick } = router.query
+      if (favoriteTabClick) {
+        dispatch(authActions.setLoginPreAction({ action: 'favorite_tab' }))
+      }
     } else if (!isRegistered) {
       router.push(ESRoutes.REGISTER_PROFILE)
     } else {

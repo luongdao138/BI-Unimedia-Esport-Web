@@ -73,7 +73,7 @@ const VideosTop: React.FC = () => {
     if (v === TabsVideo.FAVORITE_VIDEOS) {
       isAuthenticated
         ? setTab(v)
-        : router.push(makeContextualHref({ pathName: ESRoutes.LOGIN }), ESRoutes.LOGIN, {
+        : router.push(makeContextualHref({ pathName: ESRoutes.LOGIN, favoriteTabClick: true }), ESRoutes.LOGIN, {
             shallow: true,
           })
     } else {

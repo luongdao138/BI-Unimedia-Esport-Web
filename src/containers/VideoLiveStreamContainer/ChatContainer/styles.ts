@@ -106,7 +106,6 @@ const useStyles = makeStyles((theme) => ({
   },
   chatBoardContainer: {
     position: 'relative',
-    paddingTop: '16px',
     paddingLeft: '16px',
   },
   chatMessageUser: {
@@ -217,6 +216,10 @@ const useStyles = makeStyles((theme) => ({
     marginRight: 8,
   },
   userWatchingList: {
+    marginTop: '16px',
+    marginBottom: '8px',
+    marginLeft: '16px',
+    marginRight: '16px',
     display: 'flex',
     flexDirection: 'row',
     width: '100%',
