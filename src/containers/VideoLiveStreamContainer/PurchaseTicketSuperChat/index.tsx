@@ -44,17 +44,17 @@ const PurchaseTicketSuperChat: React.FC<PurchaseTicketSuperChatProps> = ({
           </Box>
           {/* Content */}
           <Box className={classes.contentContainer}>
-            <PointCardItem titleText={i18n.t('common:donate_points.my_points')} points={myPoints} pointText={'eXePoint'} />
+            <PointCardItem titleText={i18n.t('common:donate_points.my_points')} points={myPoints} pointText={'eXeポイント'} />
             <PointCardItem
               titleText={i18n.t('common:donate_points.title_required_points')}
               points={donatedPoints}
-              pointText={'eXePoint'}
+              pointText={'eXeポイント'}
               minus={true}
             />
             <PointCardItem
               titleText={i18n.t('common:donate_points.title_points_left_after_purchase')}
               points={myPoints - donatedPoints}
-              pointText={'eXePoint'}
+              pointText={'eXeポイント'}
             />
           </Box>
           {/* Button */}

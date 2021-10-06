@@ -16,8 +16,8 @@ const StepOne: React.FC<StepOneProps> = ({ onClickPurchaseLackedPoint, onClickPu
   return (
     <Box className={classes.container}>
       <Box width="100%">
-        <PointCardItem titleText={i18n.t('common:donate_points.my_points')} points={myPoints} pointText={'eXePoint'} />
-        <PointCardItem titleText={i18n.t('common:donate_points.missing_points')} points={lackedPoint} pointText={'eXePoint'} />
+        <PointCardItem titleText={i18n.t('common:donate_points.my_points')} points={myPoints} pointText={'eXeポイント'} />
+        <PointCardItem titleText={i18n.t('common:donate_points.missing_points')} points={lackedPoint} pointText={'eXeポイント'} />
       </Box>
       <Box className={classes.buttonRootContainer}>
         <Box

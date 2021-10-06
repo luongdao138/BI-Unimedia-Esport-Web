@@ -24,6 +24,7 @@ const VideoSearchContainer: React.FC = () => {
   const [hasMore, setHasMore] = useState(true)
   const isWideScreen = useMediaQuery(theme.breakpoints.up(1920))
   const { width: listDisplayWidth } = useWindowDimensions(244)
+  const { width: itemWidthDownMdScreen } = useWindowDimensions(48)
 
   useEffect(() => {
     setKeyword(searchKeyword)
@@ -66,7 +67,7 @@ const VideoSearchContainer: React.FC = () => {
       <React.Fragment key={item?.uuid || index}>
         {downMd ? (
           <Box className={classes.xsItemContainer} key={index}>
-            <VideoPreviewItem data={item} key={index} />
+            <VideoPreviewItem data={item} key={index} containerStyle={{ width: itemWidthDownMdScreen }} />
           </Box>
         ) : (
           <Grid item xs={6} lg={6} xl={4} className={classes.itemContainer} key={index} style={calculateVideoItemStyle()}>

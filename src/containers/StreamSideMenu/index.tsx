@@ -141,25 +141,25 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
                 {!minimizeLayout && <ListItemText className={classes.listText} primary={t('common:home.top_video')} />}
               </ListItem>
             </Link>
-            {isStreamer && (
-              <Link
-                href={{
-                  pathname: ESRoutes.VIDEO_STREAMING_SETTING,
-                  query: { default_tab: 1 },
-                }}
-                passHref
-                as={ESRoutes.VIDEO_STREAMING_SETTING}
-              >
-                <ListItem className={classes.list + getAddClass(classes.noMinimizeList, classes.minimizeList)} button disableRipple>
-                  <ListItemIcon className={classes.icon}>
-                    <img src="/images/icons/icon_film.svg" className={`icon_svg ${classes.img_svg}`} />
-                  </ListItemIcon>
-                  {/* link to Delivery settings and tab Delivery reservation (配信予約) */}
-                  {!minimizeLayout && <ListItemText className={classes.listText} primary={t('common:home.reservation_video')} />}
-                </ListItem>
-              </Link>
-            )}
-            {!minimizeLayout && <Box paddingBottom={1} />}
+            {/*{isStreamer && (*/}
+            {/*  <Link*/}
+            {/*    href={{*/}
+            {/*      pathname: ESRoutes.VIDEO_STREAMING_SETTING,*/}
+            {/*      query: { default_tab: 1 },*/}
+            {/*    }}*/}
+            {/*    passHref*/}
+            {/*    as={ESRoutes.VIDEO_STREAMING_SETTING}*/}
+            {/*  >*/}
+            {/*    <ListItem className={classes.list + getAddClass(classes.noMinimizeList, classes.minimizeList)} button disableRipple>*/}
+            {/*      <ListItemIcon className={classes.icon}>*/}
+            {/*        <img src="/images/icons/icon_film.svg" className={`icon_svg ${classes.img_svg}`} />*/}
+            {/*      </ListItemIcon>*/}
+            {/*      /!* link to Delivery settings and tab Delivery reservation (配信予約) *!/*/}
+            {/*      {!minimizeLayout && <ListItemText className={classes.listText} primary={t('common:home.reservation_video')} />}*/}
+            {/*    </ListItem>*/}
+            {/*  </Link>*/}
+            {/*)}*/}
+            {/*{!minimizeLayout && <Box paddingBottom={1} />}*/}
             {isStreamer && (
               <Link href={ESRoutes.VIDEO_STREAMING_MANAGEMENT} passHref>
                 <ListItem className={classes.list + getAddClass(classes.noMinimizeList, classes.minimizeList)} button disableRipple>
