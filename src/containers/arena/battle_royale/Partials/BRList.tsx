@@ -17,7 +17,13 @@ const BRList: React.FC<BRListProps> = ({ children, rule, ...props }) => {
       <div className={classes.listHeader}>
         <Typography className={classes.headerTitle}>{t('common:arena.listHeaders.player')}</Typography>
         <Typography className={classes.headerTitle}>
-          {rule === 'score_attack' ? t('common:arena.listHeaders.score') : rule === 'time_attack' ? t('common:arena.listHeaders.time') : ''}
+          {rule === 'score_attack'
+            ? t('common:arena.listHeaders.score')
+            : rule === 'time_attack'
+            ? t('common:arena.listHeaders.time')
+            : rule === 'battle_royale'
+            ? t('common:arena.listHeaders.place')
+            : ''}
         </Typography>
       </div>
       {children}
