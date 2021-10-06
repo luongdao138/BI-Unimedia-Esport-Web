@@ -12,7 +12,7 @@ import { Box, Typography } from '@material-ui/core'
 import useBattleRoyaleScore from '@containers/arena/hooks/useBattleRoyaleScore'
 import useAddToast from '@utils/hooks/useAddToast'
 import { ParticipantsResponse } from '@services/arena.service'
-import BRScoreInput from '../Partials/BRScoreInput'
+import BRScore from '../Partials/BRScore'
 import BRList from '../Partials/BRList'
 import StickyFooter from '../Partials/StickyFooter'
 import ButtonPrimary from '@components/ButtonPrimary'
@@ -144,7 +144,7 @@ const ArenaBattles: React.FC = () => {
             textSecondary={v.attributes.user?.user_code || ''}
             highlight={v.highlight}
           >
-            <BRScoreInput
+            <BRScore
               value={v.attributes.attack_score || null}
               onChange={({ target: { value } }) => setScores(value === '' ? null : Number(value), v.id)}
               onAttackError={(val) => handleTimeAttackError(val, v.id)}

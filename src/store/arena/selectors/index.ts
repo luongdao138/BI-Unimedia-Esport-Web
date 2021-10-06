@@ -26,12 +26,8 @@ export const getBattleRoyaleParticipants = createSelector(getRoot, getTournament
     highlight: isTeam ? ids.includes(participant.attributes.team?.data?.id) : ids.includes(String(participant?.id)),
   }))
 })
-export const getSortedBRParticipants = createSelector(getBattleRoyaleParticipants, getTournamentDetail, (participants, arena) => {
-  if (!arena) return []
-  const { sort_by } = arena.attributes
-  return sort_by === 'by_desc'
-    ? _.orderBy(participants, ['attributes.position'], ['desc'])
-    : _.orderBy(participants, ['attributes.position'], ['asc'])
+export const getSortedBRParticipants = createSelector(getBattleRoyaleParticipants, (participants) => {
+  return participants
 })
 
 export const getParticipantsMeta = createSelector(getRoot, (state) => state.participantsMeta)
