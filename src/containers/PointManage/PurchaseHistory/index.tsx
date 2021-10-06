@@ -30,19 +30,10 @@ const PurchaseHistory: FC = () => {
   const totalPages = Math.ceil(historyPointsData?.total / 10)
   const isLoading = meta_history_points.pending
 
-  const paramsPeriod = {
-    page: page,
-    limit: limit,
-    type: 1,
-    period: querySelected,
-  }
-  const params = {
-    page: page,
-    limit: limit,
-    type: 1,
-  }
   useEffect(() => {
-    getHistoryPointData(querySelected != '' ? paramsPeriod : params)
+    getHistoryPointData(
+      querySelected ? { page: page, limit: limit, type: 1, period: querySelected } : { page: page, limit: limit, type: 1 }
+    )
     return () => {
       resetPointsHistory()
     }
@@ -64,6 +55,7 @@ const PurchaseHistory: FC = () => {
   }
   const handleSelectedQuery = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setQuerySelected(event.target.value)
+    setPage(1)
   }
   return (
     <Box className={classes.container}>

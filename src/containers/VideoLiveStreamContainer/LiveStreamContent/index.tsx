@@ -49,7 +49,7 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
   const dispatch = useAppDispatch()
   const isAuthenticated = useAppSelector(getIsAuthenticated)
   const userProfile = useAppSelector(selectors.getUserProfile)
-  const streamerProfile = useAppSelector(selectors.getLastSeenUserData)
+  // const streamerProfile = useAppSelector(selectors.getLastSeenUserData)
 
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
   // const downMd = useMediaQuery(theme.breakpoints.down(769))
@@ -433,9 +433,11 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
       {/* Show Report Modal */}
       {isAuthenticated && (
         <ESReport
-          reportType={REPORT_TYPE.USER_LIST}
+          reportType={REPORT_TYPE.VIDEO_STREAM}
+          // reportType={REPORT_TYPE.USER_LIST}
           target_id={userProfile?.attributes?.user_code}
-          data={streamerProfile}
+          data={detailVideoResult}
+          // data={streamerProfile}
           open={showReportMenu}
           handleClose={() => setShowReportMenu(false)}
         />

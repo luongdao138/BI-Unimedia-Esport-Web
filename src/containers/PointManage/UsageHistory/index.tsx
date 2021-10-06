@@ -57,15 +57,7 @@ const UsageHistory: FC = () => {
   }
 
   useEffect(() => {
-    getUsedPointData(
-      querySelected != ''
-        ? { page: page, limit: limit, type: 2, period: querySelected }
-        : {
-            page: page,
-            limit: limit,
-            type: 2,
-          }
-    )
+    getUsedPointData(querySelected ? { page: page, limit: limit, type: 2, period: querySelected } : { page: page, limit: limit, type: 2 })
     return () => {
       resetUsagePoints()
     }
@@ -100,6 +92,7 @@ const UsageHistory: FC = () => {
   }
   const handleSelectedQuery = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setQuerySelected(event.target.value)
+    setPage(1)
   }
 
   return (
