@@ -108,7 +108,7 @@ const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
                     </Typography>
                   </Box>
                   <Typography variant="h3" style={{ fontSize: 24, fontWeight: 'bold' }}>
-                    {data.is_freezed ? data.participant_count : data.participant_count + data.interested_count}
+                    {page?.total_count || ''}
                   </Typography>
                   <Typography variant="h3" className={classes.countLabel}>
                     {unit}
