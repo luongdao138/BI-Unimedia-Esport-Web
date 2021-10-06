@@ -79,11 +79,47 @@ const DistributorInfo: React.FC<DistributorInfoProps> = ({ video_id }) => {
   const getSocialIcon = (item: dataItem) => {
     switch (item?.type) {
       case 'twitter':
-        return <SocialDistributionCircle onlyIcon={true} className={classes.socialIcon} social={item?.type} key={item?.id} />
+        return (
+          <>
+            {detailVideoResult?.channel_twitter_link && (
+              <SocialDistributionCircle
+                onlyIcon={!!detailVideoResult?.channel_twitter_link}
+                className={classes.socialIcon}
+                social={item?.type}
+                key={item?.id}
+                link={detailVideoResult?.channel_twitter_link}
+              />
+            )}
+          </>
+        )
       case 'instagram':
-        return <SocialDistributionCircle onlyIcon={true} className={classes.socialIcon} social={item?.type} key={item?.id} />
+        return (
+          <>
+            {detailVideoResult?.channel_instagram_link && (
+              <SocialDistributionCircle
+                onlyIcon={!!detailVideoResult?.channel_instagram_link}
+                className={classes.socialIcon}
+                social={item?.type}
+                key={item?.id}
+                link={detailVideoResult?.channel_instagram_link}
+              />
+            )}
+          </>
+        )
       default:
-        return <SocialDistributionCircle onlyIcon={true} className={classes.socialIcon} social={item?.type} key={item?.id} />
+        return (
+          <>
+            {detailVideoResult?.channel_discord_link && (
+              <SocialDistributionCircle
+                onlyIcon={!!detailVideoResult?.channel_discord_link}
+                className={classes.socialIcon}
+                social={item?.type}
+                key={item?.id}
+                link={detailVideoResult?.channel_discord_link}
+              />
+            )}
+          </>
+        )
     }
   }
 

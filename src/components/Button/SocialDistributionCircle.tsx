@@ -98,10 +98,9 @@ interface SocialProps {
 
 const SocialDistributionCircle: React.FC<IconButtonProps & SocialProps> = ({ link, onlyIcon, className, social }) => {
   const disabled = !link || link.length === 0
-  const url = `https://www.twitter.com/${link}`
   const classes = useStyles({ disabled: onlyIcon ? false : disabled, social })
   return (
-    <IconButton href={url} target="_blank" disabled={disabled} classes={{ root: classes.iconRoot }} className={className}>
+    <IconButton href={link} target="_blank" disabled={disabled} classes={{ root: classes.iconRoot }} className={className}>
       <div className="esbutton-hover" />
       <Avatar classes={{ root: classes.root }} className={classes.avatar}>
         {getPath(social, classes)}

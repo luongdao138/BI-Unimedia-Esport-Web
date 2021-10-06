@@ -161,11 +161,11 @@ const VideoDetail: React.FC = () => {
   const refChatContainer = useRef<any>(null)
   const navigateToArchiveUrl = () => {
     // reload page if schedule video is living
-    if(+videoStatus === STATUS_VIDEO.LIVE_STREAM && detailVideoResult.scheduled_flag === LIVE_VIDEO_TYPE.SCHEDULE){
+    if (+videoStatus === STATUS_VIDEO.LIVE_STREAM && detailVideoResult.scheduled_flag === LIVE_VIDEO_TYPE.SCHEDULE) {
       window.location.reload()
     }
     if (video_id === detailVideoResult.user_id.toString() && detailVideoResult.scheduled_flag === LIVE_VIDEO_TYPE.LIVE) {
-      if(refChatContainer && refChatContainer.current){
+      if (refChatContainer && refChatContainer.current) {
         refChatContainer.current.resetStates()
       }
       router.replace({
@@ -179,11 +179,12 @@ const VideoDetail: React.FC = () => {
     if (detailVideoResult.key_video_id) {
       console.log('🚀 ~ useEffect ~ videoInfo', videoInfo)
       const { video_status, process_status } = videoInfo
-      
-      if (videoStatus !== STATUS_VIDEO.ARCHIVE 
-          && video_status === EVENT_LIVE_STATUS.RECORDING_ARCHIVED
-          && process_status === EVENT_LIVE_STATUS.RECORDING_END
-        ) {
+
+      if (
+        videoStatus !== STATUS_VIDEO.ARCHIVE &&
+        video_status === EVENT_LIVE_STATUS.RECORDING_ARCHIVED &&
+        process_status === EVENT_LIVE_STATUS.RECORDING_END
+      ) {
         setVideoStatus(STATUS_VIDEO.ARCHIVE)
         navigateToArchiveUrl()
       }
@@ -199,7 +200,7 @@ const VideoDetail: React.FC = () => {
           // setVideoStatus(STATUS_VIDEO.ARCHIVE)
           // navigateToArchiveUrl()
         }
-      } 
+      }
     }
   }, [JSON.stringify(videoInfo)])
 
@@ -207,7 +208,7 @@ const VideoDetail: React.FC = () => {
     if (detailVideoResult.key_video_id) {
       checkVideoStatus()
       let statusDetailVideo = detailVideoResult.status
-      console.log("🚀 ~ useEffect ~ detailVideoResult", detailVideoResult)
+      console.log('🚀 ~ useEffect ~ detailVideoResult', detailVideoResult)
       console.log('🚀 ~ is Start Live)', moment().isBefore(detailVideoResult.live_stream_start_time, 'second'))
       // if have not arrive live stream start time => set video status is schedule
       if (
@@ -386,34 +387,36 @@ const VideoDetail: React.FC = () => {
   const modalIsShown = () => {
     return showConfirmModal || showPurchaseTicketModal || showModalPurchasePoint
   }
-// const refAbc = useRef(null)
+  // const refAbc = useRef(null)
   const sideChatContainer = () => {
-    return <Box className={classes.wrapChatContainer}>
-      <ChatContainer
-        ref={refChatContainer}
-        myPoint={myPoint}
-        key_video_id={detailVideoResult?.key_video_id}
-        onPressDonate={confirmDonatePoint}
-        userHasViewingTicket={userHasViewingTicket()}
-        videoType={+videoStatus}
-        freeToWatch={isVideoFreeToWatch()}
-        handleKeyboardVisibleState={changeSoftKeyboardVisibleState}
-        donateConfirmModalIsShown={modalIsShown}
-        openPurchasePointModal={(donate_point) => {
-          // reset donate point
-          setDonatedPoints(0)
-          setDonatedPoints(donate_point)
-          // no lack point if my point larger than donate point
-          if (+donate_point < +myPoint) {
-            setLackedPoint(0)
-          } else {
-            setLackedPoint(donate_point - myPoint)
-          }
-          setPurchaseType(PURCHASE_TYPE.PURCHASE_SUPER_CHAT)
-          setShowModalPurchasePoint(true)
-        }}
-      />
-    </Box>
+    return (
+      <Box className={classes.wrapChatContainer}>
+        <ChatContainer
+          ref={refChatContainer}
+          myPoint={myPoint}
+          key_video_id={detailVideoResult?.key_video_id}
+          onPressDonate={confirmDonatePoint}
+          userHasViewingTicket={userHasViewingTicket()}
+          videoType={+videoStatus}
+          freeToWatch={isVideoFreeToWatch()}
+          handleKeyboardVisibleState={changeSoftKeyboardVisibleState}
+          donateConfirmModalIsShown={modalIsShown}
+          openPurchasePointModal={(donate_point) => {
+            // reset donate point
+            setDonatedPoints(0)
+            setDonatedPoints(donate_point)
+            // no lack point if my point larger than donate point
+            if (+donate_point < +myPoint) {
+              setLackedPoint(0)
+            } else {
+              setLackedPoint(donate_point - myPoint)
+            }
+            setPurchaseType(PURCHASE_TYPE.PURCHASE_SUPER_CHAT)
+            setShowModalPurchasePoint(true)
+          }}
+        />
+      </Box>
+    )
   }
 
   // const getVideoType = () => detailVideoResult?.status

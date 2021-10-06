@@ -234,6 +234,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       padding: 0,
       // paddingBottom: theme.spacing(1),
     },
+    '& :-webkit-autofill': {
+      WebkitBoxShadow: '0 0 0 100px transparent inset',
+    },
   },
   container: {
     display: 'flex',
