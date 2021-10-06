@@ -45,7 +45,6 @@ const LobbyCreate: React.FC = () => {
   const { handleReturn } = useReturnHref()
   const classes = useStyles()
   const [tab, setTab] = useState(0)
-  const [isSubmitting, setIsSubmitting] = useState(false)
   const isFirstRun = useRef(true)
   const initialValues = getInitialValues(isEdit ? lobby : undefined)
   const [isConfirm, setIsConfirm] = useState(false)
@@ -60,7 +59,6 @@ const LobbyCreate: React.FC = () => {
     validationSchema: getValidationScheme(lobby, editables),
     enableReinitialize: true,
     onSubmit: (values) => {
-      setIsSubmitting(() => true)
       const { title, message, game_title_id, game_hardware_id } = values.stepOne
       const { address } = values.stepTwo
       const selectedGameId = game_title_id.length > 0 ? game_title_id[0].id : null
@@ -86,16 +84,7 @@ const LobbyCreate: React.FC = () => {
 
   const isChanged = !_.isEqual(formik.values, initialValues)
 
-  useEffect(() => {
-    return () => window.removeEventListener('beforeunload', unloadCallback, { capture: true })
-  }, [isSubmitting])
-
-  const unloadCallback = (e) => {
-    e.preventDefault()
-    return (e.returnValue = '')
-  }
-
-  useUnload(unloadCallback, isChanged)
+  useUnload(isChanged, formik.isSubmitting)
 
   useEffect(() => {
     if (updateMeta.error || meta.error) {
@@ -206,12 +195,12 @@ const LobbyCreate: React.FC = () => {
 
   const renderDescription = matches ? (
     <>
-      <Typography style={{ fontSize: 12 }}>{i18n.t('common:lobby.discard.message_part1')}</Typography>
-      <Typography style={{ fontSize: 12 }}>{i18n.t('common:lobby.discard.message_part2')}</Typography>
+      <span style={{ fontSize: 12, display: 'block' }}>{i18n.t('common:lobby.discard.message_part1')}</span>
+      <span style={{ fontSize: 12 }}>{i18n.t('common:lobby.discard.message_part2')}</span>
     </>
   ) : (
     <>
-      <Typography style={{ fontSize: 12 }}>{i18n.t('common:lobby.discard.message')}</Typography>
+      <span style={{ fontSize: 12 }}>{i18n.t('common:lobby.discard.message')}</span>
     </>
   )
 

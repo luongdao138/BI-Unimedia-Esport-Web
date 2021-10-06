@@ -47,7 +47,6 @@ const TournamentCreate: React.FC = () => {
   const classes = useStyles()
   const [tab, setTab] = useState(0)
   const [hasError, setError] = useState(true)
-  const [isSubmitting, setIsSubmitting] = useState(false)
   const isFirstRun = useRef(true)
   const initialValues = getInitialValues(isEdit ? arena : undefined)
   const [isConfirm, setIsConfirm] = useState(false)
@@ -60,7 +59,6 @@ const TournamentCreate: React.FC = () => {
     validationSchema: getValidationScheme(arena, editables, isEdit),
     enableReinitialize: true,
     onSubmit: (values) => {
-      setIsSubmitting(() => true)
       const selectedArea = prefectures?.data?.filter((a) => parseInt(`${a.id}`) === parseInt(`${values.stepThree.area_id}`))
       const data: TournamentFormParams = {
         ...values.stepOne,
@@ -81,16 +79,7 @@ const TournamentCreate: React.FC = () => {
 
   const isChanged = !_.isEqual(formik.values, initialValues)
 
-  useEffect(() => {
-    return () => window.removeEventListener('beforeunload', unloadCallback, { capture: true })
-  }, [isSubmitting])
-
-  const unloadCallback = (e) => {
-    e.preventDefault()
-    return (e.returnValue = '')
-  }
-
-  useUnload(unloadCallback, isChanged)
+  useUnload(isChanged, formik.isSubmitting)
 
   useEffect(() => {
     if (updateMeta.error || meta.error) {
@@ -225,12 +214,12 @@ const TournamentCreate: React.FC = () => {
 
   const renderDescription = matches ? (
     <>
-      <Typography style={{ fontSize: 12 }}>{i18n.t('common:tournament.discard.message_part1')}</Typography>
-      <Typography style={{ fontSize: 12 }}>{i18n.t('common:tournament.discard.message_part2')}</Typography>
+      <span style={{ fontSize: 12, display: 'block' }}>{i18n.t('common:tournament.discard.message_part1')}</span>
+      <span style={{ fontSize: 12 }}>{i18n.t('common:tournament.discard.message_part2')}</span>
     </>
   ) : (
     <>
-      <Typography style={{ fontSize: 12 }}>{i18n.t('common:tournament.discard.message')}</Typography>
+      <span style={{ fontSize: 12 }}>{i18n.t('common:tournament.discard.message')}</span>
     </>
   )
 
