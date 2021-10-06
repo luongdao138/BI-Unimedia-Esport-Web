@@ -146,8 +146,7 @@ const ArenaBattles: React.FC = () => {
     >
       {detailMeta.loaded && <HeaderWithButton title={tournament.attributes.title} />}
 
-      <RuleHeader textAlign="center" pt={3} rule={tournament?.attributes.rule} />
-
+      <RuleHeader textAlign="center" pt={3} rule={tournament?.attributes.rule} showCaution={isParticipant && isTeamLeader} />
       <Box textAlign="center" pb={3}>
         {hasError ? (
           <Typography style={{ color: Colors.secondary }}>{i18n.t('common:arena.rules_title.time_attack_error')}</Typography>

@@ -53,7 +53,7 @@ const BRStatusReady: React.FC<BRStatusReadyProps> = ({ arena }) => {
       footer={
         <Box textAlign="center">
           {isModerator ? (
-            <ButtonGroup size="large">
+            <ButtonGroup size="large" mb={3}>
               <div>
                 <ButtonPrimaryOutlined disabled leadingIcon={<Icon className="fas fa-user-slash" fontSize="small" />}>
                   {t('tournament.close_recruitment.button_text')}
@@ -61,6 +61,7 @@ const BRStatusReady: React.FC<BRStatusReadyProps> = ({ arena }) => {
               </div>
             </ButtonGroup>
           ) : null}
+          {isModerator ? <Typography variant="body2">{t('tournament.close_recruitment.description')}</Typography> : null}
         </Box>
       }
     />

@@ -68,7 +68,7 @@ const BRStatusComplete: React.FC<BRStatusBRStatusCompleteProps> = ({ arena }) =>
                     {t('arena.input_result')}
                   </ActionLabelButton>
                 ) : null}
-                <ESButton onClick={toResults} variant="outlined" fullWidth disabled={!winner}>
+                <ESButton onClick={toResults} variant="outlined" fullWidth>
                   {t('tournament.results')}
                 </ESButton>
               </ButtonGroup>
