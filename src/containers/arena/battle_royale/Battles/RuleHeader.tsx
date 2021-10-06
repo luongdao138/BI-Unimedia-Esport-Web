@@ -12,14 +12,20 @@ const RuleTitles: Record<TournamentRule, string> = {
 
 interface RuleHeaderProps extends BoxProps {
   rule: TournamentRule
+  showCaution: boolean
 }
 
-const RuleHeader: React.FC<RuleHeaderProps> = ({ rule, ...props }) => {
+const RuleHeader: React.FC<RuleHeaderProps> = ({ rule, showCaution, ...props }) => {
   const classes = useStyles()
 
   return (
     <Box {...props}>
       <Typography className={classes.title}>{RuleTitles[rule]}</Typography>
+      {showCaution ? (
+        <Typography className={classes.title} style={{ paddingTop: 4 }}>
+          {i18n.t('common:arena.enter_own_score')}
+        </Typography>
+      ) : null}
     </Box>
   )
 }

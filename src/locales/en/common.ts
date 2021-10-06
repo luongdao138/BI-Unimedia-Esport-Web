@@ -528,6 +528,7 @@ export default {
     },
   },
   arena: {
+    enter_own_score: '参加者は自身の対戦の結果のみ入力できます',
     input_result: '結果の入力',
     br_set_score_btn: '結果を反映する',
     br_set_score_success_toast: '結果を反映しました',
