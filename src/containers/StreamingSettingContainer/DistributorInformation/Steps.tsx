@@ -104,7 +104,6 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, channel, hasChannel, formik
   const onConfirm = () => {
     const { stepSettingThree } = formik.values
     const data: SetChannelParams = {
-      ...stepSettingThree,
       name: stepSettingThree.name.trim(),
       description: stepSettingThree.description.trim(),
       twitter_link: social.twitter_link,
