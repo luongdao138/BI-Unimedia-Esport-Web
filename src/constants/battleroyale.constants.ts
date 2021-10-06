@@ -18,3 +18,10 @@ export const BATTLE_ROYALE_DIALOGS = {
     cancellationText: i18n.t('common:arena.battles.individual_randomize_confirmation_dialog.cancellationText'),
   },
 }
+
+export const DATE_TIME = {
+  HOURS: 'hours',
+  MINUTES: 'minutes',
+  SECONDS: 'seconds',
+  MILLIS: 'millis',
+}

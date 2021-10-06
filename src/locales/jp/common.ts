@@ -6,6 +6,9 @@ export default {
     day: '日',
     time: '時間',
     hour: '時',
+    minute: '分',
+    second: '秒',
+    millis: 'ミリ秒',
     gender: '性別',
     male: '男性',
     female: '女性',
@@ -556,6 +559,7 @@ export default {
       score_attack: 'スコアを入力してください',
       time_attack: `タイムを入力してください
       例）「01:23:45:678」`,
+      time_attack_error: 'タイムは半角数字で入力してください',
     },
     status: {
       status: '{{status, status_rule}}',

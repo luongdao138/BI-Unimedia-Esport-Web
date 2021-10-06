@@ -335,6 +335,7 @@ export type ParticipantsResponse = {
       user_code: string
     }
     position: number | null
+    attack_score: number | null
     is_fixed_score?: boolean
   }
   highlight?: boolean
