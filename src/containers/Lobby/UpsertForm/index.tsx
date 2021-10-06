@@ -32,6 +32,7 @@ import { LobbyUpsertParams } from '@services/lobby.service'
 import { LOBBY_DIALOGS, LOBBY_STATUS } from '@constants/lobby.constants'
 import withProtected from '@containers/Lobby/utils/withProtected'
 import { useConfirm } from '@components/Confirm'
+import useUnload from '@utils/hooks/useUnload'
 
 let activeTabIndex = 0
 
@@ -44,6 +45,7 @@ const LobbyCreate: React.FC = () => {
   const { handleReturn } = useReturnHref()
   const classes = useStyles()
   const [tab, setTab] = useState(0)
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const isFirstRun = useRef(true)
   const initialValues = getInitialValues(isEdit ? lobby : undefined)
   const [isConfirm, setIsConfirm] = useState(false)
@@ -58,6 +60,7 @@ const LobbyCreate: React.FC = () => {
     validationSchema: getValidationScheme(lobby, editables),
     enableReinitialize: true,
     onSubmit: (values) => {
+      setIsSubmitting(() => true)
       const { title, message, game_title_id, game_hardware_id } = values.stepOne
       const { address } = values.stepTwo
       const selectedGameId = game_title_id.length > 0 ? game_title_id[0].id : null
@@ -82,6 +85,17 @@ const LobbyCreate: React.FC = () => {
   })
 
   const isChanged = !_.isEqual(formik.values, initialValues)
+
+  useEffect(() => {
+    return () => window.removeEventListener('beforeunload', unloadCallback, { capture: true })
+  }, [isSubmitting])
+
+  const unloadCallback = (e) => {
+    e.preventDefault()
+    return (e.returnValue = '')
+  }
+
+  useUnload(unloadCallback, isChanged)
 
   useEffect(() => {
     if (updateMeta.error || meta.error) {
