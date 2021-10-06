@@ -39,6 +39,7 @@ const SnsInfoStream: React.FC<SnsInfoStreamProps> = ({ social, onDataChange, han
       twitter_link: social?.twitter_link ? social?.twitter_link : '',
       discord_link: social?.discord_link ? social?.discord_link : '',
     },
+    enableReinitialize: true,
     validationSchema,
     onSubmit: (_) => null,
   })
