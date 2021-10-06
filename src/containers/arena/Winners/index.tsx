@@ -128,7 +128,7 @@ const ArenaWinners: React.FC = () => {
             )}
           </ResultList>
         ) : null}
-        {isBattleRoyale ? (
+        {isBattleRoyale && winner ? (
           <ResultList rule={arena?.attributes.rule}>
             {arenaBRWinners.map((p, idx) => (
               <ResultListItem
