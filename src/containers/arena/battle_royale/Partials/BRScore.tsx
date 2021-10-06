@@ -1,9 +1,8 @@
-import BRInput from './BRInput'
-import { OutlinedInputProps, Box, Typography } from '@material-ui/core'
-import { makeStyles } from '@material-ui/core/styles'
+import { OutlinedInputProps } from '@material-ui/core'
 import { TournamentRule } from '@services/arena.service'
 import BRTimeInput from '@containers/arena/battle_royale/Partials/BRTimeInput'
 import BRScoreInput from '@containers/arena/battle_royale/Partials/BRScoreInput'
+import BRPlacementInput from '@containers/arena/battle_royale/Partials/BRPlacementInput'
 
 const BRScore: React.FC<
   OutlinedInputProps & {
@@ -11,40 +10,20 @@ const BRScore: React.FC<
     onAttackError: (error: boolean) => void
     onChange: ({ target: { value: string } }) => void
     value: number | null
+    participantCount?: number | null
   }
-> = ({ type, onAttackError, onChange, ...props }) => {
-  const classes = useStyles()
-
+> = ({ type, participantCount, value, onAttackError, onChange, ...props }) => {
   if (type === 'battle_royale') {
     return (
-      <div className={classes.scoreInputWrap}>
-        <BRInput {...props} placeholder="未入力" />
-        <Box className={classes.rankTextHolder}>
-          <Typography className={classes.sign}>位</Typography>
-        </Box>
-      </div>
+      <BRPlacementInput value={value} participantCount={participantCount} onAttackError={onAttackError} onChange={onChange} {...props} />
     )
   } else if (type === 'time_attack') {
-    return <BRTimeInput {...props} value={props.value} onAttackError={onAttackError} onChange={onChange} />
+    return <BRTimeInput value={value} onAttackError={onAttackError} onChange={onChange} {...props} />
   } else if (type === 'score_attack') {
-    return <BRScoreInput value={props.value} onAttackError={onAttackError} onChange={onChange} />
+    return <BRScoreInput value={value} onAttackError={onAttackError} onChange={onChange} {...props} />
   } else {
     return null
   }
 }
-
-const useStyles = makeStyles(() => ({
-  scoreInputWrap: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-  rankTextHolder: {
-    paddingRight: 12,
-    paddingLeft: 12,
-  },
-  sign: {
-    fontWeight: 'bold',
-  },
-}))
 
 export default BRScore

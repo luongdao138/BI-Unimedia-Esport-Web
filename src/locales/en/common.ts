@@ -527,6 +527,7 @@ export default {
       score: 'スコア',
       time: 'タイム',
     },
+    rank: '位',
     rules: {
       rule: '{{rule, arena_rule}}',
       single: 'トーナメント',
