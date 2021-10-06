@@ -34,7 +34,6 @@ const TopicCreate: React.FC = () => {
   const { handleReturn } = useReturnHref()
   const [isConfirm, setIsConfirm] = useState(false)
   const [hasError, setHasError] = useState(true)
-  const [isSubmitting, setIsSubmitting] = useState(false)
   const isFirstRun = useRef(true)
   const initialValues = getInitialValues(undefined)
   const { submit } = useTopicCreate()
@@ -52,7 +51,6 @@ const TopicCreate: React.FC = () => {
     validationSchema: getValidationScheme(),
     enableReinitialize: true,
     onSubmit: (values) => {
-      setIsSubmitting(() => true)
       const data: TopicParams = {
         ...values.stepOne,
         community_hash: String(router.query.hash_key),
@@ -78,27 +76,18 @@ const TopicCreate: React.FC = () => {
 
   const isChanged = !_.isEqual(formik.values, initialValues)
 
-  const unloadCallback = (e) => {
-    e.preventDefault()
-    return (e.returnValue = '')
-  }
-
-  useEffect(() => {
-    return () => window.removeEventListener('beforeunload', unloadCallback, { capture: true })
-  }, [isSubmitting])
-
-  useUnload(unloadCallback, isChanged)
+  useUnload(isChanged, formik.isSubmitting)
 
   const theme = useTheme()
   const matches = useMediaQuery(theme.breakpoints.down('sm'))
 
   const renderDescription = matches ? (
     <>
-      <Typography style={{ fontSize: 12 }}>{i18n.t('common:topic_create.discard.message_part1')}</Typography>
-      <Typography style={{ fontSize: 12 }}>{i18n.t('common:topic_create.discard.message_part2')}</Typography>
+      <span style={{ fontSize: 12, display: 'block' }}>{i18n.t('common:topic_create.discard.message_part1')}</span>
+      <span style={{ fontSize: 12 }}>{i18n.t('common:topic_create.discard.message_part2')}</span>
     </>
   ) : (
-    <Typography style={{ fontSize: 12 }}>{i18n.t('common:topic_create.discard.message')}</Typography>
+    <span style={{ fontSize: 12 }}>{i18n.t('common:topic_create.discard.message')}</span>
   )
 
   const handleBack = () => {

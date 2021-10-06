@@ -1,9 +1,9 @@
 import { Typography, Box, makeStyles, Icon, Chip } from '@material-ui/core'
-import ESChip from '@components/Chip'
 import ESAvatar from '@components/Avatar'
 import ESCard from '@components/Card'
 import ESCardMedia from '@components/Card/CardMedia'
 import ESCardContent from '@components/Card/CardContent'
+import CardChip from '@components/TournamentCard/CardChip'
 import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
 import { Colors } from '@theme/colors'
@@ -28,7 +28,8 @@ const TournamentCard: React.FC<Props> = ({ tournament }) => {
   const participant = tournament.attributes.participant ? tournament.attributes.participant : tournament.attributes.winner
   const cover = attr.cover ? attr.cover : '/images/default_card.png'
   const organizer = attr.organizer_name ? attr.organizer_name : ''
-  const startDate = moment(attr.start_date).format('YYYY/MM/DD')
+  const startDate = moment(attr.start_date).format('MM/DD HH:mm')
+  const entryEndDate = moment(attr.acceptance_end_date).format('MM/DD HH:mm [まで]')
 
   const getMediaScreen = () => {
     const status = t('common:arena.status.status', { status: tournament.attributes.status })
@@ -124,25 +125,7 @@ const TournamentCard: React.FC<Props> = ({ tournament }) => {
   const getInfoRow = (value: string) => {
     return <Typography className={classes.organizer}>{value}</Typography>
   }
-  const getChippedRow = (chipLabel: string, value: string | number, extra?: string | number, topGutter?: number) => {
-    return (
-      <Box display="flex" flexDirection="row" mt={topGutter ? topGutter : 1} alignItems="center">
-        <ESChip
-          className={classes.chip}
-          size="small"
-          label={
-            <Box color={Colors.white}>
-              <Typography variant="overline">{chipLabel}</Typography>
-            </Box>
-          }
-        />
-        <Box ml={1} color={Colors.white}>
-          <Typography variant="caption">{value}</Typography>
-        </Box>
-        {extra ? <Typography variant="caption">{extra}</Typography> : null}
-      </Box>
-    )
-  }
+
   const getParticipants = () => {
     const participants = attr.participants
     return (
@@ -179,8 +162,9 @@ const TournamentCard: React.FC<Props> = ({ tournament }) => {
         {getTitle()}
         {getInfoRow(attr.game_of_title)}
         {getInfoRow(`${t('common:tournament.organizer')} ${organizer}`)}
-        {getChippedRow(t('common:tournament.card_date'), startDate)}
-        {getChippedRow(t('common:tournament.entry'), pCount(), `/${attr.max_participants}`, 0.5)}
+        <CardChip chipLabel={t('common:lobby.card.start_date')} value={startDate} />
+        <CardChip chipLabel={t('common:lobby.card.entry_period')} value={entryEndDate} />
+        <CardChip chipLabel={t('common:tournament.entry')} value={`${pCount()}/${attr.max_participants}`} />
         {getParticipants()}
       </ESCardContent>
     </ESCard>
