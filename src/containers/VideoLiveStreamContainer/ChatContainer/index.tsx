@@ -33,6 +33,7 @@ import { STATUS_VIDEO } from '@services/videoTop.services'
 import LoginRequired from '@containers/LoginRequired'
 import moment from 'moment'
 import { STATUS_SEND_MESS } from '@constants/common.constants'
+import { v4 as uuidv4 } from 'uuid'
 
 export type ChatContainerProps = {
   onPressDonate?: (donatedPoint: number, purchaseComment: string) => void
@@ -288,35 +289,37 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
 
     const refOnCreateMess = useRef(null)
     const onCreateMess = (createdMessage) => {
-      console.log('🚀 ~ onCreateMess ~ createdMessage----0909', createdMessage)
-      const foundIndex = findMessUpdated(savedMess, createdMessage, 'local_id')
-      console.log('🚀 ~ subscribeAction ~ foundIndex', foundIndex)
-      // only add new message if no found message in local
-      if (foundIndex === -1) {
-        console.log('🚀 ~ subscribeAction ~ 1234', savedMess)
-        if (playedSecond >= streamingSecond || liveStreamInfo.is_pausing_live) {
-          // render new messages with savedMess
-          const isMessageInBottom = checkMessIsInBottom()
-          // console.log("🚀 ~ 11111")
-          setStateMessages([...savedMess, createdMessage])
-          // console.log("🚀 ~ 33333")
-          if (isMessageInBottom) {
-            scrollToCurrentMess()
-          }
+      if (createdMessage.video_id === key_video_id) {
+        console.log('🚀 ~ onCreateMess ~ createdMessage----0909', createdMessage)
+        const foundIndex = findMessUpdated(savedMess, createdMessage, 'local_id')
+        console.log('🚀 ~ subscribeAction ~ foundIndex', foundIndex)
+        // only add new message if no found message in local
+        if (foundIndex === -1) {
+          console.log('🚀 ~ subscribeAction ~ 1234', savedMess)
+          if (playedSecond >= streamingSecond || liveStreamInfo.is_pausing_live) {
+            // render new messages with savedMess
+            const isMessageInBottom = checkMessIsInBottom()
+            // console.log("🚀 ~ 11111")
+            setStateMessages([...savedMess, createdMessage])
+            // console.log("🚀 ~ 33333")
+            if (isMessageInBottom) {
+              scrollToCurrentMess()
+            }
 
-          // render new users donate
-          if (isPremiumChat(createdMessage, false)) {
-            let newMessDonate = [...savedDonateMess]
-            newMessDonate = newMessDonate.filter((item) => +item.display_avatar_time > +streamingSecond)
-            // render user donate icon by time of local
-            setMessagesDonate([...newMessDonate, createdMessage])
+            // render new users donate
+            if (isPremiumChat(createdMessage, false)) {
+              let newMessDonate = [...savedDonateMess]
+              newMessDonate = newMessDonate.filter((item) => +item.display_avatar_time > +streamingSecond)
+              // render user donate icon by time of local
+              setMessagesDonate([...newMessDonate, createdMessage])
+            }
           }
-        }
-        // save mess for local
-        setSavedMess((messages) => [...messages, createdMessage])
-        // save donated messages for local (not check display time)
-        if (isPremiumChat(createdMessage, false)) {
-          setSavedDonateMess((messages) => [...messages, createdMessage])
+          // save mess for local
+          setSavedMess((messages) => [...messages, createdMessage])
+          // save donated messages for local (not check display time)
+          if (isPremiumChat(createdMessage, false)) {
+            setSavedDonateMess((messages) => [...messages, createdMessage])
+          }
         }
       }
     }
@@ -330,41 +333,54 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
 
     const refOnUpdateMess = useRef(null)
     const onUpdateMess = (updatedMess) => {
-      updateOldMessData(updatedMess, {})
+      if (updatedMess.video_id === key_video_id) {
+        updateOldMessData(updatedMess, {})
+      }
     }
     refOnUpdateMess.current = onUpdateMess
 
-    const subscribeAction = () => {
-      const pubSubClient = API.graphql(graphqlOperation(onCreateMessage))
-      pubSubClient.subscribe({
+    const subscribeCreateMessAction = () => {
+      let createMessSubscription = API.graphql(graphqlOperation(onCreateMessage))
+      createMessSubscription = createMessSubscription.subscribe({
         next: (sub: GraphQLResult<APIt.OnCreateMessageSubscription>) => {
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           //@ts-ignore
           const subMessage = sub?.value
-          if (subMessage.data.onCreateMessage.video_id === key_video_id) {
-            // getMessages()
-            const createdMessage = subMessage.data.onCreateMessage
-            // checkMessIsInBottom()
-            refOnCreateMess.current(createdMessage)
-          }
+          const createdMessage = subMessage.data.onCreateMessage
+          refOnCreateMess.current(createdMessage)
         },
         error: (error) => console.warn(error),
       })
+      return createMessSubscription
+    }
 
-      const updateMessSubscription = API.graphql(graphqlOperation(onUpdateMessage))
-      updateMessSubscription.subscribe({
+    const subscribeUpdateMessAction = () => {
+      let updateMessSubscription = API.graphql(graphqlOperation(onUpdateMessage))
+      updateMessSubscription = updateMessSubscription.subscribe({
         next: (sub: GraphQLResult<APIt.OnUpdateMessageSubscription>) => {
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           //@ts-ignore
           const subMessage = sub?.value
           const updatedMess = subMessage.data.onUpdateMessage
-          if (updatedMess.video_id === key_video_id) {
-            refOnUpdateMess.current(updatedMess)
-          }
+          refOnUpdateMess.current(updatedMess)
         },
         error: (error) => console.warn(error),
       })
+      return updateMessSubscription
     }
+
+    useEffect(() => {
+      const createMessSubscription = successGetListMess ? subscribeCreateMessAction() : null
+      const updateMessSubscription = successGetListMess ? subscribeUpdateMessAction() : null
+      return () => {
+        if (createMessSubscription) {
+          createMessSubscription.unsubscribe()
+        }
+        if (updateMessSubscription) {
+          updateMessSubscription.unsubscribe()
+        }
+      }
+    }, [successGetListMess])
 
     useEffect(() => {
       console.log('🚀 ~ useEffect ~ playedSecond ---> streamingSecond', playedSecond, streamingSecond)
@@ -511,7 +527,6 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       // save mess for use in local
       setSavedDonateMess([...transformDonateMessAsc])
       setSuccessGetListDonateMess(true)
-      subscribeAction()
     }
     refTransformListMess.current = handleTransformListMess
 
@@ -527,9 +542,8 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
           nextToken,
         }
         const messagesResults: any = await API.graphql(graphqlOperation(getMessagesByVideoId, listQV))
-        // const messagesResults: any = await API.graphql(graphqlOperation(listMessagesNew, listQV))
         const messagesInfo = messagesResults.data.getMessagesByVideoId
-        const newMess = messagesInfo.items.filter((item) => item.parent)
+        const newMess = messagesInfo.items.filter((item) => item.parent && item.video_id === key_video_id)
         // get addition messages if has more messages using nextToken to get paginated mess
         if (messagesInfo.nextToken) {
           setAllMess((messages) => [...messages, ...newMess])
@@ -814,7 +828,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
           is_premium: false,
           userId: chatUser.id,
           delete_flag: false,
-          local_id: Math.random().toString(20).substr(2, 10) + '_' + moment().format('HHmmss'),
+          local_id: uuidv4(),
           created_time: moment().toISOString(),
         }
         if (point) {
@@ -1134,10 +1148,10 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
             .slice()
             .reverse()
             // .sort((a: any, b: any) => -(+a.video_time - +b.video_time || a.createdAt.localeCompare(b.createdAt)))
-            .map((item) =>
+            .map((item, index) =>
               !item.delete_flag ? (
                 <Box
-                  key={item.id}
+                  key={index}
                   className={classes.userWatchingItem}
                   style={{
                     backgroundColor: purchasePoints[`p_${item.point}`].backgroundColor,
