@@ -42,7 +42,7 @@ export const useFreezeDialog = (isTeam: boolean): (() => Promise<void>) => {
     return confirm({
       title: t('common:arena.battles.freeze_confirmation_dialog.title', { isTeam }),
       content: <FreezeDialogContent isTeam={isTeam} />,
-      additionalText: t('common:arena.battles.freeze_confirmation_dialog.additionalText', { isTeam }),
+      additionalText: t('common:arena.battles.freeze_confirmation_dialog.additionalText'),
       confirmationText: t('common:arena.battles.freeze_confirmation_dialog.confirmationText'),
       cancellationText: t('common:arena.battles.freeze_confirmation_dialog.cancellationText'),
     })
