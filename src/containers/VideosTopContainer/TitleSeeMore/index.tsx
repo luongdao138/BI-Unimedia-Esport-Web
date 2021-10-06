@@ -1,5 +1,5 @@
-import ESLabel from '@components/Label'
 import { Box, Theme, makeStyles, Typography } from '@material-ui/core'
+import ESAppLabel from '@components/Label/ESAppLabel'
 
 export type TitleSeeMoreProps = {
   iconSource?: string
@@ -15,10 +15,10 @@ const TitleSeeMore: React.FC<TitleSeeMoreProps> = ({ iconSource, titleText, righ
       {iconSource && (
         <Box className={classes.boxOut}>
           <img src={iconSource} width={33} height={44} />
-          <ESLabel label={titleText} />
+          <ESAppLabel label={titleText} fontSize="20px" bold />
         </Box>
       )}
-      <ESLabel label={titleText} />
+      <ESAppLabel label={titleText} fontSize="20px" bold />
       <Box className={classes.viewMoreContainer} onClick={onPress}>
         {rightText && <Typography className={classes.viewMoreStyle}>{rightText}</Typography>}
       </Box>
@@ -46,6 +46,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   viewMoreStyle: {
+    fontSize: '12px',
     color: '#707070',
     textAlign: 'center',
   },
