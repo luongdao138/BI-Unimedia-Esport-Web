@@ -202,7 +202,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     player.current.addEventListener(ERROR, onError)
     player.current.addEventListener(BUFFERING, onStateChange)
     player.current.addEventListener(IDLE, onStateChange)
-    console.log("🚀 ~ useEffect ~ player.current-----11111", player.current)
+    console.log('🚀 ~ useEffect ~ player.current-----11111', player.current)
 
     return () => {
       player.current.removeEventListener(READY, onStateChange)

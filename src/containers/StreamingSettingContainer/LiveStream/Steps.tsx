@@ -796,6 +796,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       alignItems: 'center',
       padding: '4px 0 4px 0',
     },
+    '& :-webkit-autofill': {
+      WebkitBoxShadow: '0 0 0 100px transparent inset',
+    },
   },
   urlCopy: {
     paddingLeft: 12,
