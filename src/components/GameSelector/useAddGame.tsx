@@ -18,6 +18,12 @@ const useAddGame = (): { meta: Meta; createGame: (params: CreateGameTitleParams)
       dispatch(clearMetaData(actions.createGameTitle.typePrefix))
     }
   }, [])
+
+  useEffect(() => {
+    if (meta.loaded) {
+      dispatch(clearMetaData(actions.createGameTitle.typePrefix))
+    }
+  }, [meta.loaded])
   return {
     meta,
     createGame,
