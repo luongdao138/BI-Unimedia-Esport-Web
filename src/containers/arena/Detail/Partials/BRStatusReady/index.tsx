@@ -36,7 +36,7 @@ const BRStatusReady: React.FC<BRStatusReadyProps> = ({ arena }) => {
       content={
         <Box display="flex" flexDirection="column" alignItems="center">
           <RemainingDate tournament={arena} />
-          <EntryCount totalCount={arena.attributes.max_participants} count={0} isTeam={isTeam} />
+          <EntryCount totalCount={arena.attributes.max_participants} count={arena.attributes.interested_count} isTeam={isTeam} />
 
           <ButtonGroup mt={3}>
             <ESButton onClick={toParticipants} variant="outlined" fullWidth>
