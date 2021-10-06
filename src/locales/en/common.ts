@@ -464,7 +464,7 @@ export default {
     follower_entering: 'フォローしている人がエントリーしている大会',
     follower_ended: 'フォローしている人がエントリーしていた大会結果',
     recruiting_tournament_list: '募集中の大会一覧',
-    select_user: 'ユーザを選ぶ',
+    select_user: 'ユーザーを選ぶ',
     select_team: 'チームを選ぶ',
     set_participants: '設定する',
     deselect: '選択解除',
