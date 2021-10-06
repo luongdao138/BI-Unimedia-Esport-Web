@@ -3,6 +3,7 @@ import BRInput from './BRInput'
 import i18n from '@locales/i18n'
 import { Colors } from '@theme/colors'
 import _ from 'lodash'
+import { OutlinedInputProps } from '@material-ui/core'
 
 const validateNumber = (value: string | number): boolean => {
   let res = false
@@ -17,11 +18,13 @@ interface ScoreProps {
   value: string | number
 }
 
-const BRScoreInput: React.FC<{
-  value: number | null
-  onAttackError: (error: boolean) => void
-  onChange: ({ target: { value: string } }) => void
-}> = ({ value, onChange, onAttackError }) => {
+const BRScoreInput: React.FC<
+  OutlinedInputProps & {
+    value: number | null
+    onAttackError: (error: boolean) => void
+    onChange: ({ target: { value: string } }) => void
+  }
+> = ({ value, onChange, onAttackError, ...props }) => {
   const [score, setScore] = useState<ScoreProps>({ value: value })
   const [error, setError] = useState<boolean>(false)
 
@@ -53,6 +56,7 @@ const BRScoreInput: React.FC<{
       style={{ color: validateNumber(score.value) ? Colors.white_opacity[70] : Colors.secondary }}
       onChange={handleChange}
       placeholder={i18n.t('common:arena.not_entered')}
+      {...props}
     />
   )
 }

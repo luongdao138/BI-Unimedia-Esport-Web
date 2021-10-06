@@ -56,9 +56,11 @@ const BRStatusRecruiting: React.FC<BRStatusRecruitingProps> = ({ arena }) => {
       }
       content={
         <Box display="flex" flexDirection="column" alignItems="center">
-          <Typography variant="h5" gutterBottom>
-            {statusName[arena.attributes.my_role] || t('arena.participate_status.no_entry')}
-          </Typography>
+          {arena.attributes.is_freezed ? (
+            <Typography variant="h5" gutterBottom>
+              {statusName[arena.attributes.my_role] || t('arena.participate_status.no_entry')}
+            </Typography>
+          ) : null}
           <ButtonGroup>
             {isFreezed ? (
               <>

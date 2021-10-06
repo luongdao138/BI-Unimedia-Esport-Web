@@ -101,31 +101,29 @@ const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
             </Box>
             <Box py={2} textAlign="right" flexDirection="row" display="flex" alignItems="center" justifyContent="flex-end">
               <Box display="flex" flexDirection="column">
-                {page?.total_count ? (
-                  <Box display="flex" flexDirection="row" alignItems="flex-end">
-                    <Box mr={2}>
-                      <Typography variant="h3" className={classes.countLabel}>
-                        {data.is_freezed ? t('common:tournament.number_of_participants') : t('common:tournament.number_of_entries')}
-                      </Typography>
-                    </Box>
-                    <Typography variant="h3" style={{ fontSize: 24, fontWeight: 'bold' }}>
-                      {page.total_count}
-                    </Typography>
+                <Box display="flex" flexDirection="row" alignItems="flex-end">
+                  <Box mr={2}>
                     <Typography variant="h3" className={classes.countLabel}>
-                      {unit}
-                    </Typography>
-                    <Typography variant="h3" className={classes.countLabel} style={{ fontSize: 20, marginLeft: 4 }}>
-                      /
-                    </Typography>
-
-                    <Typography variant="h3" className={classes.countLabel} style={{ fontSize: 22 }}>
-                      {data.max_participants}
-                    </Typography>
-                    <Typography variant="h3" className={classes.countLabel}>
-                      {unit}
+                      {data.is_freezed ? t('common:tournament.number_of_participants') : t('common:tournament.number_of_entries')}
                     </Typography>
                   </Box>
-                ) : null}
+                  <Typography variant="h3" style={{ fontSize: 24, fontWeight: 'bold' }}>
+                    {page?.total_count ? page.total_count : 0}
+                  </Typography>
+                  <Typography variant="h3" className={classes.countLabel}>
+                    {unit}
+                  </Typography>
+                  <Typography variant="h3" className={classes.countLabel} style={{ fontSize: 20, marginLeft: 4 }}>
+                    /
+                  </Typography>
+
+                  <Typography variant="h3" className={classes.countLabel} style={{ fontSize: 22 }}>
+                    {data.max_participants}
+                  </Typography>
+                  <Typography variant="h3" className={classes.countLabel}>
+                    {unit}
+                  </Typography>
+                </Box>
               </Box>
             </Box>
             <div id="scrollableDiv" className={`${classes.scroll} ${classes.list}`}>
