@@ -1,5 +1,8 @@
 import React, { useEffect, useState, useMemo } from 'react'
 import _ from 'lodash'
+import { Box, Typography } from '@material-ui/core'
+import { Colors } from '@theme/colors'
+import i18n from '@locales/i18n'
 import { useTranslation } from 'react-i18next'
 import useTournamentDetail from '@containers/arena/hooks/useTournamentDetail'
 import HeaderWithButton from '@components/HeaderWithButton'
@@ -146,13 +149,40 @@ const ArenaBattles: React.FC = () => {
     >
       {detailMeta.loaded && <HeaderWithButton title={tournament.attributes.title} />}
 
-      <RuleHeader
-        textAlign="center"
-        pt={3}
-        rule={tournament?.attributes.rule}
-        showCaution={isParticipant && isTeamLeader}
-        showError={hasError}
-      />
+      <RuleHeader textAlign="center" pt={3} rule={tournament?.attributes.rule} showCaution={isParticipant && isTeamLeader}>
+        <Box textAlign="center" pb={3}>
+          {errorObject.time_attack_format_invalid ? (
+            <Typography style={{ color: Colors.secondary, paddingTop: 4 }}>
+              {i18n.t('common:arena.rules_title.time_attack_errors.format_invalid')}
+            </Typography>
+          ) : null}
+          {errorObject.time_attack_max_exceeds ? (
+            <Typography style={{ color: Colors.secondary, paddingTop: 4 }}>
+              {i18n.t('common:arena.rules_title.time_attack_errors.time_attack_max_exceeds')}
+            </Typography>
+          ) : null}
+          {errorObject.score_attack_format_invalid ? (
+            <Typography style={{ color: Colors.secondary, paddingTop: 4 }}>
+              {i18n.t('common:arena.rules_title.score_attack_errors.format_invalid')}
+            </Typography>
+          ) : null}
+          {errorObject.score_attack_max_exceeds ? (
+            <Typography style={{ color: Colors.secondary, paddingTop: 4 }}>
+              {i18n.t('common:arena.rules_title.score_attack_errors.score_attack_max_exceeds')}
+            </Typography>
+          ) : null}
+          {errorObject.only_digit ? (
+            <Typography style={{ color: Colors.secondary, paddingTop: 4 }}>
+              {i18n.t('common:arena.rules_title.battle_royale_error')}
+            </Typography>
+          ) : null}
+          {errorObject.placement_max_exceeds ? (
+            <Typography style={{ color: Colors.secondary, paddingTop: 4 }}>
+              {i18n.t('common:common.too_long', { max: participants.length })}
+            </Typography>
+          ) : null}
+        </Box>
+      </RuleHeader>
 
       <BRList className={classes.listContainer} rule={tournament?.attributes.rule}>
         {selecteds.map((v) => {
