@@ -197,6 +197,9 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: 5,
     backgroundColor: Colors.black_opacity[90],
     borderRadius: 10,
+    '&:last-child': {
+      marginBottom: 0,
+    },
   },
   chipSecondary: {
     width: 64,
