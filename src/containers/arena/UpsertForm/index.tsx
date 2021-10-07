@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { makeStyles, Theme, Typography, Box, useMediaQuery, useTheme } from '@material-ui/core'
 import { IconButton } from '@material-ui/core'
 import Icon from '@material-ui/core/Icon'
@@ -48,7 +48,9 @@ const TournamentCreate: React.FC = () => {
   const [tab, setTab] = useState(0)
   const [hasError, setError] = useState(true)
   const isFirstRun = useRef(true)
-  const initialValues = getInitialValues(isEdit ? arena : undefined)
+  const initialValues = useMemo(() => {
+    return getInitialValues(isEdit ? arena : undefined)
+  }, [isEdit, arena])
   const [isConfirm, setIsConfirm] = useState(false)
   const confirm = useConfirm()
 
