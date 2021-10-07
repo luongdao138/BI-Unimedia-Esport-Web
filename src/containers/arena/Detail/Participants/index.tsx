@@ -33,8 +33,8 @@ const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
   const [hasMore, setHasMore] = useState(true)
   const [selectedParticipant, setSelectedParticipant] = useState(null as ParticipantsResponse | null)
   const [members, setMembers] = useState([])
-
   const { participants, getParticipants, resetParticipants, resetMeta, page, meta, followStateChanged } = useParticipants()
+  const totalCount = _.get(page, 'total_count', '')
   const { userProfile } = useGetProfile()
   const { handleReturn } = useReturnHref()
 
@@ -103,7 +103,7 @@ const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
             <Box py={2} textAlign="right" flexDirection="row" display="flex" alignItems="center" justifyContent="flex-end">
               <ParticipantCount
                 label={data.is_freezed ? t('common:tournament.number_of_participants') : t('common:tournament.number_of_entries')}
-                total={page?.total_count ? page.total_count : 0}
+                total={totalCount}
                 max={data.max_participants}
                 unit={unit}
               />
