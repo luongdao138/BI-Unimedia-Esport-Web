@@ -25,6 +25,9 @@ const useStyles = makeStyles(() => ({
     },
     '& .MuiInputBase-input': {
       textAlign: 'center',
+      '&::-webkit-input-placeholder': {
+        fontSize: 11,
+      },
     },
     '& .MuiOutlinedInput-root': {
       borderRadius: 5,

@@ -30,7 +30,7 @@ interface TimeProps {
 
 const BRTimeInput: React.FC<
   OutlinedInputProps & { value: number | null; onAttackError: (error: boolean) => void; onChange: ({ target: { value: string } }) => void }
-> = ({ value, onChange, onAttackError }) => {
+> = ({ value, onChange, onAttackError, ...props }) => {
   const classes = useStyles()
   const [time, setTime] = useState<TimeProps>(() => TournamentHelper.millisToTime(value))
   const [error, setError] = useState<boolean>(false)
@@ -87,6 +87,7 @@ const BRTimeInput: React.FC<
         style={{ color: validateNumber(time.hours, DATE_TIME.HOURS) ? Colors.white_opacity[70] : Colors.secondary }}
         onChange={handleHourChange}
         placeholder={i18n.t('common:common.hour')}
+        {...props}
       />
       <span className={classes.colon}>:</span>
       <BRInput
@@ -95,6 +96,7 @@ const BRTimeInput: React.FC<
         style={{ color: validateNumber(time.minutes, DATE_TIME.MINUTES) ? Colors.white_opacity[70] : Colors.secondary }}
         onChange={handleMinuteChange}
         placeholder={i18n.t('common:common.minute')}
+        {...props}
       />
       <span className={classes.colon}>:</span>
       <BRInput
@@ -103,6 +105,7 @@ const BRTimeInput: React.FC<
         style={{ color: validateNumber(time.seconds, DATE_TIME.SECONDS) ? Colors.white_opacity[70] : Colors.secondary }}
         onChange={handleSecondChange}
         placeholder={i18n.t('common:common.second')}
+        {...props}
       />
       <span className={classes.colon}>:</span>
       <BRInput
@@ -111,6 +114,7 @@ const BRTimeInput: React.FC<
         style={{ color: validateNumber(time.millis, DATE_TIME.MILLIS) ? Colors.white_opacity[70] : Colors.secondary }}
         onChange={handleMillisChange}
         placeholder={i18n.t('common:common.millis')}
+        {...props}
       />
     </>
   )
