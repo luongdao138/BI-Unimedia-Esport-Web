@@ -82,7 +82,7 @@ const BRStatusComplete: React.FC<BRStatusBRStatusCompleteProps> = ({ arena }) =>
         )
       }
       footer={
-        isModerator ? (
+        isModerator && arena.attributes.is_freezed ? (
           <div className={classes.footerContainer}>
             <ButtonGroup size="large">
               <div>
