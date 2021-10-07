@@ -552,6 +552,9 @@ export default {
       score_attack: 'スコアを入力してください',
       time_attack: `タイムを入力してください
       例）「01:23:45:678」`,
+      score_attack_error: `スコアは半角数字で入力してください
+入力上限は8桁となります`,
+      battle_royale_error: '順位は半角数字で入力してください',
       time_attack_error: 'タイムは半角数字で入力してください',
     },
     status: {
