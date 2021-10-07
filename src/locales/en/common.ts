@@ -629,7 +629,7 @@ export default {
     summary: '大会総括',
     summary_title: '大会の総括',
     summary_submit: 'この内容で決定する',
-    copy_toast: '共有URLをコピーしました',
+    copy_toast: 'クリップボードにコピーしました',
     edit_arena_info: '編集',
     create_success: '大会が作成されました',
     update_success: '大会内容が編集されました',
