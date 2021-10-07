@@ -125,3 +125,11 @@ export const loginRequiredFilterOptions = [
     loginRequired: true,
   },
 ]
+
+export const TOURNAMENT_DIALOGS = {
+  DISCARD_TOURNAMENT: {
+    title: i18n.t('common:tournament.discard.title'),
+    confirmationText: i18n.t('common:tournament.discard.confirm'),
+    cancellationText: i18n.t('common:common.cancel'),
+  },
+}

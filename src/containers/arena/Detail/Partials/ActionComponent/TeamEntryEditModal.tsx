@@ -71,7 +71,9 @@ const TeamEntryEditModal: React.FC<EntryEditModalProps> = ({
   const getTeamId = () => {
     const myInfos = _.get(tournament, 'attributes.my_info', [])
     if (!_.isArray(myInfos)) return null
-    const info = myInfos.find((myInfo) => _.get(myInfo, 'role') === ROLE.INTERESTED || _.get(myInfo, 'role') === ROLE.PARTICIPANT)
+    const info = myInfos.find((myInfo) => {
+      return (_.get(myInfo, 'role') === ROLE.INTERESTED || _.get(myInfo, 'role') === ROLE.PARTICIPANT) && _.get(myInfo, 'is_leader')
+    })
     if (!info) return null
     const teamId = _.get(info, 'team_id', null)
     if (_.isNumber(teamId)) return teamId

@@ -38,6 +38,7 @@ export type TournamentListItem = {
     title: string
     hash_key: string
     start_date: Date | string
+    acceptance_end_date: string
     max_participants: number
     participant_type: number
     status: TS.READY | TS.RECRUITING | TS.RECRUITMENT_CLOSED | TS.READY_TO_START | TS.IN_PROGRESS | TS.COMPLETED | TS.CANCELLED

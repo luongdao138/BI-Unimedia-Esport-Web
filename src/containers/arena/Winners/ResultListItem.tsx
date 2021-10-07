@@ -44,7 +44,7 @@ const ResultListItem: React.FC<ResultListItemProps> = ({ position, avatar, onCli
             </Typography>
           )}
         </div>
-        {score && (rule === 'score_attack' || rule === 'time_attack') ? (
+        {score !== null && (rule === 'score_attack' || rule === 'time_attack') ? (
           <Typography className={classes.score}>{TournamentHelper.formatArenaScore(score, rule)}</Typography>
         ) : null}
       </div>

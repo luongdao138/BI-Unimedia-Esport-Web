@@ -32,6 +32,7 @@ import { LobbyUpsertParams } from '@services/lobby.service'
 import { LOBBY_DIALOGS, LOBBY_STATUS } from '@constants/lobby.constants'
 import withProtected from '@containers/Lobby/utils/withProtected'
 import { useConfirm } from '@components/Confirm'
+import useUnload from '@utils/hooks/useUnload'
 
 let activeTabIndex = 0
 
@@ -82,6 +83,8 @@ const LobbyCreate: React.FC = () => {
   })
 
   const isChanged = !_.isEqual(formik.values, initialValues)
+
+  useUnload(isChanged, formik.isSubmitting)
 
   useEffect(() => {
     if (updateMeta.error || meta.error) {
@@ -192,12 +195,12 @@ const LobbyCreate: React.FC = () => {
 
   const renderDescription = matches ? (
     <>
-      <Typography style={{ fontSize: 12 }}>{i18n.t('common:lobby.discard.message_part1')}</Typography>
-      <Typography style={{ fontSize: 12 }}>{i18n.t('common:lobby.discard.message_part2')}</Typography>
+      <span style={{ fontSize: 12, display: 'block' }}>{i18n.t('common:lobby.discard.message_part1')}</span>
+      <span style={{ fontSize: 12 }}>{i18n.t('common:lobby.discard.message_part2')}</span>
     </>
   ) : (
     <>
-      <Typography style={{ fontSize: 12 }}>{i18n.t('common:lobby.discard.message')}</Typography>
+      <span style={{ fontSize: 12 }}>{i18n.t('common:lobby.discard.message')}</span>
     </>
   )
 
