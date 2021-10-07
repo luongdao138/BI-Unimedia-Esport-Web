@@ -464,7 +464,7 @@ export default {
     follower_entering: 'フォローしている人がエントリーしている大会',
     follower_ended: 'フォローしている人がエントリーしていた大会結果',
     recruiting_tournament_list: '募集中の大会一覧',
-    select_user: 'ユーザを選ぶ',
+    select_user: 'ユーザーを選ぶ',
     select_team: 'チームを選ぶ',
     set_participants: '設定する',
     deselect: '選択解除',
@@ -587,18 +587,20 @@ export default {
         title: '{{isTeam, participation_type}}をランダムに配置します',
         subtitle: '現在エントリーしている{{isTeam, participation_type}}を対戦表の空欄になっている枠へランダムに配置します',
         description: `※エントリーしている{{isTeam, participation_type}}数が参加枠数よりも多い場合は、選択されなかったユーザーは落選となります。
-        
+
                       ※落選する{{isTeam, participation_type}}を出したくない場合は、大会管理から参加枠数を変更した後に配置を行ってください。`,
         additionalText: 'この時点ではまだエントリー表は確定しません',
         confirmationText: '配置する',
         cancellationText: 'キャンセル',
       },
       freeze_confirmation_dialog: {
-        title: '{{isTeam, participation_type}}をランダムに配置します',
-        description: '現在エントリーしている{{isTeam, participation_type}}を対戦表の空欄になっている枠へランダムに配置します',
-        additionalText: `※エントリーしている{{isTeam, participation_type}}数が参加枠数よりも多い場合は、選択されなかった{{isTeam, participation_type}}は落選となります。
-                         ※落選する{{isTeam, participation_type}}を出したくない場合は、大会管理から参加枠数を変更した後に配置を行ってください。`,
-        confirmationText: 'エントリー',
+        title: '対戦表を確定する',
+        subtitle: '現在の対戦表に登録されている{{isTeam, participation_type}}で対戦表を確定させます。よろしいですか？',
+        description: `※落選する{{isTeam, participation_type}}を出したくない場合は、大会管理から参加枠数を変更した後に配置を行ってください。
+
+                         ※エントリーしている{{isTeam, participation_type}}であっても、対戦表に反映されていないまま確定を行った場合は残りの枠数を問わず落選となります。`,
+        additionalText: '確定以降の参加枠の変更はできません',
+        confirmationText: '確定する',
         cancellationText: 'キャンセル',
       },
     },
