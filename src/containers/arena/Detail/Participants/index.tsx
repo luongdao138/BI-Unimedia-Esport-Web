@@ -17,6 +17,7 @@ import TeamEntryEditModal from '../Partials/ActionComponent/TeamEntryEditModal'
 import InidividualEntryEditModal from '../Partials/ActionComponent/InidividualEntryEditModal'
 import ESButton from '@components/Button'
 import useReturnHref from '@utils/hooks/useReturnHref'
+import ParticipantCount from '@components/ParticipantCount'
 
 export interface ParticipantsProps {
   detail: TournamentDetail
@@ -100,31 +101,12 @@ const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
               </Box>
             </Box>
             <Box py={2} textAlign="right" flexDirection="row" display="flex" alignItems="center" justifyContent="flex-end">
-              <Box display="flex" flexDirection="column">
-                <Box display="flex" flexDirection="row" alignItems="flex-end">
-                  <Box mr={2}>
-                    <Typography variant="h3" className={classes.countLabel}>
-                      {data.is_freezed ? t('common:tournament.number_of_participants') : t('common:tournament.number_of_entries')}
-                    </Typography>
-                  </Box>
-                  <Typography variant="h3" style={{ fontSize: 24, fontWeight: 'bold' }}>
-                    {page?.total_count ? page.total_count : 0}
-                  </Typography>
-                  <Typography variant="h3" className={classes.countLabel}>
-                    {unit}
-                  </Typography>
-                  <Typography variant="h3" className={classes.countLabel} style={{ fontSize: 20, marginLeft: 4 }}>
-                    /
-                  </Typography>
-
-                  <Typography variant="h3" className={classes.countLabel} style={{ fontSize: 22 }}>
-                    {data.max_participants}
-                  </Typography>
-                  <Typography variant="h3" className={classes.countLabel}>
-                    {unit}
-                  </Typography>
-                </Box>
-              </Box>
+              <ParticipantCount
+                label={data.is_freezed ? t('common:tournament.number_of_participants') : t('common:tournament.number_of_entries')}
+                total={page?.total_count ? page.total_count : 0}
+                max={data.max_participants}
+                unit={unit}
+              />
             </Box>
             <div id="scrollableDiv" className={`${classes.scroll} ${classes.list}`}>
               <InfiniteScroll
@@ -223,10 +205,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   loaderCenter: {
     textAlign: 'center',
-  },
-  countLabel: {
-    marginLeft: 2,
-    fontWeight: 400,
   },
   urlCopy: {
     cursor: 'pointer',
