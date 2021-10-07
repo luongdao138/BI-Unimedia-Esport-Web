@@ -13,6 +13,7 @@ const DEFAULT_OPTIONS: ConfirmOptions = {
   dialogProps: {},
   confirmationButtonProps: {},
   cancellationButtonProps: {},
+  backDropClose: false,
 }
 
 const buildOptions = (defaultOptions, options): ConfirmOptions => {
@@ -71,7 +72,13 @@ const ConfirmProvider = ({ children, defaultOptions = {} }) => {
       <ConfirmationDialog
         open={resolveReject.length === 2}
         options={options}
-        onClose={handleClose}
+        onClose={(event: Event, reason: string) => {
+          if ((!options.backDropClose && reason === 'escapeKeyDown') || (!options.backDropClose && reason === 'backdropClick')) {
+            event.preventDefault()
+          } else {
+            handleClose()
+          }
+        }}
         onCancel={handleCancel}
         onConfirm={handleConfirm}
       />

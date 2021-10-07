@@ -17,7 +17,7 @@ interface ConfirmationDialogProps {
   options: ConfirmOptions
   onCancel: () => void
   onConfirm: () => void
-  onClose: () => void
+  onClose: (event: Event, reason: string) => void
 }
 
 const ConfirmationDialog = ({ open, options, onCancel, onConfirm, onClose }: ConfirmationDialogProps) => {
