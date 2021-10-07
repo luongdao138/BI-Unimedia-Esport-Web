@@ -77,7 +77,7 @@ const ArenaBattles: React.FC = () => {
             ...v,
             attributes: {
               ...v.attributes,
-              position: value,
+              position: value || null,
             },
           }
         }
@@ -90,7 +90,7 @@ const ArenaBattles: React.FC = () => {
             ...v,
             attributes: {
               ...v.attributes,
-              attack_score: value,
+              attack_score: value || null,
             },
           }
         }
@@ -104,7 +104,11 @@ const ArenaBattles: React.FC = () => {
     if (isModerator) {
       setBattleRoyaleScores({ hash_key: tournament.attributes.hash_key, participants: selecteds, rule: tournament.attributes.rule })
     } else {
-      setBattleRoyaleOwnScore({ hash_key: tournament.attributes.hash_key, participants: selecteds, rule: tournament.attributes.rule })
+      setBattleRoyaleOwnScore({
+        hash_key: tournament.attributes.hash_key,
+        participants: selecteds.filter((p) => p.highlight),
+        rule: tournament.attributes.rule,
+      })
     }
   }
   useEffect(() => {
