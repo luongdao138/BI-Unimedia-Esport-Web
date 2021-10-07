@@ -66,7 +66,7 @@ const InfoContainer: React.FC<{ isOfficial: boolean; data: CommunityDetail['attr
                 <Typography className={classes.multiline}>{data.address}</Typography>
               </Linkify>
             ) : (
-              <Typography>{t('common:common.dash_separator')}</Typography>
+              <Typography>{t('common:common.dash')}</Typography>
             )}
           </Box>
         </Box>
@@ -140,7 +140,7 @@ const InfoContainer: React.FC<{ isOfficial: boolean; data: CommunityDetail['attr
               </Box>
             ))
           ) : (
-            <Typography>{t('common:common.dash_separator')}</Typography>
+            <Typography>{t('common:common.dash')}</Typography>
           )}
         </Box>
       </Box>
