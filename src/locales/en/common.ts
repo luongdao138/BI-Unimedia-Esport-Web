@@ -572,7 +572,7 @@ export default {
     no_third_place: '（3位決定戦なし）',
     randomize_button: 'ランダムに配置する',
     freeze_button: 'トーナメント表を確定する',
-    freeze_br_button: '対戦表を確定する',
+    freeze_br_button: 'メンバーを確定する',
     randomize_success: 'ユーザーをランダムに配置しました',
     freeze_success: 'トーナメント表が確定しました',
     br_freeze_success: 'メンバーを確定しました',
@@ -593,12 +593,12 @@ export default {
         cancellationText: 'キャンセル',
       },
       freeze_confirmation_dialog: {
-        title: '対戦表を確定する',
-        subtitle: '現在の対戦表に登録されている{{isTeam, participation_type}}で対戦表を確定させます。よろしいですか？',
+        title: 'メンバーを確定する',
+        subtitle: '現在の選択されている{{isTeam, participation_type}}でメンバーを確定させます。よろしいですか？',
         description: `※落選する{{isTeam, participation_type}}を出したくない場合は、大会管理から参加枠数を変更した後に配置を行ってください。
 
-                         ※エントリーしている{{isTeam, participation_type}}であっても、対戦表に反映されていないまま確定を行った場合は残りの枠数を問わず落選となります。`,
-        additionalText: '確定以降の参加枠の変更はできません',
+                      ※エントリーしている{{isTeam, participation_type}}であっても、参加メンバー一覧に反映されていないまま確定を行った場合は残りの枠数を問わず落選となります。`,
+        additionalText: '確定以降の参加枠の変更はできません。',
         confirmationText: '確定する',
         cancellationText: 'キャンセル',
       },
