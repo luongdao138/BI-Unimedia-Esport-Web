@@ -562,7 +562,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
                 <Box pb={2}>
                   <Typography className={classes.date}>
                     {formik?.values?.stepSettingOne?.use_ticket
-                      ? `利用する（${formik?.values?.stepSettingOne?.ticket_price} exeポイント）`
+                      ? `利用する（${formik?.values?.stepSettingOne?.ticket_price} ${t('common:common.eXe_points')}）`
                       : '利用しない'}
                   </Typography>
                 </Box>
