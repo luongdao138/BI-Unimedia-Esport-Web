@@ -262,9 +262,13 @@ function isBattleRoyale(arena: TournamentDetail) {
   return false
 }
 
-function isBRResultComplete(participants: ParticipantsResponse[]) {
+function isBRResultComplete(participants: ParticipantsResponse[], rule: TournamentRule) {
   for (const p of participants) {
-    if (p.attributes.attack_score === null) return false
+    if (rule === 'battle_royale') {
+      if (p.attributes.position === null) return false
+    } else {
+      if (p.attributes.attack_score === null) return false
+    }
   }
   return true
 }
