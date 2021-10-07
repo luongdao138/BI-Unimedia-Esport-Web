@@ -492,14 +492,6 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         }
       }
     }, [])
-
-    useEffect(() => {
-      const container = document.getElementsByClassName('content-wrapper')
-      if (container && container.length > 0) {
-        document.getElementsByClassName('content-wrapper')[0]['style'].willChange = purchaseDialogVisible ? 'transform' : 'opacity'
-      }
-    }, [purchaseDialogVisible])
-
     // const filterMessagesDonate = (messages: any, compare_second?: any) => {
     //   const foundMessages = messages.filter((item) => {
     //     return isPremiumChat(item, true, compare_second)
@@ -1141,8 +1133,17 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       }
     }
 
+    const chatContentPaddingBottom = () => {
+      if (purchaseDialogVisible) {
+        return 325
+      } else if (!isEnabledChat) {
+        return 16
+      }
+      return 120
+    }
+
     const chatContent = () => (
-      <Box className={classes.chatContent} style={isMobile ? { paddingBottom: purchaseDialogVisible ? 325 : 120 } : {}}>
+      <Box className={classes.chatContent} style={isMobile ? { paddingBottom: chatContentPaddingBottom() } : {}}>
         {/* <Button onClick={scrollToCurrentMess}>Scroll to chat mess</Button> */}
         <Box className={classes.userWatchingList}>
           {messagesDonate
@@ -1185,7 +1186,16 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     }
 
     return (
-      <Box className={classes.container} style={!displayChatContent() ? { height: '757.5px' } : {}}>
+      <Box
+        className={classes.container}
+        style={
+          !displayChatContent()
+            ? { height: '757.5px' }
+            : {
+                paddingBottom: isEnabledChat ? '116.5px' : '16px',
+              }
+        }
+      >
         {!isMobile && (
           <Box className={classes.chatHeader}>
             <Typography className={classes.headerTitle}>{i18n.t('common:live_stream_screen.chat_header')}</Typography>
