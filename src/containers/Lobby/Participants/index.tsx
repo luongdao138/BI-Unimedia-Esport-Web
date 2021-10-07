@@ -47,7 +47,7 @@ const Participants: React.FC<ParticipantsProps> = ({ open, data, handleClose }) 
 
   const currentPage = _.get(participantsPageMeta, 'current_page', 1)
   const totalPage = _.get(participantsPageMeta, 'total_pages', 1)
-  const totalCount = _.get(participantsPageMeta, 'total_count', 0)
+  const totalCount = _.get(participantsPageMeta, 'total_count', '')
   const maxParticipants = _.get(data, 'attributes.max_participants', '')
   const [isInitialPageLoad, setInitialPageLoad] = useState(false)
 
