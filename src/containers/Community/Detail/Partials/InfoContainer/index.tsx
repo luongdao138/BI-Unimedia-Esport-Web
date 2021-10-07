@@ -140,7 +140,7 @@ const InfoContainer: React.FC<{ isOfficial: boolean; data: CommunityDetail['attr
               </Box>
             ))
           ) : (
-            <Typography>{t('common:common.dash_separator')}</Typography>
+            <Typography>{t('common:common.dash')}</Typography>
           )}
         </Box>
       </Box>
