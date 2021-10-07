@@ -126,46 +126,47 @@ const LobbyCreate: React.FC = () => {
     }
   }, [formik.errors])
 
-  const handleSetConfirm = async () => {
-    await formik.setValues(formik.values)
-    const errors = await formik.validateForm()
+  const handleSetConfirm = () => {
+    formik.setValues(formik.values).then(() => {
+      formik.validateForm().then((errors) => {
+        const { stepOne, stepTwo } = formik.values
 
-    const { stepOne, stepTwo } = formik.values
+        const fieldIdentifier = checkNgWordFields({
+          title: stepOne.title,
+          message: stepOne.message,
+          address: stepTwo.address,
+        })
 
-    const fieldIdentifier = checkNgWordFields({
-      title: stepOne.title,
-      message: stepOne.message,
-      address: stepTwo.address,
-    })
+        const ngFields = checkNgWordByField({
+          [FIELD_TITLES.stepOne.title]: stepOne.title,
+          [FIELD_TITLES.stepOne.message]: stepOne.message,
+          [FIELD_TITLES.stepTwo.address]: stepTwo.address,
+        })
 
-    const ngFields = checkNgWordByField({
-      [FIELD_TITLES.stepOne.title]: stepOne.title,
-      [FIELD_TITLES.stepOne.message]: stepOne.message,
-      [FIELD_TITLES.stepTwo.address]: stepTwo.address,
-    })
+        if (fieldIdentifier) {
+          if (_.has(FIELD_TITLES.stepOne, fieldIdentifier)) activeTabIndex = 0
+          else if (_.has(FIELD_TITLES.stepTwo, fieldIdentifier)) activeTabIndex = 1
 
-    if (fieldIdentifier) {
-      if (_.has(FIELD_TITLES.stepOne, fieldIdentifier)) activeTabIndex = 0
-      else if (_.has(FIELD_TITLES.stepTwo, fieldIdentifier)) activeTabIndex = 1
-
-      dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: ngFields.join(', ') }))
-    } else {
-      if (_.isEmpty(errors)) {
-        if (isConfirm) {
-          formik.submitForm()
+          dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: ngFields.join(', ') }))
         } else {
-          setIsConfirm(true)
+          if (_.isEmpty(errors)) {
+            if (isConfirm) {
+              formik.submitForm()
+            } else {
+              setIsConfirm(true)
+            }
+            return
+          } else {
+            if (isConfirm) {
+              setIsConfirm(false)
+            }
+            if (_.has(errors, 'stepOne')) activeTabIndex = 0
+            else if (_.has(errors, 'stepTwo')) activeTabIndex = 1
+            setTab(activeTabIndex)
+          }
         }
-        return
-      } else {
-        if (isConfirm) {
-          setIsConfirm(false)
-        }
-        if (_.has(errors, 'stepOne')) activeTabIndex = 0
-        else if (_.has(errors, 'stepTwo')) activeTabIndex = 1
-        setTab(activeTabIndex)
-      }
-    }
+      })
+    })
   }
 
   const handleUnsetConfirm = () => setIsConfirm(false)
