@@ -201,7 +201,7 @@ export default {
     user_settings_failed: 'User settings failed',
     signup_failed: '登録に失敗しました。',
     failed: '失敗しました',
-    close_arena_failed: 'エントリーを締め切れませんでした。',
+    close_arena_failed: 'エントリーを締め切れませんでした',
     join_arena_failed: 'エントリーを完了できませんでした。',
     edit_entry_failed: 'エントリー情報を編集できませんでした。',
     leave_arena_failed: 'エントリーを辞退できませんでした',
@@ -579,7 +579,7 @@ export default {
     br_freeze_success: 'メンバーを確定しました',
     join_success: ' エントリー完了しました',
     leave_success: 'エントリーを辞退しました',
-    close_entry_success: 'エントリーを締め切りました。',
+    close_entry_success: 'エントリーを締め切りました',
     edit_entry_success: 'エントリー情報を編集しました',
     failed_to_update_match: '対戦表の更新に失敗しました',
     battles: {
