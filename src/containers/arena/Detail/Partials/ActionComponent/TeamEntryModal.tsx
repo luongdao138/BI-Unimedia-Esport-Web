@@ -200,7 +200,7 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
     teamMemberHook.setSelectedMember(selection)
   }
 
-  const { values, handleChange, errors } = formik
+  const { values, handleChange, errors, touched } = formik
   return (
     <FocusContextProvider>
       <FocusContext.Consumer>
@@ -238,7 +238,7 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
                       required
                       value={values.team_name}
                       onChange={handleChange}
-                      helperText={errors.team_name}
+                      helperText={touched.team_name && errors.team_name}
                       {...focusEvent}
                     />
 
