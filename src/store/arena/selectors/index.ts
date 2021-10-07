@@ -102,7 +102,7 @@ export const getSearchFilteredTournaments = createSelector(getRoot, (state) => {
 
 export const getBattleRoyaleFirstPlace = createSelector(getTournamentDetail, getSortedBRParticipants, (arena, participants) => {
   if (arena && participants.length) {
-    if (TournamentHelper.isBRResultComplete(participants)) {
+    if (TournamentHelper.isBRResultComplete(participants, arena.attributes.rule)) {
       const isTeam = arena.attributes.participant_type > 1
       return {
         avatar: participants[0].attributes.avatar_url,

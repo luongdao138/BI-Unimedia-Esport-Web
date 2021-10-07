@@ -210,7 +210,7 @@ export default {
     user_settings_failed: 'User settings failed',
     signup_failed: '登録に失敗しました。',
     failed: '失敗しました',
-    close_arena_failed: 'エントリーを締め切れませんでした。',
+    close_arena_failed: 'エントリーを締め切れませんでした',
     join_arena_failed: 'エントリーを完了できませんでした。',
     edit_entry_failed: 'エントリー情報を編集できませんでした。',
     leave_arena_failed: 'エントリーを辞退できませんでした',
@@ -572,6 +572,9 @@ export default {
       score_attack: 'スコアを入力してください',
       time_attack: `タイムを入力してください
       例）「01:23:45:678」`,
+      score_attack_error: `スコアは半角数字で入力してください
+入力上限は8桁となります`,
+      battle_royale_error: '順位は半角数字で入力してください',
       time_attack_error: 'タイムは半角数字で入力してください',
     },
     status: {
@@ -596,7 +599,7 @@ export default {
     br_freeze_success: 'メンバーを確定しました',
     join_success: ' エントリー完了しました',
     leave_success: 'エントリーを辞退しました',
-    close_entry_success: 'エントリーを締め切りました。',
+    close_entry_success: 'エントリーを締め切りました',
     edit_entry_success: 'エントリー情報を編集しました',
     failed_to_update_match: '対戦表の更新に失敗しました',
     battles: {

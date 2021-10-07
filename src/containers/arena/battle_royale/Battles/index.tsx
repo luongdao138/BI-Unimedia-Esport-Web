@@ -8,7 +8,6 @@ import ESLoader from '@components/FullScreenLoader'
 import { useRouter } from 'next/router'
 import BRListItem from '@containers/arena/battle_royale/Partials/BRListItem'
 import { makeStyles } from '@material-ui/core/styles'
-import { Box, Typography } from '@material-ui/core'
 import useBattleRoyaleScore from '@containers/arena/hooks/useBattleRoyaleScore'
 import useAddToast from '@utils/hooks/useAddToast'
 import { ParticipantsResponse } from '@services/arena.service'
@@ -18,8 +17,6 @@ import StickyFooter from '../Partials/StickyFooter'
 import ButtonPrimary from '@components/ButtonPrimary'
 import useArenaHelper from '@containers/arena/hooks/useArenaHelper'
 import RuleHeader from './RuleHeader'
-import { Colors } from '@theme/colors'
-import i18n from '@locales/i18n'
 import useBRParticipants from '@containers/arena/hooks/useBRParticipants'
 
 const ArenaBattles: React.FC = () => {
@@ -146,12 +143,13 @@ const ArenaBattles: React.FC = () => {
     >
       {detailMeta.loaded && <HeaderWithButton title={tournament.attributes.title} />}
 
-      <RuleHeader textAlign="center" pt={3} rule={tournament?.attributes.rule} showCaution={isParticipant && isTeamLeader} />
-      <Box textAlign="center" pb={3}>
-        {hasError ? (
-          <Typography style={{ color: Colors.secondary }}>{i18n.t('common:arena.rules_title.time_attack_error')}</Typography>
-        ) : null}
-      </Box>
+      <RuleHeader
+        textAlign="center"
+        pt={3}
+        rule={tournament?.attributes.rule}
+        showCaution={isParticipant && isTeamLeader}
+        showError={hasError}
+      />
 
       <BRList className={classes.listContainer} rule={tournament?.attributes.rule}>
         {selecteds.map((v) => {
