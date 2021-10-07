@@ -368,8 +368,7 @@ const useStyles = makeStyles((theme) => ({
   [theme.breakpoints.down(769)]: {
     purchaseDialogContainer: {
       width: '100%',
-      position: 'fixed',
-      bottom: 0,
+      position: 'absolute',
       left: 0,
       zIndex: 5,
       marginBottom: 0,

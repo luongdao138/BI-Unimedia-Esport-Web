@@ -365,12 +365,12 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
 
   return (
     <Box className={classes.container}>
-      {!detailVideoResult?.archived_url ? (
+      {_.isEmpty(detailVideoResult) ? (
         <Box className={classes.containerLoad} style={{ height: calculateVideoHeight() }}>
           {renderReloadPlayer()}
         </Box>
       ) : (
-        <Box className={classes.mediaPlayerContainer}>
+        <Box className={classes.mediaPlayerContainer} style={{ height: calculateVideoHeight() }}>
           {mediaPlayer()}
           {showOverlayOnMediaPlayer() && mediaOverlayPurchaseTicketView()}
         </Box>

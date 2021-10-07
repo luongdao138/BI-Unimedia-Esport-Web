@@ -36,6 +36,7 @@ import * as APIt from 'src/types/graphqlAPI'
 import API, { GraphQLResult, graphqlOperation } from '@aws-amplify/api'
 import { EVENT_LIVE_STATUS, LIVE_VIDEO_TYPE } from '@constants/common.constants'
 import DialogLoginContainer from '@containers/DialogLogin'
+import _ from 'lodash'
 
 enum TABS {
   PROGRAM_INFO = 1,
@@ -486,7 +487,7 @@ const VideoDetail: React.FC = () => {
           {isPendingPurchaseTicket && <ESLoader />}
           {isPendingPurchaseSuperChat && <FullESLoader open={isPendingPurchaseSuperChat} />}
           <Box className={classes.container}>
-            {!detailVideoResult?.archived_url ? (
+            {_.isEmpty(detailVideoResult) ? (
               <Box
                 style={{
                   backgroundColor: '#6A6A6C',
@@ -544,7 +545,7 @@ const VideoDetail: React.FC = () => {
               setShowModalPurchasePoint={(value) => setShowModalPurchasePoint(value)}
             />
           </Box>
-          {!detailVideoResult?.archived_url ? (
+          {_.isEmpty(detailVideoResult) ? (
             <Box
               style={{
                 display: 'flex',

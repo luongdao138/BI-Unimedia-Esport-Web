@@ -11,7 +11,7 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: '16px',
     marginRight: '16px',
     border: `1px solid #FFFFFF4D`,
-    paddingBottom: '116.5px',
+    paddingBottom: '16px',
   },
   chatMessageContainer: {
     display: 'flex',
