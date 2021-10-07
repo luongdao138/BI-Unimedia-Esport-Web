@@ -29,7 +29,7 @@ import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
 
 interface LiveStreamContentProps {
   videoType?: VIDEO_TYPE
-  freeToWatch?: boolean
+  freeToWatch?: boolean | number
   userHasViewingTicket?: boolean | number
   ticketAvailableForSale?: boolean
   softKeyboardIsShown?: boolean
@@ -40,6 +40,17 @@ interface LiveStreamContentProps {
 }
 
 const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
+  const {
+    userHasViewingTicket,
+    freeToWatch,
+    videoType,
+    ticketAvailableForSale,
+    ticketPrice,
+    video_id,
+    softKeyboardIsShown,
+    clickButtonPurchaseTicket,
+    onVideoEnd,
+  } = props
   const [showReportMenu, setShowReportMenu] = useState<boolean>(false)
   const router = useRouter()
   const { makeContextualHref } = useContextualRouting()
@@ -65,6 +76,7 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
   const [subscribeCount, setSubscribeCount] = useState(
     detailVideoResult?.channel_follow_count !== null ? detailVideoResult?.channel_follow_count : 0
   )
+  const isVideoFreeToWatch = freeToWatch === 0 ? true : false
 
   const [keyVideoPlayer, setKeyVideoPlayer] = useState(0)
   // get url browser video live stream
@@ -80,14 +92,14 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
       setSubscribeCount(subscribeCount + 1)
       // console.log('enter Subscribe')
       if (detailVideoResult?.channel_id) {
-        debouncedHandleSubscribe(1, detailVideoResult?.channel_id, props?.video_id)
+        debouncedHandleSubscribe(1, detailVideoResult?.channel_id, video_id)
       }
     } else {
       setSubscribe(0)
       setSubscribeCount(subscribeCount - 1)
       // console.log('enter unSubscribe')
       if (detailVideoResult?.channel_id) {
-        debouncedHandleSubscribe(0, detailVideoResult?.channel_id, props?.video_id)
+        debouncedHandleSubscribe(0, detailVideoResult?.channel_id, video_id)
       }
     }
   }
@@ -125,12 +137,12 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
         setUnlikeCount(unlikeCount > 0 ? unlikeCount - 1 : 0)
       }
       // console.log('enter like')
-      debouncedHandleReactionVideo(1, 0, props?.video_id)
+      debouncedHandleReactionVideo(1, 0, video_id)
     } else {
       setLike(0)
       setLikeCount(likeCount > 0 ? likeCount - 1 : 0)
       // console.log('enter like')
-      debouncedHandleReactionVideo(0, unlike, props?.video_id)
+      debouncedHandleReactionVideo(0, unlike, video_id)
     }
   }
 
@@ -143,13 +155,13 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
         setLikeCount(likeCount > 0 ? likeCount - 1 : 0)
       }
       // console.log('enter unlike')
-      debouncedHandleReactionVideo(0, 1, props?.video_id)
+      debouncedHandleReactionVideo(0, 1, video_id)
     } else {
       setUnlike(0)
       setUnlikeCount(unlikeCount > 0 ? unlikeCount - 1 : 0)
 
       // console.log('enter unlike')
-      debouncedHandleReactionVideo(like, 0, props?.video_id)
+      debouncedHandleReactionVideo(like, 0, video_id)
     }
   }
 
@@ -202,7 +214,7 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
 
   useEffect(() => {
     setKeyVideoPlayer((oldKey) => oldKey + 1)
-  }, [props.videoType])
+  }, [videoType])
 
   const mediaPlayer = () => {
     return (
@@ -220,12 +232,12 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
         ) : (
           <VideoPlayer
             key={keyVideoPlayer}
-            videoType={props.videoType}
+            videoType={videoType}
             src={detailVideoResult?.archived_url}
             thumbnail={detailVideoResult?.thumbnail}
             statusVideo={showOverlayOnMediaPlayer() ? true : null}
             mediaOverlayIsShown={showOverlayOnMediaPlayer()}
-            onVideoEnd={props.onVideoEnd}
+            onVideoEnd={onVideoEnd}
             startLive={Date.parse(detailVideoResult?.live_stream_start_time)}
             endLive={detailVideoResult?.live_stream_end_time}
             type={detailVideoResult?.status}
@@ -236,11 +248,10 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
   }
 
   const getOverlayButtonText = () => {
-    const { userHasViewingTicket, freeToWatch, videoType, ticketAvailableForSale } = props
-    if (!freeToWatch && !userHasViewingTicket && ticketAvailableForSale) {
+    if (!isVideoFreeToWatch && !userHasViewingTicket && ticketAvailableForSale) {
       return t('live_stream_screen.buy_ticket')
     }
-    if (videoType === STATUS_VIDEO.SCHEDULE && !freeToWatch && !ticketAvailableForSale) {
+    if (videoType === STATUS_VIDEO.SCHEDULE && !isVideoFreeToWatch && !ticketAvailableForSale) {
       return null
     }
 
@@ -248,12 +259,11 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
   }
 
   const getOverlayButtonDescriptionText = () => {
-    const { userHasViewingTicket, freeToWatch, videoType, ticketAvailableForSale, ticketPrice } = props
     const buyTicketPrice = ticketPrice ? ticketPrice : 0
-    if (!freeToWatch && !userHasViewingTicket && ticketAvailableForSale) {
+    if (!isVideoFreeToWatch && !userHasViewingTicket && ticketAvailableForSale) {
       return `${FormatHelper.currencyFormat(buyTicketPrice.toString())} ${t('common.eXe_points')}`
     }
-    if (videoType === STATUS_VIDEO.SCHEDULE && !freeToWatch && !ticketAvailableForSale) {
+    if (videoType === STATUS_VIDEO.SCHEDULE && !isVideoFreeToWatch && !ticketAvailableForSale) {
       return null
     }
 
@@ -261,14 +271,13 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
   }
 
   const getOverlayMessage = () => {
-    const { videoType, freeToWatch, userHasViewingTicket, ticketAvailableForSale } = props
-    if (videoType === STATUS_VIDEO.SCHEDULE && !freeToWatch && !ticketAvailableForSale) {
+    if (videoType === STATUS_VIDEO.SCHEDULE && !isVideoFreeToWatch && !ticketAvailableForSale) {
       return t('live_stream_screen.not_begin_sell_ticket')
     }
-    if (!freeToWatch && !userHasViewingTicket) {
+    if (!isVideoFreeToWatch && !userHasViewingTicket) {
       return t('live_stream_screen.purchase_ticket_note')
     }
-    if (videoType === STATUS_VIDEO.SCHEDULE && (freeToWatch || (!freeToWatch && userHasViewingTicket))) {
+    if (videoType === STATUS_VIDEO.SCHEDULE && (isVideoFreeToWatch || (!isVideoFreeToWatch && userHasViewingTicket))) {
       return t('live_stream_screen.livestream_not_start')
     }
 
@@ -278,7 +287,7 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
     return (
       <Box className={classes.overlayPurchaseContainer}>
         <OverlayContent
-          onClickButton={props?.clickButtonPurchaseTicket}
+          onClickButton={clickButtonPurchaseTicket}
           buttonText={getOverlayButtonText()}
           buttonDescriptionText={getOverlayButtonDescriptionText()}
           message={getOverlayMessage()}
@@ -288,25 +297,25 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
   }
 
   const showOverlayOnMediaPlayer = () => {
-    const { userHasViewingTicket, videoType, freeToWatch, ticketAvailableForSale } = props
-    if (videoType === STATUS_VIDEO.SCHEDULE && freeToWatch) {
+    // const { userHasViewingTicket, videoType, freeToWatch, ticketAvailableForSale } = props
+    if (videoType === STATUS_VIDEO.SCHEDULE && isVideoFreeToWatch) {
       return true
     }
-    if (videoType === STATUS_VIDEO.SCHEDULE && !freeToWatch && !ticketAvailableForSale) {
+    if (videoType === STATUS_VIDEO.SCHEDULE && !isVideoFreeToWatch && !ticketAvailableForSale) {
       return true
     }
-    if (videoType === STATUS_VIDEO.SCHEDULE && !freeToWatch && userHasViewingTicket) {
+    if (videoType === STATUS_VIDEO.SCHEDULE && !isVideoFreeToWatch && userHasViewingTicket) {
       return true
     }
-    if (!freeToWatch && !userHasViewingTicket) {
+    if (!isVideoFreeToWatch && !userHasViewingTicket) {
       return true
     }
     // return !freeToWatch && !userHasViewingTicket
     return null
   }
 
-  const liveBasicContentVisible = () => !isMobile || !props.softKeyboardIsShown
-  const mobileRegisterChannelVisible = () => isMobile && !props.softKeyboardIsShown
+  const liveBasicContentVisible = () => !isMobile || !softKeyboardIsShown
+  const mobileRegisterChannelVisible = () => isMobile && !softKeyboardIsShown
   const goToLogin = () => {
     router.push(makeContextualHref({ pathName: ESRoutes.LOGIN }), ESRoutes.LOGIN, { shallow: true })
   }

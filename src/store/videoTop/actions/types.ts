@@ -9,6 +9,7 @@ export const ACTION_VIDEO_TOP = {
   SEARCH_VIDEO: 'videoTop/searchVideo',
   RESET_SEARCH_VIDEO: 'videoTop/resetSearchVideo',
   VIDEO_DETAIL: 'video/detail',
+  RESET_VIDEO_DETAIL: 'video/resetVideoDetail',
   RESET_LIVE: 'streaming/resetLiveVideo',
   RESET_SCHEDULE: 'streaming/resetLiveSchedule',
   RESET_ARCHIVE: 'streaming/resetLiveArchive',

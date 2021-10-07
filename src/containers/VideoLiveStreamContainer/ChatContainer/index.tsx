@@ -45,7 +45,7 @@ export type ChatContainerProps = {
   donateConfirmModalIsShown: () => boolean
   openPurchasePointModal?: (point: any) => void
   videoType?: number
-  freeToWatch?: boolean
+  freeToWatch?: boolean | number
   ref: any
 }
 
@@ -158,6 +158,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     const [displayDialogMess, setDisplayDialogMess] = useState(false)
     const [firstRender, setFirstRender] = useState(false)
     const [allMess, setAllMess] = useState([])
+    const isVideoFreeToWatch = freeToWatch === 0 ? true : false
 
     console.log('video type chat container: ', videoType)
 
@@ -1117,7 +1118,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     //     }))
 
     const chatNotAvailableMessage = () => {
-      if (videoType === STATUS_VIDEO.SCHEDULE && (freeToWatch || userHasViewingTicket)) {
+      if (videoType === STATUS_VIDEO.SCHEDULE && (isVideoFreeToWatch || userHasViewingTicket)) {
         return i18n.t('common:live_stream_screen.chat_will_available_on_time')
       }
       return i18n.t('common:live_stream_screen.chat_purchase_ticket_note')
@@ -1180,7 +1181,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     )
 
     const displayChatContent = () => {
-      return videoType !== STATUS_VIDEO.SCHEDULE && (freeToWatch || userHasViewingTicket)
+      return videoType !== STATUS_VIDEO.SCHEDULE && (isVideoFreeToWatch || userHasViewingTicket)
     }
 
     return (

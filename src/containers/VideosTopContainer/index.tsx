@@ -42,25 +42,29 @@ export const TabsVideo = {
 }
 
 const VideosTop: React.FC = () => {
+  const _router = useRouter()
   const { t } = useTranslation('common')
   const classes = useStyles()
   const isAuthenticated = useAppSelector(getIsAuthenticated)
-  const [tab, setTab] = useState(0)
+  const [tab, setTab] = useState(_router?.query?.default_tab ? parseInt(_router?.query?.default_tab.toString()) : 0)
   const [follow, setFollow] = useState(0)
   const { bannerTop, listBanner, setLoginPreAction, getLoginPreAction } = useListVideoAll()
   const theme = useTheme()
   const isWideScreen = useMediaQuery(theme.breakpoints.up(1920))
   const { width: listDisplayWidth } = useWindowDimensions(146)
   const { makeContextualHref } = useContextualRouting()
-  const _router = useRouter()
   const defaultTab = _router?.query?.default_tab || '0'
 
   useEffect(() => {
-    setTab(parseInt(defaultTab.toString(), 10) ?? 0)
+    // setTab(parseInt(defaultTab.toString(), 10) ?? 0)
     bannerTop()
     setFollow(0)
     setLoginPreAction('')
   }, [])
+
+  useEffect(() => {
+    setTab(parseInt(defaultTab.toString()))
+  }, [_router])
 
   useEffect(() => {
     if (isAuthenticated && getLoginPreAction === 'favorite_tab') {
@@ -69,15 +73,15 @@ const VideosTop: React.FC = () => {
     }
   }, [isAuthenticated, getLoginPreAction])
 
-  const handleFocusTab = (_, v) => {
-    if (v === TabsVideo.FAVORITE_VIDEOS) {
+  const handleFocusTab = (_, tab) => {
+    if (tab === TabsVideo.FAVORITE_VIDEOS) {
       isAuthenticated
-        ? setTab(v)
+        ? setTab(tab)
         : router.push(makeContextualHref({ pathName: ESRoutes.LOGIN, favoriteTabClick: true }), ESRoutes.LOGIN, {
             shallow: true,
           })
     } else {
-      setTab(v)
+      setTab(tab)
     }
   }
 

@@ -138,6 +138,10 @@ export default createReducer(initialState, (builder) => {
     state.videoDetailData = videoData
     state.userDetailData = userData ? userData : state.userDetailData
   })
+  builder.addCase(actions.resetVideoDetail, (state) => {
+    state.videoDetailData = {}
+    state.userDetailData
+  })
   builder.addCase(actions.videoDetail.rejected, (state, action) => {
     // const videoData = action.payload.data.video
     // const userData = action.payload.data.user

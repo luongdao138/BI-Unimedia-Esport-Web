@@ -161,6 +161,7 @@ export const videoSearch = createAsyncThunk<services.SearchVideoResponse, servic
 )
 
 export const resetSearchVideo = createAction(ACTION_VIDEO_TOP.RESET_SEARCH_VIDEO)
+export const resetVideoDetail = createAction(ACTION_VIDEO_TOP.RESET_VIDEO_DETAIL)
 export const resetLive = createAction(ACTION_VIDEO_TOP.RESET_LIVE)
 export const resetSchedule = createAction(ACTION_VIDEO_TOP.RESET_SCHEDULE)
 export const resetArchive = createAction(ACTION_VIDEO_TOP.RESET_ARCHIVE)

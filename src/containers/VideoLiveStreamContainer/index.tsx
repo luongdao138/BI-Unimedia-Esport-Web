@@ -90,13 +90,16 @@ const VideoDetail: React.FC = () => {
   const [videoStatus, setVideoStatus] = useState(null)
   console.log('🚀 ~ videoStatus', videoStatus)
 
-  const { getVideoDetail, detailVideoResult, userResult, videoDetailError, resetVideoDetailError } = useDetailVideo()
+  const { getVideoDetail, detailVideoResult, userResult, videoDetailError, resetVideoDetailError, resetVideoDetailData } = useDetailVideo()
 
   const isPendingPurchaseTicket = meta_purchase_ticket_super_chat?.pending && purchaseType === PURCHASE_TYPE.PURCHASE_TICKET
 
   const isPendingPurchaseSuperChat = meta_purchase_ticket_super_chat.pending && purchaseType === PURCHASE_TYPE.PURCHASE_SUPER_CHAT
 
   // const isLoadingData = isAuthenticated ? !detailVideoResult || !myPointsData || !userResult || !video_id : !detailVideoResult || !video_id
+
+  const [isVideoFreeToWatch, setIsVideoFreeToWatch] = useState(detailVideoResult?.use_ticket ? detailVideoResult?.use_ticket : -1)
+  console.log('isVideoFreeToWatch VideoDetail >>>>>>>>', isVideoFreeToWatch)
 
   const handleShowDialogLogin = () => {
     setShowDialogLogin(true)
@@ -222,6 +225,8 @@ const VideoDetail: React.FC = () => {
         navigateToArchiveUrl()
       }
     }
+    // update IsVideoFreeToWatch
+    setIsVideoFreeToWatch(detailVideoResult?.use_ticket)
   }, [JSON.stringify(detailVideoResult)])
 
   const refOnUpdateVideo = useRef(null)
@@ -256,17 +261,21 @@ const VideoDetail: React.FC = () => {
       if (updateVideoSubscription) {
         updateVideoSubscription.unsubscribe()
       }
+      resetVideoDetailData()
     }
   }, [])
 
   useEffect(() => {
-    if (!isAuthenticated) {
-      handleShowDialogLogin()
-    }
     if (isAuthenticated && !myPointsData) {
       getMyPointData({ page: 1, limit: 10 })
     }
   }, [isAuthenticated])
+  // Show Dialog Login: unAuthentication and video not not free
+  useEffect(() => {
+    if (!isAuthenticated && isVideoFreeToWatch === 1) {
+      handleShowDialogLogin()
+    }
+  }, [isAuthenticated, detailVideoResult, isVideoFreeToWatch])
 
   useEffect(() => {
     if (video_id) {
@@ -354,6 +363,20 @@ const VideoDetail: React.FC = () => {
     })
   }
 
+  const isRenderContent = () => {
+    if (!isAuthenticated) {
+      if (!isVideoFreeToWatch) {
+        return false
+      } else {
+        return true
+      }
+    } else {
+      return true
+    }
+  }
+
+  console.log('isRenderContent >>>>>>>>>>>', isRenderContent())
+
   const getTabs = () => {
     return (
       <Grid item xs={12} className={classes.tabsContainer}>
@@ -404,7 +427,7 @@ const VideoDetail: React.FC = () => {
           onPressDonate={confirmDonatePoint}
           userHasViewingTicket={userHasViewingTicket()}
           videoType={+videoStatus}
-          freeToWatch={isVideoFreeToWatch()}
+          freeToWatch={isVideoFreeToWatch}
           handleKeyboardVisibleState={changeSoftKeyboardVisibleState}
           donateConfirmModalIsShown={modalIsShown}
           openPurchasePointModal={(donate_point) => {
@@ -426,7 +449,7 @@ const VideoDetail: React.FC = () => {
   }
 
   // const getVideoType = () => detailVideoResult?.status
-  const isVideoFreeToWatch = () => (detailVideoResult?.use_ticket === 0 ? true : false)
+
   const isTicketAvailableForSale = () => {
     const current = moment().valueOf()
     if (detailVideoResult?.sell_ticket_start_time && detailVideoResult?.use_ticket === 1) {
@@ -457,102 +480,93 @@ const VideoDetail: React.FC = () => {
   }
 
   return (
-    <Box className={classes.root}>
-      {isPendingPurchaseTicket && <ESLoader />}
-      {isPendingPurchaseSuperChat && <FullESLoader open={isPendingPurchaseSuperChat} />}
-      <Box className={classes.container}>
-        {!detailVideoResult?.archived_url ? (
-          <Box
-            style={{
-              backgroundColor: '#6A6A6C',
-              width: '100%',
-              height: '100%',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              textAlign: 'center',
-              borderRadius: 8,
-            }}
-          >
-            <ESLoader />
-          </Box>
-        ) : (
-          <>
-            <LiveStreamContent
-              video_id={getVideoId()}
-              userHasViewingTicket={userHasViewingTicket()}
-              videoType={videoStatus}
-              freeToWatch={isVideoFreeToWatch()}
-              ticketAvailableForSale={isTicketAvailableForSale()}
-              softKeyboardIsShown={softKeyboardIsShown}
-              ticketPrice={detailVideoResult?.ticket_price}
-              clickButtonPurchaseTicket={handlePurchaseTicket}
-              onVideoEnd={onVideoEnd}
+    <>
+      {isRenderContent ? (
+        <Box className={classes.root}>
+          {isPendingPurchaseTicket && <ESLoader />}
+          {isPendingPurchaseSuperChat && <FullESLoader open={isPendingPurchaseSuperChat} />}
+          <Box className={classes.container}>
+            {!detailVideoResult?.archived_url ? (
+              <Box
+                style={{
+                  backgroundColor: '#6A6A6C',
+                  width: '100%',
+                  height: '100%',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  textAlign: 'center',
+                  borderRadius: 8,
+                }}
+              >
+                <ESLoader />
+              </Box>
+            ) : (
+              <>
+                <LiveStreamContent
+                  video_id={getVideoId()}
+                  userHasViewingTicket={userHasViewingTicket()}
+                  videoType={videoStatus}
+                  freeToWatch={isVideoFreeToWatch}
+                  ticketAvailableForSale={isTicketAvailableForSale()}
+                  softKeyboardIsShown={softKeyboardIsShown}
+                  ticketPrice={detailVideoResult?.ticket_price}
+                  clickButtonPurchaseTicket={handlePurchaseTicket}
+                  onVideoEnd={onVideoEnd}
+                />
+                <Grid container direction="row" className={classes.tabContent}>
+                  {getTabs()}
+                  {getContent()}
+                </Grid>
+              </>
+            )}
+            <PurchaseTicketSuperChat
+              myPoints={myPoint}
+              donatedPoints={detailVideoResult?.ticket_price}
+              showModal={showPurchaseTicketModal}
+              setShowModal={setShowPurchaseTicketModal}
+              handlePurchaseTicket={doConfirmPurchaseTicket}
             />
-            <Grid container direction="row" className={classes.tabContent}>
-              {getTabs()}
-              {getContent()}
-            </Grid>
-          </>
-        )}
-        <PurchaseTicketSuperChat
-          myPoints={myPoint}
-          donatedPoints={detailVideoResult?.ticket_price}
-          showModal={showPurchaseTicketModal}
-          setShowModal={setShowPurchaseTicketModal}
-          handlePurchaseTicket={doConfirmPurchaseTicket}
-        />
-        <DialogLoginContainer showDialogLogin={showDialogLogin} onCloseDialogLogin={handleCloseDialogLogin} />
-        <DonatePointsConfirmModal
-          hasError={errorPurchase}
-          showConfirmModal={showConfirmModal}
-          handleClose={handleCloseConfirmModal}
-          myPoint={myPoint}
-          ticketPoint={detailVideoResult?.ticket_price}
-          msgContent={purchaseComment}
-          handleConfirm={handleConfirmPurchaseSuperChat}
-        />
-        <DonatePoints
-          myPoint={myPoint}
-          lackedPoint={lackedPoint}
-          showModalPurchasePoint={showModalPurchasePoint}
-          setShowModalPurchasePoint={(value) => setShowModalPurchasePoint(value)}
-        />
-      </Box>
-      {!detailVideoResult?.archived_url ? (
-        <Box
-          style={{
-            display: 'flex',
-            marginLeft: 24,
-            marginRight: 24,
-            backgroundColor: 'transparent',
-            height: '100%',
-            width: 482,
-            flexDirection: 'column',
-            borderRadius: 8,
-          }}
-        >
-          <PreloadChatContainer />
+            <DialogLoginContainer showDialogLogin={showDialogLogin} onCloseDialogLogin={handleCloseDialogLogin} />
+            <DonatePointsConfirmModal
+              hasError={errorPurchase}
+              showConfirmModal={showConfirmModal}
+              handleClose={handleCloseConfirmModal}
+              myPoint={myPoint}
+              ticketPoint={detailVideoResult?.ticket_price}
+              msgContent={purchaseComment}
+              handleConfirm={handleConfirmPurchaseSuperChat}
+            />
+            <DonatePoints
+              myPoint={myPoint}
+              lackedPoint={lackedPoint}
+              showModalPurchasePoint={showModalPurchasePoint}
+              setShowModalPurchasePoint={(value) => setShowModalPurchasePoint(value)}
+            />
+          </Box>
+          {!detailVideoResult?.archived_url ? (
+            <Box
+              style={{
+                display: 'flex',
+                marginLeft: 24,
+                marginRight: 24,
+                backgroundColor: 'transparent',
+                height: '100%',
+                width: 482,
+                flexDirection: 'column',
+                borderRadius: 8,
+              }}
+            >
+              <PreloadChatContainer />
+            </Box>
+          ) : (
+            !isMobile && sideChatContainer()
+          )}
         </Box>
       ) : (
-        !isMobile && sideChatContainer()
+        <> {handleShowDialogLogin()} </>
       )}
-      {/* <DonatePointsConfirmModal
-        hasError={errorPurchase}
-        showConfirmModal={showConfirmModal}
-        handleClose={handleCloseConfirmModal}
-        myPoint={myPoint}
-        ticketPoint={detailVideoResult?.ticket_price}
-        msgContent={purchaseComment}
-        handleConfirm={handleConfirmPurchaseSuperChat}
-      />
-      <DonatePoints
-        myPoint={myPoint}
-        lackedPoint={lackedPoint}
-        showModalPurchasePoint={showModalPurchasePoint}
-        setShowModalPurchasePoint={(value) => setShowModalPurchasePoint(value)}
-      /> */}
-    </Box>
+    </>
   )
 }
 export default VideoDetail
