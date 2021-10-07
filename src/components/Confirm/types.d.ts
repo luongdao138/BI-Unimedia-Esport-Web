@@ -14,6 +14,7 @@ export interface ConfirmOptions {
   confirmationButtonProps?: PrimaryButtonProps
   cancellationButtonProps?: ESButtonProps
   additionalText?: React.ReactNode
+  backDropClose?: boolean
 }
 
 export interface ConfirmProviderProps {

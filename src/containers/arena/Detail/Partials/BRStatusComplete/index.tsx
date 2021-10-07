@@ -18,7 +18,6 @@ import WinnerAvatar from './WinnerAvatar'
 import ESLoader from '@components/FullScreenLoader'
 import ButtonPrimary from '@components/ButtonPrimary'
 import SummaryModal from '../SummaryModal'
-import moment from 'moment'
 
 interface BRStatusBRStatusCompleteProps {
   arena: TournamentDetail
@@ -83,16 +82,11 @@ const BRStatusComplete: React.FC<BRStatusBRStatusCompleteProps> = ({ arena }) =>
         )
       }
       footer={
-        isModerator ? (
+        isModerator && arena.attributes.is_freezed ? (
           <div className={classes.footerContainer}>
             <ButtonGroup size="large">
               <div>
-                <ButtonPrimary
-                  round
-                  fullWidth
-                  onClick={() => setShowSummaryModal(true)}
-                  disabled={!winner || !moment().isSameOrAfter(moment(arena.attributes.end_date))}
-                >
+                <ButtonPrimary round fullWidth onClick={() => setShowSummaryModal(true)} disabled={!winner}>
                   {t('tournament.summary')}
                 </ButtonPrimary>
               </div>
