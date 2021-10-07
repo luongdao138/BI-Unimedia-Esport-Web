@@ -276,7 +276,7 @@ export default {
       cancel: '却下',
       hold: '保留',
       user: '一般ユーザー',
-      co_organizer: '共同管理者',
+      co_organizer: '副管理人',
       kick: 'キックする',
     },
     change_applying_members_toast: '更新しました。',
