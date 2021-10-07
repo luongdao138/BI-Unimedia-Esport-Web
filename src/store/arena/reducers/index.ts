@@ -125,7 +125,12 @@ export default createReducer(initialState, (builder) => {
       state.tournamentDetail.attributes.interested_count = action.payload.meta.total_count
     }
     state.tournamentParticipants = _participants
-    state.participantsMeta = action.payload.meta
+    state.participantsMeta = {
+      total_count: _participants.length,
+      per_page: 0,
+      current_page: 1,
+      total_pages: 1,
+    }
   })
   builder.addCase(actions.resetParticipants, (state) => {
     state.tournamentParticipants = []

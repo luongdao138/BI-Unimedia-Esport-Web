@@ -18,6 +18,7 @@ import ButtonPrimary from '@components/ButtonPrimary'
 import useArenaHelper from '@containers/arena/hooks/useArenaHelper'
 import RuleHeader from './RuleHeader'
 import useBRParticipants from '@containers/arena/hooks/useBRParticipants'
+import { ErrorType } from '../Partials/BRInput'
 
 const ArenaBattles: React.FC = () => {
   const router = useRouter()
@@ -27,7 +28,7 @@ const ArenaBattles: React.FC = () => {
   const { tournament, meta: detailMeta } = useTournamentDetail()
   const { isModerator, isParticipant, isTeamLeader } = useArenaHelper(tournament)
   const [hideFooter, setHideFooter] = useState(true)
-  const [errors, setErrors] = useState<Record<string, boolean>>({})
+  const [errors, setErrors] = useState<Record<string, ErrorType>>({})
 
   const {
     setBattleRoyaleScores,
@@ -63,7 +64,7 @@ const ArenaBattles: React.FC = () => {
     setSelecteds(participants)
   }, [participants])
 
-  const setScores = (value: number | null, id: number) => {
+  const setScores = (value: number | '', id: number) => {
     let newSelecteds = []
 
     if (tournament?.attributes.rule === 'battle_royale') {
@@ -86,7 +87,7 @@ const ArenaBattles: React.FC = () => {
             ...v,
             attributes: {
               ...v.attributes,
-              position: value,
+              attack_score: value,
             },
           }
         }
@@ -98,9 +99,9 @@ const ArenaBattles: React.FC = () => {
 
   const handleSubmitScore = () => {
     if (isModerator) {
-      setBattleRoyaleScores({ hash_key: tournament.attributes.hash_key, participants: selecteds })
+      setBattleRoyaleScores({ hash_key: tournament.attributes.hash_key, participants: selecteds, rule: tournament.attributes.rule })
     } else {
-      setBattleRoyaleOwnScore({ hash_key: tournament.attributes.hash_key, participants: selecteds })
+      setBattleRoyaleOwnScore({ hash_key: tournament.attributes.hash_key, participants: selecteds, rule: tournament.attributes.rule })
     }
   }
   useEffect(() => {
@@ -122,15 +123,17 @@ const ArenaBattles: React.FC = () => {
   }, [isModerator, isParticipant, tournament])
 
   const isScoreChanged = useMemo(() => !checkIsScoreChanged(selecteds, participants), [selecteds, participants])
-  const hasError = !!Object.keys(errors).length
 
-  const handleTimeAttackError = (value: boolean, idx: number) => {
+  const handleError = (value: ErrorType, idx: number) => {
     if (value) {
       setErrors({ ...errors, [idx]: value })
     } else {
       setErrors(_.omit(errors, [String(idx)]))
     }
   }
+
+  const errorObject = mergeErrors(errors)
+  const hasError = !_.isEmpty(errorObject)
 
   return (
     <StickyFooter
@@ -163,10 +166,10 @@ const ArenaBattles: React.FC = () => {
               highlight={v.highlight}
             >
               <BRScore
-                value={value || null}
+                value={value || ''}
                 participantCount={participants.length}
-                onChange={({ target: { value } }) => setScores(value === '' ? null : Number(value), v.id)}
-                onAttackError={(val) => handleTimeAttackError(val, v.id)}
+                onChange={({ target: { value } }) => setScores(value === '' ? '' : Number(value), v.id)}
+                onAttackError={(val) => handleError(val, v.id)}
                 type={tournament?.attributes.rule}
                 disabled={(v.attributes.is_fixed_score || !v.highlight) && !isModerator}
               />
@@ -206,4 +209,10 @@ export default ArenaBattles
 const checkIsScoreChanged = (p1: ParticipantsResponse[], p2: ParticipantsResponse[]): boolean => {
   if (!p1.length || !p2.length) return false
   return _.isEqual(p1, p2)
+}
+
+const mergeErrors = (errors: Record<string, ErrorType>): ErrorType => {
+  const errorArray = Object.values(errors)
+  if (errorArray.length) return errorArray.reduce((prev, curr) => ({ ...prev, ...curr }))
+  return {}
 }

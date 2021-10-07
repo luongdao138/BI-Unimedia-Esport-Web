@@ -585,6 +585,7 @@ export type BattleRoyaleScoreRecord = Record<number, number>
 export type SetBattleRoyaleScoresParams = {
   participants: ParticipantsResponse[]
   hash_key: string
+  rule: TournamentRule
 }
 export type SetBattleRoyaleScoresResponse = {
   data: ParticipantsResponse[]
@@ -742,10 +743,15 @@ export const updateTournamentTeamDetail = async (params: UpdateTournamentTeamPar
 export const setBattleRoyalScores = async ({
   hash_key,
   participants,
+  rule,
 }: SetBattleRoyaleScoresParams): Promise<{ data: ParticipantsResponse[] }> => {
   const scores = {}
   for (const p of participants) {
-    scores[p.id] = p.attributes.position
+    if (rule === 'battle_royale') {
+      if (p.attributes.position) scores[p.id] = p.attributes.position
+    } else {
+      if (p.attributes.attack_score) scores[p.id] = p.attributes.attack_score
+    }
   }
   const { data } = await api.post(URI.BATTLE_ROYALE_SET_SCORES.replace(/:id/gi, `${hash_key}`), { scores })
 
