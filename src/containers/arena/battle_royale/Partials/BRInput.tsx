@@ -12,6 +12,14 @@ const BRInput: React.FC<OutlinedInputProps> = (props) => {
   )
 }
 
+export type ErrorType = {
+  min?: boolean
+  max?: boolean
+  only_digit?: boolean
+  time_attack_format_invalid?: boolean
+  score_attack_format_invalid?: boolean
+}
+
 const useStyles = makeStyles(() => ({
   scoreWrap: {
     width: '100%',

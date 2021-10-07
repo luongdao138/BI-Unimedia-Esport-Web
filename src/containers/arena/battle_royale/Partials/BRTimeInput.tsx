@@ -29,7 +29,11 @@ interface TimeProps {
 }
 
 const BRTimeInput: React.FC<
-  OutlinedInputProps & { value: number | null; onAttackError: (error: boolean) => void; onChange: ({ target: { value: string } }) => void }
+  OutlinedInputProps & {
+    value: number | null
+    onAttackError: (error: boolean) => void
+    onChange: ({ target: { value: string } }) => void
+  }
 > = ({ value, onChange, onAttackError, ...props }) => {
   const classes = useStyles()
   const [time, setTime] = useState<TimeProps>(() => TournamentHelper.millisToTime(value))
