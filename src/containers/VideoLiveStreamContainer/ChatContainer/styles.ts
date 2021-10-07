@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
   },
   chatPurchaseTicketNote: {
     fontSize: 14,
-    margin: '18px 15px',
+    margin: '18px 16px',
   },
   purchaseCommentInputContainer: {
     width: '100%',
@@ -121,11 +121,12 @@ const useStyles = makeStyles((theme) => ({
     textAlign: 'center',
   },
   chatHeader: {
+    paddingLeft: '16px',
     display: 'flex',
     height: 50,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     width: '100%',
     backgroundColor: 'black',
   },
@@ -187,7 +188,7 @@ const useStyles = makeStyles((theme) => ({
       // },
     },
     '& :-webkit-autofill': {
-      WebkitBoxShadow: '0 0 0 100px #000000 inset',
+      WebkitBoxShadow: '0 0 0 100px #4d4d4d inset',
     },
   }),
   iconButtonBg: {
