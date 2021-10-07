@@ -55,7 +55,6 @@ export default {
     failed_to_get_data: 'データの取得に失敗しました。',
     input_is_incorrect: '入力内容が適切ではありません。',
     dash: '-',
-    dash_separator: 'ー',
     team: 'チーム',
     send: '送信する',
     select_an_image: '画像を選択',
