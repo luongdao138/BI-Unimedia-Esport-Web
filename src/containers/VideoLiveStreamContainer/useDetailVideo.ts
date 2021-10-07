@@ -13,6 +13,7 @@ const useDetailVideo = () => {
   const detailVideoResult = useAppSelector(selectors.videoDetailResult)
   const userResult = useAppSelector(selectors.userStreamerResult)
   const getVideoDetail = (params: VideoDetailParams) => dispatch(actions.videoDetail(params))
+  const resetVideoDetailData = () => dispatch(actions.resetVideoDetail())
   const meta = useAppSelector(_getDetailMeta)
   const streamingSecond = useAppSelector(selectors.streamingSecond)
   const playedSecond = useAppSelector(selectors.playedSecond)
@@ -39,6 +40,7 @@ const useDetailVideo = () => {
     detailVideoResult,
     userResult,
     getVideoDetail,
+    resetVideoDetailData,
     changeStreamingSecond,
     streamingSecond,
     playedSecond,

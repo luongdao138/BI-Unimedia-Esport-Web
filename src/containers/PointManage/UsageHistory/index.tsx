@@ -37,7 +37,6 @@ const UsageHistory: FC = () => {
     meta_used_points_detail,
     usagePointsHistoryDetail,
     resetDetailUsagePointsHistory,
-    resetUsagePoints,
   } = usePointsManage()
 
   const listFilterData = usedPointsData?.date_use_points
@@ -58,9 +57,6 @@ const UsageHistory: FC = () => {
 
   useEffect(() => {
     getUsedPointData(querySelected ? { page: page, limit: limit, type: 2, period: querySelected } : { page: page, limit: limit, type: 2 })
-    return () => {
-      resetUsagePoints()
-    }
   }, [page, querySelected])
 
   //set list filter

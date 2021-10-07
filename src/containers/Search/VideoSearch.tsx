@@ -28,7 +28,7 @@ const VideoSearchContainer: React.FC = () => {
 
   useEffect(() => {
     setKeyword(searchKeyword)
-    videoSearch({ page: page, keyword: searchKeyword, limit: LIMIT, category_id: searchCategoryID })
+    videoSearch({ page: 1, keyword: searchKeyword, limit: LIMIT, category_id: searchCategoryID })
 
     return () => {
       setPage(1)
@@ -38,7 +38,9 @@ const VideoSearchContainer: React.FC = () => {
   }, [searchKeyword])
 
   useEffect(() => {
-    if (page > 1) videoSearch({ page: page, limit: LIMIT, keyword: keyword, category_id: searchCategoryID })
+    if (page > 1) {
+      videoSearch({ page: page, limit: LIMIT, keyword: keyword, category_id: searchCategoryID })
+    }
   }, [page])
 
   const handleLoadMore = async () => {
