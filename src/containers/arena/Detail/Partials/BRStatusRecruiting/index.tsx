@@ -11,11 +11,11 @@ import { UserProfile } from '@services/user.service'
 import BRHeaderContent from '../BRHeaderContent'
 import ButtonPrimary from '@components/ButtonPrimary'
 import ESButton from '@components/Button'
-import RemainingDate from '../ActionComponent/RemainingDate'
 import EntryCount from '../ActionComponent/EntryCount'
 import useArenaHelper from '@containers/arena/hooks/useArenaHelper'
 import LoginRequired from '@containers/LoginRequired'
 import CloseRecruitmentModal from './CloseRecruitmentModal'
+import RemainingDate from './RemainingDate'
 
 import InidividualEntryEditModal from '../ActionComponent/InidividualEntryEditModal'
 import IndividualEntryModal from '../ActionComponent/IndividualEntryModal'
@@ -56,7 +56,7 @@ const BRStatusRecruiting: React.FC<BRStatusRecruitingProps> = ({ arena, userProf
       }
       content={
         <Box display="flex" flexDirection="column" alignItems="center">
-          <RemainingDate tournament={arena} />
+          <RemainingDate acceptanceEndDate={arena.attributes.acceptance_end_date} startDate={arena.attributes.start_date} />
           <EntryCount totalCount={arena.attributes.max_participants} count={entryMembersCount} isTeam={isTeam} />
           <ButtonGroup mt={3}>
             <ESButton onClick={toParticipants} variant="outlined" fullWidth style={{ maxWidth: 160 }}>
