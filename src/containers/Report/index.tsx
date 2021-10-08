@@ -41,6 +41,7 @@ import router from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
 import { LIGHTBOX_OPTIONS } from '@constants/common.constants'
 import { SRLWrapper } from 'simple-react-lightbox'
+import { ONLY_SPACE_REGEX } from '@constants/tournament.constants'
 
 export interface ESReportProps {
   chat_id?: string
@@ -78,7 +79,7 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
       .test('email-validation', t('user_report.email_test_result'), (value) => {
         return CommonHelper.validateEmail(value)
       }),
-    description: Yup.string().required(t('common.input_required')).max(5000),
+    description: Yup.string().required(t('common.input_required')).matches(ONLY_SPACE_REGEX, t('user_report.email_test_result')).max(5000),
     reason_id: Yup.number()
       .test('reason_id', '', (value) => {
         return value !== -1
@@ -346,13 +347,14 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
                       id="description"
                       name="description"
                       value={formik.values.description}
+                      onBlur={formik.handleBlur}
                       onChange={formik.handleChange}
                       labelPrimary={t('user_report.reason_desc')}
                       placeholder={t('user_report.reason_desc_placeholder')}
                       fullWidth
                       required
-                      helperText={formik.errors.description}
-                      error={!!formik.errors.description}
+                      helperText={formik.touched?.description && formik.errors.description}
+                      error={formik.touched?.description && !!formik.errors.description}
                       multiline
                       rows={6}
                     />
@@ -375,13 +377,14 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
                         id="user_email"
                         name="user_email"
                         value={formik.values.user_email}
+                        onBlur={formik.handleBlur}
                         onChange={formik.handleChange}
                         labelPrimary={t('user_report.reporter_email')}
                         placeholder={t('user_report.reporter_email_placeholder')}
                         fullWidth
                         required
-                        helperText={formik.errors.user_email}
-                        error={!!formik.errors.user_email}
+                        helperText={formik.touched?.user_email && formik.errors.user_email}
+                        error={formik.touched?.user_email && !!formik.errors.user_email}
                       />
                     )}
                   </Box>

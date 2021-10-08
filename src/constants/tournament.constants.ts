@@ -127,3 +127,5 @@ export const TOURNAMENT_DIALOGS = {
     cancellationText: i18n.t('common:common.cancel'),
   },
 }
+
+export const ONLY_SPACE_REGEX = /^(?!\s+$)/
