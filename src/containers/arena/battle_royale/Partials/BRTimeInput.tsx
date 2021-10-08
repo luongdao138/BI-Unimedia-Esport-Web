@@ -15,6 +15,7 @@ type TimeInputError = {
 }
 
 const checkNumber = (v: any) => !(_.isNumber(Number(v)) && !isNaN(Number(v)))
+const checkIsNumber = (v: any) => _.isNumber(Number(v)) && v !== ''
 const errorDefault = {
   hours: {},
   minutes: {},
@@ -40,7 +41,7 @@ const validateError = (value: TimeProps): TimeInputError => {
     if (checkNumber(value.minutes)) {
       errors = { ...errors, minutes: { ...errors.minutes, time_attack_format_invalid: true } }
     }
-    if (Number(value.minutes) > 59) {
+    if (Number(value.minutes) > 59 || Number(value.minutes) < 0) {
       errors = { ...errors, minutes: { ...errors.minutes, time_attack_max_exceeds: true } }
     }
   }
@@ -48,7 +49,7 @@ const validateError = (value: TimeProps): TimeInputError => {
     if (checkNumber(value.seconds)) {
       errors = { ...errors, seconds: { ...errors.seconds, time_attack_format_invalid: true } }
     }
-    if (Number(value.seconds) > 59) {
+    if (Number(value.seconds) > 59 || Number(value.seconds) < 0) {
       errors = { ...errors, seconds: { ...errors.seconds, time_attack_max_exceeds: true } }
     }
   }
@@ -74,7 +75,11 @@ const BRTimeInput: React.FC<
 
   useEffect(() => {
     setError(validateError(time))
-    onChange({ target: { value: TournamentHelper.timeToMillis(time) } })
+    if (checkIsNumber(time.hours) && checkIsNumber(time.minutes) && checkIsNumber(time.seconds) && checkIsNumber(time.millis)) {
+      onChange({ target: { value: TournamentHelper.timeToMillis(time) } })
+    } else {
+      onChange({ target: { value: '' } })
+    }
   }, [time])
 
   useEffect(() => {
