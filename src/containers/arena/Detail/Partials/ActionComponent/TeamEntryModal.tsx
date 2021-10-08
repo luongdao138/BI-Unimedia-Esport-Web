@@ -204,7 +204,7 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
   return (
     <FocusContextProvider>
       <FocusContext.Consumer>
-        {({ isFocused }) => (
+        {({ isFocused, focusEvent }) => (
           <>
             <StickyActionModal
               open={open}
@@ -237,7 +237,11 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
                       fullWidth
                       required
                       value={values.team_name}
-                      onBlur={handleBlur}
+                      {...focusEvent}
+                      onBlur={(e) => {
+                        handleBlur(e)
+                        focusEvent.onBlur()
+                      }}
                       onChange={handleChange}
                       helperText={touched.team_name && errors.team_name}
                     />

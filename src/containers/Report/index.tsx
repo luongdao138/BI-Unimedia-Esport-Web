@@ -41,7 +41,6 @@ import router from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
 import { LIGHTBOX_OPTIONS } from '@constants/common.constants'
 import { SRLWrapper } from 'simple-react-lightbox'
-import { ONLY_SPACE_REGEX } from '@constants/tournament.constants'
 
 export interface ESReportProps {
   chat_id?: string
@@ -79,7 +78,7 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
       .test('email-validation', t('user_report.email_test_result'), (value) => {
         return CommonHelper.validateEmail(value)
       }),
-    description: Yup.string().required(t('common.input_required')).matches(ONLY_SPACE_REGEX, t('user_report.email_test_result')).max(5000),
+    description: Yup.string().trim().required(t('common.input_required')).max(5000),
     reason_id: Yup.number()
       .test('reason_id', '', (value) => {
         return value !== -1
