@@ -183,7 +183,7 @@ const useStyles = makeStyles((theme) => ({
   listContainer: {
     paddingBottom: 80,
     paddingLeft: theme.spacing(3),
-    paddingRight: theme.spacing(10),
+    paddingRight: theme.spacing(3),
   },
   [theme.breakpoints.down('sm')]: {
     listContainer: {
