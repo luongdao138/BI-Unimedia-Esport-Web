@@ -19,6 +19,7 @@ const useBRStatusComplete = () => {
       dispatch(actions.getBattleRoyaleParticipants({ hash_key: String(router.query.hash_key), page: 1, role: 'participant' }))
     }
     return () => {
+      dispatch(actions.resetParticipants())
       dispatch(clearMetaData(actions.getArenaWinners.typePrefix))
     }
   }, [router])

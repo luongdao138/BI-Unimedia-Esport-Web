@@ -560,7 +560,7 @@ export default {
       },
       score_attack_errors: {
         format_invalid: 'スコアは半角数字で入力してください',
-        time_attack_max_exceeds: 'スコアを8桁までに入力して下さい。',
+        score_attack_max_exceeds: 'スコアを8桁までに入力して下さい。',
       },
     },
     status: {
@@ -593,7 +593,7 @@ export default {
         title: '{{isTeam, participation_type}}をランダムに配置します',
         subtitle: '現在エントリーしている{{isTeam, participation_type}}を対戦表の空欄になっている枠へランダムに配置します',
         description: `※エントリーしている{{isTeam, participation_type}}数が参加枠数よりも多い場合は、選択されなかったユーザーは落選となります。
-        
+
                       ※落選する{{isTeam, participation_type}}を出したくない場合は、大会管理から参加枠数を変更した後に配置を行ってください。`,
         additionalText: 'この時点ではまだエントリー表は確定しません',
         confirmationText: '配置する',
@@ -634,6 +634,7 @@ export default {
     please_select_winner: '勝者を選択してください',
     summary: '大会総括',
     summary_title: '大会の総括',
+    summary_input_placeholder: '大会の総括を入力することができます',
     summary_submit: 'この内容で決定する',
     copy_toast: 'クリップボードにコピーしました',
     edit_arena_info: '編集',
