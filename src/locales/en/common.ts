@@ -560,7 +560,7 @@ export default {
       },
       score_attack_errors: {
         format_invalid: 'スコアは半角数字で入力してください',
-        time_attack_max_exceeds: 'スコアを8桁までに入力して下さい。',
+        score_attack_max_exceeds: 'スコアを8桁までに入力して下さい。',
       },
     },
     status: {
@@ -634,6 +634,7 @@ export default {
     please_select_winner: '勝者を選択してください',
     summary: '大会総括',
     summary_title: '大会の総括',
+    summary_input_placeholder: '大会の総括を入力することができます',
     summary_submit: 'この内容で決定する',
     copy_toast: 'クリップボードにコピーしました',
     edit_arena_info: '編集',
