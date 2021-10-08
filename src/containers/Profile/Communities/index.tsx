@@ -12,7 +12,7 @@ interface Props {
 const CommunityContainer: React.FC<Props> = ({ userCode }) => {
   const classes = useStyles()
 
-  const { communities, meta, pages, fetchCommunityData, resetMeta } = useCommunityByUserData()
+  const { communities, meta, pages, fetchCommunityData, resetMeta, clearCommunityData } = useCommunityByUserData()
   const { t } = useTranslation(['common'])
 
   const hasNextPage = pages && Number(pages.current_page) !== Number(pages.total_pages)
@@ -25,7 +25,10 @@ const CommunityContainer: React.FC<Props> = ({ userCode }) => {
 
   useEffect(() => {
     fetchCommunityData({ page: 1, user_code: userCode })
-    return () => resetMeta()
+    return () => {
+      resetMeta()
+      clearCommunityData()
+    }
   }, [])
 
   return (

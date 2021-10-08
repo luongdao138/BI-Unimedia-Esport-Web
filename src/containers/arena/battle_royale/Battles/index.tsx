@@ -119,15 +119,17 @@ const ArenaBattles: React.FC = () => {
     }
   }, [setBattleRoyaleScoresMeta.loaded, setBattleRoyaleOwnScoreMeta.loaded])
 
+  const isFixedMyScore = useMemo(() => getIsFixedMyScore(selecteds), [selecteds])
+
   useEffect(() => {
     if (tournament?.attributes.status === 'in_progress' || tournament?.attributes.status === 'completed') {
       if (isModerator) {
         setHideFooter(false)
-      } else if (isParticipant && isTeamLeader) {
+      } else if (isParticipant && isTeamLeader && !isFixedMyScore) {
         setHideFooter(false)
       }
     }
-  }, [isModerator, isParticipant, tournament])
+  }, [isModerator, isParticipant, tournament, isFixedMyScore])
 
   const isScoreChanged = useMemo(() => !checkIsScoreChanged(selecteds, participants), [selecteds, participants])
 
@@ -249,4 +251,10 @@ const mergeErrors = (errors: Record<string, ErrorType>): ErrorType => {
   const errorArray = Object.values(errors)
   if (errorArray.length) return errorArray.reduce((prev, curr) => ({ ...prev, ...curr }))
   return {}
+}
+
+const getIsFixedMyScore = (participants: ParticipantsResponse[]): boolean => {
+  const myTeam = participants.filter((p) => p.highlight)
+  if (myTeam.length) return myTeam[0].attributes.is_fixed_score
+  return true
 }

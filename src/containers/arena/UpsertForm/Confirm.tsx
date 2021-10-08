@@ -186,7 +186,7 @@ const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, prefectures, user,
       <Box pb={2} />
       <ESInput labelPrimary={t('common:tournament_create.organizer')} value={user.nickname} disabled={true} fullWidth />
       <Box pb={2} />
-      <ESInput labelPrimary={t('common:tournament_create.co_organizer')} value={coOrganizers} disabled={true} fullWidth />
+      <ESInput labelPrimary={t('common:tournament_create.co_organizer')} value={coOrganizers} disabled={true} fullWidth multiline />
       <Box pb={2} />
       <ESInput
         labelPrimary={t('common:tournament_create.organizer_name')}
