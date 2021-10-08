@@ -554,6 +554,9 @@ export default {
       score_attack_error: `スコアは半角数字で入力してください
 入力上限は8桁となります`,
       battle_royale_error: '順位は半角数字で入力してください',
+      battle_royale_errors: {
+        min_max_range_invalid: '{{min}}～{{max}}までの半角数字を入力してください',
+      },
       time_attack_errors: {
         format_invalid: 'タイムは半角数字で入力してください',
         time_attack_max_exceeds: '分、秒は0〜59の間の数字を入力してください',

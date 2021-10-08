@@ -10,8 +10,8 @@ import { OutlinedInputProps } from '@material-ui/core'
 const validateError = ({ value }: PlacementProps, max: number): ErrorType => {
   const error: ErrorType = {}
   if (value) {
-    if (Number(value) > max) {
-      error['placement_max_exceeds'] = true
+    if (Number(value) > max || !(_.isNumber(Number(value)) && !isNaN(Number(value)) && Number(value) > 0)) {
+      error['placement_min_max_range_invalid'] = true
     }
     if (!(_.isNumber(Number(value)) && !isNaN(Number(value)))) {
       error['only_digit'] = true
