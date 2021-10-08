@@ -560,7 +560,7 @@ export default {
       },
       score_attack_errors: {
         format_invalid: 'スコアは半角数字で入力してください',
-        time_attack_max_exceeds: 'スコアを8桁までに入力して下さい。',
+        score_attack_max_exceeds: 'スコアを8桁までに入力して下さい。',
       },
     },
     status: {
