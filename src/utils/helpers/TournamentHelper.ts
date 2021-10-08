@@ -284,7 +284,7 @@ const millisToTime = (duration: number | null) => {
   const minutes: string | number = Math.floor((duration / (1000 * 60)) % 60)
   const hours: string | number = Math.floor(duration / (1000 * 60 * 60))
 
-  return { hours: Number(hours), minutes: minutes, seconds: seconds, millis: millis }
+  return { hours: Number(hours) || '', minutes: minutes || '', seconds: seconds || '', millis: millis || '' }
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
