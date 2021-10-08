@@ -25,7 +25,7 @@ type DistributorInfoProps = {
 const DistributorInfo: React.FC<DistributorInfoProps> = ({ video_id }) => {
   const classes = useStyles()
   const theme = useTheme()
-  const downMd = useMediaQuery(theme.breakpoints.down(769))
+  const downMd = useMediaQuery(theme.breakpoints.down(769), { noSsr: true })
   const isLoading = false
   const { detailVideoResult } = useDetailVideo()
   const { meta_archived_video_stream, archivedVideoStreamData, getArchivedVideoStream, resetArchivedVideoStream } = useLiveStreamDetail()
@@ -80,7 +80,7 @@ const DistributorInfo: React.FC<DistributorInfoProps> = ({ video_id }) => {
     switch (item?.type) {
       case 'twitter':
         return (
-          <>
+          <React.Fragment key={item?.id}>
             {detailVideoResult?.channel_twitter_link && (
               <SocialDistributionCircle
                 onlyIcon={!!detailVideoResult?.channel_twitter_link}
@@ -90,11 +90,11 @@ const DistributorInfo: React.FC<DistributorInfoProps> = ({ video_id }) => {
                 link={detailVideoResult?.channel_twitter_link}
               />
             )}
-          </>
+          </React.Fragment>
         )
       case 'instagram':
         return (
-          <>
+          <React.Fragment key={item?.id}>
             {detailVideoResult?.channel_instagram_link && (
               <SocialDistributionCircle
                 onlyIcon={!!detailVideoResult?.channel_instagram_link}
@@ -104,11 +104,11 @@ const DistributorInfo: React.FC<DistributorInfoProps> = ({ video_id }) => {
                 link={detailVideoResult?.channel_instagram_link}
               />
             )}
-          </>
+          </React.Fragment>
         )
       default:
         return (
-          <>
+          <React.Fragment key={item?.id}>
             {detailVideoResult?.channel_discord_link && (
               <SocialDistributionCircle
                 onlyIcon={!!detailVideoResult?.channel_discord_link}
@@ -118,7 +118,7 @@ const DistributorInfo: React.FC<DistributorInfoProps> = ({ video_id }) => {
                 link={detailVideoResult?.channel_discord_link}
               />
             )}
-          </>
+          </React.Fragment>
         )
     }
   }
@@ -238,7 +238,8 @@ const DistributorInfo: React.FC<DistributorInfoProps> = ({ video_id }) => {
           next={handleLoadMore}
           hasMore={hasMore}
           loader={
-            isLoadingData && (
+            isLoadingData &&
+            !downMd && (
               <div className={classes.loaderCenter}>
                 <ESLoader />
               </div>

@@ -18,7 +18,7 @@ type ProgramInfoProps = {
 const ProgramInfo: React.FC<ProgramInfoProps> = ({ video_id }) => {
   const classes = useStyles()
   const theme = useTheme()
-  const downMd = useMediaQuery(theme.breakpoints.down(769))
+  const downMd = useMediaQuery(theme.breakpoints.down(769), { noSsr: true })
 
   const { meta_archived_video_stream, archivedVideoStreamData, getArchivedVideoStream, resetArchivedVideoStream } = useLiveStreamDetail()
   const { detailVideoResult } = useDetailVideo()
@@ -124,7 +124,8 @@ const ProgramInfo: React.FC<ProgramInfoProps> = ({ video_id }) => {
           next={handleLoadMore}
           hasMore={hasMore}
           loader={
-            isLoadingData && (
+            isLoadingData &&
+            !downMd && (
               <div className={classes.loaderCenter}>
                 <ESLoader />
               </div>

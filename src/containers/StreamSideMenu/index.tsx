@@ -143,22 +143,24 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
               </ListItem>
             </Link>
             {/* Favorite Tab */}
-            <Link
-              href={{
-                pathname: ESRoutes.VIDEO_TOP,
-                query: { default_tab: 4 },
-              }}
-              passHref
-              as={ESRoutes.VIDEO_TOP}
-            >
-              <ListItem className={classes.list + getAddClass(classes.noMinimizeList, classes.minimizeList)} button disableRipple>
-                <ListItemIcon className={classes.icon}>
-                  <Icon fontSize="small" className="fa fa-heart" />
-                </ListItemIcon>
-                {/* link to top video page and tab favorite(お気に入り) is selected*/}
-                {!minimizeLayout && <ListItemText className={classes.listText} primary={t('common:home.top_video')} />}
-              </ListItem>
-            </Link>
+            <LoginRequired>
+              <Link
+                href={{
+                  pathname: ESRoutes.VIDEO_TOP,
+                  query: { default_tab: 4 },
+                }}
+                passHref
+                as={ESRoutes.VIDEO_TOP}
+              >
+                <ListItem className={classes.list + getAddClass(classes.noMinimizeList, classes.minimizeList)} button disableRipple>
+                  <ListItemIcon className={classes.icon}>
+                    <Icon fontSize="small" className="fa fa-heart" />
+                  </ListItemIcon>
+                  {/* link to top video page and tab favorite(お気に入り) is selected*/}
+                  {!minimizeLayout && <ListItemText className={classes.listText} primary={t('common:home.top_video')} />}
+                </ListItem>
+              </Link>
+            </LoginRequired>
             {/*{isStreamer && (*/}
             {/*  <Link*/}
             {/*    href={{*/}

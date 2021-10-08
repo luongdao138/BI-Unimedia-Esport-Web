@@ -559,14 +559,20 @@ const useStyles = makeStyles((theme) => ({
     position: 'relative',
     width: '100%',
   },
-  tabContainer: {
-    paddingRight: 122,
-  },
-  tabs: {
-    overflow: 'hidden',
+  tabsContainer: {
+    display: 'flex',
+    width: '100%',
+    // paddingRight: 122,
     borderBottomColor: Colors.text[300],
     borderBottomWidth: 1,
     borderBottomStyle: 'solid',
+  },
+  tabs: {
+    display: 'flex',
+    overflow: 'hidden',
+    // borderBottomColor: Colors.text[300],
+    // borderBottomWidth: 1,
+    // borderBottomStyle: 'solid',
     paddingLeft: 24,
   },
   forbiddenMessageContainer: {
@@ -604,13 +610,30 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   [theme.breakpoints.down(415)]: {
+    tabsContainer: {
+      display: 'flex',
+      paddingRight: 0,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    tabs: {
+      display: 'flex',
+      paddingLeft: 0,
+    },
     singleTab: {
       minWidth: 56,
-      marginRight: '12px',
+      // marginRight: '12px',
     },
   },
   [theme.breakpoints.down(375)]: {
+    tabsContainer: {
+      display: 'flex',
+      paddingRight: 0,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
     tabs: {
+      display: 'flex',
       paddingLeft: 0,
     },
     singleTab: {
