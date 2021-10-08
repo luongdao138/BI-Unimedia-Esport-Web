@@ -1,5 +1,5 @@
 import { GameTitle } from '@services/game.service'
-import { RecommendedUsers } from '@services/arena.service'
+import { RecommendedUsers, TournamentRule } from '@services/arena.service'
 
 type GameTitleItem = GameTitle['attributes']
 
@@ -14,7 +14,7 @@ export type FormType = {
     overview: string
   }
   stepTwo: {
-    rule: string | -1
+    rule: TournamentRule | -1
     sort_by: 'by_asc' | 'by_desc'
     t_type: 't_public' | 't_private' | -1
     has_third_place: boolean

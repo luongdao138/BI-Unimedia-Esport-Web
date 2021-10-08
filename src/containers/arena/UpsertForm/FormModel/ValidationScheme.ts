@@ -117,7 +117,7 @@ export const getValidationScheme = (data: TournamentDetail, editables: EditableT
       }),
       acceptance_end_start_date: Yup.string().when(['acceptance_end_date', 'start_date'], {
         is: (acceptance_end_date, start_date) => {
-          return Date.parse(acceptance_end_date) > Date.parse(start_date)
+          return Date.parse(acceptance_end_date) >= Date.parse(start_date)
         },
         then: Yup.string().required(i18n.t('common:common.validation.acceptance_end_start_date')),
       }),

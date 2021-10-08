@@ -25,20 +25,19 @@ const useWinners = (isImmediately = true) => {
   const { userProfile } = useGetProfile()
   const brFirstPlace = useAppSelector(selectors.getBattleRoyaleFirstPlace)
   const trFirstPlace = useAppSelector(selectors.getTournamentFirstPlace)
-  const { isNotHeld, isTeam, isBattleRoyale } = useArenaHelper(arena)
+  const { isNotHeld, isTeam, isBattleRoyale, isCancelled } = useArenaHelper(arena)
   const fetchWinners = () => dispatch(actions.getArenaWinners(router.query.hash_key))
-  useEffect(() => {
-    if (isNotHeld) toDetail()
-  }, [isNotHeld])
+  // useEffect(() => {
+  //   if (isNotHeld) toDetail()
+  // }, [isNotHeld])
 
   useEffect(() => {
     if (router.query.hash_key && isImmediately) {
       dispatch(actions.getTournamentDetail(router.query.hash_key))
     }
   }, [router.query.hash_key, userProfile])
-
   useEffect(() => {
-    if (arenaMeta.loaded && !isNotHeld) {
+    if (arena && arenaMeta.loaded && !isNotHeld && !isCancelled) {
       switch (arena.attributes.rule) {
         case 'battle_royale':
         case 'score_attack':
@@ -53,7 +52,7 @@ const useWinners = (isImmediately = true) => {
           break
       }
     }
-  }, [arenaMeta.loaded, isNotHeld])
+  }, [arena, arenaMeta.loaded, isNotHeld, isCancelled])
 
   const toDetail = () => {
     const placementsUrl = '/placements'
@@ -86,6 +85,8 @@ const useWinners = (isImmediately = true) => {
     isBattleRoyale,
     winner: isBattleRoyale ? brFirstPlace : trFirstPlace,
     resetMeta,
+    isCancelled,
+    isNotHeld,
   }
 }
 
