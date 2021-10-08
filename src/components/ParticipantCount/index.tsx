@@ -2,8 +2,8 @@ import { Typography, Box, makeStyles } from '@material-ui/core'
 
 type ProfileAvatarProps = {
   label: string | null
-  max: number
-  total: number
+  max: number | string
+  total: number | string
   unit: string
 }
 
@@ -54,7 +54,7 @@ const useStyles = makeStyles(() => ({
     top: -2,
   },
   maxCount: {
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: 400,
   },
   totalCount: {

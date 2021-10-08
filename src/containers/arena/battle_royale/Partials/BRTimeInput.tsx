@@ -1,26 +1,26 @@
 import { useState, useEffect, ChangeEvent } from 'react'
-import BRInput from './BRInput'
+import BRInput, { ErrorType } from './BRInput'
 import { OutlinedInputProps } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
 import _ from 'lodash'
-import { DATE_TIME } from '@constants/battleroyale.constants'
 import i18n from '@locales/i18n'
 import { TournamentHelper } from '@utils/helpers/TournamentHelper'
 
-const validateNumber = (value: string | number, type: string): boolean => {
-  let res = false
-  if ((_.isNumber(Number(value)) && !isNaN(Number(value)) && Number(value) > -1) || _.isEmpty(value)) {
-    res = true
-  }
-
-  if (type === DATE_TIME.MINUTES || type === DATE_TIME.SECONDS) {
-    res = _.isNumber(Number(value)) && !isNaN(Number(value)) && Number(value) <= 59 ? true : false
-  }
-
-  return res
+type TimeInputError = {
+  hours: ErrorType
+  minutes: ErrorType
+  seconds: ErrorType
+  millis: ErrorType
 }
 
+const checkNumber = (v: any) => !(_.isNumber(Number(v)) && !isNaN(Number(v)))
+const errorDefault = {
+  hours: {},
+  minutes: {},
+  seconds: {},
+  millis: {},
+}
 interface TimeProps {
   hours: string | number
   minutes: string | number
@@ -28,27 +28,57 @@ interface TimeProps {
   millis: string | number
 }
 
+const validateError = (value: TimeProps): TimeInputError => {
+  let errors: TimeInputError = errorDefault
+
+  if (value.hours) {
+    if (checkNumber(value.hours)) {
+      errors = { ...errors, hours: { ...errors.hours, time_attack_format_invalid: true } }
+    }
+  }
+  if (value.minutes) {
+    if (checkNumber(value.minutes)) {
+      errors = { ...errors, minutes: { ...errors.minutes, time_attack_format_invalid: true } }
+    }
+    if (Number(value.minutes) > 59) {
+      errors = { ...errors, minutes: { ...errors.minutes, time_attack_max_exceeds: true } }
+    }
+  }
+  if (value.seconds) {
+    if (checkNumber(value.seconds)) {
+      errors = { ...errors, seconds: { ...errors.seconds, time_attack_format_invalid: true } }
+    }
+    if (Number(value.seconds) > 59) {
+      errors = { ...errors, seconds: { ...errors.seconds, time_attack_max_exceeds: true } }
+    }
+  }
+  if (value.millis) {
+    if (checkNumber(value.millis)) {
+      errors = { ...errors, millis: { ...errors.millis, time_attack_format_invalid: true } }
+    }
+  }
+
+  return errors
+}
+
 const BRTimeInput: React.FC<
-  OutlinedInputProps & { value: number | null; onAttackError: (error: boolean) => void; onChange: ({ target: { value: string } }) => void }
+  OutlinedInputProps & {
+    value: number | ''
+    onAttackError?: (error: ErrorType) => void
+    onChange: ({ target: { value: string } }) => void
+  }
 > = ({ value, onChange, onAttackError, ...props }) => {
   const classes = useStyles()
-  const [time, setTime] = useState<TimeProps>(() => TournamentHelper.millisToTime(value))
-  const [error, setError] = useState<boolean>(false)
+  const [time, setTime] = useState<TimeProps>(() => TournamentHelper.millisToTime(Number(value)))
+  const [error, setError] = useState<TimeInputError>(errorDefault)
 
   useEffect(() => {
-    const result = TournamentHelper.timeToMillis(time)
-
-    if (isNaN(Number(result)) || !validateNumber(time.minutes, DATE_TIME.MINUTES) || !validateNumber(time.seconds, DATE_TIME.SECONDS)) {
-      setError(true)
-    } else {
-      setError(false)
-    }
-
-    onChange({ target: { value: String(result) } })
+    setError(validateError(time))
+    onChange({ target: { value: TournamentHelper.timeToMillis(time) } })
   }, [time])
 
   useEffect(() => {
-    onAttackError(error)
+    onAttackError(mergeErrors(error))
   }, [error])
 
   const handleHourChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -79,12 +109,19 @@ const BRTimeInput: React.FC<
     }))
   }
 
+  const hasError = {
+    hours: !_.isEmpty(error.hours),
+    minutes: !_.isEmpty(error.minutes),
+    seconds: !_.isEmpty(error.seconds),
+    millis: !_.isEmpty(error.millis),
+  }
+
   return (
     <>
       <BRInput
         inputProps={{ maxLength: 2 }}
         value={time.hours}
-        style={{ color: validateNumber(time.hours, DATE_TIME.HOURS) ? Colors.white_opacity[70] : Colors.secondary }}
+        style={{ color: hasError.hours ? Colors.secondary : Colors.white_opacity[70] }}
         onChange={handleHourChange}
         placeholder={i18n.t('common:common.hour')}
         {...props}
@@ -93,7 +130,7 @@ const BRTimeInput: React.FC<
       <BRInput
         inputProps={{ maxLength: 2 }}
         value={time.minutes}
-        style={{ color: validateNumber(time.minutes, DATE_TIME.MINUTES) ? Colors.white_opacity[70] : Colors.secondary }}
+        style={{ color: hasError.minutes ? Colors.secondary : Colors.white_opacity[70] }}
         onChange={handleMinuteChange}
         placeholder={i18n.t('common:common.minute')}
         {...props}
@@ -102,7 +139,7 @@ const BRTimeInput: React.FC<
       <BRInput
         inputProps={{ maxLength: 2 }}
         value={time.seconds}
-        style={{ color: validateNumber(time.seconds, DATE_TIME.SECONDS) ? Colors.white_opacity[70] : Colors.secondary }}
+        style={{ color: hasError.seconds ? Colors.secondary : Colors.white_opacity[70] }}
         onChange={handleSecondChange}
         placeholder={i18n.t('common:common.second')}
         {...props}
@@ -111,7 +148,7 @@ const BRTimeInput: React.FC<
       <BRInput
         inputProps={{ maxLength: 3 }}
         value={time.millis}
-        style={{ color: validateNumber(time.millis, DATE_TIME.MILLIS) ? Colors.white_opacity[70] : Colors.secondary }}
+        style={{ color: hasError.millis ? Colors.secondary : Colors.white_opacity[70] }}
         onChange={handleMillisChange}
         placeholder={i18n.t('common:common.millis')}
         {...props}
@@ -129,3 +166,9 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 export default BRTimeInput
+
+const mergeErrors = (errors: Record<string, ErrorType>): ErrorType => {
+  const errorArray = Object.values(errors)
+  if (errorArray.length) return errorArray.reduce((prev, curr) => ({ ...prev, ...curr }))
+  return {}
+}
