@@ -16,7 +16,7 @@ type RelatedVideosProps = {
 const RelatedVideos: React.FC<RelatedVideosProps> = ({ video_id }) => {
   const classes = useStyles()
   const theme = useTheme()
-  const downMd = useMediaQuery(theme.breakpoints.down(769))
+  const downMd = useMediaQuery(theme.breakpoints.down(769), { noSsr: true })
   const [page, setPage] = useState<number>(1)
   const [hasMore, setHasMore] = useState(true)
   const limit = LIMIT_ITEM
@@ -88,10 +88,11 @@ const RelatedVideos: React.FC<RelatedVideosProps> = ({ video_id }) => {
         <InfiniteScroll
           className={classes.scrollContainer}
           dataLength={relatedVideoStreamData.length}
-          next={handleLoadMore}
+          next={downMd && handleLoadMore}
           hasMore={hasMore}
           loader={
-            isLoading && (
+            isLoading &&
+            !downMd && (
               <div className={classes.loaderCenter}>
                 <ESLoader />
               </div>
