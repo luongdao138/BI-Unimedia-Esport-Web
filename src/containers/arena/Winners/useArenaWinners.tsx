@@ -27,9 +27,9 @@ const useWinners = (isImmediately = true) => {
   const trFirstPlace = useAppSelector(selectors.getTournamentFirstPlace)
   const { isNotHeld, isTeam, isBattleRoyale, isCancelled } = useArenaHelper(arena)
   const fetchWinners = () => dispatch(actions.getArenaWinners(router.query.hash_key))
-  // useEffect(() => {
-  //   if (isNotHeld) toDetail()
-  // }, [isNotHeld])
+  useEffect(() => {
+    if (isNotHeld || isCancelled) toDetail()
+  }, [isNotHeld, isCancelled])
 
   useEffect(() => {
     if (router.query.hash_key && isImmediately) {
