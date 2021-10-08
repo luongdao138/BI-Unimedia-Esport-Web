@@ -13,8 +13,8 @@ function SortInfoDialogContent() {
         <Box>{t('tournament_create.sort_info_modal.row1col2')}</Box>
       </Box>
       <Box display="flex">
-        <Box minWidth={72}>{t('tournament_create.sort_info_modal.row1col1')}</Box>
-        <Box>{t('tournament_create.sort_info_modal.row1col2')}</Box>
+        <Box minWidth={72}>{t('tournament_create.sort_info_modal.row2col1')}</Box>
+        <Box>{t('tournament_create.sort_info_modal.row2col2')}</Box>
       </Box>
     </Box>
   )
