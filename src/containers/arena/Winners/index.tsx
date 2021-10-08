@@ -7,6 +7,7 @@ import { Typography, IconButton, Box, Divider } from '@material-ui/core'
 import ArenaAvatar from './ArenaAvatar'
 import { useEffect, useState, useRef } from 'react'
 import ESButton from '@components/Button'
+import ESLoader from '@components/FullScreenLoader'
 import { useTranslation } from 'react-i18next'
 import Linkify from 'react-linkify'
 import { ParticipantsResponse, PlacementItem } from '@services/arena.service'
@@ -20,6 +21,7 @@ const ArenaWinners: React.FC = () => {
   const {
     arenaWinners,
     arena,
+    arenaMeta,
     handleBack,
     toDetail,
     isTeam,
@@ -31,6 +33,8 @@ const ArenaWinners: React.FC = () => {
     winnersMeta,
     brWinnersMeta,
     resetMeta,
+    isCancelled,
+    isNotHeld,
   } = useArenaWinners()
   const classes = useStyles()
   const [showSummary, setShowSummary] = useState(false)
@@ -65,7 +69,10 @@ const ArenaWinners: React.FC = () => {
     const id = Number(item.attributes.team?.data.id || item.id)
     setSelectedItem({ id, highlight: item.highlight })
   }
-  return (
+
+  return arenaMeta.pending && (winnersMeta.pending || brWinnersMeta.pending) ? (
+    <ESLoader open={true} />
+  ) : arenaMeta.loaded && arena && !(isNotHeld || isCancelled) ? (
     <div className={classes.root}>
       <div ref={backButtonRef} className={classes.backButtonWrapper}>
         <IconButton className={classes.backButton} onClick={handleBack}>
@@ -167,7 +174,7 @@ const ArenaWinners: React.FC = () => {
         />
       )}
     </div>
-  )
+  ) : null
 }
 
 export default ArenaWinners

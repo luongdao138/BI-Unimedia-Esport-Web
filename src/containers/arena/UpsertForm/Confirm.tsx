@@ -147,6 +147,13 @@ const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, prefectures, user,
       <ESInput labelPrimary={t('common:tournament_create.game_hardware')} value={hardwareName} disabled={true} fullWidth />
       <Box pb={2} />
       <ESInput labelPrimary={t('common:tournament_create.holding_format')} value={ruleName} disabled={true} fullWidth />
+      {values.stepTwo.rule === 'score_attack' || values.stepTwo.rule === 'time_attack' ? (
+        <ESInput
+          value={values.stepTwo.sort_by === 'by_asc' ? t('common:tournament_create.by_asc') : t('common:tournament_create.by_desc')}
+          disabled={true}
+          fullWidth
+        />
+      ) : null}
       {values.stepTwo.has_third_place && <ESInput value={t('common:tournament_create.has_third_place')} disabled={true} fullWidth />}
       <Box pb={2} />
       <ESInput labelPrimary={t('common:tournament_create.participation')} value={participationType} disabled={true} fullWidth />
