@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
 import * as actions from '@store/arena/actions'
+import * as selectors from '@store/arena/selectors'
 import { createMetaSelector } from '@store/metadata/selectors'
 import { FreezeMatchParams, SetParticipantParams, SetParticipantsParams } from '@services/arena.service'
 import { Meta } from '@store/metadata/actions/types'
@@ -9,6 +10,7 @@ import * as commonActions from '@store/common/actions'
 import { useTranslation } from 'react-i18next'
 import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
+import useArenaHelper from './useArenaHelper'
 
 const _setParticipantMeta = createMetaSelector(actions.setParticipant)
 const _setParticipantsMeta = createMetaSelector(actions.setParticipants)
@@ -47,6 +49,8 @@ const useModeratorActions = (): {
   const setParticipantsMeta = useAppSelector(_setParticipantsMeta)
   const randomizeMeta = useAppSelector(_randomizeMeta)
   const freezeMeta = useAppSelector(_freezeMeta)
+  const arena = useAppSelector(selectors.getTournamentDetail)
+  const { isBattleRoyale } = useArenaHelper(arena)
 
   const resetParticipantMeta = () => dispatch(clearMetaData(actions.setParticipant.typePrefix))
   const resetParticipantsMeta = () => dispatch(clearMetaData(actions.setParticipants.typePrefix))
@@ -62,7 +66,9 @@ const useModeratorActions = (): {
 
   useEffect(() => {
     if (freezeMeta.loaded) {
-      dispatch(commonActions.addToast(t('common:arena.br_freeze_success')))
+      if (arena) {
+        dispatch(commonActions.addToast(isBattleRoyale ? t('common:arena.br_freeze_success') : t('common:arena.freeze_success')))
+      }
       resetFreezeMeta()
       if (router.query.hash_key) router.push(`${ESRoutes.ARENA}/${router.query.hash_key}`)
     }
