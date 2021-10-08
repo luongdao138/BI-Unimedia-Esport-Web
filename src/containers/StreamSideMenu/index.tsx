@@ -218,6 +218,26 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
                 {!minimizeLayout && <ListItemText className={classes.listText} primary={t('common:home.settings')} />}
               </ListItem>
             </Link>
+
+            {/* TODO: LINK DEMO FOR HLS.js */}
+            <Link
+              href={{
+                pathname: ESRoutes.VIDEO_TOP_DEMO,
+                query: { vid: 'Q8rguVtERhD4l3dO', is_medialive: false },
+              }}
+              passHref
+              as={ESRoutes.VIDEO_TOP_DEMO}
+            >
+              <ListItem className={classes.list + getAddClass(classes.noMinimizeList, classes.minimizeList)} button disableRipple>
+                <ListItemIcon className={classes.icon}>
+                  <Icon fontSize="small" className="fa fa-heart" />
+                </ListItemIcon>
+                {/* link to top video page and tab favorite(お気に入り) is selected*/}
+                {!minimizeLayout && <ListItemText className={classes.listText} primary={'ページデモ'} />}
+              </ListItem>
+            </Link>
+            {/* END */}
+
             {!minimizeLayout && <Box paddingBottom={1} />}
             <LoginRequired>
               <Link href={ESRoutes.HOME} passHref>
