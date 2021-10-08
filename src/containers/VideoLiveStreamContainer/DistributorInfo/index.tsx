@@ -309,7 +309,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 36,
+    marginTop: 12,
     justifyContent: 'flex-end',
   },
   contentContainer: {
@@ -473,7 +473,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       },
     },
     seeMoreContainer: {
-      marginTop: 16,
+      marginTop: 12,
       justifyContent: 'center',
     },
     seeMore: {
