@@ -101,10 +101,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexDirection: 'row',
     width: '100%',
-    marginTop: '16px',
+    marginTop: 24,
   },
   infoLastItem: {
-    marginTop: '20px',
+    marginTop: 24,
   },
 }))
 export default ProgramInfoNoViewingTicket

@@ -282,9 +282,14 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   }, [])
 
   const toggleFullScreen = () => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    //@ts-ignore
-    screenfull.toggle(playerContainerRef.current)
+    const videoPlayerElement = reactPlayerRef.current.getInternalPlayer()
+    if(isMobile && videoPlayerElement.webkitSupportsFullscreen){
+      videoPlayerElement.webkitEnterFullscreen()
+    } else {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      //@ts-ignore
+      screenfull.toggle(playerContainerRef.current)
+    }
   }
 
   const handleMute = () => {
