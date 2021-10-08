@@ -177,7 +177,7 @@ const CoOrganizer: React.FC<Props> = ({ open, values, onSubmit, hide }) => {
             </Box>
           )}
           {open ? (
-            <div id="scrollableDiv" className={`${classes.scroll} ${classes.list}`}>
+            <div id="scrollableDiv" className={`${classes.scroll} ${classes.list}`} style={{ paddingBottom: contentRect.height + 30 }}>
               <InfiniteScroll
                 dataLength={recommendedUsers.length}
                 scrollableTarget="scrollableDiv"
@@ -289,7 +289,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     overflow: 'auto',
     overflowX: 'hidden',
     height: '100%',
-    paddingBottom: 50,
   },
   scroll: {
     scrollbarColor: '#222 transparent',
