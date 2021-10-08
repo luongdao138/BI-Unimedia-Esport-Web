@@ -88,6 +88,12 @@ const useStyles = makeStyles((theme) => ({
       '&:first-child': {
         paddingLeft: 32,
       },
+      '&:last-child': {
+        position: 'absolute',
+        right: theme.spacing(6),
+        top: '50%',
+        transform: 'translateY(-50%)',
+      },
     },
   },
 }))
