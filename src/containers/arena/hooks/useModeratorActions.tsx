@@ -76,11 +76,25 @@ const useModeratorActions = (): {
 
   useEffect(() => {
     if (!!freezeMeta.error || !!randomizeMeta.error || !!setParticipantsMeta.error) {
-      dispatch(commonActions.addToast(t('common:arena.failed_to_update_match')))
-      resetFreezeMeta()
-      resetRandomizeMeta()
-      resetParticipantsMeta()
-      setTimeout(() => router.reload(), 3000)
+      if (arena && !isBattleRoyale) {
+        dispatch(commonActions.addToast(t('common:arena.failed_to_update_match')))
+        resetFreezeMeta()
+        resetRandomizeMeta()
+        resetParticipantsMeta()
+        setTimeout(() => router.reload(), 3000)
+      }
+    }
+  }, [freezeMeta.error, randomizeMeta.error, setParticipantMeta.error])
+
+  useEffect(() => {
+    if (!!freezeMeta.error || !!randomizeMeta.error || !!setParticipantsMeta.error) {
+      if (arena && isBattleRoyale) {
+        dispatch(commonActions.addToast(t('common:arena.failed_to_update_br_members')))
+        resetFreezeMeta()
+        resetRandomizeMeta()
+        resetParticipantsMeta()
+        setTimeout(() => router.reload(), 3000)
+      }
     }
   }, [freezeMeta.error, randomizeMeta.error, setParticipantsMeta.error])
 

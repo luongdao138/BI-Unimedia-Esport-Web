@@ -591,6 +591,7 @@ export default {
     close_entry_success: 'エントリーを締め切りました',
     edit_entry_success: 'エントリー情報を編集しました',
     failed_to_update_match: '対戦表の更新に失敗しました',
+    failed_to_update_br_members: 'メンバーリストの更新に失敗しました',
     battles: {
       randomize_confirmation_dialog: {
         title: '{{isTeam, participation_type}}をランダムに配置します',
