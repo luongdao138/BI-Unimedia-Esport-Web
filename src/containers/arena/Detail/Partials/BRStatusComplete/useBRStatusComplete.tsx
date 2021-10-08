@@ -15,7 +15,7 @@ const useBRStatusComplete = () => {
   const winnerMeta = useAppSelector(getBattleRoyaleParticipantsMeta)
 
   useEffect(() => {
-    if (router.query.hash_key) {
+    if (router.query.hash_key && !router.asPath.endsWith('/participants')) {
       dispatch(actions.getBattleRoyaleParticipants({ hash_key: String(router.query.hash_key), page: 1, role: 'participant' }))
     }
     return () => {
