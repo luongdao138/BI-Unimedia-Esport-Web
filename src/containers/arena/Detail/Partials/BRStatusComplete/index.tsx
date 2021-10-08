@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Typography, Box } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
@@ -29,7 +29,16 @@ const BRStatusComplete: React.FC<BRStatusBRStatusCompleteProps> = ({ arena }) =>
     arena.attributes.end_date
   )}`
   const { toParticipants, isModerator, isTeamLeader, toMatches, isFreezed, isParticipant, toResults } = useArenaHelper(arena)
-  const { winner, winnerMeta } = useBRStatusComplete()
+  const { winner: winnerData, winnerMeta } = useBRStatusComplete()
+  const winnerMounted = useRef(null)
+  const [winner, setWinner] = useState(winnerData)
+
+  useEffect(() => {
+    if (winnerData && !winnerMounted.current) {
+      setWinner(winnerData)
+      winnerMounted.current = true
+    }
+  }, [winnerData])
 
   const [showSummaryModal, setShowSummaryModal] = useState(false)
   if (winnerMeta.pending) return <ESLoader open />

@@ -105,20 +105,24 @@ const useStyles = makeStyles((theme) => ({
   },
   [theme.breakpoints.down('xs')]: {
     contentWrapper: {
-      flexDirection: 'column',
+      flexDirection: 'row',
       justifyContent: 'center',
-      paddingLeft: theme.spacing(1),
-      paddingRight: 180,
-      paddingTop: 8,
-      paddingBottom: 8,
+      paddingLeft: theme.spacing(0.5),
+      paddingTop: theme.spacing(0.5),
+      paddingBottom: theme.spacing(0.5),
+      paddingRight: 175,
     },
     textContent: {
-      textAlign: 'center',
       width: '100%',
       padding: '0 5px',
     },
     rightContent: {
-      width: 180,
+      width: 170,
+      paddingRight: theme.spacing(0.5),
+      paddingLeft: theme.spacing(0.5),
+    },
+    root: {
+      minHeight: 56,
     },
   },
 }))

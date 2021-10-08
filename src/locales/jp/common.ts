@@ -744,6 +744,8 @@ export default {
     sorting_method: 'ソート方法',
     sort_info_title: 'ソート方法について',
     public_arena_info_title: '公開設定について',
+    by_asc: '昇順',
+    by_desc: '降順',
     /* eslint-disable no-irregular-whitespace */
     sort_info_modal: {
       row1col1: '昇順',
