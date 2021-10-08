@@ -75,7 +75,7 @@ const ArenaBattles: React.FC = () => {
             ...v,
             attributes: {
               ...v.attributes,
-              attack_score: value || null,
+              attack_score: _.isNumber(value) ? value : null,
             },
           }
         }
