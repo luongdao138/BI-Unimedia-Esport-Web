@@ -18,7 +18,7 @@ export type ErrorType = {
   time_attack_max_exceeds?: boolean
   score_attack_format_invalid?: boolean
   score_attack_max_exceeds?: boolean
-  placement_max_exceeds?: boolean
+  placement_min_max_range_invalid?: boolean
 }
 
 const useStyles = makeStyles(() => ({

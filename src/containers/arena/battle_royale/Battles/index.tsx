@@ -165,9 +165,9 @@ const ArenaBattles: React.FC = () => {
               {i18n.t('common:arena.rules_title.battle_royale_error')}
             </Typography>
           ) : null}
-          {errorObject.placement_max_exceeds ? (
+          {errorObject.placement_min_max_range_invalid ? (
             <Typography style={{ color: Colors.secondary, paddingTop: 4 }}>
-              {i18n.t('common:common.too_long', { max: participants.length })}
+              {i18n.t('common:arena.rules_title.battle_royale_errors.min_max_range_invalid', { min: 1, max: participants.length })}
             </Typography>
           ) : null}
         </Box>
