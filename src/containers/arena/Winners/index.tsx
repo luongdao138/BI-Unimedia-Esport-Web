@@ -5,7 +5,7 @@ import { Colors } from '@theme/colors'
 import Avatar from '@components/Avatar'
 import { Typography, IconButton, Box, Divider } from '@material-ui/core'
 import ArenaAvatar from './ArenaAvatar'
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState } from 'react'
 import ESButton from '@components/Button'
 import ESLoader from '@components/FullScreenLoader'
 import { useTranslation } from 'react-i18next'
@@ -38,27 +38,9 @@ const ArenaWinners: React.FC = () => {
   } = useArenaWinners()
   const classes = useStyles()
   const [showSummary, setShowSummary] = useState(false)
-  const [, setUpdate] = useState(false)
-  const winnerListRef = useRef(null)
-  const backButtonRef = useRef(null)
   const [selectedItem, setSelectedItem] = useState<{ id: number; highlight: boolean } | null>(null)
 
-  useEffect(() => {
-    window.onscroll = () => {
-      const winnerListTopOffset = getClientRect(winnerListRef).top
-      const backButtonBottomOffset = getClientRect(backButtonRef).bottom
-      setUpdate(winnerListTopOffset < 620 || backButtonBottomOffset > 60)
-    }
-
-    return () => resetMeta()
-  }, [])
-
-  const getClientRect = (ref) => {
-    if (ref && ref.current) {
-      return ref.current.getBoundingClientRect()
-    }
-    return { top: 0, bottom: 0 }
-  }
+  useEffect(() => () => resetMeta(), [])
 
   const selectTournamentParticipant = (item: PlacementItem) => {
     const id = isTeam ? item.team_id : item.id
@@ -73,15 +55,23 @@ const ArenaWinners: React.FC = () => {
   return arenaMeta.pending && (winnersMeta.pending || brWinnersMeta.pending) ? (
     <ESLoader open={true} />
   ) : arenaMeta.loaded && arena && !(isNotHeld || isCancelled) ? (
-    <div className={classes.root}>
-      <div ref={backButtonRef} className={classes.backButtonWrapper}>
+    <div
+      className={classes.root}
+      style={{
+        backgroundImage: 'url(/images/arena_cover_min.png)',
+        backgroundPosition: 'top center',
+        backgroundAttachment: 'fixed',
+        backgroundSize: `auto 600px`,
+        backgroundRepeat: 'no-repeat',
+      }}
+    >
+      <div className={classes.backButtonWrapper}>
         <IconButton className={classes.backButton} onClick={handleBack}>
           <ArrowBack />
         </IconButton>
       </div>
-      <div className={classes.coverWrapper}>
-        <img src={'/images/arena_cover.png'} className={classes.cover} />
-      </div>
+      <div className={classes.coverWrapper} />
+
       <div className={classes.topWrapper}>
         <Box color={Colors.white} textAlign="center" mb={3}>
           <Typography variant="h3" className={classes.title}>
@@ -117,7 +107,7 @@ const ArenaWinners: React.FC = () => {
           {t('common:tournament.tournament_detail')}
         </ESButton>
       </Box>
-      <div ref={winnerListRef} className={classes.listContainer}>
+      <div className={classes.listContainer}>
         {hasWinnersData && !isBattleRoyale ? (
           <ResultList rule={arena?.attributes.rule}>
             {Object.keys(arenaWinners).map((key) =>
@@ -190,6 +180,8 @@ const useStyles = makeStyles((theme) => ({
   root: {
     position: 'relative',
     paddingBottom: theme.spacing(3),
+    paddingTop: 30,
+    top: -30,
   },
   backButton: {
     backgroundColor: '#4D4D4D',
@@ -209,19 +201,10 @@ const useStyles = makeStyles((theme) => ({
     zIndex: 1,
   },
   coverWrapper: {
-    position: 'sticky',
     zIndex: 0,
     top: 60,
     height: 560,
     marginBottom: -100,
-    '&:before': {
-      content: "''",
-      position: 'absolute',
-      background: 'linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.3) 70%, rgba(33,33,33,1) 100%)',
-      bottom: 0,
-      height: 560,
-      width: '100%',
-    },
   },
   cover: {
     width: '100%',
@@ -242,7 +225,7 @@ const useStyles = makeStyles((theme) => ({
   topWrapper: {
     position: 'absolute',
     width: '100%',
-    top: 80,
+    top: 100,
   },
   title: {
     wordBreak: 'break-word',
