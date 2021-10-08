@@ -10,7 +10,7 @@ import DistributorInfo from './DistributorInfo'
 import ProgramInfo from './ProgramInfo'
 import RelatedVideos from './RelatedVideos'
 import ChatContainer from './ChatContainer'
-import LiveStreamContent from './LiveStreamContent'
+// import LiveStreamContent from './LiveStreamContent'
 import DonatePoints from './DonatePoints'
 import DonatePointsConfirmModal from './DonatePointsConfirmModal/DonatePointsConfirmModal'
 import ProgramInfoNoViewingTicket from '@containers/VideoLiveStreamContainer/ProgramInfoNoViewingTicket'
@@ -38,6 +38,7 @@ import { EVENT_LIVE_STATUS, LIVE_VIDEO_TYPE } from '@constants/common.constants'
 import DialogLoginContainer from '@containers/DialogLogin'
 import _ from 'lodash'
 import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
+import LiveStreamContent from './LiveStreamContentDemo'
 
 enum TABS {
   PROGRAM_INFO = 1,
