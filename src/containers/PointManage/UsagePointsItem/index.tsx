@@ -35,8 +35,8 @@ const UsagePointsItem: FC<UsagePointsItemProps> = ({ data, serialNumber, setShow
     return (
       <Box onClick={handleShowDetail} key={index}>
         <Typography className={classes.purchasePointIdText}>
-          {index >= 1 ? ` ${item}` : item}
-          {dataPurchasePointId?.length > 1 && index < dataPurchasePointId?.length - 1 ? ' /' : ''}
+          <span className={classes.purchasePointIdUnderlineText}>{index >= 1 ? ` ${item}` : item}</span>
+          {dataPurchasePointId?.length > 1 && index < dataPurchasePointId?.length - 1 ? ' / ' : ''}
         </Typography>
       </Box>
     )
@@ -159,9 +159,11 @@ const useStyles = makeStyles((theme) => ({
   },
   purchasePointIdText: {
     color: Colors.primary,
-    textDecoration: 'underline',
     marginBottom: 8,
     whiteSpace: 'pre',
+  },
+  purchasePointIdUnderlineText: {
+    textDecoration: 'underline',
   },
   textStyle: {
     color: Colors.white_opacity['70'],
