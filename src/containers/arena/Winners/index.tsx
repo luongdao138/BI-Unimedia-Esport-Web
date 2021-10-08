@@ -172,6 +172,7 @@ export default ArenaWinners
 const useStyles = makeStyles((theme) => ({
   multiline: {
     whiteSpace: 'pre-wrap',
+    wordBreak: 'break-word',
   },
   link: {
     color: Colors.white,

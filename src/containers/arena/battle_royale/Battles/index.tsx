@@ -68,23 +68,8 @@ const ArenaBattles: React.FC = () => {
   }, [participants])
 
   const setScores = (value: number | '', id: number) => {
-    let newSelecteds = []
-
-    if (tournament?.attributes.rule === 'battle_royale') {
-      newSelecteds = selecteds.map((v) => {
-        if (v.id == id) {
-          return {
-            ...v,
-            attributes: {
-              ...v.attributes,
-              position: value || null,
-            },
-          }
-        }
-        return v
-      })
-    } else {
-      newSelecteds = selecteds.map((v) => {
+    setSelecteds(
+      selecteds.map((v) => {
         if (v.id == id) {
           return {
             ...v,
@@ -96,8 +81,7 @@ const ArenaBattles: React.FC = () => {
         }
         return v
       })
-    }
-    setSelecteds(newSelecteds)
+    )
   }
 
   const handleSubmitScore = () => {
