@@ -82,7 +82,4 @@ export const ESRoutes = {
   USER_POINT_MANAGEMENT: '/settings/points',
   // w00
   SEARCH_VIDEO: '/search/video',
-
-  //TODO: LINK DEMO FOR HLS.js
-  VIDEO_TOP_DEMO: '/demo',
 }

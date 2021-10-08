@@ -231,9 +231,19 @@ const useStyles = makeStyles((theme: Theme) => ({
       width: 465,
     },
   },
+  [theme.breakpoints.down(515)]: {
+    container: {
+      width: 320,
+    },
+  },
   [theme.breakpoints.down(415)]: {
     container: {
       width: 299,
+    },
+  },
+  [theme.breakpoints.down(360)]: {
+    container: {
+      width: 250,
     },
   },
 }))
