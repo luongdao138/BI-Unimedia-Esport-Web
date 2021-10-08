@@ -18,7 +18,6 @@ export default {
     at: '@',
     search_results: '検索結果',
     total: '件',
-    error: 'エラー文言が入ります',
     game_display_name_error: '入力必須項目です',
     too_long: '{{max}}文字以内で入力してください',
     at_least: '2文字以上入力してください。',
@@ -257,6 +256,7 @@ export default {
     title_chat: 'Chat',
     user_report_done: 'User Reported',
     reported: 'Reported!',
+    email_test_result: '入力内容が適切ではありません',
   },
   profile: {
     prefectures: '都道府県',
