@@ -1660,6 +1660,7 @@ export default {
     show_more_mess: '新しいコメントを見る ',
     chat_will_available_on_time: 'Liveチャットはライブ配信中のみ有効です',
     discord_id_copied: 'DiscordのIDをクリップボードにコピーしました。',
+    after_stream_ended: '配信終了後から',
   },
   video_search: {
     video_results: '動画「:key」 の検索結果',
