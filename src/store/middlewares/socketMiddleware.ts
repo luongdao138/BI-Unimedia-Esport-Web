@@ -1,4 +1,5 @@
 import { WEBSOCKET_PREFIX, CHAT_ACTION_TYPE, CHAT_PAGING_ACTION_TYPE, ENTRY_TYPE } from '@constants/socket.constants'
+import ReconnectingWebSocket from 'reconnecting-websocket'
 import { v4 as uuidv4 } from 'uuid'
 import { Action, Middleware } from 'redux'
 import { StoreType, AppDispatch } from '@store/store'
@@ -93,7 +94,7 @@ export const webSocketMiddle: Middleware = (store: StoreType) => (next: AppDispa
     const encrypted = btoa(accessToken)
     closeExisting()
     const uri = `${process.env.NEXT_PUBLIC_CHAT_END_POINT}/?accessToken=${encrypted}&deviceId=${DEVICE_ID}&appVersion=web_v2`
-    socket = new WebSocket(uri)
+    socket = new ReconnectingWebSocket(uri)
     socket.onmessage = onMessage(store)
     socket.onclose = onClose(store)
     socket.onopen = onOpen(store)
