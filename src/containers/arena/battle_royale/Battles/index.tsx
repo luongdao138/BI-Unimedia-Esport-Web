@@ -102,12 +102,11 @@ const ArenaBattles: React.FC = () => {
 
   const handleSubmitScore = () => {
     if (isModerator) {
-      setBattleRoyaleScores({ hash_key: tournament.attributes.hash_key, participants: selecteds, rule: tournament.attributes.rule })
+      setBattleRoyaleScores({ hash_key: tournament.attributes.hash_key, participants: selecteds })
     } else {
       setBattleRoyaleOwnScore({
         hash_key: tournament.attributes.hash_key,
         participants: selecteds.filter((p) => p.highlight),
-        rule: tournament.attributes.rule,
       })
     }
   }
@@ -191,27 +190,24 @@ const ArenaBattles: React.FC = () => {
       </RuleHeader>
 
       <BRList className={classes.listContainer} rule={tournament?.attributes.rule}>
-        {selecteds.map((v) => {
-          const value = tournament?.attributes.rule === 'battle_royale' ? v.attributes.position : v.attributes.attack_score
-          return (
-            <BRListItem
-              key={v.id}
-              avatar={<Avatar alt={v.attributes.name || ''} src={v.attributes.avatar_url || ''} size={26} />}
-              text={v.attributes.user?.user_code ? v.attributes.name : v.attributes.team?.data.attributes.name}
-              textSecondary={v.attributes.user?.user_code || ''}
-              highlight={v.highlight}
-            >
-              <BRScore
-                value={value || ''}
-                participantCount={participants.length}
-                onChange={({ target: { value } }) => setScores(value === '' ? '' : Number(value), v.id)}
-                onAttackError={(val) => handleError(val, v.id)}
-                type={tournament?.attributes.rule}
-                disabled={(v.attributes.is_fixed_score || !v.highlight) && !isModerator}
-              />
-            </BRListItem>
-          )
-        })}
+        {selecteds.map((v) => (
+          <BRListItem
+            key={v.id}
+            avatar={<Avatar alt={v.attributes.name || ''} src={v.attributes.avatar_url || ''} size={26} />}
+            text={v.attributes.user?.user_code ? v.attributes.name : v.attributes.team?.data.attributes.name}
+            textSecondary={v.attributes.user?.user_code || ''}
+            highlight={v.highlight}
+          >
+            <BRScore
+              value={v.attributes.attack_score || ''}
+              participantCount={participants.length}
+              onChange={({ target: { value } }) => setScores(value === '' ? '' : Number(value), v.id)}
+              onAttackError={(val) => handleError(val, v.id)}
+              type={tournament?.attributes.rule}
+              disabled={(v.attributes.is_fixed_score || !v.highlight) && !isModerator}
+            />
+          </BRListItem>
+        ))}
       </BRList>
       <ESLoader open={detailMeta.pending || participantsMeta.pending} />
     </StickyFooter>

@@ -78,7 +78,13 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
       .test('email-validation', t('user_report.email_test_result'), (value) => {
         return CommonHelper.validateEmail(value)
       }),
-    description: Yup.string().trim().required(t('common.input_required')).max(5000),
+    description: Yup.string()
+      .required(t('common.input_required'))
+      .test('empty-check', t('user_report.email_test_result'), (val) => {
+        if (val && val.length > 0 && val.trim().length === 0) return false
+        return true
+      })
+      .max(5000),
     reason_id: Yup.number()
       .test('reason_id', '', (value) => {
         return value !== -1
