@@ -155,7 +155,7 @@ const ArenaBattlesEdit: React.FC = () => {
           <Box pt={3} pb={3} textAlign="center">
             {/* {tournament.attributes.is_freezed ? null : <Typography>順位を入力してください</Typography>} */}
           </Box>
-          <BRList marginX={3}>
+          <BRList marginX={3} mb={7}>
             {selecteds.map((v, i) => (
               <BRListItem
                 key={i}
