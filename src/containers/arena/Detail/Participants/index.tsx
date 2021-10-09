@@ -19,6 +19,7 @@ import ESButton from '@components/Button'
 import useReturnHref from '@utils/hooks/useReturnHref'
 import ParticipantCount from '@components/ParticipantCount'
 import { useRouter } from 'next/router'
+import { ESRoutes } from '@constants/route.constants'
 
 export interface ParticipantsProps {
   detail: TournamentDetail
@@ -89,7 +90,7 @@ const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
 
   const toDetail = () => {
     if (hash_key) {
-      router.push(`/arena/${hash_key}`)
+      router.push(ESRoutes.ARENA_DETAIL.replace(/:id/gi, hash_key))
     }
   }
   return (
