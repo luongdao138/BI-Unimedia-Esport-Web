@@ -125,7 +125,7 @@ const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, prefectures, user,
         className={classes.coverWrapper}
       ></Box>
       <Box pb={2} />
-      <ESInput labelPrimary={t('common:tournament_create.name')} fullWidth value={values.stepOne.title} disabled />
+      <ESInput labelPrimary={t('common:tournament_create.name')} fullWidth value={values.stepOne.title.trim()} disabled />
       <Box pb={2} />
       <ESInput labelPrimary={t('common:tournament_create.overview')} multiline value={values.stepOne.overview} disabled={true} fullWidth />
       <Box pb={2} />

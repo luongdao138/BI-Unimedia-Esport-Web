@@ -29,7 +29,7 @@ const ArenaBattles: React.FC = () => {
   const { t } = useTranslation(['common'])
 
   const { tournament, meta: detailMeta } = useTournamentDetail()
-  const { isModerator, isParticipant, isTeamLeader } = useArenaHelper(tournament)
+  const { isModerator, isParticipant, isTeamLeader, isTeam } = useArenaHelper(tournament)
   const [hideFooter, setHideFooter] = useState(true)
   const [errors, setErrors] = useState<Record<string, ErrorType>>({})
 
@@ -165,9 +165,9 @@ const ArenaBattles: React.FC = () => {
               {i18n.t('common:arena.rules_title.battle_royale_error')}
             </Typography>
           ) : null}
-          {errorObject.placement_max_exceeds ? (
+          {errorObject.placement_min_max_range_invalid ? (
             <Typography style={{ color: Colors.secondary, paddingTop: 4 }}>
-              {i18n.t('common:common.too_long', { max: participants.length })}
+              {i18n.t('common:arena.rules_title.battle_royale_errors.min_max_range_invalid', { min: 1, max: participants.length })}
             </Typography>
           ) : null}
         </Box>
@@ -177,7 +177,13 @@ const ArenaBattles: React.FC = () => {
         {selecteds.map((v) => (
           <BRListItem
             key={v.id}
-            avatar={<Avatar alt={v.attributes.name || ''} src={v.attributes.avatar_url || ''} size={26} />}
+            avatar={
+              <Avatar
+                alt={isTeam ? v.attributes.team.data.attributes.name : v.attributes.name || ''}
+                src={isTeam ? v.attributes.team.data.attributes.team_avatar : v.attributes.avatar_url || ''}
+                size={26}
+              />
+            }
             text={v.attributes.user?.user_code ? v.attributes.name : v.attributes.team?.data.attributes.name}
             textSecondary={v.attributes.user?.user_code || ''}
             highlight={v.highlight}

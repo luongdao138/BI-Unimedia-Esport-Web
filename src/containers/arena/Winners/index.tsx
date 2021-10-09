@@ -131,7 +131,12 @@ const ArenaWinners: React.FC = () => {
               <ResultListItem
                 key={idx}
                 position={p.attributes.position}
-                avatar={<Avatar src={p.attributes.avatar_url} alt={p.attributes.name} />}
+                avatar={
+                  <Avatar
+                    src={isTeam ? p.attributes.team.data.attributes.team_avatar : p.attributes.avatar_url || ''}
+                    alt={isTeam ? p.attributes.team.data.attributes.name : p.attributes.name}
+                  />
+                }
                 onClickAvatar={() => selectBRParticipant(p)}
                 name={p.attributes.team ? p.attributes.team.data.attributes.name : p.attributes.name}
                 nameSecondary={p.attributes.user ? `@${p.attributes.user.user_code}` : ''}
