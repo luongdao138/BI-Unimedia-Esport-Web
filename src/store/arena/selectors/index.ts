@@ -26,12 +26,8 @@ export const getBattleRoyaleParticipants = createSelector(getRoot, getTournament
     highlight: isTeam ? ids.includes(participant.attributes.team?.data?.id) : ids.includes(String(participant?.id)),
   }))
 })
-export const getSortedBRParticipants = createSelector(getBattleRoyaleParticipants, getTournamentDetail, (participants, arena) => {
-  if (!arena) return []
-  const { sort_by } = arena.attributes
-  return sort_by === 'by_desc'
-    ? _.orderBy(participants, ['attributes.position'], ['desc'])
-    : _.orderBy(participants, ['attributes.position'], ['asc'])
+export const getSortedBRParticipants = createSelector(getBattleRoyaleParticipants, (participants) => {
+  return participants
 })
 
 export const getParticipantsMeta = createSelector(getRoot, (state) => state.participantsMeta)
@@ -98,15 +94,15 @@ export const getSearchFilteredTournaments = createSelector(getRoot, (state) => {
           : Number(item.attributes.participant_count) + Number(item.attributes.interested_count),
         0
       ),
-      startDate: moment(item.attributes.start_date).format('YYYY/MM/DD'),
-      acceptance_start_date: moment(item.attributes.acceptance_start_date).format('YYYY/MM/DD HH:mm ~'),
+      startDate: moment(item.attributes.start_date).format('MM/DD HH:mm'),
+      entryEndDate: moment(item.attributes.acceptance_end_date).format('MM/DD HH:mm [まで]'),
     }
   })
 })
 
 export const getBattleRoyaleFirstPlace = createSelector(getTournamentDetail, getSortedBRParticipants, (arena, participants) => {
   if (arena && participants.length) {
-    if (TournamentHelper.isBRResultComplete(participants)) {
+    if (TournamentHelper.isBRResultComplete(participants, arena.attributes.rule)) {
       const isTeam = arena.attributes.participant_type > 1
       return {
         avatar: participants[0].attributes.avatar_url,

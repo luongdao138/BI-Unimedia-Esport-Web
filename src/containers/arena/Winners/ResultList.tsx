@@ -1,4 +1,4 @@
-import { createContext, useContext } from 'react'
+import { createContext, useContext, memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { makeStyles, Typography } from '@material-ui/core'
 import { TournamentRule } from '@services/arena.service'
@@ -8,9 +8,10 @@ import { Colors } from '@theme/colors'
 const ArenaResultContext = createContext<TournamentRule | undefined>(undefined)
 ArenaResultContext.displayName = 'ArenaResultContext'
 
-function ResultList(props: { rule: TournamentRule; children: ReactNode }) {
+const ResultList: React.FC<{ rule: TournamentRule; children: ReactNode }> = (props) => {
   const classes = useStyles()
   const { t } = useTranslation('common')
+
   return (
     <ArenaResultContext.Provider value={props.rule}>
       <div className={classes.listHeader}>
@@ -31,7 +32,7 @@ export const useArenaResult = () => {
   return context
 }
 
-export default ResultList
+export default memo(ResultList)
 
 const useStyles = makeStyles((theme) => ({
   listWrapper: {
@@ -61,12 +62,13 @@ const useStyles = makeStyles((theme) => ({
       paddingLeft: theme.spacing(5),
     },
     '&:nth-child(2)': {
-      paddingLeft: theme.spacing(9),
+      paddingLeft: theme.spacing(10),
     },
     '&:last-child': {
       position: 'absolute',
       right: theme.spacing(8),
       top: '50%',
+
       transform: 'translateY(-50%)',
     },
   },
@@ -77,11 +79,21 @@ const useStyles = makeStyles((theme) => ({
         paddingLeft: theme.spacing(3),
       },
       '&:nth-child(2)': {
-        paddingLeft: theme.spacing(9),
+        paddingLeft: theme.spacing(10),
       },
     },
     listWrapper: {
       paddingRight: theme.spacing(1),
+    },
+  },
+  [theme.breakpoints.down('xs')]: {
+    headerTitle: {
+      '&:last-child': {
+        right: 20,
+      },
+      '&:nth-child(2)': {
+        paddingLeft: theme.spacing(4.5),
+      },
     },
   },
 }))

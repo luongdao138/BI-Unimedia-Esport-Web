@@ -17,7 +17,13 @@ const BRList: React.FC<BRListProps> = ({ children, rule, ...props }) => {
       <div className={classes.listHeader}>
         <Typography className={classes.headerTitle}>{t('common:arena.listHeaders.player')}</Typography>
         <Typography className={classes.headerTitle}>
-          {rule === 'score_attack' ? t('common:arena.listHeaders.score') : rule === 'time_attack' ? t('common:arena.listHeaders.time') : ''}
+          {rule === 'score_attack'
+            ? t('common:arena.listHeaders.score')
+            : rule === 'time_attack'
+            ? t('common:arena.listHeaders.time')
+            : rule === 'battle_royale'
+            ? t('common:arena.listHeaders.place')
+            : ''}
         </Typography>
       </div>
       {children}
@@ -47,13 +53,6 @@ const useStyles = makeStyles((theme) => ({
       paddingRight: 92,
     },
   },
-  [theme.breakpoints.down('xs')]: {
-    headerText: {
-      '&:first-child': {
-        paddingLeft: 24,
-      },
-    },
-  },
   listHeader: {
     background: theme.palette.common.black,
     borderTopLeftRadius: 12,
@@ -74,9 +73,27 @@ const useStyles = makeStyles((theme) => ({
     },
     '&:last-child': {
       position: 'absolute',
-      right: theme.spacing(8),
+      right: theme.spacing(10),
       top: '50%',
       transform: 'translateY(-50%)',
+    },
+  },
+  [theme.breakpoints.down('xs')]: {
+    headerText: {
+      '&:first-child': {
+        paddingLeft: 24,
+      },
+    },
+    headerTitle: {
+      '&:first-child': {
+        paddingLeft: 32,
+      },
+      '&:last-child': {
+        position: 'absolute',
+        right: theme.spacing(6),
+        top: '50%',
+        transform: 'translateY(-50%)',
+      },
     },
   },
 }))

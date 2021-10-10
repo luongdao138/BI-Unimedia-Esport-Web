@@ -17,7 +17,6 @@ import { TeamMemberSelectItem } from '@store/arena/actions/types'
 import useDocTitle from '@utils/hooks/useDocTitle'
 import { ROLE } from '@constants/tournament.constants'
 import useArenaHelper from '@containers/arena/hooks/useArenaHelper'
-import LoginRequired from '@containers/LoginRequired'
 
 interface EntryEditModalProps {
   tournament: TournamentDetail
@@ -42,7 +41,7 @@ const TeamEntryEditModal: React.FC<EntryEditModalProps> = ({
 }) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
-  const { teamDetail, isPending, getTeamDetail } = useTeamDetail()
+  const { teamDetail, isPending, getTeamDetail, resetTeamDetail } = useTeamDetail()
   const { isRecruiting } = useArenaHelper(tournament)
   const [editMode, setEditMode] = useState(false)
   const isPreview = previewMode === true
@@ -54,11 +53,15 @@ const TeamEntryEditModal: React.FC<EntryEditModalProps> = ({
       fetch()
       changeTitle(`${t('common:page_head.arena_entry_title')}｜${tournament?.attributes?.title || ''}`)
     }
-  }, [open])
 
-  useEffect(() => {
-    return () => resetTitle()
-  }, [])
+    return () => {
+      if (open) {
+        setEditMode(false)
+        resetTitle()
+        resetTeamDetail()
+      }
+    }
+  }, [open])
 
   useEffect(() => {
     if (isPreview) fetch()
@@ -67,7 +70,9 @@ const TeamEntryEditModal: React.FC<EntryEditModalProps> = ({
   const getTeamId = () => {
     const myInfos = _.get(tournament, 'attributes.my_info', [])
     if (!_.isArray(myInfos)) return null
-    const info = myInfos.find((myInfo) => _.get(myInfo, 'role') === ROLE.INTERESTED || _.get(myInfo, 'role') === ROLE.PARTICIPANT)
+    const info = myInfos.find((myInfo) => {
+      return (_.get(myInfo, 'role') === ROLE.INTERESTED || _.get(myInfo, 'role') === ROLE.PARTICIPANT) && _.get(myInfo, 'is_leader')
+    })
     if (!info) return null
     const teamId = _.get(info, 'team_id', null)
     if (_.isNumber(teamId)) return teamId
@@ -133,11 +138,6 @@ const TeamEntryEditModal: React.FC<EntryEditModalProps> = ({
     }
   }
 
-  const handleClose = () => {
-    resetTitle()
-    onClose()
-  }
-
   return (
     <Box>
       <StickyActionModal
@@ -145,7 +145,7 @@ const TeamEntryEditModal: React.FC<EntryEditModalProps> = ({
         returnText={t('common:arena.entry_information')}
         actionButtonText={editMode ? t('common:tournament.join_with_this') : t('common:tournament.update_entry_info')}
         actionButtonDisabled={false}
-        onReturnClicked={handleClose}
+        onReturnClicked={onClose}
         onActionButtonClicked={onSubmit}
         hideFooter={!myTeam || !isRecruiting}
       >
@@ -154,17 +154,9 @@ const TeamEntryEditModal: React.FC<EntryEditModalProps> = ({
             <DetailInfo
               detail={tournament}
               bottomButton={
-                <LoginRequired>
-                  <ESButton
-                    className={classes.bottomButton}
-                    variant="outlined"
-                    round
-                    size="large"
-                    onClick={toDetail ? toDetail : handleClose}
-                  >
-                    {t('common:tournament.tournament_detail')}
-                  </ESButton>
-                </LoginRequired>
+                <ESButton className={classes.bottomButton} variant="outlined" round size="large" onClick={toDetail ? toDetail : onClose}>
+                  {t('common:tournament.tournament_detail')}
+                </ESButton>
               }
             />
           </BlackBox>

@@ -14,9 +14,10 @@ const useTeamDetail = () => {
 
   const getTeamDetail = (teamId: number) => dispatch(actions.getTournamentTeamDetail(teamId))
   const resetMeta = () => dispatch(clearMetaData(actions.getParticipantName.typePrefix))
+  const resetTeamDetail = () => dispatch(clearMetaData(actions.getTournamentTeamDetail.typePrefix))
   const isPending = getMeta.pending
 
-  return { getTeamDetail, resetMeta, isPending, teamDetail }
+  return { getTeamDetail, resetMeta, isPending, teamDetail, resetTeamDetail }
 }
 
 export default useTeamDetail

@@ -19,6 +19,7 @@ import _ from 'lodash'
 import useDocTitle from '@utils/hooks/useDocTitle'
 import ServerError from './ServerError'
 import { FocusContext, FocusContextProvider } from '@utils/hooks/input-focus-context'
+import i18n from '@locales/i18n'
 
 interface IndividualEntryModalProps {
   tournament: TournamentDetail
@@ -31,17 +32,17 @@ const IndividualEntryModal: React.FC<IndividualEntryModalProps> = ({ tournament,
   const { t } = useTranslation(['common'])
   const { join, joinMeta, resetJoinMeta } = useEntry()
   const { resetTitle, changeTitle } = useDocTitle()
-
-  useEffect(() => {
-    if (joinMeta.loaded) {
-      handleClose()
-    }
-  }, [joinMeta.loaded])
   const { checkNgWord } = useCheckNgWord()
   const dispatch = useAppDispatch()
 
   const validationSchema = Yup.object().shape({
-    nickname: Yup.string().required(t('common:common.input_required')).max(40),
+    nickname: Yup.string()
+      .required(t('common:common.input_required'))
+      .test('empty-check', i18n.t('common:common.input_incorrect'), (val) => {
+        if (val && val.length > 0 && val.trim().length === 0) return false
+        return true
+      })
+      .max(40),
   })
 
   const { values, errors, isValid, handleSubmit, handleChange, setFieldValue } = useFormik({
@@ -65,17 +66,18 @@ const IndividualEntryModal: React.FC<IndividualEntryModalProps> = ({ tournament,
       setFieldValue('nickname', userProfile ? userProfile.attributes.nickname : '')
       changeTitle(`${t('common:page_head.arena_entry_title')}｜${tournament?.attributes?.title || ''}`)
     }
+
+    return () => {
+      if (open) {
+        resetTitle()
+        resetJoinMeta()
+      }
+    }
   }, [open])
 
   useEffect(() => {
-    return () => resetTitle()
-  }, [])
-
-  const handleClose = () => {
-    resetJoinMeta()
-    resetTitle()
-    onClose()
-  }
+    if (joinMeta.loaded) onClose()
+  }, [joinMeta.loaded])
 
   return (
     <FocusContextProvider>
@@ -87,7 +89,7 @@ const IndividualEntryModal: React.FC<IndividualEntryModalProps> = ({ tournament,
               returnText={t('common:tournament.join')}
               actionButtonText={t('common:tournament.join_with_this')}
               actionButtonDisabled={!isValid}
-              onReturnClicked={handleClose}
+              onReturnClicked={onClose}
               onActionButtonClicked={handleSubmit}
               hideFooterOnMobile={isFocused}
             >

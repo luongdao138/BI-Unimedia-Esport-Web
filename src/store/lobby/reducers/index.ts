@@ -2,7 +2,6 @@ import { createReducer } from '@reduxjs/toolkit'
 import * as actions from '../actions'
 import { ParticipantsData, PageMeta, LobbyListItem, CategoryItem, LobbyDetail, ParticipantsItem } from '@services/lobby.service'
 import _ from 'lodash'
-import { LobbyHelper } from '@utils/helpers/LobbyHelper'
 
 type StateType = {
   participants: ParticipantsData
@@ -31,13 +30,7 @@ const initialState: StateType = {
 
 export default createReducer(initialState, (builder) => {
   builder.addCase(actions.searchLobby.fulfilled, (_state, _action) => {
-    let searchLobbies = _action.payload.data.map((lobbyDetail) => ({
-      ...lobbyDetail,
-      attributes: {
-        ...lobbyDetail.attributes,
-        status: LobbyHelper.correctStatus(lobbyDetail.attributes.start_datetime, lobbyDetail.attributes.status),
-      },
-    }))
+    let searchLobbies = _action.payload.data
     if (_action.payload.meta != undefined && _action.payload.meta.current_page > 1) {
       searchLobbies = _.unionBy(_state.searchLobbies, searchLobbies, 'attributes.hash_key')
     }
@@ -76,14 +69,7 @@ export default createReducer(initialState, (builder) => {
     }))
   })
   builder.addCase(actions.getLobbyDetail.fulfilled, (state, action) => {
-    const lobbyDetail = action.payload.data
-    state.lobbyDetail = {
-      ...lobbyDetail,
-      attributes: {
-        ...lobbyDetail.attributes,
-        status: LobbyHelper.correctStatus(lobbyDetail.attributes.start_datetime, lobbyDetail.attributes.status),
-      },
-    }
+    state.lobbyDetail = action.payload.data
   })
   builder.addCase(actions.lobbyFollow.pending, (state, action) => {
     state.participants = state.participants.map((member: ParticipantsItem) => {
@@ -180,13 +166,7 @@ export default createReducer(initialState, (builder) => {
     state.allParticipants = []
   })
   builder.addCase(actions.getRecentLobbies.fulfilled, (state, action) => {
-    let recentLobbies = action.payload.data.map((lobbyDetail) => ({
-      ...lobbyDetail,
-      attributes: {
-        ...lobbyDetail.attributes,
-        status: LobbyHelper.correctStatus(lobbyDetail.attributes.start_datetime, lobbyDetail.attributes.status),
-      },
-    }))
+    let recentLobbies = action.payload.data
     if (action.payload.meta != undefined && action.payload.meta.current_page > 1) {
       recentLobbies = _.unionBy(state.recentLobbies, recentLobbies, 'attributes.hash_key')
     }
@@ -198,13 +178,7 @@ export default createReducer(initialState, (builder) => {
     state.recentLobbiesPageMeta = undefined
   })
   builder.addCase(actions.getRecommendedLobbies.fulfilled, (state, action) => {
-    let recommendedLobbies = action.payload.data.map((lobbyDetail) => ({
-      ...lobbyDetail,
-      attributes: {
-        ...lobbyDetail.attributes,
-        status: LobbyHelper.correctStatus(lobbyDetail.attributes.start_datetime, lobbyDetail.attributes.status),
-      },
-    }))
+    let recommendedLobbies = action.payload.data
     if (action.payload.meta != undefined && action.payload.meta.current_page > 1) {
       recommendedLobbies = _.unionBy(state.recommendedLobbies, recommendedLobbies, 'attributes.hash_key')
     }

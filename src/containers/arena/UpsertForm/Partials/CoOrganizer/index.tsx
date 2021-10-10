@@ -28,7 +28,7 @@ const contentRef = React.createRef<HTMLDivElement>()
 const CoOrganizer: React.FC<Props> = ({ open, values, onSubmit, hide }) => {
   const [selectedList, setSelectedList] = useState([] as RecommendedUsers[])
   const theme = useTheme()
-  const { getRecommendedUsersByName, meta, recommendedUsers, page } = useOrganizerSearch()
+  const { getRecommendedUsersByName, meta, recommendedUsers, page, clearRecommendedUsers } = useOrganizerSearch()
   const [keyword, setKeyword] = useState('')
   const [bottomGap, setBottomGap] = useState<number>(0)
   const matches = useMediaQuery(theme.breakpoints.up('sm'))
@@ -40,6 +40,11 @@ const CoOrganizer: React.FC<Props> = ({ open, values, onSubmit, hide }) => {
     if (open) {
       setSelectedList(values)
       getRecommendedUsersByName(keyword, 1)
+    }
+    return () => {
+      if (open) {
+        clearRecommendedUsers()
+      }
     }
   }, [open])
 
@@ -172,7 +177,7 @@ const CoOrganizer: React.FC<Props> = ({ open, values, onSubmit, hide }) => {
             </Box>
           )}
           {open ? (
-            <div id="scrollableDiv" className={`${classes.scroll} ${classes.list}`}>
+            <div id="scrollableDiv" className={`${classes.scroll} ${classes.list}`} style={{ paddingBottom: contentRect.height + 30 }}>
               <InfiniteScroll
                 dataLength={recommendedUsers.length}
                 scrollableTarget="scrollableDiv"
@@ -284,7 +289,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     overflow: 'auto',
     overflowX: 'hidden',
     height: '100%',
-    paddingBottom: 50,
   },
   scroll: {
     scrollbarColor: '#222 transparent',

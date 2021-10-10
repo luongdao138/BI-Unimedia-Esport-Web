@@ -5,8 +5,9 @@ import * as selectors from '@store/arena/selectors'
 import * as actions from '@store/arena/actions'
 import { createMetaSelector } from '@store/metadata/selectors'
 import useArenaHelper from '@containers/arena/hooks/useArenaHelper'
-import { ArenaWinners } from '@services/arena.service'
 import useGetProfile from '@utils/hooks/useGetProfile'
+import { ArenaWinners } from '@services/arena.service'
+import { clearMetaData } from '@store/metadata/actions'
 
 const getWinnersMeta = createMetaSelector(actions.getArenaWinners)
 const getArenaMeta = createMetaSelector(actions.getTournamentDetail)
@@ -24,20 +25,19 @@ const useWinners = (isImmediately = true) => {
   const { userProfile } = useGetProfile()
   const brFirstPlace = useAppSelector(selectors.getBattleRoyaleFirstPlace)
   const trFirstPlace = useAppSelector(selectors.getTournamentFirstPlace)
-  const { isNotHeld, isTeam, isBattleRoyale } = useArenaHelper(arena)
+  const { isNotHeld, isTeam, isBattleRoyale, isCancelled } = useArenaHelper(arena)
   const fetchWinners = () => dispatch(actions.getArenaWinners(router.query.hash_key))
   useEffect(() => {
-    if (isNotHeld) toDetail()
-  }, [isNotHeld])
+    if (isNotHeld || isCancelled) toDetail()
+  }, [isNotHeld, isCancelled])
 
   useEffect(() => {
     if (router.query.hash_key && isImmediately) {
       dispatch(actions.getTournamentDetail(router.query.hash_key))
     }
   }, [router.query.hash_key, userProfile])
-
   useEffect(() => {
-    if (arenaMeta.loaded && !isNotHeld) {
+    if (arena && arenaMeta.loaded && !isNotHeld && !isCancelled) {
       switch (arena.attributes.rule) {
         case 'battle_royale':
         case 'score_attack':
@@ -52,7 +52,7 @@ const useWinners = (isImmediately = true) => {
           break
       }
     }
-  }, [arenaMeta.loaded, isNotHeld])
+  }, [arena, arenaMeta.loaded, isNotHeld, isCancelled])
 
   const toDetail = () => {
     const placementsUrl = '/placements'
@@ -64,6 +64,10 @@ const useWinners = (isImmediately = true) => {
   const handleBack = () => router.back()
 
   const hasWinners = useMemo(() => hasWinnersData(arenaWinners), [arenaWinners])
+  const resetMeta = () => {
+    dispatch(clearMetaData(actions.getArenaWinners.typePrefix))
+    dispatch(clearMetaData(actions.getTournamentDetail.typePrefix))
+  }
 
   return {
     arenaWinners,
@@ -80,6 +84,9 @@ const useWinners = (isImmediately = true) => {
     arenaBRWinners,
     isBattleRoyale,
     winner: isBattleRoyale ? brFirstPlace : trFirstPlace,
+    resetMeta,
+    isCancelled,
+    isNotHeld,
   }
 }
 

@@ -38,6 +38,7 @@ export type TournamentListItem = {
     title: string
     hash_key: string
     start_date: Date | string
+    acceptance_end_date: string
     max_participants: number
     participant_type: number
     status: TS.READY | TS.RECRUITING | TS.RECRUITMENT_CLOSED | TS.READY_TO_START | TS.IN_PROGRESS | TS.COMPLETED | TS.CANCELLED
@@ -327,6 +328,7 @@ export type ParticipantsResponse = {
             user_id: number
           }[]
           name: string
+          team_avatar: string | null
         }
         id: string
       }
@@ -335,6 +337,7 @@ export type ParticipantsResponse = {
       user_code: string
     }
     position: number | null
+    attack_score: number | null
     is_fixed_score?: boolean
   }
   highlight?: boolean
@@ -743,7 +746,7 @@ export const setBattleRoyalScores = async ({
 }: SetBattleRoyaleScoresParams): Promise<{ data: ParticipantsResponse[] }> => {
   const scores = {}
   for (const p of participants) {
-    scores[p.id] = p.attributes.position
+    if (p.attributes.attack_score) scores[p.id] = p.attributes.attack_score
   }
   const { data } = await api.post(URI.BATTLE_ROYALE_SET_SCORES.replace(/:id/gi, `${hash_key}`), { scores })
 
@@ -753,9 +756,7 @@ export const setBattleRoyalScores = async ({
 export const setBattleRoyalOwnScore = async ({ hash_key, participants }: SetBattleRoyaleScoresParams) => {
   const scores = {}
   for (const p of participants) {
-    if (p.highlight) {
-      scores[p.id] = p.attributes.position
-    }
+    if (p.attributes.attack_score) scores[p.id] = p.attributes.attack_score
   }
   const { data } = await api.post(URI.BATTLE_ROYALE_SET_OWN_SCORE.replace(/:id/gi, `${hash_key}`), { scores })
   return data as SetBattleRoyaleScoresResponse

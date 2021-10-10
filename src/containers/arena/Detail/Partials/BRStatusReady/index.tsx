@@ -36,7 +36,7 @@ const BRStatusReady: React.FC<BRStatusReadyProps> = ({ arena }) => {
       content={
         <Box display="flex" flexDirection="column" alignItems="center">
           <RemainingDate tournament={arena} />
-          <EntryCount totalCount={arena.attributes.max_participants} count={0} isTeam={isTeam} />
+          <EntryCount totalCount={arena.attributes.max_participants} count={arena.attributes.interested_count} isTeam={isTeam} />
 
           <ButtonGroup mt={3}>
             <ESButton onClick={toParticipants} variant="outlined" fullWidth>
@@ -53,7 +53,7 @@ const BRStatusReady: React.FC<BRStatusReadyProps> = ({ arena }) => {
       footer={
         <Box textAlign="center">
           {isModerator ? (
-            <ButtonGroup size="large">
+            <ButtonGroup size="large" mb={3}>
               <div>
                 <ButtonPrimaryOutlined disabled leadingIcon={<Icon className="fas fa-user-slash" fontSize="small" />}>
                   {t('tournament.close_recruitment.button_text')}
@@ -61,6 +61,7 @@ const BRStatusReady: React.FC<BRStatusReadyProps> = ({ arena }) => {
               </div>
             </ButtonGroup>
           ) : null}
+          {isModerator ? <Typography variant="body2">{t('tournament.close_recruitment.description')}</Typography> : null}
         </Box>
       }
     />

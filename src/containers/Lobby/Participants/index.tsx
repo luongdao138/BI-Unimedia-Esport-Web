@@ -16,6 +16,7 @@ import { ESRoutes } from '@constants/route.constants'
 import { use100vh } from 'react-div-100vh'
 import { getIsAuthenticated } from '@store/auth/selectors'
 import { useAppSelector } from '@store/hooks'
+import ParticipantCount from '@components/ParticipantCount'
 
 export interface ParticipantsProps {
   open: boolean
@@ -111,32 +112,14 @@ const Participants: React.FC<ParticipantsProps> = ({ open, data, handleClose }) 
               alignItems="center"
               justifyContent="flex-end"
             >
-              <Box display="flex" flexDirection="column">
-                <Box display="flex" flexDirection="row" alignItems="flex-end">
-                  <Box mr={2}>
-                    <Typography variant="h3" className={classes.countLabel}>
-                      {data.attributes.is_freezed
-                        ? t('common:tournament.number_of_participants')
-                        : t('common:tournament.number_of_entries')}
-                    </Typography>
-                  </Box>
-                  <Typography variant="h3" style={{ fontSize: 24, fontWeight: 'bold' }}>
-                    {totalCount}
-                  </Typography>
-                  <Typography variant="h3" className={classes.countLabel}>
-                    {unit}
-                  </Typography>
-                  <Typography variant="h3" className={classes.countLabel} style={{ fontSize: 20, marginLeft: 4 }}>
-                    /
-                  </Typography>
-                  <Typography variant="h3" className={classes.countLabel} style={{ fontSize: 22 }}>
-                    {maxParticipants}
-                  </Typography>
-                  <Typography variant="h3" className={classes.countLabel}>
-                    {unit}
-                  </Typography>
-                </Box>
-              </Box>
+              <ParticipantCount
+                label={
+                  data.attributes.is_freezed ? t('common:tournament.number_of_participants') : t('common:tournament.number_of_entries')
+                }
+                total={totalCount}
+                unit={unit}
+                max={maxParticipants}
+              />
             </Box>
           </Box>
           {isInitialPageLoad && participantsMeta.pending && (

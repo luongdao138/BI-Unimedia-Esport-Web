@@ -1,6 +1,6 @@
 import { memo } from 'react'
 import { Typography, Box, makeStyles, Icon, Chip } from '@material-ui/core'
-import ESChip from '@components/Chip'
+import CardChip from '@components/TournamentCard/CardChip'
 import ESAvatar from '@components/Avatar'
 import ESCard from '@components/Card'
 import ESCardMedia from '@components/Card/CardMedia'
@@ -20,7 +20,7 @@ export interface TournamentListFiltered extends TournamentListItem {
   total?: number
   participantsLimited?: ParticipantType[]
   startDate?: string
-  acceptance_start_date?: string
+  entryEndDate?: string
 }
 
 interface Props {
@@ -37,7 +37,7 @@ const TournamentHomeCard: React.FC<Props> = ({ tournament }) => {
   const cover = attr.cover ? attr.cover : '/images/default_card.png'
   const organizer = attr.organizer_name ? attr.organizer_name : ''
   const startDate = tournament.startDate
-  const acceptance_start_date = tournament.acceptance_start_date
+  const entryEndDate = tournament.entryEndDate
 
   const getMediaScreen = () => {
     const status = t('common:arena.status.status', { status: tournament.attributes.status })
@@ -55,7 +55,7 @@ const TournamentHomeCard: React.FC<Props> = ({ tournament }) => {
         >
           <ESAvatar size={36} src={attr.organizer_avatar} alt={attr.organizer_name} />
           {status ? (
-            <Box position="absolute" top={0} right={0} margin={0.6}>
+            <Box position="absolute" top={0} right={0} margin={0.6} zIndex={3}>
               <StatusChip label={status} color={tournament.attributes.status === TS.COMPLETED ? 'black' : 'white'} />
             </Box>
           ) : null}
@@ -84,7 +84,7 @@ const TournamentHomeCard: React.FC<Props> = ({ tournament }) => {
             />
           </Box>
         </Box>
-        {participant?.position && attr.status === TS.COMPLETED && (
+        {attr.status === TS.COMPLETED && (
           <Box
             zIndex={2}
             className={`${classes.mediaOverlay} ${classes.blurOverlay}`}
@@ -93,54 +93,39 @@ const TournamentHomeCard: React.FC<Props> = ({ tournament }) => {
             flexDirection="column"
             alignItems="center"
           >
-            <span
-              className={`${classes.text} ${participant.position === 1 && classes.first} ${participant.position === 2 && classes.second} ${
-                participant.position === 3 && classes.third
-              }`}
-            >
-              {participant.position}
-              {participant.position === 1 && <span>st</span>}
-              {participant.position === 2 && <span>nd</span>}
-              {participant.position === 3 && <span>rd</span>}
-            </span>
-            <ESAvatar
-              onClick={() => {
-                participant?.user_code ? router.push(`${ESRoutes.PROFILE}/${participant.user_code}`) : null
-              }}
-              className={classes.marginV}
-              alt={participant?.name}
-              src={participant?.profile_image}
-            />
-            <Box className={classes.captionTitle}>
-              <Typography noWrap variant="overline">
-                {participant?.name}
-              </Typography>
-            </Box>
+            {participant?.position ? (
+              <>
+                <span
+                  className={`${classes.text} ${participant.position === 1 && classes.first} ${
+                    participant.position === 2 && classes.second
+                  } ${participant.position === 3 && classes.third}`}
+                >
+                  {participant.position}
+                  {participant.position === 1 && <span>st</span>}
+                  {participant.position === 2 && <span>nd</span>}
+                  {participant.position === 3 && <span>rd</span>}
+                </span>
+                <ESAvatar
+                  onClick={() => {
+                    participant?.user_code ? router.push(`${ESRoutes.PROFILE}/${participant.user_code}`) : null
+                  }}
+                  className={classes.marginV}
+                  alt={participant?.name}
+                  src={participant?.profile_image}
+                />
+                <Box className={classes.captionTitle}>
+                  <Typography noWrap variant="overline">
+                    {participant?.name}
+                  </Typography>
+                </Box>
+              </>
+            ) : null}
           </Box>
         )}
       </>
     )
   }
 
-  const getChippedRow = (chipLabel: string, value: string | number, extra?: string | number, topGutter?: number) => {
-    return (
-      <Box display="flex" flexDirection="row" mt={topGutter ? topGutter : 1} alignItems="center">
-        <ESChip
-          className={classes.chip}
-          size="small"
-          label={
-            <Box color={Colors.white}>
-              <Typography variant="overline">{chipLabel}</Typography>
-            </Box>
-          }
-        />
-        <Box ml={1} color={Colors.white}>
-          <Typography variant="caption">{value}</Typography>
-        </Box>
-        {extra ? <Typography variant="caption">{extra}</Typography> : null}
-      </Box>
-    )
-  }
   const getParticipants = () => {
     const participants = attr.participants
     return (
@@ -171,9 +156,9 @@ const TournamentHomeCard: React.FC<Props> = ({ tournament }) => {
         </Box>
         <Typography className={classes.organizer}>{attr.game_of_title}</Typography>
         <Typography className={classes.organizer}>{`${t('common:tournament.organizer')} ${organizer}`}</Typography>
-        {getChippedRow(t('common:tournament.card_date'), startDate)}
-        {getChippedRow(t('common:tournament.acceptance_start_date'), acceptance_start_date)}
-        {getChippedRow(t('common:tournament.entry'), tournament.total, `/${attr.max_participants}`, 0.5)}
+        <CardChip chipLabel={t('common:lobby.card.start_date')} value={startDate} />
+        <CardChip chipLabel={t('common:lobby.card.entry_period')} value={entryEndDate} />
+        <CardChip chipLabel={t('common:tournament.entry')} value={`${tournament.total}/${attr.max_participants}`} />
         {getParticipants()}
       </ESCardContent>
     </ESCard>
@@ -206,6 +191,9 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: 5,
     backgroundColor: Colors.black_opacity[90],
     borderRadius: 10,
+    '&:last-child': {
+      marginBottom: 0,
+    },
   },
   chipSecondary: {
     width: 64,

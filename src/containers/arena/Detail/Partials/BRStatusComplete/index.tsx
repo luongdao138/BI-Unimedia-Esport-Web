@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Typography, Box } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
@@ -18,7 +18,6 @@ import WinnerAvatar from './WinnerAvatar'
 import ESLoader from '@components/FullScreenLoader'
 import ButtonPrimary from '@components/ButtonPrimary'
 import SummaryModal from '../SummaryModal'
-import moment from 'moment'
 
 interface BRStatusBRStatusCompleteProps {
   arena: TournamentDetail
@@ -30,7 +29,16 @@ const BRStatusComplete: React.FC<BRStatusBRStatusCompleteProps> = ({ arena }) =>
     arena.attributes.end_date
   )}`
   const { toParticipants, isModerator, isTeamLeader, toMatches, isFreezed, isParticipant, toResults } = useArenaHelper(arena)
-  const { winner, winnerMeta } = useBRStatusComplete()
+  const { winner: winnerData, winnerMeta } = useBRStatusComplete()
+  const winnerMounted = useRef(null)
+  const [winner, setWinner] = useState(winnerData)
+
+  useEffect(() => {
+    if (winnerData && !winnerMounted.current) {
+      setWinner(winnerData)
+      winnerMounted.current = true
+    }
+  }, [winnerData])
 
   const [showSummaryModal, setShowSummaryModal] = useState(false)
   if (winnerMeta.pending) return <ESLoader open />
@@ -45,7 +53,7 @@ const BRStatusComplete: React.FC<BRStatusBRStatusCompleteProps> = ({ arena }) =>
       }
       content={
         isFreezed ? (
-          winnerMeta.loaded && (isTeamLeader || isModerator) ? (
+          winnerMeta.loaded ? (
             <Box display="flex" flexDirection="column" alignItems="center">
               {winner ? (
                 <WinnerAvatar src={winner.avatar} name={winner.name} user_code={winner.user_code} />
@@ -68,18 +76,12 @@ const BRStatusComplete: React.FC<BRStatusBRStatusCompleteProps> = ({ arena }) =>
                     {t('arena.input_result')}
                   </ActionLabelButton>
                 ) : null}
-                <ESButton onClick={toResults} variant="outlined" fullWidth disabled={!winner}>
+                <ESButton onClick={toResults} variant="outlined" fullWidth>
                   {t('tournament.results')}
                 </ESButton>
               </ButtonGroup>
             </Box>
-          ) : (
-            <Box textAlign="center">
-              <Typography color="secondary" variant="body1">
-                {t('arena.result_incomplete')}
-              </Typography>
-            </Box>
-          )
+          ) : null
         ) : (
           <Box textAlign="center">
             <Typography color="secondary" variant="body1">
@@ -89,16 +91,11 @@ const BRStatusComplete: React.FC<BRStatusBRStatusCompleteProps> = ({ arena }) =>
         )
       }
       footer={
-        isModerator ? (
+        isModerator && arena.attributes.is_freezed ? (
           <div className={classes.footerContainer}>
             <ButtonGroup size="large">
               <div>
-                <ButtonPrimary
-                  round
-                  fullWidth
-                  onClick={() => setShowSummaryModal(true)}
-                  disabled={!winner || !moment().isSameOrAfter(moment(arena.attributes.end_date))}
-                >
+                <ButtonPrimary round fullWidth onClick={() => setShowSummaryModal(true)} disabled={!winner}>
                   {t('tournament.summary')}
                 </ButtonPrimary>
               </div>

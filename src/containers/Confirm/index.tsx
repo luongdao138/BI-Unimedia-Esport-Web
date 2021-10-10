@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { makeStyles, Theme, Typography, Box } from '@material-ui/core'
 import { IconButton } from '@material-ui/core'
 import Icon from '@material-ui/core/Icon'
@@ -7,14 +7,15 @@ import { useTranslation } from 'react-i18next'
 import useConfirm from './useConfirm'
 import ESPinInput from '@components/PinInput'
 import ESLoader from '@components/FullScreenLoader'
-import ESToast from '@components/Toast'
 import ESStickyFooter from '@components/StickyFooter'
 import AuthenticationLayout from '@layouts/AuthenticationLayout'
+import useToast from '@utils/hooks/useToast'
 
 const ConfirmContainer: React.FC = () => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const [confirmationCode, setConfirmationCode] = useState<string>('')
+  const { addToast } = useToast()
   const {
     user,
     registerConfirm,
@@ -35,6 +36,13 @@ const ConfirmContainer: React.FC = () => {
     }
     registerConfirm(params)
   }
+
+  useEffect(() => {
+    if (metaResend.loaded || metaResendForgot.loaded) {
+      addToast(t('common:register.resend_success'))
+      resetResendMeta()
+    }
+  }, [metaResend.loaded, metaResendForgot.loaded])
 
   const buttonActive = (): boolean => {
     return user?.email !== '' && confirmationCode.length === 6 && (!metaConfirm.error || !metaForgot.error)
@@ -105,13 +113,6 @@ const ConfirmContainer: React.FC = () => {
       </ESStickyFooter>
 
       <ESLoader open={metaConfirm.pending || metaResend.pending || metaForgot.pending || metaResendForgot.pending} />
-      {(metaResend.loaded || metaResendForgot.loaded) && (
-        <ESToast
-          open={metaResend.loaded || metaResendForgot.loaded}
-          message={t('common:register.resend_success')}
-          resetMeta={resetResendMeta}
-        />
-      )}
     </AuthenticationLayout>
   )
 }

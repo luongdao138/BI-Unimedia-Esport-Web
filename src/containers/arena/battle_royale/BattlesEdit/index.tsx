@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { Box, Icon } from '@material-ui/core'
+import { Box, Icon, Typography } from '@material-ui/core'
 import BRListItem from '@containers/arena/battle_royale/Partials/BRListItem'
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
@@ -23,7 +23,7 @@ import useArenaHelper from '@containers/arena/hooks/useArenaHelper'
 
 const participantDefault: ParticipantsResponse = {
   id: undefined,
-  attributes: { avatar_url: null, name: '', position: null },
+  attributes: { avatar_url: null, name: '', position: null, attack_score: null },
 }
 
 const getDefaultParticipants = (length: number) => Array.from({ length: length }, (_, i) => i).map((_) => participantDefault)
@@ -40,9 +40,15 @@ const ArenaBattlesEdit: React.FC = () => {
   const [showParticipants, setShowParticipants] = useState<{ pid: number | undefined; open: boolean }>({ pid: undefined, open: false })
   const [selecteds, setSelecteds] = useState<ParticipantsResponse[]>([])
   const [clickIndex, setClickIndex] = useState<number>(0)
-  const { isTeam, maxCapacity, isMemberSelectable } = useArenaHelper(tournament)
+  const { isTeam, maxCapacity, isMemberSelectable, isModerator, toDetail } = useArenaHelper(tournament)
   const confirmFreeze = useFreezeDialog(isTeam)
   const confirmRandomize = useRandomizeDialog(isTeam)
+
+  useEffect(() => {
+    if (detailMeta.loaded && tournament && !isModerator) {
+      toDetail()
+    }
+  }, [isModerator, detailMeta.loaded, tournament])
 
   const handleFreeze = () => {
     confirmFreeze().then(() => {
@@ -130,14 +136,19 @@ const ArenaBattlesEdit: React.FC = () => {
   }
 
   const [freezable, setFreezable] = useState(false)
+
   useEffect(() => {
     const selectedLength = getParticipantIds(selecteds).length
-    setFreezable(selectedLength === maxCapacity)
-  }, [selecteds])
+    if (selectedLength === 1) {
+      setFreezable(false)
+    } else {
+      setFreezable(!!participants.length && selectedLength === maxCapacity)
+    }
+  }, [selecteds, participants])
 
   return (
     <>
-      {detailMeta.loaded && participantsMeta.loaded && tournament && (
+      {detailMeta.loaded && participantsMeta.loaded && tournament && isModerator && (
         <StickyFooter
           hideFooter={tournament.attributes.is_freezed}
           primaryButton={
@@ -146,16 +157,25 @@ const ArenaBattlesEdit: React.FC = () => {
             </ButtonPrimary>
           }
           secondaryButton={
-            <ButtonPrimaryOutlined onClick={handleRandomize} leadingIcon={<Icon className="fas fa-random" fontSize="small" />}>
+            <ButtonPrimaryOutlined
+              disabled={!(tournament.attributes.interested_count || tournament.attributes.participant_count)}
+              onClick={handleRandomize}
+              leadingIcon={<Icon className="fas fa-random" fontSize="small" />}
+            >
               {t('common:arena.randomize_button')}
             </ButtonPrimaryOutlined>
           }
         >
           <HeaderWithButton title={tournament.attributes.title} />
           <Box pt={3} pb={3} textAlign="center">
-            {/* {tournament.attributes.is_freezed ? null : <Typography>順位を入力してください</Typography>} */}
+            {tournament.attributes.is_freezed ? null : (
+              <>
+                <Typography>{t('common:tournament.confirm_participants')}</Typography>
+                <Typography>{t('common:arena.select_two_or_more')}</Typography>
+              </>
+            )}
           </Box>
-          <BRList marginX={3}>
+          <BRList marginX={3} mb={7}>
             {selecteds.map((v, i) => (
               <BRListItem
                 key={i}

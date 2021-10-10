@@ -20,8 +20,8 @@ const ButtonPrimary: React.FC<PrimaryButtonProps> = ({ children, classes: _class
   return (
     <ButtonBase
       className={`${classes} ${className}`}
-      {...props}
       style={{ paddingLeft: px, paddingRight: px, paddingTop: 0, paddingBottom: 0 }}
+      {...props}
     >
       <div className="circle"></div>
       <span className="label-primary MuiButton-label">{children}</span>

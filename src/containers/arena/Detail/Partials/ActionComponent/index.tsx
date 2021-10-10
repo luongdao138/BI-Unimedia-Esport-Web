@@ -38,9 +38,10 @@ const ActionComponent: React.FC<Props> = (props) => {
     isCancelled,
     isRecruitmentClosed,
     isNotHeld,
-    isAdminJoined,
     isTeamLeader,
     isEntered,
+    isParticipant,
+    isInterested,
   } = useArenaHelper(tournament)
 
   const [showSummaryModal, setShowSummaryModal] = useState<boolean>(false)
@@ -100,7 +101,7 @@ const ActionComponent: React.FC<Props> = (props) => {
       </Box>
     )
   }
-
+  const isAdminJoined = isTeamLeader && (isParticipant || isInterested)
   const renderEntry = () => {
     if ((isEntered && isTeamLeader) || isAdminJoined) {
       return entryEditButton()

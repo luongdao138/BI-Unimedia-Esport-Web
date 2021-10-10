@@ -197,6 +197,12 @@ const socketReducer = (state: State = initialState, action: AnyAction): State =>
         ...state,
         tempList: undefined,
       }
+    case CHAT_ACTION_TYPE.UPDATE_AVATAR:
+      // unique merge store messages
+      return {
+        ...state,
+        roomList: ChatHelper.updateAvatar(state.roomList, action.data.imgUrl, action.data.chatRoomId),
+      }
     case `${WEBSOCKET_PREFIX}:CONNECTED`:
       return {
         ...state,

@@ -15,9 +15,10 @@ import LoginRequired from '@containers/LoginRequired'
 
 interface UnjoinModalProps {
   tournament: TournamentDetail
+  showButton: boolean
 }
 
-const UnjoinModal: React.FC<UnjoinModalProps> = ({ tournament }) => {
+const UnjoinModal: React.FC<UnjoinModalProps> = ({ tournament, showButton }) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const [open, setOpen] = useState(false)
@@ -31,9 +32,11 @@ const UnjoinModal: React.FC<UnjoinModalProps> = ({ tournament }) => {
 
   return (
     <Box textAlign="center" mb={2}>
-      <LoginRequired>
-        <LinkButton onClick={() => setOpen(true)}>{t('common:tournament.decline_entry')}</LinkButton>
-      </LoginRequired>
+      {showButton ? (
+        <LoginRequired>
+          <LinkButton onClick={() => setOpen(true)}>{t('common:tournament.decline_entry')}</LinkButton>
+        </LoginRequired>
+      ) : null}
       <ESPopup open={open}>
         <BlankLayout>
           <Box paddingBottom={2} paddingTop={2} className={classes.childrenContainer}>

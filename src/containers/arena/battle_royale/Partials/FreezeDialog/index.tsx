@@ -10,10 +10,10 @@ function FreezeDialogContent({ isTeam }) {
   return (
     <>
       <Typography variant="h2" className={classes.subtitle}>
-        {t('common:arena.battles.randomize_confirmation_dialog.subtitle', { isTeam })}
+        {t('common:arena.battles.freeze_confirmation_dialog.subtitle', { isTeam })}
       </Typography>
       <Typography variant="caption" gutterBottom className={classes.desc}>
-        {t('common:arena.battles.randomize_confirmation_dialog.description', { isTeam })}
+        {t('common:arena.battles.freeze_confirmation_dialog.description', { isTeam })}
       </Typography>
     </>
   )
@@ -40,11 +40,11 @@ export const useFreezeDialog = (isTeam: boolean): (() => Promise<void>) => {
   const { t } = useTranslation(['common'])
   return (): Promise<void> => {
     return confirm({
-      title: t('common:arena.battles.randomize_confirmation_dialog.title', { isTeam }),
+      title: t('common:arena.battles.freeze_confirmation_dialog.title', { isTeam }),
       content: <FreezeDialogContent isTeam={isTeam} />,
-      additionalText: t('common:arena.battles.randomize_confirmation_dialog.additionalText'),
-      confirmationText: t('common:arena.battles.randomize_confirmation_dialog.confirmationText'),
-      cancellationText: t('common:arena.battles.randomize_confirmation_dialog.cancellationText'),
+      additionalText: t('common:arena.battles.freeze_confirmation_dialog.additionalText'),
+      confirmationText: t('common:arena.battles.freeze_confirmation_dialog.confirmationText'),
+      cancellationText: t('common:arena.battles.freeze_confirmation_dialog.cancellationText'),
     })
   }
 }

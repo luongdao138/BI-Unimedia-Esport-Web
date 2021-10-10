@@ -12,6 +12,15 @@ const BRInput: React.FC<OutlinedInputProps> = (props) => {
   )
 }
 
+export type ErrorType = {
+  only_digit?: boolean
+  time_attack_format_invalid?: boolean
+  time_attack_max_exceeds?: boolean
+  score_attack_format_invalid?: boolean
+  score_attack_max_exceeds?: boolean
+  placement_min_max_range_invalid?: boolean
+}
+
 const useStyles = makeStyles(() => ({
   scoreWrap: {
     width: '100%',
@@ -25,6 +34,9 @@ const useStyles = makeStyles(() => ({
     },
     '& .MuiInputBase-input': {
       textAlign: 'center',
+      '&::-webkit-input-placeholder': {
+        fontSize: 11,
+      },
     },
     '& .MuiOutlinedInput-root': {
       borderRadius: 5,

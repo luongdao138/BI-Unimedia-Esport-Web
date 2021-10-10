@@ -6,6 +6,9 @@ export default {
     day: '日',
     time: '時間',
     hour: '時',
+    minute: '分',
+    second: '秒',
+    millis: 'ミリ秒',
     gender: '性別',
     male: '男性',
     female: '女性',
@@ -55,7 +58,6 @@ export default {
     failed_to_get_data: 'データの取得に失敗しました。',
     input_is_incorrect: '入力内容が適切ではありません。',
     dash: '-',
-    dash_separator: 'ー',
     team: 'チーム',
     send: '送信する',
     select_an_image: '画像を選択',
@@ -198,7 +200,7 @@ export default {
     user_settings_failed: 'User settings failed',
     signup_failed: '登録に失敗しました。',
     failed: '失敗しました',
-    close_arena_failed: 'エントリーを締め切れませんでした。',
+    close_arena_failed: 'エントリーを締め切れませんでした',
     join_arena_failed: 'エントリーを完了できませんでした。',
     edit_entry_failed: 'エントリー情報を編集できませんでした。',
     leave_arena_failed: 'エントリーを辞退できませんでした',
@@ -276,7 +278,7 @@ export default {
       cancel: '却下',
       hold: '保留',
       user: '一般ユーザー',
-      co_organizer: '共同管理者',
+      co_organizer: '副管理人',
       kick: 'キックする',
     },
     change_applying_members_toast: '更新しました。',
@@ -461,7 +463,7 @@ export default {
     follower_entering: 'フォローしている人がエントリーしている大会',
     follower_ended: 'フォローしている人がエントリーしていた大会結果',
     recruiting_tournament_list: '募集中の大会一覧',
-    select_user: 'ユーザを選ぶ',
+    select_user: 'ユーザーを選ぶ',
     select_team: 'チームを選ぶ',
     set_participants: '設定する',
     deselect: '選択解除',
@@ -513,8 +515,20 @@ export default {
       followers_entering: '該当の大会は存在しません',
       followers_entering_results: '該当の大会結果は存在しません',
     },
+    discard: {
+      title: '内容を破棄します',
+      message: '画面を戻ると、現在の入力内容は破棄されます。よろしいですか？',
+      message_part1: '画面を戻ると、現在の入力内容は破棄されます。',
+      message_part2: 'よろしいですか？',
+      confirm: '内容を破棄して戻る',
+      edit_title: '内容を破棄します',
+      edit_confirm: '内容を破棄して戻る',
+      edit_message: '画面を戻ると、現在の入力内容は破棄されます。よろしいですか？',
+    },
   },
   arena: {
+    select_two_or_more: '参加メンバーを２つ以上選択して下さい。',
+    enter_own_score: '参加者は自身の対戦の結果のみ入力できます',
     input_result: '結果の入力',
     br_set_score_btn: '結果を反映する',
     br_set_score_success_toast: '結果を反映しました',
@@ -524,6 +538,7 @@ export default {
       score: 'スコア',
       time: 'タイム',
     },
+    rank: '位',
     rules: {
       rule: '{{rule, arena_rule}}',
       single: 'トーナメント',
@@ -537,6 +552,20 @@ export default {
       score_attack: 'スコアを入力してください',
       time_attack: `タイムを入力してください
       例）「01:23:45:678」`,
+      score_attack_error: `スコアは半角数字で入力してください
+入力上限は8桁となります`,
+      battle_royale_error: '順位は半角数字で入力してください',
+      battle_royale_errors: {
+        min_max_range_invalid: '{{min}}～{{max}}までの半角数字を入力してください',
+      },
+      time_attack_errors: {
+        format_invalid: 'タイムは半角数字で入力してください',
+        time_attack_max_exceeds: '分、秒は0〜59の間の数字を入力してください',
+      },
+      score_attack_errors: {
+        format_invalid: 'スコアは半角数字で入力してください',
+        score_attack_max_exceeds: 'スコアを8桁までに入力して下さい。',
+      },
     },
     status: {
       status: '{{status, status_rule}}',
@@ -554,32 +583,35 @@ export default {
     no_third_place: '（3位決定戦なし）',
     randomize_button: 'ランダムに配置する',
     freeze_button: 'トーナメント表を確定する',
-    freeze_br_button: '対戦表を確定する',
+    freeze_br_button: 'メンバーを確定する',
     randomize_success: 'ユーザーをランダムに配置しました',
     freeze_success: 'トーナメント表が確定しました',
     br_freeze_success: 'メンバーを確定しました',
     join_success: ' エントリー完了しました',
     leave_success: 'エントリーを辞退しました',
-    close_entry_success: 'エントリーを締め切りました。',
+    close_entry_success: 'エントリーを締め切りました',
     edit_entry_success: 'エントリー情報を編集しました',
     failed_to_update_match: '対戦表の更新に失敗しました',
+    failed_to_update_br_members: 'メンバーリストの更新に失敗しました',
     battles: {
       randomize_confirmation_dialog: {
         title: '{{isTeam, participation_type}}をランダムに配置します',
         subtitle: '現在エントリーしている{{isTeam, participation_type}}を対戦表の空欄になっている枠へランダムに配置します',
         description: `※エントリーしている{{isTeam, participation_type}}数が参加枠数よりも多い場合は、選択されなかったユーザーは落選となります。
-        
+
                       ※落選する{{isTeam, participation_type}}を出したくない場合は、大会管理から参加枠数を変更した後に配置を行ってください。`,
         additionalText: 'この時点ではまだエントリー表は確定しません',
         confirmationText: '配置する',
         cancellationText: 'キャンセル',
       },
       freeze_confirmation_dialog: {
-        title: '{{isTeam, participation_type}}をランダムに配置します',
-        description: '現在エントリーしている{{isTeam, participation_type}}を対戦表の空欄になっている枠へランダムに配置します',
-        additionalText: `※エントリーしている{{isTeam, participation_type}}数が参加枠数よりも多い場合は、選択されなかった{{isTeam, participation_type}}は落選となります。
-                         ※落選する{{isTeam, participation_type}}を出したくない場合は、大会管理から参加枠数を変更した後に配置を行ってください。`,
-        confirmationText: 'エントリー',
+        title: 'メンバーを確定する',
+        subtitle: '現在の選択されている{{isTeam, participation_type}}でメンバーを確定させます。よろしいですか？',
+        description: `※落選する{{isTeam, participation_type}}を出したくない場合は、大会管理から参加枠数を変更した後に配置を行ってください。
+
+                      ※エントリーしている{{isTeam, participation_type}}であっても、参加メンバー一覧に反映されていないまま確定を行った場合は残りの枠数を問わず落選となります。`,
+        additionalText: '確定以降の参加枠の変更はできません。',
+        confirmationText: '確定する',
         cancellationText: 'キャンセル',
       },
     },
@@ -607,8 +639,9 @@ export default {
     please_select_winner: '勝者を選択してください',
     summary: '大会総括',
     summary_title: '大会の総括',
+    summary_input_placeholder: '大会の総括を入力することができます',
     summary_submit: 'この内容で決定する',
-    copy_toast: '共有URLをコピーしました',
+    copy_toast: 'クリップボードにコピーしました',
     edit_arena_info: '編集',
     create_success: '大会が作成されました',
     update_success: '大会内容が編集されました',
@@ -717,27 +750,28 @@ export default {
     sorting_method: 'ソート方法',
     sort_info_title: 'ソート方法について',
     public_arena_info_title: '公開設定について',
+    by_asc: '昇順',
+    by_desc: '降順',
     /* eslint-disable no-irregular-whitespace */
-    sort_info_content: `
-昇順　入力値（スコアやタイム等）が小さい順に順位を決定します。
-　　　例：入力値と順位の関係は下記のようになります。
-　　　100→1位、200→2位、300→3位
-降順　入力値（スコアやタイム等）が大きい順に順位を決定します。
-　　　例：入力値と順位の関係は下記のようになります。
-　　　300→1位、200→2位、100→3位`,
+    sort_info_modal: {
+      row1col1: '昇順',
+      row1col2:
+        '入力値（スコアやタイム等）が小さい順に順位を決定します。\n例：入力値と順位の関係は下記のようになります。\n100→1位、200→2位、300→3位',
+      row2col1: '降順',
+      row2col2:
+        '入力値（スコアやタイム等）が大きい順に順位を決定します。\n例：入力値と順位の関係は下記のようになります。\n300→1位、200→2位、100→3位',
+    },
     close: '閉じる',
     publishing_settings: '公開設定',
     /* eslint-disable no-irregular-whitespace */
-    publishing_settings_info: `
-    eXeLABで作成した大会は、公開範囲を設定することができます。
-    
-公開　　　公開設定では全てのユーザーが大会を参照可能となります。
-
-限定公開　限定公開設定では大会のURLを知っているユーザーのみ参照/エントリー
-　　　　　が可能となります。アリーナ一覧や検索には表示されません。大会を特定
-　　　　　のユーザーに共有する場合は大会詳細画面の「共有URLをコピー」より
-　　　　　URLの連携をお願いいたします。　　　　
-　　　　`,
+    public_setting_modal: {
+      row: 'eXeLABで作成した大会は、公開範囲を設定することができます。',
+      row1col1: '公開',
+      row1col2: '公開設定では全てのユーザーが大会を参照可能となります。',
+      row2col1: '限定公開',
+      row2col2:
+        '限定公開設定では大会のURLを知っているユーザーのみ参照/エントリーが可能となります。アリーナ一覧や検索には表示されません。大会を特定のユーザーに共有する場合は大会詳細画面の「共有URLをコピー」よりURLの連携をお願いいたします。',
+    },
     has_third_place: '3位決定戦あり',
     participation: '参加形式',
     participation_term: '参加条件・ルール',

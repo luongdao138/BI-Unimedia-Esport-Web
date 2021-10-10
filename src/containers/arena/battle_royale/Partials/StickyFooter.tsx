@@ -17,7 +17,7 @@ const StickyFooter: React.FC<StickyFooterProps> = ({ primaryButton, secondaryBut
   const classes = useStyles()
   const height = use100vh()
   return (
-    <div style={{ height: `calc(${height}px - ${headerHeight}px)`, overflowY: 'auto', paddingBottom: 60 }} className={classes.scroll}>
+    <div style={{ height: `calc(${height}px - ${headerHeight}px)`, overflowY: 'auto' }} className={classes.scroll}>
       {children}
       {hideFooter ? null : (
         <Box className={classes.actionButtonContainer}>
@@ -33,6 +33,7 @@ const StickyFooter: React.FC<StickyFooterProps> = ({ primaryButton, secondaryBut
 
 const useStyles = makeStyles((theme) => ({
   scroll: {
+    paddingBottom: 60,
     scrollbarColor: '#000 transparent',
     scrollbarWidth: 'thin',
     '&::-webkit-scrollbar': {
@@ -64,6 +65,9 @@ const useStyles = makeStyles((theme) => ({
   },
   actionButton: {
     width: '100%',
+  },
+  [theme.breakpoints.down('sm')]: {
+    scroll: { paddingBottom: 165 },
   },
 }))
 
