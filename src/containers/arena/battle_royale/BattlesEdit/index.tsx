@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import { Box, Icon, Typography } from '@material-ui/core'
 import BRListItem from '@containers/arena/battle_royale/Partials/BRListItem'
-import React, { useEffect, useState, useMemo } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import useBRParticipants from '@containers/arena/hooks/useBRParticipants'
 import useTournamentDetail from '@containers/arena/hooks/useTournamentDetail'
@@ -137,12 +137,13 @@ const ArenaBattlesEdit: React.FC = () => {
 
   const [freezable, setFreezable] = useState(false)
 
-  const selectedLength = useMemo(() => {
-    return getParticipantIds(selecteds).length
-  }, [selecteds])
-
   useEffect(() => {
-    setFreezable(!!participants.length && selectedLength === maxCapacity)
+    const selectedLength = getParticipantIds(selecteds).length
+    if (selectedLength === 1) {
+      setFreezable(false)
+    } else {
+      setFreezable(!!participants.length && selectedLength === maxCapacity)
+    }
   }, [selecteds, participants])
 
   return (
@@ -151,7 +152,7 @@ const ArenaBattlesEdit: React.FC = () => {
         <StickyFooter
           hideFooter={tournament.attributes.is_freezed}
           primaryButton={
-            <ButtonPrimary type="submit" round fullWidth disabled={!freezable || selectedLength === 1} onClick={handleFreeze}>
+            <ButtonPrimary type="submit" round fullWidth disabled={!freezable} onClick={handleFreeze}>
               {t('common:arena.freeze_br_button')}
             </ButtonPrimary>
           }
@@ -167,8 +168,12 @@ const ArenaBattlesEdit: React.FC = () => {
         >
           <HeaderWithButton title={tournament.attributes.title} />
           <Box pt={3} pb={3} textAlign="center">
-            {tournament.attributes.is_freezed ? null : <Typography>{t('common:tournament.confirm_participants')}</Typography>}
-            <Typography>{t('common:arena.select_two_or_more')}</Typography>
+            {tournament.attributes.is_freezed ? null : (
+              <>
+                <Typography>{t('common:tournament.confirm_participants')}</Typography>
+                <Typography>{t('common:arena.select_two_or_more')}</Typography>
+              </>
+            )}
           </Box>
           <BRList marginX={3} mb={7}>
             {selecteds.map((v, i) => (
