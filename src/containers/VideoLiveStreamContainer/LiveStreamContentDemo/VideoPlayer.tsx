@@ -165,6 +165,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
 
   const { playing, muted, volume, ended } = state
   const { loading, videoLoaded } = visible
+  const hls = new Hls()
   // const chatBoardWidth = () => {
   //   if (!isDown1100) return 482
   //   if (!isDownMd) return 350
@@ -182,58 +183,68 @@ const VideoPlayer: React.FC<PlayerProps> = ({
 
   // ===================hls.js==================================
   useEffect(() => {
+    const video = document.getElementById('video')
+    // const hls = new Hls({
+    //   liveSyncDurationCount: 1,
+    //   initialLiveManifestSize: 1,
+    //   // liveMaxLatencyDurationCount:10
+    //   liveDurationInfinity: true,
+    //   startPosition: 0,
+    // })
+
+    //function event MEDIA_ATTACHED
+    const handleMedia = () => {
+      console.log('video and hls.js are now bound together !')
+      // video.play(); //auto play video
+      //@ts-ignore
+      video.muted = true
+      hls.on(Hls.Events.LEVEL_LOADED, handleLoaded)
+      hls.on(Hls.Events.ERROR, handleError)
+    }
+
+    const handleLoaded = (_, data) => {
+      console.log('~~~~LEVEL_LOADED~~~~~', data)
+      // setDurationPlayer(data.details.totalduration)
+      // setIsLive(data.details.live)
+    }
+    const handleError = (_, data) => {
+      console.log('~~~~~~~~> ERROR', data)
+      if (data.fatal) {
+        switch (data.type) {
+          case Hls.ErrorTypes.NETWORK_ERROR:
+            // try to recover network error
+            console.log('fatal network error encountered, try to recover')
+            setVisible({ ...visible, videoError: true })
+            hls.startLoad()
+            break
+          case Hls.ErrorTypes.MEDIA_ERROR:
+            console.log('fatal media error encountered, try to recover')
+            setVisible({ ...visible, videoError: true })
+            hls.recoverMediaError()
+            break
+          default:
+            // cannot recover
+            hls.destroy()
+            break
+        }
+      } else {
+        setVisible({ ...visible, videoError: true })
+        hls.startLoad()
+      }
+    }
     if (Hls.isSupported() && !isMobile) {
-      const video = document.getElementById('video')
-      // const hls = new Hls({
-      //   liveSyncDurationCount: 1,
-      //   initialLiveManifestSize: 1,
-      //   // liveMaxLatencyDurationCount:10
-      //   liveDurationInfinity: true,
-      //   startPosition: 0,
-      // })
-      const hls = new Hls()
       // bind them together
       // hls.loadSource(src)
       // hls.loadSource('https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8')
-      hls.loadSource('https://d3ueuwvla07imz.cloudfront.net/live/ducnncw202110081522/index.m3u8')
+      hls.loadSource('https://cowell-web.exelab.jp/live/CW352202110051226/index.m3u8')
       //@ts-ignore
       hls.attachMedia(video)
-      hls.on(Hls.Events.MEDIA_ATTACHED, function () {
-        console.log('video and hls.js are now bound together !')
-        // video.play(); //auto play video
-        //@ts-ignore
-        video.muted = true
-        hls.on(Hls.Events.LEVEL_LOADED, (_, data) => {
-          console.log('~~~~LEVEL_LOADED~~~~~', data)
-          // setDurationPlayer(data.details.totalduration)
-          // setIsLive(data.details.live)
-        })
-        hls.on(Hls.Events.ERROR, function (_, data) {
-          console.log('~~~~~~~~> ERROR', data)
-          if (data.fatal) {
-            switch (data.type) {
-              case Hls.ErrorTypes.NETWORK_ERROR:
-                // try to recover network error
-                console.log('fatal network error encountered, try to recover')
-                setVisible({ ...visible, videoError: true })
-                hls.startLoad()
-                break
-              case Hls.ErrorTypes.MEDIA_ERROR:
-                console.log('fatal media error encountered, try to recover')
-                setVisible({ ...visible, videoError: true })
-                hls.recoverMediaError()
-                break
-              default:
-                // cannot recover
-                hls.destroy()
-                break
-            }
-          } else {
-            setVisible({ ...visible, videoError: true })
-            hls.startLoad()
-          }
-        })
-      })
+      hls.on(Hls.Events.MEDIA_ATTACHED, handleMedia)
+    }
+    return () => {
+      hls.off(Hls.Events.MEDIA_ATTACHED, handleMedia)
+      hls.off(Hls.Events.LEVEL_LOADED, handleLoaded)
+      hls.off(Hls.Events.ERROR, handleError)
     }
   }, [])
   //archived
@@ -348,6 +359,11 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     }
   }
 
+  const handleTryAgain = () => {
+    hls.loadSource('https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8')
+    hls.startLoad()
+  }
+
   return (
     <div className={classes.videoPlayer}>
       <div ref={playerContainerRef} className={classes.playerContainer}>
@@ -359,8 +375,8 @@ const VideoPlayer: React.FC<PlayerProps> = ({
               muted={muted}
               style={{ width: '100%', height: '100%' }}
               // src={'https://cowell-web.exelab.jp/live/CW352202110051226/index.m3u8'}
-              autoPlay={true}
-              // controls
+              autoPlay={false}
+              // poster={thumbnail ?? '/images/live_stream/thumbnail_default.png'}
             />
           ) : (
             <video
@@ -440,7 +456,9 @@ const VideoPlayer: React.FC<PlayerProps> = ({
             </div>
             <Box className={classes.boxError}>
               <Typography className={classes.errorType}>{'Network Error'}</Typography>
-              <Typography className={classes.tryAgain}>{'もう一度試す'}</Typography>
+              <div className={classes.buttonReload} onClick={handleTryAgain}>
+                <Typography className={classes.tryAgain}>{'もう一度試す'}</Typography>
+              </div>
             </Box>
           </div>
         )}
@@ -637,11 +655,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   tryAgain: {
     color: '#fff',
     fontSize: 14,
-    border: '1px solid #FF4786',
-    padding: '3px 7px',
-    borderRadius: 15,
-    marginTop: 7,
-    background: '#FF4786',
   },
   errorType: {
     color: '#fff',
@@ -663,6 +676,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'center',
     alignItems: 'center',
     zIndex: 99,
+  },
+  buttonReload: {
+    border: '1px solid #FF4786',
+    padding: '3px 7px',
+    borderRadius: 15,
+    marginTop: 7,
+    background: '#FF4786',
+    cursor: 'pointer',
   },
 }))
 
