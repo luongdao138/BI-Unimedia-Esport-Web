@@ -527,6 +527,7 @@ export default {
     },
   },
   arena: {
+    select_two_or_more: '参加メンバーを２つ以上選択して下さい。',
     enter_own_score: '参加者は自身の対戦の結果のみ入力できます',
     input_result: '結果の入力',
     br_set_score_btn: '結果を反映する',

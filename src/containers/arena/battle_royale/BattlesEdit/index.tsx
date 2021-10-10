@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import { Box, Icon, Typography } from '@material-ui/core'
 import BRListItem from '@containers/arena/battle_royale/Partials/BRListItem'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import { useRouter } from 'next/router'
 import useBRParticipants from '@containers/arena/hooks/useBRParticipants'
 import useTournamentDetail from '@containers/arena/hooks/useTournamentDetail'
@@ -136,8 +136,12 @@ const ArenaBattlesEdit: React.FC = () => {
   }
 
   const [freezable, setFreezable] = useState(false)
+
+  const selectedLength = useMemo(() => {
+    return getParticipantIds(selecteds).length
+  }, [selecteds, participants])
+
   useEffect(() => {
-    const selectedLength = getParticipantIds(selecteds).length
     setFreezable(!!participants.length && selectedLength === maxCapacity)
   }, [selecteds, participants])
 
@@ -164,6 +168,7 @@ const ArenaBattlesEdit: React.FC = () => {
           <HeaderWithButton title={tournament.attributes.title} />
           <Box pt={3} pb={3} textAlign="center">
             {tournament.attributes.is_freezed ? null : <Typography>{t('common:tournament.confirm_participants')}</Typography>}
+            {selectedLength === 1 ? <Typography>{t('common:arena.select_two_or_more')}</Typography> : null}
           </Box>
           <BRList marginX={3} mb={7}>
             {selecteds.map((v, i) => (
