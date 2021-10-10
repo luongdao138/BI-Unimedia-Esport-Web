@@ -139,7 +139,7 @@ const ArenaBattlesEdit: React.FC = () => {
 
   const selectedLength = useMemo(() => {
     return getParticipantIds(selecteds).length
-  }, [selecteds, participants])
+  }, [selecteds])
 
   useEffect(() => {
     setFreezable(!!participants.length && selectedLength === maxCapacity)
@@ -151,7 +151,7 @@ const ArenaBattlesEdit: React.FC = () => {
         <StickyFooter
           hideFooter={tournament.attributes.is_freezed}
           primaryButton={
-            <ButtonPrimary type="submit" round fullWidth disabled={!freezable} onClick={handleFreeze}>
+            <ButtonPrimary type="submit" round fullWidth disabled={!freezable || selectedLength === 1} onClick={handleFreeze}>
               {t('common:arena.freeze_br_button')}
             </ButtonPrimary>
           }
@@ -168,7 +168,7 @@ const ArenaBattlesEdit: React.FC = () => {
           <HeaderWithButton title={tournament.attributes.title} />
           <Box pt={3} pb={3} textAlign="center">
             {tournament.attributes.is_freezed ? null : <Typography>{t('common:tournament.confirm_participants')}</Typography>}
-            {selectedLength === 1 ? <Typography>{t('common:arena.select_two_or_more')}</Typography> : null}
+            <Typography>{t('common:arena.select_two_or_more')}</Typography>
           </Box>
           <BRList marginX={3} mb={7}>
             {selecteds.map((v, i) => (
