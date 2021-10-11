@@ -32,7 +32,7 @@ declare global {
 }
 
 const VideoPlayer: React.FC<PlayerProps> = ({
-  // src,
+  src,
   // // statusVideo,
   mediaOverlayIsShown,
   // onVideoEnd,
@@ -244,7 +244,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       // bind them together
       // hls.loadSource(src)
       // hls.loadSource('https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8')
-      hls.loadSource('https://d3ueuwvla07imz.cloudfront.net/live/ducnn2021/index.m3u8')
+      hls.loadSource(src)
       //@ts-ignore
       hls.attachMedia(video)
       hls.on(Hls.Events.MEDIA_ATTACHED, handleMedia)
@@ -379,7 +379,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   }
 
   const handleTryAgain = () => {
-    hls.loadSource('https://d3ueuwvla07imz.cloudfront.net/live/ducnn2021/index.m3u8')
+    hls.loadSource(src)
     //@ts-ignore
     hls.attachMedia(document.getElementById('video'))
     hls.startLoad(-1)
@@ -400,15 +400,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
               // poster={thumbnail ?? '/images/live_stream/thumbnail_default.png'}
             />
           ) : (
-            <video
-              id="video"
-              ref={videoEl}
-              muted={muted}
-              style={{ width: '100%', height: '100%' }}
-              src={'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8'}
-              autoPlay={true}
-              controls
-            />
+            <video id="video" ref={videoEl} muted={muted} style={{ width: '100%', height: '100%' }} src={src} autoPlay={true} controls />
           )}
           {!isMobile && !mediaOverlayIsShown && loading && (
             <div className={classes.playOverView}>
