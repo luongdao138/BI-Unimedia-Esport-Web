@@ -7,23 +7,33 @@ import InfiniteScroll from 'react-infinite-scroll-component'
 import { useTranslation } from 'react-i18next'
 import useSearch from '@containers/Search/useSearch'
 import { LobbyFilterOption } from '@services/lobby.service'
+import useLogout from '@containers/Logout/useLogout'
 
 const LobbySearchContainer: React.FC = () => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
+  const { meta: logoutMeta } = useLogout()
   const { searchKeyword } = useSearch()
   const { searchLobbies, searchLobby, page, meta, resetMeta, resetSearchLobbies } = useLobbySearch()
   const [keyword, setKeyword] = useState<string>('')
 
   useEffect(() => {
-    setKeyword(searchKeyword)
-    searchLobby({ page: 1, keyword: searchKeyword, filter: LobbyFilterOption.all })
-
+    if (!logoutMeta.pending) {
+      setKeyword(searchKeyword)
+      searchLobby({ page: 1, keyword: searchKeyword, filter: LobbyFilterOption.all })
+    }
     return () => {
       resetSearchLobbies()
       resetMeta()
     }
   }, [searchKeyword])
+
+  useEffect(() => {
+    return () => {
+      resetSearchLobbies()
+      resetMeta()
+    }
+  }, [])
 
   const loadMore = () => {
     if (page && page.current_page !== page.total_pages) {
