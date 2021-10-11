@@ -35,7 +35,7 @@ const ProgramInfoNoViewingTicket: React.FC<ProgramInfoProps> = ({ videoInfo }) =
   const [hasMore, setHasMore] = useState(true)
   const isLoadingData = meta_archived_video_stream?.pending
   const theme = useTheme()
-  const downMd = useMediaQuery(theme.breakpoints.down(769))
+  const downMd = useMediaQuery(theme.breakpoints.down(769), { noSsr: true })
 
   useEffect(() => {
     if (videoInfo?.uuid) {
@@ -46,6 +46,12 @@ const ProgramInfoNoViewingTicket: React.FC<ProgramInfoProps> = ({ videoInfo }) =
       resetArchivedVideoStream()
     }
   }, [videoInfo])
+
+  useEffect(() => {
+    if (page > 1) {
+      getArchivedVideoStream({ video_id: videoInfo?.uuid, page: page, limit: LIMIT_ITEM })
+    }
+  }, [page])
 
   const handleLoadMore = async () => {
     if (archivedVideoStreamData.length > 0 && archivedVideoStreamData.length < LIMIT_ITEM * page) {
@@ -115,7 +121,7 @@ const ProgramInfoNoViewingTicket: React.FC<ProgramInfoProps> = ({ videoInfo }) =
     )
   }
 
-  const archieveVideo = () => {
+  const archivedVideo = () => {
     return (
       <Box>
         <Box className={classes.archiveVideoTitleContainer}>
@@ -232,7 +238,7 @@ const ProgramInfoNoViewingTicket: React.FC<ProgramInfoProps> = ({ videoInfo }) =
           </Box>
         </Box>
       </Box>
-      {archieveVideo()}
+      {archivedVideo()}
     </Box>
   )
 }

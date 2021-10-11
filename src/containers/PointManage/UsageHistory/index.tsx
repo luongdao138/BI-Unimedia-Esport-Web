@@ -94,7 +94,7 @@ const UsageHistory: FC = () => {
   return (
     <Box className={classes.container}>
       {!usageHistoryDetail && (
-        <Grid item xs={7}>
+        <Grid item xs={12} md={7}>
           <ESSelect
             fullWidth
             placeholder={i18n.t('common:point_management_tab.choosing')}
@@ -226,15 +226,17 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignContent: 'center',
   },
   spacingBottom: {
-    paddingBottom: 24,
+    // paddingBottom: 24,
+    paddingBottom: 8,
   },
   headerContainer: {
     justifyContent: 'center',
     alignItems: 'center',
     alignContent: 'center',
     display: 'flex',
-    marginTop: 16,
-    marginBottom: 24,
+    // marginTop: 16,
+    // marginBottom: 24,
+    marginTop: 8,
   },
   headerTitle: {
     color: Colors.white_opacity['70'],
@@ -243,20 +245,25 @@ const useStyles = makeStyles((theme: Theme) => ({
   typePurchaseContainer: {
     justifyContent: 'center',
     display: 'flex',
-    marginTop: 24,
-    marginBottom: 24,
+    // marginTop: 24,
+    // marginBottom: 24,
+    marginTop: 16,
+    marginBottom: 16,
   },
   typeUsageContainer: {
     justifyContent: 'center',
     display: 'flex',
-    marginTop: 24,
-    marginBottom: 24,
+    // marginTop: 24,
+    // marginBottom: 24,
+    marginTop: 16,
+    marginBottom: 16,
   },
   comboBox: {},
   container: {
     marginLeft: theme.spacing(3),
     marginRight: theme.spacing(3),
-    marginTop: theme.spacing(3),
+    // marginTop: theme.spacing(3),
+    marginTop: theme.spacing(2),
     marginBottom: theme.spacing(3),
   },
   wrapContent: {
@@ -266,8 +273,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderWidth: 1,
     borderColor: Colors.grey['200'],
     borderStyle: 'solid',
-    marginTop: 18,
-    paddingBottom: 18,
+    // marginTop: 18,
+    // paddingBottom: 18,
+    marginTop: 16,
   },
   paginationContainer: {
     marginTop: 30,
@@ -287,15 +295,20 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& .MuiPaginationItem-ranges': {},
   },
   noDataContainer: {
-    backgroundColor: Colors.white_opacity['6'],
-    marginLeft: 16,
-    marginRight: 16,
-    marginTop: 16,
+    // backgroundColor: Colors.white_opacity['6'],
+    // marginLeft: 16,
+    // marginRight: 16,
+    // marginTop: 16,
+    // borderRadius: 4,
+    // padding: 16,
+    backgroundColor: '#171717',
+    alignItems: 'center',
+    margin: 8,
     borderRadius: 4,
-    padding: 16,
   },
   noDataText: {
     color: Colors.white_opacity['70'],
+    padding: 8,
   },
   [theme.breakpoints.down(375)]: {
     typePurchaseContainer: {

@@ -50,7 +50,9 @@ const ProgramInfo: React.FC<ProgramInfoProps> = ({ video_id }) => {
   }, [video_id])
 
   useEffect(() => {
-    if (page > 1) getArchivedVideoStream({ video_id: video_id, page: page, limit: LIMIT_ITEM })
+    if (page > 1) {
+      getArchivedVideoStream({ video_id: video_id, page: page, limit: LIMIT_ITEM })
+    }
   }, [page])
 
   const renderArchiveVideoItem = (item: TypeVideoArchived, index: number) => {

@@ -99,10 +99,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderWidth: 1,
     borderColor: Colors.grey['200'],
     borderStyle: 'solid',
-    marginTop: 18,
+    // marginTop: 18,
+    marginTop: 16,
   },
   spacingBottom: {
-    paddingBottom: 24,
+    // paddingBottom: 24,
+    paddingBottom: 8,
   },
   paginationContainer: {
     marginTop: 30,
@@ -112,13 +114,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   noDataContainer: {
     backgroundColor: '#171717',
     alignItems: 'center',
-    margin: 16,
+    // margin: 16,
+    margin: 8,
     borderRadius: 4,
   },
   noDataText: {
-    paddingTop: 16,
-    paddingBottom: 16,
-    paddingLeft: 16,
+    // paddingTop: 16,
+    // paddingBottom: 16,
+    // paddingLeft: 16,
+    padding: 8,
   },
   paginationStyle: {
     '& .MuiPaginationItem-root': {

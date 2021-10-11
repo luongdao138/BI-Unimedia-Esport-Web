@@ -7,16 +7,17 @@ import { useTheme } from '@material-ui/core/styles'
 import React, { useEffect, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import useLiveVideos from './useLiveVideos'
-import { LIMIT_ITEM, TypeVideo, TYPE_VIDEO_TOP } from '@services/videoTop.services'
+import { TypeVideo, TYPE_VIDEO_TOP } from '@services/videoTop.services'
 // import ESLoader from '@components/Loader'
 import PreLoadContainer from '../PreLoadContainer'
+import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
 
 interface Props {
   follow?: number
   setFollow?: (value: number) => void
   videoItemStyle?: any
 }
-
+const LIMIT_ITEM = 12
 const LiveStreamVideos: React.FC<Props> = ({ follow, setFollow, videoItemStyle }) => {
   const theme = useTheme()
   const downMd = useMediaQuery(theme.breakpoints.down(769))
@@ -24,22 +25,7 @@ const LiveStreamVideos: React.FC<Props> = ({ follow, setFollow, videoItemStyle }
   const classes = useStyles()
   const [page, setPage] = useState<number>(1)
   const [hasMore, setHasMore] = useState(true)
-
-  const renderLiveItem = (item: TypeVideo, index: number) => {
-    return (
-      <React.Fragment key={item?.id || index}>
-        {downMd ? (
-          <Box className={classes.xsItemContainer}>
-            <VideoPreviewItem data={item} />
-          </Box>
-        ) : (
-          <Grid item xs={6} className={classes.itemContainer} style={videoItemStyle}>
-            <VideoPreviewItem data={item} />
-          </Grid>
-        )}
-      </React.Fragment>
-    )
-  }
+  const { width: itemWidthDownMdScreen } = useWindowDimensions(48)
 
   useEffect(() => {
     if (listLiveVideo.length === 0) {
@@ -53,7 +39,9 @@ const LiveStreamVideos: React.FC<Props> = ({ follow, setFollow, videoItemStyle }
   }, [follow])
 
   useEffect(() => {
-    if (page > 1) getListVideoTop({ type: TYPE_VIDEO_TOP.LIVE, page: page, limit: LIMIT_ITEM, follow: follow })
+    if (page > 1) {
+      getListVideoTop({ type: TYPE_VIDEO_TOP.LIVE, page: page, limit: LIMIT_ITEM, follow: follow })
+    }
   }, [page])
 
   const handleLoadMore = async () => {
@@ -66,6 +54,22 @@ const LiveStreamVideos: React.FC<Props> = ({ follow, setFollow, videoItemStyle }
     }
   }
 
+  const renderLiveItem = (item: TypeVideo, index: number) => {
+    return (
+      <React.Fragment key={item?.id || index}>
+        {downMd ? (
+          <Box className={classes.xsItemContainer}>
+            <VideoPreviewItem data={item} containerStyle={{ width: itemWidthDownMdScreen }} />
+          </Box>
+        ) : (
+          <Grid item xs={6} lg={6} xl={4} className={classes.itemContainer} style={videoItemStyle}>
+            <VideoPreviewItem data={item} />
+          </Grid>
+        )}
+      </React.Fragment>
+    )
+  }
+
   const renderPreLoad = () => {
     const arrayPreLoad = Array(9)
       .fill('')
@@ -73,7 +77,7 @@ const LiveStreamVideos: React.FC<Props> = ({ follow, setFollow, videoItemStyle }
     return arrayPreLoad.map((_item: any, index: number) =>
       downMd ? (
         <Box className={classes.xsItemContainer} key={index}>
-          <Box className={classes.wrapPreLoadContainer}>
+          <Box className={classes.wrapPreLoadContainer} style={{ width: itemWidthDownMdScreen }}>
             <PreLoadContainer />
           </Box>
         </Box>
@@ -187,16 +191,19 @@ const useStyles = makeStyles((theme: Theme) => ({
       flexWrap: 'nowrap',
       margin: '0px',
       paddingBottom: '0px',
-      overflow: 'auto',
+      flexDirection: 'column',
     },
     wrapPreLoadContainer: {
       width: 290,
     },
     xsItemContainer: {
       paddingRight: '24px',
-      '&:last-child': {
-        paddingRight: 0,
-      },
+      marginBottom: '24px',
+      display: 'flex',
+      justifyContent: 'center',
+      // '&:last-child': {
+      //   paddingRight: 0,
+      // },
     },
     xsItemContainerBonus: {
       marginRight: '20.7px',
