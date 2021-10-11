@@ -144,6 +144,7 @@ export type StreamUrlAndKeyParams = {
   type: string
   objected: string
   is_live: number
+  is_medialive?: boolean
 }
 
 export type GetStreamUrlAndKeyResponse = {

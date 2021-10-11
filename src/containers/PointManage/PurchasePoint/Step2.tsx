@@ -308,7 +308,7 @@ const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
               </Box>
             </Box>
           </Box>
-          <Box className={classes.card_wrap}>
+          <Box className={classes.card_wrap + ' ' + classes.second_card_wrap}>
             <Box className={classes.card_info_title}>{t('purchase_point_tab.card_title')}</Box>
             <Box className={classes.card_info_container + ' ' + classes.second_card_info_container}>
               <Box className={classes.wrap_all_cards} style={purchasePointInfo.saved_cards.length >= 3 ? { height: 288 } : null}>
@@ -351,7 +351,7 @@ const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
               {purchasePointInfo.saved_cards.length === 0 ? (
                 <Box className={classes.wrap_all_card + ' ' + classes.wrap_no_card}>{t('purchase_point_tab.no_card')}</Box>
               ) : (
-                <Box textAlign="center" pb={1}>
+                <Box textAlign="center" pb={1} className={classes.clearButtonContainer}>
                   <ESButton
                     onClick={() => {
                       setSelectedCardId('')
@@ -488,7 +488,10 @@ const useStyles = makeStyles((theme) => ({
     width: '50%',
   },
   first_card_wrap: {
-    paddingRight: 28,
+    paddingRight: 14,
+  },
+  second_card_wrap: {
+    paddingLeft: 14,
   },
   card_info_container: {
     borderRadius: 4,
@@ -514,7 +517,7 @@ const useStyles = makeStyles((theme) => ({
   },
   wrap_all_card: {
     borderRadius: 4,
-    background: '#000',
+    background: '#000000',
     display: 'flex',
     padding: '16px',
     alignItems: 'center',
@@ -578,6 +581,9 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: '#898989',
       borderRadius: 6,
     },
+  },
+  clearButtonContainer: {
+    paddingRight: '16px',
   },
   [theme.breakpoints.down('lg')]: {
     card_info_wrap: {
