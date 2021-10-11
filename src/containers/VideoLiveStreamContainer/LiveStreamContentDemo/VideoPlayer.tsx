@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable no-console */
-import { Box, Icon, makeStyles, Theme, Typography, useMediaQuery, useTheme } from '@material-ui/core'
+import { Icon, makeStyles, Theme, useMediaQuery, useTheme } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import React, { memo, useEffect, useRef, useState } from 'react'
 import ControlBarPlayer from './ControlBar'
@@ -12,6 +12,7 @@ import ESLoader from '@components/Loader'
 import useDetailVideo from '../useDetailVideo'
 import Hls from 'hls.js'
 import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
+// import { DELAY_SECONDS } from '@constants/common.constants'
 
 interface PlayerProps {
   src?: string
@@ -52,7 +53,9 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   // const { IVSPlayer } = window
   // const isPlayerSupported = IVSPlayer?.isPlayerSupported
   const [durationPlayer, setDurationPlayer] = useState(0)
+  console.log('🚀 ~ durationPlayer', durationPlayer)
   const [playedSeconds, setPlayedSeconds] = useState(0)
+  console.log('🚀 ~ playedSeconds', playedSeconds)
   // const reactPlayerRef = useRef(null)
   const playerContainerRef = useRef(null)
   // const [isLive, setIsLive] = useState(false)
@@ -72,11 +75,11 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   })
 
   const {
-    // changeStreamingSecond,
+    changeStreamingSecond,
     // streamingSecond,
     // changeIsViewingStream,
     // isViewingStream,
-    // changePlayedSecond,
+    changePlayedSecond,
     // playedSecond,
     // changeVideoTime,
     // changeIsEndLive,
@@ -128,6 +131,18 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       window.removeEventListener('orientationchange', handleOrientationChange)
     }
   }, [])
+
+  // useEffect(() => {
+  //   if(Math.floor(playedSeconds) !== liveStreamInfo.played_second) {
+  //     changePlayedSecond(Math.floor(playedSeconds))
+  //   }
+  // }, [playedSeconds])
+
+  // useEffect(() => {
+  //   if(Math.floor(durationPlayer) !== liveStreamInfo.streaming_second) {
+  //     changeStreamingSecond(Math.floor(durationPlayer))
+  //   }
+  // }, [durationPlayer])
 
   // const toggleFullScreen = () => {
   //   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -242,9 +257,9 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     }
     if (Hls.isSupported() && !isMobile) {
       // bind them together
-      // hls.loadSource(src)
-      // hls.loadSource('https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8')
       hls.loadSource(src)
+      // hls.loadSource('https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8')
+      // hls.loadSource('https://d3ueuwvla07imz.cloudfront.net/live/ducnn20211012/index.m3u8')
       //@ts-ignore
       hls.attachMedia(video)
       hls.on(Hls.Events.MEDIA_ATTACHED, handleMedia)
@@ -255,21 +270,49 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       hls.off(Hls.Events.ERROR, handleError)
     }
   }, [])
+
+  // useEffect(() => {
+  //   if(Math.floor(playedSeconds) !== liveStreamInfo.played_second) {
+  //     changePlayedSecond(Math.floor(playedSeconds))
+  //   }
+  // }, [playedSeconds])
+
+  // useEffect(() => {
+  // if(Math.floor(durationPlayer) !== liveStreamInfo.streaming_second) {
+  //   changeStreamingSecond(Math.floor(durationPlayer))
+  // }
+  // }, [durationPlayer])
+
   //archived
   useEffect(() => {
     videoEl.current.addEventListener('timeupdate', (event) => {
-      console.log('----->>timeupdate<<------', event.target.currentTime, event.target.duration)
+      console.log('----->>timeupdate<<------', event.target.currentTime, event.target.duration - 15)
       if (event.target) {
-        setPlayedSeconds(event.target.currentTime)
+        const newPlayedSecondTime = event.target.currentTime
+        setPlayedSeconds(newPlayedSecondTime)
         // setDurationPlayer(event.target.duration)
+        if (Math.floor(newPlayedSecondTime) !== liveStreamInfo.played_second) {
+          changePlayedSecond(Math.floor(newPlayedSecondTime))
+        }
+
+        const duration = event.target.duration - 15
+        const newDurationTime = duration <= newPlayedSecondTime ? newPlayedSecondTime : duration
+        setDurationPlayer(newDurationTime)
+        if (Math.floor(newDurationTime) !== liveStreamInfo.streaming_second) {
+          changeStreamingSecond(Math.floor(newDurationTime))
+        }
       }
     })
 
     videoEl.current.addEventListener('durationchange', (event) => {
-      console.log('------->>durationchange<<<-----', event)
-      if (event.target) {
-        setDurationPlayer(event.target.duration - 15)
-      }
+      console.log('------->>durationchange<<<-----', event.target.duration)
+      // if (event.target) {
+      //   const newDurationTime = event.target.duration - 15 <= playedSeconds ? playedSeconds : event.target.duration - 15
+      //   setDurationPlayer(newDurationTime)
+      //   if(Math.floor(newDurationTime) !== liveStreamInfo.streaming_second) {
+      //     changeStreamingSecond(Math.floor(newDurationTime))
+      //   }
+      // }
     })
 
     videoEl.current.addEventListener('volumechange', () => {
@@ -378,12 +421,12 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     }
   }
 
-  const handleTryAgain = () => {
-    hls.loadSource(src)
-    //@ts-ignore
-    hls.attachMedia(document.getElementById('video'))
-    hls.startLoad(-1)
-  }
+  // const handleTryAgain = () => {
+  //   hls.loadSource(src)
+  //   //@ts-ignore
+  //   hls.attachMedia(document.getElementById('video'))
+  //   hls.startLoad(-1)
+  // }
 
   return (
     <div className={classes.videoPlayer}>
@@ -456,7 +499,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
           </div>
         )}
         {errorVideo && <div className={classes.loading} />} */}
-        {visible.videoError && (
+        {/* {visible.videoError && (
           <div className={classes.overViewError}>
             <div
               className={classes.thumbBegin}
@@ -474,7 +517,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
               </div>
             </Box>
           </div>
-        )}
+        )} */}
       </div>
     </div>
   )

@@ -34,6 +34,7 @@ import LoginRequired from '@containers/LoginRequired'
 import moment from 'moment'
 import { STATUS_SEND_MESS } from '@constants/common.constants'
 import { v4 as uuidv4 } from 'uuid'
+import { DELAY_SECONDS } from '@constants/common.constants'
 
 export type ChatContainerProps = {
   onPressDonate?: (donatedPoint: number, purchaseComment: string) => void
@@ -241,6 +242,17 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       }
     })
 
+    const isStreaming = (() => {
+      // || liveStreamInfo.is_pausing_live
+      if (videoType === STATUS_VIDEO.ARCHIVE) {
+        return false
+      }
+      if (playedSecond >= streamingSecond || playedSecond + DELAY_SECONDS >= streamingSecond) {
+        return true
+      }
+      return false
+    })()
+
     const handleCreateUserDB = async () => {
       console.log(
         `{
@@ -297,7 +309,8 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         // only add new message if no found message in local
         if (foundIndex === -1) {
           console.log('🚀 ~ subscribeAction ~ 1234', savedMess)
-          if (playedSecond >= streamingSecond || liveStreamInfo.is_pausing_live) {
+          // if (playedSecond >= streamingSecond || liveStreamInfo.is_pausing_live) {
+          if (isStreaming) {
             // render new messages with savedMess
             const isMessageInBottom = checkMessIsInBottom()
             // console.log("🚀 ~ 11111")
@@ -310,7 +323,8 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
             // render new users donate
             if (isPremiumChat(createdMessage, false)) {
               let newMessDonate = [...savedDonateMess]
-              newMessDonate = newMessDonate.filter((item) => +item.display_avatar_time > +streamingSecond)
+              // newMessDonate = newMessDonate.filter((item) => +item.display_avatar_time > +streamingSecond)
+              newMessDonate = newMessDonate.filter((item) => +item.display_avatar_time > +playedSecond)
               // render user donate icon by time of local
               setMessagesDonate([...newMessDonate, createdMessage])
             }
@@ -383,11 +397,11 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       }
     }, [successGetListMess])
 
-    useEffect(() => {
-      console.log('🚀 ~ useEffect ~ playedSecond ---> streamingSecond', playedSecond, streamingSecond)
-      if ((playedSecond >= streamingSecond || liveStreamInfo.is_pausing_live) && successGetListMess && successGetListDonateMess) {
+    const filterByStreaming = () => {
+      // if ((playedSecond >= streamingSecond || liveStreamInfo.is_pausing_live) && successGetListMess && successGetListDonateMess) {
+      if (successGetListMess && successGetListDonateMess) {
         // fix bug streaming second is not true when access url first time
-        const realStreamingSecond = streamingSecond < playedSecond ? playedSecond : streamingSecond
+        const realStreamingSecond = playedSecond
         // check archive video => no use that case
         if (!firstRender && +realStreamingSecond > 0) {
           setFirstRender(true)
@@ -421,7 +435,47 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
           setMessagesDonate(newMessagesDonate)
         }
       }
-    }, [streamingSecond])
+    }
+
+    // useEffect(() => {
+    //   console.log('🚀 ~ useEffect ~ playedSecond ---> streamingSecond', playedSecond, streamingSecond)
+    //   if ((playedSecond >= streamingSecond || liveStreamInfo.is_pausing_live) && successGetListMess && successGetListDonateMess) {
+    //     // fix bug streaming second is not true when access url first time
+    //     const realStreamingSecond = streamingSecond < playedSecond ? playedSecond : streamingSecond
+    //     // check archive video => no use that case
+    //     if (!firstRender && +realStreamingSecond > 0) {
+    //       setFirstRender(true)
+    //       const newMess = savedMess.filter((item) => +item.video_time <= +realStreamingSecond)
+    //       console.log('🚀 ~ 222 ~ newMess', newMess)
+    //       const isMessageInBottom = checkMessIsInBottom()
+    //       // render new messages with savedMess
+    //       console.log('🚀 ~ 11111')
+    //       setStateMessages([...newMess])
+
+    //       console.log('🚀 ~ 33333')
+    //       if (isMessageInBottom) {
+    //         // if(point){
+    //         setIsChatInBottom(true)
+    //         // } else {
+    //         // scrollToCurrentMess()
+    //         // }
+    //       }
+
+    //       console.log('🚀 ~ createMess ~ stateMessages', stateMessages)
+    //       const newMessagesDonate = savedDonateMess.filter(
+    //         (item) => +item.display_avatar_time > +realStreamingSecond && +item.video_time <= +realStreamingSecond
+    //       )
+    //       setMessagesDonate(newMessagesDonate)
+    //     } else {
+    //       // only check displaying of user donate icon
+    //       const newMessagesDonate = messagesDonate.filter(
+    //         (item) => +item.display_avatar_time > +realStreamingSecond && +item.video_time <= +realStreamingSecond
+    //       )
+    //       // console.log("🚀 ~ useEffect ~ display_avatar_time", display_avatar_time)
+    //       setMessagesDonate(newMessagesDonate)
+    //     }
+    //   }
+    // }, [streamingSecond])
 
     useEffect(() => {
       // hide dialog message if message donate is no longer show
@@ -458,8 +512,11 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
 
     useEffect(() => {
       console.log('🚀 ~ 2222 --- playedSecond ---> streamingSecond', playedSecond, streamingSecond)
+      if (isStreaming) {
+        filterByStreaming()
+      }
       // filter mess when user no seeking or pausing live video
-      if (playedSecond < streamingSecond && !isSeeking && !liveStreamInfo.is_pausing_live) {
+      if (!isSeeking && !liveStreamInfo.is_pausing_live && !isStreaming) {
         filterMessByPlayedSecond(playedSecond)
       }
       if (isSeeking) {
@@ -791,25 +848,27 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     refCreateMessLocal.current = handleCreateMessLocal
 
     const resendMess = async (message: any) => {
-      const videoTime = streamingSecond < playedSecond ? playedSecond : streamingSecond
-      let newMess = { ...message, video_time: videoTime.toString() }
-      if (message.point) {
-        newMess = { ...newMess, display_avatar_time: videoTime + purchasePoints[`p_${message.point}`].displayTime }
-      }
-      delete newMess.mess_status
-      refUpdateMessBeforeCallApi.current(newMess, { mess_status: STATUS_SEND_MESS.PENDING })
+      if (isStreaming) {
+        const videoTime = playedSecond
+        let newMess = { ...message, video_time: videoTime.toString() }
+        if (message.point) {
+          newMess = { ...newMess, display_avatar_time: videoTime + purchasePoints[`p_${message.point}`].displayTime }
+        }
+        delete newMess.mess_status
+        refUpdateMessBeforeCallApi.current(newMess, { mess_status: STATUS_SEND_MESS.PENDING })
 
-      try {
-        const result = await API.graphql(graphqlOperation(createMessage, { input: newMess }))
-        refCreateMessLocal.current(result, newMess)
-      } catch (errors) {
-        if (errors && errors.errors.length !== 0) refCreateMessLocal.current([], newMess, true)
+        try {
+          const result = await API.graphql(graphqlOperation(createMessage, { input: newMess }))
+          refCreateMessLocal.current(result, newMess)
+        } catch (errors) {
+          if (errors && errors.errors.length !== 0) refCreateMessLocal.current([], newMess, true)
+        }
       }
     }
 
     const createMess = async (message: string, point = 0): Promise<void> => {
-      if (successFlagGetAddUSer && Object.keys(chatUser).length > 0 && message && isEnabledChat) {
-        const videoTime = streamingSecond < playedSecond ? playedSecond : streamingSecond
+      if (successFlagGetAddUSer && Object.keys(chatUser).length > 0 && message && isEnabledChat && isStreaming) {
+        const videoTime = playedSecond
         let input: MessInput = {
           // id is auto populated by AWS Amplify
           owner: chatUser.user_name,
@@ -859,7 +918,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         }
 
         // save message to local
-        if (playedSecond >= streamingSecond || liveStreamInfo.is_pausing_live) {
+        if (isStreaming) {
           const isMessageInBottom = checkMessIsInBottom()
           // render new messages with savedMess
           console.log('🚀 ~ 11111')
@@ -878,7 +937,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
           // render new users donate
           if (is_premium_local_message) {
             let newMessDonate = [...savedDonateMess]
-            newMessDonate = newMessDonate.filter((item) => +item.display_avatar_time > +streamingSecond)
+            newMessDonate = newMessDonate.filter((item) => +item.display_avatar_time > +playedSecond)
             // render user donate icon by time of local
             setMessagesDonate([...newMessDonate, local_message])
           }
@@ -972,41 +1031,47 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     const chatInputComponent = () => (
       <Box className={classes.chatInputMobileContainer}>
         {purchaseDialogVisible && isMobile && purchaseInfoDialog()}
-        {isEnabledChat && (
-          <Box className={classes.chatInputContainer}>
-            {purchaseDialogVisible && !isMobile && purchaseInfoDialog()}
-            <LoginRequired>
-              {/* <IconButton onClick={isEnabledChat ? purchaseIconClick : null} id="btnOpenPremiumChatDialog" className={classes.iconPurchase}> */}
-              <IconButton onClick={purchaseIconClick} id="btnOpenPremiumChatDialog" className={classes.iconPurchase}>
-                <img id="btnOpenPremiumChatDialogImage" src="/images/ic_purchase.svg" />
-              </IconButton>
-            </LoginRequired>
-            <Box className={classes.chatBox}>
-              <ESInput
-                id={'message'}
-                name="message"
-                onChange={handleChange}
-                placeholder={i18n.t('common:live_stream_screen.message_placeholder')}
-                value={values.message}
-                classes={{ root: classes.input, input: classes.chatTextInput }}
-                margin="dense"
-                onFocus={handleChatInputOnFocus}
-                onBlur={handleChatInputOnBlur}
-                helperText={touched.message && errors?.message}
-                error={touched.message && !!errors?.message}
-                onKeyPress={handlePressEnter}
-                // disabled={!isEnabledChat}
-              />
+        {isEnabledChat &&
+          (!isStreaming ? (
+            <></>
+          ) : (
+            // <Box className={classes.chatInputContainer}>
+            //   <Button onClick={scrollToCurrentMess}>{i18n.t('common:streaming_setting_screen.scroll_to_new_mess')}</Button>
+            // </Box>
+            <Box className={classes.chatInputContainer}>
+              {purchaseDialogVisible && !isMobile && purchaseInfoDialog()}
               <LoginRequired>
-                {/* <Button onClick={handleSubmitChatContent} className={classes.iconButtonBg} disabled={!isEnabledChat}> */}
-                <Button onClick={handleSubmitChatContent} className={classes.iconButtonBg}>
-                  <Icon className={`fa fa-paper-plane ${classes.sendIcon}`} fontSize="small" />
-                </Button>
+                {/* <IconButton onClick={isEnabledChat ? purchaseIconClick : null} id="btnOpenPremiumChatDialog" className={classes.iconPurchase}> */}
+                <IconButton onClick={purchaseIconClick} id="btnOpenPremiumChatDialog" className={classes.iconPurchase}>
+                  <img id="btnOpenPremiumChatDialogImage" src="/images/ic_purchase.svg" />
+                </IconButton>
               </LoginRequired>
+              <Box className={classes.chatBox}>
+                <ESInput
+                  id={'message'}
+                  name="message"
+                  onChange={handleChange}
+                  placeholder={i18n.t('common:live_stream_screen.message_placeholder')}
+                  value={values.message}
+                  classes={{ root: classes.input, input: classes.chatTextInput }}
+                  margin="dense"
+                  onFocus={handleChatInputOnFocus}
+                  onBlur={handleChatInputOnBlur}
+                  helperText={touched.message && errors?.message}
+                  error={touched.message && !!errors?.message}
+                  onKeyPress={handlePressEnter}
+                  // disabled={!isEnabledChat}
+                />
+                <LoginRequired>
+                  {/* <Button onClick={handleSubmitChatContent} className={classes.iconButtonBg} disabled={!isEnabledChat}> */}
+                  <Button onClick={handleSubmitChatContent} className={classes.iconButtonBg}>
+                    <Icon className={`fa fa-paper-plane ${classes.sendIcon}`} fontSize="small" />
+                  </Button>
+                </LoginRequired>
+              </Box>
+              {/* {errors.message && <Typography className={classes.chatInputErrorText}>{errors.message}</Typography>} */}
             </Box>
-            {/* {errors.message && <Typography className={classes.chatInputErrorText}>{errors.message}</Typography>} */}
-          </Box>
-        )}
+          ))}
       </Box>
     )
 
@@ -1170,7 +1235,15 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
                     }
                   }}
                 >
-                  <ESAvatar src={item?.parent?.avatar} size={32} alt={item.parent.user_name} />
+                  <ESAvatar
+                    src={
+                      item?.parent?.avatar
+                        ? item?.parent?.avatar + `?${moment().format('YYYYMMDDHHmmss').toString()}`
+                        : item?.parent?.avatar
+                    }
+                    size={32}
+                    alt={item.parent.user_name}
+                  />
                 </Box>
               ) : (
                 ''

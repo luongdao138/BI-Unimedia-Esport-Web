@@ -320,8 +320,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 12,
-    justifyContent: 'flex-end',
+    marginTop: 10,
+    justifyContent: 'flex-start',
+    // justifyContent: 'flex-end',
   },
   contentContainer: {
     marginTop: theme.spacing(0),
@@ -489,10 +490,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       '&:last-child': {
         paddingRight: 0,
       },
-    },
-    seeMoreContainer: {
-      marginTop: 12,
-      justifyContent: 'center',
     },
     seeMore: {
       justifyContent: 'center',
