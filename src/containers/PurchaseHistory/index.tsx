@@ -7,11 +7,14 @@ import { makeStyles, Typography } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
 
 const ESPurchaseHistory: React.FC = () => {
-  const { purchaseHistory, fetchPurchaseHistory, clearPurchaseHistory, pages, meta } = usePurchaseHistoryList()
+  const { purchaseHistory, fetchPurchaseHistory, clearPurchaseHistory, pages, meta, clearMeta } = usePurchaseHistoryList()
   const classes = useStyles()
   const { t } = useTranslation(['common'])
   useEffect(() => {
-    return () => clearPurchaseHistory()
+    return () => {
+      clearMeta()
+      clearPurchaseHistory()
+    }
   }, [])
 
   useEffect(() => {

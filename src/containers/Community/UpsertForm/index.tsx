@@ -45,7 +45,6 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
   const { handleReturn } = useReturnHref()
   const [isConfirm, setIsConfirm] = useState(false)
   const [hasError, setHasError] = useState(true)
-  const [isSubmitting, setIsSubmitting] = useState(false)
   const isFirstRun = useRef(true)
   const confirm = useConfirm()
   const {
@@ -75,7 +74,6 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
     validationSchema: getValidationScheme(),
     enableReinitialize: true,
     onSubmit: (values) => {
-      setIsSubmitting(() => true)
       const data = {
         ...values.stepOne,
         features: (values.stepOne.features as CommunityFeature[]).map((feature) => Number(feature.id)),
@@ -92,16 +90,7 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
 
   const isChanged = !_.isEqual(formik.values, initialValues)
 
-  useEffect(() => {
-    return () => window.removeEventListener('beforeunload', unloadCallback, { capture: true })
-  }, [isSubmitting])
-
-  const unloadCallback = (e) => {
-    e.preventDefault()
-    return (e.returnValue = '')
-  }
-
-  useUnload(unloadCallback, isChanged)
+  useUnload(isChanged, formik.isSubmitting)
 
   useEffect(() => {
     if (community) {
@@ -179,11 +168,11 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
 
   const renderDescription = matches ? (
     <>
-      <Typography style={{ fontSize: 12 }}>{i18n.t('common:community_create.discard.message_part1')}</Typography>
-      <Typography style={{ fontSize: 12 }}>{i18n.t('common:community_create.discard.message_part2')}</Typography>
+      <span style={{ fontSize: 12, display: 'block' }}>{i18n.t('common:community_create.discard.message_part1')}</span>
+      <span style={{ fontSize: 12 }}>{i18n.t('common:community_create.discard.message_part2')}</span>
     </>
   ) : (
-    <Typography style={{ fontSize: 12 }}>{i18n.t('common:community_create.discard.message')}</Typography>
+    <span style={{ fontSize: 12 }}>{i18n.t('common:community_create.discard.message')}</span>
   )
 
   const handleBack = () => {

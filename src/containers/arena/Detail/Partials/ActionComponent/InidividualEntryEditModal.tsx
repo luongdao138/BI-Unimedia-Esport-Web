@@ -24,7 +24,6 @@ import useArenaHelper from '@containers/arena/hooks/useArenaHelper'
 import ServerError from './ServerError'
 import { ESRoutes } from '@constants/route.constants'
 import { useRouter } from 'next/router'
-import LoginRequired from '@containers/LoginRequired'
 import { FocusContext, FocusContextProvider } from '@utils/hooks/input-focus-context'
 
 interface EntryEditModalProps {
@@ -48,7 +47,7 @@ const InidividualEntryEditModal: React.FC<EntryEditModalProps> = ({
 }) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
-  const { participant, isPending, getParticipant, changeName, changeMeta } = useParticipantDetail()
+  const { participant, isPending, getParticipant, changeName, changeMeta, resetMeta } = useParticipantDetail()
   const { isRecruiting } = useArenaHelper(tournament)
   const [editMode, setEditMode] = useState(false)
   const isPreview = previewMode === true
@@ -67,10 +66,7 @@ const InidividualEntryEditModal: React.FC<EntryEditModalProps> = ({
     onSubmit: (_values) => {
       if (values.nickname) {
         if (_.isEmpty(checkNgWord(values.nickname))) {
-          changeName(tournament.attributes.hash_key, values.nickname, () => {
-            handleClose()
-            setEditMode(false)
-          })
+          changeName(tournament.attributes.hash_key, values.nickname, () => onClose())
         } else {
           dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: NG_WORD_AREA.join_nickname }))
         }
@@ -88,15 +84,19 @@ const InidividualEntryEditModal: React.FC<EntryEditModalProps> = ({
   }
 
   useEffect(() => {
-    return () => resetTitle()
-  }, [])
-
-  useEffect(() => {
     if (isPreview && open) {
       setEditMode(false)
       changeTitle(`${t('common:page_head.arena_entry_title')}｜${tournament?.attributes?.title || ''}`)
       const pId = initialParticipantId ? parseInt(initialParticipantId) : getPid()
       getParticipant(_.get(tournament, 'attributes.hash_key', ''), pId)
+    }
+
+    return () => {
+      if (open) {
+        setEditMode(false)
+        resetTitle()
+        resetMeta()
+      }
     }
   }, [isPreview, open])
 
@@ -126,16 +126,16 @@ const InidividualEntryEditModal: React.FC<EntryEditModalProps> = ({
     }
   }
 
-  const handleClose = () => {
-    resetTitle()
-    onClose()
-  }
-
   const onUserClick = (participant: ParticipantName) => {
     const userCode = _.get(participant, 'attributes.user.user_code')
     if (_.isString(userCode)) {
       router.push(`${ESRoutes.PROFILE}/${userCode}`)
     }
+  }
+
+  const handleReturn = () => {
+    if (editMode) setEditMode(false)
+    else onClose()
   }
 
   return (
@@ -148,7 +148,7 @@ const InidividualEntryEditModal: React.FC<EntryEditModalProps> = ({
               returnText={editMode ? t('common:tournament.update_entry_info') : t('common:arena.entry_information')}
               actionButtonText={editMode ? t('common:arena.update_with_content') : t('common:tournament.update_entry_info')}
               actionButtonDisabled={!isValid}
-              onReturnClicked={handleClose}
+              onReturnClicked={handleReturn}
               onActionButtonClicked={onSubmit}
               hideFooter={!me || !isRecruiting}
               hideFooterOnMobile={isFocused}
@@ -160,17 +160,15 @@ const InidividualEntryEditModal: React.FC<EntryEditModalProps> = ({
                   <DetailInfo
                     detail={tournament}
                     bottomButton={
-                      <LoginRequired>
-                        <ESButton
-                          className={classes.bottomButton}
-                          variant="outlined"
-                          round
-                          size="large"
-                          onClick={toDetail ? toDetail : handleClose}
-                        >
-                          {t('common:tournament.tournament_detail')}
-                        </ESButton>
-                      </LoginRequired>
+                      <ESButton
+                        className={classes.bottomButton}
+                        variant="outlined"
+                        round
+                        size="large"
+                        onClick={toDetail ? toDetail : onClose}
+                      >
+                        {t('common:tournament.tournament_detail')}
+                      </ESButton>
                     }
                   />
                 </BlackBox>

@@ -165,22 +165,6 @@ const getLabelName = (field: string): string => {
   return ''
 }
 
-const correctStatus = (startDateTime: string, status: LOBBY_STATUS): number => {
-  if (!startDateTime) return status
-  const startDate = moment(moment(startDateTime).format('YYYY-MM-DD'), 'YYYY-MM-DD')
-  const now = moment()
-  if (status === LOBBY_STATUS.IN_PROGRESS) {
-    if (now.isBefore(startDate)) {
-      return LOBBY_STATUS.ENTRY_CLOSED
-    }
-  } else if (status === LOBBY_STATUS.ENDED) {
-    if (now.format('YYYYMMDD') === startDate.format('YYYYMMDD')) {
-      return LOBBY_STATUS.IN_PROGRESS
-    }
-  }
-  return status
-}
-
 export const LobbyHelper = {
   formatDate,
   defaultDetails,
@@ -192,5 +176,4 @@ export const LobbyHelper = {
   isStatusPassed,
   checkRequiredFields,
   getLabelName,
-  correctStatus,
 }

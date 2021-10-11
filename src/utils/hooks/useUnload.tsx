@@ -1,10 +1,13 @@
 import { useEffect, useRef } from 'react'
 
-const useUnload = (fn: (e: Event) => void, isChanged: boolean): void => {
-  const cb = useRef(fn)
+const useUnload = (isChanged: boolean, dep: boolean): void => {
+  const cb = useRef((e) => {
+    e.preventDefault()
+    return (e.returnValue = '')
+  })
+  const onUnload = cb.current
 
   useEffect(() => {
-    const onUnload = cb.current
     if (isChanged) {
       window.addEventListener('beforeunload', onUnload, { capture: true })
     }
@@ -12,6 +15,14 @@ const useUnload = (fn: (e: Event) => void, isChanged: boolean): void => {
       window.removeEventListener('beforeunload', onUnload, { capture: true })
     }
   }, [cb, isChanged])
+
+  useEffect(() => {
+    return () => {
+      if (!dep) {
+        window.removeEventListener('beforeunload', onUnload, { capture: true })
+      }
+    }
+  }, [dep])
 }
 
 export default useUnload

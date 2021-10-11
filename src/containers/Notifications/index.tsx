@@ -49,7 +49,7 @@ const NotificationContainer: React.FC = () => {
       <InfiniteScroll
         className={classes.container}
         dataLength={notifications.length}
-        next={loadMore}
+        next={!meta.pending && loadMore}
         hasMore={hasNextPage}
         loader={null}
         scrollThreshold="1px"

@@ -21,11 +21,11 @@ import FollowUsers from '@containers/FollowUsers'
 import { useContextualRouting } from 'next-use-contextual-routing'
 import ESReport from '@containers/Report'
 import ESLoader from '@components/Loader'
-import ESToast from '@components/Toast'
 import _ from 'lodash'
 import { ESRoutes } from '@constants/route.constants'
 import { FOLLOW_STATES, REPORT_TYPE } from '@constants/common.constants'
 import { UPLOADER_TYPE } from '@constants/image.constants'
+import useToast from '@utils/hooks/useToast'
 interface WithRouterProps {
   router: NextRouter
 }
@@ -45,8 +45,6 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
   const [disable, toggleDisable] = useState(false)
   const { blockUser, blockMeta } = useBlock()
   const { unblockUser, unblockMeta } = useUnblock()
-  const [blocked, setBlocked] = useState(false)
-  const [showToast, setShow] = useState(false)
   const [offset, setOffset] = useState(0)
   const { makeContextualHref } = useContextualRouting()
 
@@ -99,11 +97,12 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
     }
   }, [profile])
 
+  const { addToast } = useToast()
   useEffect(() => {
-    if (blocked && !blockMeta.pending) {
-      setShow(true)
+    if (blockMeta.loaded) {
+      addToast(i18n.t('common:profile.block_success_message'))
     }
-  }, [blockMeta])
+  }, [blockMeta.loaded])
 
   useEffect(() => {
     if (meta.error) {
@@ -182,7 +181,6 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
                       disabled={disable}
                       onClick={() => {
                         unblockUser({ user_code: attr.user_code })
-                        setBlocked(false)
                       }}
                     >
                       {i18n.t('common:profile.unblock')}
@@ -210,7 +208,6 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
                       <ESMenuItem
                         onClick={() => {
                           unblockUser({ user_code: attr.user_code })
-                          setBlocked(false)
                         }}
                       >
                         {i18n.t('common:profile.menu_unblock')}
@@ -220,7 +217,6 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
                       <ESMenuItem
                         onClick={() => {
                           blockUser({ user_code: attr.user_code })
-                          setBlocked(true)
                         }}
                       >
                         {i18n.t('common:profile.menu_block')}
@@ -309,16 +305,6 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
         {getHeader()}
         {getTabs()}
         {getContent()}
-        {showToast && (
-          <ESToast
-            open={showToast}
-            message={i18n.t('common:profile.block_success_message')}
-            onClose={() => {
-              setBlocked(false)
-              setShow(false)
-            }}
-          />
-        )}
         <Box mb={3} />
       </Grid>
     </>

@@ -141,7 +141,7 @@ const UserListItem: React.FC<Props> = ({
           </Typography>
         </Box>
       </Box>
-      {followed !== undefined && userProfile?.id != data.id && (
+      {userProfile && followed !== undefined && userProfile?.id != data.id && (
         <Box flexShrink={0}>
           {blocked ? (
             <ESButton

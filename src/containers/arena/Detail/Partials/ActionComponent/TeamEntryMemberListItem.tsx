@@ -38,7 +38,9 @@ const TeamEntryMemberListItem: React.FC<TeamEntryMemberListProps> = ({
 
   const getNicknameError = (): string => {
     const isTouched = _.get(formik, `touched.members[${index - 1}].name`, false)
-    if (!isTouched) return undefined
+    const hasValue = _.get(formik, `values.members[${index - 1}].name`, false)
+
+    if (!isTouched && !hasValue) return undefined
     return _.get(formik, `errors.members[${index - 1}].name`) as string
   }
 

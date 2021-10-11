@@ -1,8 +1,7 @@
-import { useState } from 'react'
 import { Avatar, SvgIcon, IconButton, IconButtonProps } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
-import ESToast from '@components/Toast'
 import i18n from '@locales/i18n'
+import useToast from '@utils/hooks/useToast'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -38,9 +37,9 @@ interface SocialProps {
 }
 
 const ESButtonDiscordCircle: React.FC<IconButtonProps & SocialProps> = ({ link, onlyIcon, ...rest }) => {
-  const [showToast, toggleShowToast] = useState(false)
   const disabled = !link || link.length === 0
   const classes = useStyles({ disabled: onlyIcon ? false : disabled })
+  const { addToast } = useToast()
   function copyToClipboard() {
     const dummy = document.createElement('textarea')
     document.body.appendChild(dummy)
@@ -48,7 +47,7 @@ const ESButtonDiscordCircle: React.FC<IconButtonProps & SocialProps> = ({ link, 
     dummy.select()
     document.execCommand('copy')
     document.body.removeChild(dummy)
-    toggleShowToast(true)
+    addToast(i18n.t('common:messages.discord_id_copied'))
   }
   return (
     <IconButton onClick={copyToClipboard} disabled={disabled} classes={{ root: classes.iconRoot }} {...rest}>
@@ -64,9 +63,6 @@ const ESButtonDiscordCircle: React.FC<IconButtonProps & SocialProps> = ({ link, 
           />
         </SvgIcon>
       </Avatar>
-      {showToast && (
-        <ESToast open={showToast} message={i18n.t('common:messages.discord_id_copied')} onClose={() => toggleShowToast(false)} />
-      )}
     </IconButton>
   )
 }

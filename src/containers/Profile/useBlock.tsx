@@ -20,6 +20,11 @@ const useBlock = (): { blockMeta: Meta; blockUser: (params: BlockParams) => void
       dispatch(clearMetaData(actions.blockUser.typePrefix))
     }
   }, [])
+  useEffect(() => {
+    if (blockMeta.loaded) {
+      dispatch(clearMetaData(actions.blockUser.typePrefix))
+    }
+  }, [blockMeta.loaded])
   return {
     blockMeta,
     blockUser,

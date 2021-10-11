@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { DialogProps } from '@material-ui/core/Dialog'
+
 import { PrimaryButtonProps } from '@components/ButtonPrimary'
 import { ESButtonProps } from '@components/Button'
 
@@ -13,6 +14,7 @@ export interface ConfirmOptions {
   confirmationButtonProps?: PrimaryButtonProps
   cancellationButtonProps?: ESButtonProps
   additionalText?: React.ReactNode
+  backDropClose?: boolean
 }
 
 export interface ConfirmProviderProps {
