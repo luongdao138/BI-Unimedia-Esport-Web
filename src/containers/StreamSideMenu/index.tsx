@@ -21,6 +21,7 @@ import { useTheme } from '@material-ui/core/styles'
 import SideFooter from '@containers/SideMenu/SideFooter'
 import AppDialog from '@containers/SideMenu/AppDialog'
 import usePointsManage from '@containers/PointManage/usePointsManage'
+// import moment from 'moment'
 
 interface StreamSideMenuProps {
   minimizeLayout?: boolean
@@ -68,7 +69,8 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
   const handleAppModal = (value: boolean) => {
     setAppModal(value)
   }
-
+  const x = userProfile?.attributes?.avatar_url
+  // console.log('STEAM SIDE MENU',x);
   return (
     <>
       <Box
@@ -79,11 +81,7 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
         {minimizeLayout ? (
           <Box>
             {/* <img src="/images/stream_log.svg" className={classes.logo} /> */}
-            <ESAvatar
-              className={classes.logo}
-              alt={userProfile?.attributes?.nickname}
-              src={userProfile ? userProfile?.attributes?.avatar_url : '/images/avatar.png'}
-            />
+            <ESAvatar className={classes.logo} alt={userProfile?.attributes?.nickname} src={userProfile ? x : '/images/avatar.png'} />
           </Box>
         ) : (
           <>
@@ -92,11 +90,7 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
               onClick={() => isAuthenticated && router.push(ESRoutes.PROFILE, undefined, { shallow: true })}
             >
               <Box className={classes.userInfo}>
-                <ESAvatar
-                  className={classes.avatar}
-                  alt={userProfile?.attributes?.nickname}
-                  src={userProfile ? userProfile?.attributes?.avatar_url : '/images/avatar.png'}
-                />
+                <ESAvatar className={classes.avatar} alt={userProfile?.attributes?.nickname} src={userProfile ? x : '/images/avatar.png'} />
                 {isAuthenticated && (
                   <Box width="100%" textAlign="center">
                     <Typography variant="h2" className={classes.name}>

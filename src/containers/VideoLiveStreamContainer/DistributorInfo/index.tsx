@@ -217,15 +217,17 @@ const DistributorInfo: React.FC<DistributorInfoProps> = ({ video_id }) => {
                 {channelDescription()}
               </Box>
             </Box>
-            {detailVideoResult?.channel_twitter_link || detailVideoResult?.channel_instagram_link 
-              || detailVideoResult?.channel_discord_link ? (
-                <Box className={classes.socialMediaContainer}>
-                  {getDistributorSocialInfo.map((item: dataItem) => {
-                    return getSocialIcon(item)
-                  })}
-                </Box>
-              ) : ''
-            }
+            {detailVideoResult?.channel_twitter_link ||
+            detailVideoResult?.channel_instagram_link ||
+            detailVideoResult?.channel_discord_link ? (
+              <Box className={classes.socialMediaContainer}>
+                {getDistributorSocialInfo.map((item: dataItem) => {
+                  return getSocialIcon(item)
+                })}
+              </Box>
+            ) : (
+              ''
+            )}
           </>
         ) : (
           <>{renderPreloadChannel()}</>
@@ -364,7 +366,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: 14,
     marginTop: 7,
     whiteSpace: 'pre-wrap',
-    wordBreak: 'break-all'
+    wordBreak: 'break-all',
   },
   socialMediaContainer: {
     display: 'flex',
