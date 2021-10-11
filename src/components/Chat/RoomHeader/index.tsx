@@ -191,7 +191,12 @@ const RoomHeader: React.FC<RoomHeaderProps> = ({ roomId }) => {
             <RoomMemberAddView roomId={roomId as string} open={dialogOpen === MENU.ADD_MEMBER} hide={() => setDialogOpen(null)} />
           ) : null}
           <RoomNameEditor roomName={roomName} roomId={roomId} open={dialogOpen === MENU.CHANGE_NAME} hide={() => setDialogOpen(null)} />
-          <ChatMemberEditContainer roomId={roomId as string} open={dialogOpen === MENU.MEMBER_LIST} hide={() => setDialogOpen(null)} />
+          <ChatMemberEditContainer
+            roomId={roomId as string}
+            disabled={!hasPermission}
+            open={dialogOpen === MENU.MEMBER_LIST}
+            hide={() => setDialogOpen(null)}
+          />
           {dialogOpen === MENU.CHANGE_IMG ? <AvatarSelector alt="" cancel={() => setDialogOpen(null)} onUpdate={onUpdate} /> : null}
         </>
       )}

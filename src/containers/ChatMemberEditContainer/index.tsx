@@ -14,10 +14,11 @@ import i18n from '@locales/i18n'
 interface ChatRoomContainerProps {
   roomId: string
   open: boolean
+  disabled: boolean
   hide: () => void
 }
 
-const ChatMemberEditContainer: React.FC<ChatRoomContainerProps> = ({ roomId, open, hide }) => {
+const ChatMemberEditContainer: React.FC<ChatRoomContainerProps> = ({ roomId, open, hide, disabled }) => {
   const classes = useStyles()
   const dispatch = useAppDispatch()
   const roomMembers = useAppSelector(membersFilter)
@@ -65,6 +66,7 @@ const ChatMemberEditContainer: React.FC<ChatRoomContainerProps> = ({ roomId, ope
                 <RoomMemberItem
                   profile={val.profile}
                   key={val.userId}
+                  disabled={disabled}
                   userCode={val.userCode}
                   isAdminOrSelf={val.memberType === CHAT_MEMBER_TYPE.CHAT_ADMIN || val.userId === userId}
                   id={val.userId}
