@@ -45,7 +45,11 @@ const GameSelectorDialog: React.FC<Props> = ({ values, onChange, disabled }) => 
       <Box display="flex" alignItems="center" pb={1}>
         <Typography className={classes.labelColor}>{t('common:tournament_create.game')}</Typography>
       </Box>
-      <ButtonBase disabled={disabled} onClick={() => setOpen(true)} className={classes.inputContainer}>
+      <ButtonBase
+        disabled={disabled}
+        onClick={() => setOpen(true)}
+        className={`${classes.inputContainer} ${disabled ? classes.disabled : ''}`}
+      >
         <Box display="flex" flexDirection="row" flexWrap="wrap">
           {_.isEmpty(values) ? (
             <Typography className={classes.hintColor}>{t('common:common.not_selected')}</Typography>
@@ -57,7 +61,7 @@ const GameSelectorDialog: React.FC<Props> = ({ values, onChange, disabled }) => 
             ))
           )}
         </Box>
-        <Icon className={`fa fa-chevron-right ${classes.icon}`} fontSize="small" />
+        <Icon className={`fa fa-chevron-right ${classes.icon} ${disabled ? classes.disabled : ''}`} fontSize="small" />
       </ButtonBase>
 
       <ESModal open={open} handleClose={() => setOpen(false)}>
@@ -167,5 +171,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     topContainer: {
       paddingTop: 0,
     },
+  },
+  disabled: {
+    color: Colors.white_opacity['30'],
   },
 }))
