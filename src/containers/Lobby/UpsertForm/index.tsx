@@ -127,7 +127,7 @@ const LobbyCreate: React.FC = () => {
   }, [formik.errors])
 
   const handleSetConfirm = () => {
-    formik.setValues(formik.values).then(() => {
+    formik.validateForm().then(() => {
       formik.validateForm().then((errors) => {
         const { stepOne, stepTwo } = formik.values
 
