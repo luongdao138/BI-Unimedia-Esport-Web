@@ -408,7 +408,7 @@ const VideoDetail: React.FC = () => {
 
   const isDown960 = pageWidth <= 960
   const sizeMenuWidth = () => {
-    if (!isDown960) return 98
+    if (!isDown960) return 50
     return 0
   }
 

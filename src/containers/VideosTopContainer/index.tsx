@@ -51,7 +51,8 @@ const VideosTop: React.FC = () => {
   const { bannerTop, listBanner, setLoginPreAction, getLoginPreAction } = useListVideoAll()
   const theme = useTheme()
   const isWideScreen = useMediaQuery(theme.breakpoints.up(1920))
-  const { width: listDisplayWidth } = useWindowDimensions(146)
+  // const { width: listDisplayWidth } = useWindowDimensions(146)
+  const { width: listDisplayWidth } = useWindowDimensions(98)
   const { makeContextualHref } = useContextualRouting()
   const defaultTab = _router?.query?.default_tab || '0'
 
@@ -157,17 +158,24 @@ export default VideosTop
 
 const useStyles = makeStyles((theme) => ({
   tabsContainer: {
-    paddingRight: '24px',
+    display: 'flex',
+    width: '100%',
+    // paddingRight: '24px',
+    borderBottomColor: Colors.text[300],
+    borderBottomWidth: 1,
+    borderBottomStyle: 'solid',
   },
   contentContainer: {
-    flexWrap: 'unset',
+    // flexWrap: 'unset',
+    flexWrap: 'wrap',
   },
   tabContent: {
     padding: '0 24px 8px 24px',
   },
   container: {
     width: '100%',
-    padding: '0 122px 0 24px',
+    // padding: '0 122px 0 24px',
+    padding: '0 74px 0 74px',
     display: 'flex',
     justifyContent: 'center',
   },
@@ -178,10 +186,11 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: '#212121',
   },
   tabs: {
+    display: 'flex',
     overflowY: 'hidden',
-    borderBottomColor: Colors.text[300],
-    borderBottomWidth: 1,
-    borderBottomStyle: 'solid',
+    // borderBottomColor: Colors.text[300],
+    // borderBottomWidth: 1,
+    // borderBottomStyle: 'solid',
     paddingLeft: 24,
   },
   forbiddenMessageContainer: {
@@ -214,6 +223,7 @@ const useStyles = makeStyles((theme) => ({
     },
     container: {
       paddingRight: '24px',
+      paddingLeft: '24px',
     },
     tabs: {
       overflowY: 'hidden',
@@ -229,16 +239,52 @@ const useStyles = makeStyles((theme) => ({
       paddingRight: 0,
     },
     tabs: {
+      display: 'flex',
       paddingLeft: 0,
     },
   },
   [theme.breakpoints.down(415)]: {
+    tabsContainer: {
+      display: 'flex',
+      paddingLeft: 0,
+      paddingRight: 0,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    tabs: {
+      display: 'flex',
+      paddingLeft: 0,
+    },
     tabMin: {
+      display: 'flex',
+      // paddingLeft: 4,
+      // paddingRight: 4,
       minWidth: 56,
-      marginRight: '12px',
+      // marginRight: '12px',
     },
     bannerContainer: {
       marginTop: 0,
+    },
+  },
+  [theme.breakpoints.down(375)]: {
+    tabsContainer: {
+      display: 'flex',
+      paddingLeft: 0,
+      paddingRight: 0,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    tabs: {
+      display: 'flex',
+      paddingLeft: 0,
+    },
+    tabMin: {
+      display: 'flex',
+      paddingLeft: 0,
+      paddingRight: 0,
+      '& .MuiTab-wrapper': {
+        fontSize: 12,
+      },
     },
   },
 }))
