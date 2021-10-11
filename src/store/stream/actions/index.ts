@@ -57,7 +57,7 @@ export const getStreamUrlAndKeyInfo = createAsyncThunk<services.GetStreamUrlAndK
   ACTION_STREAM_TYPES.GET_STREAM_URL_AND_KEY,
   async (secretKeyParams, { rejectWithValue }) => {
     try {
-      const res = await services.getStreamUrlAndKey(secretKeyParams)
+      const res = await services.getStreamUrlAndKey({ ...secretKeyParams, is_medialive: true })
       if (res?.code === 200) {
         // console.log("====getStreamUrlAndKey====",res)
         return res

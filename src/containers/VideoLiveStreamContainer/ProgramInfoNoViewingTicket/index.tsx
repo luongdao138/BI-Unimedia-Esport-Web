@@ -171,11 +171,11 @@ const ProgramInfoNoViewingTicket: React.FC<ProgramInfoProps> = ({ videoInfo }) =
     const dateDiff = startMoment.diff(endMoment, 'days')
 
     if (dateDiff === 0) {
-      return `${startMoment.format(FORMAT_DATE_SIMPLE)} ${moment(startTime).format(FORMAT_TIME_SIMPLE)}~${moment(endTime).format(
+      return `${startMoment.format(FORMAT_DATE_SIMPLE)} ${moment(startTime).format(FORMAT_TIME_SIMPLE)}〜${moment(endTime).format(
         FORMAT_TIME_SIMPLE
       )}`
     }
-    return `${moment(startTime).format(FORMAT_SCHEDULE_TIME)}~${moment(endTime).format(FORMAT_SCHEDULE_TIME)}`
+    return `${moment(startTime).format(FORMAT_SCHEDULE_TIME)}〜${moment(endTime).format(FORMAT_SCHEDULE_TIME)}`
   }
 
   const getSellingTicketDate = () => {
@@ -287,7 +287,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       background: 'rgba(0,0,0,0.5)',
     },
     '&::-webkit-scrollbar-thumb': {
-      backgroundColor: '#222',
+      backgroundColor: '#222222',
       borderRadius: 6,
     },
   },
@@ -416,6 +416,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     infoSectionContainer: {
       marginTop: '16px',
+    },
+    infoSectionContent: {
+      fontSize: '14px',
+    },
+    infoSectionTitle: {
+      fontSize: '14px',
     },
   },
 }))
