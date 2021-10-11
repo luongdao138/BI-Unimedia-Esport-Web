@@ -75,7 +75,7 @@ const TournamentCard: React.FC<Props> = ({ tournament }) => {
             />
           </Box>
         </Box>
-        {participant?.position && attr.status === TS.COMPLETED && (
+        {attr.status === TS.COMPLETED && (
           <Box
             zIndex={2}
             className={`${classes.mediaOverlay} ${classes.blurOverlay}`}
@@ -85,30 +85,33 @@ const TournamentCard: React.FC<Props> = ({ tournament }) => {
             alignItems="center"
           >
             {/* <img className={classes.firstIcon} src="/images/first_icon.png" /> */}
-
-            <span
-              className={`${classes.text} ${participant.position === 1 && classes.first} ${participant.position === 2 && classes.second} ${
-                participant.position === 3 && classes.third
-              }`}
-            >
-              {participant.position}
-              {participant.position === 1 && <span>st</span>}
-              {participant.position === 2 && <span>nd</span>}
-              {participant.position === 3 && <span>rd</span>}
-            </span>
-            <ESAvatar
-              onClick={() => {
-                participant?.user_code ? router.push(`${ESRoutes.PROFILE}/${participant.user_code}`) : null
-              }}
-              className={classes.marginV}
-              alt={participant?.name}
-              src={participant?.profile_image}
-            />
-            <Box className={classes.captionTitle}>
-              <Typography noWrap variant="overline">
-                {participant?.name}
-              </Typography>
-            </Box>
+            {participant?.position ? (
+              <>
+                <span
+                  className={`${classes.text} ${participant.position === 1 && classes.first} ${
+                    participant.position === 2 && classes.second
+                  } ${participant.position === 3 && classes.third}`}
+                >
+                  {participant.position}
+                  {participant.position === 1 && <span>st</span>}
+                  {participant.position === 2 && <span>nd</span>}
+                  {participant.position === 3 && <span>rd</span>}
+                </span>
+                <ESAvatar
+                  onClick={() => {
+                    participant?.user_code ? router.push(`${ESRoutes.PROFILE}/${participant.user_code}`) : null
+                  }}
+                  className={classes.marginV}
+                  alt={participant?.name}
+                  src={participant?.profile_image}
+                />
+                <Box className={classes.captionTitle}>
+                  <Typography noWrap variant="overline">
+                    {participant?.name}
+                  </Typography>
+                </Box>
+              </>
+            ) : null}
           </Box>
         )}
       </>
@@ -197,6 +200,9 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: 5,
     backgroundColor: Colors.black_opacity[90],
     borderRadius: 10,
+    '&:last-child': {
+      marginBottom: 0,
+    },
   },
   chipSecondary: {
     width: 64,

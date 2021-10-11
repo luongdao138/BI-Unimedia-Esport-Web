@@ -17,6 +17,9 @@ import TeamEntryEditModal from '../Partials/ActionComponent/TeamEntryEditModal'
 import InidividualEntryEditModal from '../Partials/ActionComponent/InidividualEntryEditModal'
 import ESButton from '@components/Button'
 import useReturnHref from '@utils/hooks/useReturnHref'
+import ParticipantCount from '@components/ParticipantCount'
+import { useRouter } from 'next/router'
+import { ESRoutes } from '@constants/route.constants'
 
 export interface ParticipantsProps {
   detail: TournamentDetail
@@ -32,10 +35,11 @@ const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
   const [hasMore, setHasMore] = useState(true)
   const [selectedParticipant, setSelectedParticipant] = useState(null as ParticipantsResponse | null)
   const [members, setMembers] = useState([])
-
   const { participants, getParticipants, resetParticipants, resetMeta, page, meta, followStateChanged } = useParticipants()
+  const totalCount = _.get(page, 'total_count', '')
   const { userProfile } = useGetProfile()
   const { handleReturn } = useReturnHref()
+  const router = useRouter()
 
   useEffect(() => {
     if (data) {
@@ -84,6 +88,11 @@ const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
     setSelectedParticipant(participant)
   }
 
+  const toDetail = () => {
+    if (hash_key) {
+      router.push(ESRoutes.ARENA_DETAIL.replace(/:id/gi, hash_key))
+    }
+  }
   return (
     <div>
       {data && (
@@ -100,31 +109,12 @@ const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
               </Box>
             </Box>
             <Box py={2} textAlign="right" flexDirection="row" display="flex" alignItems="center" justifyContent="flex-end">
-              <Box display="flex" flexDirection="column">
-                <Box display="flex" flexDirection="row" alignItems="flex-end">
-                  <Box mr={2}>
-                    <Typography variant="h3" className={classes.countLabel}>
-                      {data.is_freezed ? t('common:tournament.number_of_participants') : t('common:tournament.number_of_entries')}
-                    </Typography>
-                  </Box>
-                  <Typography variant="h3" style={{ fontSize: 24, fontWeight: 'bold' }}>
-                    {page?.total_count ? page.total_count : 0}
-                  </Typography>
-                  <Typography variant="h3" className={classes.countLabel}>
-                    {unit}
-                  </Typography>
-                  <Typography variant="h3" className={classes.countLabel} style={{ fontSize: 20, marginLeft: 4 }}>
-                    /
-                  </Typography>
-
-                  <Typography variant="h3" className={classes.countLabel} style={{ fontSize: 22 }}>
-                    {data.max_participants}
-                  </Typography>
-                  <Typography variant="h3" className={classes.countLabel}>
-                    {unit}
-                  </Typography>
-                </Box>
-              </Box>
+              <ParticipantCount
+                label={data.is_freezed ? t('common:tournament.number_of_participants') : t('common:tournament.number_of_entries')}
+                total={totalCount}
+                max={data.max_participants}
+                unit={unit}
+              />
             </Box>
             <div id="scrollableDiv" className={`${classes.scroll} ${classes.list}`}>
               <InfiniteScroll
@@ -179,9 +169,7 @@ const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
           initialTeamId={getTeamId(selectedParticipant)}
           onClose={() => setSelectedParticipant(null)}
           myTeam={isMyTeam(selectedParticipant)}
-          toDetail={() => {
-            setSelectedParticipant(null)
-          }}
+          toDetail={toDetail}
         />
       ) : (
         <InidividualEntryEditModal
@@ -191,9 +179,7 @@ const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
           initialParticipantId={`${selectedParticipant.id}`}
           onClose={() => setSelectedParticipant(null)}
           me={isMe(selectedParticipant)}
-          toDetail={() => {
-            setSelectedParticipant(null)
-          }}
+          toDetail={toDetail}
         />
       )}
     </div>
@@ -223,10 +209,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   loaderCenter: {
     textAlign: 'center',
-  },
-  countLabel: {
-    marginLeft: 2,
-    fontWeight: 400,
   },
   urlCopy: {
     cursor: 'pointer',

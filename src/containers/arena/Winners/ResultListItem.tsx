@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
 import { TournamentHelper } from '@utils/helpers/TournamentHelper'
 import { useArenaResult } from './ResultList'
+import { memo } from 'react'
 
 interface ResultListItemProps {
   position: number
@@ -173,4 +174,4 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-export default ResultListItem
+export default memo(ResultListItem)

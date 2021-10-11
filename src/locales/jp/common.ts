@@ -58,7 +58,6 @@ export default {
     failed_to_get_data: 'データの取得に失敗しました。',
     input_is_incorrect: '入力内容が適切ではありません。',
     dash: '-',
-    dash_separator: 'ー',
     team: 'チーム',
     send: '送信する',
     select_an_image: '画像を選択',
@@ -279,7 +278,7 @@ export default {
       cancel: '却下',
       hold: '保留',
       user: '一般ユーザー',
-      co_organizer: '共同管理者',
+      co_organizer: '副管理人',
       kick: 'キックする',
     },
     change_applying_members_toast: '更新しました。',
@@ -528,6 +527,7 @@ export default {
     },
   },
   arena: {
+    select_two_or_more: '参加メンバーを２つ以上選択して下さい。',
     enter_own_score: '参加者は自身の対戦の結果のみ入力できます',
     input_result: '結果の入力',
     br_set_score_btn: '結果を反映する',
@@ -555,7 +555,17 @@ export default {
       score_attack_error: `スコアは半角数字で入力してください
 入力上限は8桁となります`,
       battle_royale_error: '順位は半角数字で入力してください',
-      time_attack_error: 'タイムは半角数字で入力してください',
+      battle_royale_errors: {
+        min_max_range_invalid: '{{min}}～{{max}}までの半角数字を入力してください',
+      },
+      time_attack_errors: {
+        format_invalid: 'タイムは半角数字で入力してください',
+        time_attack_max_exceeds: '分、秒は0〜59の間の数字を入力してください',
+      },
+      score_attack_errors: {
+        format_invalid: 'スコアは半角数字で入力してください',
+        score_attack_max_exceeds: 'スコアを8桁までに入力して下さい。',
+      },
     },
     status: {
       status: '{{status, status_rule}}',
@@ -573,7 +583,7 @@ export default {
     no_third_place: '（3位決定戦なし）',
     randomize_button: 'ランダムに配置する',
     freeze_button: 'トーナメント表を確定する',
-    freeze_br_button: '対戦表を確定する',
+    freeze_br_button: 'メンバーを確定する',
     randomize_success: 'ユーザーをランダムに配置しました',
     freeze_success: 'トーナメント表が確定しました',
     br_freeze_success: 'メンバーを確定しました',
@@ -582,23 +592,26 @@ export default {
     close_entry_success: 'エントリーを締め切りました',
     edit_entry_success: 'エントリー情報を編集しました',
     failed_to_update_match: '対戦表の更新に失敗しました',
+    failed_to_update_br_members: 'メンバーリストの更新に失敗しました',
     battles: {
       randomize_confirmation_dialog: {
         title: '{{isTeam, participation_type}}をランダムに配置します',
         subtitle: '現在エントリーしている{{isTeam, participation_type}}を対戦表の空欄になっている枠へランダムに配置します',
         description: `※エントリーしている{{isTeam, participation_type}}数が参加枠数よりも多い場合は、選択されなかったユーザーは落選となります。
-        
+
                       ※落選する{{isTeam, participation_type}}を出したくない場合は、大会管理から参加枠数を変更した後に配置を行ってください。`,
         additionalText: 'この時点ではまだエントリー表は確定しません',
         confirmationText: '配置する',
         cancellationText: 'キャンセル',
       },
       freeze_confirmation_dialog: {
-        title: '{{isTeam, participation_type}}をランダムに配置します',
-        description: '現在エントリーしている{{isTeam, participation_type}}を対戦表の空欄になっている枠へランダムに配置します',
-        additionalText: `※エントリーしている{{isTeam, participation_type}}数が参加枠数よりも多い場合は、選択されなかった{{isTeam, participation_type}}は落選となります。
-                         ※落選する{{isTeam, participation_type}}を出したくない場合は、大会管理から参加枠数を変更した後に配置を行ってください。`,
-        confirmationText: 'エントリー',
+        title: 'メンバーを確定する',
+        subtitle: '現在の選択されている{{isTeam, participation_type}}でメンバーを確定させます。よろしいですか？',
+        description: `※落選する{{isTeam, participation_type}}を出したくない場合は、大会管理から参加枠数を変更した後に配置を行ってください。
+
+                      ※エントリーしている{{isTeam, participation_type}}であっても、参加メンバー一覧に反映されていないまま確定を行った場合は残りの枠数を問わず落選となります。`,
+        additionalText: '確定以降の参加枠の変更はできません。',
+        confirmationText: '確定する',
         cancellationText: 'キャンセル',
       },
     },
@@ -626,8 +639,9 @@ export default {
     please_select_winner: '勝者を選択してください',
     summary: '大会総括',
     summary_title: '大会の総括',
+    summary_input_placeholder: '大会の総括を入力することができます',
     summary_submit: 'この内容で決定する',
-    copy_toast: '共有URLをコピーしました',
+    copy_toast: 'クリップボードにコピーしました',
     edit_arena_info: '編集',
     create_success: '大会が作成されました',
     update_success: '大会内容が編集されました',
@@ -736,6 +750,8 @@ export default {
     sorting_method: 'ソート方法',
     sort_info_title: 'ソート方法について',
     public_arena_info_title: '公開設定について',
+    by_asc: '昇順',
+    by_desc: '降順',
     /* eslint-disable no-irregular-whitespace */
     sort_info_modal: {
       row1col1: '昇順',

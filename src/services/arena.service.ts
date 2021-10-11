@@ -328,6 +328,7 @@ export type ParticipantsResponse = {
             user_id: number
           }[]
           name: string
+          team_avatar: string | null
         }
         id: string
       }
@@ -745,7 +746,7 @@ export const setBattleRoyalScores = async ({
 }: SetBattleRoyaleScoresParams): Promise<{ data: ParticipantsResponse[] }> => {
   const scores = {}
   for (const p of participants) {
-    scores[p.id] = p.attributes.position
+    if (p.attributes.attack_score) scores[p.id] = p.attributes.attack_score
   }
   const { data } = await api.post(URI.BATTLE_ROYALE_SET_SCORES.replace(/:id/gi, `${hash_key}`), { scores })
 
@@ -755,9 +756,7 @@ export const setBattleRoyalScores = async ({
 export const setBattleRoyalOwnScore = async ({ hash_key, participants }: SetBattleRoyaleScoresParams) => {
   const scores = {}
   for (const p of participants) {
-    if (p.highlight) {
-      scores[p.id] = p.attributes.position
-    }
+    if (p.attributes.attack_score) scores[p.id] = p.attributes.attack_score
   }
   const { data } = await api.post(URI.BATTLE_ROYALE_SET_OWN_SCORE.replace(/:id/gi, `${hash_key}`), { scores })
   return data as SetBattleRoyaleScoresResponse
