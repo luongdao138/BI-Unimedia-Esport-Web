@@ -29,7 +29,7 @@ const ArenaBattles: React.FC = () => {
   const { t } = useTranslation(['common'])
 
   const { tournament, meta: detailMeta } = useTournamentDetail()
-  const { isModerator, isParticipant, isTeamLeader } = useArenaHelper(tournament)
+  const { isModerator, isParticipant, isTeamLeader, isTeam } = useArenaHelper(tournament)
   const [hideFooter, setHideFooter] = useState(true)
   const [errors, setErrors] = useState<Record<string, ErrorType>>({})
 
@@ -68,46 +68,29 @@ const ArenaBattles: React.FC = () => {
   }, [participants])
 
   const setScores = (value: number | '', id: number) => {
-    let newSelecteds = []
-
-    if (tournament?.attributes.rule === 'battle_royale') {
-      newSelecteds = selecteds.map((v) => {
+    setSelecteds(
+      selecteds.map((v) => {
         if (v.id == id) {
           return {
             ...v,
             attributes: {
               ...v.attributes,
-              position: value || null,
+              attack_score: _.isNumber(value) ? value : null,
             },
           }
         }
         return v
       })
-    } else {
-      newSelecteds = selecteds.map((v) => {
-        if (v.id == id) {
-          return {
-            ...v,
-            attributes: {
-              ...v.attributes,
-              attack_score: value || null,
-            },
-          }
-        }
-        return v
-      })
-    }
-    setSelecteds(newSelecteds)
+    )
   }
 
   const handleSubmitScore = () => {
     if (isModerator) {
-      setBattleRoyaleScores({ hash_key: tournament.attributes.hash_key, participants: selecteds, rule: tournament.attributes.rule })
+      setBattleRoyaleScores({ hash_key: tournament.attributes.hash_key, participants: selecteds })
     } else {
       setBattleRoyaleOwnScore({
         hash_key: tournament.attributes.hash_key,
         participants: selecteds.filter((p) => p.highlight),
-        rule: tournament.attributes.rule,
       })
     }
   }
@@ -119,15 +102,17 @@ const ArenaBattles: React.FC = () => {
     }
   }, [setBattleRoyaleScoresMeta.loaded, setBattleRoyaleOwnScoreMeta.loaded])
 
+  const isFixedMyScore = useMemo(() => getIsFixedMyScore(selecteds), [selecteds])
+
   useEffect(() => {
     if (tournament?.attributes.status === 'in_progress' || tournament?.attributes.status === 'completed') {
       if (isModerator) {
         setHideFooter(false)
-      } else if (isParticipant && isTeamLeader) {
+      } else if (isParticipant && isTeamLeader && !isFixedMyScore) {
         setHideFooter(false)
       }
     }
-  }, [isModerator, isParticipant, tournament])
+  }, [isModerator, isParticipant, tournament, isFixedMyScore])
 
   const isScoreChanged = useMemo(() => !checkIsScoreChanged(selecteds, participants), [selecteds, participants])
 
@@ -180,36 +165,39 @@ const ArenaBattles: React.FC = () => {
               {i18n.t('common:arena.rules_title.battle_royale_error')}
             </Typography>
           ) : null}
-          {errorObject.placement_max_exceeds ? (
+          {errorObject.placement_min_max_range_invalid ? (
             <Typography style={{ color: Colors.secondary, paddingTop: 4 }}>
-              {i18n.t('common:common.too_long', { max: participants.length })}
+              {i18n.t('common:arena.rules_title.battle_royale_errors.min_max_range_invalid', { min: 1, max: participants.length })}
             </Typography>
           ) : null}
         </Box>
       </RuleHeader>
 
       <BRList className={classes.listContainer} rule={tournament?.attributes.rule}>
-        {selecteds.map((v) => {
-          const value = tournament?.attributes.rule === 'battle_royale' ? v.attributes.position : v.attributes.attack_score
-          return (
-            <BRListItem
-              key={v.id}
-              avatar={<Avatar alt={v.attributes.name || ''} src={v.attributes.avatar_url || ''} size={26} />}
-              text={v.attributes.user?.user_code ? v.attributes.name : v.attributes.team?.data.attributes.name}
-              textSecondary={v.attributes.user?.user_code || ''}
-              highlight={v.highlight}
-            >
-              <BRScore
-                value={value || ''}
-                participantCount={participants.length}
-                onChange={({ target: { value } }) => setScores(value === '' ? '' : Number(value), v.id)}
-                onAttackError={(val) => handleError(val, v.id)}
-                type={tournament?.attributes.rule}
-                disabled={(v.attributes.is_fixed_score || !v.highlight) && !isModerator}
+        {selecteds.map((v) => (
+          <BRListItem
+            key={v.id}
+            avatar={
+              <Avatar
+                alt={isTeam ? v.attributes.team.data.attributes.name : v.attributes.name || ''}
+                src={isTeam ? v.attributes.team.data.attributes.team_avatar : v.attributes.avatar_url || ''}
+                size={26}
               />
-            </BRListItem>
-          )
-        })}
+            }
+            text={v.attributes.user?.user_code ? v.attributes.name : v.attributes.team?.data.attributes.name}
+            textSecondary={v.attributes.user?.user_code || ''}
+            highlight={v.highlight}
+          >
+            <BRScore
+              value={v.attributes.attack_score || ''}
+              participantCount={participants.length}
+              onChange={({ target: { value } }) => setScores(value === '' ? '' : Number(value), v.id)}
+              onAttackError={(val) => handleError(val, v.id)}
+              type={tournament?.attributes.rule}
+              disabled={(v.attributes.is_fixed_score || !v.highlight) && !isModerator}
+            />
+          </BRListItem>
+        ))}
       </BRList>
       <ESLoader open={detailMeta.pending || participantsMeta.pending} />
     </StickyFooter>
@@ -220,7 +208,7 @@ const useStyles = makeStyles((theme) => ({
   listContainer: {
     paddingBottom: 80,
     paddingLeft: theme.spacing(3),
-    paddingRight: theme.spacing(10),
+    paddingRight: theme.spacing(3),
   },
   [theme.breakpoints.down('sm')]: {
     listContainer: {
@@ -249,4 +237,10 @@ const mergeErrors = (errors: Record<string, ErrorType>): ErrorType => {
   const errorArray = Object.values(errors)
   if (errorArray.length) return errorArray.reduce((prev, curr) => ({ ...prev, ...curr }))
   return {}
+}
+
+const getIsFixedMyScore = (participants: ParticipantsResponse[]): boolean => {
+  const myTeam = participants.filter((p) => p.highlight)
+  if (myTeam.length) return myTeam[0].attributes.is_fixed_score
+  return true
 }

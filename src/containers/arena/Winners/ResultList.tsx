@@ -1,4 +1,4 @@
-import { createContext, useContext } from 'react'
+import { createContext, useContext, memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { makeStyles, Typography } from '@material-ui/core'
 import { TournamentRule } from '@services/arena.service'
@@ -32,7 +32,7 @@ export const useArenaResult = () => {
   return context
 }
 
-export default ResultList
+export default memo(ResultList)
 
 const useStyles = makeStyles((theme) => ({
   listWrapper: {

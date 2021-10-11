@@ -547,6 +547,7 @@ export default {
     },
   },
   arena: {
+    select_two_or_more: '参加メンバーを２つ以上選択して下さい。',
     enter_own_score: '参加者は自身の対戦の結果のみ入力できます',
     input_result: '結果の入力',
     br_set_score_btn: '結果を反映する',
@@ -574,13 +575,16 @@ export default {
       score_attack_error: `スコアは半角数字で入力してください
 入力上限は8桁となります`,
       battle_royale_error: '順位は半角数字で入力してください',
+      battle_royale_errors: {
+        min_max_range_invalid: '{{min}}～{{max}}までの半角数字を入力してください',
+      },
       time_attack_errors: {
         format_invalid: 'タイムは半角数字で入力してください',
         time_attack_max_exceeds: '分、秒は0〜59の間の数字を入力してください',
       },
       score_attack_errors: {
         format_invalid: 'スコアは半角数字で入力してください',
-        time_attack_max_exceeds: 'スコアを8桁までに入力して下さい。',
+        score_attack_max_exceeds: 'スコアを8桁までに入力して下さい。',
       },
     },
     status: {
@@ -608,6 +612,7 @@ export default {
     close_entry_success: 'エントリーを締め切りました',
     edit_entry_success: 'エントリー情報を編集しました',
     failed_to_update_match: '対戦表の更新に失敗しました',
+    failed_to_update_br_members: 'メンバーリストの更新に失敗しました',
     battles: {
       randomize_confirmation_dialog: {
         title: '{{isTeam, participation_type}}をランダムに配置します',
@@ -654,6 +659,7 @@ export default {
     please_select_winner: '勝者を選択してください',
     summary: '大会総括',
     summary_title: '大会の総括',
+    summary_input_placeholder: '大会の総括を入力することができます',
     summary_submit: 'この内容で決定する',
     copy_toast: 'クリップボードにコピーしました',
     edit_arena_info: '編集',
@@ -764,6 +770,8 @@ export default {
     sorting_method: 'ソート方法',
     sort_info_title: 'ソート方法について',
     public_arena_info_title: '公開設定について',
+    by_asc: '昇順',
+    by_desc: '降順',
     /* eslint-disable no-irregular-whitespace */
     sort_info_modal: {
       row1col1: '昇順',

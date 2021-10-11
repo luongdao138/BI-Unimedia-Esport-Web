@@ -15,7 +15,7 @@ interface RuleHeaderProps extends BoxProps {
   showCaution: boolean
 }
 
-const RuleHeader: React.FC<RuleHeaderProps> = ({ rule, showCaution, ...props }) => {
+const RuleHeader: React.FC<RuleHeaderProps> = ({ rule, showCaution, children, ...props }) => {
   const classes = useStyles()
 
   return (
@@ -26,6 +26,7 @@ const RuleHeader: React.FC<RuleHeaderProps> = ({ rule, showCaution, ...props }) 
           {i18n.t('common:arena.enter_own_score')}
         </Typography>
       ) : null}
+      {children}
     </Box>
   )
 }

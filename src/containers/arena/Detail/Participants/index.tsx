@@ -18,6 +18,8 @@ import InidividualEntryEditModal from '../Partials/ActionComponent/InidividualEn
 import ESButton from '@components/Button'
 import useReturnHref from '@utils/hooks/useReturnHref'
 import ParticipantCount from '@components/ParticipantCount'
+import { useRouter } from 'next/router'
+import { ESRoutes } from '@constants/route.constants'
 
 export interface ParticipantsProps {
   detail: TournamentDetail
@@ -37,6 +39,7 @@ const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
   const totalCount = _.get(page, 'total_count', '')
   const { userProfile } = useGetProfile()
   const { handleReturn } = useReturnHref()
+  const router = useRouter()
 
   useEffect(() => {
     if (data) {
@@ -85,6 +88,11 @@ const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
     setSelectedParticipant(participant)
   }
 
+  const toDetail = () => {
+    if (hash_key) {
+      router.push(ESRoutes.ARENA_DETAIL.replace(/:id/gi, hash_key))
+    }
+  }
   return (
     <div>
       {data && (
@@ -161,9 +169,7 @@ const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
           initialTeamId={getTeamId(selectedParticipant)}
           onClose={() => setSelectedParticipant(null)}
           myTeam={isMyTeam(selectedParticipant)}
-          toDetail={() => {
-            setSelectedParticipant(null)
-          }}
+          toDetail={toDetail}
         />
       ) : (
         <InidividualEntryEditModal
@@ -173,9 +179,7 @@ const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
           initialParticipantId={`${selectedParticipant.id}`}
           onClose={() => setSelectedParticipant(null)}
           me={isMe(selectedParticipant)}
-          toDetail={() => {
-            setSelectedParticipant(null)
-          }}
+          toDetail={toDetail}
         />
       )}
     </div>
