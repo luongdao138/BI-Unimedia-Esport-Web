@@ -91,9 +91,16 @@ const RoomHeader: React.FC<RoomHeaderProps> = ({ roomId }) => {
 
   const hasPermissionLobby = _.get(lobby, 'is_freezed', false)
 
-  const roleLobby = _.get(lobby, 'my_role.role', null)
+  const roleLobby = _.get(lobby, 'my_role', null)
 
   const isOrganizerLobby = _.includes(LOBBY_ADMIN_ROLES, roleLobby)
+
+  const hasPermissionDelete =
+    !isDirect() && _.get(roomInfo, 'groupType', null) === CHAT_ROOM_TYPE.CHAT_ROOM
+      ? true
+      : _.get(roomInfo, 'groupType', null) === CHAT_ROOM_TYPE.RECRUITMENT
+      ? hasPermissionLobby
+      : hasPermission
 
   const memberAddItem = () => {
     if (roomInfo.groupType === CHAT_ROOM_TYPE.TOURNAMENT && hasPermission && isOrganizer) {
@@ -191,7 +198,12 @@ const RoomHeader: React.FC<RoomHeaderProps> = ({ roomId }) => {
             <RoomMemberAddView roomId={roomId as string} open={dialogOpen === MENU.ADD_MEMBER} hide={() => setDialogOpen(null)} />
           ) : null}
           <RoomNameEditor roomName={roomName} roomId={roomId} open={dialogOpen === MENU.CHANGE_NAME} hide={() => setDialogOpen(null)} />
-          <ChatMemberEditContainer roomId={roomId as string} open={dialogOpen === MENU.MEMBER_LIST} hide={() => setDialogOpen(null)} />
+          <ChatMemberEditContainer
+            roomId={roomId as string}
+            disabled={!hasPermissionDelete}
+            open={dialogOpen === MENU.MEMBER_LIST}
+            hide={() => setDialogOpen(null)}
+          />
           {dialogOpen === MENU.CHANGE_IMG ? <AvatarSelector alt="" cancel={() => setDialogOpen(null)} onUpdate={onUpdate} /> : null}
         </>
       )}

@@ -29,6 +29,10 @@ const StepOne: React.FC<Props> = ({ formik, hardwares, editables }) => {
     })
   }, [])
 
+  const handleRemove = useCallback(() => {
+    formik.setFieldValue('stepOne.cover_image_url', '')
+  }, [])
+
   const handleSelectedGame = useCallback((value) => {
     formik.setFieldValue('stepOne.game_title_id', value)
   }, [])
@@ -42,9 +46,10 @@ const StepOne: React.FC<Props> = ({ formik, hardwares, editables }) => {
       <Box pb={4}>
         <CoverUploader
           src={formik.values.stepOne.cover_image_url}
-          onChange={handleUpload}
           isUploading={isUploading}
           disabled={!editables.cover_image_url}
+          onChange={handleUpload}
+          onRemove={handleRemove}
         />
       </Box>
       <Box pb={4}>
