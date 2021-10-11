@@ -7,7 +7,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    width: 482,
+    // width: 482,
     marginLeft: '16px',
     marginRight: '16px',
     border: `1px solid #FFFFFF4D`,
@@ -325,12 +325,12 @@ const useStyles = makeStyles((theme) => ({
   // purchasePointText: {},
   [theme.breakpoints.down(1100)]: {
     container: {
-      width: 350,
+      // width: 350,
     },
   },
   [theme.breakpoints.down(870)]: {
     container: {
-      width: 240,
+      // width: 240,
     },
   },
   [theme.breakpoints.down(769)]: {

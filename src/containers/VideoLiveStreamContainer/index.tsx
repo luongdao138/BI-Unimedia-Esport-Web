@@ -2,7 +2,7 @@
 import ESTab from '@components/Tab'
 import ESTabs from '@components/Tabs'
 import i18n from '@locales/i18n'
-import { Box, Grid, makeStyles, Typography, useMediaQuery, useTheme } from '@material-ui/core'
+import { Box, Grid, makeStyles, Typography } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import React, { useEffect, useState, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -37,6 +37,7 @@ import API, { GraphQLResult, graphqlOperation } from '@aws-amplify/api'
 import { EVENT_LIVE_STATUS, LIVE_VIDEO_TYPE } from '@constants/common.constants'
 import DialogLoginContainer from '@containers/DialogLogin'
 import _ from 'lodash'
+import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
 
 enum TABS {
   PROGRAM_INFO = 1,
@@ -62,8 +63,8 @@ const VideoDetail: React.FC = () => {
   }
   const classes = useStyles()
   const { t } = useTranslation('common')
-  const theme = useTheme()
-  const isMobile = useMediaQuery(theme.breakpoints.down(769))
+  const { width: pageWidth } = useWindowDimensions(0)
+  const isMobile = pageWidth <= 768
   const dispatch = useAppDispatch()
   const router = useRouter()
   const video_id = Array.isArray(router.query?.vid) ? router.query.vid[0] : router.query.vid // uuid video
@@ -403,10 +404,33 @@ const VideoDetail: React.FC = () => {
   const modalIsShown = () => {
     return showConfirmModal || showPurchaseTicketModal || showModalPurchasePoint
   }
-  // const refAbc = useRef(null)
+
+  const isDown960 = pageWidth <= 960
+  const sizeMenuWidth = () => {
+    if (!isDown960) return 98
+    return 0
+  }
+
+  const componentsSize = (() => {
+    const chatMaxWidth = 482
+    const chatMinWidth = 330
+    const pageWidthWithoutMenu = pageWidth - sizeMenuWidth()
+    // render chat component is 30% of page width without menu
+    let chatWidth = Math.round(pageWidthWithoutMenu * 0.3)
+    // limit width of chat component
+    chatWidth = chatWidth > chatMaxWidth ? chatMaxWidth : chatWidth < chatMinWidth ? chatMinWidth : chatWidth
+    const videoWidth = isMobile ? pageWidthWithoutMenu : pageWidthWithoutMenu - chatWidth
+    const videoHeight = (videoWidth * 9) / 16
+    return {
+      chatWidth,
+      videoWidth,
+      videoHeight,
+    }
+  })()
+
   const sideChatContainer = () => {
     return (
-      <Box className={classes.wrapChatContainer}>
+      <Box className={classes.wrapChatContainer} style={{ width: isMobile ? '100%' : componentsSize.chatWidth }}>
         <ChatContainer
           ref={refChatContainer}
           myPoint={myPoint}
@@ -470,13 +494,13 @@ const VideoDetail: React.FC = () => {
     <Box className={classes.root}>
       {isPendingPurchaseTicket && <ESLoader />}
       {isPendingPurchaseSuperChat && <FullESLoader open={isPendingPurchaseSuperChat} />}
-      <Box className={classes.container}>
+      <Box className={classes.container} style={{ width: isMobile ? '100%' : componentsSize.videoWidth }}>
         {_.isEmpty(detailVideoResult) && isVideoFreeToWatch === -1 ? (
           <Box
             style={{
               backgroundColor: '#6A6A6C',
               width: '100%',
-              height: '100%',
+              height: componentsSize.videoHeight,
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
@@ -489,6 +513,7 @@ const VideoDetail: React.FC = () => {
         ) : (
           <>
             <LiveStreamContent
+              componentsSize={componentsSize}
               video_id={getVideoId()}
               userHasViewingTicket={userHasViewingTicket()}
               videoType={videoStatus}
@@ -529,23 +554,27 @@ const VideoDetail: React.FC = () => {
           setShowModalPurchasePoint={(value) => setShowModalPurchasePoint(value)}
         />
       </Box>
-      {_.isEmpty(detailVideoResult) ? (
-        <Box
-          style={{
-            display: 'flex',
-            marginLeft: 24,
-            marginRight: 24,
-            backgroundColor: 'transparent',
-            height: '100%',
-            width: 482,
-            flexDirection: 'column',
-            borderRadius: 8,
-          }}
-        >
-          <PreloadChatContainer />
-        </Box>
+      {!isMobile ? (
+        _.isEmpty(detailVideoResult) ? (
+          <Box
+            style={{
+              display: 'flex',
+              marginLeft: 24,
+              marginRight: 24,
+              backgroundColor: 'transparent',
+              height: '100%',
+              width: componentsSize.chatWidth,
+              flexDirection: 'column',
+              borderRadius: 8,
+            }}
+          >
+            <PreloadChatContainer />
+          </Box>
+        ) : (
+          sideChatContainer()
+        )
       ) : (
-        !isMobile && sideChatContainer()
+        ''
       )}
     </Box>
   )
