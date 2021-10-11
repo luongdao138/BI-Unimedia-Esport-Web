@@ -514,7 +514,7 @@ const VideoDetail: React.FC = () => {
         ) : (
           <>
             <LiveStreamContent
-              componentsSize={componentsSize}
+              // componentsSize={componentsSize} //GHÉP THẬT THÌ PHẢI BỎ COMMENT RA NHÉ
               video_id={getVideoId()}
               userHasViewingTicket={userHasViewingTicket()}
               videoType={videoStatus}

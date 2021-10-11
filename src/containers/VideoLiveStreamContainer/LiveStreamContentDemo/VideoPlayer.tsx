@@ -11,6 +11,7 @@ import ESLoader from '@components/Loader'
 
 import useDetailVideo from '../useDetailVideo'
 import Hls from 'hls.js'
+import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
 
 interface PlayerProps {
   src?: string
@@ -58,7 +59,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
 
   //As of Chrome 66, videos must be muted in order to play automatically
   const [state, setState] = useState({
-    playing: false,
+    playing: true,
     muted: true,
     volume: 0,
     ended: false,
@@ -85,6 +86,10 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   } = useDetailVideo()
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'), { noSsr: true })
+  const isDownMd = useMediaQuery(theme.breakpoints.down(769), { noSsr: true })
+  const isDown1100 = useMediaQuery(theme.breakpoints.down(1100), { noSsr: true })
+  const isDown960 = useMediaQuery(theme.breakpoints.down(960), { noSsr: true })
+  const { width: videoDisplayWidth } = useWindowDimensions(0)
 
   const handlePauseAndSeekVideo = () => {
     // seek to current live stream second if is pausing live and is not playing
@@ -166,20 +171,20 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   const { playing, muted, volume, ended } = state
   const { loading, videoLoaded } = visible
   const hls = new Hls()
-  // const chatBoardWidth = () => {
-  //   if (!isDown1100) return 482
-  //   if (!isDownMd) return 350
-  //   return 0
-  // }
-  // const sizeMenuWidth = () => {
-  //   if (!isDown960) return 98
-  //   return 0
-  // }
+  const chatBoardWidth = () => {
+    if (!isDown1100) return 482
+    if (!isDownMd) return 350
+    return 0
+  }
+  const sizeMenuWidth = () => {
+    if (!isDown960) return 98
+    return 0
+  }
 
-  // const calculateVideoHeight = () => {
-  //   const videoWidth = videoDisplayWidth - (chatBoardWidth() + sizeMenuWidth())
-  //   return (videoWidth * 9) / 16
-  // }
+  const calculateVideoHeight = () => {
+    const videoWidth = videoDisplayWidth - (chatBoardWidth() + sizeMenuWidth())
+    return (videoWidth * 9) / 16
+  }
 
   // ===================hls.js==================================
   useEffect(() => {
@@ -199,6 +204,9 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       //@ts-ignore
       video.muted = true
       hls.on(Hls.Events.LEVEL_LOADED, handleLoaded)
+      hls.on(Hls.Events.MEDIA_ATTACHING, (_, data) => {
+        console.log('----MEDIA_ATTACHING----', data)
+      })
       hls.on(Hls.Events.ERROR, handleError)
     }
 
@@ -236,7 +244,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       // bind them together
       // hls.loadSource(src)
       // hls.loadSource('https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8')
-      hls.loadSource('https://cowell-web.exelab.jp/live/CW352202110051226/index.m3u8')
+      hls.loadSource('https://d3ueuwvla07imz.cloudfront.net/live/ducnn2021/index.m3u8')
       //@ts-ignore
       hls.attachMedia(video)
       hls.on(Hls.Events.MEDIA_ATTACHED, handleMedia)
@@ -253,14 +261,14 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       console.log('----->>timeupdate<<------', event.target.currentTime, event.target.duration)
       if (event.target) {
         setPlayedSeconds(event.target.currentTime)
-        setDurationPlayer(event.target.duration)
+        // setDurationPlayer(event.target.duration)
       }
     })
 
     videoEl.current.addEventListener('durationchange', (event) => {
       console.log('------->>durationchange<<<-----', event)
       if (event.target) {
-        setDurationPlayer(event.target.duration)
+        setDurationPlayer(event.target.duration - 15)
       }
     })
 
@@ -298,7 +306,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     })
     videoEl.current.addEventListener('loadeddata', () => {
       console.log('=================loadeddata===================')
-      setVisible({ ...visible, loading: true, videoLoaded: true })
+      // setVisible({ ...visible, loading: true, videoLoaded: true })
     })
     videoEl.current.addEventListener('emptied', (event) => {
       console.log('=================emptied===================')
@@ -311,6 +319,17 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     videoEl.current.addEventListener('error', (event) => {
       console.log('=================error===================')
       console.log(event)
+    })
+    videoEl.current.addEventListener('play', (event) => {
+      console.log('=================play===================')
+      console.log(event)
+      setVisible({ ...visible, loading: true, videoLoaded: true })
+    })
+    videoEl.current.addEventListener('playing', (event) => {
+      console.log('=================playing===================')
+      console.log(event)
+      setVisible({ ...visible, loading: false, videoLoaded: false })
+      // setState({...state, playing:true})
     })
 
     return () => {
@@ -360,8 +379,10 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   }
 
   const handleTryAgain = () => {
-    hls.loadSource('https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8')
-    hls.startLoad()
+    hls.loadSource('https://d3ueuwvla07imz.cloudfront.net/live/ducnn2021/index.m3u8')
+    //@ts-ignore
+    hls.attachMedia(document.getElementById('video'))
+    hls.startLoad(-1)
   }
 
   return (
@@ -373,9 +394,9 @@ const VideoPlayer: React.FC<PlayerProps> = ({
               id="video"
               ref={videoEl}
               muted={muted}
-              style={{ width: '100%', height: '100%' }}
+              style={{ width: '100%', height: calculateVideoHeight() }}
               // src={'https://cowell-web.exelab.jp/live/CW352202110051226/index.m3u8'}
-              autoPlay={false}
+              autoPlay={true}
               // poster={thumbnail ?? '/images/live_stream/thumbnail_default.png'}
             />
           ) : (
@@ -385,7 +406,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
               muted={muted}
               style={{ width: '100%', height: '100%' }}
               src={'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8'}
-              autoPlay={false}
+              autoPlay={true}
               controls
             />
           )}
