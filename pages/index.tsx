@@ -5,24 +5,26 @@ import i18n from '@locales/i18n'
 import { useRouter } from 'next/router'
 import StreamLayout from '@layouts/StreamLayout'
 import VideoLiveStreamContainer from '@containers/VideoLiveStreamContainer'
+import PlainLayoutNoHeader from '@layouts/PlainLayoutNoHeader'
 
 const TopPage: PageWithLayoutType = () => {
   const router = useRouter()
   // https://github.com/vercel/next.js/discussions/11484#discussioncomment-60563
   const queryKey = 'vid'
   const video_id = router.query[queryKey] || router.asPath.match(new RegExp(`[&?]${queryKey}=(.*)(&|$)`))
-  return (
-    <PlainLayout
-    // noFooter={!!video_id}
-    >
-      {!video_id ? (
+  if (!video_id) {
+    return (
+      <PlainLayout>
         <TopContainer />
-      ) : (
-        <StreamLayout noTopPadding minimizeLayout loginRequired={false} footer={false}>
-          <VideoLiveStreamContainer />
-        </StreamLayout>
-      )}
-    </PlainLayout>
+      </PlainLayout>
+    )
+  }
+  return (
+    <PlainLayoutNoHeader>
+      <StreamLayout noTopPadding minimizeLayout loginRequired={false} footer={false}>
+        <VideoLiveStreamContainer />
+      </StreamLayout>
+    </PlainLayoutNoHeader>
   )
 }
 
