@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react'
 import moment from 'moment'
 import { UserLoginResponse } from '@services/auth.service'
 import ESChip from '@components/Chip'
+import ESLabel from '@components/Label'
 
 interface ConfirmProps {
   values: FormikProps<FormType>['values']
@@ -162,10 +163,11 @@ const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, prefectures, isEdi
       <ESInput labelPrimary={t('common:lobby_create.area')} value={areaName} disabled={true} fullWidth />
       <ESInput labelPrimary={''} value={values.stepTwo.address} disabled={true} fullWidth multiline />
       <Box pb={2} />
+      <ESLabel label={t('common:lobby_create.category')} size="small" />
+      <Box pb={1} />
       {values.stepOne.categories.map((category, idx) => (
         <ESChip key={idx} className={classes.chip} label={category.name} />
       ))}
-
       <Box pb={2} />
     </Box>
   )
