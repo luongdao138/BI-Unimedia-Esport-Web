@@ -527,6 +527,7 @@ export default {
     },
   },
   arena: {
+    select_two_or_more: '参加メンバーを２つ以上選択して下さい。',
     enter_own_score: '参加者は自身の対戦の結果のみ入力できます',
     input_result: '結果の入力',
     br_set_score_btn: '結果を反映する',
@@ -591,6 +592,7 @@ export default {
     close_entry_success: 'エントリーを締め切りました',
     edit_entry_success: 'エントリー情報を編集しました',
     failed_to_update_match: '対戦表の更新に失敗しました',
+    failed_to_update_br_members: 'メンバーリストの更新に失敗しました',
     battles: {
       randomize_confirmation_dialog: {
         title: '{{isTeam, participation_type}}をランダムに配置します',

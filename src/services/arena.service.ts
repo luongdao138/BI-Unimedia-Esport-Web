@@ -328,6 +328,7 @@ export type ParticipantsResponse = {
             user_id: number
           }[]
           name: string
+          team_avatar: string | null
         }
         id: string
       }

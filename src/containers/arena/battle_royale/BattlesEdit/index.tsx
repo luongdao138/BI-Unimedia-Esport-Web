@@ -136,9 +136,14 @@ const ArenaBattlesEdit: React.FC = () => {
   }
 
   const [freezable, setFreezable] = useState(false)
+
   useEffect(() => {
     const selectedLength = getParticipantIds(selecteds).length
-    setFreezable(!!participants.length && selectedLength === maxCapacity)
+    if (selectedLength === 1) {
+      setFreezable(false)
+    } else {
+      setFreezable(!!participants.length && selectedLength === maxCapacity)
+    }
   }, [selecteds, participants])
 
   return (
@@ -163,7 +168,12 @@ const ArenaBattlesEdit: React.FC = () => {
         >
           <HeaderWithButton title={tournament.attributes.title} />
           <Box pt={3} pb={3} textAlign="center">
-            {tournament.attributes.is_freezed ? null : <Typography>{t('common:tournament.confirm_participants')}</Typography>}
+            {tournament.attributes.is_freezed ? null : (
+              <>
+                <Typography>{t('common:tournament.confirm_participants')}</Typography>
+                <Typography>{t('common:arena.select_two_or_more')}</Typography>
+              </>
+            )}
           </Box>
           <BRList marginX={3} mb={7}>
             {selecteds.map((v, i) => (

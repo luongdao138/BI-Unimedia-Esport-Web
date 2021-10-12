@@ -1,5 +1,6 @@
 import { ReactNode, useState } from 'react'
-import { Grid, Box, makeStyles, Typography, Theme, Icon, ButtonBase } from '@material-ui/core'
+import { Grid, Box, makeStyles, Theme, Icon, ButtonBase } from '@material-ui/core'
+import Typography from './Typography'
 import ESChip from '@components/Chip'
 import { Colors } from '@theme/colors'
 import ESMenu from '@components/Menu'

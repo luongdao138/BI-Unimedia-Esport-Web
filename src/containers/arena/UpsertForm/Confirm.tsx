@@ -125,7 +125,7 @@ const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, prefectures, user,
         className={classes.coverWrapper}
       ></Box>
       <Box pb={2} />
-      <ESInput labelPrimary={t('common:tournament_create.name')} fullWidth value={values.stepOne.title} disabled />
+      <ESInput labelPrimary={t('common:tournament_create.name')} fullWidth value={values.stepOne.title.trim()} disabled multiline />
       <Box pb={2} />
       <ESInput labelPrimary={t('common:tournament_create.overview')} multiline value={values.stepOne.overview} disabled={true} fullWidth />
       <Box pb={2} />
@@ -135,7 +135,7 @@ const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, prefectures, user,
         disabled={true}
         fullWidth
       />
-      {values.stepOne.has_prize && <ESInput value={values.stepOne.prize_amount} disabled={true} fullWidth />}
+      {values.stepOne.has_prize && <ESInput value={values.stepOne.prize_amount} disabled={true} fullWidth multiline />}
       <Box pb={2} />
       <ESInput
         labelPrimary={t('common:tournament_create.game')}
@@ -144,9 +144,9 @@ const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, prefectures, user,
         fullWidth
       />
       <Box pb={2} />
-      <ESInput labelPrimary={t('common:tournament_create.game_hardware')} value={hardwareName} disabled={true} fullWidth />
+      <ESInput labelPrimary={t('common:tournament_create.game_hardware')} value={hardwareName} disabled={true} fullWidth multiline />
       <Box pb={2} />
-      <ESInput labelPrimary={t('common:tournament_create.holding_format')} value={ruleName} disabled={true} fullWidth />
+      <ESInput labelPrimary={t('common:tournament_create.holding_format')} value={ruleName} disabled={true} fullWidth multiline />
 
       {values.stepTwo.rule === 'score_attack' || values.stepTwo.rule === 'time_attack' ? (
         <>
@@ -160,9 +160,11 @@ const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, prefectures, user,
         </>
       ) : null}
 
-      {values.stepTwo.has_third_place && <ESInput value={t('common:tournament_create.has_third_place')} disabled={true} fullWidth />}
+      {values.stepTwo.has_third_place && (
+        <ESInput value={t('common:tournament_create.has_third_place')} disabled={true} fullWidth multiline />
+      )}
       <Box pb={2} />
-      <ESInput labelPrimary={t('common:tournament_create.participation')} value={participationType} disabled={true} fullWidth />
+      <ESInput labelPrimary={t('common:tournament_create.participation')} value={participationType} disabled={true} fullWidth multiline />
       <ESInput value={`${values.stepTwo.max_participants}${peopleText}`} disabled={true} fullWidth />
       <ESInput value={values.stepTwo.terms_of_participation} disabled={true} fullWidth multiline />
       <Box pb={2} />
@@ -171,6 +173,7 @@ const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, prefectures, user,
         value={values.stepTwo.t_type === 't_public' ? t('common:tournament_create.public') : t('common:tournament_create.private')}
         disabled={true}
         fullWidth
+        multiline
       />
       <Box pb={2} />
       <ESInput labelPrimary={t('common:tournament_create.precautions')} value={values.stepTwo.notes} multiline disabled={true} fullWidth />
@@ -187,10 +190,10 @@ const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, prefectures, user,
       <Box pb={2} />
       {formatDate(t('common:tournament_create.holding_period'), values.stepThree.start_date, values.stepThree.end_date)}
       <Box pb={2} />
-      <ESInput labelPrimary={t('common:tournament_create.area')} value={areaName} disabled={true} fullWidth />
+      <ESInput labelPrimary={t('common:tournament_create.area')} value={areaName} disabled={true} fullWidth multiline />
       {values.stepThree.address && <ESInput value={values.stepThree.address} disabled={true} fullWidth multiline />}
       <Box pb={2} />
-      <ESInput labelPrimary={t('common:tournament_create.organizer')} value={user.nickname} disabled={true} fullWidth />
+      <ESInput labelPrimary={t('common:tournament_create.organizer')} value={user.nickname} disabled={true} fullWidth multiline />
       <Box pb={2} />
       <ESInput labelPrimary={t('common:tournament_create.co_organizer')} value={coOrganizers} disabled={true} fullWidth multiline />
       <Box pb={2} />
@@ -199,6 +202,7 @@ const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, prefectures, user,
         value={values.stepFour.organizer_name}
         disabled={true}
         fullWidth
+        multiline
       />
       <Box pb={2} />
     </Box>
