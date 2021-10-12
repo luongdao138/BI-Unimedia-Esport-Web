@@ -48,7 +48,7 @@ const VideosTop: React.FC = () => {
   const isAuthenticated = useAppSelector(getIsAuthenticated)
   const [tab, setTab] = useState(_router?.query?.default_tab ? parseInt(_router?.query?.default_tab.toString()) : 0)
   const [follow, setFollow] = useState(0)
-  const { bannerTop, listBanner, setLoginPreAction, getLoginPreAction } = useListVideoAll()
+  const { bannerTop, listBanner } = useListVideoAll()
   const theme = useTheme()
   const isWideScreen = useMediaQuery(theme.breakpoints.up(1920))
   // const { width: listDisplayWidth } = useWindowDimensions(146)
@@ -60,19 +60,11 @@ const VideosTop: React.FC = () => {
     // setTab(parseInt(defaultTab.toString(), 10) ?? 0)
     bannerTop()
     setFollow(0)
-    setLoginPreAction('')
   }, [])
 
   useEffect(() => {
     setTab(parseInt(defaultTab.toString()))
   }, [_router])
-
-  useEffect(() => {
-    if (isAuthenticated && getLoginPreAction === 'favorite_tab') {
-      setTab(TabsVideo.FAVORITE_VIDEOS)
-      setLoginPreAction('')
-    }
-  }, [isAuthenticated, getLoginPreAction])
 
   const handleFocusTab = (_, tab) => {
     if (tab === TabsVideo.FAVORITE_VIDEOS) {

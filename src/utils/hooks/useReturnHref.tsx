@@ -3,11 +3,8 @@ import { useRouter } from 'next/router'
 import { useContextualRouting } from 'next-use-contextual-routing'
 import { ESRoutes } from '@constants/route.constants'
 import { RouteContext } from 'pages/_app'
-import { useAppDispatch, useAppSelector } from '@store/hooks'
+import { useAppSelector } from '@store/hooks'
 import { getIsRegistered } from '@store/auth/selectors'
-import auth from '@store/auth'
-
-const { actions: authActions } = auth
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const useReturnHref = () => {
@@ -15,7 +12,6 @@ const useReturnHref = () => {
   const isRegistered = useAppSelector(getIsRegistered)
   const { returnHref, makeContextualHref } = useContextualRouting()
   const { previousRoute } = useContext(RouteContext)
-  const dispatch = useAppDispatch()
 
   const handleReturn = () => router.back()
   const navigateScreen = (pathName: string) => {
@@ -30,11 +26,7 @@ const useReturnHref = () => {
     if (previousRoute === ESRoutes.TOP) {
       router.push(ESRoutes.HOME)
     } else if (previousRoute === ESRoutes.VIDEO_TOP) {
-      router.push(returnHref, undefined, { shallow: true })
-      const { favoriteTabClick } = router.query
-      if (favoriteTabClick) {
-        dispatch(authActions.setLoginPreAction({ action: 'favorite_tab' }))
-      }
+      router.push({ pathname: returnHref, search: '?default_tab=4' }, undefined, { shallow: true })
     } else if (!isRegistered) {
       router.push(ESRoutes.REGISTER_PROFILE)
     } else {

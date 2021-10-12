@@ -27,6 +27,13 @@ const PointManage: React.FC = () => {
 
   useEffect(() => {
     setTab(0)
+    document.getElementsByTagName('html')[0]['style'].overflowY = 'scroll'
+    return () => {
+      const container = document.getElementsByTagName('html')
+      if (container && container.length > 0) {
+        document.getElementsByTagName('html')[0]['style'].overflowY = 'unset'
+      }
+    }
   }, [])
 
   const { purchasePointInfo } = usePurchasePointData()

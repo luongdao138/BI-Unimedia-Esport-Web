@@ -3,11 +3,9 @@ import { useAppDispatch, useAppSelector } from '@store/hooks'
 import { Meta } from '@store/metadata/actions/types'
 import { createMetaSelector } from '@store/metadata/selectors'
 import videoTop from '@store/videoTop'
-import auth from '@store/auth'
 import { getTimeZone } from '@utils/helpers/CommonHelper'
 
 const { selectors, actions } = videoTop
-const { selectors: authSelectors, actions: authActions } = auth
 
 const _getListVideoAll = createMetaSelector(actions.getListVideoAll)
 const useListVideoAll = (): {
@@ -19,8 +17,6 @@ const useListVideoAll = (): {
   videoCategoryPopular: CategoryPopularData[]
   listBanner: BannerItem[]
   bannerTop: () => void
-  setLoginPreAction: (action: string) => void
-  getLoginPreAction: string
 } => {
   const dispatch = useAppDispatch()
   const videoTop = useAppSelector(selectors.getAllVideo)
@@ -31,8 +27,6 @@ const useListVideoAll = (): {
   const getListVideoTop = (params: ListVideoTopParams) => dispatch(actions.getListVideoAll(params))
   const getListVideoPopular = () => dispatch(actions.getCategoryPopularVideo({ timezone: getTimeZone(), limit: 5 }))
   const bannerTop = () => dispatch(actions.getBannerTop())
-  const setLoginPreAction = (action) => dispatch(authActions.setLoginPreAction({ action: action }))
-  const getLoginPreAction = useAppSelector(authSelectors.getPreLoginAction)
 
   //TODO: add limit (if you need)
   const listLiveVideo = () => {
@@ -52,8 +46,6 @@ const useListVideoAll = (): {
     videoCategoryPopular,
     listBanner,
     bannerTop,
-    setLoginPreAction,
-    getLoginPreAction,
   }
 }
 
