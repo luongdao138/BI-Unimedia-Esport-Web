@@ -87,7 +87,7 @@ const CoverUploader: React.FC<ProfileAvatarProps> = ({
       </label>
       {open && (
         <CoverSelector
-          src={localSrc.toString()}
+          src={_.isEmpty(localSrc) ? '' : localSrc.toString()}
           ratio={ratio}
           cancel={() => setOpen(false)}
           is_required={false}
