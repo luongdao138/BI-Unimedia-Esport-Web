@@ -59,7 +59,4 @@ export default createReducer(initialState, (builder) => {
     .addCase(userProfileActions.changeEmailConfirm.fulfilled, (state, action) => {
       state.user.email = action.payload.email
     })
-    .addCase(actions.setLoginPreAction, (state, action) => {
-      state.loginPreAction = action.payload.action
-    })
 })
