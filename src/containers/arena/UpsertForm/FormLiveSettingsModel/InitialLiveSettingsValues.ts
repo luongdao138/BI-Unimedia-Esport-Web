@@ -75,6 +75,6 @@ export const getInitialDistributorValues = (data?: DistributorStepSetting): Form
     instagram_link: data && data.instagram_link ? data.instagram_link : '',
     //check step
     step_setting: 1,
-    id: data && data.id ? data.id : 0,
+    id: data !== null && data.id ? data.id : data === null ? -1 : 0,
   },
 })
