@@ -586,6 +586,28 @@ const useStyles = makeStyles((theme) => ({
     paddingRight: '16px',
   },
   [theme.breakpoints.down('lg')]: {
+    // card_info_wrap: {
+    //   flexWrap: 'wrap',
+    //   paddingRight: 0,
+    // },
+    // card_wrap: {
+    //   width: '100%',
+    //   paddingRight: 0,
+    //   marginBottom: 24,
+    // },
+  },
+  [theme.breakpoints.down('md')]: {
+    // card_info_wrap: {
+    //   flexWrap: 'wrap',
+    //   paddingRight: 0,
+    // },
+    // card_wrap: {
+    //   width: '100%',
+    //   paddingRight: 0,
+    //   marginBottom: 24,
+    // },
+  },
+  [theme.breakpoints.down('sm')]: {
     card_info_wrap: {
       flexWrap: 'wrap',
       paddingRight: 0,
@@ -595,10 +617,11 @@ const useStyles = makeStyles((theme) => ({
       paddingRight: 0,
       marginBottom: 24,
     },
-  },
-  [theme.breakpoints.down('sm')]: {
     container: {
       width: '100%',
+    },
+    second_card_wrap: {
+      paddingLeft: 0,
     },
     point: {
       width: 100,
