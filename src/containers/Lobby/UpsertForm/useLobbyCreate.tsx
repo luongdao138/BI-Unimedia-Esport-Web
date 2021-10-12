@@ -73,6 +73,10 @@ const useLobbyCreate = (): {
     if (actions.createLobby.fulfilled.match(resultAction)) {
       resetMeta()
       router.push(`${ESRoutes.LOBBY}/${resultAction.payload.hash_key}`)
+    } else if (actions.createLobby.rejected.match(resultAction)) {
+      if (_.get(resultAction.payload, 'error.code') === 422415) {
+        resetMeta()
+      }
     }
   }
   const update = async (params: UpdateParams) => {
