@@ -16,6 +16,7 @@ import { useTheme } from '@material-ui/core/styles'
 import _ from 'lodash'
 import moment from 'moment'
 import { FORMAT_DATE_SIMPLE, FORMAT_SCHEDULE_TIME, FORMAT_TIME_SIMPLE } from '@constants/common.constants'
+import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
 
 interface InfoSectionProps {
   title?: string
@@ -27,15 +28,17 @@ interface InfoSectionProps {
 
 interface ProgramInfoProps {
   videoInfo?: any
+  videoItemStyle?: any
 }
 
-const ProgramInfoNoViewingTicket: React.FC<ProgramInfoProps> = ({ videoInfo }) => {
+const ProgramInfoNoViewingTicket: React.FC<ProgramInfoProps> = ({ videoInfo, videoItemStyle }) => {
   const { meta_archived_video_stream, archivedVideoStreamData, getArchivedVideoStream, resetArchivedVideoStream } = useLiveStreamDetail()
   const [page, setPage] = useState<number>(1)
   const [hasMore, setHasMore] = useState(true)
   const isLoadingData = meta_archived_video_stream?.pending
   const theme = useTheme()
   const downMd = useMediaQuery(theme.breakpoints.down(769), { noSsr: true })
+  const { width: itemWidthDownMdScreen } = useWindowDimensions(48)
 
   useEffect(() => {
     if (videoInfo?.uuid) {
@@ -90,11 +93,11 @@ const ProgramInfoNoViewingTicket: React.FC<ProgramInfoProps> = ({ videoInfo }) =
     return (
       <React.Fragment key={item?.id || index}>
         {downMd ? (
-          <Box className={classes.xsItemContainer} key={item?.id || index}>
-            <VideoPreviewItem data={item} />
+          <Box className={classes.xsItemContainer}>
+            <VideoPreviewItem data={item} containerStyle={{ width: itemWidthDownMdScreen }} />
           </Box>
         ) : (
-          <Grid item xs={6} lg={6} xl={4} className={classes.itemContainer} key={item?.id || index}>
+          <Grid item xs={6} lg={6} xl={4} className={classes.itemContainer} style={videoItemStyle}>
             <VideoPreviewItem data={item} />
           </Grid>
         )}
