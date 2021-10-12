@@ -31,7 +31,7 @@ declare global {
 }
 
 const VideoPlayer: React.FC<PlayerProps> = ({
-  src,
+  // src,
   // // statusVideo,
   mediaOverlayIsShown,
   // onVideoEnd,
@@ -182,7 +182,9 @@ const VideoPlayer: React.FC<PlayerProps> = ({
 
   // ===================hls.js==================================
   useEffect(() => {
+    console.log('🚀 ~ useEffect ~ isMobile---1111', isMobile)
     if (Hls.isSupported() && !isMobile) {
+      console.log('🚀 ~ useEffect ~ isMobile---222', isMobile)
       const video = document.getElementById('video')
       const hls = new Hls({
         liveSyncDurationCount: 1,
@@ -192,7 +194,8 @@ const VideoPlayer: React.FC<PlayerProps> = ({
         startPosition: 0,
       })
       // bind them together
-      hls.loadSource(src)
+      hls.loadSource('https://d3ueuwvla07imz.cloudfront.net/live/ducnn2021/index.m3u8')
+      // hls.loadSource(src)
       // hls.loadSource('https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8')
       //@ts-ignore
       hls.attachMedia(video)
@@ -327,7 +330,8 @@ const VideoPlayer: React.FC<PlayerProps> = ({
               muted={muted}
               style={{ width: '100%', height: '100%' }}
               // src={'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8'}
-              src={src}
+              src={'https://d3ueuwvla07imz.cloudfront.net/live/ducnn2021/index.m3u8'}
+              // src={src}
               autoPlay={false}
               controls
             />

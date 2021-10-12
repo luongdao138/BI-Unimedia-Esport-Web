@@ -191,7 +191,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     // marginTop: 36,
     cursor: 'pointer',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
+    margin: '10px 0 0 10px',
+    // justifyContent: 'center',
   },
   contentContainer: {
     marginTop: theme.spacing(0),
@@ -285,9 +287,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       '&:last-child': {
         marginRight: 0,
       },
-    },
-    seeMoreContainer: {
-      marginTop: 0,
     },
   },
   loaderCenter: {
