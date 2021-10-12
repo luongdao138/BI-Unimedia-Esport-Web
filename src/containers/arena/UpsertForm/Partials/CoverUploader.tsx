@@ -14,6 +14,7 @@ type ProfileAvatarProps = {
   onChange?: (file: File, blob: any) => void
   disabled?: boolean
   onOpenStateChange?: (open: boolean) => void
+  onRemove: () => void
 }
 
 const CoverUploader: React.FC<ProfileAvatarProps> = ({
@@ -23,6 +24,7 @@ const CoverUploader: React.FC<ProfileAvatarProps> = ({
   onChange,
   disabled = false,
   onOpenStateChange,
+  onRemove,
 }) => {
   const classes = useStyles()
   const [drag, setDrag] = useState<boolean>(false)
@@ -31,9 +33,7 @@ const CoverUploader: React.FC<ProfileAvatarProps> = ({
   const { t } = useTranslation(['common'])
 
   useEffect(() => {
-    if (src) {
-      setLocalSrc(src)
-    }
+    setLocalSrc(src)
   }, [src])
 
   const handleChange = (file: File, blob: any) => {
@@ -49,6 +49,11 @@ const CoverUploader: React.FC<ProfileAvatarProps> = ({
   useEffect(() => {
     !!onOpenStateChange && onOpenStateChange(open)
   }, [open])
+
+  const handleRemove = () => {
+    setOpen(false)
+    onRemove()
+  }
 
   return (
     <div className={classes.root}>
@@ -84,7 +89,9 @@ const CoverUploader: React.FC<ProfileAvatarProps> = ({
           src={localSrc.toString()}
           ratio={ratio}
           cancel={() => setOpen(false)}
+          is_required={false}
           onUpdate={(file: File, blob: any) => handleChange(file, blob)}
+          onRemove={handleRemove}
         />
       )}
     </div>
