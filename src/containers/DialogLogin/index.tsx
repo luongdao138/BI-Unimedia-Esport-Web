@@ -22,6 +22,7 @@ import LoginError from '@containers/Login/LoginError'
 import { URI } from '@constants/uri.constants'
 import LoginAgreementBox from '@containers/Login/LoginAgreementBox'
 import ESModal from '@components/Modal'
+import { useRouter } from 'next/router'
 
 interface DialogLoginProps {
   loginRequired?: boolean
@@ -38,6 +39,7 @@ const DialogLoginContainer: React.FC<DialogLoginProps> = ({ showDialogLogin, onC
   const [isAgreementChecked, setAgreementChecked] = useState(false)
 
   const { loginByEmail, meta, resetMeta, handleClick } = useLoginByEmail()
+  const _router = useRouter()
 
   const resetMetas = () => {
     resetMeta()
@@ -54,6 +56,14 @@ const DialogLoginContainer: React.FC<DialogLoginProps> = ({ showDialogLogin, onC
     loginByEmail(_values)
   }
 
+  const handleReturn = () => {
+    if (document.referrer) {
+      handleClick()
+    } else {
+      _router.push(ESRoutes.VIDEO_TOP)
+    }
+  }
+
   useEffect(() => {
     if (meta.loaded) {
       onCloseDialogLogin()
@@ -65,7 +75,8 @@ const DialogLoginContainer: React.FC<DialogLoginProps> = ({ showDialogLogin, onC
       <Container maxWidth={false} className={classes.root}>
         <Box pt={7.5} pb={9} className={classes.topContainer}>
           <Box py={2}>
-            <IconButton className={classes.iconButtonBg} onClick={handleClick}>
+            {/* <IconButton className={classes.iconButtonBg} onClick={handleClick}> */}
+            <IconButton className={classes.iconButtonBg} onClick={handleReturn}>
               <Icon className="fa fa-arrow-left" fontSize="small" />
             </IconButton>
           </Box>
