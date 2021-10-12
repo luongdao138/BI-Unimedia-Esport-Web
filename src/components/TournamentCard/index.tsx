@@ -1,15 +1,16 @@
+import { memo } from 'react'
 import { Typography, Box, makeStyles, Icon, Chip } from '@material-ui/core'
+import CardChip from '@components/TournamentCard/CardChip'
 import ESAvatar from '@components/Avatar'
 import ESCard from '@components/Card'
 import ESCardMedia from '@components/Card/CardMedia'
 import ESCardContent from '@components/Card/CardContent'
-import CardChip from '@components/TournamentCard/CardChip'
 import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
 import { Colors } from '@theme/colors'
 import { TournamentListItem } from '@services/arena.service'
 import { useTranslation } from 'react-i18next'
-import { TOURNAMENT_STATUS as TS, TOURNAMENT_RULE as TR } from '@constants/common.constants'
+import { TOURNAMENT_STATUS as TS } from '@constants/common.constants'
 import i18n from '@locales/i18n'
 import moment from 'moment'
 
@@ -47,7 +48,7 @@ const TournamentCard: React.FC<Props> = ({ tournament }) => {
         >
           <ESAvatar size={36} src={attr.organizer_avatar} alt={attr.organizer_name} />
           {status ? (
-            <Box position="absolute" top={0} right={0} margin={0.6}>
+            <Box position="absolute" top={0} right={0} margin={0.6} zIndex={3}>
               <StatusChip label={status} color={tournament.attributes.status === TS.COMPLETED ? 'black' : 'white'} />
             </Box>
           ) : null}
@@ -58,9 +59,7 @@ const TournamentCard: React.FC<Props> = ({ tournament }) => {
               size="small"
               label={
                 <Box color={Colors.white} justifyContent="flex-">
-                  <Typography variant="overline">
-                    {attr.rule === TR.BATTLE_ROYAL ? i18n.t('common:tournament:rule_battle') : i18n.t('common:tournament:rule_tournament')}
-                  </Typography>
+                  <Typography variant="overline">{t('common:arena.rules.rule', { rule: attr.rule })}</Typography>
                 </Box>
               }
             />
@@ -68,7 +67,7 @@ const TournamentCard: React.FC<Props> = ({ tournament }) => {
               className={classes.chipPrimary}
               size="small"
               label={
-                <Box color={Colors.white} justifyContent="flex-">
+                <Box color={Colors.white}>
                   <Typography variant="overline">{p_type}</Typography>
                 </Box>
               }
@@ -84,7 +83,6 @@ const TournamentCard: React.FC<Props> = ({ tournament }) => {
             flexDirection="column"
             alignItems="center"
           >
-            {/* <img className={classes.firstIcon} src="/images/first_icon.png" /> */}
             {participant?.position ? (
               <>
                 <span
@@ -284,9 +282,6 @@ const useStyles = makeStyles((theme) => ({
       WebkitTextStroke: '1px #FFC962',
     },
   },
-  first: {},
-  second: {},
-  third: {},
   title: {
     display: '-webkit-box',
     WebkitBoxOrient: 'vertical',
@@ -304,6 +299,9 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'center',
   },
+  first: {},
+  second: {},
+  third: {},
   [theme.breakpoints.down('sm')]: {
     firstIcon: {
       marginTop: 10,
@@ -312,4 +310,4 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-export default TournamentCard
+export default memo(TournamentCard)
