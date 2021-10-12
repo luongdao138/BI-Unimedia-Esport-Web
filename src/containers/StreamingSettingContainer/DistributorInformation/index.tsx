@@ -11,7 +11,7 @@ import { FormikProps } from 'formik'
 import { FormLiveType } from '@containers/arena/UpsertForm/FormLiveSettingsModel/FormLiveSettingsType'
 
 interface Props {
-  hasChannel?: boolean
+  hasChannel?: boolean | null
   formik?: FormikProps<FormLiveType>
 }
 
@@ -21,7 +21,7 @@ const DistributorInformationContainer: React.FC<Props> = ({ formik }) => {
   const { channelInfo } = useLiveSetting()
   const [modal, setModal] = useState(false)
   const { t } = useTranslation(['common'])
-  const hasChannel = formik?.values?.stepSettingThree?.id === 0 ? false : true
+  const hasChannel = formik?.values?.stepSettingThree?.id === 0 ? false : formik?.values?.stepSettingThree?.id === -1 ? null : true
 
   const onChangeStep = (step: number): void => {
     // setStep(step)
@@ -37,7 +37,6 @@ const DistributorInformationContainer: React.FC<Props> = ({ formik }) => {
   const onComplete = (): void => {
     router.push(ESRoutes.VIDEO_STREAMING_MANAGEMENT)
   }
-
   return (
     <>
       <Steps
