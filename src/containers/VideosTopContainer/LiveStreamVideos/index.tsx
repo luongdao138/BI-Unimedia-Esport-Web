@@ -136,9 +136,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: 'column',
     marginTop: 45,
   },
-  content: {
-    width: '100%',
-  },
   titleContainer: {},
   contentContainer: {
     marginTop: theme.spacing(0),

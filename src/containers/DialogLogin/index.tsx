@@ -32,7 +32,6 @@ interface DialogLoginProps {
 const DialogLoginContainer: React.FC<DialogLoginProps> = ({ showDialogLogin, onCloseDialogLogin }) => {
   const social = useSocialLogin('login')
   const { t } = useTranslation(['common'])
-
   const classes = useStyles()
 
   const { handleLink } = useReturnHref()

@@ -9,11 +9,13 @@ import i18n from '@locales/i18n'
 import useLiveStreamDetail from '../useLiveStreamDetail'
 import { LIMIT_ITEM, TypeVideoArchived } from '@services/liveStreamDetail.service'
 import ESLoader from '@components/Loader'
+import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
 
 type RelatedVideosProps = {
   video_id?: string | string[]
+  videoItemStyle?: any
 }
-const RelatedVideos: React.FC<RelatedVideosProps> = ({ video_id }) => {
+const RelatedVideos: React.FC<RelatedVideosProps> = ({ video_id, videoItemStyle }) => {
   const classes = useStyles()
   const theme = useTheme()
   const downMd = useMediaQuery(theme.breakpoints.down(769), { noSsr: true })
@@ -22,6 +24,7 @@ const RelatedVideos: React.FC<RelatedVideosProps> = ({ video_id }) => {
   const limit = LIMIT_ITEM
   const { meta_related_video_stream, relatedVideoStreamData, getRelatedVideoStream, resetRelatedVideoStream } = useLiveStreamDetail()
   const isLoading = meta_related_video_stream?.pending
+  const { width: itemWidthDownMdScreen } = useWindowDimensions(48)
 
   useEffect(() => {
     if (video_id) {
@@ -51,11 +54,11 @@ const RelatedVideos: React.FC<RelatedVideosProps> = ({ video_id }) => {
     return (
       <React.Fragment key={item?.id || index}>
         {downMd ? (
-          <Box className={classes.xsItemContainer} key={item?.id || index}>
-            <VideoPreviewItem data={item} />
+          <Box className={classes.xsItemContainer}>
+            <VideoPreviewItem data={item} containerStyle={{ width: itemWidthDownMdScreen }} />
           </Box>
         ) : (
-          <Grid item xs={6} lg={6} xl={4} className={classes.itemContainer} key={item?.id || index}>
+          <Grid item xs={6} lg={6} xl={4} className={classes.itemContainer} style={videoItemStyle}>
             <VideoPreviewItem data={item} />
           </Grid>
         )}
@@ -70,12 +73,12 @@ const RelatedVideos: React.FC<RelatedVideosProps> = ({ video_id }) => {
     return arrayPreLoad.map((_item: any, index: number) =>
       downMd ? (
         <Box className={classes.xsItemContainer} key={index}>
-          <Box className={classes.wrapPreLoadContainer}>
+          <Box className={classes.wrapPreLoadContainer} style={{ width: itemWidthDownMdScreen }}>
             <PreloadPreviewItem />
           </Box>
         </Box>
       ) : (
-        <Grid item xs={6} className={classes.itemContainer} key={index}>
+        <Grid item xs={6} className={classes.itemContainer} style={videoItemStyle} key={index}>
           <PreloadPreviewItem />
         </Grid>
       )
@@ -131,15 +134,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   container: {
     display: 'flex',
     justifyContent: 'center',
-    marginTop: theme.spacing(2),
+    marginTop: theme.spacing(3),
+    flexDirection: 'column',
     width: '100%',
   },
   wrapContentContainer: {
-    justifyContent: 'center',
     overflow: 'hidden',
-    width: '100%',
-    paddingBottom: 24,
-    paddingLeft: 10,
+    padding: '0 24px 8px 24px',
   },
   scrollContainer: {
     display: 'flex',
@@ -150,22 +151,19 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(0),
     paddingBottom: theme.spacing(2),
     display: 'flex',
+    height: '100%',
   },
   itemContainer: {
-    width: '100%',
+    borderRadius: 4,
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
   },
-  [theme.breakpoints.up(1167)]: {
+  [theme.breakpoints.up(1920)]: {
     itemContainer: {
       flexGrow: '0',
-      maxWidth: '50%',
-      flexBasis: '50%',
-    },
-  },
-  [theme.breakpoints.up(1401)]: {
-    itemContainer: {
-      flexGrow: '0',
-      maxWidth: '33.333333%',
-      flexBasis: '33.333333%',
+      maxWidth: '465px',
+      flexBasis: '25%',
     },
   },
   [theme.breakpoints.up(1680)]: {
@@ -175,19 +173,24 @@ const useStyles = makeStyles((theme: Theme) => ({
       flexBasis: '25%',
     },
   },
-  [theme.breakpoints.up(1920)]: {
+  [theme.breakpoints.up(1401)]: {
     itemContainer: {
       flexGrow: '0',
-      maxWidth: '25%',
-      flexBasis: '25%',
+      maxWidth: '33.333333%',
+      flexBasis: '33.333333%',
+    },
+  },
+  [theme.breakpoints.up(1167)]: {
+    itemContainer: {
+      flexGrow: '0',
+      maxWidth: '50%',
+      flexBasis: '50%',
     },
   },
   [theme.breakpoints.down(769)]: {
     wrapContentContainer: {
-      paddingLeft: 10,
       width: 'calc(100vw)',
       overflow: 'auto',
-      justifyContent: 'center',
     },
     wrapPreLoadContainer: {
       width: 290,
@@ -196,13 +199,16 @@ const useStyles = makeStyles((theme: Theme) => ({
       flexWrap: 'nowrap',
       margin: '0px',
       paddingBottom: '0px',
-      overflow: 'auto',
+      flexDirection: 'column',
     },
     xsItemContainer: {
+      display: 'flex',
+      justifyContent: 'center',
       paddingRight: '24px',
-      '&:last-child': {
-        paddingRight: 0,
-      },
+      marginBottom: '24px',
+      // '&:last-child': {
+      //   paddingRight: 0,
+      // },
     },
   },
 }))

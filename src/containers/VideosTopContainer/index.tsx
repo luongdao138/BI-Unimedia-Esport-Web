@@ -125,37 +125,52 @@ const VideosTop: React.FC = () => {
       </Box>
     )
   }
-  //   const dt = [{ "id": 1, "title": "banner 1", "image": "https://3.bp.blogspot.com/-VbzRbUQEvLw/VsaD4AS4O9I/AAAAAAAAACA/mGU1pPx3BAI/s1600/giai-ma-cac-con-so-trong-chiem-tinh-phuong-tay%2B%25281%2529.jpg", "url": "https://exelab.jp/", "target": "_blank" },
-  //   { "id": 4, "title": "banner 4", "image": "https://png.pngtree.com/png-clipart/20200309/ourlarge/pngtree-gold-number-2-png-image_2158838.jpg", "url": "https://exelab.jp/", "target": "_blank" },
-  //   { "id": 5, "title": "banner 5", "image": "https://tarotvnnews.com/wp-content/uploads/2019/03/than-so-hoc-so-3-va-y-nghia.jpg", "url": "https://exelab.jp/", "target": "_blank" },
-  //   { "id": 6, "title": "banner 6", "image": "https://tarotvnnews.com/wp-content/uploads/2019/03/than-so-hoc-so-4-va-y-nghia.jpg", "url": "https://exelab.jp/", "target": "_blank" },
-  //   { "id": 17, "title": "banner 7", "image": "https://gombattrangdoanquang.com/wp-content/uploads/2021/01/so-5-la-bieu-tuong-cho-quyen-luc.jpg", "url": "https://exelab.jp/", "target": "_blank" },
-  //   { "id": 3, "title": "banner 3", "image": "https://alokiddy.com.vn/Uploads/images/BAI%20TEST%20DINH%20KY/FLYERS/tranh-06.jpg", "url": "https://exelab.jp/", "target": "_blank" },
-  // ]
 
   return (
     <Box className={classes.root}>
       <Box className={classes.container}>
-        {/* //listBanner */}
         <Box className={classes.bannerContainer}>{listBanner.length > 0 && <BannerCarousel data={listBanner} />}</Box>
       </Box>
-      <Grid container direction="column" className={classes.contentContainer}>
-        {getTabs()}
-        <Box className={classes.tabContent}>{getContent()}</Box>
-      </Grid>
+      <Box className={classes.contents}>
+        <Grid container direction="column" className={classes.contentContainer}>
+          {getTabs()}
+          <Box className={classes.tabContent}>{getContent()}</Box>
+        </Grid>
+      </Box>
     </Box>
   )
 }
 export default VideosTop
 
 const useStyles = makeStyles((theme) => ({
+  root: {
+    display: 'flex',
+    flexDirection: 'column',
+    position: 'relative',
+    backgroundColor: '#212121',
+  },
+  container: {
+    display: 'flex',
+    width: '100%',
+    padding: '0 74px 0 74px',
+    justifyContent: 'center',
+  },
+  contents: {
+    display: 'flex',
+    flexDirection: 'column',
+    width: '100%',
+  },
   tabsContainer: {
     display: 'flex',
     width: '100%',
-    // paddingRight: '24px',
     borderBottomColor: Colors.text[300],
     borderBottomWidth: 1,
     borderBottomStyle: 'solid',
+  },
+  tabs: {
+    display: 'flex',
+    overflowY: 'hidden',
+    paddingLeft: 24,
   },
   contentContainer: {
     // flexWrap: 'unset',
@@ -164,27 +179,7 @@ const useStyles = makeStyles((theme) => ({
   tabContent: {
     padding: '0 24px 8px 24px',
   },
-  container: {
-    width: '100%',
-    // padding: '0 122px 0 24px',
-    padding: '0 74px 0 74px',
-    display: 'flex',
-    justifyContent: 'center',
-  },
-  root: {
-    display: 'flex',
-    flexDirection: 'column',
-    position: 'relative',
-    backgroundColor: '#212121',
-  },
-  tabs: {
-    display: 'flex',
-    overflowY: 'hidden',
-    // borderBottomColor: Colors.text[300],
-    // borderBottomWidth: 1,
-    // borderBottomStyle: 'solid',
-    paddingLeft: 24,
-  },
+
   forbiddenMessageContainer: {
     width: '100%',
     display: 'flex',
@@ -249,10 +244,7 @@ const useStyles = makeStyles((theme) => ({
     },
     tabMin: {
       display: 'flex',
-      // paddingLeft: 4,
-      // paddingRight: 4,
       minWidth: 56,
-      // marginRight: '12px',
     },
     bannerContainer: {
       marginTop: 0,
@@ -271,9 +263,6 @@ const useStyles = makeStyles((theme) => ({
       paddingLeft: 0,
     },
     tabMin: {
-      display: 'flex',
-      paddingLeft: 0,
-      paddingRight: 0,
       '& .MuiTab-wrapper': {
         fontSize: 12,
       },

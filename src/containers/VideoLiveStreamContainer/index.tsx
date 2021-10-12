@@ -2,7 +2,7 @@
 import ESTab from '@components/Tab'
 import ESTabs from '@components/Tabs'
 import i18n from '@locales/i18n'
-import { Box, Grid, makeStyles, Typography } from '@material-ui/core'
+import { Box, Grid, makeStyles, Typography, useMediaQuery, useTheme } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import React, { useEffect, useState, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -91,6 +91,11 @@ const VideoDetail: React.FC = () => {
   const [errorPurchase, setErrorPurchase] = useState(false)
   const [videoInfo, setVideoInfo] = useState<VIDEO_INFO>({ video_status: STATUS_VIDEO.SCHEDULE, process_status: '' })
   const [videoStatus, setVideoStatus] = useState(null)
+  const theme = useTheme()
+  const isWideScreen = useMediaQuery(theme.breakpoints.up(1920))
+  // const { width: listDisplayWidth } = useWindowDimensions(146)
+  const { width: listDisplayWidth } = useWindowDimensions(98)
+
   console.log('🚀 ~ videoStatus', videoStatus)
 
   const { getVideoDetail, detailVideoResult, userResult, videoDetailError, resetVideoDetailError, resetVideoDetailData } = useDetailVideo()
@@ -366,6 +371,18 @@ const VideoDetail: React.FC = () => {
     })
   }
 
+  const calculateVideoItemStyle = (): any => {
+    if (!isWideScreen) {
+      return {}
+    }
+    const numOfDisplayItem = Math.floor(listDisplayWidth / 433.5)
+    const calcWidth = listDisplayWidth / numOfDisplayItem
+
+    return {
+      maxWidth: calcWidth,
+    }
+  }
+
   const getTabs = () => {
     return (
       <Grid item xs={12} className={classes.tabsContainer}>
@@ -382,14 +399,14 @@ const VideoDetail: React.FC = () => {
     switch (tab) {
       case TABS.PROGRAM_INFO:
         return !isScheduleAndNotHaveTicket() ? (
-          <ProgramInfo video_id={getVideoId()} />
+          <ProgramInfo video_id={getVideoId()} videoItemStyle={calculateVideoItemStyle()} />
         ) : (
-          <ProgramInfoNoViewingTicket videoInfo={detailVideoResult} />
+          <ProgramInfoNoViewingTicket videoInfo={detailVideoResult} videoItemStyle={calculateVideoItemStyle()} />
         )
       case TABS.DISTRIBUTOR_INFO:
-        return <DistributorInfo video_id={getVideoId()} />
+        return <DistributorInfo video_id={getVideoId()} videoItemStyle={calculateVideoItemStyle()} />
       case TABS.RELATED_VIDEOS:
-        return <RelatedVideos video_id={getVideoId()} />
+        return <RelatedVideos video_id={getVideoId()} videoItemStyle={calculateVideoItemStyle()} />
       case TABS.COMMENT:
         return sideChatContainer()
       default:
@@ -525,7 +542,7 @@ const VideoDetail: React.FC = () => {
               clickButtonPurchaseTicket={handlePurchaseTicket}
               onVideoEnd={onVideoEnd}
             />
-            <Grid container direction="row" className={classes.tabContent}>
+            <Grid container direction="row" className={classes.contentContainer}>
               {getTabs()}
               {getContent()}
             </Grid>
@@ -589,10 +606,14 @@ const useStyles = makeStyles((theme) => ({
     position: 'relative',
     width: '100%',
   },
+  container: {
+    display: 'flex',
+    flexDirection: 'column',
+    width: '100%',
+  },
   tabsContainer: {
     display: 'flex',
     width: '100%',
-    // paddingRight: 122,
     borderBottomColor: Colors.text[300],
     borderBottomWidth: 1,
     borderBottomStyle: 'solid',
@@ -600,9 +621,6 @@ const useStyles = makeStyles((theme) => ({
   tabs: {
     display: 'flex',
     overflow: 'hidden',
-    // borderBottomColor: Colors.text[300],
-    // borderBottomWidth: 1,
-    // borderBottomStyle: 'solid',
     paddingLeft: 24,
   },
   forbiddenMessageContainer: {
@@ -613,10 +631,9 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: 50,
     backgroundColor: '#212121',
   },
-  container: {
-    display: 'flex',
-    flexDirection: 'column',
-    width: '100%',
+
+  contentContainer: {
+    flexWrap: 'wrap',
   },
   headerIcon: {
     width: 16,
@@ -652,7 +669,6 @@ const useStyles = makeStyles((theme) => ({
     },
     singleTab: {
       minWidth: 56,
-      // marginRight: '12px',
     },
   },
   [theme.breakpoints.down(375)]: {
