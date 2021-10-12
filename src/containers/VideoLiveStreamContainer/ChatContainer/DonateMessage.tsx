@@ -11,7 +11,6 @@ import _ from 'lodash'
 import { STATUS_SEND_MESS } from '@constants/common.constants'
 import { STATUS_VIDEO } from '@services/videoTop.services'
 import ESAvatar from '@components/Avatar'
-import moment from 'moment'
 
 type DonateMessageProps = {
   message?: any
@@ -46,14 +45,7 @@ const DonateMessage: React.FC<DonateMessageProps> = ({
   return (
     <Box className={classes.accountInfo}>
       <Box className={classes.accountInfoHeader} style={{ backgroundColor: hexToRgba(bgColor, 0.8) }}>
-        <ESAvatar
-          src={
-            message?.parent?.avatar ? message?.parent?.avatar + `?${moment().format('YYYYMMDDHHmmss').toString()}` : message?.parent?.avatar
-          }
-          size={32}
-          alt={message.parent.user_name}
-          className={classes.userAvatar}
-        />
+        <ESAvatar src={message?.parent?.avatar} size={32} alt={message.parent.user_name} className={classes.userAvatar} />
         <Typography className={classes.accountName}>
           <span className={getClassDeletedMess()}>{message.owner}</span>
         </Typography>

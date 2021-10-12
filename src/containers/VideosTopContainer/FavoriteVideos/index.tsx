@@ -241,7 +241,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   [theme.breakpoints.down(769)]: {
     wrapContentContainer: {
-      width: 'calc(100vw - 24px)',
+      marginLeft: '-24px',
+      width: 'calc(100vw)',
       overflow: 'auto',
     },
     noDataWrapContentContainer: {
@@ -257,8 +258,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     xsItemContainer: {
       paddingRight: '24px',
-      '&:last-child': {
-        paddingRight: 0,
+      '&:first-child': {
+        paddingLeft: '24px',
       },
     },
     titleContainer: {
