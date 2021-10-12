@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import { memo, useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { Box, Typography } from '@material-ui/core'
@@ -68,7 +69,7 @@ const CoverUploader: React.FC<ProfileAvatarProps> = ({
           if (!isUploading && !disabled) setOpen(true)
         }}
       >
-        {localSrc.toString() !== '' && <img className={classes.image} src={localSrc.toString()} />}
+        {_.isEmpty(localSrc) ? null : <img className={classes.image} src={localSrc.toString()} />}
         {!isUploading ? (
           <Box display="flex" flexDirection="column" alignItems="center" position="absolute" zIndex="100" className={classes.logoWhite}>
             <Camera fontSize="large" className={classes.camera} />
