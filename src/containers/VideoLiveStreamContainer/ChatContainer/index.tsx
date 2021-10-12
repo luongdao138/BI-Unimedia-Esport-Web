@@ -698,7 +698,11 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         delete_flag: true,
       }
       console.log('start delete-111111')
-      refUpdateMessBeforeCallApi.current(message, { ...message, delete_flag: true, mess_status: STATUS_SEND_MESS.PENDING })
+      refUpdateMessBeforeCallApi.current(message, {
+        ...message,
+        delete_flag: true,
+        mess_status: STATUS_SEND_MESS.PENDING,
+      })
       try {
         const result = await API.graphql(graphqlOperation(updateMessage, { input }))
         refUpdateMessLocal.current(result, { ...message, delete_flag: true })
@@ -1235,15 +1239,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
                     }
                   }}
                 >
-                  <ESAvatar
-                    src={
-                      item?.parent?.avatar
-                        ? item?.parent?.avatar + `?${moment().format('YYYYMMDDHHmmss').toString()}`
-                        : item?.parent?.avatar
-                    }
-                    size={32}
-                    alt={item.parent.user_name}
-                  />
+                  <ESAvatar src={item?.parent?.avatar} size={32} alt={item.parent.user_name} />
                 </Box>
               ) : (
                 ''
