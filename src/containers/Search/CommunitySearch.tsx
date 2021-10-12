@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next'
 import useSearch from '@containers/Search/useSearch'
 import { WindowScroller, List, CellMeasurer, AutoSizer, CellMeasurerCache } from 'react-virtualized'
 import { useLayoutEffect } from 'react'
+import useLogout from '@containers/Logout/useLogout'
 
 const cache = new CellMeasurerCache({
   fixedWidth: true,
@@ -18,6 +19,7 @@ const CommunitySearchContainer: React.FC = () => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const { searchKeyword } = useSearch()
+  const { meta: logoutMeta } = useLogout()
   const { communityResult, searchCommunity, resetMeta, resetSearchCommunity, meta, page } = useCommunitySearch()
   const [keyword, setKeyword] = useState<string>('')
 
@@ -40,14 +42,22 @@ const CommunitySearchContainer: React.FC = () => {
   }, [matchesXL, matchesLG, matchesSM])
 
   useEffect(() => {
-    setKeyword(searchKeyword)
-    searchCommunity({ page: 1, keyword: searchKeyword })
-
+    if (!logoutMeta.pending) {
+      setKeyword(searchKeyword)
+      searchCommunity({ page: 1, keyword: searchKeyword })
+    }
     return () => {
       resetSearchCommunity()
       resetMeta()
     }
   }, [searchKeyword])
+
+  useEffect(() => {
+    return () => {
+      resetSearchCommunity()
+      resetMeta()
+    }
+  }, [])
 
   useLayoutEffect(() => {
     const updateSize = () => {

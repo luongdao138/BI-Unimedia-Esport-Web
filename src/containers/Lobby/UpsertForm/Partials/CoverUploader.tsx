@@ -6,16 +6,25 @@ import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
 import CoverSelector from '@components/ImagePicker/CoverSelector'
 import ESLoader from '@components/Loader'
+import _ from 'lodash'
 
 type ProfileAvatarProps = {
   src: string
   isUploading: boolean
   ratio?: number
-  onChange?: (file: File, blob: any) => void
   disabled?: boolean
+  onChange?: (file: File, blob: any) => void
+  onRemove?: () => void
 }
 
-const CoverUploader: React.FC<ProfileAvatarProps> = ({ src, ratio = 3.303 / 1, isUploading = false, onChange, disabled = false }) => {
+const CoverUploader: React.FC<ProfileAvatarProps> = ({
+  src,
+  ratio = 3.303 / 1,
+  isUploading = false,
+  disabled = false,
+  onChange,
+  onRemove,
+}) => {
   const classes = useStyles()
   const [drag, setDrag] = useState<boolean>(false)
   const [open, setOpen] = useState<boolean>(false)
@@ -23,9 +32,7 @@ const CoverUploader: React.FC<ProfileAvatarProps> = ({ src, ratio = 3.303 / 1, i
   const { t } = useTranslation(['common'])
 
   useEffect(() => {
-    if (src) {
-      setLocalSrc(src)
-    }
+    setLocalSrc(src)
   }, [src])
 
   const handleChange = (file: File, blob: any) => {
@@ -36,6 +43,11 @@ const CoverUploader: React.FC<ProfileAvatarProps> = ({ src, ratio = 3.303 / 1, i
         onChange(file, blob)
       }
     }
+  }
+
+  const handleRemove = () => {
+    setOpen(false)
+    onRemove()
   }
 
   return (
@@ -51,7 +63,7 @@ const CoverUploader: React.FC<ProfileAvatarProps> = ({ src, ratio = 3.303 / 1, i
           if (!isUploading && !disabled) setOpen(true)
         }}
       >
-        {localSrc.toString() !== '' && <img className={classes.image} src={localSrc.toString()} />}
+        {!_.isEmpty(localSrc) && <img className={classes.image} src={localSrc.toString()} />}
         {!isUploading ? (
           <Box display="flex" flexDirection="column" alignItems="center" position="absolute" zIndex="100" className={classes.logoWhite}>
             <Camera fontSize="large" className={classes.camera} />
@@ -70,10 +82,12 @@ const CoverUploader: React.FC<ProfileAvatarProps> = ({ src, ratio = 3.303 / 1, i
       </label>
       {open && (
         <CoverSelector
-          src={localSrc.toString()}
+          src={_.isEmpty(localSrc) ? '' : localSrc.toString()}
+          is_required={false}
           ratio={ratio}
           cancel={() => setOpen(false)}
           onUpdate={(file: File, blob: any) => handleChange(file, blob)}
+          onRemove={() => handleRemove()}
         />
       )}
     </div>
