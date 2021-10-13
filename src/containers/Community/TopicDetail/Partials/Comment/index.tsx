@@ -31,9 +31,6 @@ type StyleProps = {
   currentReplyNumberRectX: number
   currentReplyNumberRectY: number
   isBottom: boolean
-  windowDimensions: {
-    height: number
-  }
   maxHeight: number
 }
 
@@ -60,8 +57,8 @@ export type ReportData = {
 type CommunityHeaderProps = {
   comment: CommentsResponse
   menuParams?: MenuParams
-  showComment: any
-  setShowComment: (params: any) => void
+  showComment: boolean
+  setShowComment: Dispatch<SetStateAction<boolean[]>>
   handleReply?: (params: { hash_key: string; comment_no: number }) => void
   setOpenDelete?: Dispatch<SetStateAction<boolean>>
   setSelectedCommentNo?: Dispatch<SetStateAction<number>>
@@ -81,7 +78,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({
 }) => {
   const [isBottom, setIsBottom] = useState<boolean>(false)
   const windowDimensions = useWindowDimensions()
-  const classes = useStyles({ currentReplyNumberRectX, currentReplyNumberRectY, isBottom, windowDimensions, maxHeight })
+  const classes = useStyles({ currentReplyNumberRectX, currentReplyNumberRectY, isBottom, maxHeight })
   const { query } = useRouter()
   const { topic_hash_key } = query
   const { t } = useTranslation(['common'])
@@ -190,11 +187,16 @@ const Comment: React.FC<CommunityHeaderProps> = ({
           commentDetailMeta.loaded &&
           (replyData.deleted_at ? deletedComment(replyData.comment_no, true) : popoverContent())}
         {commentDetailMeta.error && (
-          <Box my={1} display="flex" justifyContent="space-between">
-            Not found
-            <IconButton className={classes.closeMainComment} onClick={handleCloseReply}>
-              <IconClose fontSize="small" className={classes.closeMainCommentIcon} />
-            </IconButton>
+          <Box className={classes.emptyPopoverContent}>
+            <Box flex={1} />
+            <Typography className={`${classes.content} ${classes.center}`}>{t('common:topic_comment.comment_not_exist')}</Typography>
+            <Box>
+              <Box flex={1} textAlign="end">
+                <IconButton className={classes.closeMainComment} onClick={handleCloseReply}>
+                  <IconClose fontSize="small" className={classes.closeMainCommentIcon} />
+                </IconButton>
+              </Box>
+            </Box>
           </Box>
         )}
         {commentDetailMeta.pending && (
@@ -405,12 +407,6 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     width: 'calc(100% - 150px)',
   },
-  userAvatarBox: {
-    display: 'flex',
-    borderRadius: 30,
-    width: 50,
-    height: 50,
-  },
   userInfoBox: {
     display: 'flex',
     flexDirection: 'column',
@@ -454,13 +450,6 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     position: 'relative',
     marginBottom: theme.spacing(1),
-    marginTop: 9,
-  },
-  contentContainerWithImage: {
-    display: 'flex',
-    flexDirection: 'column',
-    position: 'relative',
-    marginBottom: 7,
     marginTop: 9,
   },
   imageContainer: {
@@ -543,7 +532,6 @@ const useStyles = makeStyles((theme) => ({
       whiteSpace: 'pre',
     },
   },
-
   number: {
     fontSize: 10,
   },
