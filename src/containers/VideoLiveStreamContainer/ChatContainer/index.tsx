@@ -248,11 +248,11 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         return false
       }
       console.log('33-played->streaming->range', playedSecond, streamingSecond, streamingSecond - playedSecond)
-      console.log("🚀 ~ isStreaming ~ ---0000", playedSecond + 10 >= streamingSecond)
+      console.log('🚀 ~ isStreaming ~ ---0000', playedSecond + 10 >= streamingSecond)
       if (playedSecond >= streamingSecond || playedSecond + 10 >= streamingSecond) {
         return true
       } else {
-        console.log("🚀 ~ isStreaming ~ false")
+        console.log('🚀 ~ isStreaming ~ false')
       }
       return false
     })()
