@@ -284,8 +284,8 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   //archived
   useEffect(() => {
     videoEl.current.addEventListener('timeupdate', (event) => {
-      const delaySeconds = 40
-      console.log('----->>timeupdate<<------', event.target.currentTime, event.target.duration, event.target.duration - delaySeconds)
+      // const delaySeconds = 40
+      console.log('->current->duration-> range', event.target.currentTime, event.target.duration, event.target.duration - event.target.currentTime)
       if (event.target) {
         const newPlayedSecondTime = event.target.currentTime
         setPlayedSeconds(newPlayedSecondTime)
@@ -294,8 +294,9 @@ const VideoPlayer: React.FC<PlayerProps> = ({
         //   changePlayedSecond(Math.floor(newPlayedSecondTime))
         // }
         if (isLive) {
-          const durationTime = event.target.duration - delaySeconds
-          const newDurationTime = durationTime <= newPlayedSecondTime ? newPlayedSecondTime : durationTime
+          // const durationTime = event.target.duration - delaySeconds
+          // const newDurationTime = durationTime <= newPlayedSecondTime ? newPlayedSecondTime : durationTime
+          const newDurationTime = event.target.duration
           setDurationPlayer(newDurationTime)
           // if (Math.floor(newDurationTime) !== liveStreamInfo.streaming_second) {
           //   changeStreamingSecond(Math.floor(newDurationTime))

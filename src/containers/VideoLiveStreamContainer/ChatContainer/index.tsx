@@ -247,8 +247,12 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       if (videoType === STATUS_VIDEO.ARCHIVE) {
         return false
       }
-      if (playedSecond >= streamingSecond) {
+      console.log('33-played->streaming->range', playedSecond, streamingSecond, streamingSecond - playedSecond)
+      console.log("🚀 ~ isStreaming ~ ---0000", playedSecond + 10 >= streamingSecond)
+      if (playedSecond >= streamingSecond || playedSecond + 10 >= streamingSecond) {
         return true
+      } else {
+        console.log("🚀 ~ isStreaming ~ false")
       }
       return false
     })()
@@ -511,7 +515,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     }
 
     useEffect(() => {
-      console.log('🚀 ~ 2222 --- playedSecond ---> streamingSecond', playedSecond, streamingSecond)
+      console.log('2-played->streaming->range', playedSecond, streamingSecond, streamingSecond - playedSecond)
       if (isStreaming) {
         filterByStreaming()
       }
