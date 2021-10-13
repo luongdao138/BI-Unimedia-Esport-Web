@@ -154,7 +154,11 @@ export default createReducer(initialState, (builder) => {
     state.interestedsMeta = action.payload.meta
   })
   builder.addCase(actions.getTournamentMatches.fulfilled, (state, action) => {
-    state.tournamentMatches = action.payload
+    state.tournamentMatches.matches = action.payload.matches
+    state.tournamentMatches.third_place_match = action.payload.third_place_match.map((match) => ({
+      ...match,
+      match_no: match.match_no + 1,
+    }))
   })
   builder.addCase(actions.getTournamentMatchesInterval.fulfilled, (state, action) => {
     state.tournamentMatches = action.payload

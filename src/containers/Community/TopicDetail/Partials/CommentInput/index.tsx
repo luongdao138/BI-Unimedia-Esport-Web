@@ -23,9 +23,10 @@ type CommunityHeaderProps = {
   setPage: Dispatch<SetStateAction<number>>
   setCommentCount?: Dispatch<SetStateAction<number>>
   commentCount?: number
+  setShowReply: Dispatch<SetStateAction<boolean[]>>
 }
 
-const Comment: React.FC<CommunityHeaderProps> = ({ reply_param, setPage, setCommentCount, commentCount }) => {
+const Comment: React.FC<CommunityHeaderProps> = ({ reply_param, setPage, setCommentCount, commentCount, setShowReply }) => {
   const classes = useStyles()
   const { query } = useRouter()
   const { topic_hash_key } = query
@@ -80,6 +81,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ reply_param, setPage, setComm
   }
 
   const send = () => {
+    setShowReply((comments) => _.map(comments, () => false))
     if (_.isEmpty(checkNgWord(inputText.trim()))) {
       const reply_comment_nos = _.map(_.filter(_.split(inputText, REPLY_REGEX)), (c) => Number(c.slice(2)))
       const data = {

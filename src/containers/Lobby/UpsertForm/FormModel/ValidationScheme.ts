@@ -4,14 +4,19 @@ import { LobbyHelper } from '@utils/helpers/LobbyHelper'
 import moment from 'moment'
 import { LobbyDetail } from '@services/lobby.service'
 import { EditableTypes } from '../useLobbyCreate'
+import { LOBBY_STATUS } from '@constants/lobby.constants'
 
 export const getValidationScheme = (data: LobbyDetail, editables: EditableTypes): any => {
   let recruitMinDate = new Date()
+  let recruitEndMinDate = new Date()
   let minStartDate = new Date()
 
   if (!!data && !!data.attributes.status) {
-    const beforeRecruit = LobbyHelper.checkStatus(data.attributes.status, 'recruiting')
+    const beforeRecruit = LobbyHelper.checkStatus(data.attributes.status, LOBBY_STATUS.RECRUITING)
+    const beforeRecruitEnd = LobbyHelper.checkStatus(data.attributes.status, LOBBY_STATUS.ENTRY_CLOSED)
+
     if (!beforeRecruit && data.attributes.entry_start_datetime) recruitMinDate = new Date(data.attributes.entry_start_datetime)
+    if (!beforeRecruitEnd && data.attributes.entry_end_datetime) recruitEndMinDate = new Date(data.attributes.entry_end_datetime)
     if (!editables.start_datetime && data.attributes.start_datetime) minStartDate = new Date(data.attributes.start_datetime)
   }
 
@@ -45,7 +50,10 @@ export const getValidationScheme = (data: LobbyDetail, editables: EditableTypes)
         .nullable()
         .required(i18n.t('common:common.input_required'))
         .min(recruitMinDate, i18n.t('common:common.validation.min_date')),
-      entry_end_datetime: Yup.date().nullable().required(i18n.t('common:common.input_required')),
+      entry_end_datetime: Yup.date()
+        .nullable()
+        .required(i18n.t('common:common.input_required'))
+        .min(recruitEndMinDate, i18n.t('common:common.validation.min_date')),
       start_datetime: Yup.date()
         .nullable()
         .required(i18n.t('common:common.input_required'))

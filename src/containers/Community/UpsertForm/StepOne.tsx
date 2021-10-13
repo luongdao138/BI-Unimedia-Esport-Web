@@ -5,7 +5,7 @@ import { EditableTypes } from './useCommunityCreate'
 import { useCallback } from 'react'
 import useUploadImage from '@utils/hooks/useUploadImage'
 import GameSelectorDialog from './Partials/GameSelectorDialog'
-import CoverUploader from '@components/CoverUploader'
+import CoverUploader from './Partials/CoverUploader'
 import ESSelect from '@components/Select'
 import ESFastInput from '@components/FastInput'
 import ESCheckbox from '@components/Checkbox'
@@ -47,6 +47,7 @@ const StepOne: React.FC<Props> = ({ formik, prefectures, editables }) => {
           onChange={handleUpload}
           isUploading={isUploading}
           disabled={!editables.cover_image_url}
+          onRemove={() => formik.setFieldValue('stepOne.cover_image_url', '')}
         />
       </Box>
       <Box pb={4}>

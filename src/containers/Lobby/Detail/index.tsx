@@ -34,7 +34,10 @@ const LobbyDetailBody: React.FC = () => {
   const isFreezed = _.get(lobby, 'attributes.is_freezed', false)
   const isOwner = _.get(lobby, 'attributes.is_owner', false)
   const isEditable = status !== LOBBY_STATUS.CANCELLED
-  const isConfirmable = (status === LOBBY_STATUS.RECRUITING || status === LOBBY_STATUS.ENTRY_CLOSED) && isOwner && !isFreezed
+  const isConfirmable =
+    (status === LOBBY_STATUS.RECRUITING || status === LOBBY_STATUS.ENTRY_CLOSED || status === LOBBY_STATUS.IN_PROGRESS) &&
+    isOwner &&
+    !isFreezed
 
   const hashKey = _.get(lobby, 'attributes.hash_key', null)
 
