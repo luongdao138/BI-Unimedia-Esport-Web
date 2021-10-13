@@ -40,7 +40,7 @@ const PurchaseHistory: FC = () => {
     if (listFilterData) {
       setFilterOptions(filterOptionsData)
       const newObjects = listFilterData.map((item) => {
-        return { label: moment(item).format(FORMAT_YEAR_MONTH), value: item }
+        return { label: moment(new Date(item)).format(FORMAT_YEAR_MONTH), value: item }
       })
       const newFilterData = filterOptionsData.concat(newObjects)
       setFilterOptions(newFilterData)
@@ -167,6 +167,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   [theme.breakpoints.down(375)]: {
     wrapContent: {
       paddingBottom: 0,
+    },
+    paginationStyle: {
+      '& .MuiPaginationItem-root': {
+        minWidth: '22px',
+        minHeight: '22px',
+      },
     },
   },
 }))

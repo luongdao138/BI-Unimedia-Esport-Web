@@ -7,15 +7,15 @@ import { PreloadPreviewItem } from '../PreloadContainer'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import i18n from '@locales/i18n'
 import useLiveStreamDetail from '../useLiveStreamDetail'
-import { LIMIT_ITEM, TypeVideoArchived } from '@services/liveStreamDetail.service'
+import { TypeVideoArchived } from '@services/liveStreamDetail.service'
 import ESLoader from '@components/Loader'
 import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
 
 type RelatedVideosProps = {
   video_id?: string | string[]
-  videoItemStyle?: any
 }
-const RelatedVideos: React.FC<RelatedVideosProps> = ({ video_id, videoItemStyle }) => {
+const LIMIT_ITEM = 12
+const RelatedVideos: React.FC<RelatedVideosProps> = ({ video_id }) => {
   const classes = useStyles()
   const theme = useTheme()
   const downMd = useMediaQuery(theme.breakpoints.down(769), { noSsr: true })
@@ -58,7 +58,7 @@ const RelatedVideos: React.FC<RelatedVideosProps> = ({ video_id, videoItemStyle 
             <VideoPreviewItem data={item} containerStyle={{ width: itemWidthDownMdScreen }} />
           </Box>
         ) : (
-          <Grid item xs={6} lg={6} xl={4} className={classes.itemContainer} style={videoItemStyle}>
+          <Grid item xs={6} lg={6} xl={4} className={classes.itemContainer}>
             <VideoPreviewItem data={item} />
           </Grid>
         )}
@@ -67,7 +67,7 @@ const RelatedVideos: React.FC<RelatedVideosProps> = ({ video_id, videoItemStyle 
   }
 
   const renderPreLoadRelatedVideoItem = () => {
-    const arrayPreLoad = Array(6)
+    const arrayPreLoad = Array(12)
       .fill('')
       .map((_, i) => ({ i }))
     return arrayPreLoad.map((_item: any, index: number) =>
@@ -78,7 +78,7 @@ const RelatedVideos: React.FC<RelatedVideosProps> = ({ video_id, videoItemStyle 
           </Box>
         </Box>
       ) : (
-        <Grid item xs={6} className={classes.itemContainer} style={videoItemStyle} key={index}>
+        <Grid item xs={6} className={classes.itemContainer} key={index}>
           <PreloadPreviewItem />
         </Grid>
       )
@@ -91,11 +91,10 @@ const RelatedVideos: React.FC<RelatedVideosProps> = ({ video_id, videoItemStyle 
         <InfiniteScroll
           className={classes.scrollContainer}
           dataLength={relatedVideoStreamData.length}
-          next={downMd && handleLoadMore}
+          next={handleLoadMore}
           hasMore={hasMore}
           loader={
-            isLoading &&
-            !downMd && (
+            isLoading && (
               <div className={classes.loaderCenter}>
                 <ESLoader />
               </div>
@@ -122,6 +121,7 @@ const RelatedVideos: React.FC<RelatedVideosProps> = ({ video_id, videoItemStyle 
     </Box>
   )
 }
+
 const useStyles = makeStyles((theme: Theme) => ({
   loaderCenter: {
     width: '100%',
@@ -134,11 +134,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   container: {
     display: 'flex',
     justifyContent: 'center',
-    marginTop: theme.spacing(3),
     flexDirection: 'column',
+    marginTop: theme.spacing(3),
     width: '100%',
   },
   wrapContentContainer: {
+    width: '100%',
     overflow: 'hidden',
     padding: '0 24px 8px 24px',
   },
@@ -151,26 +152,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(0),
     paddingBottom: theme.spacing(2),
     display: 'flex',
-    height: '100%',
   },
   itemContainer: {
-    borderRadius: 4,
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-between',
+    width: '100%',
   },
-  [theme.breakpoints.up(1920)]: {
+  [theme.breakpoints.up(1167)]: {
     itemContainer: {
       flexGrow: '0',
-      maxWidth: '465px',
-      flexBasis: '25%',
-    },
-  },
-  [theme.breakpoints.up(1680)]: {
-    itemContainer: {
-      flexGrow: '0',
-      maxWidth: '25%',
-      flexBasis: '25%',
+      maxWidth: '50%',
+      flexBasis: '50%',
     },
   },
   [theme.breakpoints.up(1401)]: {
@@ -180,11 +170,18 @@ const useStyles = makeStyles((theme: Theme) => ({
       flexBasis: '33.333333%',
     },
   },
-  [theme.breakpoints.up(1167)]: {
+  [theme.breakpoints.up(1680)]: {
     itemContainer: {
       flexGrow: '0',
-      maxWidth: '50%',
-      flexBasis: '50%',
+      maxWidth: '25%',
+      flexBasis: '25%',
+    },
+  },
+  [theme.breakpoints.up(1920)]: {
+    itemContainer: {
+      flexGrow: '0',
+      maxWidth: '25%',
+      flexBasis: '25%',
     },
   },
   [theme.breakpoints.down(769)]: {
@@ -204,12 +201,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     xsItemContainer: {
       display: 'flex',
       justifyContent: 'center',
-      paddingRight: '24px',
       marginBottom: '24px',
-      // '&:last-child': {
-      //   paddingRight: 0,
-      // },
     },
   },
 }))
+
 export default RelatedVideos

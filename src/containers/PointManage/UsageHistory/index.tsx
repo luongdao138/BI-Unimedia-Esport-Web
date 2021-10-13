@@ -36,7 +36,6 @@ const UsageHistory: FC = () => {
     getUsagePointsHistoryData,
     meta_used_points_detail,
     usagePointsHistoryDetail,
-    resetDetailUsagePointsHistory,
   } = usePointsManage()
 
   const listFilterData = usedPointsData?.date_use_points
@@ -64,7 +63,7 @@ const UsageHistory: FC = () => {
     if (listFilterData) {
       setFilterOptions(filterOptionsData)
       const newObjects = listFilterData.map((item) => {
-        return { label: moment(item).format(FORMAT_YEAR_MONTH), value: item }
+        return { label: moment(new Date(item)).format(FORMAT_YEAR_MONTH), value: item }
       })
       const newFilterData = filterOptionsData.concat(newObjects)
       setFilterOptions(newFilterData)
@@ -74,9 +73,6 @@ const UsageHistory: FC = () => {
   useEffect(() => {
     if (usageHistoryDetail) {
       getUsagePointsHistoryData({ page: pageDetail, limit: limit, uuid: purchasePointId })
-    }
-    return () => {
-      resetDetailUsagePointsHistory()
     }
   }, [purchasePointId, usageHistoryDetail, pageDetail])
 
@@ -89,31 +85,31 @@ const UsageHistory: FC = () => {
   const handleSelectedQuery = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setQuerySelected(event.target.value)
     setPage(1)
+    setUsageHistoryDetail(false)
   }
 
   return (
     <Box className={classes.container}>
-      {!usageHistoryDetail && (
-        <Grid item xs={12} md={7}>
-          <ESSelect
-            fullWidth
-            placeholder={i18n.t('common:point_management_tab.choosing')}
-            displayEmpty
-            size="big"
-            disabled={false}
-            className={classes.comboBox}
-            value={querySelected}
-            onChange={handleSelectedQuery}
-          >
-            {filterOptions &&
-              filterOptions.map((rule, index) => (
-                <option key={index} value={rule.value}>
-                  {rule.label}
-                </option>
-              ))}
-          </ESSelect>
-        </Grid>
-      )}
+      <Grid item xs={12} md={7}>
+        <ESSelect
+          fullWidth
+          placeholder={i18n.t('common:point_management_tab.choosing')}
+          displayEmpty
+          size="big"
+          name={'query'}
+          disabled={false}
+          className={classes.comboBox}
+          value={querySelected}
+          onChange={handleSelectedQuery}
+        >
+          {filterOptions &&
+            filterOptions.map((rule, index) => (
+              <option key={index} value={rule.value}>
+                {rule.label}
+              </option>
+            ))}
+        </ESSelect>
+      </Grid>
       {/* Title Header */}
       {usageHistoryDetail && (
         <Box className={classes.headerContainer}>
@@ -288,6 +284,8 @@ const useStyles = makeStyles((theme: Theme) => ({
       color: Colors.white,
       borderColor: Colors.primary,
       borderWidth: 1,
+      minWidth: '22px',
+      minHeight: '22px',
     },
     '& .Mui-selected': {
       backgroundColor: Colors.primary,
@@ -322,6 +320,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     headerTitle: {
       fontSize: 13,
+    },
+    paginationStyle: {
+      '& .MuiPaginationItem-root': {
+        minWidth: '22px',
+        minHeight: '22px',
+      },
     },
   },
 }))
