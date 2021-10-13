@@ -66,10 +66,7 @@ const TournamentHomeCard: React.FC<Props> = ({ tournament }) => {
               size="small"
               label={
                 <Box color={Colors.white} justifyContent="flex-">
-                  <Typography variant="overline">
-                    {t('common:arena.rules.rule', { rule: attr.rule })}
-                    {/* {attr.rule === TR.BATTLE_ROYAL ? i18n.t('common:tournament:rule_battle') : i18n.t('common:tournament:rule_tournament')} */}
-                  </Typography>
+                  <Typography variant="overline">{t('common:arena.rules.rule', { rule: attr.rule })}</Typography>
                 </Box>
               }
             />

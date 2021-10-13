@@ -34,7 +34,8 @@ const useLobbyDetail = (): {
   }, [query.hash_key, isAuth])
 
   useEffect(() => {
-    return function () {
+    return () => {
+      dispatch(actions.clearLobbyDetail())
       dispatch(clearMetaData(actions.getLobbyDetail.typePrefix))
     }
   }, [])

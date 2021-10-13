@@ -182,7 +182,7 @@ const updateAvatar = (roomList: ChatDataType[], imgUrl: string, chatRoomId: stri
       return o.chatRoomId === chatRoomId ? { ...o, roomImg: imgUrl } : o
     })
   } else {
-    return []
+    return undefined
   }
 }
 

@@ -255,11 +255,15 @@ const formatArenaScore = (score: number, rule: TournamentRule): string => {
   return String(score)
 }
 
-function isBattleRoyale(arena: TournamentDetail) {
-  if (arena.attributes.rule === 'battle_royale') return true
-  if (arena.attributes.rule === 'score_attack') return true
-  if (arena.attributes.rule === 'time_attack') return true
+function isBattleRoyale(rule: TournamentRule) {
+  if (rule === 'battle_royale') return true
+  if (rule === 'score_attack') return true
+  if (rule === 'time_attack') return true
   return false
+}
+
+function isTournament(rule: TournamentRule) {
+  return rule === 'single'
 }
 
 function isBRResultComplete(participants: ParticipantsResponse[], rule: TournamentRule) {
@@ -312,5 +316,6 @@ export const TournamentHelper = {
   getLabelName,
   formatArenaScore,
   isBattleRoyale,
+  isTournament,
   isBRResultComplete,
 }
