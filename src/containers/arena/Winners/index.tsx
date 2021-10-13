@@ -108,7 +108,7 @@ const ArenaWinners: React.FC = () => {
         </ESButton>
       </Box>
       <div className={classes.listContainer}>
-        {hasWinnersData && !isBattleRoyale ? (
+        {hasWinnersData && !isBattleRoyale && winnersMeta.loaded ? (
           <ResultList rule={arena?.attributes.rule}>
             {Object.keys(arenaWinners).map((key) =>
               (arenaWinners[key] || []).map((p, idx) => (
