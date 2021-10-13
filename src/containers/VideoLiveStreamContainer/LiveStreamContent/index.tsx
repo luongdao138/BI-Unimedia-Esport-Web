@@ -677,6 +677,7 @@ const useStyles = makeStyles((theme) => ({
       paddingRight: 0,
       flex: 1,
       justifyContent: 'space-between',
+      marginRight: 0,
     },
     mobileRegisterChannelContainer: {
       backgroundColor: 'black',

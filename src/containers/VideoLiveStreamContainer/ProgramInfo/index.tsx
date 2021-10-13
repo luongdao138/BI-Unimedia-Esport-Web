@@ -28,6 +28,8 @@ const ProgramInfo: React.FC<ProgramInfoProps> = ({ video_id, videoItemStyle }) =
   const getDescription = CommonHelper.linkifyString(detailVideoResult?.description)
 
   const [descriptionCollapse, setDescriptionCollapse] = useState(true)
+  const [descriptionCanTruncated, setDescriptionCanTruncated] = useState(false)
+
   const [page, setPage] = useState<number>(1)
   const [hasMore, setHasMore] = useState(true)
   const { width: itemWidthDownMdScreen } = useWindowDimensions(48)
@@ -42,6 +44,11 @@ const ProgramInfo: React.FC<ProgramInfoProps> = ({ video_id, videoItemStyle }) =
     }
   }
 
+  useEffect(() => {
+    if (getDescription) {
+      setDescriptionCanTruncated(isTruncated())
+    }
+  }, [getDescription])
   useEffect(() => {
     if (video_id) {
       getArchivedVideoStream({ video_id: video_id, page: page, limit: LIMIT_ITEM })
@@ -91,20 +98,28 @@ const ProgramInfo: React.FC<ProgramInfoProps> = ({ video_id, videoItemStyle }) =
       )
     )
   }
-  const getDescriptionTruncated = () => {
-    return descriptionCollapse ? `${getDescription.substring(0, downMd ? 70 : 200)}...` : getDescription
-  }
+
   const toggleDescriptionCollapse = () => {
     setDescriptionCollapse(!descriptionCollapse)
   }
+
+  const isTruncated = () => {
+    const descriptionDiv = document.getElementById('program-info-description')
+    if (!descriptionDiv) {
+      return false
+    }
+    return descriptionDiv.offsetHeight < descriptionDiv.scrollHeight
+  }
+
   const renderDescription = () => {
     return (
       <>
         <div
-          className={classes.label}
-          dangerouslySetInnerHTML={{ __html: getDescription?.length < 200 ? getDescription : getDescriptionTruncated() }}
+          id="program-info-description"
+          className={classes.label + ' ' + (descriptionCollapse ? classes.labelCollapse : '')}
+          dangerouslySetInnerHTML={{ __html: getDescription }}
         />
-        {getDescription?.length > 200 && (
+        {descriptionCanTruncated && (
           <Box onClick={toggleDescriptionCollapse} className={classes.seeMoreContainer}>
             <Typography className={classes.seeMoreTitle}>
               {descriptionCollapse ? i18n.t('common:live_stream_screen.view_more') : i18n.t('common:live_stream_screen.view_less')}
@@ -184,6 +199,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: '#FFFFFF',
     opacity: 0.7,
     whiteSpace: 'pre-wrap',
+  },
+  labelCollapse: {
+    overflow: 'hidden',
+    'text-overflow': 'ellipsis',
+    display: '-webkit-box',
+    '-webkit-line-clamp': 5,
+    '-webkit-box-orient': 'vertical',
   },
   seeMoreContainer: {
     display: 'flex',

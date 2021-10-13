@@ -322,12 +322,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontWeight: 'bold',
   },
   wrapContentContainer: {
-    overflow: 'hidden',
-    paddingBottom: 24,
-    paddingLeft: 10,
+    marginTop: theme.spacing(0),
+    paddingBottom: theme.spacing(2),
+    display: 'flex',
+    height: '100%',
   },
   scrollContainer: {
-    display: 'flex',
     flexWrap: 'wrap',
     overflow: 'hidden',
   },
@@ -390,24 +390,26 @@ const useStyles = makeStyles((theme: Theme) => ({
   [theme.breakpoints.down(992)]: {},
   [theme.breakpoints.down(769)]: {
     wrapContentContainer: {
-      paddingLeft: 10,
-      paddingRight: 10,
-      width: 'calc(100vw)',
       overflow: 'auto',
     },
     wrapPreLoadContainer: {
       width: 290,
     },
     contentContainer: {
-      flexWrap: 'nowrap',
       margin: '0px',
       paddingBottom: '0px',
-      overflow: 'auto',
     },
     xsItemContainer: {
-      paddingRight: '24px',
+      paddingRight: '16px',
+      marginBottom: '24px',
+      display: 'flex',
+      justifyContent: 'center',
+      width: 'calc(100vw)',
+    },
+    xsItemContainerBonus: {
+      marginRight: '20.7px',
       '&:last-child': {
-        paddingRight: 0,
+        marginRight: 0,
       },
     },
   },

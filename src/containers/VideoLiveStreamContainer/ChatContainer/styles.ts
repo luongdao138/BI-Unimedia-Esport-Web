@@ -153,7 +153,6 @@ const useStyles = makeStyles((theme) => ({
   },
   chatInputMobileContainer: {
     position: 'absolute',
-    bottom: -116.5,
     left: 0,
     width: '100%',
   },
@@ -286,6 +285,8 @@ const useStyles = makeStyles((theme) => ({
     opacity: 1,
     visibility: 'visible',
     width: '100%',
+    paddingLeft: '16px',
+    paddingRight: '20px',
   },
   messContentOuter: {
     flex: 1,
@@ -324,7 +325,7 @@ const useStyles = makeStyles((theme) => ({
     borderColor: Colors.primary,
     padding: '12px 6px',
     fontSize: 14,
-    color: '#fff',
+    color: '#FFFFFF',
     fontWeight: 'bold',
     marginRight: '16px',
     alignItems: 'center',

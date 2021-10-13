@@ -689,6 +689,7 @@ const useStyles = makeStyles((theme) => ({
       },
     },
     wrap_title: {
+      marginRight: 0,
       paddingRight: 0,
       flex: 1,
       justifyContent: 'space-between',
