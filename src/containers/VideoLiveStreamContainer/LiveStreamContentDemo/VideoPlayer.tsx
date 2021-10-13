@@ -204,14 +204,14 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   // ===================hls.js==================================
   useEffect(() => {
     const video = document.getElementById('video')
-    const hls = new Hls({
-      // liveSyncDurationCount: 1,
-      // initialLiveManifestSize: 1,
-      // liveMaxLatencyDurationCount:10
-      liveDurationInfinity: true,
-      startPosition: 0,
-    })
-
+    // const hls = new Hls({
+    //   // liveSyncDurationCount: 1,
+    //   // initialLiveManifestSize: 1,
+    //   // liveMaxLatencyDurationCount:10
+    //   liveDurationInfinity: true,
+    //   startPosition: 0,
+    // })
+    const hls = new Hls()
     //function event MEDIA_ATTACHED
     const handleMedia = () => {
       console.log('video and hls.js are now bound together !')
@@ -263,9 +263,9 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       hls.on(Hls.Events.MEDIA_ATTACHED, handleMedia)
     }
     return () => {
-      hls.off(Hls.Events.MEDIA_ATTACHED, handleMedia)
-      hls.off(Hls.Events.LEVEL_LOADED, handleLoaded)
-      hls.off(Hls.Events.ERROR, handleError)
+      // hls.off(Hls.Events.MEDIA_ATTACHED, handleMedia)
+      // hls.off(Hls.Events.LEVEL_LOADED, handleLoaded)
+      // hls.off(Hls.Events.ERROR, handleError)
     }
   }, [])
 
@@ -327,9 +327,9 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     videoEl.current.addEventListener('volumechange', () => {
       setState({
         ...state,
-        muted: videoEl.current.muted,
-        volume: videoEl.current.muted === true ? 0 : videoEl.current.volume,
-        playing: !videoEl.current.paused,
+        muted: videoEl.current?.muted,
+        volume: videoEl.current?.muted === true ? 0 : videoEl.current?.volume,
+        playing: !videoEl.current?.paused,
       })
       // setState({ ...state, muted: videoEl.current.volume!==0?false:true, volume:  videoEl.current.volume, playing: !videoEl.current.paused })
     })
@@ -449,7 +449,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
               style={{ width: '100%', height: calculateVideoHeight() }}
               // src={'https://cowell-web.exelab.jp/live/CW352202110051226/index.m3u8'}
               autoPlay={true}
-            // poster={thumbnail ?? '/images/live_stream/thumbnail_default.png'}
+              // poster={thumbnail ?? '/images/live_stream/thumbnail_default.png'}
             />
           ) : (
             <video id="video" ref={videoEl} muted={muted} style={{ width: '100%', height: '100%' }} src={src} autoPlay={true} controls />
