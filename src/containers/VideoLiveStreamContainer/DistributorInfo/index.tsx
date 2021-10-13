@@ -9,7 +9,7 @@ import i18n from '@locales/i18n'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { PreloadChannel, PreloadPreviewItem } from '../PreloadContainer'
 import useLiveStreamDetail from '../useLiveStreamDetail'
-import { LIMIT_ITEM, TypeVideoArchived } from '@services/liveStreamDetail.service'
+import { TypeVideoArchived } from '@services/liveStreamDetail.service'
 import ESLoader from '@components/Loader'
 import useDetailVideo from '../useDetailVideo'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
@@ -21,10 +21,10 @@ interface dataItem {
 }
 type DistributorInfoProps = {
   video_id?: string | string[]
-  videoItemStyle?: any
 }
 
-const DistributorInfo: React.FC<DistributorInfoProps> = ({ video_id, videoItemStyle }) => {
+const LIMIT_ITEM = 12
+const DistributorInfo: React.FC<DistributorInfoProps> = ({ video_id }) => {
   const classes = useStyles()
   const theme = useTheme()
   const downMd = useMediaQuery(theme.breakpoints.down(769), { noSsr: true })
@@ -134,7 +134,7 @@ const DistributorInfo: React.FC<DistributorInfoProps> = ({ video_id, videoItemSt
             <VideoPreviewItem data={item} containerStyle={{ width: itemWidthDownMdScreen }} />
           </Box>
         ) : (
-          <Grid item xs={6} lg={6} xl={4} className={classes.itemContainer} style={videoItemStyle}>
+          <Grid item xs={6} lg={6} xl={4} className={classes.itemContainer}>
             <VideoPreviewItem data={item} />
           </Grid>
         )}
@@ -142,7 +142,7 @@ const DistributorInfo: React.FC<DistributorInfoProps> = ({ video_id, videoItemSt
     )
   }
   const renderPreLoadArchiveVideoItem = () => {
-    const arrayPreLoad = Array(6)
+    const arrayPreLoad = Array(12)
       .fill('')
       .map((_, i) => ({ i }))
     return arrayPreLoad.map((_item: any, index: number) =>
@@ -153,7 +153,7 @@ const DistributorInfo: React.FC<DistributorInfoProps> = ({ video_id, videoItemSt
           </Box>
         </Box>
       ) : (
-        <Grid item xs={6} className={classes.itemContainer} style={videoItemStyle} key={index}>
+        <Grid item xs={6} className={classes.itemContainer} key={index}>
           <PreloadPreviewItem />
         </Grid>
       )
@@ -247,8 +247,7 @@ const DistributorInfo: React.FC<DistributorInfoProps> = ({ video_id, videoItemSt
           next={handleLoadMore}
           hasMore={hasMore}
           loader={
-            isLoadingData &&
-            !downMd && (
+            isLoadingData && (
               <div className={classes.loaderCenter}>
                 <ESLoader />
               </div>
@@ -285,7 +284,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     textAlign: 'center',
   },
   container: {
-    flex: 1,
     width: '100%',
     display: 'flex',
     justifyContent: 'center',
@@ -295,7 +293,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   titleContainer: {
     display: 'flex',
     width: '100%',
-    // justifyContent: 'center',
+    justifyContent: 'center',
     flexDirection: 'row',
     marginTop: 24,
   },
@@ -306,6 +304,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'center',
     flexDirection: 'column',
     marginTop: 16,
+  },
+  wrapContentContainer: {
+    width: '100%',
+    overflow: 'hidden',
+    padding: '0 24px 8px 24px',
   },
   channelContainer: {
     display: 'flex',
@@ -322,7 +325,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     marginTop: 10,
     justifyContent: 'flex-start',
-    // justifyContent: 'flex-end',
   },
   contentContainer: {
     marginTop: theme.spacing(0),
@@ -393,32 +395,24 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: 24,
     fontWeight: 'bold',
   },
-  wrapContentContainer: {
-    overflow: 'hidden',
-    padding: '0 24px 8px 24px',
-  },
+
   itemContainer: {
-    borderRadius: 4,
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-between',
+    width: '100%',
   },
   wrapPreLoadDescription: {},
-  [theme.breakpoints.up(1920)]: {
+  scrollContainer: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    overflow: 'hidden',
+  },
+  [theme.breakpoints.up(1167)]: {
     itemContainer: {
       flexGrow: '0',
-      maxWidth: '25%',
-      flexBasis: '25%',
+      maxWidth: '50%',
+      flexBasis: '50%',
     },
   },
-  [theme.breakpoints.up(1680)]: {
-    itemContainer: {
-      flexGrow: '0',
-      maxWidth: '25%',
-      flexBasis: '25%',
-    },
-  },
-  [theme.breakpoints.down(1401)]: {
+  [theme.breakpoints.up(1401)]: {
     socialMediaContainer: {
       display: 'flex',
       justifyContent: 'flex-end',
@@ -433,25 +427,25 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginLeft: 5,
       borderRadius: 30,
     },
-  },
-  [theme.breakpoints.up(1167)]: {
     itemContainer: {
       flexGrow: '0',
-      maxWidth: '50%',
-      flexBasis: '50%',
+      maxWidth: '33.333333%',
+      flexBasis: '33.333333%',
     },
   },
-  // [theme.breakpoints.up(1401)]: {
-  //   itemContainer: {
-  //     flexGrow: '0',
-  //     maxWidth: '33.333333%',
-  //     flexBasis: '33.333333%',
-  //   },
-  // },
-  scrollContainer: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    overflow: 'hidden',
+  [theme.breakpoints.up(1680)]: {
+    itemContainer: {
+      flexGrow: '0',
+      maxWidth: '25%',
+      flexBasis: '25%',
+    },
+  },
+  [theme.breakpoints.up(1920)]: {
+    itemContainer: {
+      flexGrow: '0',
+      maxWidth: '25%',
+      flexBasis: '25%',
+    },
   },
   [theme.breakpoints.down(769)]: {
     titleContainer: {
@@ -465,8 +459,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginLeft: 10,
     },
     wrapContentContainer: {
-      // paddingLeft: 10,
-      // paddingRight: 10,
       width: 'calc(100vw)',
       overflow: 'auto',
     },
@@ -485,11 +477,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       flexDirection: 'column',
     },
     xsItemContainer: {
-      paddingRight: '24px',
+      display: 'flex',
+      justifyContent: 'center',
       marginBottom: '24px',
-      '&:last-child': {
-        paddingRight: 0,
-      },
     },
     seeMore: {
       justifyContent: 'center',

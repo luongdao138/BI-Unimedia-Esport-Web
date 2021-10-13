@@ -2,7 +2,7 @@
 import ESTab from '@components/Tab'
 import ESTabs from '@components/Tabs'
 import i18n from '@locales/i18n'
-import { Box, Grid, makeStyles, Typography, useMediaQuery, useTheme } from '@material-ui/core'
+import { Box, Grid, makeStyles, Typography } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import React, { useEffect, useState, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -91,10 +91,6 @@ const VideoDetail: React.FC = () => {
   const [errorPurchase, setErrorPurchase] = useState(false)
   const [videoInfo, setVideoInfo] = useState<VIDEO_INFO>({ video_status: STATUS_VIDEO.SCHEDULE, process_status: '' })
   const [videoStatus, setVideoStatus] = useState(null)
-  const theme = useTheme()
-  const isWideScreen = useMediaQuery(theme.breakpoints.up(1920))
-  // const { width: listDisplayWidth } = useWindowDimensions(146)
-  const { width: listDisplayWidth } = useWindowDimensions(98)
 
   console.log('🚀 ~ videoStatus', videoStatus)
 
@@ -371,18 +367,6 @@ const VideoDetail: React.FC = () => {
     })
   }
 
-  const calculateVideoItemStyle = (): any => {
-    if (!isWideScreen) {
-      return {}
-    }
-    const numOfDisplayItem = Math.floor(listDisplayWidth / 433.5)
-    const calcWidth = listDisplayWidth / numOfDisplayItem
-
-    return {
-      maxWidth: calcWidth,
-    }
-  }
-
   const getTabs = () => {
     return (
       <Grid item xs={12} className={classes.tabsContainer}>
@@ -399,14 +383,14 @@ const VideoDetail: React.FC = () => {
     switch (tab) {
       case TABS.PROGRAM_INFO:
         return !isScheduleAndNotHaveTicket() ? (
-          <ProgramInfo video_id={getVideoId()} videoItemStyle={calculateVideoItemStyle()} />
+          <ProgramInfo video_id={getVideoId()} />
         ) : (
-          <ProgramInfoNoViewingTicket videoInfo={detailVideoResult} videoItemStyle={calculateVideoItemStyle()} />
+          <ProgramInfoNoViewingTicket videoInfo={detailVideoResult} />
         )
       case TABS.DISTRIBUTOR_INFO:
-        return <DistributorInfo video_id={getVideoId()} videoItemStyle={calculateVideoItemStyle()} />
+        return <DistributorInfo video_id={getVideoId()} />
       case TABS.RELATED_VIDEOS:
-        return <RelatedVideos video_id={getVideoId()} videoItemStyle={calculateVideoItemStyle()} />
+        return <RelatedVideos video_id={getVideoId()} />
       case TABS.COMMENT:
         return sideChatContainer()
       default:
@@ -633,6 +617,7 @@ const useStyles = makeStyles((theme) => ({
   },
 
   contentContainer: {
+    display: 'flex',
     flexWrap: 'wrap',
   },
   headerIcon: {

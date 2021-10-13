@@ -47,8 +47,8 @@ const PointManage: React.FC = () => {
 
   const getTabs = () => {
     return (
-      <Grid item xs={12}>
-        <ESTabs value={tab} onChange={(_, v) => setTab(v)} className={classes.tabs}>
+      <Grid item xs={12} className={classes.tabsContainer}>
+        <ESTabs value={tab} onChange={(_, v) => setTab(v)} className={classes.tabs} scrollButtons="off" variant="scrollable">
           <ESTab className={classes.tabMin} label={t('point_management_tab.point_management')} value={0} />
           <ESTab className={classes.tabMin} label={t('point_management_tab.purchase_point')} value={1} />
           <ESTab className={classes.tabMin} label={t('point_management_tab.purchase_history')} value={2} />
@@ -86,7 +86,7 @@ const PointManage: React.FC = () => {
         <script src={process.env.NEXT_PUBLIC_GMO_ENDPOINT}></script>
       </Head>
       <HeaderWithButton title={t('point_management_tab.point_management')} />
-      <Grid container direction="column">
+      <Grid container direction="column" className={classes.contentContainer}>
         {getTabs()}
         {getContent()}
       </Grid>
@@ -99,11 +99,19 @@ const useStyles = makeStyles((theme) => ({
   wrap_container: {
     padding: '0 24px',
   },
-  tabs: {
-    overflow: 'hidden',
+  contentContainer: {
+    flexWrap: 'wrap',
+  },
+  tabsContainer: {
+    display: 'flex',
+    width: '100%',
     borderBottomColor: Colors.text[300],
     borderBottomWidth: 1,
     borderBottomStyle: 'solid',
+  },
+  tabs: {
+    display: 'flex',
+    overflowY: 'hidden',
     paddingLeft: 24,
   },
   forbiddenMessageContainer: {
@@ -116,8 +124,30 @@ const useStyles = makeStyles((theme) => ({
   tabMin: {
     minWidth: 56,
   },
-  [theme.breakpoints.down(375)]: {
+  [theme.breakpoints.down(415)]: {
+    tabsContainer: {
+      display: 'flex',
+      paddingRight: 0,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
     tabs: {
+      display: 'flex',
+      paddingLeft: 0,
+    },
+    tabMin: {
+      minWidth: 56,
+    },
+  },
+  [theme.breakpoints.down(375)]: {
+    tabsContainer: {
+      display: 'flex',
+      paddingRight: 0,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    tabs: {
+      display: 'flex',
       paddingLeft: 0,
     },
     tabMin: {

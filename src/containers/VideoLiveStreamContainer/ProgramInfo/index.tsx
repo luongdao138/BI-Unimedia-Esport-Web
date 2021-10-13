@@ -7,7 +7,7 @@ import { useTheme } from '@material-ui/core/styles'
 import { PreloadPreviewItem } from '../PreloadContainer'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import useLiveStreamDetail from '../useLiveStreamDetail'
-import { LIMIT_ITEM, TypeVideoArchived } from '@services/liveStreamDetail.service'
+import { TypeVideoArchived } from '@services/liveStreamDetail.service'
 import useDetailVideo from '../useDetailVideo'
 import ESLoader from '@components/Loader'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
@@ -15,9 +15,9 @@ import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
 
 type ProgramInfoProps = {
   video_id?: string | string[]
-  videoItemStyle?: any
 }
-const ProgramInfo: React.FC<ProgramInfoProps> = ({ video_id, videoItemStyle }) => {
+const LIMIT_ITEM = 12
+const ProgramInfo: React.FC<ProgramInfoProps> = ({ video_id }) => {
   const classes = useStyles()
   const theme = useTheme()
   const downMd = useMediaQuery(theme.breakpoints.down(769), { noSsr: true })
@@ -73,7 +73,7 @@ const ProgramInfo: React.FC<ProgramInfoProps> = ({ video_id, videoItemStyle }) =
             <VideoPreviewItem data={item} containerStyle={{ width: itemWidthDownMdScreen }} />
           </Box>
         ) : (
-          <Grid item xs={6} lg={6} xl={4} className={classes.itemContainer} style={videoItemStyle}>
+          <Grid item xs={6} lg={6} xl={4} className={classes.itemContainer}>
             <VideoPreviewItem data={item} />
           </Grid>
         )}
@@ -81,7 +81,7 @@ const ProgramInfo: React.FC<ProgramInfoProps> = ({ video_id, videoItemStyle }) =
     )
   }
   const renderPreLoadArchiveVideoItem = () => {
-    const arrayPreLoad = Array(6)
+    const arrayPreLoad = Array(12)
       .fill('')
       .map((_, i) => ({ i }))
     return arrayPreLoad.map((_item: any, index: number) =>
@@ -92,7 +92,7 @@ const ProgramInfo: React.FC<ProgramInfoProps> = ({ video_id, videoItemStyle }) =
           </Box>
         </Box>
       ) : (
-        <Grid item xs={6} className={classes.itemContainer} style={videoItemStyle} key={index}>
+        <Grid item xs={6} className={classes.itemContainer} key={index}>
           <PreloadPreviewItem />
         </Grid>
       )
@@ -144,8 +144,7 @@ const ProgramInfo: React.FC<ProgramInfoProps> = ({ video_id, videoItemStyle }) =
           next={handleLoadMore}
           hasMore={hasMore}
           loader={
-            isLoadingData &&
-            !downMd && (
+            isLoadingData && (
               <div className={classes.loaderCenter}>
                 <ESLoader />
               </div>
@@ -180,7 +179,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: 'column',
     width: '100%',
   },
-
   scrollContainer: {
     display: 'flex',
     flexWrap: 'wrap',
@@ -253,18 +251,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: 'column',
     justifyContent: 'space-between',
   },
-  [theme.breakpoints.up(1920)]: {
+  [theme.breakpoints.up(1167)]: {
     itemContainer: {
       flexGrow: '0',
-      maxWidth: '465px',
-      flexBasis: '25%',
-    },
-  },
-  [theme.breakpoints.up(1680)]: {
-    itemContainer: {
-      flexGrow: '0',
-      maxWidth: '25%',
-      flexBasis: '25%',
+      maxWidth: '50%',
+      flexBasis: '50%',
     },
   },
   [theme.breakpoints.up(1401)]: {
@@ -274,11 +265,18 @@ const useStyles = makeStyles((theme: Theme) => ({
       flexBasis: '33.333333%',
     },
   },
-  [theme.breakpoints.up(1167)]: {
+  [theme.breakpoints.up(1680)]: {
     itemContainer: {
       flexGrow: '0',
-      maxWidth: '50%',
-      flexBasis: '50%',
+      maxWidth: '25%',
+      flexBasis: '25%',
+    },
+  },
+  [theme.breakpoints.up(1920)]: {
+    itemContainer: {
+      flexGrow: '0',
+      maxWidth: '25%',
+      flexBasis: '25%',
     },
   },
   [theme.breakpoints.down(769)]: {
@@ -300,9 +298,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginBottom: '24px',
       display: 'flex',
       justifyContent: 'center',
-      // '&:last-child': {
-      //   paddingRight: 0,
-      // },
     },
     xsItemContainerBonus: {
       marginRight: '20.7px',
