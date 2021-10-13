@@ -58,7 +58,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   // console.log('🚀 ~ playedSeconds', playedSeconds)
   // const reactPlayerRef = useRef(null)
   const playerContainerRef = useRef(null)
-  // const [isLive, setIsLive] = useState(false)
+  const [isLive, setIsLive] = useState(false)
 
   //As of Chrome 66, videos must be muted in order to play automatically
   const [state, setState] = useState({
@@ -185,7 +185,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
 
   const { playing, muted, volume, ended } = state
   const { loading, videoLoaded } = visible
-  const hls = new Hls()
+  // const hls = new Hls()
   const chatBoardWidth = () => {
     if (!isDown1100) return 482
     if (!isDownMd) return 350
@@ -204,13 +204,13 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   // ===================hls.js==================================
   useEffect(() => {
     const video = document.getElementById('video')
-    // const hls = new Hls({
-    //   liveSyncDurationCount: 1,
-    //   initialLiveManifestSize: 1,
-    //   // liveMaxLatencyDurationCount:10
-    //   liveDurationInfinity: true,
-    //   startPosition: 0,
-    // })
+    const hls = new Hls({
+      // liveSyncDurationCount: 1,
+      // initialLiveManifestSize: 1,
+      // liveMaxLatencyDurationCount:10
+      liveDurationInfinity: true,
+      startPosition: 0,
+    })
 
     //function event MEDIA_ATTACHED
     const handleMedia = () => {
@@ -228,7 +228,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     const handleLoaded = (_, data) => {
       console.log('~~~~LEVEL_LOADED~~~~~', data)
       // setDurationPlayer(data.details.totalduration)
-      // setIsLive(data.details.live)
+      setIsLive(data.details.live)
     }
     const handleError = (_, data) => {
       console.log('~~~~~~~~> ERROR', data)
@@ -258,8 +258,6 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     if (Hls.isSupported() && !isMobile) {
       // bind them together
       hls.loadSource(src)
-      // hls.loadSource('https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8')
-      // hls.loadSource('https://d3ueuwvla07imz.cloudfront.net/live/ducnn20211012/index.m3u8')
       //@ts-ignore
       hls.attachMedia(video)
       hls.on(Hls.Events.MEDIA_ATTACHED, handleMedia)
@@ -295,24 +293,28 @@ const VideoPlayer: React.FC<PlayerProps> = ({
         // if (Math.floor(newPlayedSecondTime) !== liveStreamInfo.played_second) {
         //   changePlayedSecond(Math.floor(newPlayedSecondTime))
         // }
-
-        const durationTime = event.target.duration - delaySeconds
-        const newDurationTime = durationTime <= newPlayedSecondTime ? newPlayedSecondTime : durationTime
-        setDurationPlayer(newDurationTime)
-        // if (Math.floor(newDurationTime) !== liveStreamInfo.streaming_second) {
-        //   changeStreamingSecond(Math.floor(newDurationTime))
-        // }
-        if (
-          Math.floor(newPlayedSecondTime) !== liveStreamInfo.played_second ||
-          Math.floor(newDurationTime) !== liveStreamInfo.streaming_second
-        ) {
-          changeVideoTime(Math.floor(newDurationTime), Math.floor(newPlayedSecondTime))
+        if (isLive) {
+          const durationTime = event.target.duration - delaySeconds
+          const newDurationTime = durationTime <= newPlayedSecondTime ? newPlayedSecondTime : durationTime
+          setDurationPlayer(newDurationTime)
+          // if (Math.floor(newDurationTime) !== liveStreamInfo.streaming_second) {
+          //   changeStreamingSecond(Math.floor(newDurationTime))
+          // }
+          if (
+            Math.floor(newPlayedSecondTime) !== liveStreamInfo.played_second ||
+            Math.floor(newDurationTime) !== liveStreamInfo.streaming_second
+          ) {
+            changeVideoTime(Math.floor(newDurationTime), Math.floor(newPlayedSecondTime))
+          }
         }
       }
     })
 
     videoEl.current.addEventListener('durationchange', (event) => {
-      console.log('------->>durationchange<<<-----', event.target.duration, event.target.currentTime)
+      console.log('------->>durationchange<<<-----', event.target.duration)
+      if (!isLive) {
+        setDurationPlayer(event.target.duration)
+      }
       // if (event.target) {
       //   const newDurationTime = event.target.duration - 15 <= playedSeconds ? playedSeconds : event.target.duration - 15
       //   setDurationPlayer(newDurationTime)
@@ -447,7 +449,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
               style={{ width: '100%', height: calculateVideoHeight() }}
               // src={'https://cowell-web.exelab.jp/live/CW352202110051226/index.m3u8'}
               autoPlay={true}
-              // poster={thumbnail ?? '/images/live_stream/thumbnail_default.png'}
+            // poster={thumbnail ?? '/images/live_stream/thumbnail_default.png'}
             />
           ) : (
             <video id="video" ref={videoEl} muted={muted} style={{ width: '100%', height: '100%' }} src={src} autoPlay={true} controls />
