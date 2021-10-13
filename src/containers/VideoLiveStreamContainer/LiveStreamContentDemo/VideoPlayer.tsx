@@ -58,7 +58,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   // console.log('🚀 ~ playedSeconds', playedSeconds)
   // const reactPlayerRef = useRef(null)
   const playerContainerRef = useRef(null)
-  const [isLive, setIsLive] = useState(false)
+  // const [isLive, setIsLive] = useState(false)
 
   //As of Chrome 66, videos must be muted in order to play automatically
   const [state, setState] = useState({
@@ -228,7 +228,6 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     const handleLoaded = (_, data) => {
       console.log('~~~~LEVEL_LOADED~~~~~', data)
       // setDurationPlayer(data.details.totalduration)
-      setIsLive(data.details.live)
     }
     const handleError = (_, data) => {
       console.log('~~~~~~~~> ERROR', data)
@@ -285,7 +284,12 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   useEffect(() => {
     videoEl.current.addEventListener('timeupdate', (event) => {
       // const delaySeconds = 40
-      console.log('->current->duration-> range', event.target.currentTime, event.target.duration, event.target.duration - event.target.currentTime)
+      console.log(
+        '->current->duration-> range',
+        event.target.currentTime,
+        event.target.duration,
+        event.target.duration - event.target.currentTime
+      )
       if (event.target) {
         const newPlayedSecondTime = event.target.currentTime
         setPlayedSeconds(newPlayedSecondTime)
@@ -293,29 +297,25 @@ const VideoPlayer: React.FC<PlayerProps> = ({
         // if (Math.floor(newPlayedSecondTime) !== liveStreamInfo.played_second) {
         //   changePlayedSecond(Math.floor(newPlayedSecondTime))
         // }
-        if (isLive) {
-          // const durationTime = event.target.duration - delaySeconds
-          // const newDurationTime = durationTime <= newPlayedSecondTime ? newPlayedSecondTime : durationTime
-          const newDurationTime = event.target.duration
-          setDurationPlayer(newDurationTime)
-          // if (Math.floor(newDurationTime) !== liveStreamInfo.streaming_second) {
-          //   changeStreamingSecond(Math.floor(newDurationTime))
-          // }
-          if (
-            Math.floor(newPlayedSecondTime) !== liveStreamInfo.played_second ||
-            Math.floor(newDurationTime) !== liveStreamInfo.streaming_second
-          ) {
-            changeVideoTime(Math.floor(newDurationTime), Math.floor(newPlayedSecondTime))
-          }
+        // const durationTime = event.target.duration - delaySeconds
+        // const newDurationTime = durationTime <= newPlayedSecondTime ? newPlayedSecondTime : durationTime
+        const newDurationTime = event.target.duration
+        setDurationPlayer(newDurationTime)
+        // if (Math.floor(newDurationTime) !== liveStreamInfo.streaming_second) {
+        //   changeStreamingSecond(Math.floor(newDurationTime))
+        // }
+        if (
+          Math.floor(newPlayedSecondTime) !== liveStreamInfo.played_second ||
+          Math.floor(newDurationTime) !== liveStreamInfo.streaming_second
+        ) {
+          changeVideoTime(Math.floor(newDurationTime), Math.floor(newPlayedSecondTime))
         }
       }
     })
 
     videoEl.current.addEventListener('durationchange', (event) => {
       console.log('------->>durationchange<<<-----', event.target.duration)
-      if (!isLive) {
-        setDurationPlayer(event.target.duration)
-      }
+      // setDurationPlayer(event.target.duration)
       // if (event.target) {
       //   const newDurationTime = event.target.duration - 15 <= playedSeconds ? playedSeconds : event.target.duration - 15
       //   setDurationPlayer(newDurationTime)
