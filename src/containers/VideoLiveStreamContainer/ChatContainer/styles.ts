@@ -157,6 +157,10 @@ const useStyles = makeStyles((theme) => ({
     left: 0,
     width: '100%',
   },
+  // chatInputStreamingStyle: {
+  //   position: 'relative',
+  //   bottom: 0,
+  // },
   chatBox: {
     display: 'flex',
     flexDirection: 'row',
@@ -311,6 +315,21 @@ const useStyles = makeStyles((theme) => ({
   displaySeeMore: {
     visibility: 'visible',
     opacity: '1',
+  },
+  btn_scroll_mess: {
+    background: Colors.primary,
+    borderRadius: 4,
+    borderWidth: 1,
+    borderStyle: 'solid',
+    borderColor: Colors.primary,
+    padding: '12px 6px',
+    fontSize: 14,
+    color: '#fff',
+    fontWeight: 'bold',
+    marginRight: '16px',
+    alignItems: 'center',
+    display: 'flex',
+    width: '100%',
   },
   // purchaseItem: {},
   // purchaseItemText: {},

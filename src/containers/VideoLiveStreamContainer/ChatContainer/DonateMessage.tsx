@@ -105,6 +105,7 @@ const DonateMessage: React.FC<DonateMessageProps> = ({
 const useStyles = makeStyles(() => ({
   userAvatar: {
     marginRight: 5,
+    alignSelf: 'center',
   },
   icon: {},
   resendIcon: {
@@ -154,13 +155,13 @@ const useStyles = makeStyles(() => ({
   accountInfoHeader: {
     position: 'relative',
     display: 'flex',
-    paddingTop: 7,
+    paddingTop: 11,
     paddingBottom: 11,
     paddingLeft: 14,
     paddingRight: 32,
     flexDirection: 'row',
     backgroundColor: 'rgba(71,106,255, 0.75)',
-    alignItems: 'flex-end',
+    alignItems: 'baseline',
   },
   accountInfoContent: {
     paddingLeft: 14,
@@ -179,7 +180,7 @@ const useStyles = makeStyles(() => ({
     fontSize: 14,
     color: 'black',
     flex: 1,
-    marginBottom: 3,
+    // marginBottom: 3,
     marginRight: 20,
     textOverflow: 'ellipsis',
     overflow: 'hidden',
@@ -195,7 +196,7 @@ const useStyles = makeStyles(() => ({
     fontWeight: 'bold',
     color: 'black',
     marginLeft: 17,
-    marginBottom: 3,
+    // marginBottom: 3,
     textOverflow: 'ellipsis',
     overflow: 'hidden',
     whiteSpace: 'nowrap',

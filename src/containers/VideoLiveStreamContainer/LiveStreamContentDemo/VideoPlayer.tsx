@@ -53,9 +53,9 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   // const { IVSPlayer } = window
   // const isPlayerSupported = IVSPlayer?.isPlayerSupported
   const [durationPlayer, setDurationPlayer] = useState(0)
-  console.log('🚀 ~ durationPlayer', durationPlayer)
+  // console.log('🚀 ~ durationPlayer', durationPlayer)
   const [playedSeconds, setPlayedSeconds] = useState(0)
-  console.log('🚀 ~ playedSeconds', playedSeconds)
+  // console.log('🚀 ~ playedSeconds', playedSeconds)
   // const reactPlayerRef = useRef(null)
   const playerContainerRef = useRef(null)
   // const [isLive, setIsLive] = useState(false)
@@ -75,17 +75,17 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   })
 
   const {
-    changeStreamingSecond,
+    // changeStreamingSecond,
     // streamingSecond,
     // changeIsViewingStream,
     // isViewingStream,
-    changePlayedSecond,
+    // changePlayedSecond,
     // playedSecond,
-    // changeVideoTime,
+    changeVideoTime,
     // changeIsEndLive,
-    changeIsPausingLive,
+    // changeIsPausingLive,
     liveStreamInfo,
-    changeSeekCount,
+    // changeSeekCount,
   } = useDetailVideo()
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'), { noSsr: true })
@@ -95,17 +95,17 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   const { width: videoDisplayWidth } = useWindowDimensions(0)
 
   const handlePauseAndSeekVideo = () => {
-    // seek to current live stream second if is pausing live and is not playing
-    if (!state.playing && liveStreamInfo.is_pausing_live) {
-      const newSecond = Math.floor(durationPlayer)
-      changeSeekCount(Math.floor(newSecond))
-    }
-    // if pause video when is live streaming => set is pausing to true
-    if (state.playing && Math.floor(playedSeconds) === Math.floor(durationPlayer)) {
-      changeIsPausingLive(true)
-    } else {
-      changeIsPausingLive(false)
-    }
+    // // seek to current live stream second if is pausing live and is not playing
+    // if (!state.playing && liveStreamInfo.is_pausing_live) {
+    //   const newSecond = Math.floor(durationPlayer)
+    //   changeSeekCount(Math.floor(newSecond))
+    // }
+    // // if pause video when is live streaming => set is pausing to true
+    // if (state.playing && Math.floor(playedSeconds) === Math.floor(durationPlayer)) {
+    //   changeIsPausingLive(true)
+    // } else {
+    //   changeIsPausingLive(false)
+    // }
   }
 
   const [isPortrait, setIsPortrait] = useState<boolean>(!!isMobile)
@@ -286,26 +286,33 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   //archived
   useEffect(() => {
     videoEl.current.addEventListener('timeupdate', (event) => {
-      console.log('----->>timeupdate<<------', event.target.currentTime, event.target.duration - 15)
+      const delaySeconds = 40
+      console.log('----->>timeupdate<<------', event.target.currentTime, event.target.duration, event.target.duration - delaySeconds)
       if (event.target) {
         const newPlayedSecondTime = event.target.currentTime
         setPlayedSeconds(newPlayedSecondTime)
         // setDurationPlayer(event.target.duration)
-        if (Math.floor(newPlayedSecondTime) !== liveStreamInfo.played_second) {
-          changePlayedSecond(Math.floor(newPlayedSecondTime))
-        }
+        // if (Math.floor(newPlayedSecondTime) !== liveStreamInfo.played_second) {
+        //   changePlayedSecond(Math.floor(newPlayedSecondTime))
+        // }
 
-        const duration = event.target.duration - 15
-        const newDurationTime = duration <= newPlayedSecondTime ? newPlayedSecondTime : duration
+        const durationTime = event.target.duration - delaySeconds
+        const newDurationTime = durationTime <= newPlayedSecondTime ? newPlayedSecondTime : durationTime
         setDurationPlayer(newDurationTime)
-        if (Math.floor(newDurationTime) !== liveStreamInfo.streaming_second) {
-          changeStreamingSecond(Math.floor(newDurationTime))
+        // if (Math.floor(newDurationTime) !== liveStreamInfo.streaming_second) {
+        //   changeStreamingSecond(Math.floor(newDurationTime))
+        // }
+        if (
+          Math.floor(newPlayedSecondTime) !== liveStreamInfo.played_second ||
+          Math.floor(newDurationTime) !== liveStreamInfo.streaming_second
+        ) {
+          changeVideoTime(Math.floor(newDurationTime), Math.floor(newPlayedSecondTime))
         }
       }
     })
 
     videoEl.current.addEventListener('durationchange', (event) => {
-      console.log('------->>durationchange<<<-----', event.target.duration)
+      console.log('------->>durationchange<<<-----', event.target.duration, event.target.currentTime)
       // if (event.target) {
       //   const newDurationTime = event.target.duration - 15 <= playedSeconds ? playedSeconds : event.target.duration - 15
       //   setDurationPlayer(newDurationTime)

@@ -34,7 +34,7 @@ import LoginRequired from '@containers/LoginRequired'
 import moment from 'moment'
 import { STATUS_SEND_MESS } from '@constants/common.constants'
 import { v4 as uuidv4 } from 'uuid'
-import { DELAY_SECONDS } from '@constants/common.constants'
+// import { DELAY_SECONDS } from '@constants/common.constants'
 
 export type ChatContainerProps = {
   onPressDonate?: (donatedPoint: number, purchaseComment: string) => void
@@ -247,7 +247,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       if (videoType === STATUS_VIDEO.ARCHIVE) {
         return false
       }
-      if (playedSecond >= streamingSecond || playedSecond + DELAY_SECONDS >= streamingSecond) {
+      if (playedSecond >= streamingSecond) {
         return true
       }
       return false
@@ -1032,16 +1032,15 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       }
     }
 
+    // const isStreamingStyle = () => {
+    //   return !isMobile && !isStreaming && isEnabledChat
+    // }
+
     const chatInputComponent = () => (
-      <Box className={classes.chatInputMobileContainer}>
+      <Box className={`${classes.chatInputMobileContainer}`}>
         {purchaseDialogVisible && isMobile && purchaseInfoDialog()}
         {isEnabledChat &&
-          (!isStreaming ? (
-            <></>
-          ) : (
-            // <Box className={classes.chatInputContainer}>
-            //   <Button onClick={scrollToCurrentMess}>{i18n.t('common:streaming_setting_screen.scroll_to_new_mess')}</Button>
-            // </Box>
+          (isStreaming ? (
             <Box className={classes.chatInputContainer}>
               {purchaseDialogVisible && !isMobile && purchaseInfoDialog()}
               <LoginRequired>
@@ -1075,6 +1074,8 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
               </Box>
               {/* {errors.message && <Typography className={classes.chatInputErrorText}>{errors.message}</Typography>} */}
             </Box>
+          ) : (
+            <></>
           ))}
       </Box>
     )
@@ -1247,6 +1248,16 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
             )}
         </Box>
         {chatBoardComponent()}
+        {isEnabledChat && !isStreaming ? (
+          <Box className={classes.chatInputContainer}>
+            <ButtonBase onClick={() => scrollToCurrentMess()} className={`${classes.btn_scroll_mess}`}>
+              {i18n.t('common:streaming_setting_screen.scroll_to_new_mess')}
+            </ButtonBase>
+            {/* <Button onClick={scrollToCurrentMess}>{i18n.t('common:streaming_setting_screen.scroll_to_new_mess')}</Button> */}
+          </Box>
+        ) : (
+          <></>
+        )}
       </Box>
     )
 
@@ -1261,7 +1272,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
           !displayChatContent()
             ? { height: '757.5px' }
             : {
-                paddingBottom: isEnabledChat ? '116.5px' : '16px',
+                paddingBottom: isEnabledChat ? (isStreaming ? '116.5px' : '0') : '16px',
               }
         }
       >
