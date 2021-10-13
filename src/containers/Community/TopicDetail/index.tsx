@@ -49,7 +49,7 @@ const TopicDetailContainer: React.FC = () => {
   const { isNotMember, isModerator, isPublic, isAutomatic } = useCommunityHelper(communityDetail)
 
   const [reply, setReply] = useState<{ hash_key: string; comment_no: number } | any>({})
-  const [showCommentReply, setShowCommentReply] = useState([])
+  const [showCommentReply, setShowCommentReply] = useState<boolean[]>([])
   const [openDelete, setOpenDelete] = useState(false)
   const [isOpened, setIsOpened] = useState<boolean>(false)
   const [selectedCommentNo, setSelectedCommentNo] = useState()
@@ -196,7 +196,13 @@ const TopicDetailContainer: React.FC = () => {
 
         {!isNotMember && (
           <Box className={classes.inputContainer}>
-            <CommentInput reply_param={reply} setPage={setPage} setCommentCount={setCommentCount} commentCount={commentCount} />
+            <CommentInput
+              reply_param={reply}
+              setPage={setPage}
+              setCommentCount={setCommentCount}
+              commentCount={commentCount}
+              setShowReply={setShowCommentReply}
+            />
           </Box>
         )}
         {isAuthenticated && reportData && (
