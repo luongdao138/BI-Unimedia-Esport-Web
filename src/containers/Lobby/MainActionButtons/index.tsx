@@ -79,7 +79,10 @@ const MainActionButtons: React.FC<Props> = ({ lobby, entry, decline, memberConfi
 
   const renderMemberEdit = () => {
     if (
-      (status === LOBBY_STATUS.READY || status === LOBBY_STATUS.RECRUITING || status === LOBBY_STATUS.ENTRY_CLOSED) &&
+      (status === LOBBY_STATUS.READY ||
+        status === LOBBY_STATUS.RECRUITING ||
+        status === LOBBY_STATUS.ENTRY_CLOSED ||
+        status === LOBBY_STATUS.IN_PROGRESS) &&
       isOwner &&
       !isFreezed
     ) {
