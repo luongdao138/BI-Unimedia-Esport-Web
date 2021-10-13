@@ -36,8 +36,8 @@ const SeekBar: React.FC<Props & SliderProps> = ({ currentTime, durationsPlayer, 
   const handleCommit = (_, value) => {
     console.log('~~~VALUE SEEK TO ~~~~~', value, (value * durationsPlayer) / 100)
     setTimePlayed(value)
-    videoRef.current.currentTime = (value * durationsPlayer) / 100
     const newSecond = (value * durationsPlayer) / 100
+    videoRef.current.currentTime = newSecond
     changeSeekCount(Math.floor(newSecond))
   }
 

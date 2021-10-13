@@ -34,7 +34,7 @@ import LoginRequired from '@containers/LoginRequired'
 import moment from 'moment'
 import { STATUS_SEND_MESS } from '@constants/common.constants'
 import { v4 as uuidv4 } from 'uuid'
-// import { DELAY_SECONDS } from '@constants/common.constants'
+import { DELAY_SECONDS } from '@constants/common.constants'
 
 export type ChatContainerProps = {
   onPressDonate?: (donatedPoint: number, purchaseComment: string) => void
@@ -199,7 +199,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     const [isChatInBottom, setIsChatInBottom] = useState(false)
     const [isSeeking, setIsSeeking] = useState(false)
 
-    const { userResult, streamingSecond, playedSecond, isViewingStream, liveStreamInfo } = useDetailVideo()
+    const { userResult, streamingSecond, playedSecond, liveStreamInfo } = useDetailVideo()
     // const { streamingSecond, playedSecond, isViewingStream, liveStreamInfo } = useDetailVideo()
     // const userResult = {streamer: 1}
     const { dataPurchaseTicketSuperChat } = usePurchaseTicketSuperChat()
@@ -244,17 +244,14 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
 
     const isStreaming = (() => {
       // || liveStreamInfo.is_pausing_live
-      if (videoType === STATUS_VIDEO.ARCHIVE) {
-        return false
-      }
       console.log('33-played->streaming->range', playedSecond, streamingSecond, streamingSecond - playedSecond)
-      console.log('🚀 ~ isStreaming ~ ---0000', playedSecond + 10 >= streamingSecond)
-      if (playedSecond >= streamingSecond || playedSecond + 10 >= streamingSecond) {
+      console.log('🚀 ~ isStreaming ~ ---0000', playedSecond + DELAY_SECONDS >= streamingSecond)
+      if ((playedSecond >= streamingSecond || playedSecond + DELAY_SECONDS >= streamingSecond) && videoType === STATUS_VIDEO.LIVE_STREAM) {
         return true
       } else {
         console.log('🚀 ~ isStreaming ~ false')
+        return false
       }
-      return false
     })()
 
     const handleCreateUserDB = async () => {
@@ -291,11 +288,12 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     const isPremiumChat = (message: any, is_check_time = true, compare_second?: any) => {
       let compareSecond = compare_second
       if (!compareSecond) {
-        if (isViewingStream) {
-          compareSecond = streamingSecond
-        } else {
-          compareSecond = playedSecond
-        }
+        // if (isViewingStream) {
+        //   compareSecond = streamingSecond
+        // } else {
+        //   compareSecond = playedSecond
+        // }
+        compareSecond = playedSecond
       }
       const conditionWithoutTime = +message.point > 300 && message.is_premium === true && !message.delete_flag
       if (!is_check_time) {
@@ -306,7 +304,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
 
     const refOnCreateMess = useRef(null)
     const onCreateMess = (createdMessage) => {
-      if (createdMessage.video_id === key_video_id) {
+      if (createdMessage.video_id === key_video_id && videoType === STATUS_VIDEO.LIVE_STREAM) {
         console.log('🚀 ~ onCreateMess ~ createdMessage----0909', createdMessage)
         const foundIndex = findMessUpdated(savedMess, createdMessage, 'local_id')
         console.log('🚀 ~ subscribeAction ~ foundIndex', foundIndex)
@@ -518,11 +516,13 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       console.log('2-played->streaming->range', playedSecond, streamingSecond, streamingSecond - playedSecond)
       if (isStreaming) {
         filterByStreaming()
+      } else {
+        // filter mess when user no seeking or pausing live video
+        if (!isSeeking && !liveStreamInfo.is_pausing_live) {
+          filterMessByPlayedSecond(playedSecond)
+        }
       }
-      // filter mess when user no seeking or pausing live video
-      if (!isSeeking && !liveStreamInfo.is_pausing_live && !isStreaming) {
-        filterMessByPlayedSecond(playedSecond)
-      }
+      
       if (isSeeking) {
         setIsSeeking(false)
       }
