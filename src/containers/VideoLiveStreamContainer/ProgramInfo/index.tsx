@@ -26,7 +26,7 @@ const ProgramInfo: React.FC<ProgramInfoProps> = ({ video_id }) => {
   const { detailVideoResult } = useDetailVideo()
   const isLoadingData = meta_archived_video_stream?.pending
   // const getDescription = CommonHelper.splitToLinkifyComponent(detailVideoResult?.channel_description)
-  const getDescription = CommonHelper.splitToLinkifyComponent(detailVideoResult?.channel_description)
+  const getDescription = CommonHelper.splitToLinkifyComponent(detailVideoResult?.description)
 
   const [descriptionCollapse, setDescriptionCollapse] = useState(true)
   const [descriptionCanTruncated, setDescriptionCanTruncated] = useState(false)
