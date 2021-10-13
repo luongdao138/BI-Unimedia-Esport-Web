@@ -327,4 +327,4 @@ export const LIVE_VIDEO_TYPE = {
   SCHEDULE: 1,
 }
 
-export const DELAY_SECONDS = 18
+export const DELAY_SECONDS = 15

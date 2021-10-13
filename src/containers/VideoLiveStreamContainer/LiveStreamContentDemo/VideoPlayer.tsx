@@ -293,17 +293,10 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       if (event.target) {
         const newPlayedSecondTime = event.target.currentTime
         setPlayedSeconds(newPlayedSecondTime)
-        // setDurationPlayer(event.target.duration)
-        // if (Math.floor(newPlayedSecondTime) !== liveStreamInfo.played_second) {
-        //   changePlayedSecond(Math.floor(newPlayedSecondTime))
-        // }
         // const durationTime = event.target.duration - delaySeconds
         // const newDurationTime = durationTime <= newPlayedSecondTime ? newPlayedSecondTime : durationTime
         const newDurationTime = event.target.duration
         setDurationPlayer(newDurationTime)
-        // if (Math.floor(newDurationTime) !== liveStreamInfo.streaming_second) {
-        //   changeStreamingSecond(Math.floor(newDurationTime))
-        // }
         if (
           Math.floor(newPlayedSecondTime) !== liveStreamInfo.played_second ||
           Math.floor(newDurationTime) !== liveStreamInfo.streaming_second
