@@ -499,6 +499,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
                   InputProps={{
                     classes: { root: classes.root },
                   }}
+                  minutesStep={1}
                   // readOnly={!isFirstStep()}
                 />
               ) : (
@@ -536,6 +537,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
                   InputProps={{
                     classes: { root: classes.root },
                   }}
+                  minutesStep={1}
                 />
               ) : (
                 <Box pt={1}>
@@ -571,6 +573,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
                   InputProps={{
                     classes: { root: classes.root },
                   }}
+                  minutesStep={1}
                 />
               ) : (
                 <Box pt={1}>
@@ -609,6 +612,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
                     formik?.touched?.stepSettingTwo?.video_publish_end_time && !!formik?.errors?.stepSettingTwo?.video_publish_end_time
                   }
                   minDateMessage={''}
+                  minutesStep={1}
                 />
               ) : (
                 <Box pt={1}>

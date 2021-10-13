@@ -44,8 +44,17 @@ const SearchArea: React.FC<SearchAreaProps> = (props) => {
     }
   }, [value])
 
+  const isInVideoDetailPage = () => {
+    if (router.pathname !== ESRoutes.TOP) {
+      return false
+    }
+    const queryKey = 'vid'
+    const video_id = router.query[queryKey] || router.asPath.match(new RegExp(`[&?]${queryKey}=(.*)(&|$)`))
+    return !!video_id
+  }
+
   useEffect(() => {
-    if (router.pathname == ESRoutes.VIDEO_TOP || router.pathname == ESRoutes.SEARCH_VIDEO) {
+    if (router.pathname == ESRoutes.VIDEO_TOP || router.pathname == ESRoutes.SEARCH_VIDEO || isInVideoDetailPage()) {
       //only search video
       setOption(searchTypes.VIDEO)
     } else {
@@ -171,7 +180,7 @@ const useStyles = makeStyles(() => ({
     },
   },
   closeIcon: {
-    color: '#888',
+    color: '#888888',
   },
   inputFocused: { width: 0, opacity: 0, visibility: 'hidden' },
   inputBlur: { width: 170, opacity: 1, visibility: 'visible' },
@@ -183,7 +192,7 @@ const useStyles = makeStyles(() => ({
     backgroundColor: Colors.black,
     '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
       borderWidth: 1,
-      borderColor: '#fff',
+      borderColor: '#FFFFFF',
     },
     '&.Mui-error .MuiOutlinedInput-notchedOutline': {
       background: 'rgba(247, 247, 53, 0.1)',

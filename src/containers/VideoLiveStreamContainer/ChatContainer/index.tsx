@@ -522,7 +522,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
           filterMessByPlayedSecond(playedSecond)
         }
       }
-      
+
       if (isSeeking) {
         setIsSeeking(false)
       }
@@ -1041,7 +1041,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     // }
 
     const chatInputComponent = () => (
-      <Box className={`${classes.chatInputMobileContainer}`}>
+      <Box className={`${classes.chatInputMobileContainer}`} style={{ bottom: errors?.message ? '-132.5px' : '-116.5px' }}>
         {purchaseDialogVisible && isMobile && purchaseInfoDialog()}
         {isEnabledChat &&
           (isStreaming ? (
@@ -1269,6 +1269,16 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       return videoType !== STATUS_VIDEO.SCHEDULE && (isVideoFreeToWatch || userHasViewingTicket)
     }
 
+    const chatBoxPaddingBottom = () => {
+      if (!isEnabledChat) {
+        return '16px'
+      }
+      if (!isStreaming) {
+        return '0px'
+      }
+      return errors?.message ? '132.5px' : '116.5px'
+    }
+
     return (
       <Box
         className={classes.container}
@@ -1276,7 +1286,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
           !displayChatContent()
             ? { height: '757.5px' }
             : {
-                paddingBottom: isEnabledChat ? (isStreaming ? '116.5px' : '0') : '16px',
+                paddingBottom: chatBoxPaddingBottom(),
               }
         }
       >
