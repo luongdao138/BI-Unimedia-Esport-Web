@@ -101,13 +101,14 @@ const Comment: React.FC<CommunityHeaderProps> = ({
     if (windowDimensions.height / 2 > currentRect.top) {
       setIsBottom(false)
       maxHeight = windowDimensions.height - currentRect.bottom - 62
+      currentReplyNumberRectY = contentRect.bottom - currentRect.bottom
     } else {
       setIsBottom(true)
       maxHeight = currentRect.top - 63
+      currentReplyNumberRectY = currentRect.top - contentRect.top
     }
     setReplyAnchorEl(event.currentTarget)
     currentReplyNumberRectX = currentRect.left - contentRect.left
-    currentReplyNumberRectY = currentRect.top - contentRect.top
     setShowComment((comments) => _.map(comments, (__, i) => (Number(i) === index ? true : false)))
   }
 
@@ -497,8 +498,8 @@ const useStyles = makeStyles((theme) => ({
     '&:before': {
       content: "''",
       position: 'absolute',
-      top: (props: StyleProps) => (props.isBottom ? 'calc(100% - 19px)' : 'auto'),
-      bottom: (props: StyleProps) => (props.isBottom ? 'auto' : 'calc(100% - 19px)'),
+      top: (props: StyleProps) =>
+        props.isBottom ? props.currentReplyNumberRectY : `calc(100% - ${props.currentReplyNumberRectY}px - 10px)`,
       left: (props: StyleProps) => props.currentReplyNumberRectX + theme.spacing(2) || theme.spacing(1),
       transform: (props: StyleProps) => (props.isBottom ? 'none' : 'rotate(180deg)'),
       marginLeft: -5,
