@@ -28,7 +28,7 @@ const BRStatusComplete: React.FC<BRStatusBRStatusCompleteProps> = ({ arena }) =>
   const dateInterval = `${TournamentHelper.formatDate(arena.attributes.start_date)} ～ ${TournamentHelper.formatDate(
     arena.attributes.end_date
   )}`
-  const { toParticipants, isModerator, isTeamLeader, toMatches, isFreezed, isParticipant, toResults } = useArenaHelper(arena)
+  const { toParticipants, isModerator, toMatches, isFreezed, toResults } = useArenaHelper(arena)
   const { winner: winnerData, winnerMeta } = useBRStatusComplete()
   const winnerMounted = useRef(null)
   const [winner, setWinner] = useState(winnerData)
@@ -71,8 +71,8 @@ const BRStatusComplete: React.FC<BRStatusBRStatusCompleteProps> = ({ arena }) =>
                 <ESButton onClick={toParticipants} variant="outlined" fullWidth>
                   {t('tournament.participants')}
                 </ESButton>
-                {isModerator || (isTeamLeader && isParticipant) ? (
-                  <ActionLabelButton variant="outlined" fullWidth onClick={toMatches} disabled={!(isModerator || isTeamLeader)}>
+                {isModerator ? (
+                  <ActionLabelButton variant="outlined" fullWidth onClick={toMatches}>
                     {t('arena.input_result')}
                   </ActionLabelButton>
                 ) : null}
