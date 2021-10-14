@@ -20,7 +20,7 @@ import Linkify from 'react-linkify'
 import { ESRoutes } from '@constants/route.constants'
 import { useRouter } from 'next/router'
 import _ from 'lodash'
-import { TwitterShareButton } from 'react-share'
+import ESTwitterShareButton from '@components/TwitterShareButton'
 
 interface Props {
   detail: LobbyDetail
@@ -86,9 +86,7 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit }) => {
                 <Icon className={`fa fa-link ${classes.link}`} fontSize="small" />
                 <Typography>{t('common:lobby.copy_shared_url')}</Typography>
               </Box>
-              <TwitterShareButton url={window.location.toString()} title={_.defaultTo(detail.attributes.title, '')}>
-                <img className={classes.twitter_logo} src="/images/twitter_logo.png" />
-              </TwitterShareButton>
+              <ESTwitterShareButton title={detail.attributes.title} url={window.location.toString()} />
             </>
           )}
         </Box>
@@ -230,11 +228,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&.MuiButtonBase-root.button-primary:focus': {
       background: 'transparent',
     },
-  },
-  twitter_logo: {
-    height: 23,
-    width: 23,
-    marginLeft: 12,
   },
   labelUrlShareContainer: {
     display: 'flex',
