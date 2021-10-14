@@ -139,11 +139,7 @@ const ArenaBattlesEdit: React.FC = () => {
 
   useEffect(() => {
     const selectedLength = getParticipantIds(selecteds).length
-    if (selectedLength === 1) {
-      setFreezable(false)
-    } else {
-      setFreezable(!!participants.length && selectedLength === maxCapacity)
-    }
+    setFreezable(selectedLength === maxCapacity && selectedLength !== 1)
   }, [selecteds, participants])
 
   return (

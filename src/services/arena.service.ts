@@ -746,7 +746,7 @@ export const setBattleRoyalScores = async ({
 }: SetBattleRoyaleScoresParams): Promise<{ data: ParticipantsResponse[] }> => {
   const scores = {}
   for (const p of participants) {
-    if (p.attributes.attack_score) scores[p.id] = p.attributes.attack_score
+    if (p.attributes.attack_score || p.attributes.attack_score === 0) scores[p.id] = p.attributes.attack_score
   }
   const { data } = await api.post(URI.BATTLE_ROYALE_SET_SCORES.replace(/:id/gi, `${hash_key}`), { scores })
 

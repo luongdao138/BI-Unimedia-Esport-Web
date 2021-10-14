@@ -529,7 +529,7 @@ export default {
   arena: {
     entry_after_recruitment_period: '受付時間を過ぎていたため、エントリーに失敗しました',
     leave_after_recruitment_period: '受付時間を過ぎていたため、エントリーを辞退できませんでした',
-    select_two_or_more: '参加メンバーを２つ以上選択して下さい。',
+    select_two_or_more: '参加枠数と同数のユーザーを選択してください。選択されなかったユーザーは落選となります。',
     enter_own_score: '参加者は自身の対戦の結果のみ入力できます',
     input_result: '結果の入力',
     br_set_score_btn: '結果を反映する',
@@ -563,10 +563,12 @@ export default {
       time_attack_errors: {
         format_invalid: 'タイムは半角数字で入力してください',
         time_attack_max_exceeds: '分、秒は0〜59の間の数字を入力してください',
+        invalid_value: 'タイムは半角数字で入力してください',
       },
       score_attack_errors: {
         format_invalid: 'スコアは半角数字で入力してください',
         score_attack_max_exceeds: 'スコアを8桁までに入力して下さい。',
+        invalid_value: '半角数字を入力してください',
       },
     },
     status: {
