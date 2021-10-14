@@ -37,7 +37,7 @@ const validateError = (value: TimeProps): TimeInputError => {
     if (checkNumber(value.hours)) {
       errors = { ...errors, hours: { ...errors.hours, time_attack_format_invalid: true } }
     }
-    if (Number(value.hours) > 23 || Number(value.hours) < 0) {
+    if (Number(value.hours) > 99 || Number(value.hours) < 0) {
       errors = { ...errors, hours: { ...errors.hours, time_attack_invalid_value: true } }
     }
   }
