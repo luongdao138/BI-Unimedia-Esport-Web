@@ -25,7 +25,8 @@ const ProgramInfo: React.FC<ProgramInfoProps> = ({ video_id }) => {
   const { meta_archived_video_stream, archivedVideoStreamData, getArchivedVideoStream, resetArchivedVideoStream } = useLiveStreamDetail()
   const { detailVideoResult } = useDetailVideo()
   const isLoadingData = meta_archived_video_stream?.pending
-  const getDescription = CommonHelper.linkifyString(detailVideoResult?.description)
+  // const getDescription = CommonHelper.splitToLinkifyComponent(detailVideoResult?.channel_description)
+  const getDescription = CommonHelper.splitToLinkifyComponent(detailVideoResult?.channel_description)
 
   const [descriptionCollapse, setDescriptionCollapse] = useState(true)
   const [descriptionCanTruncated, setDescriptionCanTruncated] = useState(false)
@@ -48,7 +49,7 @@ const ProgramInfo: React.FC<ProgramInfoProps> = ({ video_id }) => {
     if (getDescription) {
       setDescriptionCanTruncated(isTruncated())
     }
-  }, [getDescription])
+  }, [getDescription.length])
   useEffect(() => {
     if (video_id) {
       getArchivedVideoStream({ video_id: video_id, page: page, limit: LIMIT_ITEM })
@@ -114,11 +115,21 @@ const ProgramInfo: React.FC<ProgramInfoProps> = ({ video_id }) => {
   const renderDescription = () => {
     return (
       <>
-        <div
-          id="program-info-description"
-          className={classes.label + ' ' + (descriptionCollapse ? classes.labelCollapse : '')}
-          dangerouslySetInnerHTML={{ __html: getDescription }}
-        />
+        <div id="program-info-description" className={classes.label + ' ' + (descriptionCollapse ? classes.labelCollapse : '')}>
+          {getDescription.map(({ type, text }) => {
+            if (type === 'text') {
+              return text
+            }
+            return (
+              <div
+                key={text}
+                dangerouslySetInnerHTML={{
+                  __html: CommonHelper.linkifyString(text),
+                }}
+              ></div>
+            )
+          })}
+        </div>
         {descriptionCanTruncated && (
           <Box onClick={toggleDescriptionCollapse} className={classes.seeMoreContainer}>
             <Typography className={classes.seeMoreTitle}>
