@@ -6,13 +6,13 @@ import { createMetaSelector } from '@store/metadata/selectors'
 import { clearMetaData } from '@store/metadata/actions'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
 
-const getBattleRoyaleParticipantsMeta = createMetaSelector(actions.getBattleRoyaleParticipants)
+const getBattleRoyaleWinnersMeta = createMetaSelector(actions.getBattleRoyaleWinners)
 
 const useBRStatusComplete = () => {
   const router = useRouter()
   const dispatch = useAppDispatch()
   const winner = useAppSelector(selectors.getBattleRoyaleFirstPlace)
-  const winnerMeta = useAppSelector(getBattleRoyaleParticipantsMeta)
+  const winnerMeta = useAppSelector(getBattleRoyaleWinnersMeta)
 
   useEffect(() => {
     if (router.query.hash_key && !router.asPath.endsWith('/participants')) {
