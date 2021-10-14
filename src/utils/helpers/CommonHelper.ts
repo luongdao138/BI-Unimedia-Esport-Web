@@ -298,10 +298,28 @@ const regex = {
   url: /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi,
 }
 
-const linkifyString = (text = ''): string => {
-  return text.replace(regex.url, function (url) {
-    return '<a target="_blank" href="' + url + '" style="color:#FFF">' + url + '</a>'
+const linkifyString = (url = ''): string => {
+  return '<a target="_blank" href="' + url + '" style="color:#FFF">' + url + '</a>'
+}
+
+const splitToLinkifyComponent = (text = '') => {
+  const { url: linkifyRegex } = regex
+  const urlFromText = text.match(linkifyRegex)
+  if (!urlFromText || urlFromText.length === 0) {
+    return [{ type: 'text', text }]
+  }
+  let _text = text
+  const results = []
+  urlFromText.forEach((url) => {
+    const idx = _text.indexOf(url)
+    results.push({ type: 'text', text: _text.slice(0, idx) })
+    results.push({ type: 'link', text: url })
+    _text = text.slice(idx + url.length)
   })
+  if (_text.length) {
+    results.push({ type: 'text', text: _text })
+  }
+  return results
 }
 
 export const CommonHelper = {
@@ -327,4 +345,5 @@ export const CommonHelper = {
   formatTimeVideo,
   validateImageUrl,
   linkifyString,
+  splitToLinkifyComponent,
 }

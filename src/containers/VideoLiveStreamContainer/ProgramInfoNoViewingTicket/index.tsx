@@ -74,12 +74,7 @@ const ProgramInfoNoViewingTicket: React.FC<ProgramInfoProps> = ({ videoInfo, vid
       <Box className={`${classes.infoSectionContainer} ${containerClass}`}>
         <Typography className={classes.infoSectionTitle}>{title}</Typography>
         {htmlEnable ? (
-          <div
-            className={classes.infoContent + ' ' + classes.infoSectionContent + ' ' + contentClass}
-            dangerouslySetInnerHTML={{
-              __html: CommonHelper.linkifyString(content),
-            }}
-          />
+          <div className={classes.infoContent + ' ' + classes.infoSectionContent + ' ' + contentClass} />
         ) : (
           <Box className={classes.infoContent}>
             <Typography className={classes.infoSectionContent}>{content}</Typography>
@@ -232,12 +227,21 @@ const ProgramInfoNoViewingTicket: React.FC<ProgramInfoProps> = ({ videoInfo, vid
         <Typography className={classes.infoSectionTitle}>{t('live_stream_screen.explanation')}</Typography>
         <Box className={classes.infoContent + ' ' + classes.infoContentDescription}>
           <Box className={classes.description}>
-            <div
-              className={classes.infoSectionContent}
-              dangerouslySetInnerHTML={{
-                __html: CommonHelper.linkifyString(videoInfo?.description),
-              }}
-            />
+            <div className={classes.infoSectionContent}>
+              {CommonHelper.splitToLinkifyComponent(videoInfo?.description).map(({ type, text }) => {
+                if (type === 'text') {
+                  return text
+                }
+                return (
+                  <div
+                    key={text}
+                    dangerouslySetInnerHTML={{
+                      __html: CommonHelper.linkifyString(text),
+                    }}
+                  ></div>
+                )
+              })}
+            </div>
           </Box>
         </Box>
       </Box>

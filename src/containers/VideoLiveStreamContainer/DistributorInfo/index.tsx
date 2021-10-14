@@ -33,9 +33,10 @@ const DistributorInfo: React.FC<DistributorInfoProps> = ({ video_id }) => {
   const { meta_archived_video_stream, archivedVideoStreamData, getArchivedVideoStream, resetArchivedVideoStream } = useLiveStreamDetail()
   const isLoadingData = meta_archived_video_stream?.pending
 
-  const getChannelDescriptionText = CommonHelper.linkifyString(detailVideoResult?.channel_description)
-
+  const getChannelDescriptionText = CommonHelper.splitToLinkifyComponent(detailVideoResult?.channel_description)
   const [descriptionCollapse, setDescriptionCollapse] = useState(true)
+  const [descriptionCanTruncated, setDescriptionCanTruncated] = useState(false)
+
   const [page, setPage] = useState<number>(1)
   const [hasMore, setHasMore] = useState(true)
   const { width: itemWidthDownMdScreen } = useWindowDimensions(48)
@@ -59,6 +60,20 @@ const DistributorInfo: React.FC<DistributorInfoProps> = ({ video_id }) => {
       resetArchivedVideoStream()
     }
   }, [video_id])
+
+  const isTruncated = () => {
+    const descriptionDiv = document.getElementById('distributor-info-description')
+    if (!descriptionDiv) {
+      return false
+    }
+    return descriptionDiv.offsetHeight < descriptionDiv.scrollHeight
+  }
+
+  useEffect(() => {
+    if (getChannelDescriptionText) {
+      setDescriptionCanTruncated(isTruncated())
+    }
+  }, [getChannelDescriptionText.length])
 
   useEffect(() => {
     if (page > 1) getArchivedVideoStream({ video_id: video_id, page: page, limit: LIMIT_ITEM })
@@ -160,10 +175,6 @@ const DistributorInfo: React.FC<DistributorInfoProps> = ({ video_id }) => {
     )
   }
 
-  const getDescriptionTruncated = () => {
-    return descriptionCollapse ? `${getChannelDescriptionText.substring(0, downMd ? 70 : 200)}...` : getChannelDescriptionText
-  }
-
   const toggleDescriptionViewMore = () => {
     setDescriptionCollapse(!descriptionCollapse)
   }
@@ -182,13 +193,21 @@ const DistributorInfo: React.FC<DistributorInfoProps> = ({ video_id }) => {
   const channelDescription = () => {
     return (
       <Box className={classes.channelDescription}>
-        <div
-          className={classes.content}
-          dangerouslySetInnerHTML={{
-            __html: getChannelDescriptionText?.length < 200 ? getChannelDescriptionText : getDescriptionTruncated(),
-          }}
-        />
-        {getChannelDescriptionText.length > 200 && collapseButton()}
+        <div id="distribution-info-description" className={classes.content} />
+        {getChannelDescriptionText.map(({ type, text }) => {
+          if (type === 'text') {
+            return text
+          }
+          return (
+            <div
+              key={text}
+              dangerouslySetInnerHTML={{
+                __html: CommonHelper.linkifyString(text),
+              }}
+            ></div>
+          )
+        })}
+        {descriptionCanTruncated && collapseButton()}
       </Box>
     )
   }
@@ -352,6 +371,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'flex-end',
+    whiteSpace: 'pre-wrap',
+    color: '#FFFFFF',
+    opacity: 0.7,
   },
   avatar: {
     marginRight: '14px',
@@ -373,6 +395,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: 7,
     whiteSpace: 'pre-wrap',
     wordBreak: 'break-all',
+  },
+  contentCollapse: {
+    overflow: 'hidden',
+    'text-overflow': 'ellipsis',
+    display: '-webkit-box',
+    '-webkit-line-clamp': 5,
+    '-webkit-box-orient': 'vertical',
   },
   socialMediaContainer: {
     display: 'flex',

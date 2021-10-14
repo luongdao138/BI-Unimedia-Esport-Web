@@ -487,6 +487,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
                   error={
                     formik?.touched?.stepSettingOne?.video_publish_end_time && !!formik?.errors?.stepSettingOne?.video_publish_end_time
                   }
+                  minutesStep={1}
                 />
               ) : (
                 <Box pt={1}>
