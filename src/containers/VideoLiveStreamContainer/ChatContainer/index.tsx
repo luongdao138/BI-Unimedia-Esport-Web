@@ -208,10 +208,11 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     const isEnabledChat =
       videoType === STATUS_VIDEO.LIVE_STREAM &&
       !liveStreamInfo.is_end_live &&
-      +streamingSecond >= 0 &&
+      (+streamingSecond >= 0 || streamingSecond === Infinity) &&
       successGetListMess &&
       successGetListDonateMess
     // const isEnabledChat = true
+    console.log("🚀 ~ isEnabledChat", isEnabledChat)
 
     const validationSchema = Yup.object().shape({
       message: Yup.string()
@@ -227,7 +228,6 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       validationSchema,
       onSubmit: (values) => {
         createMess(sanitizeMess(values.message))
-        values.message = ''
       },
     })
     const classes = useStyles({ chatValidationError: !!errors.message })
@@ -246,12 +246,18 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       // || liveStreamInfo.is_pausing_live
       console.log('33-played->streaming->range', playedSecond, streamingSecond, streamingSecond - playedSecond)
       console.log('🚀 ~ isStreaming ~ ---0000', playedSecond + DELAY_SECONDS >= streamingSecond)
-      if ((playedSecond >= streamingSecond || playedSecond + DELAY_SECONDS >= streamingSecond) && videoType === STATUS_VIDEO.LIVE_STREAM) {
-        return true
-      } else {
-        console.log('🚀 ~ isStreaming ~ false')
-        return false
+      if(videoType === STATUS_VIDEO.LIVE_STREAM){
+        if(streamingSecond === Infinity){
+          console.log('🚀 ~ isStreaming ~ 0000101111')
+          return true
+        }
+        if ((playedSecond >= streamingSecond || playedSecond + DELAY_SECONDS >= streamingSecond)) {
+          // if ((playedSecond >= streamingSecond) && videoType === STATUS_VIDEO.LIVE_STREAM) {
+          return true
+        }
       }
+      console.log('🚀 ~ isStreaming ~ false')
+      return false
     })()
 
     const handleCreateUserDB = async () => {
@@ -566,9 +572,11 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       const transformMessAsc = sortMessages(transformMess)
       // const transformMess = messagesResults.data.listMessages.items.filter((item) => item.video_id === key_video_id)
       // console.log("🚀 ~ ------111 ~ playedSecond", playedSecond)
-      // console.log("🚀 ~ ------222 ~ streamingSecond", streamingSecond)
+      console.log("🚀 ~ ------222 ~ streamingSecond", streamingSecond)
       // comment if no get in initial
-      // setStateMessages(transformMessAsc)
+      if(streamingSecond === Infinity && videoType === STATUS_VIDEO.LIVE_STREAM){
+        setStateMessages(transformMessAsc)
+      }
       // save mess for use in local
       setSavedMess([...transformMessAsc])
       setSuccessGetListMess(true)
@@ -929,6 +937,10 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
           const isMessageInBottom = checkMessIsInBottom()
           // render new messages with savedMess
           console.log('🚀 ~ 11111')
+          if(!point) {
+            // reset input chat
+            values.message = ''
+          }
           setStateMessages([...savedMess, local_message])
           console.log('🚀 ~ createMess ~ stateMessages', stateMessages)
 
@@ -949,7 +961,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
             setMessagesDonate([...newMessDonate, local_message])
           }
         }
-
+        
         try {
           const result = await API.graphql(graphqlOperation(createMessage, { input }))
           refCreateMessLocal.current(result, local_message)
@@ -1040,7 +1052,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     // }
 
     const chatInputComponent = () => (
-      <Box className={`${classes.chatInputMobileContainer}`} style={{ bottom: errors?.message ? '-132.5px' : '-116.5px' }}>
+      <Box className={`${classes.chatInputMobileContainer}`} style={{ bottom: isMobile ? '0px' : (errors?.message ? '-132.5px' : '-116.5px') }}>
         {purchaseDialogVisible && isMobile && purchaseInfoDialog()}
         {isEnabledChat &&
           (isStreaming ? (
