@@ -527,6 +527,8 @@ export default {
     },
   },
   arena: {
+    entry_after_recruitment_period: '受付時間を過ぎていたため、エントリーに失敗しました',
+    leave_after_recruitment_period: '受付時間を過ぎていたため、エントリーを辞退できませんでした',
     select_two_or_more: '参加メンバーを２つ以上選択して下さい。',
     enter_own_score: '参加者は自身の対戦の結果のみ入力できます',
     input_result: '結果の入力',
