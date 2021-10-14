@@ -195,6 +195,7 @@ const ArenaBattles: React.FC = () => {
               onAttackError={(val) => handleError(val, v.id)}
               type={tournament?.attributes.rule}
               disabled={(v.attributes.is_fixed_score || !v.highlight) && !isModerator}
+              participants={participants}
             />
           </BRListItem>
         ))}
