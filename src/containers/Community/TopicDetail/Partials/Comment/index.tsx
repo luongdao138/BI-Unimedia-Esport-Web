@@ -7,7 +7,7 @@ import ESLoader from '@components/Loader'
 import ESMenuItem from '@components/Menu/MenuItem'
 import LoginRequired from '@containers/LoginRequired'
 import { useTranslation } from 'react-i18next'
-import { Dispatch, SetStateAction, useState, useRef } from 'react'
+import { Dispatch, SetStateAction, useState, useRef, useEffect } from 'react'
 import { SRLWrapper } from 'simple-react-lightbox'
 import { LIGHTBOX_OPTIONS } from '@constants/common.constants'
 import { CommentsResponse } from '@services/community.service'
@@ -87,7 +87,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({
   const { isModerator, isPublic, isNotMember, isTopicOwner } = menuParams
   const { getCommentDetail, commentDetail, commentDetailMeta, resetCommentDetail } = useTopicDetail()
   const contentRef = useRef(null)
-  const popoverRef = useRef(null)
+  const popoverInnerRef = useRef()
 
   const toProfile = (user_code) => router.push(`${ESRoutes.PROFILE}/${user_code}`)
 
@@ -201,7 +201,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({
           </Box>
         )}
         {commentDetailMeta.pending && (
-          <Box display="flex" justifyContent="center" alignItems="center">
+          <Box display="flex" justifyContent="center" alignItems="center" my={2}>
             <ESLoader />
           </Box>
         )}
@@ -209,9 +209,22 @@ const Comment: React.FC<CommunityHeaderProps> = ({
     )
   }
 
+  useEffect(() => {
+    document.addEventListener('click', handleClick)
+    return () => document.removeEventListener('click', handleClick)
+    function handleClick(e: any) {
+      if (popoverInnerRef && popoverInnerRef.current) {
+        const ref: any = popoverInnerRef.current
+        if (!ref.contains(e.target) && document.getElementById('SRLLightbox') === null) {
+          setShowComment((comments) => _.map(comments, () => false))
+        }
+      }
+    }
+  }, [])
+
   const popoverContent = () => {
     return (
-      <>
+      <StyledBox ref={popoverInnerRef} p={2}>
         <Box display="flex" alignItems="flex-start" justifyContent="space-between" mb={1}>
           <Box className={classes.userInfoContainer}>
             <Typography className={classes.number}>{replyData.comment_no}</Typography>
@@ -246,7 +259,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({
             replyData.attachments[0]?.assets_url &&
             renderClickableImage(replyData.attachments[0]?.assets_url, true)}
         </Box>
-      </>
+      </StyledBox>
     )
   }
 
@@ -289,9 +302,9 @@ const Comment: React.FC<CommunityHeaderProps> = ({
           </Box>
           <StyledBox className={classes.contentContainer} ref={contentRef}>
             {showComment && (
-              <StyledBox className={`${classes.popcontentArrow} ${Boolean(replyAnchorEl) && 'show'}`} ref={popoverRef}>
+              <Box className={`${classes.popcontentArrow} ${Boolean(replyAnchorEl) && 'show'}`}>
                 <Box className={classes.popcontent}>{renderPopover()}</Box>
-              </StyledBox>
+              </Box>
             )}
             <Linkify
               componentDecorator={(decoratedHref, decoratedText, key) => (
@@ -465,7 +478,6 @@ const useStyles = makeStyles((theme) => ({
     background: 'rgba(33, 33, 33, .9)',
     border: '3px solid #646464',
     borderRadius: 4,
-    padding: theme.spacing(2),
     top: (props: StyleProps) => (props.isBottom ? 'auto' : `calc(100% - ${props.currentReplyNumberRectY}px)`),
     bottom: (props: StyleProps) => (props.isBottom ? `calc(100% - ${props.currentReplyNumberRectY}px)` : 'auto'),
     left: theme.spacing(-2),

@@ -36,7 +36,7 @@ const CommunityContainer: React.FC<Props> = ({ userCode }) => {
       {communities && communities.length > 0
         ? communities &&
           communities.map((community, i) => (
-            <Grid key={i} item xs={12} sm={12} md={3} lg={3} xl={3} className={classes.card}>
+            <Grid key={i} item xs={12} lg={4} xl={3} sm={12} className={classes.card}>
               <CommunityCard community={community} />
             </Grid>
           ))

@@ -389,7 +389,8 @@ const useStyles = makeStyles<Theme, StyleProps>(() => ({
   },
   button: {
     minWidth: 170,
-    marginLeft: 20,
+    marginLeft: 10,
+    marginRight: 10,
     marginTop: 10,
   },
 }))

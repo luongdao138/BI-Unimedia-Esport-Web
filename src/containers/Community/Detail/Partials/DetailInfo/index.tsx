@@ -22,8 +22,7 @@ import { CommunityDetail, TopicDetailList } from '@services/community.service'
 import useCommunityHelper from '@containers/Community/hooks/useCommunityHelper'
 import DetailInfoButtons from '../../../Partials/DetailInfoButtons'
 import { MEMBER_ROLE, TABS, COMMUNITY_DIALOGS } from '@constants/community.constants'
-import { TwitterShareButton } from 'react-share'
-import _ from 'lodash'
+import ESTwitterShareButton from '@components/TwitterShareButton'
 import * as actions from '@store/community/actions'
 import { useConfirm } from '@components/Confirm'
 
@@ -310,9 +309,7 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
               <Icon className={`fa fa-link ${classes.link}`} fontSize="small" />
               <Typography>{t('common:community.copy_shared_url')}</Typography>
             </Box>
-            <TwitterShareButton url={window.location.toString()} title={_.defaultTo(detail.attributes.name, '')}>
-              <img className={classes.twitter_logo} src="/images/twitter_logo.png" />
-            </TwitterShareButton>
+            <ESTwitterShareButton title={detail.attributes.name} url={window.location.toString()} />
           </Box>
         </Box>
 
@@ -419,7 +416,6 @@ const useStyles = makeStyles((theme) => ({
   },
   communityId: { marginRight: 20 },
   urlCopy: {
-    marginRight: 12,
     cursor: 'pointer',
     color: '#EB5686',
   },
