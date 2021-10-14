@@ -93,6 +93,8 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   const isDown1100 = useMediaQuery(theme.breakpoints.down(1100), { noSsr: true })
   const isDown960 = useMediaQuery(theme.breakpoints.down(960), { noSsr: true })
   const { width: videoDisplayWidth } = useWindowDimensions(0)
+  const androidPl = /Android/i.test(window.navigator.userAgent)
+  const iPhonePl = /iPhone/i.test(window.navigator.userAgent)
 
   const handlePauseAndSeekVideo = () => {
     // // seek to current live stream second if is pausing live and is not playing
@@ -254,7 +256,8 @@ const VideoPlayer: React.FC<PlayerProps> = ({
         hls.startLoad()
       }
     }
-    if (Hls.isSupported() && !isMobile) {
+    // if (Hls.isSupported() && !isMobile) {
+    if (Hls.isSupported() || androidPl) {
       // bind them together
       hls.loadSource(src)
       //@ts-ignore
@@ -433,9 +436,27 @@ const VideoPlayer: React.FC<PlayerProps> = ({
 
   return (
     <div className={classes.videoPlayer}>
+      {(iPhonePl || androidPl) && (
+        <video
+          id="video"
+          ref={videoEl}
+          muted
+          style={{ width: '100%', height: '100%' }}
+          src={src}
+          autoPlay
+          controls
+          //@ts-ignore
+          playsinline="playsinline"
+          preload={'auto'}
+          className={classes.video}
+          controlslist="noplaybackrate foobar"
+        >
+          <source src={src} type={'video/MP4'} />
+        </video>
+      )}
       <div ref={playerContainerRef} className={classes.playerContainer}>
         <div style={{ height: '100%' }} onClick={handlePlayPauseOut}>
-          {!isMobile ? (
+          {!isMobile && !androidPl && !iPhonePl && (
             <video
               id="video"
               ref={videoEl}
@@ -445,10 +466,8 @@ const VideoPlayer: React.FC<PlayerProps> = ({
               autoPlay={true}
               // poster={thumbnail ?? '/images/live_stream/thumbnail_default.png'}
             />
-          ) : (
-            <video id="video" ref={videoEl} muted={muted} style={{ width: '100%', height: '100%' }} src={src} autoPlay={true} controls />
           )}
-          {!isMobile && !mediaOverlayIsShown && loading && (
+          {!androidPl && !iPhonePl && !mediaOverlayIsShown && loading && (
             <div className={classes.playOverView}>
               {videoLoaded && (
                 <div
@@ -465,7 +484,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
             </div>
           )}
         </div>
-        {!isMobile && (
+        {!androidPl && !iPhonePl && (
           <div className={classes.processControl}>
             <SeekBar videoRef={videoEl} durationsPlayer={durationPlayer} currentTime={playedSeconds} />
             <div className={classes.controlOut}>
@@ -743,6 +762,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: 7,
     background: '#FF4786',
     cursor: 'pointer',
+  },
+  video: {
+    'video::-webkit-media-controls-timeline': {
+      display: 'none !important',
+    },
   },
 }))
 

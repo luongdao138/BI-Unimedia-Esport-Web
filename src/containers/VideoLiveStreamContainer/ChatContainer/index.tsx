@@ -522,7 +522,6 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
           filterMessByPlayedSecond(playedSecond)
         }
       }
-
       if (isSeeking) {
         setIsSeeking(false)
       }
