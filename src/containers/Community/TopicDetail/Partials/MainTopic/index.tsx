@@ -249,7 +249,6 @@ const useStyles = makeStyles((theme) => ({
   },
   date: {
     fontSize: 11,
-    color: Colors.white_opacity[30],
   },
   contentContainer: {
     display: 'flex',

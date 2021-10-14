@@ -23,6 +23,7 @@ import Linkify from 'react-linkify'
 import { RULE } from '@constants/tournament.constants'
 import { ESRoutes } from '@constants/route.constants'
 import { useRouter } from 'next/router'
+import ESTwitterShareButton from '@components/TwitterShareButton'
 
 interface Props {
   detail: TournamentDetail
@@ -83,9 +84,12 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
         <Box display="flex" flexDirection="row" alignItems="center">
           <Typography>{`${t('common:tournament.tournament_id')}${detail.id}`}</Typography>
           {extended && (
-            <Box display="flex" justifyContent="flex-end" className={classes.urlCopy} onClick={handleCopy}>
-              <Icon className={`fa fa-link ${classes.link}`} fontSize="small" />
-              <Typography>{t('common:tournament.copy_shared_url')}</Typography>
+            <Box display="flex" flexDirection="row" alignItems="center" flexWrap="wrap">
+              <Box display="flex" justifyContent="flex-end" className={classes.urlCopy} onClick={handleCopy}>
+                <Icon className={`fa fa-link ${classes.link}`} fontSize="small" />
+                <Typography>{t('common:tournament.copy_shared_url')}</Typography>
+              </Box>
+              <ESTwitterShareButton title={detail.attributes.title} url={window.location.toString()} />
             </Box>
           )}
         </Box>
