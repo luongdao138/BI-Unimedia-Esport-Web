@@ -140,6 +140,11 @@ const ArenaBattles: React.FC = () => {
 
       <RuleHeader textAlign="center" pt={3} rule={tournament?.attributes.rule} showCaution={isParticipant && isTeamLeader}>
         <Box textAlign="center" pb={3}>
+          {errorObject.time_attack_invalid_value ? (
+            <Typography style={{ color: Colors.secondary, paddingTop: 4 }}>
+              {i18n.t('common:arena.rules_title.time_attack_errors.invalid_value')}
+            </Typography>
+          ) : null}
           {errorObject.time_attack_format_invalid ? (
             <Typography style={{ color: Colors.secondary, paddingTop: 4 }}>
               {i18n.t('common:arena.rules_title.time_attack_errors.format_invalid')}
@@ -150,9 +155,9 @@ const ArenaBattles: React.FC = () => {
               {i18n.t('common:arena.rules_title.time_attack_errors.time_attack_max_exceeds')}
             </Typography>
           ) : null}
-          {errorObject.time_attack_invalid_value ? (
+          {errorObject.score_attack_invalid_value ? (
             <Typography style={{ color: Colors.secondary, paddingTop: 4 }}>
-              {i18n.t('common:arena.rules_title.time_attack_errors.invalid_value')}
+              {i18n.t('common:arena.rules_title.score_attack_errors.invalid_value')}
             </Typography>
           ) : null}
           {errorObject.score_attack_format_invalid ? (
@@ -163,11 +168,6 @@ const ArenaBattles: React.FC = () => {
           {errorObject.score_attack_max_exceeds ? (
             <Typography style={{ color: Colors.secondary, paddingTop: 4 }}>
               {i18n.t('common:arena.rules_title.score_attack_errors.score_attack_max_exceeds')}
-            </Typography>
-          ) : null}
-          {errorObject.score_attack_invalid_value ? (
-            <Typography style={{ color: Colors.secondary, paddingTop: 4 }}>
-              {i18n.t('common:arena.rules_title.score_attack_errors.invalid_value')}
             </Typography>
           ) : null}
           {errorObject.only_digit ? (

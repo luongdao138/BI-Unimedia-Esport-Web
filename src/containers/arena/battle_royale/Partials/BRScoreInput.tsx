@@ -20,6 +20,9 @@ const validateError = ({ value }: ScoreProps): ErrorType => {
     if (Number(value) % 1 !== 0) {
       error['score_attack_invalid_value'] = true
     }
+    if (Number(value) < 0) {
+      error['score_attack_invalid_value'] = true
+    }
   }
 
   return error
