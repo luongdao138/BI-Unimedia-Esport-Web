@@ -25,7 +25,7 @@ const CommunityCard: React.FC<Props> = ({ community }) => {
   const getMediaScreen = () => {
     return (
       <>
-        <Box className={classes.mediaOverlay} display="flex" flexDirection="row" justifyContent="flex-start" p={1}>
+        <Box className={classes.mediaOverlay} display="flex" flexDirection="row" justifyContent="space-between" p={1}>
           <Box alignSelf="flex-end">
             <ESAvatar size={36} src={attr.organizer_avatar} alt={attr.organizer_name} />
           </Box>
