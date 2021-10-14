@@ -40,21 +40,21 @@ const ReloadButton: React.FC<Props> = ({ videoRef, typeButton, currentTime, isLi
   }
   if (typeButton === 'reload') {
     return (
-      <Box pr={2} className={classes.buttonNormal} onClick={onChangeTime} data-tip data-for="reload">
+      <Box className={classes.buttonNormal} onClick={onChangeTime} data-tip data-for="reload">
         <img src={'/images/ic_reload.svg'} className={classes.image} />
         <PlayerTooltip id={'reload'} title={t('videos_top_tab.reload')} />
       </Box>
     )
   } else if (typeButton === 'previous') {
     return (
-      <Box pl={2} className={classes.buttonNormal} onClick={onChangeTime} data-tip data-for="previous">
+      <Box className={classes.buttonNormal} onClick={onChangeTime} data-tip data-for="previous">
         <img src={'/images/ic_previous.svg'} className={classes.image} />
         <PlayerTooltip id={'previous'} title={t('videos_top_tab.previous')} offset={{ top: -10, left: -10 }} />
       </Box>
     )
   } else {
     return (
-      <Box pl={2} className={classes.buttonNormal} onClick={onChangeTime} data-tip data-for="next">
+      <Box className={classes.buttonNormal} onClick={onChangeTime} data-tip data-for="next">
         <img src={'/images/ic_next.svg'} className={classes.image} />
         <PlayerTooltip id={'next'} title={t('videos_top_tab.next')} offset={{ top: -10, left: -10 }} />
       </Box>
@@ -67,6 +67,7 @@ const useStyles = makeStyles(() => ({
       alignItems: 'center',
       display: 'flex',
       cursor: props.isLive ? 'not-allowed' : 'pointer',
+      padding: '0px 8px',
     }
   },
   image: (props: { isLive: boolean }) => {

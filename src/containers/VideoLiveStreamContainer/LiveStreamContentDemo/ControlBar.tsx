@@ -1,4 +1,4 @@
-import { Box, Icon, makeStyles, Slider } from '@material-ui/core'
+import { Box, Icon, makeStyles, Slider, Typography } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import React, { memo, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -21,6 +21,7 @@ interface ControlProps {
   volume?: number
   isLive?: boolean
   videoStatus?: number
+  onReloadTime?: () => void
 }
 
 const ControlBarPlayer: React.FC<ControlProps> = ({
@@ -37,8 +38,9 @@ const ControlBarPlayer: React.FC<ControlProps> = ({
   volume,
   isLive,
   videoStatus,
+  onReloadTime,
 }) => {
-  const classes = useStyles()
+  const classes = useStyles({ liveStreaming: durationsPlayer - currentTime <= 20 ? true : false })
   const { t } = useTranslation('common')
   const [isFull, setFull] = useState<boolean>(false)
 
@@ -96,8 +98,30 @@ const ControlBarPlayer: React.FC<ControlProps> = ({
         <div className={classes.time}>
           <TimeBar statusVideo={videoStatus} currentTime={currentTime} durationsPlayer={durationsPlayer} />
         </div>
-        <Reload videoRef={videoRef} typeButton={'previous'} currentTime={currentTime} durationsPlayer={durationsPlayer} isLive={isLive} />
-        <Reload videoRef={videoRef} typeButton={'next'} currentTime={currentTime} durationsPlayer={durationsPlayer} isLive={isLive} />
+        {!isLive && (
+          <>
+            <Reload
+              videoRef={videoRef}
+              typeButton={'previous'}
+              currentTime={currentTime}
+              durationsPlayer={durationsPlayer}
+              isLive={isLive}
+            />
+            <Reload videoRef={videoRef} typeButton={'next'} currentTime={currentTime} durationsPlayer={durationsPlayer} isLive={isLive} />
+          </>
+        )}
+        {/* dot live streaming */}
+        {isLive && (
+          <>
+            <div className={classes.liveStreaming}>
+              <div className={classes.dot} />
+              {/* <Typography className={classes.textStatus}>{t('live_stream_screen.live_streaming')}</Typography> */}
+            </div>
+            <div className={classes.btnRefreshTime} onClick={onReloadTime}>
+              <Typography className={classes.textRefresh}>{t('live_stream_screen.refresh_new_live')}</Typography>
+            </div>
+          </>
+        )}
       </div>
       <Box pr={2} className={classes.buttonNormal} onClick={toggleFullScreen} data-tip data-for="toggleFullScreen" id={'fullscreenRef'}>
         {!isFull ? (
@@ -154,7 +178,7 @@ const useStyles = makeStyles(() => ({
     // borderStyle:'solid',
     alignItems: 'center',
     display: 'flex',
-    paddingLeft: 16,
+    padding: '0px 8px 0px 8px',
   },
   textTime: {
     fontSize: 15,
@@ -185,7 +209,7 @@ const useStyles = makeStyles(() => ({
   volumeBar: {
     width: 90,
     marginLeft: 16,
-    marginRight: 8,
+    // marginRight: 8,
     borderRadius: 2,
     '& .MuiSlider-rail': {
       color: '#C3C3C3',
@@ -215,10 +239,49 @@ const useStyles = makeStyles(() => ({
     alignItems: 'center',
     display: 'flex',
     cursor: 'pointer',
+    padding: '0px 0px 0px 8px',
   },
   playerTooltip: {
     padding: '5px 7px !important',
     transition: 'opacity 0.3s ease-out',
+  },
+  liveStreaming: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 5,
+  },
+  dot: (props: { liveStreaming: boolean }) => {
+    return {
+      background: props.liveStreaming ? 'red' : '#FFFFFF4D',
+      width: 8,
+      height: 8,
+      borderRadius: 4,
+    }
+  },
+  textStatus: {
+    fontSize: 13,
+    color: '#fff',
+    paddingLeft: 4,
+  },
+  btnRefreshTime: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    display: 'flex',
+    cursor: 'pointer',
+    marginLeft: 8,
+  },
+  textRefresh: {
+    fontSize: 11,
+    color: '#fff',
+    borderRadius: 15,
+    border: '1px solid #FFFFFF4D',
+    justifyContent: 'center',
+    alignItems: 'center',
+    display: 'flex',
+    padding: '1px 3px',
+    // background: '#FF4786'
   },
 }))
 

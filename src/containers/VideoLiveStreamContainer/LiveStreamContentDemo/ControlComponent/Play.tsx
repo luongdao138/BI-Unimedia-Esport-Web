@@ -28,8 +28,8 @@ const useStyles = makeStyles(() => ({
   buttonNormal: {
     alignItems: 'center',
     display: 'flex',
-    paddingLeft: 16,
     cursor: 'pointer',
+    padding: '0px 8px',
   },
   pauseSmall: {
     color: Colors.white,

@@ -58,7 +58,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   // console.log('🚀 ~ playedSeconds', playedSeconds)
   // const reactPlayerRef = useRef(null)
   const playerContainerRef = useRef(null)
-  // const [isLive, setIsLive] = useState(false)
+  const [isLive, setIsLive] = useState(true)
 
   //As of Chrome 66, videos must be muted in order to play automatically
   const [state, setState] = useState({
@@ -221,15 +221,13 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       //@ts-ignore
       video.muted = true
       hls.on(Hls.Events.LEVEL_LOADED, handleLoaded)
-      hls.on(Hls.Events.MEDIA_ATTACHING, (_, data) => {
-        console.log('----MEDIA_ATTACHING----', data)
-      })
       hls.on(Hls.Events.ERROR, handleError)
     }
 
     const handleLoaded = (_, data) => {
       console.log('~~~~LEVEL_LOADED~~~~~', data)
       // setDurationPlayer(data.details.totalduration)
+      setIsLive(data.details.live)
     }
     const handleError = (_, data) => {
       console.log('~~~~~~~~> ERROR', data)
@@ -441,6 +439,10 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   //   hls.attachMedia(document.getElementById('video'))
   //   hls.startLoad(-1)
   // }
+  const handleReloadTime = () => {
+    // document.querySelector("video").load()
+    videoEl.current.currentTime = durationPlayer
+  }
 
   return (
     <div className={classes.videoPlayer}>
@@ -508,8 +510,9 @@ const VideoPlayer: React.FC<PlayerProps> = ({
                 onChangeVol={handleChangeVol}
                 onChangeVolDrag={handleChangeVolDrag}
                 volume={volume}
-                // isLive={isLive}
+                isLive={isLive}
                 videoStatus={type}
+                onReloadTime={handleReloadTime}
               />
             </div>
           </div>
@@ -680,6 +683,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     // backgroundColor: 'rgba(0,0,0,0.3)',
     display: 'flex',
     justifyContent: 'space-between',
+    height: 40,
   },
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   processControl: {
