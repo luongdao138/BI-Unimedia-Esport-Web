@@ -91,9 +91,9 @@ const useStyles = makeStyles(() => ({
     //   height: 8,
     //   borderRadius: 4,
     // },
-    // '& .MuiSlider-thumb.Mui-focusVisible, .MuiSlider-thumb:hover': {
-    //   boxShadow: 'none',
-    // },
+    '& .MuiSlider-thumb.Mui-focusVisible, .MuiSlider-thumb:hover': {
+      boxShadow: 'none',
+    },
     // '& .MuiSlider-root': {
     //   // padding: 0,
     // },

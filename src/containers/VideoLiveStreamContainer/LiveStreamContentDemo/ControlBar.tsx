@@ -19,7 +19,7 @@ interface ControlProps {
   onChangeVol?: (_, value) => void
   onChangeVolDrag?: (_, value) => void
   volume?: number
-  isLive?: boolean
+  isLive?: boolean | null
   videoStatus?: number
   onReloadTime?: () => void
 }
@@ -36,11 +36,11 @@ const ControlBarPlayer: React.FC<ControlProps> = ({
   onChangeVol,
   onChangeVolDrag,
   volume,
-  isLive,
+  isLive = null,
   videoStatus,
   onReloadTime,
 }) => {
-  const classes = useStyles({ liveStreaming: durationsPlayer - currentTime <= 20 ? true : false })
+  const classes = useStyles({ liveStreaming: durationsPlayer - currentTime <= 13 ? true : false })
   const { t } = useTranslation('common')
   const [isFull, setFull] = useState<boolean>(false)
 
@@ -72,7 +72,7 @@ const ControlBarPlayer: React.FC<ControlProps> = ({
     <>
       <div className={classes.controlLeft}>
         <Play onPlayPause={onPlayPause} playing={playing} />
-        <Reload videoRef={videoRef} typeButton={'reload'} isLive={isLive} />
+        <Reload videoRef={videoRef} typeButton={'reload'} />
         <Box className={classes.buttonVolume}>
           <Box className={classes.boxIconVolume} onClick={onMute} data-tip data-for="mute">
             {!muted ? (
@@ -81,7 +81,7 @@ const ControlBarPlayer: React.FC<ControlProps> = ({
               <Icon fontSize={'small'} className={`fas fa-volume-mute ${classes.mutedIcon}`} />
             )}
           </Box>
-          <PlayerTooltip id={'mute'} title={!muted ? t('videos_top_tab.mute') : t('videos_top_tab.unmute')} offset={{ top: -2, left: 0 }} />
+          <PlayerTooltip id={'mute'} title={!muted ? t('videos_top_tab.mute') : t('videos_top_tab.unmute')} offset={{ top: -5, left: 0 }} />
           <div className={classes.slider}>
             <Slider
               max={1}
@@ -98,7 +98,7 @@ const ControlBarPlayer: React.FC<ControlProps> = ({
         <div className={classes.time}>
           <TimeBar statusVideo={videoStatus} currentTime={currentTime} durationsPlayer={durationsPlayer} />
         </div>
-        {!isLive && (
+        {!isLive && isLive !== null && (
           <>
             <Reload
               videoRef={videoRef}
@@ -111,7 +111,7 @@ const ControlBarPlayer: React.FC<ControlProps> = ({
           </>
         )}
         {/* dot live streaming */}
-        {isLive && (
+        {isLive && isLive !== null && (
           <>
             <div className={classes.liveStreaming}>
               <div className={classes.dot} />

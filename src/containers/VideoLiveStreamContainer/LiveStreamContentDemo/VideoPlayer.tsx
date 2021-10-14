@@ -58,7 +58,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   // console.log('🚀 ~ playedSeconds', playedSeconds)
   // const reactPlayerRef = useRef(null)
   const playerContainerRef = useRef(null)
-  const [isLive, setIsLive] = useState(true)
+  const [isLive, setIsLive] = useState(null)
 
   //As of Chrome 66, videos must be muted in order to play automatically
   const [state, setState] = useState({
@@ -284,7 +284,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   //archived
   useEffect(() => {
     videoEl.current.addEventListener('timeupdate', (event) => {
-      // console.log("🚀 ~ videoEl.current.addEventListener ~ event", event) 
+      // console.log("🚀 ~ videoEl.current.addEventListener ~ event", event)
       // const delaySeconds = 15
       console.log(
         '->current->duration-> range',
@@ -776,8 +776,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     cursor: 'pointer',
   },
   video: {
-    'video::-webkit-media-controls-timeline': {
+    '&::-webkit-media-controls': {
       display: 'none !important',
+      visibility: 'hidden',
+    },
+    '&::-webkit-media-controls-current-time-display': {
+      display: 'none',
+      visibility: 'hidden',
+    },
+    '&::-webkit-media-controls-timeline': {
+      display: 'none',
     },
   },
 }))
