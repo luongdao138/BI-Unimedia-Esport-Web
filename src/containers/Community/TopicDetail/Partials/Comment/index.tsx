@@ -303,7 +303,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({
           <StyledBox className={classes.contentContainer} ref={contentRef}>
             {showComment && (
               <Box className={`${classes.popcontentArrow} ${Boolean(replyAnchorEl) && 'show'}`}>
-                <StyledBox className={classes.popcontent}>{renderPopover()}</StyledBox>
+                <Box className={classes.popcontent}>{renderPopover()}</Box>
               </Box>
             )}
             <Linkify
