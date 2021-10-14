@@ -37,8 +37,8 @@ const validateError = (value: TimeProps): TimeInputError => {
     if (checkNumber(value.hours)) {
       errors = { ...errors, hours: { ...errors.hours, time_attack_format_invalid: true } }
     }
-    if (Number(value.hours) < 0) {
-      errors = { ...errors, hours: { ...errors.hours, time_attack_format_invalid: true } }
+    if (Number(value.hours) > 23 || Number(value.hours) < 0) {
+      errors = { ...errors, hours: { ...errors.hours, time_attack_invalid_value: true } }
     }
   }
   if (value.minutes) {
@@ -61,8 +61,8 @@ const validateError = (value: TimeProps): TimeInputError => {
     if (checkNumber(value.millis)) {
       errors = { ...errors, millis: { ...errors.millis, time_attack_format_invalid: true } }
     }
-    if (Number(value.millis) < 0) {
-      errors = { ...errors, millis: { ...errors.millis, time_attack_format_invalid: true } }
+    if (Number(value.millis) > 999 || Number(value.millis) < 0) {
+      errors = { ...errors, millis: { ...errors.millis, time_attack_invalid_value: true } }
     }
   }
 
