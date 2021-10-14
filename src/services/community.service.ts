@@ -78,6 +78,8 @@ export type CommunityResponse = {
     description: string
     cover_image_url: string | null
     open_range: number
+    organizer_name: string
+    organizer_avatar: string
     is_official: number
     members_avatar: {
       id: number | null
@@ -310,6 +312,8 @@ export type FollowersTopicResponse = {
     cover_image_url: string | null
     topic_title: string
     topic_hash: string
+    organizer_name: string
+    organizer_avatar: string
     comment_count: number
     topic_created_at: string
     members_avatar: {

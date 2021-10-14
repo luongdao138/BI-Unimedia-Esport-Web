@@ -26,7 +26,11 @@ const TopicCard: React.FC<Props> = ({ topic, from }) => {
   const getMediaScreen = () => {
     return (
       <>
-        <Box className={classes.mediaOverlay} display="flex" flexDirection="row" justifyContent="flex-end" p={1}>
+        <Box className={classes.mediaOverlay} display="flex" flexDirection="row" justifyContent="flex-start" p={1}>
+          <Box alignSelf="flex-end">
+            <ESAvatar size={36} src={attr.organizer_avatar} alt={attr.organizer_name} />
+          </Box>
+
           <Box display="flex" flexDirection="column" alignItems="flex-end">
             {!!attr.is_official && (
               <Chip
