@@ -67,6 +67,10 @@ export default createReducer(initialState, (builder) => {
     state.searchCommunity = searchCommunity
     state.searchCommunityMeta = action.payload.meta
   })
+  builder.addCase(actions.resetSearchCommunity, (state) => {
+    state.searchCommunity = []
+    state.searchCommunityMeta = undefined
+  })
   builder.addCase(actions.getTopicList.fulfilled, (state, action) => {
     state.topicList = action.payload.data
     state.topicListMeta = action.payload.meta

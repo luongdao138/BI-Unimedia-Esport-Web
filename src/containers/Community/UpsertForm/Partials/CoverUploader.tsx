@@ -1,4 +1,3 @@
-import _ from 'lodash'
 import { memo, useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { Box, Typography } from '@material-ui/core'
@@ -7,6 +6,7 @@ import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
 import CoverSelector from '@components/ImagePicker/CoverSelector'
 import ESLoader from '@components/Loader'
+import _ from 'lodash'
 
 type ProfileAvatarProps = {
   src: string
@@ -70,14 +70,16 @@ const CoverUploader: React.FC<ProfileAvatarProps> = ({
         }}
       >
         {_.isEmpty(localSrc) ? null : <img className={classes.image} src={localSrc.toString()} />}
-        {!isUploading ? (
-          <Box display="flex" flexDirection="column" alignItems="center" position="absolute" zIndex="100" className={classes.logoWhite}>
-            <Camera fontSize="large" className={classes.camera} />
-            <Typography>{t('common:tournament.cover_upload_select_img')}</Typography>
-          </Box>
-        ) : null}
+
+        <Box display="flex" flexDirection="column" alignItems="center" position="absolute" zIndex="100" className={classes.logoWhite}>
+          <Camera fontSize="large" className={classes.camera} />
+          <Typography>{t('common:tournament.cover_upload_select_img')}</Typography>
+        </Box>
+
         <img src="/images/logo.svg" className={classes.logo} />
+
         <div className={classes.outerBackdrop} />
+
         {drag || isUploading ? <div className={classes.backdrop} /> : null}
         {isUploading ? (
           <Box className={classes.loader}>
@@ -107,21 +109,12 @@ const useStyles = makeStyles(() => ({
   },
   logoWhite: {
     color: Colors.text[200],
-    position: 'absolute',
-    top: '50%',
-    transform: 'translateY(-50%)',
-    left: 0,
-    right: 0,
   },
   image: {
     position: 'absolute',
     zIndex: 30,
-    top: 0,
-    bottom: 0,
-    right: 0,
-    left: 0,
     width: '100%',
-    height: '100%',
+    height: 'auto',
     objectFit: 'contain',
   },
   touch: {
@@ -129,11 +122,11 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     position: 'relative',
     overflow: 'hidden',
+    height: 120,
     alignItems: 'center',
     justifyContent: 'center',
     border: `1px dashed ${Colors.text[200]}`,
     borderRadius: 4,
-    paddingTop: '30.21756647864625%',
     '&:hover': {
       cursor: 'pointer',
     },
@@ -186,8 +179,6 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     position: 'absolute',
     zIndex: 50,
-    top: 0,
-    bottom: 0,
     justifyContent: 'center',
     alignItems: 'center',
   },

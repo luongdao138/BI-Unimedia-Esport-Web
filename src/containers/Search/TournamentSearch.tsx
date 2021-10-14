@@ -6,23 +6,34 @@ import TournamentCard from '@components/TournamentCard'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useTranslation } from 'react-i18next'
 import useSearch from '@containers/Search/useSearch'
+import useLogout from '@containers/Logout/useLogout'
 
 const TournamentSearchContainer: React.FC = () => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const { searchKeyword } = useSearch()
+  const { meta: logoutMeta } = useLogout()
   const { searchTournaments, tournamentSearch, page, meta, resetMeta, resetSearchTournaments } = useTournamentSearch()
   const [keyword, setKeyword] = useState<string>('')
 
   useEffect(() => {
-    setKeyword(searchKeyword)
-    tournamentSearch({ page: 1, keyword: searchKeyword })
+    if (!logoutMeta.pending) {
+      setKeyword(searchKeyword)
+      tournamentSearch({ page: 1, keyword: searchKeyword })
+    }
 
     return () => {
       resetSearchTournaments()
       resetMeta()
     }
   }, [searchKeyword])
+
+  useEffect(() => {
+    return () => {
+      resetSearchTournaments()
+      resetMeta()
+    }
+  }, [])
 
   const loadMore = () => {
     if (page && page.current_page !== page.total_pages) {

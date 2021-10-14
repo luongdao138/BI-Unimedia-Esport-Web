@@ -86,6 +86,10 @@ const SummaryModal: React.FC<SummaryModalProps> = ({ tournament, open, handleClo
     })
   }
 
+  const onRemove = () => {
+    setFieldValue('summary_image', '')
+  }
+
   return (
     <Box>
       <ESModal open={open}>
@@ -110,7 +114,13 @@ const SummaryModal: React.FC<SummaryModalProps> = ({ tournament, open, handleClo
               <Typography className={classes.summaryTitle}>{data.title}</Typography>
             </Box>
             <Box width="100%" pb={4} pt={4}>
-              <CoverUploader ratio={25 / 7} src={values.summary_image} onChange={handleImageUpload} isUploading={isUploading} />
+              <CoverUploader
+                ratio={25 / 7}
+                src={values.summary_image}
+                onChange={handleImageUpload}
+                isUploading={isUploading}
+                onRemove={onRemove}
+              />
             </Box>
             <Box width="100%" pb={1}>
               <ESFastInput

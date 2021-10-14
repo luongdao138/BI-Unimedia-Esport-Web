@@ -49,6 +49,7 @@ const TopicDetailContainer: React.FC = () => {
   const { isNotMember, isModerator, isPublic, isAutomatic } = useCommunityHelper(communityDetail)
 
   const [reply, setReply] = useState<{ hash_key: string; comment_no: number } | any>({})
+  const [showCommentReply, setShowCommentReply] = useState<boolean[]>([])
   const [openDelete, setOpenDelete] = useState(false)
   const [isOpened, setIsOpened] = useState<boolean>(false)
   const [selectedCommentNo, setSelectedCommentNo] = useState()
@@ -120,6 +121,7 @@ const TopicDetailContainer: React.FC = () => {
   useEffect(() => {
     if (!commentsListMeta.pending && commentsListMeta.loaded) {
       setCount(commentsListPageMeta?.total_pages)
+      _.map(commentsList, (__) => setShowCommentReply((comments) => [...comments, false]))
     }
   }, [commentsListMeta])
 
@@ -179,6 +181,9 @@ const TopicDetailContainer: React.FC = () => {
                   setOpenDelete={setOpenDelete}
                   setSelectedCommentNo={setSelectedCommentNo}
                   onReport={handleReportComment}
+                  setShowComment={setShowCommentReply}
+                  showComment={showCommentReply[i]}
+                  index={i}
                 />
               )
             })}
@@ -191,7 +196,13 @@ const TopicDetailContainer: React.FC = () => {
 
         {!isNotMember && (
           <Box className={classes.inputContainer}>
-            <CommentInput reply_param={reply} setPage={setPage} setCommentCount={setCommentCount} commentCount={commentCount} />
+            <CommentInput
+              reply_param={reply}
+              setPage={setPage}
+              setCommentCount={setCommentCount}
+              commentCount={commentCount}
+              setShowReply={setShowCommentReply}
+            />
           </Box>
         )}
         {isAuthenticated && reportData && (

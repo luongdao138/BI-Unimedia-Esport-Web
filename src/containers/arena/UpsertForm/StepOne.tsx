@@ -46,6 +46,7 @@ const StepOne: React.FC<Props> = ({ formik, hardwares, editables }) => {
           onChange={handleUpload}
           isUploading={isUploading}
           disabled={!editables.cover_image}
+          onRemove={() => formik.setFieldValue('stepOne.cover_image_url', '')}
         />
       </Box>
       <Box pb={4}>
