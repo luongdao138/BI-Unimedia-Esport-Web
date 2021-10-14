@@ -411,6 +411,7 @@ const useStyles = makeStyles((theme) => ({
   emptyPopoverContent: {
     display: 'flex',
     justifyContent: 'space-between',
+    margin: theme.spacing(2),
   },
   userContainer: {
     display: 'flex',
