@@ -201,7 +201,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({
           </Box>
         )}
         {commentDetailMeta.pending && (
-          <Box display="flex" justifyContent="center" alignItems="center">
+          <Box display="flex" justifyContent="center" alignItems="center" my={2}>
             <ESLoader />
           </Box>
         )}
