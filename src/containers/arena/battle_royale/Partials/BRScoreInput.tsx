@@ -17,6 +17,9 @@ const validateError = ({ value }: ScoreProps): ErrorType => {
     if (!(_.isNumber(Number(value)) && !isNaN(Number(value)))) {
       error['score_attack_format_invalid'] = true
     }
+    if (Number(value) % 1 !== 0) {
+      error['score_attack_invalid_value'] = true
+    }
   }
 
   return error

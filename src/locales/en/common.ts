@@ -563,10 +563,12 @@ export default {
       time_attack_errors: {
         format_invalid: 'タイムは半角数字で入力してください',
         time_attack_max_exceeds: '分、秒は0〜59の間の数字を入力してください',
+        invalid_value: 'タイムは半角数字で入力してください',
       },
       score_attack_errors: {
         format_invalid: 'スコアは半角数字で入力してください',
         score_attack_max_exceeds: 'スコアを8桁までに入力して下さい。',
+        invalid_value: '半角数字を入力してください',
       },
     },
     status: {
