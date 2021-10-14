@@ -6,6 +6,7 @@ import { Colors } from '@theme/colors'
 import _ from 'lodash'
 import i18n from '@locales/i18n'
 import { TournamentHelper } from '@utils/helpers/TournamentHelper'
+import { ParticipantsResponse } from '@services/arena.service'
 
 type TimeInputError = {
   hours: ErrorType
@@ -15,7 +16,7 @@ type TimeInputError = {
 }
 
 const checkNumber = (v: any) => !(_.isNumber(Number(v)) && !isNaN(Number(v)))
-const checkIsNumber = (v: any) => _.isNumber(Number(v)) && v !== ''
+
 const errorDefault = {
   hours: {},
   minutes: {},
@@ -73,20 +74,21 @@ const BRTimeInput: React.FC<
     value: number | ''
     onAttackError?: (error: ErrorType) => void
     onChange: ({ target: { value: string } }) => void
+    participants: ParticipantsResponse[]
   }
-> = ({ value, onChange, onAttackError, ...props }) => {
+> = ({ value, onChange, onAttackError, participants, ...props }) => {
   const classes = useStyles()
-  const [time, setTime] = useState<TimeProps>(() => TournamentHelper.millisToTime(Number(value)))
+  const [time, setTime] = useState<TimeProps>(() => TournamentHelper.millisToTime(value))
   const [error, setError] = useState<TimeInputError>(errorDefault)
 
   useEffect(() => {
     setError(validateError(time))
-    if (checkIsNumber(time.hours) && checkIsNumber(time.minutes) && checkIsNumber(time.seconds) && checkIsNumber(time.millis)) {
-      onChange({ target: { value: TournamentHelper.timeToMillis(time) } })
-    } else {
-      onChange({ target: { value: '' } })
-    }
+    onChange({ target: { value: TournamentHelper.timeToMillis(time) } })
   }, [time])
+
+  useEffect(() => {
+    setTime(() => TournamentHelper.millisToTime(Number(value)))
+  }, [participants])
 
   useEffect(() => {
     onAttackError(mergeErrors(error))
