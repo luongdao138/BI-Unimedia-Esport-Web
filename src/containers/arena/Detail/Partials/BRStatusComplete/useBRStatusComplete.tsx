@@ -16,7 +16,7 @@ const useBRStatusComplete = () => {
 
   useEffect(() => {
     if (router.query.hash_key && !router.asPath.endsWith('/participants')) {
-      dispatch(actions.getBattleRoyaleParticipants({ hash_key: String(router.query.hash_key), page: 1, role: 'participant' }))
+      dispatch(actions.getBattleRoyaleWinners(String(router.query.hash_key)))
     }
     return () => {
       dispatch(actions.resetParticipants())
