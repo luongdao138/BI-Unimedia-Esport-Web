@@ -1529,6 +1529,7 @@ export default {
     public_time_title: 'アーカイブ配信終了日時',
     note_channel: '配信する場合は、配信者情報を設定してください',
     scroll_to_new_mess: '最新のコメント',
+    clear: 'クリア',
   },
   delivery_reservation_tab: {
     category: 'カテゴリー',

@@ -585,7 +585,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
             </Box>
           </Box>
           {/* public time video archive */}
-          <Box pb={2} className={classes.wrap_input}>
+          <Box pb={2} className={classes.wrap_input} flexDirection="row" display="flex" alignItems="flex-end">
             <Box className={classes.firstItem}>
               <ESLabel label={i18n.t('common:streaming_setting_screen.public_time_title')} required={false} />
               {isFirstStep() ? (
@@ -624,6 +624,35 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
                 </Box>
               )}
             </Box>
+            {isFirstStep() && (
+              <Box
+                flexDirection="row"
+                display="flex"
+                className={`${classes.lastItem}`}
+                marginBottom={
+                  formik?.touched?.stepSettingTwo?.video_publish_end_time && !!formik?.errors?.stepSettingTwo?.video_publish_end_time
+                    ? '22px'
+                    : 0
+                }
+              >
+                <Box
+                  py={1}
+                  display="flex"
+                  justifyContent="flex-end"
+                  className={classes.urlCopy}
+                  onClick={() => {
+                    formik.setFieldValue('stepSettingTwo.video_publish_end_time', null)
+                  }}
+                >
+                  <Typography
+                    className={formik?.values?.stepSettingTwo?.video_publish_end_time ? classes.clearEnable : classes.clearDisable}
+                  >
+                    <Icon className={`fas fa-times ${classes.clear}`} fontSize="small" />
+                    {t('common:streaming_setting_screen.clear')}
+                  </Typography>
+                </Box>
+              </Box>
+            )}
           </Box>
           {paid_delivery_flag && (
             <>
@@ -1032,6 +1061,14 @@ const useStyles = makeStyles((theme: Theme) => ({
       color: '#FFFFFF9C',
     },
     cursor: 'default',
+  },
+  clearEnable: {
+    color: '#EB5686',
+    textDecoration: 'underline',
+  },
+  clearDisable: {
+    color: '#FFFFFF30',
+    textDecoration: 'underline',
   },
   textLink: {
     textDecoration: 'underline',
