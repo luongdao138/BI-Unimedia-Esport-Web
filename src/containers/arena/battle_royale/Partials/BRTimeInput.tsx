@@ -87,7 +87,7 @@ const BRTimeInput: React.FC<
   }, [time])
 
   useEffect(() => {
-    setTime(() => TournamentHelper.millisToTime(Number(value)))
+    setTime(() => TournamentHelper.millisToTime(value))
   }, [participants])
 
   useEffect(() => {

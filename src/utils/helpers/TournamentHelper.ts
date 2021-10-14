@@ -279,7 +279,7 @@ function isBRResultComplete(participants: ParticipantsResponse[], rule: Tourname
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const millisToTime = (duration: number | string) => {
-  if (duration === 0 || duration === '') {
+  if (duration === '') {
     return { hours: '', minutes: '', seconds: '', millis: '' }
   }
   const numberDuration = Number(duration)
@@ -294,10 +294,10 @@ const millisToTime = (duration: number | string) => {
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const timeToMillis = (time: TimeProps) => {
   const { hours, minutes, seconds, millis } = time
-  const result = Number(hours) * 60 * 60 * 1000 + Number(minutes) * 60 * 1000 + Number(seconds) * 1000 + Number(millis) * 1
-  if (result === 0) {
+  if (hours === '' && minutes === '' && seconds === '' && millis === '') {
     return ''
   }
+  const result = Number(hours) * 60 * 60 * 1000 + Number(minutes) * 60 * 1000 + Number(seconds) * 1000 + Number(millis) * 1
   return result
 }
 
