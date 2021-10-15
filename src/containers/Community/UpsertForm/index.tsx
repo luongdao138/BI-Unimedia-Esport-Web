@@ -181,48 +181,47 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
         : handleReturn()
   }
 
-  const handleSetConfirm = async (e) => {
+  const handleSetConfirm = (e) => {
     e.preventDefault()
+    formik.validateForm().then(async () => {
+      const { stepOne } = formik.values
 
-    const value = formik.values.stepOne.name
-    const resultAction = await dispatch(actions.checkCommunityName({ name: value.trim() }))
-    if (actions.checkCommunityName.fulfilled.match(resultAction)) {
-      if (resultAction.payload.is_unique === false) {
-        setIsDuplicate(() => true)
+      const fieldIdentifier = checkNgWordFields({
+        name: stepOne.name,
+        description: stepOne.description,
+        address: stepOne.address,
+      })
+
+      const ngFields = checkNgWordByField({
+        [FIELD_TITLES.stepOne.name]: stepOne.name,
+        [FIELD_TITLES.stepOne.description]: stepOne.description,
+        [FIELD_TITLES.stepOne.address]: stepOne.address,
+      })
+
+      if (fieldIdentifier) {
+        dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: ngFields.join(', ') }))
       } else {
-        setIsDuplicate(() => false)
-        formik.validateForm().then(() => {
-          const { stepOne } = formik.values
-
-          const fieldIdentifier = checkNgWordFields({
-            name: stepOne.name,
-            description: stepOne.description,
-            address: stepOne.address,
-          })
-
-          const ngFields = checkNgWordByField({
-            [FIELD_TITLES.stepOne.name]: stepOne.name,
-            [FIELD_TITLES.stepOne.description]: stepOne.description,
-            [FIELD_TITLES.stepOne.address]: stepOne.address,
-          })
-
-          if (fieldIdentifier) {
-            dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: ngFields.join(', ') }))
+        if (_.isEmpty(formik.errors)) {
+          if (isConfirm) {
+            formik.submitForm()
           } else {
-            if (_.isEmpty(formik.errors)) {
-              if (isConfirm) {
-                formik.submitForm()
+            const value = formik.values.stepOne.name
+            const resultAction = await dispatch(actions.checkCommunityName({ name: value.trim() }))
+            if (actions.checkCommunityName.fulfilled.match(resultAction)) {
+              if (resultAction.payload.is_unique === false) {
+                setIsDuplicate(true)
               } else {
+                setIsDuplicate(false)
                 setIsConfirm(true)
               }
-              return
-            } else {
-              setIsConfirm(false)
             }
           }
-        })
+          return
+        } else {
+          setIsConfirm(false)
+        }
       }
-    }
+    })
   }
 
   const handleUnsetConfirm = () => {
