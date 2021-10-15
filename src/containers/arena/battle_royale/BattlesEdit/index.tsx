@@ -174,7 +174,7 @@ const ArenaBattlesEdit: React.FC = () => {
           <BRList marginX={3} mb={7}>
             {selecteds.map((v, i) => {
               const name = isTeam ? v.attributes.team?.data.attributes.name : v.attributes.name
-              const nameSecondary = isTeam ? v.attributes.user?.user_code : ''
+              const nameSecondary = isTeam ? '' : v.attributes.user?.user_code
               const avatar = isTeam ? v.attributes.team?.data.attributes.team_avatar : v.attributes.avatar_url
               return (
                 <BRListItem
