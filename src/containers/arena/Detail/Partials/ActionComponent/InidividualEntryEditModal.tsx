@@ -73,7 +73,7 @@ const InidividualEntryEditModal: React.FC<EntryEditModalProps> = ({
     onSubmit: (_values) => {
       if (values.nickname) {
         if (_.isEmpty(checkNgWord(values.nickname))) {
-          changeName(tournament.attributes.hash_key, values.nickname, () => onClose())
+          changeName(tournament.attributes.hash_key, values.nickname.trim(), () => onClose())
         } else {
           dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: NG_WORD_AREA.join_nickname }))
         }
