@@ -2,7 +2,7 @@ import { Box } from '@material-ui/core'
 import { FormikProps } from 'formik'
 import { FormType } from './FormModel/FormType'
 import { EditableTypes } from './useCommunityCreate'
-import { useCallback } from 'react'
+import { Dispatch, SetStateAction, useCallback } from 'react'
 import useUploadImage from '@utils/hooks/useUploadImage'
 import { useAppDispatch } from '@store/hooks'
 import community from '@store/community'
@@ -16,6 +16,8 @@ import TagSelectorDialog from './Partials/TagSelectorDialog'
 import i18n from '@locales/i18n'
 import { CommunityHelper } from '@utils/helpers/CommunityHelper'
 import { GetPrefecturesResponse } from '@services/common.service'
+import _ from 'lodash'
+import { Colors } from '@theme/colors'
 
 const { actions } = community
 
@@ -23,9 +25,11 @@ type Props = {
   formik: FormikProps<FormType>
   prefectures: GetPrefecturesResponse
   editables: EditableTypes
+  isDuplicate: boolean
+  setIsDuplicate: Dispatch<SetStateAction<boolean>>
 }
 
-const StepOne: React.FC<Props> = ({ formik, prefectures, editables }) => {
+const StepOne: React.FC<Props> = ({ formik, prefectures, editables, isDuplicate, setIsDuplicate }) => {
   const dispatch = useAppDispatch()
   const { uploadArenaCoverImage, isUploading } = useUploadImage()
 
@@ -40,18 +44,24 @@ const StepOne: React.FC<Props> = ({ formik, prefectures, editables }) => {
   }, [])
 
   const handleSelectedTag = useCallback((value) => {
-    // value = value.filter((v) => {id: v.id, feature: v.attributes.feature})
     formik.setFieldValue('stepOne.features', value)
   }, [])
 
   const handleTitleBlur = async (event) => {
-    const resultAction = await dispatch(actions.checkCommunityName({ name: event.target.value }))
-    if (actions.checkCommunityName.fulfilled.match(resultAction)) {
-      if (resultAction.payload.is_unique === false) {
-        formik.setFieldError('stepOne.name', i18n.t('common:community_create.title_already_in_use'))
+    const value = event.target.value
+    if (!_.isEmpty(value.trim())) {
+      const resultAction = await dispatch(actions.checkCommunityName({ name: value.trim() }))
+      if (actions.checkCommunityName.fulfilled.match(resultAction)) {
+        if (resultAction.payload.is_unique === false) {
+          setIsDuplicate(() => true)
+        } else {
+          setIsDuplicate(() => false)
+        }
       }
-      formik.handleBlur
+    } else {
+      setIsDuplicate(() => false)
     }
+    formik.handleBlur(event)
   }
 
   return (
@@ -67,19 +77,25 @@ const StepOne: React.FC<Props> = ({ formik, prefectures, editables }) => {
       </Box>
       <Box pb={4}>
         <ESFastInput
-          id="title"
+          id="stepOne.name"
           name="stepOne.name"
           labelPrimary={i18n.t('common:community_create.name')}
           fullWidth
           value={formik.values.stepOne.name}
-          onChange={formik.handleChange}
+          onChange={(e) => {
+            setIsDuplicate(() => false)
+            formik.handleChange(e)
+          }}
           helperText={formik.touched?.stepOne?.name && formik.errors?.stepOne?.name}
-          error={formik.touched?.stepOne?.name && !!formik.errors?.stepOne?.name}
+          error={formik.touched?.stepOne?.name && (!!formik.errors?.stepOne?.name || isDuplicate)}
           onBlur={handleTitleBlur}
           size="small"
           required
           disabled={!editables.name}
         />
+        <Box color={Colors.secondary} mt="3px" lineHeight={1.66}>
+          {isDuplicate && !formik.errors?.stepOne?.name && i18n.t('common:community_create.title_already_in_use')}
+        </Box>
       </Box>
       <Box pb={4}>
         <ESFastInput
