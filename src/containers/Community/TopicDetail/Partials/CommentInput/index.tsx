@@ -1,8 +1,8 @@
-import { Box, IconButton, Icon } from '@material-ui/core'
+import { Box } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
-import InputBase from '@material-ui/core/InputBase'
-import React, { useEffect, useState, Dispatch, SetStateAction } from 'react'
+
+import React, { useEffect, useState, Dispatch, SetStateAction, useRef } from 'react'
 import useUploadImage from '@utils/hooks/useUploadImage'
 import { useTranslation } from 'react-i18next'
 import ImageUploader from '../ImageUploader'
@@ -16,8 +16,7 @@ import { NG_WORD_AREA, NG_WORD_DIALOG_CONFIG } from '@constants/common.constants
 import useTopicDetail from '../../useTopicDetail'
 import { forwardRef } from 'react'
 import { REPLY_REGEX } from '@constants/community.constants'
-
-const TEXT_INPUT_LIMIT = 5000
+import CommentInputArea from './CommentInputArea'
 
 type CommunityHeaderProps = {
   reply_param?: { hash_key: string; comment_no: number }
@@ -39,7 +38,9 @@ const Comment = forwardRef<HTMLDivElement, CommunityHeaderProps>(
     const { uploadCommentImage } = useUploadImage()
 
     const [isUploading, setUploading] = useState(false)
-    const [isMaxLength, setIsMaxLength] = useState(false)
+
+    const inputRef = useRef<{ clearInput: () => void }>(null)
+
     const [imageURL, setImageURL] = useState('')
     const [inputText, setInputText] = useState('')
 
@@ -53,7 +54,7 @@ const Comment = forwardRef<HTMLDivElement, CommunityHeaderProps>(
 
     useEffect(() => {
       if (!createCommentMeta.pending && createCommentMeta.loaded) {
-        setInputText('')
+        if (inputRef.current) inputRef.current.clearInput()
         setImageURL('')
         setPage(1)
         setCommentCount(commentCount + 1)
@@ -82,13 +83,13 @@ const Comment = forwardRef<HTMLDivElement, CommunityHeaderProps>(
       return true
     }
 
-    const send = () => {
+    const send = (text: string) => {
       setShowReply((comments) => _.map(comments, () => false))
-      if (_.isEmpty(checkNgWord(inputText.trim()))) {
-        const reply_comment_nos = _.map(_.filter(_.split(inputText, REPLY_REGEX)), (c) => Number(c.slice(2)))
+      if (_.isEmpty(checkNgWord(text.trim()))) {
+        const reply_comment_nos = _.map(_.filter(_.split(text, REPLY_REGEX)), (c) => Number(c.slice(2)))
         const data = {
           topic_hash: String(topic_hash_key),
-          content: isInputEmpty(inputText) ? '' : inputText,
+          content: isInputEmpty(text) ? '' : text,
           reply_to_comment_nos: reply_comment_nos,
           attachments: imageURL,
         }
@@ -100,43 +101,13 @@ const Comment = forwardRef<HTMLDivElement, CommunityHeaderProps>(
       }
     }
 
-    const handleChange = (event) => {
-      if (event.target.value.length > TEXT_INPUT_LIMIT) {
-        setIsMaxLength(true)
-      } else {
-        setIsMaxLength(false)
-      }
-      setInputText(event.target.value)
-    }
-
     return (
       <div className={classes.inputContainer} ref={ref}>
         <Box className={classes.root}>
           <Box className={classes.toolbarCont}>
             <ImageUploader src={imageURL} setSrc={setImageURL} onChange={handleUpload} isUploading={isUploading} />
           </Box>
-          <Box className={classes.inputCont}>
-            <InputBase
-              value={inputText}
-              onChange={handleChange}
-              className={classes.input}
-              multiline
-              rowsMax={9}
-              placeholder={t('common:topic_create.comment_placeholder')}
-              inputProps={{ maxLength: TEXT_INPUT_LIMIT, style: { overflow: 'visible' } }}
-            />
-          </Box>
-          <Box className={classes.sendCont}>
-            <Box display="flex" alignItems="center">
-              <IconButton
-                className={classes.iconButton}
-                onClick={send}
-                disabled={(imageURL === '' && inputText.trim() === '') || isMaxLength}
-              >
-                <Icon className={`${classes.icon} fas fa-paper-plane`} />
-              </IconButton>
-            </Box>
-          </Box>
+          <CommentInputArea ref={inputRef} onPressSend={send} disabled={imageURL === ''} />
         </Box>
       </div>
     )
@@ -186,7 +157,7 @@ const useStyles = makeStyles((theme) => ({
   sendCont: {
     display: 'flex',
     alignItems: 'flex-end',
-    marginBottom: 5,
+    marginBottom: 7,
     marginRight: 13,
   },
   input: {
