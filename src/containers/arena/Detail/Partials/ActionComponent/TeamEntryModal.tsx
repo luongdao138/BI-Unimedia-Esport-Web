@@ -159,15 +159,15 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
           const selected = selectedMembers.find((member) => member.index === i + 1)
           newMembers.push({
             user_id: parseInt(selected.item.id),
-            name: values.members[i].name,
+            name: values.members[i].name.trim(),
           })
         }
         if (isEdit) {
           updateTeam({
             id: initialData.team_id,
             data: {
-              leader_name: _.get(values, 'members[0].name'),
-              team_name: values.team_name,
+              leader_name: _.get(values, 'members[0].name', '').trim(),
+              team_name: values.team_name.trim(),
               team_icon_url: values.team_icon_url,
               members: newMembers.map((member) => ({ user_id: Number(member.user_id), name: member.name })),
             },
@@ -175,7 +175,12 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
         } else {
           join({
             hash_key: tournament.attributes.hash_key,
-            data: { ...values, members: newMembers, leader_name: _.get(values, 'members[0].name') },
+            data: {
+              ...values,
+              members: newMembers,
+              leader_name: _.get(values, 'members[0].name', '').trim(),
+              team_name: values.team_name.trim(),
+            },
           })
         }
       }
