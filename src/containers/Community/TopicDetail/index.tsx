@@ -2,11 +2,10 @@ import React, { useEffect, useState } from 'react'
 import TopicDetailHeader from '@containers/Community/TopicDetail/Partials/TopicDetailHeader'
 import Comment, { ReportData } from '@containers/Community/TopicDetail/Partials/Comment'
 import MainTopic from '@containers/Community/TopicDetail/Partials/MainTopic'
-import { Box, makeStyles, Theme } from '@material-ui/core'
+import { Box } from '@material-ui/core'
 import Pagination from '../Partials/Pagination'
 import CommentInput from './Partials/CommentInput'
 import useTopicDetail from './useTopicDetail'
-import { Colors } from '@theme/colors'
 import ESFullLoader from '@components/FullScreenLoader'
 import { useRouter } from 'next/router'
 import useCommunityDetail from '../Detail/useCommunityDetail'
@@ -20,10 +19,13 @@ import ESReport from '@containers/Report'
 import useDocTitle from '@utils/hooks/useDocTitle'
 import { useConfirm } from '@components/Confirm'
 import { COMMUNITY_DIALOGS } from '@constants/community.constants'
+import ListContainer from './Partials/ListContainer'
+import { use100vh } from 'react-div-100vh'
+
+const inputRef = React.createRef<HTMLDivElement>()
 
 const TopicDetailContainer: React.FC = () => {
   const { t } = useTranslation(['common'])
-  const classes = useStyles()
   const router = useRouter()
   const confirm = useConfirm()
   const { topic_hash_key, hash_key, from } = router.query
@@ -46,6 +48,8 @@ const TopicDetailContainer: React.FC = () => {
   const { getCommunityDetail, communityDetail, isAuthenticated } = useCommunityDetail()
   const { isOwner } = useTopicHelper(topic?.attributes?.owner_user_code)
   const { isNotMember, isModerator, isPublic, isAutomatic } = useCommunityHelper(communityDetail)
+
+  const height = use100vh()
 
   const [reply, setReply] = useState<{ hash_key: string; comment_no: number } | any>({})
   const [showCommentReply, setShowCommentReply] = useState<boolean[]>([])
@@ -156,54 +160,56 @@ const TopicDetailContainer: React.FC = () => {
 
   return (
     <>
-      <Box display="flex" flexDirection="column" minHeight="100vh">
-        <Box flex={1}>
-          <ESFullLoader
-            open={topicDetailMeta.pending || commentsListMeta.pending || createCommentMeta.pending || deleteTopicCommentMeta.pending}
-          />
-          {topicDetailMeta.loaded && (
-            <>
-              <TopicDetailHeader title={data?.title} isTopic={true} onHandleBack={handleBack} />
-              <MainTopic topic={topic} handleDelete={handleDeleteTopic} community={communityDetail} comment_count={commentCount} />
-            </>
-          )}
+      <Box display="flex" height={height - 60} overflow="hidden" flexDirection="column">
+        <ListContainer height="100%">
+          <Box>
+            <ESFullLoader
+              open={topicDetailMeta.pending || commentsListMeta.pending || createCommentMeta.pending || deleteTopicCommentMeta.pending}
+            />
+            {topicDetailMeta.loaded && (
+              <>
+                <TopicDetailHeader title={data?.title} isTopic={true} onHandleBack={handleBack} />
+                <MainTopic topic={topic} handleDelete={handleDeleteTopic} community={communityDetail} comment_count={commentCount} />
+              </>
+            )}
 
-          {!!commentsList &&
-            !_.isEmpty(commentsList) &&
-            _.map(commentsList, (comment, i) => {
-              return (
-                <Comment
-                  key={i}
-                  comment={comment}
-                  menuParams={menuParams}
-                  handleReply={setReply}
-                  setOpenDelete={setOpenDelete}
-                  setSelectedCommentNo={setSelectedCommentNo}
-                  onReport={handleReportComment}
-                  setShowComment={setShowCommentReply}
-                  showComment={showCommentReply[i]}
-                  index={i}
-                />
-              )
-            })}
-          {!_.isEmpty(commentsList) && (
-            <Box display="flex" justifyContent="center" my={2}>
-              <Pagination page={page} pageNumber={count} setPage={setPage} disabled={commentsListMeta.pending} />
-            </Box>
-          )}
-        </Box>
-
-        {!isNotMember && (
-          <Box className={classes.inputContainer}>
+            {!!commentsList &&
+              !_.isEmpty(commentsList) &&
+              _.map(commentsList, (comment, i) => {
+                return (
+                  <Comment
+                    key={i}
+                    comment={comment}
+                    menuParams={menuParams}
+                    handleReply={setReply}
+                    setOpenDelete={setOpenDelete}
+                    setSelectedCommentNo={setSelectedCommentNo}
+                    onReport={handleReportComment}
+                    setShowComment={setShowCommentReply}
+                    showComment={showCommentReply[i]}
+                    index={i}
+                  />
+                )
+              })}
+            {!_.isEmpty(commentsList) && (
+              <Box display="flex" justifyContent="center" my={2}>
+                <Pagination page={page} pageNumber={count} setPage={setPage} disabled={commentsListMeta.pending} />
+              </Box>
+            )}
+          </Box>
+        </ListContainer>
+        <Box flexGrow={1}>
+          {!isNotMember && (
             <CommentInput
               reply_param={reply}
               setPage={setPage}
+              ref={inputRef}
               setCommentCount={setCommentCount}
               commentCount={commentCount}
               setShowReply={setShowCommentReply}
             />
-          </Box>
-        )}
+          )}
+        </Box>
         {isAuthenticated && reportData && (
           <ESReport
             reportType={REPORT_TYPE.TOPIC_COMMENT}
@@ -218,52 +224,5 @@ const TopicDetailContainer: React.FC = () => {
     </>
   )
 }
-
-const useStyles = makeStyles((theme: Theme) => ({
-  link: {
-    marginLeft: theme.spacing(3),
-    marginRight: theme.spacing(3),
-    marginBottom: theme.spacing(3),
-  },
-  inputContainer: {
-    display: 'flex',
-    alignItems: 'center',
-    flexDirection: 'column',
-    position: 'sticky',
-    bottom: 0,
-    padding: 11,
-    width: '100%',
-    background: '#101010',
-    willChange: 'transform',
-    zIndex: 2,
-  },
-  loaderBox: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  pagination: {
-    zIndex: 1,
-    '& .MuiPaginationItem-root': {
-      color: Colors.white,
-      borderRadius: 4,
-    },
-    '& .MuiPaginationItem-outlined': {
-      borderColor: Colors.primary,
-    },
-    '& .Mui-selected': {
-      backgroundColor: Colors.primary,
-      color: Colors.white,
-    },
-    '& .MuiPaginationItem-ellipsis': {
-      height: 32,
-      border: '1px solid',
-      borderColor: Colors.primary,
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-  },
-}))
 
 export default TopicDetailContainer
