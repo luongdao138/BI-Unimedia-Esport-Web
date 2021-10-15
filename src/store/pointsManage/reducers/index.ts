@@ -1,7 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit'
 import * as actions from '../actions'
 import { ListMyPointsData, ListHistoryPointsData, ListUsedPointsData, ListUsagePointHistoryData } from '@services/points.service'
-
+import * as authActions from '@store/auth/actions'
 type StateType = {
   list_my_points: {
     total: number
@@ -78,8 +78,16 @@ export default createReducer(initialState, (builder) => {
     state.detail_usage_points_history = null
   })
   // purchase ticket super chat
-  builder.addCase(actions.purchaseTicketSuperChat.fulfilled, (state, action) => {
-    const purchaseTicket = action.payload
-    state.purchase_ticket_super_chat = purchaseTicket
-  })
+  builder
+    .addCase(actions.purchaseTicketSuperChat.fulfilled, (state, action) => {
+      const purchaseTicket = action.payload
+      state.purchase_ticket_super_chat = purchaseTicket
+    })
+    // logout clear data point
+    .addCase(authActions.logout.fulfilled, (state) => {
+      state.list_my_points = null
+      state.list_used_points = null
+      state.list_history_points = null
+      state.detail_usage_points_history = null
+    })
 })

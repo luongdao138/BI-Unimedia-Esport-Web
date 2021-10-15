@@ -230,6 +230,23 @@ const useStyles = makeStyles((theme) => ({
       paddingLeft: 0,
     },
   },
+  [theme.breakpoints.down(549)]: {
+    tabsContainer: {
+      display: 'flex',
+      paddingLeft: 24,
+      paddingRight: 24,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    tabs: {
+      display: 'flex',
+      paddingLeft: 0,
+    },
+    tabMin: {
+      display: 'flex',
+      minWidth: 500 / 5,
+    },
+  },
   [theme.breakpoints.down(415)]: {
     tabsContainer: {
       display: 'flex',
