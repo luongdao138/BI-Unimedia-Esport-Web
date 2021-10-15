@@ -48,6 +48,7 @@ export type LiveStreamSetting = {
   video_publish_end_time?: string
   status?: number
   channel_id?: number
+  arn?: string
 }
 
 export type DistributorStepSetting = {
@@ -87,6 +88,7 @@ export type LiveStreamSettingResponse = {
     created_at?: string
     status?: number
     channel_id?: number
+    arn?: string
   }
 }
 export type LiveStreamSettingParams = {

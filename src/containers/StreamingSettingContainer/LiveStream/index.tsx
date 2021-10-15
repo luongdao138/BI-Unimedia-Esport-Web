@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import SettingsCompleted from '@components/SettingsCompleted'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Steps from './Steps'
 import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
@@ -8,13 +9,17 @@ import ESModal from '@components/Modal'
 import BlankLayout from '@layouts/BlankLayout'
 import { FormLiveType } from '@containers/arena/UpsertForm/FormLiveSettingsModel/FormLiveSettingsType'
 import { FormikProps } from 'formik'
-
+import ESLoader from '@components/FullScreenLoaderNote'
+import { EVENT_STATE_CHANNEL } from '@constants/common.constants'
+import API, { GraphQLResult, graphqlOperation } from '@aws-amplify/api'
+import { onUpdateChannel } from 'src/graphql/subscriptions'
+import * as APIt from 'src/types/graphqlAPI'
 interface Props {
   formik?: FormikProps<FormLiveType>
 }
 
 const LiveStreamContainer: React.FC<Props> = ({ formik }) => {
-  // const [step, setStep] = useState(1)
+  const [step, setStep] = useState(1)
   const router = useRouter()
   const { categoryData } = useLiveSetting()
   const [modal, setModal] = useState(false)
@@ -23,9 +28,10 @@ const LiveStreamContainer: React.FC<Props> = ({ formik }) => {
     title: '',
     content: '',
   })
+  const [stateChannelMedia, setStateChannelMedia] = useState(EVENT_STATE_CHANNEL.STARTING)
 
   const onChangeStep = (step: number, isShare?: boolean, post?: { title: string; content: string }): void => {
-    // setStep(step)
+    setStep(step)
     setShare(isShare)
     setPost(post)
     if (step === 3) {
@@ -41,6 +47,31 @@ const LiveStreamContainer: React.FC<Props> = ({ formik }) => {
     router.push(ESRoutes.VIDEO_STREAMING_MANAGEMENT)
   }
 
+  //update channel
+  const subscribeUpdateChannelAction = () => {
+    let updateChannelSubscription = API.graphql(graphqlOperation(onUpdateChannel))
+    updateChannelSubscription = updateChannelSubscription.subscribe({
+      next: (sub: GraphQLResult<APIt.OnUpdateChannelSubscription>) => {
+        //@ts-ignore
+        if (sub?.value?.data?.onUpdateChannel?.arn === formik?.values?.stepSettingOne?.arn) {
+          //@ts-ignore
+          setStateChannelMedia(sub?.value?.data?.onUpdateChannel?.state)
+        }
+      },
+      error: (error) => console.warn(error),
+    })
+    return updateChannelSubscription
+  }
+  useEffect(() => {
+    const updateChannelSubscription = subscribeUpdateChannelAction()
+    return () => {
+      if (updateChannelSubscription) {
+        updateChannelSubscription.unsubscribe()
+      }
+      // resetVideoDetailData()
+    }
+  })
+
   return (
     <>
       <Steps
@@ -52,11 +83,12 @@ const LiveStreamContainer: React.FC<Props> = ({ formik }) => {
         titlePost={post.title}
         contentPost={post.content}
       />
-      <ESModal open={modal} handleClose={() => setModal(false)}>
+      <ESModal open={modal && stateChannelMedia === EVENT_STATE_CHANNEL.RUNNING} handleClose={() => setModal(false)}>
         <BlankLayout>
           <SettingsCompleted onClose={onClose} onComplete={onComplete} />
         </BlankLayout>
       </ESModal>
+      {step === 3 && stateChannelMedia !== EVENT_STATE_CHANNEL.RUNNING && <ESLoader open={true} />}
     </>
   )
 }
