@@ -451,7 +451,6 @@ const VideoPlayer: React.FC<PlayerProps> = ({
           //@ts-ignore
           playsinline="playsinline"
           preload={'auto'}
-          className={classes.video}
           controlslist="noplaybackrate foobar"
         >
           <source src={src} type={'video/MP4'} />
@@ -767,19 +766,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: 7,
     background: '#FF4786',
     cursor: 'pointer',
-  },
-  video: {
-    '&::-webkit-media-controls': {
-      display: 'none !important',
-      visibility: 'hidden',
-    },
-    '&::-webkit-media-controls-current-time-display': {
-      display: 'none',
-      visibility: 'hidden',
-    },
-    '&::-webkit-media-controls-timeline': {
-      display: 'none',
-    },
   },
 }))
 
