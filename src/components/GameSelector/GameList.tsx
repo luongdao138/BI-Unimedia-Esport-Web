@@ -10,7 +10,6 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing(2),
   },
   listContainer: {
-    maxHeight: 330,
     overflowY: 'auto',
   },
 }))
@@ -19,9 +18,10 @@ type GameListProps = {
   games: GameTitle['attributes'][]
   selectedGames: GameTitle['attributes'][]
   handleAdd: (game: GameTitle['attributes']) => void
+  height: number
 }
 
-const GameList: React.FC<GameListProps> = ({ games, selectedGames, handleAdd }) => {
+const GameList: React.FC<GameListProps> = ({ games, selectedGames, handleAdd, height }) => {
   const classes = useStyles()
   if (games.length === 0) {
     return (
@@ -36,7 +36,7 @@ const GameList: React.FC<GameListProps> = ({ games, selectedGames, handleAdd }) 
   return (
     <>
       {games.length > 0 && (
-        <Container maxWidth="md" className={classes.listContainer}>
+        <Container maxWidth="md" className={classes.listContainer} style={{ maxHeight: height }}>
           <List>
             {games.map((g, idx) => (
               <ESChip
