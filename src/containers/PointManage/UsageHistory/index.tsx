@@ -285,8 +285,12 @@ const useStyles = makeStyles((theme: Theme) => ({
       color: Colors.white,
       borderColor: Colors.primary,
       borderWidth: 1,
-      // minWidth: '22px',
-      // minHeight: '22px',
+      maxWidth: '32px',
+      maxHeight: '32px',
+      width: 'calc((100vw - 48px) / 15)',
+      height: 'calc((100vw - 48px) / 15)',
+      minWidth: 'unset',
+      minHeight: 'unset',
     },
     '& .Mui-selected': {
       backgroundColor: Colors.primary,
@@ -315,12 +319,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     headerTitle: {
       fontSize: 13,
-    },
-    paginationStyle: {
-      '& .MuiPaginationItem-root': {
-        // minWidth: '22px',
-        // minHeight: '22px',
-      },
     },
   },
 }))
