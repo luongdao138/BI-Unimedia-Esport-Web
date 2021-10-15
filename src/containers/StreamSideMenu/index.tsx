@@ -362,7 +362,8 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'flex-start',
     alignItems: 'center',
     paddingTop: 72,
-    width: 50,
+    // width: 50,
+    width: 60,
   },
   icon: {},
   userInfo: {

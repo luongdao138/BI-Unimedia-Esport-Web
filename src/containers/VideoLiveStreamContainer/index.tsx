@@ -409,7 +409,8 @@ const VideoDetail: React.FC = () => {
 
   const isDown960 = pageWidth <= 960
   const sizeMenuWidth = () => {
-    if (!isDown960) return 50
+    // if (!isDown960) return 50
+    if (!isDown960) return 60
     return 0
   }
 
@@ -639,6 +640,23 @@ const useStyles = makeStyles((theme) => ({
   [theme.breakpoints.down(769)]: {
     wrapChatContainer: {
       width: '100%',
+    },
+  },
+  [theme.breakpoints.down(549)]: {
+    tabsContainer: {
+      display: 'flex',
+      paddingLeft: 24,
+      paddingRight: 24,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    tabs: {
+      display: 'flex',
+      paddingLeft: 0,
+    },
+    singleTab: {
+      display: 'flex',
+      minWidth: 500 / 4,
     },
   },
   [theme.breakpoints.down(415)]: {

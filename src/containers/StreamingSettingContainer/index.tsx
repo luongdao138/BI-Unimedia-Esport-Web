@@ -96,9 +96,6 @@ const StreamingSettingContainer: React.FC<{ default_tab: any }> = ({ default_tab
         setTab(default_tab)
         getCategory()
       }
-      // setTab(data?.data?.channel_id === 0 || !data?.data?.channel_id ? 2 : default_tab)
-      // setDisable(data?.data?.channel_id === 0 || !data?.data?.channel_id ? true : false)
-      // data?.data?.channel_id !== 0 && getCategory()
     })
   }, [])
 

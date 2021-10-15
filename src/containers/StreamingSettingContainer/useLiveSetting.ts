@@ -2,10 +2,10 @@ import { LiveStreamSettingParams, SetChannelParams, SetLiveStreamParams, StreamU
 import { useAppDispatch, useAppSelector } from '@store/hooks'
 import { createMetaSelector } from '@store/metadata/selectors'
 import stream from '@store/stream'
-import common from '@store/common'
+import { addToast } from '@store/common/actions'
+import i18n from 'i18next'
 
 const { selectors, actions } = stream
-const commonActions = common.actions
 const _getMeta = createMetaSelector(actions.getLiveSettingInfo)
 const _getStreamUrlAndKeyMeta = createMetaSelector(actions.getStreamUrlAndKeyInfo)
 const _getChannelMeta = createMetaSelector(actions.getChannel)
@@ -13,22 +13,22 @@ const _getChannelMeta = createMetaSelector(actions.getChannel)
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const useLiveSetting = () => {
   const dispatch = useAppDispatch()
-  // const getLiveSettingTab = (param: LiveStreamSettingParams) => dispatch(actions.getLiveSettingInfo(param))
-
   const getLiveSettingTab = async (param: LiveStreamSettingParams) => {
     const result = await dispatch(actions.getLiveSettingInfo(param))
     if (!actions.getLiveSettingInfo.fulfilled.match(result) || result?.payload?.code !== 200) {
-      dispatch(
-        commonActions.showErrorModal({
-          showModal: true,
-        })
-      )
+      dispatch(addToast(i18n.t('common:common.failed_to_get_data')))
     } else {
       return result
     }
   }
-
-  const getScheduleSettingTab = (param: LiveStreamSettingParams) => dispatch(actions.getScheduleSettingInfo(param))
+  const getScheduleSettingTab = async (param: LiveStreamSettingParams) => {
+    const result = await dispatch(actions.getScheduleSettingInfo(param))
+    if (!actions.getScheduleSettingInfo.fulfilled.match(result) || result?.payload?.code !== 200) {
+      dispatch(addToast(i18n.t('common:common.failed_to_get_data')))
+    } else {
+      return result
+    }
+  }
   const liveSettingInformation = useAppSelector(selectors.getLiveStreamSetting)
   const scheduleInformation = useAppSelector(selectors.getScheduleSetting)
   const streamUrlAndKeyInformation = useAppSelector(selectors.getStreamUrlAndKey)
@@ -36,6 +36,8 @@ const useLiveSetting = () => {
     const resultAction = await dispatch(actions.setLiveStream(param))
     if (actions.setLiveStream.fulfilled.match(resultAction)) {
       onSuccess()
+    } else {
+      dispatch(addToast(i18n.t('common:common.failed_to_get_data')))
     }
   }
   const meta = useAppSelector(_getMeta)

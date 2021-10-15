@@ -41,7 +41,7 @@ const SideMenu: React.FC = () => {
       }
       getMyPointData(params)
     }
-  }, [])
+  }, [isAuthenticated])
   const isSelected = (routeName: string): boolean => {
     return router.pathname && router.pathname.startsWith(routeName)
   }
