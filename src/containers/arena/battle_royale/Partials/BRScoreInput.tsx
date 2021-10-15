@@ -17,7 +17,7 @@ const validateError = ({ value }: ScoreProps): ErrorType => {
     if (!(_.isNumber(Number(value)) && !isNaN(Number(value)))) {
       error['score_attack_format_invalid'] = true
     }
-    if (Number(value) % 1 !== 0) {
+    if (!String(value).match(/^[0-9]+$/)) {
       error['score_attack_invalid_value'] = true
     }
     if (Number(value) < 0) {
@@ -59,7 +59,7 @@ const BRScoreInput: React.FC<
   return (
     <BRInput
       value={score.value}
-      inputProps={{ maxLength: 9 }}
+      inputProps={{ maxLength: 8 }}
       style={{ color: hasError ? Colors.secondary : Colors.white_opacity[70] }}
       onChange={handleChange}
       placeholder={i18n.t('common:arena.not_entered')}
