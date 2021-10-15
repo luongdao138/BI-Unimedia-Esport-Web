@@ -9,6 +9,7 @@ import { Colors } from '@theme/colors'
 import ESButton from '@components/Button'
 import useArenaHelper from '@containers/arena/hooks/useArenaHelper'
 import ButtonPrimaryOutlined from '@components/ButtonPrimaryOutlined'
+import ButtonPrimary from '@components/ButtonPrimary'
 import RemainingDate from '../ActionComponent/RemainingDate'
 import EntryCount from '../ActionComponent/EntryCount'
 import ActionLabelButton from '../ActionComponent/ActionLabelButton'
@@ -53,15 +54,22 @@ const BRStatusReady: React.FC<BRStatusReadyProps> = ({ arena }) => {
       footer={
         <Box textAlign="center">
           {isModerator ? (
-            <ButtonGroup size="large" mb={3}>
-              <div>
-                <ButtonPrimaryOutlined disabled leadingIcon={<Icon className="fas fa-user-slash" fontSize="small" />}>
-                  {t('tournament.close_recruitment.button_text')}
-                </ButtonPrimaryOutlined>
-              </div>
-            </ButtonGroup>
+            <>
+              <ButtonGroup size="large" mb={3}>
+                <div>
+                  <ButtonPrimaryOutlined disabled leadingIcon={<Icon className="fas fa-user-slash" fontSize="small" />}>
+                    {t('tournament.close_recruitment.button_text')}
+                  </ButtonPrimaryOutlined>
+                </div>
+                <div>
+                  <ButtonPrimary disabled={true} round fullWidth>
+                    {t('tournament.join')}
+                  </ButtonPrimary>
+                </div>
+              </ButtonGroup>
+              <Typography variant="body2">{t('tournament.close_recruitment.description')}</Typography>
+            </>
           ) : null}
-          {isModerator ? <Typography variant="body2">{t('tournament.close_recruitment.description')}</Typography> : null}
         </Box>
       }
     />

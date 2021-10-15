@@ -59,18 +59,11 @@ const BRStatusRecruiting: React.FC<BRStatusRecruitingProps> = ({ arena, userProf
           <RemainingDate acceptanceEndDate={arena.attributes.acceptance_end_date} startDate={arena.attributes.start_date} />
           <EntryCount totalCount={arena.attributes.max_participants} count={entryMembersCount} isTeam={isTeam} />
           <ButtonGroup mt={3}>
-            <ESButton onClick={toParticipants} variant="outlined" fullWidth style={{ maxWidth: 160 }}>
+            <ESButton onClick={toParticipants} variant="outlined" fullWidth>
               {t('tournament.entry_members')}
             </ESButton>
             {isModerator || isInterested ? (
-              <ActionLabelButton
-                actionLabel={t('arena.temporary')}
-                variant="outlined"
-                fullWidth
-                onClick={toGroupChat}
-                disabled={false}
-                style={{ width: 160 }}
-              >
+              <ActionLabelButton actionLabel={t('arena.temporary')} variant="outlined" fullWidth onClick={toGroupChat} disabled={false}>
                 {t('tournament.group_chat')}
               </ActionLabelButton>
             ) : null}
@@ -78,24 +71,27 @@ const BRStatusRecruiting: React.FC<BRStatusRecruitingProps> = ({ arena, userProf
         </Box>
       }
       footer={
-        <div className={classes.footerContainer}>
+        <div>
           <ButtonGroup mb={3}>
             {isModerator ? (
-              <Box minWidth={260} className={classes.button}>
+              <Box minWidth={260}>
                 <CloseRecruitmentModal isRecruiting={true} tournament={arena} handleClose={noop} />
               </Box>
-            ) : (
-              <Box minWidth={256} className={classes.button}>
-                <LoginRequired>
-                  <ButtonPrimary disabled={false} round fullWidth onClick={handleOpenEntryModal}>
-                    {isTeamLeader ? t('tournament.check_entry') : t('tournament.join')}
-                  </ButtonPrimary>
-                </LoginRequired>
-              </Box>
-            )}
+            ) : null}
+            <Box minWidth={256} className={classes.button}>
+              <LoginRequired>
+                <ButtonPrimary disabled={false} round fullWidth onClick={handleOpenEntryModal}>
+                  {isTeamLeader ? t('tournament.check_entry') : t('tournament.join')}
+                </ButtonPrimary>
+              </LoginRequired>
+            </Box>
           </ButtonGroup>
-          <UnjoinModal tournament={arena} showButton={isTeamLeader && !isModerator} />
-          {isModerator ? <Typography variant="body2">{t('tournament.close_recruitment.description')}</Typography> : null}
+          <UnjoinModal tournament={arena} showButton={isTeamLeader} />
+          {isModerator ? (
+            <Typography align="center" variant="body2">
+              {t('tournament.close_recruitment.description')}
+            </Typography>
+          ) : null}
 
           {/* Modals */}
 
@@ -126,11 +122,6 @@ const useStyles = makeStyles((theme) => ({
       fontWeight: 700,
       paddingLeft: theme.spacing(1),
     },
-  },
-  footerContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
   },
   button: {
     marginRight: 8,

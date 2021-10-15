@@ -140,6 +140,11 @@ const ArenaBattles: React.FC = () => {
 
       <RuleHeader textAlign="center" pt={3} rule={tournament?.attributes.rule} showCaution={isParticipant && isTeamLeader}>
         <Box textAlign="center" pb={3}>
+          {errorObject.time_attack_invalid_value ? (
+            <Typography style={{ color: Colors.secondary, paddingTop: 4 }}>
+              {i18n.t('common:arena.rules_title.time_attack_errors.invalid_value')}
+            </Typography>
+          ) : null}
           {errorObject.time_attack_format_invalid ? (
             <Typography style={{ color: Colors.secondary, paddingTop: 4 }}>
               {i18n.t('common:arena.rules_title.time_attack_errors.format_invalid')}
@@ -148,6 +153,11 @@ const ArenaBattles: React.FC = () => {
           {errorObject.time_attack_max_exceeds ? (
             <Typography style={{ color: Colors.secondary, paddingTop: 4 }}>
               {i18n.t('common:arena.rules_title.time_attack_errors.time_attack_max_exceeds')}
+            </Typography>
+          ) : null}
+          {errorObject.score_attack_invalid_value ? (
+            <Typography style={{ color: Colors.secondary, paddingTop: 4 }}>
+              {i18n.t('common:arena.rules_title.score_attack_errors.invalid_value')}
             </Typography>
           ) : null}
           {errorObject.score_attack_format_invalid ? (
@@ -174,30 +184,34 @@ const ArenaBattles: React.FC = () => {
       </RuleHeader>
 
       <BRList className={classes.listContainer} rule={tournament?.attributes.rule}>
-        {selecteds.map((v) => (
-          <BRListItem
-            key={v.id}
-            avatar={
-              <Avatar
-                alt={isTeam ? v.attributes.team.data.attributes.name : v.attributes.name || ''}
-                src={isTeam ? v.attributes.team.data.attributes.team_avatar : v.attributes.avatar_url || ''}
-                size={26}
+        {selecteds.map((v) => {
+          const value = _.isNumber(v.attributes.attack_score) ? v.attributes.attack_score : ''
+          return (
+            <BRListItem
+              key={v.id}
+              avatar={
+                <Avatar
+                  alt={isTeam ? v.attributes.team.data.attributes.name : v.attributes.name || ''}
+                  src={isTeam ? v.attributes.team.data.attributes.team_avatar : v.attributes.avatar_url || ''}
+                  size={26}
+                />
+              }
+              text={v.attributes.user?.user_code ? v.attributes.name : v.attributes.team?.data.attributes.name}
+              textSecondary={v.attributes.user?.user_code || ''}
+              highlight={v.highlight}
+            >
+              <BRScore
+                value={value}
+                participantCount={participants.length}
+                onChange={({ target: { value } }) => setScores(value === '' ? '' : Number(value), v.id)}
+                onAttackError={(val) => handleError(val, v.id)}
+                type={tournament?.attributes.rule}
+                disabled={(v.attributes.is_fixed_score || !v.highlight) && !isModerator}
+                participants={participants}
               />
-            }
-            text={v.attributes.user?.user_code ? v.attributes.name : v.attributes.team?.data.attributes.name}
-            textSecondary={v.attributes.user?.user_code || ''}
-            highlight={v.highlight}
-          >
-            <BRScore
-              value={v.attributes.attack_score || ''}
-              participantCount={participants.length}
-              onChange={({ target: { value } }) => setScores(value === '' ? '' : Number(value), v.id)}
-              onAttackError={(val) => handleError(val, v.id)}
-              type={tournament?.attributes.rule}
-              disabled={(v.attributes.is_fixed_score || !v.highlight) && !isModerator}
-            />
-          </BRListItem>
-        ))}
+            </BRListItem>
+          )
+        })}
       </BRList>
       <ESLoader open={detailMeta.pending || participantsMeta.pending} />
     </StickyFooter>

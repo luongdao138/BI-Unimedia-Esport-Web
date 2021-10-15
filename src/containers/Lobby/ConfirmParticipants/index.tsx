@@ -57,7 +57,10 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ lobby, op
 
   const [isInitialPageLoad, setInitialPageLoad] = useState(false)
   const [isConfirmBtnActive, setConfirmBtnActive] = useState(false)
-  const isConfirmable = (status === LOBBY_STATUS.RECRUITING || status === LOBBY_STATUS.ENTRY_CLOSED) && is_owner && !is_freezed
+  const isConfirmable =
+    (status === LOBBY_STATUS.RECRUITING || status === LOBBY_STATUS.ENTRY_CLOSED || status === LOBBY_STATUS.IN_PROGRESS) &&
+    is_owner &&
+    !is_freezed
 
   useEffect(() => {
     if (open) {

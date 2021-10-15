@@ -41,6 +41,8 @@ import router from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
 import { LIGHTBOX_OPTIONS } from '@constants/common.constants'
 import { SRLWrapper } from 'simple-react-lightbox'
+import { TextMessage } from '@components/Chat/elements'
+import { ChatSuggestionList } from '@components/Chat/types/chat.types'
 
 export interface ESReportProps {
   chat_id?: string
@@ -52,11 +54,22 @@ export interface ESReportProps {
   open?: boolean
   reportType?: number
   handleClose?: () => void
-  members?: any
+  members?: ChatSuggestionList[]
   title?: string
 }
 
-const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, title, reportType, msg_body, open, handleClose }) => {
+const ESReport: React.FC<ESReportProps> = ({
+  data,
+  target_id,
+  room_id,
+  chat_id,
+  title,
+  members,
+  reportType,
+  msg_body,
+  open,
+  handleClose,
+}) => {
   const _theme = useTheme()
   const classes = useStyles()
   const dispatch = useAppDispatch()
@@ -204,7 +217,7 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
                   </Box>
                 ) : msg_body ? (
                   <Box className={classes.msgBox}>
-                    <Typography className={classes.msg}>{msg_body}</Typography>
+                    <TextMessage members={members} color={Colors.white} text={msg_body} />
                   </Box>
                 ) : null}
               </Grid>

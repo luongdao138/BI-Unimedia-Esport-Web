@@ -278,22 +278,25 @@ function isBRResultComplete(participants: ParticipantsResponse[], rule: Tourname
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-const millisToTime = (duration: number | null) => {
-  if (duration === null) {
+const millisToTime = (duration: number | string) => {
+  if (duration === '') {
     return { hours: '', minutes: '', seconds: '', millis: '' }
   }
+  const numberDuration = Number(duration)
+  const millis: number = Math.floor(numberDuration % 1000)
+  const seconds: number = Math.floor((numberDuration / 1000) % 60)
+  const minutes: number = Math.floor((numberDuration / (1000 * 60)) % 60)
+  const hours: number = Math.floor(numberDuration / (1000 * 60 * 60))
 
-  const millis: string | number = Math.floor(duration % 1000)
-  const seconds: string | number = Math.floor((duration / 1000) % 60)
-  const minutes: string | number = Math.floor((duration / (1000 * 60)) % 60)
-  const hours: string | number = Math.floor(duration / (1000 * 60 * 60))
-
-  return { hours: Number(hours) || '', minutes: minutes || '', seconds: seconds || '', millis: millis || '' }
+  return { hours: hours, minutes: minutes, seconds: seconds, millis: millis }
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const timeToMillis = (time: TimeProps) => {
   const { hours, minutes, seconds, millis } = time
+  if (hours === '' && minutes === '' && seconds === '' && millis === '') {
+    return ''
+  }
   const result = Number(hours) * 60 * 60 * 1000 + Number(minutes) * 60 * 1000 + Number(seconds) * 1000 + Number(millis) * 1
   return result
 }
