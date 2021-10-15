@@ -24,6 +24,7 @@ export const getInitialLiveSettingValues = (data?: LiveStreamSetting): FormLiveT
     channel_id: data && data.channel_id ? data.channel_id : -1,
     //check step
     step_setting: 1,
+    arn: data && data.arn ? data.arn : '',
   },
 })
 

@@ -1534,6 +1534,7 @@ export default {
     note_channel: '配信する場合は、配信者情報を設定してください',
     scroll_to_new_mess: '最新のコメント',
     clear: 'クリア',
+    note_loading: 'ただいま処理中です。今しばらくお待ちください',
   },
   delivery_reservation_tab: {
     category: 'カテゴリー',

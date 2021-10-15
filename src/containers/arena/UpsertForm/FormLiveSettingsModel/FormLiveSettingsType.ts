@@ -16,6 +16,7 @@ export type FormLiveType = {
     channel_id?: number
     //check step
     step_setting?: number
+    arn?: string
   }
   stepSettingTwo?: {
     uuid: string

@@ -121,7 +121,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
 
   useEffect(() => {
     if (isArchived) {
-      console.log("🚀 ~ useEffect ~ isArchived----11111", isArchived)
+      console.log('🚀 ~ useEffect ~ isArchived----11111', isArchived)
       videoEl.current.currentTime = 0
       setState({ ...state, playing: false })
       setAutoPlay(false)
