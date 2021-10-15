@@ -4,8 +4,6 @@ import { FormType } from './FormModel/FormType'
 import { EditableTypes } from './useCommunityCreate'
 import { Dispatch, SetStateAction, useCallback } from 'react'
 import useUploadImage from '@utils/hooks/useUploadImage'
-import { useAppDispatch } from '@store/hooks'
-import community from '@store/community'
 import GameSelectorDialog from './Partials/GameSelectorDialog'
 import CoverUploader from './Partials/CoverUploader'
 import ESSelect from '@components/Select'
@@ -16,10 +14,7 @@ import TagSelectorDialog from './Partials/TagSelectorDialog'
 import i18n from '@locales/i18n'
 import { CommunityHelper } from '@utils/helpers/CommunityHelper'
 import { GetPrefecturesResponse } from '@services/common.service'
-import _ from 'lodash'
 import { Colors } from '@theme/colors'
-
-const { actions } = community
 
 type Props = {
   formik: FormikProps<FormType>
@@ -30,7 +25,6 @@ type Props = {
 }
 
 const StepOne: React.FC<Props> = ({ formik, prefectures, editables, isDuplicate, setIsDuplicate }) => {
-  const dispatch = useAppDispatch()
   const { uploadArenaCoverImage, isUploading } = useUploadImage()
 
   const handleUpload = useCallback((file: File, blob: any) => {
@@ -46,23 +40,6 @@ const StepOne: React.FC<Props> = ({ formik, prefectures, editables, isDuplicate,
   const handleSelectedTag = useCallback((value) => {
     formik.setFieldValue('stepOne.features', value)
   }, [])
-
-  const handleTitleBlur = async (event) => {
-    const value = event.target.value
-    if (!_.isEmpty(value.trim())) {
-      const resultAction = await dispatch(actions.checkCommunityName({ name: value.trim() }))
-      if (actions.checkCommunityName.fulfilled.match(resultAction)) {
-        if (resultAction.payload.is_unique === false) {
-          setIsDuplicate(() => true)
-        } else {
-          setIsDuplicate(() => false)
-        }
-      }
-    } else {
-      setIsDuplicate(() => false)
-    }
-    formik.handleBlur(event)
-  }
 
   return (
     <Box pb={9}>
@@ -88,7 +65,7 @@ const StepOne: React.FC<Props> = ({ formik, prefectures, editables, isDuplicate,
           }}
           helperText={formik.touched?.stepOne?.name && formik.errors?.stepOne?.name}
           error={formik.touched?.stepOne?.name && (!!formik.errors?.stepOne?.name || isDuplicate)}
-          onBlur={handleTitleBlur}
+          onBlur={formik.handleBlur}
           size="small"
           required
           disabled={!editables.name}

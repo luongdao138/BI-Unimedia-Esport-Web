@@ -28,7 +28,10 @@ import { useRouter } from 'next/router'
 import { useConfirm } from '@components/Confirm'
 import { COMMUNITY_DIALOGS } from '@constants/community.constants'
 import useUnload from '@utils/hooks/useUnload'
+import community from '@store/community'
 import ESFullLoader from '@components/FullScreenLoader'
+
+const { actions } = community
 
 type CommunityCreateProps = {
   communityName?: string
@@ -178,38 +181,48 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
         : handleReturn()
   }
 
-  const handleSetConfirm = (e) => {
+  const handleSetConfirm = async (e) => {
     e.preventDefault()
-    formik.validateForm().then(() => {
-      const { stepOne } = formik.values
 
-      const fieldIdentifier = checkNgWordFields({
-        name: stepOne.name,
-        description: stepOne.description,
-        address: stepOne.address,
-      })
-
-      const ngFields = checkNgWordByField({
-        [FIELD_TITLES.stepOne.name]: stepOne.name,
-        [FIELD_TITLES.stepOne.description]: stepOne.description,
-        [FIELD_TITLES.stepOne.address]: stepOne.address,
-      })
-
-      if (fieldIdentifier) {
-        dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: ngFields.join(', ') }))
+    const value = formik.values.stepOne.name
+    const resultAction = await dispatch(actions.checkCommunityName({ name: value.trim() }))
+    if (actions.checkCommunityName.fulfilled.match(resultAction)) {
+      if (resultAction.payload.is_unique === false) {
+        setIsDuplicate(() => true)
       } else {
-        if (_.isEmpty(formik.errors)) {
-          if (isConfirm) {
-            formik.submitForm()
+        setIsDuplicate(() => false)
+        formik.validateForm().then(() => {
+          const { stepOne } = formik.values
+
+          const fieldIdentifier = checkNgWordFields({
+            name: stepOne.name,
+            description: stepOne.description,
+            address: stepOne.address,
+          })
+
+          const ngFields = checkNgWordByField({
+            [FIELD_TITLES.stepOne.name]: stepOne.name,
+            [FIELD_TITLES.stepOne.description]: stepOne.description,
+            [FIELD_TITLES.stepOne.address]: stepOne.address,
+          })
+
+          if (fieldIdentifier) {
+            dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: ngFields.join(', ') }))
           } else {
-            setIsConfirm(true)
+            if (_.isEmpty(formik.errors)) {
+              if (isConfirm) {
+                formik.submitForm()
+              } else {
+                setIsConfirm(true)
+              }
+              return
+            } else {
+              setIsConfirm(false)
+            }
           }
-          return
-        } else {
-          setIsConfirm(false)
-        }
+        })
       }
-    })
+    }
   }
 
   const handleUnsetConfirm = () => {
