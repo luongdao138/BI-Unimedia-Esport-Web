@@ -10,6 +10,7 @@ import { useRouter } from 'next/router'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
 import React from 'react'
 import { FollowersTopicResponse } from '@services/community.service'
+import { IS_OFFICIAL } from '@constants/community.constants'
 
 interface Props {
   topic: FollowersTopicResponse
@@ -27,9 +28,13 @@ const TopicCard: React.FC<Props> = ({ topic, from }) => {
     return (
       <>
         <Box className={classes.mediaOverlay} display="flex" flexDirection="row" justifyContent="space-between" p={1}>
-          <Box alignSelf="flex-end">
-            <ESAvatar size={36} src={attr.organizer_avatar} alt={attr.organizer_name} />
-          </Box>
+          {attr.is_official === IS_OFFICIAL.NOT_OFFICIAL ? (
+            <Box alignSelf="flex-end">
+              <ESAvatar size={36} src={attr.organizer_avatar} alt={attr.organizer_name} />
+            </Box>
+          ) : (
+            <Box />
+          )}
 
           <Box display="flex" flexDirection="column" alignItems="flex-end">
             {!!attr.is_official && (
