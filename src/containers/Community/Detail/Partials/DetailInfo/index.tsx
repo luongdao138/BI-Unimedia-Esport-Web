@@ -35,12 +35,11 @@ const ROLE_TYPES = {
 
 type Props = {
   detail: CommunityDetail
-  toEdit?: () => void
   topicList: TopicDetailList[]
   showTopicListAndSearchTab: boolean
 }
 
-const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListAndSearchTab }) => {
+const DetailInfo: React.FC<Props> = ({ detail, topicList, showTopicListAndSearchTab }) => {
   const dispatch = useAppDispatch()
   const { t } = useTranslation(['common'])
 
@@ -49,7 +48,7 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
   const [tab, setTab] = useState(0)
   const data = detail.attributes
   const confirm = useConfirm()
-  const { isNotMember, isPublic, isOfficial, isAutomatic } = useCommunityHelper(detail)
+  const { isNotMember, isPublic, isOfficial, isAutomatic, toEdit, toCreateTopic } = useCommunityHelper(detail)
 
   const {
     isAuthenticated,
@@ -77,12 +76,12 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
 
   useEffect(() => {
     if (router?.query) {
-      setTab(isAutomatic && isPublic ? TABS.TOPIC_LIST : isNotMember ? TABS.INFO : TABS.TOPIC_LIST)
+      setTab(isAutomatic ? TABS.TOPIC_LIST : isNotMember ? TABS.INFO : TABS.TOPIC_LIST)
     }
   }, [router.query])
 
   useEffect(() => {
-    setTab(isAutomatic && isPublic ? TABS.TOPIC_LIST : isNotMember ? TABS.INFO : TABS.TOPIC_LIST)
+    setTab(isAutomatic ? TABS.TOPIC_LIST : isNotMember ? TABS.INFO : TABS.TOPIC_LIST)
   }, [detail])
 
   const setOtherRoleFalse = (setRoleType: string) => {
@@ -336,12 +335,8 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
       <Grid item xs={12}>
         <ESTabs value={tab} onChange={(_, v) => setTab(v)} className={`${classes.tabs} community-tab`}>
           <ESTab label={t('common:community.info')} value={TABS.INFO} />
-          {showTopicListAndSearchTab && (
-            <ESTab label={t('common:community.topic_list')} value={TABS.TOPIC_LIST} disabled={isNotMember && !isPublic} />
-          )}
-          {showTopicListAndSearchTab && (
-            <ESTab label={t('common:community.search')} value={TABS.SEARCH} disabled={isNotMember && !isPublic} />
-          )}
+          {showTopicListAndSearchTab && <ESTab label={t('common:community.topic_list')} value={TABS.TOPIC_LIST} />}
+          {showTopicListAndSearchTab && <ESTab label={t('common:community.search')} value={TABS.SEARCH} />}
         </ESTabs>
       </Grid>
     )
@@ -351,7 +346,7 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
       case TABS.INFO:
         return <InfoContainer isOfficial={isOfficial} data={data} />
       case TABS.TOPIC_LIST:
-        return !!topicList && showTopicListAndSearchTab && <TopicListContainer />
+        return !!topicList && showTopicListAndSearchTab && <TopicListContainer toCreateTopic={toCreateTopic} isNotMember={isNotMember} />
       case TABS.SEARCH:
         return showTopicListAndSearchTab && <SearchContainer />
       default:
