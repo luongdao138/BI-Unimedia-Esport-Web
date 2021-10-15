@@ -149,7 +149,7 @@ export const validationScheduleScheme = (): any => {
       }),
       sell_less_than_start: Yup.string().when(['sell_ticket_start_time', 'stream_schedule_start_time'], {
         is: (sell_ticket_start_time, stream_schedule_start_time) => {
-          return Date.parse(sell_ticket_start_time) > Date.parse(stream_schedule_start_time)
+          return Date.parse(sell_ticket_start_time) >= Date.parse(stream_schedule_start_time)
         },
         then: Yup.string().required(i18n.t('common:streaming_setting_screen.validation.sell_less_than_start')),
       }),
