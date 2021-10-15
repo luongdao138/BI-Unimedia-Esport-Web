@@ -11,7 +11,6 @@ const TEXT_INPUT_LIMIT = 5000
 
 export interface MessageInputAreaProps {
   onPressSend?: (text: string) => void
-  text?: string | null
   disabled?: boolean
   ref: Ref<ClearInputrRef>
 }
@@ -61,7 +60,7 @@ const CommentInputArea: React.FC<MessageInputAreaProps> = forwardRef<ClearInputr
       </Box>
       <Box className={classes.sendCont}>
         <Box display="flex" alignItems="center">
-          <IconButton className={classes.iconButton} onClick={send} disabled={disabled || text.trim() == ''}>
+          <IconButton className={classes.iconButton} onClick={send} disabled={disabled && text.trim() === ''}>
             <Icon className={`${classes.icon} fas fa-paper-plane`} />
           </IconButton>
         </Box>
