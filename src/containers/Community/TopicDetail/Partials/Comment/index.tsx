@@ -229,9 +229,13 @@ const Comment: React.FC<CommunityHeaderProps> = ({
           <Box className={classes.userInfoContainer}>
             <Typography className={classes.number}>{replyData.comment_no}</Typography>
             <Box ml={1}>
-              <ButtonBase onClick={() => toProfile(replyData.user_code)}>
+              {replyData.is_system ? (
                 <ESAvatar className={classes.avatar} alt={replyData.owner_nickname} src={replyData.owner_profile} />
-              </ButtonBase>
+              ) : (
+                <ButtonBase onClick={() => toProfile(replyData.user_code)}>
+                  <ESAvatar className={classes.avatar} alt={replyData.owner_nickname} src={replyData.owner_profile} />
+                </ButtonBase>
+              )}
             </Box>
             <Box className={classes.userInfoBox} ml={1}>
               <Typography className={classes.username}>{replyData.owner_nickname}</Typography>
@@ -272,9 +276,13 @@ const Comment: React.FC<CommunityHeaderProps> = ({
               <Typography className={classes.number}>{commentData.comment_no}</Typography>
 
               <Box ml={1}>
-                <ButtonBase onClick={() => router.push(`${ESRoutes.PROFILE}/${commentData.user_code}`)}>
+                {commentData.is_system ? (
                   <ESAvatar className={classes.avatar} alt={commentData.owner_nickname} src={commentData.owner_profile} />
-                </ButtonBase>
+                ) : (
+                  <ButtonBase onClick={() => router.push(`${ESRoutes.PROFILE}/${commentData.user_code}`)}>
+                    <ESAvatar className={classes.avatar} alt={commentData.owner_nickname} src={commentData.owner_profile} />
+                  </ButtonBase>
+                )}
               </Box>
 
               <Box className={classes.userInfoBox} ml={1}>
