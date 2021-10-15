@@ -40,6 +40,7 @@ export const URI = {
   COMMUNITY_LIST_BY_USER: '/v2/communities/by_user',
   COMMUNITY_DETAIL: '/v2/communities/:id/details',
   COMMUNITY_CREATE: '/v2/communities',
+  COMMUNITY_CHECK_NAME: '/v2/communities/check_unique_name',
   COMMUNITY_UPDATE: '/v2/communities/:id',
   COMMUNITY_FEATURES: '/v2/communities/features',
   COMMUNITY_FOLLOW: '/v2/communities/:id/join',
