@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import { SetParticipantParams, TournamentDetail, TournamentMatchItem, MatchParticipant } from '@services/arena.service'
+import {
+  SetParticipantParams,
+  TournamentDetail,
+  TournamentMatchItem,
+  MatchParticipant,
+  ParticipantsResponse,
+} from '@services/arena.service'
 import { Typography, Box, makeStyles, Theme, IconButton, Icon, useMediaQuery, useTheme } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
@@ -74,11 +80,13 @@ const SelectParticipantModal: React.FC<SelectParticipantModalProps> = ({
     setShowParticipants(true)
   }
 
-  const participantData = (participant) => {
+  const participantData = (participant: ParticipantsResponse) => {
     const _user = participant.attributes.user
     const teamName = isTeam ? participant.attributes.team.data.attributes.name : ''
+    const avatar = isTeam ? participant.attributes.team?.data.attributes.team_avatar : participant.attributes.avatar_url
+
     return {
-      avatar: participant.attributes.avatar_url,
+      avatar,
       user: {
         ..._user,
         role: ROLE.PARTICIPANT,
