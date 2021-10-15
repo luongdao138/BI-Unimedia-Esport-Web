@@ -32,7 +32,7 @@ const BRListItem: React.FC<BRListItemProps> = (props: BRListItemProps) => {
           </Typography>
           {props.textSecondary && (
             <Typography className={classes.textSecondary} noWrap>
-              {props.textSecondary}
+              {`@${props.textSecondary}`}
             </Typography>
           )}
         </div>

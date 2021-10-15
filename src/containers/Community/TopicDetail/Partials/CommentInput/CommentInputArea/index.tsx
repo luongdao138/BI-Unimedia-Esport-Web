@@ -81,6 +81,7 @@ const useStyles = makeStyles((theme) => ({
     width: 'calc(100% - 97px)',
     marginLeft: 13,
     marginRight: theme.spacing(1),
+    minHeight: 36,
   },
   sendCont: {
     display: 'flex',
@@ -93,7 +94,10 @@ const useStyles = makeStyles((theme) => ({
     border: '1px solid #777',
     backgroundColor: '#101010',
     width: '100%',
+    height: '100%',
     padding: 9,
+    paddingTop: 7,
+    paddingBottom: 7,
     fontSize: 14,
     color: Colors.white,
   },
