@@ -50,7 +50,7 @@ const GameSelector: React.FC<GameSelectorProps> = (props) => {
   const topHeight = isMobile ? 256 : 340
   const selectedGamesRef = useRef<HTMLDivElement>(null)
   const { height: selectedGamesHeight } = useRect(selectedGamesRef)
-  const gameListHeight = windowHeight - topHeight - (selectedGamesHeight || 0)
+  const contentHeight = windowHeight - topHeight - (selectedGamesHeight || 0)
   return (
     <Box>
       <Tabs value={tab} onChange={handleChangeTab} className={classes.tab} variant={'scrollable'}>
@@ -60,12 +60,12 @@ const GameSelector: React.FC<GameSelectorProps> = (props) => {
       </Tabs>
       <TabPanel value={tab} index={0}>
         <GameSearchByTitle>
-          <GameList games={games} selectedGames={props.values} handleAdd={handleAdd} height={gameListHeight} />
+          <GameList games={games} selectedGames={props.values} handleAdd={handleAdd} height={contentHeight} />
         </GameSearchByTitle>
       </TabPanel>
       <TabPanel value={tab} index={1}>
-        <GameSearchByGenre genres={genres} clearGames={clearGames}>
-          <GameList games={games} selectedGames={props.values} handleAdd={handleAdd} height={gameListHeight} />
+        <GameSearchByGenre genres={genres} clearGames={clearGames} categoryListHeight={contentHeight}>
+          <GameList games={games} selectedGames={props.values} handleAdd={handleAdd} height={contentHeight} />
         </GameSearchByGenre>
       </TabPanel>
       <TabPanel value={tab} index={2}>
