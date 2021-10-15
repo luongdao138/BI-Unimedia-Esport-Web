@@ -72,7 +72,7 @@ const useStyles = makeStyles((theme) => ({
     zIndex: 1,
   },
 
-  [theme.breakpoints.down('sm')]: {
+  [theme.breakpoints.down('md')]: {
     addCommentIcon: {
       fontSize: 30,
       margin: theme.spacing(0),
