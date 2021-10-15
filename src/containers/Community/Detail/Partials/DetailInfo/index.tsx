@@ -77,12 +77,12 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
 
   useEffect(() => {
     if (router?.query) {
-      setTab(isAutomatic && isPublic ? TABS.TOPIC_LIST : isNotMember ? TABS.INFO : TABS.TOPIC_LIST)
+      setTab(isAutomatic ? TABS.TOPIC_LIST : isNotMember ? TABS.INFO : TABS.TOPIC_LIST)
     }
   }, [router.query])
 
   useEffect(() => {
-    setTab(isAutomatic && isPublic ? TABS.TOPIC_LIST : isNotMember ? TABS.INFO : TABS.TOPIC_LIST)
+    setTab(isAutomatic ? TABS.TOPIC_LIST : isNotMember ? TABS.INFO : TABS.TOPIC_LIST)
   }, [detail])
 
   const setOtherRoleFalse = (setRoleType: string) => {
@@ -336,12 +336,8 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
       <Grid item xs={12}>
         <ESTabs value={tab} onChange={(_, v) => setTab(v)} className={`${classes.tabs} community-tab`}>
           <ESTab label={t('common:community.info')} value={TABS.INFO} />
-          {showTopicListAndSearchTab && (
-            <ESTab label={t('common:community.topic_list')} value={TABS.TOPIC_LIST} disabled={isNotMember && !isPublic} />
-          )}
-          {showTopicListAndSearchTab && (
-            <ESTab label={t('common:community.search')} value={TABS.SEARCH} disabled={isNotMember && !isPublic} />
-          )}
+          {showTopicListAndSearchTab && <ESTab label={t('common:community.topic_list')} value={TABS.TOPIC_LIST} />}
+          {showTopicListAndSearchTab && <ESTab label={t('common:community.search')} value={TABS.SEARCH} />}
         </ESTabs>
       </Grid>
     )
