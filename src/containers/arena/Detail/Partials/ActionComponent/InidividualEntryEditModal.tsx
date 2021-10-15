@@ -24,8 +24,8 @@ import useArenaHelper from '@containers/arena/hooks/useArenaHelper'
 import ServerError from './ServerError'
 import { ESRoutes } from '@constants/route.constants'
 import { useRouter } from 'next/router'
-import LoginRequired from '@containers/LoginRequired'
 import { FocusContext, FocusContextProvider } from '@utils/hooks/input-focus-context'
+import i18n from '@locales/i18n'
 
 interface EntryEditModalProps {
   tournament: TournamentDetail
@@ -57,7 +57,13 @@ const InidividualEntryEditModal: React.FC<EntryEditModalProps> = ({
   const dispatch = useAppDispatch()
   const router = useRouter()
   const validationSchema = Yup.object().shape({
-    nickname: Yup.string().required(t('common:common.input_required')).max(40),
+    nickname: Yup.string()
+      .required(t('common:common.input_required'))
+      .test('empty-check', i18n.t('common:common.input_incorrect'), (val) => {
+        if (val && val.length > 0 && val.trim().length === 0) return false
+        return true
+      })
+      .max(40),
   })
   const { values, errors, isValid, handleSubmit, handleChange, setFieldValue } = useFormik({
     initialValues: {
@@ -161,17 +167,15 @@ const InidividualEntryEditModal: React.FC<EntryEditModalProps> = ({
                   <DetailInfo
                     detail={tournament}
                     bottomButton={
-                      <LoginRequired>
-                        <ESButton
-                          className={classes.bottomButton}
-                          variant="outlined"
-                          round
-                          size="large"
-                          onClick={toDetail ? toDetail : onClose}
-                        >
-                          {t('common:tournament.tournament_detail')}
-                        </ESButton>
-                      </LoginRequired>
+                      <ESButton
+                        className={classes.bottomButton}
+                        variant="outlined"
+                        round
+                        size="large"
+                        onClick={toDetail ? toDetail : onClose}
+                      >
+                        {t('common:tournament.tournament_detail')}
+                      </ESButton>
                     }
                   />
                 </BlackBox>

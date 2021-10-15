@@ -1,14 +1,14 @@
 import { ButtonBase, ButtonBaseProps } from '@material-ui/core'
 
-const ButtonPrimary: React.FC<
-  ButtonBaseProps & {
-    round?: boolean
-    gradient?: boolean
-    size?: 'small' | 'large'
-    fullWidth?: boolean
-    px?: number
-  }
-> = ({ children, classes: _classes, className, ...rest }) => {
+export interface PrimaryButtonProps extends ButtonBaseProps {
+  round?: boolean
+  gradient?: boolean
+  size?: 'small' | 'large'
+  fullWidth?: boolean
+  px?: number
+}
+
+const ButtonPrimary: React.FC<PrimaryButtonProps> = ({ children, classes: _classes, className, ...rest }) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { round, gradient, size, fullWidth, px, ...props } = rest
   const roundClass = round ? 'button-primary primary-rounded' : 'button-primary'
@@ -20,8 +20,8 @@ const ButtonPrimary: React.FC<
   return (
     <ButtonBase
       className={`${classes} ${className}`}
-      {...props}
       style={{ paddingLeft: px, paddingRight: px, paddingTop: 0, paddingBottom: 0 }}
+      {...props}
     >
       <div className="circle"></div>
       <span className="label-primary MuiButton-label">{children}</span>

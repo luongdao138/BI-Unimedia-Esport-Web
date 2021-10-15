@@ -52,9 +52,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const ESButton: React.FC<
-  ButtonProps & { gradient?: boolean; round?: boolean; minWidth?: number; normalColor?: string; hoverColor?: string }
-> = ({ children, classes: _classes, ...rest }) => {
+export interface ESButtonProps extends ButtonProps {
+  gradient?: boolean
+  round?: boolean
+  minWidth?: number
+  normalColor?: string
+  hoverColor?: string
+}
+
+const ESButton: React.FC<ESButtonProps> = ({ children, classes: _classes, ...rest }) => {
   const classes = useStyles(rest)
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { gradient, round, minWidth, ...props } = rest

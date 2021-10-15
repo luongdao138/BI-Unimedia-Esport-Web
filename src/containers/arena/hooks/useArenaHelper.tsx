@@ -4,33 +4,9 @@ import { ROLE, RULE, TOURNAMENT_STATUS } from '@constants/tournament.constants'
 import { ESRoutes } from '@constants/route.constants'
 import { useContextualRouting } from 'next-use-contextual-routing'
 import _ from 'lodash'
+import { TournamentHelper } from '@utils/helpers/TournamentHelper'
 
-const useArenaHelper = (
-  tournament?: TournamentDetail
-): {
-  toMatches: () => void
-  toResults: () => void
-  toGroupChat: () => void
-  isModerator: boolean
-  isInProgress: boolean
-  isCancelled: boolean
-  isCompleted: boolean
-  isRecruitmentClosed: boolean
-  isBattleRoyale: boolean
-  isRecruiting: boolean
-  isTeam: boolean
-  isEditable: boolean
-  isNotHeld: boolean
-  isReady: boolean
-  isEntered: boolean
-  isUnselected: boolean
-  toEdit: () => void
-  toCreate: () => void
-  isAdminJoined: boolean
-  isTeamLeader: boolean
-  toDetail: () => void
-  toParticipants: () => void
-} => {
+const useArenaHelper = (tournament?: TournamentDetail) => {
   const router = useRouter()
   const { makeContextualHref } = useContextualRouting()
 
@@ -43,7 +19,7 @@ const useArenaHelper = (
   const isCancelled = status === TOURNAMENT_STATUS.CANCELLED
   const isCompleted = status === TOURNAMENT_STATUS.COMPLETED
   const isRecruitmentClosed = status === TOURNAMENT_STATUS.RECRUITMENT_CLOSED || status === TOURNAMENT_STATUS.READY_TO_START
-  const isBattleRoyale = tournament?.attributes?.rule === RULE.BATTLE_ROYALE
+  const isBattleRoyale = [RULE.BATTLE_ROYALE, RULE.TIME_ATTACK, RULE.SCORE_ATTACK].includes(tournament?.attributes?.rule)
   const isRecruiting = status === TOURNAMENT_STATUS.RECRUITING
   const isTeam = tournament?.attributes?.participant_type > 1
   const isEditable = isModerator && status !== TOURNAMENT_STATUS.CANCELLED
@@ -52,7 +28,17 @@ const useArenaHelper = (
   const isReady = status === TOURNAMENT_STATUS.READY
   const isEntered = tournament?.attributes?.is_entered
   const isUnselected = isEntered && isFreezed && myRole === ROLE.INTERESTED
-
+  const joinedCount = tournament ? tournament.attributes.interested_count + tournament.attributes.participant_count : 0
+  const maxCapacity = tournament?.attributes.is_freezed
+    ? tournament?.attributes.participant_count
+    : TournamentHelper.checkStatus(tournament?.attributes.status, TOURNAMENT_STATUS.RECRUITMENT_CLOSED) ||
+      joinedCount > tournament.attributes.max_participants
+    ? tournament?.attributes.max_participants
+    : joinedCount
+  const isMemberSelectable =
+    isModerator &&
+    (tournament.attributes.status === TOURNAMENT_STATUS.RECRUITMENT_CLOSED ||
+      (tournament.attributes.status === TOURNAMENT_STATUS.IN_PROGRESS && !tournament.attributes.is_freezed))
   const checkAdminJoined = () => {
     if (!isModerator) return false
     const myInfoList = _.get(tournament, 'attributes.my_info', [])
@@ -69,6 +55,8 @@ const useArenaHelper = (
     return _.some(myInfoList, { is_leader: true })
   }
   const isTeamLeader = checkTeamLeader()
+  const isParticipant = checkIsParticipant(tournament)
+  const isInterested = checkIsInterested(tournament)
 
   const toCreate = () => router.push(makeContextualHref({ pathName: '/arena/create' }), '/arena/create', { shallow: true })
   const toEdit = () =>
@@ -104,12 +92,14 @@ const useArenaHelper = (
     toGroupChat,
     toMatches,
     toResults,
+    isFreezed,
     isInProgress,
     isCancelled,
     isCompleted,
     isRecruitmentClosed,
     isBattleRoyale,
     isModerator,
+    isParticipant,
     isRecruiting,
     isTeam,
     isEditable,
@@ -123,7 +113,13 @@ const useArenaHelper = (
     toDetail,
     isEntered,
     toParticipants,
+    maxCapacity,
+    isMemberSelectable,
+    isInterested,
   }
 }
+
+const checkIsParticipant = (arena: TournamentDetail) => _.some(arena?.attributes.my_info || [], { role: 'participant' })
+const checkIsInterested = (arena: TournamentDetail) => _.some(arena?.attributes.my_info || [], { role: 'interested' })
 
 export default useArenaHelper

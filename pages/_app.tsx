@@ -27,6 +27,8 @@ import useRouteUrlHistory from '@utils/hooks/useRouterUrlHistory'
 import ToastContainer from '@containers/ToastContainer'
 import DialogContainer from '@containers/DialogContainer'
 import ESHead from '@components/ESHead'
+import { ConfirmProvider } from '@components/Confirm'
+import { defaultConfirmationOptions } from '@constants/common.constants'
 import 'video.js/src/css/video-js.scss'
 import 'src/containers/VideoPlayer/theme.scss'
 import 'src/containers/VideoPlayer/position.scss'
@@ -100,10 +102,12 @@ const App = ({ Component, pageProps }: Props) => {
             <ToastContainer />
             <DialogContainer />
             <SimpleReactLightbox>
-              <Layout>
-                <CssBaseline />
-                <Component {...pageProps} />
-              </Layout>
+              <ConfirmProvider defaultOptions={defaultConfirmationOptions}>
+                <Layout>
+                  <CssBaseline />
+                  <Component {...pageProps} />
+                </Layout>
+              </ConfirmProvider>
             </SimpleReactLightbox>
           </ThemeProvider>
         </RouteContext.Provider>

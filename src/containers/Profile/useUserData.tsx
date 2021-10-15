@@ -21,7 +21,7 @@ const useUserData = (
   meta: Meta
   communityList: CommunityResponse[]
   communityMeta: Meta
-  getCommunityList: () => void
+  // getCommunityList: () => void
   getMemberProfile: (userCode: string) => void
   profileImageChange: (file: File, user_id: number, type: number, blob?: any) => void
   profileImageRemove: (path: string, file_type: number) => void
@@ -58,7 +58,7 @@ const useUserData = (
   }
   const getMemberProfile = () => dispatch(userActions.getMemberProfile(userCode))
   const clearMemberProfile = () => dispatch(userActions.clearMemberProfile())
-  const getCommunityList = () => dispatch(communityActions.getCommunityList())
+  // const getCommunityList = () => dispatch(communityActions.getCommunityList())
   const communityList = useAppSelector(communitySelectors.getCommunityList)
   const communityMeta = useAppSelector(getCommunityListMeta)
 
@@ -126,7 +126,6 @@ const useUserData = (
     meta,
     communityList,
     communityMeta,
-    getCommunityList,
     getMemberProfile,
     profileImageChange,
     profileImageRemove,

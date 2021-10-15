@@ -17,7 +17,6 @@ import { TeamMemberSelectItem } from '@store/arena/actions/types'
 import useDocTitle from '@utils/hooks/useDocTitle'
 import { ROLE } from '@constants/tournament.constants'
 import useArenaHelper from '@containers/arena/hooks/useArenaHelper'
-import LoginRequired from '@containers/LoginRequired'
 
 interface EntryEditModalProps {
   tournament: TournamentDetail
@@ -71,7 +70,9 @@ const TeamEntryEditModal: React.FC<EntryEditModalProps> = ({
   const getTeamId = () => {
     const myInfos = _.get(tournament, 'attributes.my_info', [])
     if (!_.isArray(myInfos)) return null
-    const info = myInfos.find((myInfo) => _.get(myInfo, 'role') === ROLE.INTERESTED || _.get(myInfo, 'role') === ROLE.PARTICIPANT)
+    const info = myInfos.find((myInfo) => {
+      return (_.get(myInfo, 'role') === ROLE.INTERESTED || _.get(myInfo, 'role') === ROLE.PARTICIPANT) && _.get(myInfo, 'is_leader')
+    })
     if (!info) return null
     const teamId = _.get(info, 'team_id', null)
     if (_.isNumber(teamId)) return teamId
@@ -153,11 +154,9 @@ const TeamEntryEditModal: React.FC<EntryEditModalProps> = ({
             <DetailInfo
               detail={tournament}
               bottomButton={
-                <LoginRequired>
-                  <ESButton className={classes.bottomButton} variant="outlined" round size="large" onClick={toDetail ? toDetail : onClose}>
-                    {t('common:tournament.tournament_detail')}
-                  </ESButton>
-                </LoginRequired>
+                <ESButton className={classes.bottomButton} variant="outlined" round size="large" onClick={toDetail ? toDetail : onClose}>
+                  {t('common:tournament.tournament_detail')}
+                </ESButton>
               }
             />
           </BlackBox>

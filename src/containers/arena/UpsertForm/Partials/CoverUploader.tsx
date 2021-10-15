@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import { memo, useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { Box, Typography } from '@material-ui/core'
@@ -14,6 +15,7 @@ type ProfileAvatarProps = {
   onChange?: (file: File, blob: any) => void
   disabled?: boolean
   onOpenStateChange?: (open: boolean) => void
+  onRemove: () => void
 }
 
 const CoverUploader: React.FC<ProfileAvatarProps> = ({
@@ -23,6 +25,7 @@ const CoverUploader: React.FC<ProfileAvatarProps> = ({
   onChange,
   disabled = false,
   onOpenStateChange,
+  onRemove,
 }) => {
   const classes = useStyles()
   const [drag, setDrag] = useState<boolean>(false)
@@ -31,9 +34,7 @@ const CoverUploader: React.FC<ProfileAvatarProps> = ({
   const { t } = useTranslation(['common'])
 
   useEffect(() => {
-    if (src) {
-      setLocalSrc(src)
-    }
+    setLocalSrc(src)
   }, [src])
 
   const handleChange = (file: File, blob: any) => {
@@ -50,6 +51,11 @@ const CoverUploader: React.FC<ProfileAvatarProps> = ({
     !!onOpenStateChange && onOpenStateChange(open)
   }, [open])
 
+  const handleRemove = () => {
+    setOpen(false)
+    onRemove()
+  }
+
   return (
     <div className={classes.root}>
       <label
@@ -63,7 +69,7 @@ const CoverUploader: React.FC<ProfileAvatarProps> = ({
           if (!isUploading && !disabled) setOpen(true)
         }}
       >
-        {localSrc.toString() !== '' && <img className={classes.image} src={localSrc.toString()} />}
+        {_.isEmpty(localSrc) ? null : <img className={classes.image} src={localSrc.toString()} />}
         {!isUploading ? (
           <Box display="flex" flexDirection="column" alignItems="center" position="absolute" zIndex="100" className={classes.logoWhite}>
             <Camera fontSize="large" className={classes.camera} />
@@ -81,10 +87,12 @@ const CoverUploader: React.FC<ProfileAvatarProps> = ({
       </label>
       {open && (
         <CoverSelector
-          src={localSrc.toString()}
+          src={_.isEmpty(localSrc) ? '' : localSrc.toString()}
           ratio={ratio}
           cancel={() => setOpen(false)}
+          is_required={false}
           onUpdate={(file: File, blob: any) => handleChange(file, blob)}
+          onRemove={handleRemove}
         />
       )}
     </div>

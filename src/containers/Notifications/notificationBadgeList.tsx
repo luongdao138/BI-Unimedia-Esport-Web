@@ -1,4 +1,3 @@
-import { Grid } from '@material-ui/core'
 import React, { useEffect } from 'react'
 import useNotificationList from './useNotificationList'
 import NotificationBadgeItem from './notificationBadgeItem'
@@ -42,6 +41,21 @@ const NotificationBadgeListContainer: React.FC = () => {
           router.push(`${ESRoutes.GROUP_CHAT.replace(/:id/gi, notification.attributes.room_id)}`)
           break
         }
+        case NOTIFICATION_ACTION_TYPES.NOTIFICATION_TYPE_RECRUITMENT: {
+          seenNotificationBadge()
+          router.push(`${ESRoutes.LOBBY_DETAIL.replace(/:id/gi, notification.attributes.hash_key)}`)
+          break
+        }
+        case NOTIFICATION_ACTION_TYPES.NOTIFICATION_TYPE_COMMUNITY: {
+          seenNotificationBadge()
+          router.push(`${ESRoutes.COMMUNITY_DETAIL.replace(/:id/gi, notification.attributes.hash_key)}`)
+          break
+        }
+        case NOTIFICATION_ACTION_TYPES.NOTIFICATION_TYPE_COMMENT: {
+          seenNotificationBadge()
+          router.push(`${ESRoutes.TOPIC.replace(/:id/gi, notification.attributes.hash_key)}/${notification.attributes.hash_key2}`)
+          break
+        }
         default: {
           break
         }
@@ -50,20 +64,17 @@ const NotificationBadgeListContainer: React.FC = () => {
   }
 
   return (
-    <div>
+    <>
       {badgeNotifications.map((notification, i) => (
-        <Grid
-          item
-          xs={12}
+        <NotificationBadgeItem
           key={i}
+          data={notification}
           onClick={() => {
             handleClick(notification)
           }}
-        >
-          <NotificationBadgeItem data={notification} />
-        </Grid>
+        />
       ))}
-    </div>
+    </>
   )
 }
 

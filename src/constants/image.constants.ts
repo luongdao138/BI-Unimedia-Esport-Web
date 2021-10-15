@@ -10,6 +10,7 @@ export const UPLOADER_TYPE = {
   USER_ICON: 7,
   TEAM: 8,
   TOURNAMENT_SUMMARY: 9,
+  LOBBY: 10,
 }
 
 export const ACTION_TYPE = {

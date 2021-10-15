@@ -1,5 +1,6 @@
 import { ReactNode, useState } from 'react'
-import { Grid, Box, makeStyles, Typography, Theme, Icon, ButtonBase } from '@material-ui/core'
+import { Grid, Box, makeStyles, Theme, Icon, ButtonBase } from '@material-ui/core'
+import Typography from './Typography'
 import ESChip from '@components/Chip'
 import { Colors } from '@theme/colors'
 import ESMenu from '@components/Menu'
@@ -22,6 +23,7 @@ import Linkify from 'react-linkify'
 import { RULE } from '@constants/tournament.constants'
 import { ESRoutes } from '@constants/route.constants'
 import { useRouter } from 'next/router'
+import ESTwitterShareButton from '@components/TwitterShareButton'
 
 interface Props {
   detail: TournamentDetail
@@ -82,9 +84,12 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
         <Box display="flex" flexDirection="row" alignItems="center">
           <Typography>{`${t('common:tournament.tournament_id')}${detail.id}`}</Typography>
           {extended && (
-            <Box display="flex" justifyContent="flex-end" className={classes.urlCopy} onClick={handleCopy}>
-              <Icon className={`fa fa-link ${classes.link}`} fontSize="small" />
-              <Typography>{t('common:tournament.copy_shared_url')}</Typography>
+            <Box display="flex" flexDirection="row" alignItems="center" flexWrap="wrap">
+              <Box display="flex" justifyContent="flex-end" className={classes.urlCopy} onClick={handleCopy}>
+                <Icon className={`fa fa-link ${classes.link}`} fontSize="small" />
+                <Typography>{t('common:tournament.copy_shared_url')}</Typography>
+              </Box>
+              <ESTwitterShareButton title={detail.attributes.title} url={window.location.toString()} />
             </Box>
           )}
         </Box>
@@ -93,7 +98,7 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
           <ESChip className={classes.gameChip} label={game} />
         </Box>
 
-        <Box marginTop={2}>
+        <Box marginTop={2} marginBottom={2}>
           <Linkify
             componentDecorator={(decoratedHref, decoratedText, key) => (
               <a target="_blank" rel="noopener noreferrer" href={decoratedHref} key={key} className={classes.linkify}>
@@ -114,8 +119,12 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
               </Box>
               <Box className={classes.value}>
                 <Typography>
-                  {TournamentHelper.ruleText(data.rule)}
-                  {data.rule === RULE.SINGLE && data.has_third_place ? t('common:arena.third_place') : t('common:arena.no_third_place')}
+                  {t('common:arena.rules.rule', { rule: data.rule })}
+                  {helper.isBattleRoyale
+                    ? ''
+                    : data.rule === RULE.SINGLE && data.has_third_place
+                    ? t('common:arena.third_place')
+                    : t('common:arena.no_third_place')}
                 </Typography>
               </Box>
             </Box>
@@ -241,7 +250,7 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
                 {data.owner && (
                   <Box display="flex" flexDirection="row" alignItems="center">
                     <ButtonBase onClick={() => toProfile(data.owner.data.attributes.user_code)}>
-                      <ESAvatar alt={data.owner.data.attributes.nickname} src={data.owner.data.attributes.avatar} />
+                      <ESAvatar alt={data.owner.data.attributes.nickname} src={data.owner.data.attributes.avatar} size={35} />
                     </ButtonBase>
                     <Typography className={classes.breakWord}>{data.owner.data.attributes.nickname}</Typography>
                   </Box>
@@ -259,7 +268,7 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
                   data.co_organizers.data.map((co: CommonResponse, i) => (
                     <Box key={`co${i}`} display="flex" flexDirection="row" alignItems="center" mt={i > 0 ? 1 : 0}>
                       <ButtonBase onClick={() => toProfile(co.attributes.user_code)}>
-                        <ESAvatar alt={co.attributes.nickname} src={co.attributes.avatar} />{' '}
+                        <ESAvatar alt={co.attributes.nickname} src={co.attributes.avatar} size={35} />
                       </ButtonBase>
                       <Typography className={classes.breakWord}>{co.attributes.nickname}</Typography>
                     </Box>
@@ -311,7 +320,7 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
               <ESChip label={TournamentHelper.participantTypeText(data.participant_type)} />
             </Box>
             <Box mt={1} mr={1}>
-              <ESChip label={TournamentHelper.ruleText(data.rule)} />
+              <ESChip label={t('common:arena.rules.rule', { rule: data.rule })} />
             </Box>
             {!!data.has_prize && (
               <Box mt={1} mr={1}>

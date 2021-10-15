@@ -11,6 +11,7 @@ import { ESRoutes } from '@constants/route.constants'
 import Button from '@components/Button'
 import { socketCreators } from '@store/socket/actions'
 import { useAppDispatch } from '@store/hooks'
+import { debounce } from 'lodash'
 
 interface ChatSideBarProps {
   expand: boolean
@@ -28,11 +29,18 @@ const ChatSideBar: React.FC<ChatSideBarProps> = ({ toggleChatBar, expand }) => {
     dispatch(socketCreators.cleanRoom())
   }, [])
 
+  const debouncedHandleMouseEnter = debounce(() => toggleChatBar(true), 300)
+
+  const handlOnMouseLeave = () => {
+    toggleChatBar(false)
+    debouncedHandleMouseEnter.cancel()
+  }
+
   return (
     <Box
       className={`${classes.sidebarCont} ${expand ? 'expanded-sidebar' : ''}`}
-      onMouseOver={() => toggleChatBar(true)}
-      onMouseLeave={() => toggleChatBar(false)}
+      onMouseOver={() => debouncedHandleMouseEnter()}
+      onMouseLeave={() => handlOnMouseLeave()}
     >
       <Box className={classes.contentInner}>
         <Box className={classes.header} display="flex" flexDirection="row" justifyContent="space-between" alignItems="center">

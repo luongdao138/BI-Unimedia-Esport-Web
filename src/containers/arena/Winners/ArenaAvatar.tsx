@@ -4,7 +4,7 @@ import { Typography } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
 
-interface ArenaAvatarProps {
+export interface ArenaAvatarProps {
   src: null | string
   leaf?: boolean
   name?: string

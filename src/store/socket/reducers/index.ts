@@ -130,7 +130,7 @@ const socketReducer = (state: State = initialState, action: AnyAction): State =>
     case CHAT_ACTION_TYPE.GET_ROOM_MEMBERS:
       return {
         ...state,
-        members: action.data.content,
+        members: _.defaultTo(action.data.content[0].chatRoomId, '') === state.activeRoom ? action.data.content : state.members,
       }
     case CHAT_ACTION_TYPE.REMOVE_MEMBER:
       return {
@@ -196,6 +196,12 @@ const socketReducer = (state: State = initialState, action: AnyAction): State =>
       return {
         ...state,
         tempList: undefined,
+      }
+    case CHAT_ACTION_TYPE.UPDATE_AVATAR:
+      // unique merge store messages
+      return {
+        ...state,
+        roomList: ChatHelper.updateAvatar(state.roomList, action.data.imgUrl, action.data.chatRoomId),
       }
     case `${WEBSOCKET_PREFIX}:CONNECTED`:
       return {

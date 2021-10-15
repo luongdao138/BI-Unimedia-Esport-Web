@@ -24,6 +24,11 @@ export const getPreSignedUrl = async (params: PresignedDataParams): Promise<any>
   return data
 }
 
+export const getLobbyPreSignedUrl = async (params: PresignedDataParams): Promise<any> => {
+  const { data } = await api.post<any>(URI.LOBBY_PRESIGNED_URL, params)
+  return data
+}
+
 export const getAvatarPreSignedUrl = async (params: AvatarPresignedDataParams): Promise<any> => {
   const { data } = await api.post<any>(URI.AVATAR_PRESIGNED_URL, params)
   return data

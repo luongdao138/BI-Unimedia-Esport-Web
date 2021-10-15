@@ -24,6 +24,7 @@ const ESInputDatePicker: React.FC<Props & DateTimePickerProps> = ({ helperText, 
           inputVariant="outlined"
           minutesStep={5}
           margin="dense"
+          minDateMessage=""
           disablePast={!rest.disabled}
           initialFocusedDate={start}
           className={classes.noMargin}
@@ -42,6 +43,10 @@ const useStyles = makeStyles(() => ({
   root: {
     backgroundColor: Colors.black,
     borderRadius: 4,
+    '& .MuiInputBase-inputMultiline': {
+      overflow: 'hidden',
+      resize: 'none',
+    },
     '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
       borderWidth: 1,
       borderColor: '#fff',

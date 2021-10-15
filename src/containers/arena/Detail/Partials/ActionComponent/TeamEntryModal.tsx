@@ -27,6 +27,7 @@ import { NG_WORD_DIALOG_CONFIG, NG_WORD_AREA } from '@constants/common.constants
 import useDocTitle from '@utils/hooks/useDocTitle'
 import ServerError from './ServerError'
 import { FocusContext, FocusContextProvider } from '@utils/hooks/input-focus-context'
+import i18n from '@locales/i18n'
 
 interface TeamEntryModalProps {
   tournament: TournamentDetail
@@ -109,11 +110,23 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
   }, [isEdit, initialData])
 
   const membersValidationSchema = Yup.object().shape({
-    name: Yup.string().required(t('common:common.input_required')).max(40),
+    name: Yup.string()
+      .required(t('common:common.input_required'))
+      .test('empty-check', i18n.t('common:common.input_incorrect'), (val) => {
+        if (val && val.length > 0 && val.trim().length === 0) return false
+        return true
+      })
+      .max(40),
   })
 
   const validationSchema = Yup.object().shape({
-    team_name: Yup.string().required(t('common:common.input_required')).max(40),
+    team_name: Yup.string()
+      .required(t('common:common.input_required'))
+      .test('empty-check', i18n.t('common:common.input_incorrect'), (val) => {
+        if (val && val.length > 0 && val.trim().length === 0) return false
+        return true
+      })
+      .max(40),
     team_icon_url: Yup.string().nullable(),
     members: Yup.array().of(membersValidationSchema),
   })
@@ -200,7 +213,7 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
     teamMemberHook.setSelectedMember(selection)
   }
 
-  const { values, handleChange, errors } = formik
+  const { values, handleChange, handleBlur, errors, touched } = formik
   return (
     <FocusContextProvider>
       <FocusContext.Consumer>
@@ -237,9 +250,13 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
                       fullWidth
                       required
                       value={values.team_name}
-                      onChange={handleChange}
-                      helperText={errors.team_name}
                       {...focusEvent}
+                      onBlur={(e) => {
+                        handleBlur(e)
+                        focusEvent.onBlur()
+                      }}
+                      onChange={handleChange}
+                      helperText={touched.team_name && errors.team_name}
                     />
 
                     <Box mt={4} />

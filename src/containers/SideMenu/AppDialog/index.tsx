@@ -22,11 +22,15 @@ const ConfirmDialog: React.FC<Props> = ({ open, handleClose }) => {
               <Typography className={classes.detail}>{i18n.t('common:home.app_desc')}</Typography>
             </Box>
             <Box className={classes.buttonWrap}>
-              <ButtonBase href="https://apps.apple.com/jp/app/exelab/id1525346211" target="_blank">
-                <img className={classes.app_store} src="/images/appstore.png" />
+              <ButtonBase className={classes.appBtn} href="https://apps.apple.com/jp/app/exelab/id1525346211" target="_blank">
+                <img className={classes.app_store} src="/images/appstore_2x.png" />
               </ButtonBase>
-              <ButtonBase href="https://play.google.com/store/apps/details?id=jp.co.ntt.esportspf.exelab" target="_blank">
-                <img className={classes.google_play} src="/images/googleplay.png" />
+              <ButtonBase
+                className={classes.googleBtn}
+                href="https://play.google.com/store/apps/details?id=jp.co.ntt.esportspf.exelab"
+                target="_blank"
+              >
+                <img className={classes.google_play} src="/images/googleplay_2x.png" />
               </ButtonBase>
             </Box>
             <Box className={classes.bottomButton}>
@@ -63,24 +67,22 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   app_store: {
     height: 50,
-    maxWidth: '100%',
-    paddingBottom: theme.spacing(1),
-    marginRight: theme.spacing(3),
+    width: 'auto',
   },
   google_play: {
     height: 50,
-    maxWidth: '100%',
-    paddingBottom: theme.spacing(1),
+    width: 'auto',
   },
+  appBtn: {
+    marginRight: theme.spacing(2),
+  },
+  googleBtn: {},
   bottomButton: {
     paddingTop: theme.spacing(8),
     display: 'flex',
     justifyContent: 'center',
   },
   [theme.breakpoints.down('sm')]: {
-    app_store: {
-      marginRight: theme.spacing(2),
-    },
     button: {
       width: 280,
       paddingBottom: theme.spacing(2),
@@ -96,6 +98,22 @@ const useStyles = makeStyles((theme: Theme) => ({
     dialogContainer: {
       paddingLeft: theme.spacing(3),
       paddingRight: theme.spacing(3),
+    },
+  },
+  [theme.breakpoints.down('xs')]: {
+    dialogContainer: {
+      paddingLeft: theme.spacing(2),
+      paddingRight: theme.spacing(2),
+    },
+    appBtn: {
+      marginRight: theme.spacing(2),
+      marginBottom: theme.spacing(2),
+      textAlign: 'center',
+      width: '100%',
+    },
+    googleBtn: {
+      width: '100%',
+      textAlign: 'center',
     },
   },
 }))
