@@ -421,7 +421,7 @@ export type CommentDetail = {
     deleted_at: string | null
     created_at: string
     content: string
-    is_mine: true
+    is_system: boolean
     attachments: CommentsAttachmentResponse[] | null
     owner_nickname: string
     user_code: string
@@ -449,6 +449,7 @@ export type CommentsResponse = {
     owner_profile: string
     hash_key: string
     reply_to_comment_hash_key: string
+    is_system: boolean
     main_comment: {
       id: number
       comment_no: number
