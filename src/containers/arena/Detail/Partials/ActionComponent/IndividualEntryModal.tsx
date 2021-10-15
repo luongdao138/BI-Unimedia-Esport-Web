@@ -53,7 +53,7 @@ const IndividualEntryModal: React.FC<IndividualEntryModalProps> = ({ tournament,
     onSubmit: (values) => {
       if (values.nickname) {
         if (_.isEmpty(checkNgWord(values.nickname))) {
-          join({ hash_key: tournament.attributes.hash_key, data: { name: values.nickname } })
+          join({ hash_key: tournament.attributes.hash_key, data: { name: values.nickname.trim() } })
         } else {
           dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: NG_WORD_AREA.join_nickname }))
         }
