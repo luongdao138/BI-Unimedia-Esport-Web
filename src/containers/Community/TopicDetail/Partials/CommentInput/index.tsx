@@ -173,7 +173,7 @@ const useStyles = makeStyles((theme) => ({
   sendCont: {
     display: 'flex',
     alignItems: 'flex-end',
-    marginBottom: 5,
+    marginBottom: 7,
     marginRight: 13,
   },
   input: {
