@@ -317,14 +317,6 @@ const VideoPlayer: React.FC<PlayerProps> = ({
 
     videoEl.current.addEventListener('durationchange', (event) => {
       console.log('------->>durationchange<<<-----', event.target.duration)
-      // setDurationPlayer(event.target.duration)
-      // if (event.target) {
-      //   const newDurationTime = event.target.duration - 15 <= playedSeconds ? playedSeconds : event.target.duration - 15
-      //   setDurationPlayer(newDurationTime)
-      //   if(Math.floor(newDurationTime) !== liveStreamInfo.streaming_second) {
-      //     changeStreamingSecond(Math.floor(newDurationTime))
-      //   }
-      // }
     })
 
     videoEl.current.addEventListener('volumechange', () => {
@@ -370,6 +362,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     videoEl.current.addEventListener('canplay', (event) => {
       console.log('=================canplay===================')
       console.log(event)
+      setVisible({ ...visible, loading: videoEl.current?.paused })
     })
     videoEl.current.addEventListener('error', (event) => {
       console.log('=================error===================')

@@ -280,7 +280,7 @@ const useStyles = makeStyles(() => ({
     justifyContent: 'center',
     alignItems: 'center',
     display: 'flex',
-    padding: '1px 3px',
+    padding: '2px 3px 1px 3px',
     // background: '#FF4786'
   },
 }))
