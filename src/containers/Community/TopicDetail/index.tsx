@@ -186,6 +186,7 @@ const TopicDetailContainer: React.FC = () => {
                     setShowComment={setShowCommentReply}
                     showComment={showCommentReply[i]}
                     index={i}
+                    windowHeight={height}
                   />
                 )
               })}
