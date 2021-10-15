@@ -25,7 +25,6 @@ const TopicDetailContainer: React.FC = () => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const router = useRouter()
-  const { back } = useRouter()
   const confirm = useConfirm()
   const { topic_hash_key, hash_key, from } = router.query
   const {
@@ -149,7 +148,7 @@ const TopicDetailContainer: React.FC = () => {
     setReportData(detail)
   }
 
-  const handleBack = () => back()
+  const handleBack = () => router.push({ pathname: ESRoutes.COMMUNITY_DETAIL.replace(/:id/gi, String(hash_key)) })
 
   if (!render) {
     return <></>
