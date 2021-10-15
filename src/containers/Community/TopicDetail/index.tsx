@@ -22,8 +22,6 @@ import { COMMUNITY_DIALOGS } from '@constants/community.constants'
 import ListContainer from './Partials/ListContainer'
 import { use100vh } from 'react-div-100vh'
 
-const inputRef = React.createRef<HTMLDivElement>()
-
 const TopicDetailContainer: React.FC = () => {
   const { t } = useTranslation(['common'])
   const router = useRouter()
@@ -203,7 +201,6 @@ const TopicDetailContainer: React.FC = () => {
             <CommentInput
               reply_param={reply}
               setPage={setPage}
-              ref={inputRef}
               setCommentCount={setCommentCount}
               commentCount={commentCount}
               setShowReply={setShowCommentReply}
