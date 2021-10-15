@@ -4,6 +4,8 @@ import { FormType } from './FormModel/FormType'
 import { EditableTypes } from './useCommunityCreate'
 import { useCallback } from 'react'
 import useUploadImage from '@utils/hooks/useUploadImage'
+import { useAppDispatch } from '@store/hooks'
+import community from '@store/community'
 import GameSelectorDialog from './Partials/GameSelectorDialog'
 import CoverUploader from './Partials/CoverUploader'
 import ESSelect from '@components/Select'
@@ -15,6 +17,8 @@ import i18n from '@locales/i18n'
 import { CommunityHelper } from '@utils/helpers/CommunityHelper'
 import { GetPrefecturesResponse } from '@services/common.service'
 
+const { actions } = community
+
 type Props = {
   formik: FormikProps<FormType>
   prefectures: GetPrefecturesResponse
@@ -22,6 +26,7 @@ type Props = {
 }
 
 const StepOne: React.FC<Props> = ({ formik, prefectures, editables }) => {
+  const dispatch = useAppDispatch()
   const { uploadArenaCoverImage, isUploading } = useUploadImage()
 
   const handleUpload = useCallback((file: File, blob: any) => {
@@ -38,6 +43,16 @@ const StepOne: React.FC<Props> = ({ formik, prefectures, editables }) => {
     // value = value.filter((v) => {id: v.id, feature: v.attributes.feature})
     formik.setFieldValue('stepOne.features', value)
   }, [])
+
+  const handleTitleBlur = async (event) => {
+    const resultAction = await dispatch(actions.checkCommunityName({ name: event.target.value }))
+    if (actions.checkCommunityName.fulfilled.match(resultAction)) {
+      if (resultAction.payload.is_unique === false) {
+        formik.setFieldError('stepOne.name', i18n.t('common:community_create.title_already_in_use'))
+      }
+      formik.handleBlur
+    }
+  }
 
   return (
     <Box pb={9}>
@@ -60,7 +75,7 @@ const StepOne: React.FC<Props> = ({ formik, prefectures, editables }) => {
           onChange={formik.handleChange}
           helperText={formik.touched?.stepOne?.name && formik.errors?.stepOne?.name}
           error={formik.touched?.stepOne?.name && !!formik.errors?.stepOne?.name}
-          onBlur={formik.handleBlur}
+          onBlur={handleTitleBlur}
           size="small"
           required
           disabled={!editables.name}
