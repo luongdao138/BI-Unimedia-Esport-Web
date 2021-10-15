@@ -13,7 +13,7 @@ export const getServerSideProps = storeWrapper.getServerSideProps(async ({ store
   const { dispatch }: { dispatch: AppDispatch } = store
   await dispatch(actions.getTournamentDetail(String(params.hash_key)))
   const arena = selectors.getTournamentDetail(store.getState())
-  if (TournamentHelper.isBattleRoyale(arena.attributes?.rule)) {
+  if (TournamentHelper.isBattleRoyale(arena?.attributes?.rule)) {
     return {
       redirect: {
         destination: ESRoutes.ARENA_BATTLES.replace(/:id/gi, String(params.hash_key)),

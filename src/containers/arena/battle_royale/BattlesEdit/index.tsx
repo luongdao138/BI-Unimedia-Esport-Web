@@ -167,26 +167,31 @@ const ArenaBattlesEdit: React.FC = () => {
             {tournament.attributes.is_freezed ? null : (
               <>
                 <Typography>{t('common:tournament.confirm_participants')}</Typography>
-                <Typography>{t('common:arena.select_two_or_more')}</Typography>
+                <Typography>{t('common:arena.select_two_or_more', { isTeam })}</Typography>
               </>
             )}
           </Box>
           <BRList marginX={3} mb={7}>
-            {selecteds.map((v, i) => (
-              <BRListItem
-                key={i}
-                avatar={<Avatar alt={v.attributes.name || ''} src={v.attributes.avatar_url || ''} size={26} />}
-                text={v.attributes.user?.user_code ? v.attributes.name : v.attributes.team?.data.attributes.name}
-                textSecondary={v.attributes.user?.user_code || ''}
-                onClick={() => {
-                  if (isMemberSelectable) {
-                    setShowParticipants({ open: true, pid: Number(v.id) })
-                    setClickIndex(i)
-                  }
-                }}
-                highlight={v.highlight}
-              />
-            ))}
+            {selecteds.map((v, i) => {
+              const name = isTeam ? v.attributes.team?.data.attributes.name : v.attributes.name
+              const nameSecondary = isTeam ? v.attributes.user?.user_code : ''
+              const avatar = isTeam ? v.attributes.team?.data.attributes.team_avatar : v.attributes.avatar_url
+              return (
+                <BRListItem
+                  key={i}
+                  avatar={<Avatar alt={name} src={avatar} size={26} />}
+                  text={name}
+                  textSecondary={nameSecondary}
+                  onClick={() => {
+                    if (isMemberSelectable) {
+                      setShowParticipants({ open: true, pid: Number(v.id) })
+                      setClickIndex(i)
+                    }
+                  }}
+                  highlight={v.highlight}
+                />
+              )
+            })}
           </BRList>
           <InterestedList
             pid={showParticipants.pid}

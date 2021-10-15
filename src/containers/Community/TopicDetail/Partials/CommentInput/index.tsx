@@ -1,8 +1,8 @@
-import { Box, IconButton, Icon } from '@material-ui/core'
+import { Box } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
-import InputBase from '@material-ui/core/InputBase'
-import React, { useEffect, useState, Dispatch, SetStateAction } from 'react'
+
+import React, { useEffect, useState, Dispatch, SetStateAction, useRef } from 'react'
 import useUploadImage from '@utils/hooks/useUploadImage'
 import { useTranslation } from 'react-i18next'
 import ImageUploader from '../ImageUploader'
@@ -14,9 +14,9 @@ import * as commonActions from '@store/common/actions'
 import { showDialog } from '@store/common/actions'
 import { NG_WORD_AREA, NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
 import useTopicDetail from '../../useTopicDetail'
+import { forwardRef } from 'react'
 import { REPLY_REGEX } from '@constants/community.constants'
-
-const TEXT_INPUT_LIMIT = 5000
+import CommentInputArea from './CommentInputArea'
 
 type CommunityHeaderProps = {
   reply_param?: { hash_key: string; comment_no: number }
@@ -26,120 +26,93 @@ type CommunityHeaderProps = {
   setShowReply: Dispatch<SetStateAction<boolean[]>>
 }
 
-const Comment: React.FC<CommunityHeaderProps> = ({ reply_param, setPage, setCommentCount, commentCount, setShowReply }) => {
-  const classes = useStyles()
-  const { query } = useRouter()
-  const { topic_hash_key } = query
-  const { t } = useTranslation(['common'])
-  const dispatch = useAppDispatch()
-  const { checkNgWord } = useCheckNgWord()
-  const { createComment, createCommentMeta, resetCommentCreateMeta } = useTopicDetail()
-  const { uploadCommentImage } = useUploadImage()
+const Comment = forwardRef<HTMLDivElement, CommunityHeaderProps>(
+  ({ reply_param, setPage, setCommentCount, commentCount, setShowReply }, ref) => {
+    const classes = useStyles()
+    const { query } = useRouter()
+    const { topic_hash_key } = query
+    const { t } = useTranslation(['common'])
+    const dispatch = useAppDispatch()
+    const { checkNgWord } = useCheckNgWord()
+    const { createComment, createCommentMeta, resetCommentCreateMeta } = useTopicDetail()
+    const { uploadCommentImage } = useUploadImage()
 
-  const [isUploading, setUploading] = useState(false)
-  const [isMaxLength, setIsMaxLength] = useState(false)
-  const [imageURL, setImageURL] = useState('')
-  const [inputText, setInputText] = useState('')
+    const [isUploading, setUploading] = useState(false)
 
-  useEffect(() => {
-    if (!_.isEmpty(reply_param)) {
-      if (!_.includes(_.split(inputText, REPLY_REGEX), `>>${reply_param.comment_no}`)) {
-        setInputText(inputText.concat('>>' + reply_param.comment_no))
+    const inputRef = useRef<{ clearInput: () => void }>(null)
+
+    const [imageURL, setImageURL] = useState('')
+    const [inputText, setInputText] = useState('')
+
+    useEffect(() => {
+      if (!_.isEmpty(reply_param)) {
+        if (!_.includes(_.split(inputText, REPLY_REGEX), `>>${reply_param.comment_no}`)) {
+          setInputText(inputText.concat('>>' + reply_param.comment_no))
+        }
+      }
+    }, [reply_param])
+
+    useEffect(() => {
+      if (!createCommentMeta.pending && createCommentMeta.loaded) {
+        if (inputRef.current) inputRef.current.clearInput()
+        setImageURL('')
+        setPage(1)
+        setCommentCount(commentCount + 1)
+      } else if (!createCommentMeta.pending && createCommentMeta.error) {
+        dispatch(commonActions.addToast(t('common:topic.topic_not_found')))
+        router.back()
+      }
+      resetCommentCreateMeta()
+    }, [createCommentMeta])
+
+    const handleUpload = (file: File) => {
+      setUploading(true)
+      uploadCommentImage(file, undefined, (imageUrl) => {
+        setUploading(false)
+        setImageURL(imageUrl)
+      })
+    }
+
+    const isInputEmpty = (text: string) => {
+      const textArray = _.split(text, '\n')
+      for (let i = 0; i < textArray.length; i++) {
+        if (textArray[i] !== '') {
+          return false
+        }
+      }
+      return true
+    }
+
+    const send = (text: string) => {
+      setShowReply((comments) => _.map(comments, () => false))
+      if (_.isEmpty(checkNgWord(text.trim()))) {
+        const reply_comment_nos = _.map(_.filter(_.split(text, REPLY_REGEX)), (c) => Number(c.slice(2)))
+        const data = {
+          topic_hash: String(topic_hash_key),
+          content: isInputEmpty(text) ? '' : text,
+          reply_to_comment_nos: reply_comment_nos,
+          attachments: imageURL,
+        }
+        if (!createCommentMeta.pending) {
+          createComment(data)
+        }
+      } else {
+        dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: NG_WORD_AREA.comment_section }))
       }
     }
-  }, [reply_param])
 
-  useEffect(() => {
-    if (!createCommentMeta.pending && createCommentMeta.loaded) {
-      setInputText('')
-      setImageURL('')
-      setPage(1)
-      setCommentCount(commentCount + 1)
-    } else if (!createCommentMeta.pending && createCommentMeta.error) {
-      dispatch(commonActions.addToast(t('common:topic.topic_not_found')))
-      router.back()
-    }
-    resetCommentCreateMeta()
-  }, [createCommentMeta])
-
-  const handleUpload = (file: File) => {
-    setUploading(true)
-    uploadCommentImage(file, undefined, (imageUrl) => {
-      setUploading(false)
-      setImageURL(imageUrl)
-    })
-  }
-
-  const isInputEmpty = (text: string) => {
-    const textArray = _.split(text, '\n')
-    for (let i = 0; i < textArray.length; i++) {
-      if (textArray[i] !== '') {
-        return false
-      }
-    }
-    return true
-  }
-
-  const send = () => {
-    setShowReply((comments) => _.map(comments, () => false))
-    if (_.isEmpty(checkNgWord(inputText.trim()))) {
-      const reply_comment_nos = _.map(_.filter(_.split(inputText, REPLY_REGEX)), (c) => Number(c.slice(2)))
-      const data = {
-        topic_hash: String(topic_hash_key),
-        content: isInputEmpty(inputText) ? '' : inputText,
-        reply_to_comment_nos: reply_comment_nos,
-        attachments: imageURL,
-      }
-      if (!createCommentMeta.pending) {
-        createComment(data)
-      }
-    } else {
-      dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: NG_WORD_AREA.comment_section }))
-    }
-  }
-
-  const handleChange = (event) => {
-    if (event.target.value.length > TEXT_INPUT_LIMIT) {
-      setIsMaxLength(true)
-    } else {
-      setIsMaxLength(false)
-    }
-    setInputText(event.target.value)
-  }
-
-  return (
-    <>
-      <Box className={classes.root}>
-        <Box className={classes.toolbarCont}>
-          <ImageUploader src={imageURL} setSrc={setImageURL} onChange={handleUpload} isUploading={isUploading} />
-        </Box>
-        <Box className={classes.inputCont}>
-          <InputBase
-            value={inputText}
-            onChange={handleChange}
-            className={classes.input}
-            multiline
-            rowsMax={9}
-            placeholder={t('common:topic_create.comment_placeholder')}
-            inputProps={{ maxLength: TEXT_INPUT_LIMIT, style: { overflow: 'visible' } }}
-          />
-        </Box>
-        <Box className={classes.sendCont}>
-          <Box display="flex" alignItems="center">
-            <IconButton
-              className={classes.iconButton}
-              onClick={send}
-              disabled={(imageURL === '' && inputText.trim() === '') || isMaxLength}
-            >
-              <Icon className={`${classes.icon} fas fa-paper-plane`} />
-            </IconButton>
+    return (
+      <div className={classes.inputContainer} ref={ref}>
+        <Box className={classes.root}>
+          <Box className={classes.toolbarCont}>
+            <ImageUploader src={imageURL} setSrc={setImageURL} onChange={handleUpload} isUploading={isUploading} />
           </Box>
+          <CommentInputArea ref={inputRef} onPressSend={send} disabled={imageURL === ''} />
         </Box>
-      </Box>
-    </>
-  )
-}
-
+      </div>
+    )
+  }
+)
 const useStyles = makeStyles((theme) => ({
   root: {
     flexDirection: 'row',
@@ -148,6 +121,17 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: '100%',
     width: '100%',
     position: 'relative',
+  },
+  inputContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    flexDirection: 'column',
+    bottom: 0,
+    padding: 11,
+    width: '100%',
+    background: '#101010',
+    willChange: 'transform',
+    zIndex: 2,
   },
   toolbarCont: {
     display: 'flex',
@@ -173,7 +157,7 @@ const useStyles = makeStyles((theme) => ({
   sendCont: {
     display: 'flex',
     alignItems: 'flex-end',
-    marginBottom: 5,
+    marginBottom: 7,
     marginRight: 13,
   },
   input: {

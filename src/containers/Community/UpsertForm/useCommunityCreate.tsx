@@ -14,6 +14,7 @@ const { actions, selectors } = community
 const _getCommunityFeaturesMeta = createMetaSelector(actions.getCommunityFeatures)
 const createCommunityMeta = createMetaSelector(actions.createCommunity)
 const updateCommunityMeta = createMetaSelector(actions.updateCommunity)
+const getCheckCommunityNameMeta = createMetaSelector(actions.checkCommunityName)
 
 export type EditableTypes = {
   name: boolean
@@ -37,6 +38,7 @@ const useCommunityCreate = (): {
   getCommunityFeaturesMeta: Meta
   getCreateCommunityMeta: Meta
   getUpdateCommunityMeta: Meta
+  checkCommunityNameMeta: Meta
   getCommunityFeatures: () => void
   resetCreateUpdateMeta: () => void
 } => {
@@ -49,6 +51,7 @@ const useCommunityCreate = (): {
   const getCommunityFeaturesMeta = useAppSelector(_getCommunityFeaturesMeta)
   const getCreateCommunityMeta = useAppSelector(createCommunityMeta)
   const getUpdateCommunityMeta = useAppSelector(updateCommunityMeta)
+  const checkCommunityNameMeta = useAppSelector(getCheckCommunityNameMeta)
   const [isEdit, setIsEdit] = useState(false)
 
   const editables: EditableTypes = {
@@ -66,6 +69,7 @@ const useCommunityCreate = (): {
   const resetCreateUpdateMeta = () => {
     dispatch(clearMetaData(actions.createCommunity.typePrefix))
     dispatch(clearMetaData(actions.updateCommunity.typePrefix))
+    dispatch(clearMetaData(actions.checkCommunityName.typePrefix))
   }
 
   const resetMeta = () => dispatch(clearMetaData(actions.createCommunity.typePrefix))
@@ -105,6 +109,7 @@ const useCommunityCreate = (): {
     getCommunityFeatures,
     getCreateCommunityMeta,
     getUpdateCommunityMeta,
+    checkCommunityNameMeta,
     resetCreateUpdateMeta,
   }
 }
