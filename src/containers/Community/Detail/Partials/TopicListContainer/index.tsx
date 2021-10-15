@@ -1,6 +1,6 @@
 import { Box, makeStyles, Typography, useMediaQuery, useTheme } from '@material-ui/core'
 import TopicRowItem from '@components/TopicRowItem'
-import { useState, useEffect, createRef } from 'react'
+import { useState, useEffect, createRef, useLayoutEffect } from 'react'
 import moment from 'moment'
 import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
@@ -12,11 +12,9 @@ import _ from 'lodash'
 import Pagination from '@containers/Community/Partials/Pagination'
 import TopicCreateButton from '@containers/Community/Partials/TopicCreateButton'
 import styled from 'styled-components'
-import { useRect } from '@utils/hooks/useRect'
 
-let topicCreateRightPx: number
 type StyleParams = {
-  topicCreateRightPx: number
+  leftPosition: number
 }
 const StyledBox = styled(Box)``
 const contentRef = createRef<HTMLDivElement>()
@@ -35,12 +33,22 @@ const TopicListContainer: React.FC<TopicListProps> = ({ toCreateTopic, isNotMemb
   const { topicList, getTopicList, topicListMeta, topicListPageMeta } = useCommunityDetail()
   const { hash_key } = router.query
 
-  const contentRect = useRect(contentRef)
-  topicCreateRightPx = contentRect.left
   const _theme = useTheme()
   const isMobile = useMediaQuery(_theme.breakpoints.down('sm'), { noSsr: true })
 
-  const classes = useStyles({ topicCreateRightPx })
+  const [position, setPosition] = useState<number>()
+
+  useLayoutEffect(() => {
+    const updateSize = () => {
+      const width = document.getElementById('content-main').getBoundingClientRect().right
+      setPosition(width)
+    }
+    window.addEventListener('resize', updateSize)
+    updateSize()
+    return () => window.removeEventListener('resize', updateSize)
+  }, [])
+
+  const classes = useStyles({ leftPosition: position })
 
   useEffect(() => {
     if (!topicListMeta.pending && topicListMeta.loaded) {
@@ -100,7 +108,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'flex-end',
     width: 99,
-    right: (props: StyleParams) => props.topicCreateRightPx + 24,
+    left: (props: StyleParams) => props.leftPosition - 120,
     position: 'fixed',
     bottom: theme.spacing(5),
   },
