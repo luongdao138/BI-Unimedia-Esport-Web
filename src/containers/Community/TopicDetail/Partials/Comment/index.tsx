@@ -20,9 +20,9 @@ import _ from 'lodash'
 import useTopicHelper from '../../useTopicHelper'
 import useTopicDetail from '../../useTopicDetail'
 import styled from 'styled-components'
-import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
 import { REPLY_REGEX } from '@constants/community.constants'
 import moment from 'moment'
+import { use100vh } from 'react-div-100vh'
 
 const StyledBox = styled(Box)``
 let currentReplyNumberRectX: number, currentReplyNumberRectY: number, maxHeight: number
@@ -77,7 +77,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({
   index,
 }) => {
   const [isBottom, setIsBottom] = useState<boolean>(false)
-  const windowDimensions = useWindowDimensions()
+
   const classes = useStyles({ currentReplyNumberRectX, currentReplyNumberRectY, isBottom, maxHeight })
   const { query } = useRouter()
   const { topic_hash_key } = query
@@ -89,6 +89,8 @@ const Comment: React.FC<CommunityHeaderProps> = ({
   const contentRef = useRef(null)
   const popoverInnerRef = useRef()
 
+  const windowHeight = use100vh()
+
   const toProfile = (user_code) => router.push(`${ESRoutes.PROFILE}/${user_code}`)
 
   const handleClickReply = (event, content) => {
@@ -98,9 +100,9 @@ const Comment: React.FC<CommunityHeaderProps> = ({
     getCommentDetail({ topic_hash: topic_hash_key, comment_no: content.slice(2) })
     const currentRect = event.currentTarget.getBoundingClientRect()
     const contentRect = contentRef.current.getBoundingClientRect()
-    if (windowDimensions.height / 2 > currentRect.top) {
+    if (windowHeight / 2 > currentRect.top) {
       setIsBottom(false)
-      maxHeight = windowDimensions.height - currentRect.bottom - 62
+      maxHeight = windowHeight - currentRect.bottom - 62
       currentReplyNumberRectY = contentRect.bottom - currentRect.bottom
     } else {
       setIsBottom(true)
