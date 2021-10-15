@@ -42,7 +42,6 @@ const Comment = forwardRef<HTMLDivElement, CommunityHeaderProps>(
     const inputRef = useRef<{ clearInput: () => void }>(null)
 
     const [imageURL, setImageURL] = useState('')
-    const [inputText, setInputText] = useState('')
 
     useEffect(() => {
       if (!_.isEmpty(reply_param)) {
@@ -107,7 +106,7 @@ const Comment = forwardRef<HTMLDivElement, CommunityHeaderProps>(
           <Box className={classes.toolbarCont}>
             <ImageUploader src={imageURL} setSrc={setImageURL} onChange={handleUpload} isUploading={isUploading} />
           </Box>
-          <CommentInputArea ref={inputRef} onPressSend={send} disabled={imageURL === ''} />
+          <CommentInputArea replyParam={reply_param} ref={inputRef} onPressSend={send} disabled={imageURL === ''} />
         </Box>
       </div>
     )
