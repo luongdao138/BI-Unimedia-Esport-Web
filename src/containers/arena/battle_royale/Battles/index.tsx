@@ -29,7 +29,7 @@ const ArenaBattles: React.FC = () => {
   const { t } = useTranslation(['common'])
 
   const { tournament, meta: detailMeta } = useTournamentDetail()
-  const { isModerator, isParticipant, isTeamLeader, isTeam } = useArenaHelper(tournament)
+  const { isModerator, isParticipant, isTeamLeader, isTeam, isFreezed } = useArenaHelper(tournament)
   const [hideFooter, setHideFooter] = useState(true)
   const [errors, setErrors] = useState<Record<string, ErrorType>>({})
 
@@ -106,9 +106,9 @@ const ArenaBattles: React.FC = () => {
 
   useEffect(() => {
     if (tournament?.attributes.status === 'in_progress' || tournament?.attributes.status === 'completed') {
-      if (isModerator) {
+      if (isModerator && isFreezed) {
         setHideFooter(false)
-      } else if (isParticipant && isTeamLeader && !isFixedMyScore) {
+      } else if (isParticipant && isTeamLeader && !isFixedMyScore && isFreezed) {
         setHideFooter(false)
       }
     }
@@ -206,7 +206,7 @@ const ArenaBattles: React.FC = () => {
                 onChange={({ target: { value } }) => setScores(value === '' ? '' : Number(value), v.id)}
                 onAttackError={(val) => handleError(val, v.id)}
                 type={tournament?.attributes.rule}
-                disabled={(v.attributes.is_fixed_score || !v.highlight) && !isModerator}
+                disabled={((v.attributes.is_fixed_score || !v.highlight) && !isModerator) || !isFreezed}
                 participants={participants}
               />
             </BRListItem>
