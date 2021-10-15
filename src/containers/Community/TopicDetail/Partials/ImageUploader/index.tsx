@@ -161,9 +161,10 @@ const useStyles = makeStyles((theme) => ({
   },
   iconButton: {
     padding: 0,
+    borderRadius: 0,
   },
   icon: {
-    fontSize: 34,
+    fontSize: 30,
     color: Colors.grey[400],
   },
 }))

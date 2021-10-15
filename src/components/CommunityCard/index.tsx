@@ -11,6 +11,7 @@ import { useRouter } from 'next/router'
 import { CommunityResponse } from '@services/community.service'
 import React from 'react'
 import _ from 'lodash'
+import { IS_OFFICIAL } from '@constants/community.constants'
 
 interface Props {
   community: CommunityResponse
@@ -26,9 +27,13 @@ const CommunityCard: React.FC<Props> = ({ community }) => {
     return (
       <>
         <Box className={classes.mediaOverlay} display="flex" flexDirection="row" justifyContent="space-between" p={1}>
-          <Box alignSelf="flex-end">
-            <ESAvatar size={36} src={attr.organizer_avatar} alt={attr.organizer_name} />
-          </Box>
+          {attr.is_official === IS_OFFICIAL.NOT_OFFICIAL ? (
+            <Box alignSelf="flex-end">
+              <ESAvatar size={36} src={attr.organizer_avatar} alt={attr.organizer_name} />
+            </Box>
+          ) : (
+            <Box />
+          )}
 
           <Box display="flex" flexDirection="column" alignItems="flex-end">
             {!!attr.is_official && (

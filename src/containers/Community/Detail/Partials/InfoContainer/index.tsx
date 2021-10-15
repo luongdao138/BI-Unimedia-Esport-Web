@@ -108,7 +108,7 @@ const InfoContainer: React.FC<{ isOfficial: boolean; data: CommunityDetail['attr
             <Box display="flex" flexDirection="row" alignItems="center" mb={1}>
               <LoginRequired>
                 {isOfficial ? (
-                  <ESAvatar src={'/images/avatar.png'} />
+                  <ESAvatar alt={data.admin.nickname} src={data.admin.avatar_image_url} size={35} />
                 ) : (
                   <ButtonBase onClick={() => toProfile(data.admin.user_code)}>
                     <ESAvatar alt={data.admin.nickname} src={data.admin.avatar_image_url} size={35} />

@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
+import { useTheme, useMediaQuery } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
 import { Colors } from '@theme/colors'
 import Tabs from '../Tabs'
@@ -15,6 +16,8 @@ import { GameTitle } from '@services/game.service'
 import _ from 'lodash'
 import SelectedGames from './SelectedGames'
 import { Box } from '@material-ui/core'
+import { use100vh } from 'react-div-100vh'
+import { useRect } from '@utils/hooks/useRect'
 
 type GameTitleItem = GameTitle['attributes']
 export type GameSelectorProps = { values: GameTitleItem[]; onChange: (games: GameTitleItem[]) => void; single?: boolean }
@@ -40,6 +43,14 @@ const GameSelector: React.FC<GameSelectorProps> = (props) => {
   const handleRemove = (game: GameTitleItem) => {
     props.onChange(_.differenceBy(props.values, [game], 'id'))
   }
+
+  const theme = useTheme()
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
+  const windowHeight = use100vh()
+  const topHeight = isMobile ? 256 : 340
+  const selectedGamesRef = useRef<HTMLDivElement>(null)
+  const { height: selectedGamesHeight } = useRect(selectedGamesRef)
+  const contentHeight = windowHeight - topHeight - (selectedGamesHeight || 0)
   return (
     <Box>
       <Tabs value={tab} onChange={handleChangeTab} className={classes.tab} variant={'scrollable'}>
@@ -49,18 +60,18 @@ const GameSelector: React.FC<GameSelectorProps> = (props) => {
       </Tabs>
       <TabPanel value={tab} index={0}>
         <GameSearchByTitle>
-          <GameList games={games} selectedGames={props.values} handleAdd={handleAdd} />
+          <GameList games={games} selectedGames={props.values} handleAdd={handleAdd} height={contentHeight} />
         </GameSearchByTitle>
       </TabPanel>
       <TabPanel value={tab} index={1}>
-        <GameSearchByGenre genres={genres} clearGames={clearGames}>
-          <GameList games={games} selectedGames={props.values} handleAdd={handleAdd} />
+        <GameSearchByGenre genres={genres} clearGames={clearGames} categoryListHeight={contentHeight}>
+          <GameList games={games} selectedGames={props.values} handleAdd={handleAdd} height={contentHeight} />
         </GameSearchByGenre>
       </TabPanel>
       <TabPanel value={tab} index={2}>
         <AddGame genres={genres} handleAdd={handleAdd} />
       </TabPanel>
-      <SelectedGames games={props.values} handleRemove={handleRemove} />
+      <SelectedGames games={props.values} handleRemove={handleRemove} ref={selectedGamesRef} />
     </Box>
   )
 }
