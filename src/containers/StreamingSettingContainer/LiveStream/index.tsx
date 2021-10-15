@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import SettingsCompleted from '@components/SettingsCompleted'
 import React, { useEffect, useState } from 'react'
@@ -14,6 +15,7 @@ import { EVENT_STATE_CHANNEL } from '@constants/common.constants'
 import API, { GraphQLResult, graphqlOperation } from '@aws-amplify/api'
 import { onUpdateChannel } from 'src/graphql/subscriptions'
 import * as APIt from 'src/types/graphqlAPI'
+import { getChannelByArn } from 'src/graphql/queries'
 interface Props {
   formik?: FormikProps<FormLiveType>
 }
@@ -53,6 +55,8 @@ const LiveStreamContainer: React.FC<Props> = ({ formik }) => {
     updateChannelSubscription = updateChannelSubscription.subscribe({
       next: (sub: GraphQLResult<APIt.OnUpdateChannelSubscription>) => {
         //@ts-ignore
+        console.log('====>>SUB<<===', sub?.value?.data?.onUpdateChannel?.state, step)
+        //@ts-ignore
         if (sub?.value?.data?.onUpdateChannel?.arn === formik?.values?.stepSettingOne?.arn) {
           //@ts-ignore
           setStateChannelMedia(sub?.value?.data?.onUpdateChannel?.state)
@@ -71,6 +75,27 @@ const LiveStreamContainer: React.FC<Props> = ({ formik }) => {
       // resetVideoDetailData()
     }
   })
+  const checkChannelState = async () => {
+    try {
+      const channelArn = formik?.values?.stepSettingOne?.arn
+      const listQC: APIt.GetChannelByArnQueryVariables = {
+        arn: channelArn,
+        limit: 2000,
+      }
+      const channelRs: any = await API.graphql(graphqlOperation(getChannelByArn, listQC))
+      console.log('===>>channelRs<<<===', channelRs)
+      const channelData = channelRs.data.getChannelByArn.items.find((i) => i.arn === channelArn)
+      console.log('====>>data channel find<<====', channelData)
+      if (channelData) {
+        setStateChannelMedia(channelData.state)
+      }
+    } catch (error) {
+      console.error(error)
+    }
+  }
+  useEffect(() => {
+    checkChannelState()
+  }, [formik?.values?.stepSettingOne?.arn])
 
   return (
     <>
