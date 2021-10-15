@@ -8,7 +8,7 @@ import i18n from '@locales/i18n'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import ESLoader from '@components/Loader'
 import useLiveStreamDetail from '@containers/VideoLiveStreamContainer/useLiveStreamDetail'
-import { LIMIT_ITEM, TypeVideoArchived } from '@services/liveStreamDetail.service'
+import { TypeVideoArchived } from '@services/liveStreamDetail.service'
 import VideoPreviewItem from '@containers/VideosTopContainer/VideoPreviewItem'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import { PreloadPreviewItem } from '@containers/VideoLiveStreamContainer/PreloadContainer'
@@ -30,7 +30,7 @@ interface ProgramInfoProps {
   videoInfo?: any
   videoItemStyle?: any
 }
-
+const LIMIT_ITEM = 12
 const ProgramInfoNoViewingTicket: React.FC<ProgramInfoProps> = ({ videoInfo, videoItemStyle }) => {
   const { meta_archived_video_stream, archivedVideoStreamData, getArchivedVideoStream, resetArchivedVideoStream } = useLiveStreamDetail()
   const [page, setPage] = useState<number>(1)

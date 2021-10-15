@@ -247,7 +247,7 @@ const useStyles = makeStyles((theme) => ({
       minWidth: 500 / 5,
     },
   },
-  [theme.breakpoints.down(415)]: {
+  [theme.breakpoints.down(419)]: {
     tabsContainer: {
       display: 'flex',
       paddingLeft: 0,

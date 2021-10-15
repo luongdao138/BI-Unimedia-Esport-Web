@@ -8,7 +8,7 @@ import PurchaseHistoryItem from '../PurchaseHistoryItem'
 import usePointsManage from '../usePointsManage'
 import ESLoader from '@components/FullScreenLoader'
 import moment from 'moment'
-import { FORMAT_YEAR_MONTH } from '@constants/common.constants'
+import { FORMAT_YEAR_MONTH, FORMAT_YEAR_MONTH_FILTER } from '@constants/common.constants'
 
 export type FilterOptionsParams = {
   label: string
@@ -40,7 +40,7 @@ const PurchaseHistory: FC = () => {
     if (listFilterData) {
       setFilterOptions(filterOptionsData)
       const newObjects = listFilterData.map((item) => {
-        return { label: moment(new Date(item)).format(FORMAT_YEAR_MONTH), value: item }
+        return { label: moment(new Date(item)).format(FORMAT_YEAR_MONTH), value: moment(new Date(item)).format(FORMAT_YEAR_MONTH_FILTER) }
       })
       const newFilterData = filterOptionsData.concat(newObjects)
       setFilterOptions(newFilterData)

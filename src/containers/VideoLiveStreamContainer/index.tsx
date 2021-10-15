@@ -92,7 +92,7 @@ const VideoDetail: React.FC = () => {
   const [videoInfo, setVideoInfo] = useState<VIDEO_INFO>({ video_status: STATUS_VIDEO.SCHEDULE, process_status: '' })
   const [videoStatus, setVideoStatus] = useState(null)
   const [isArchived, setIsArchived] = useState(false)
-  console.log("🚀 ~ isArchived", isArchived)
+  console.log('🚀 ~ isArchived', isArchived)
 
   console.log('🚀 ~ videoStatus', videoStatus)
 
@@ -188,13 +188,13 @@ const VideoDetail: React.FC = () => {
     if (detailVideoResult.key_video_id) {
       console.log('🚀 ~ useEffect ~ videoInfo', videoInfo)
       const { video_status, process_status } = videoInfo
-      console.log("🚀 ~ useEffect ~ videoStatus", videoStatus)
-      if (
-        videoStatus !== STATUS_VIDEO.ARCHIVE
-      ) {
+      console.log('🚀 ~ useEffect ~ videoStatus', videoStatus)
+      if (videoStatus !== STATUS_VIDEO.ARCHIVE) {
         // if end live stream or archive => navigateToArchiveUrl
-        if((video_status === EVENT_LIVE_STATUS.RECORDING_ARCHIVED &&
-        process_status === EVENT_LIVE_STATUS.RECORDING_END) || (+video_status === STATUS_VIDEO.ARCHIVE && process_status === EVENT_LIVE_STATUS.STREAM_END)) {
+        if (
+          (video_status === EVENT_LIVE_STATUS.RECORDING_ARCHIVED && process_status === EVENT_LIVE_STATUS.RECORDING_END) ||
+          (+video_status === STATUS_VIDEO.ARCHIVE && process_status === EVENT_LIVE_STATUS.STREAM_END)
+        ) {
           // setVideoStatus(STATUS_VIDEO.ARCHIVE)
           console.log('🚀 ~ 00000', videoInfo)
           setTimeout(() => {
@@ -202,16 +202,16 @@ const VideoDetail: React.FC = () => {
             setVideoStatus(STATUS_VIDEO.ARCHIVE)
             setIsArchived(true)
             navigateToArchiveUrl()
-          }, 3000);
+          }, 3000)
         }
       }
       if (+video_status === STATUS_VIDEO.SCHEDULE) {
-        // catch event video is schedule 
+        // catch event video is schedule
         if (+videoStatus !== STATUS_VIDEO.LIVE_STREAM) {
           setVideoStatus(STATUS_VIDEO.SCHEDULE)
         }
       } else if (+video_status === STATUS_VIDEO.LIVE_STREAM) {
-        // catch event start live 
+        // catch event start live
         if (process_status === EVENT_LIVE_STATUS.STREAM_START) {
           setVideoStatus(STATUS_VIDEO.LIVE_STREAM)
           // window.location.reload()
@@ -571,6 +571,7 @@ const VideoDetail: React.FC = () => {
           showModalPurchasePoint={showModalPurchasePoint}
           setShowModalPurchasePoint={(value) => setShowModalPurchasePoint(value)}
         />
+        `
       </Box>
       {!isMobile ? (
         _.isEmpty(detailVideoResult) ? (
@@ -657,53 +658,46 @@ const useStyles = makeStyles((theme) => ({
       width: '100%',
     },
   },
-  [theme.breakpoints.down(549)]: {
+  [theme.breakpoints.down(419)]: {
     tabsContainer: {
       display: 'flex',
-      paddingLeft: 24,
-      paddingRight: 24,
+      width: '100%',
+      paddingRight: 0,
+      paddingLeft: 0,
       justifyContent: 'center',
       alignItems: 'center',
     },
     tabs: {
       display: 'flex',
+      width: '100%',
       paddingLeft: 0,
     },
     singleTab: {
-      display: 'flex',
-      minWidth: 500 / 4,
+      width: '25%',
+      minWidth: 'unset',
     },
   },
-  [theme.breakpoints.down(415)]: {
+  [theme.breakpoints.down(376)]: {
     tabsContainer: {
       display: 'flex',
+      width: '100%',
+      paddingLeft: 0,
       paddingRight: 0,
       justifyContent: 'center',
       alignItems: 'center',
     },
     tabs: {
       display: 'flex',
+      width: '100%',
       paddingLeft: 0,
-    },
-    singleTab: {
-      minWidth: 56,
-    },
-  },
-  [theme.breakpoints.down(375)]: {
-    tabsContainer: {
-      display: 'flex',
       paddingRight: 0,
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    tabs: {
-      display: 'flex',
-      paddingLeft: 0,
     },
     singleTab: {
-      '& .MuiTab-wrapper': {
-        fontSize: 12,
-      },
+      width: 'unset',
+      minWidth: '25%',
+      // '& .MuiTab-wrapper': {
+      //   fontSize: 12,
+      // },
     },
   },
 }))

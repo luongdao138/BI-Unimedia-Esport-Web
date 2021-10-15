@@ -10,7 +10,7 @@ import ESLoader from '@components/FullScreenLoader'
 import moment from 'moment'
 import PurchaseHistoryItem from '../PurchaseHistoryItem'
 import UsagePointDetailItem from '../UsagePointDetailItem'
-import { FORMAT_YEAR_MONTH } from '@constants/common.constants'
+import { FORMAT_YEAR_MONTH, FORMAT_YEAR_MONTH_FILTER } from '@constants/common.constants'
 
 export interface UsagePointDataProps {
   serialNumber: string
@@ -19,6 +19,7 @@ export interface UsagePointDataProps {
   expiresDatePurchased: string
   type: string
 }
+
 const UsageHistory: FC = () => {
   const classes = useStyles()
   const filterOptionsData = [{ label: i18n.t('common:point_management_tab.thirty_days_ago'), value: '' }]
@@ -55,7 +56,15 @@ const UsageHistory: FC = () => {
   }
 
   useEffect(() => {
-    getUsedPointData(querySelected ? { page: page, limit: limit, type: 2, period: querySelected } : { page: page, limit: limit, type: 2 })
+    getUsedPointData(
+      querySelected
+        ? { page: page, limit: limit, type: 2, period: querySelected }
+        : {
+            page: page,
+            limit: limit,
+            type: 2,
+          }
+    )
   }, [page, querySelected])
 
   //set list filter
@@ -63,7 +72,7 @@ const UsageHistory: FC = () => {
     if (listFilterData) {
       setFilterOptions(filterOptionsData)
       const newObjects = listFilterData.map((item) => {
-        return { label: moment(new Date(item)).format(FORMAT_YEAR_MONTH), value: item }
+        return { label: moment(new Date(item)).format(FORMAT_YEAR_MONTH), value: moment(new Date(item)).format(FORMAT_YEAR_MONTH_FILTER) }
       })
       const newFilterData = filterOptionsData.concat(newObjects)
       setFilterOptions(newFilterData)
@@ -85,31 +94,32 @@ const UsageHistory: FC = () => {
   const handleSelectedQuery = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setQuerySelected(event.target.value)
     setPage(1)
-    setUsageHistoryDetail(false)
   }
 
   return (
     <Box className={classes.container}>
-      <Grid item xs={12} md={7}>
-        <ESSelect
-          fullWidth
-          placeholder={i18n.t('common:point_management_tab.choosing')}
-          displayEmpty
-          size="big"
-          name={'query'}
-          disabled={false}
-          className={classes.comboBox}
-          value={querySelected}
-          onChange={handleSelectedQuery}
-        >
-          {filterOptions &&
-            filterOptions.map((rule, index) => (
-              <option key={index} value={rule.value}>
-                {rule.label}
-              </option>
-            ))}
-        </ESSelect>
-      </Grid>
+      {!usageHistoryDetail && (
+        <Grid item xs={12} md={7}>
+          <ESSelect
+            fullWidth
+            placeholder={i18n.t('common:point_management_tab.choosing')}
+            displayEmpty
+            size="big"
+            name={'query'}
+            disabled={false}
+            className={classes.comboBox}
+            value={querySelected}
+            onChange={handleSelectedQuery}
+          >
+            {filterOptions &&
+              filterOptions.map((rule, index) => (
+                <option key={index} value={rule.value}>
+                  {rule.label}
+                </option>
+              ))}
+          </ESSelect>
+        </Grid>
+      )}
       {/* Title Header */}
       {usageHistoryDetail && (
         <Box className={classes.headerContainer}>
@@ -153,6 +163,8 @@ const UsageHistory: FC = () => {
                           variant="outlined"
                           shape="rounded"
                           className={classes.paginationStyle}
+                          siblingCount={1}
+                          boundaryCount={1}
                           onChange={onChangePageDetail}
                         />
                       </Box>
@@ -215,14 +227,12 @@ const UsageHistory: FC = () => {
 const useStyles = makeStyles((theme: Theme) => ({
   loadingContainer: {
     marginTop: theme.spacing(4),
-    // marginBottom: theme.spacing(4),
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
     alignContent: 'center',
   },
   spacingBottom: {
-    // paddingBottom: 24,
     paddingBottom: 8,
   },
   headerContainer: {
@@ -230,8 +240,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     alignContent: 'center',
     display: 'flex',
-    // marginTop: 16,
-    // marginBottom: 24,
     marginTop: 8,
   },
   headerTitle: {
@@ -241,16 +249,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   typePurchaseContainer: {
     justifyContent: 'center',
     display: 'flex',
-    // marginTop: 24,
-    // marginBottom: 24,
     marginTop: 16,
     marginBottom: 16,
   },
   typeUsageContainer: {
     justifyContent: 'center',
     display: 'flex',
-    // marginTop: 24,
-    // marginBottom: 24,
     marginTop: 16,
     marginBottom: 16,
   },
@@ -258,7 +262,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   container: {
     marginLeft: theme.spacing(3),
     marginRight: theme.spacing(3),
-    // marginTop: theme.spacing(3),
     marginTop: theme.spacing(2),
     marginBottom: theme.spacing(3),
   },
@@ -269,8 +272,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderWidth: 1,
     borderColor: Colors.grey['200'],
     borderStyle: 'solid',
-    // marginTop: 18,
-    // paddingBottom: 18,
     marginTop: 16,
   },
   paginationContainer: {
@@ -284,8 +285,8 @@ const useStyles = makeStyles((theme: Theme) => ({
       color: Colors.white,
       borderColor: Colors.primary,
       borderWidth: 1,
-      minWidth: '22px',
-      minHeight: '22px',
+      // minWidth: '22px',
+      // minHeight: '22px',
     },
     '& .Mui-selected': {
       backgroundColor: Colors.primary,
@@ -293,12 +294,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& .MuiPaginationItem-ranges': {},
   },
   noDataContainer: {
-    // backgroundColor: Colors.white_opacity['6'],
-    // marginLeft: 16,
-    // marginRight: 16,
-    // marginTop: 16,
-    // borderRadius: 4,
-    // padding: 16,
     backgroundColor: '#171717',
     alignItems: 'center',
     margin: 8,
@@ -323,8 +318,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     paginationStyle: {
       '& .MuiPaginationItem-root': {
-        minWidth: '22px',
-        minHeight: '22px',
+        // minWidth: '22px',
+        // minHeight: '22px',
       },
     },
   },

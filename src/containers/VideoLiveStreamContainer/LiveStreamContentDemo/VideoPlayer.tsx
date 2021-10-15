@@ -120,7 +120,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
 
   useEffect(() => {
     if (isArchived) {
-      console.log("🚀 ~ useEffect ~ isArchived----11111", isArchived)
+      console.log('🚀 ~ useEffect ~ isArchived----11111', isArchived)
       videoEl.current.currentTime = durationPlayer
       setPlayedSeconds(durationPlayer)
       // setState({ ...state, playing: false })
@@ -294,7 +294,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
 
   //archived
   useEffect(() => {
-    videoEl.current.addEventListener('timeupdate', (event) => {
+    videoEl.current?.addEventListener('timeupdate', (event) => {
       // console.log("🚀 ~ videoEl.current.addEventListener ~ event", event)
       // const delaySeconds = 15
       console.log(
