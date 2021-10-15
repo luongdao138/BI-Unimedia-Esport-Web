@@ -90,7 +90,7 @@ const ArenaBattles: React.FC = () => {
     } else {
       setBattleRoyaleOwnScore({
         hash_key: tournament.attributes.hash_key,
-        participants: selecteds.filter((p) => p.highlight),
+        participants: selecteds.filter((p) => p.highlight && !p.attributes.is_fixed_score),
       })
     }
   }
