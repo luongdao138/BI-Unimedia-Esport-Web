@@ -34,7 +34,7 @@ const TopicListContainer: React.FC<TopicListProps> = ({ toCreateTopic, isNotMemb
   const { hash_key } = router.query
 
   const _theme = useTheme()
-  const isMobile = useMediaQuery(_theme.breakpoints.down('sm'), { noSsr: true })
+  const isMobile = useMediaQuery(_theme.breakpoints.down('md'), { noSsr: true })
 
   const [position, setPosition] = useState<number>()
 
@@ -112,7 +112,7 @@ const useStyles = makeStyles((theme) => ({
     position: 'fixed',
     bottom: theme.spacing(5),
   },
-  [theme.breakpoints.down('sm')]: {
+  [theme.breakpoints.down('md')]: {
     topicCreateContainer: {
       bottom: theme.spacing(3),
     },
