@@ -167,7 +167,7 @@ const ArenaBattlesEdit: React.FC = () => {
             {tournament.attributes.is_freezed ? null : (
               <>
                 <Typography>{t('common:tournament.confirm_participants')}</Typography>
-                <Typography>{t('common:arena.select_two_or_more')}</Typography>
+                <Typography>{t('common:arena.select_two_or_more', { isTeam })}</Typography>
               </>
             )}
           </Box>
