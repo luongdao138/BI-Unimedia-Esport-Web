@@ -44,14 +44,6 @@ const Comment = forwardRef<HTMLDivElement, CommunityHeaderProps>(
     const [imageURL, setImageURL] = useState('')
 
     useEffect(() => {
-      if (!_.isEmpty(reply_param)) {
-        if (!_.includes(_.split(inputText, REPLY_REGEX), `>>${reply_param.comment_no}`)) {
-          setInputText(inputText.concat('>>' + reply_param.comment_no))
-        }
-      }
-    }, [reply_param])
-
-    useEffect(() => {
       if (!createCommentMeta.pending && createCommentMeta.loaded) {
         if (inputRef.current) inputRef.current.clearInput()
         setImageURL('')
