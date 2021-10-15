@@ -153,7 +153,7 @@ const useStyles = makeStyles((theme) => ({
   input: {
     borderRadius: 24,
     border: '1px solid #777',
-    background: 'green',
+    backgroundColor: '#101010',
     width: '100%',
     height: '100%',
     padding: 9,
