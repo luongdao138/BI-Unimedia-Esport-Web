@@ -59,14 +59,15 @@ const SeekBar: React.FC<Props & SliderProps> = ({ currentTime, durationsPlayer, 
 
 const useStyles = makeStyles(() => ({
   sliderSeek: {
-    width: '100%',
+    // width: '100%',
     display: 'block',
     transition: 'width 0.4s ease-in',
     alignItems: 'flex-end',
     justifyContent: 'center',
     // backgroundColor: 'pink',
-    paddingBottom: 10,
+    // paddingBottom: 10,
     // height:20,
+    margin: '0px 5px',
   },
   seekBar: {
     // width: 90,
@@ -76,26 +77,26 @@ const useStyles = makeStyles(() => ({
     padding: 0,
     '& .MuiSlider-rail': {
       color: '#C3C3C3',
-      height: 7,
-      borderRadius: 2,
+      height: 3,
+      // borderRadius: 2,
     },
     '& .MuiSlider-track': {
       color: '#FF4786',
-      height: 7,
-      borderRadius: 2,
+      height: 3,
+      // borderRadius: 2,
     },
-    '& .MuiSlider-thumb': {
-      color: 'transparent', //circle
-      width: 14,
-      height: 14,
-      borderRadius: 7,
-    },
+    // '& .MuiSlider-thumb': {
+    //   color: '#fff', //circle
+    //   width: 8,
+    //   height: 8,
+    //   borderRadius: 4,
+    // },
     '& .MuiSlider-thumb.Mui-focusVisible, .MuiSlider-thumb:hover': {
       boxShadow: 'none',
     },
-    '& .MuiSlider-root': {
-      padding: 0,
-    },
+    // '& .MuiSlider-root': {
+    //   // padding: 0,
+    // },
   },
 }))
 

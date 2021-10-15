@@ -1671,6 +1671,8 @@ export default {
     chat_will_available_on_time: 'Liveチャットはライブ配信中のみ有効です',
     discord_id_copied: 'DiscordのIDをクリップボードにコピーしました。',
     after_stream_ended: '配信終了後から',
+    live_streaming: '配信設定',
+    refresh_new_live: '最新を再生',
   },
   video_search: {
     video_results: '動画「:key」 の検索結果',

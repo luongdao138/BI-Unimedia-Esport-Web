@@ -58,7 +58,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   // console.log('🚀 ~ playedSeconds', playedSeconds)
   // const reactPlayerRef = useRef(null)
   const playerContainerRef = useRef(null)
-  // const [isLive, setIsLive] = useState(false)
+  const [isLive, setIsLive] = useState(null)
 
   //As of Chrome 66, videos must be muted in order to play automatically
   const [state, setState] = useState({
@@ -221,15 +221,13 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       //@ts-ignore
       video.muted = true
       hls.on(Hls.Events.LEVEL_LOADED, handleLoaded)
-      hls.on(Hls.Events.MEDIA_ATTACHING, (_, data) => {
-        console.log('----MEDIA_ATTACHING----', data)
-      })
       hls.on(Hls.Events.ERROR, handleError)
     }
 
     const handleLoaded = (_, data) => {
       console.log('~~~~LEVEL_LOADED~~~~~', data)
       // setDurationPlayer(data.details.totalduration)
+      setIsLive(data.details.live)
     }
     const handleError = (_, data) => {
       console.log('~~~~~~~~> ERROR', data)
@@ -286,7 +284,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   //archived
   useEffect(() => {
     videoEl.current.addEventListener('timeupdate', (event) => {
-      // console.log("🚀 ~ videoEl.current.addEventListener ~ event", event) 
+      // console.log("🚀 ~ videoEl.current.addEventListener ~ event", event)
       // const delaySeconds = 15
       console.log(
         '->current->duration-> range',
@@ -319,14 +317,6 @@ const VideoPlayer: React.FC<PlayerProps> = ({
 
     videoEl.current.addEventListener('durationchange', (event) => {
       console.log('------->>durationchange<<<-----', event.target.duration)
-      // setDurationPlayer(event.target.duration)
-      // if (event.target) {
-      //   const newDurationTime = event.target.duration - 15 <= playedSeconds ? playedSeconds : event.target.duration - 15
-      //   setDurationPlayer(newDurationTime)
-      //   if(Math.floor(newDurationTime) !== liveStreamInfo.streaming_second) {
-      //     changeStreamingSecond(Math.floor(newDurationTime))
-      //   }
-      // }
     })
 
     videoEl.current.addEventListener('volumechange', () => {
@@ -372,6 +362,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     videoEl.current.addEventListener('canplay', (event) => {
       console.log('=================canplay===================')
       console.log(event)
+      setVisible({ ...visible, loading: videoEl.current?.paused })
     })
     videoEl.current.addEventListener('error', (event) => {
       console.log('=================error===================')
@@ -441,6 +432,10 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   //   hls.attachMedia(document.getElementById('video'))
   //   hls.startLoad(-1)
   // }
+  const handleReloadTime = () => {
+    // document.querySelector("video").load()
+    videoEl.current.currentTime = durationPlayer
+  }
 
   return (
     <div className={classes.videoPlayer}>
@@ -508,8 +503,9 @@ const VideoPlayer: React.FC<PlayerProps> = ({
                 onChangeVol={handleChangeVol}
                 onChangeVolDrag={handleChangeVolDrag}
                 volume={volume}
-                // isLive={isLive}
+                isLive={isLive}
                 videoStatus={type}
+                onReloadTime={handleReloadTime}
               />
             </div>
           </div>
@@ -680,6 +676,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     // backgroundColor: 'rgba(0,0,0,0.3)',
     display: 'flex',
     justifyContent: 'space-between',
+    height: 40,
   },
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   processControl: {
@@ -772,8 +769,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     cursor: 'pointer',
   },
   video: {
-    'video::-webkit-media-controls-timeline': {
+    '&::-webkit-media-controls': {
       display: 'none !important',
+      visibility: 'hidden',
+    },
+    '&::-webkit-media-controls-current-time-display': {
+      display: 'none',
+      visibility: 'hidden',
+    },
+    '&::-webkit-media-controls-timeline': {
+      display: 'none',
     },
   },
 }))
