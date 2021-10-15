@@ -91,6 +91,13 @@ export type CommunityResponse = {
   }
 }
 
+export type CheckCommunityNameParams = {
+  name: string
+}
+export interface CheckCommunityNameResponse {
+  is_unique: boolean
+}
+
 export type CommunityFormParams = {
   name: string
   description: string
@@ -478,7 +485,6 @@ export type DeleteCommentParams = {
   topic_hash: string
   comment_no: number
 }
-
 export const communitySearch = async (params: CommunitySearchParams): Promise<CommunitySearchResponse> => {
   const { data } = await api.get<CommunitySearchResponse>(URI.COMMUNITY_SEARCH, { params })
   return data
@@ -511,6 +517,11 @@ export const getCommunityDetail = async (hash_key: string): Promise<CommunityDet
 
 export const createCommunity = async (params: CommunityFormParams): Promise<CreateCommunityResponse> => {
   const { data } = await api.post<CreateCommunityResponse>(URI.COMMUNITY_CREATE, params)
+  return data
+}
+
+export const checkCommunityName = async (params: CheckCommunityNameParams): Promise<CheckCommunityNameResponse> => {
+  const { data } = await api.post<CheckCommunityNameResponse>(URI.COMMUNITY_CHECK_NAME, params)
   return data
 }
 
