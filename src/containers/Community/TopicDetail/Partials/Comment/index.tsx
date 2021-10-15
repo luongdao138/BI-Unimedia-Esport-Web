@@ -22,7 +22,6 @@ import useTopicDetail from '../../useTopicDetail'
 import styled from 'styled-components'
 import { REPLY_REGEX } from '@constants/community.constants'
 import moment from 'moment'
-import { use100vh } from 'react-div-100vh'
 
 const StyledBox = styled(Box)``
 let currentReplyNumberRectX: number, currentReplyNumberRectY: number, maxHeight: number
@@ -64,6 +63,7 @@ type CommunityHeaderProps = {
   setSelectedCommentNo?: Dispatch<SetStateAction<number>>
   onReport?: (comment: ReportData) => void
   index: number
+  windowHeight: number
 }
 const Comment: React.FC<CommunityHeaderProps> = ({
   comment,
@@ -75,6 +75,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({
   showComment,
   setShowComment,
   index,
+  windowHeight,
 }) => {
   const [isBottom, setIsBottom] = useState<boolean>(false)
 
@@ -88,8 +89,6 @@ const Comment: React.FC<CommunityHeaderProps> = ({
   const { getCommentDetail, commentDetail, commentDetailMeta, resetCommentDetail } = useTopicDetail()
   const contentRef = useRef(null)
   const popoverInnerRef = useRef()
-
-  const windowHeight = use100vh()
 
   const toProfile = (user_code) => router.push(`${ESRoutes.PROFILE}/${user_code}`)
 
