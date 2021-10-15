@@ -288,7 +288,12 @@ const millisToTime = (duration: number | string) => {
   const minutes: number = Math.floor((numberDuration / (1000 * 60)) % 60)
   const hours: number = Math.floor(numberDuration / (1000 * 60 * 60))
 
-  return { hours: hours, minutes: minutes, seconds: seconds, millis: millis }
+  return {
+    hours: String(hours).padStart(2, '0'),
+    minutes: String(minutes).padStart(2, '0'),
+    seconds: String(seconds).padStart(2, '0'),
+    millis: String(millis).padStart(3, '0'),
+  }
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -297,7 +302,8 @@ const timeToMillis = (time: TimeProps) => {
   if (hours === '' && minutes === '' && seconds === '' && millis === '') {
     return ''
   }
-  const result = Number(hours) * 60 * 60 * 1000 + Number(minutes) * 60 * 1000 + Number(seconds) * 1000 + Number(millis) * 1
+  const result =
+    Number(hours) * 60 * 60 * 1000 + Number(minutes) * 60 * 1000 + Number(seconds) * 1000 + Number(String(millis).padEnd(3, '0')) * 1
   return result
 }
 

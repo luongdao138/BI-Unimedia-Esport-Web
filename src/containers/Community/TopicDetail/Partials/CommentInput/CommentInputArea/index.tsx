@@ -1,8 +1,10 @@
-import React, { Ref, useImperativeHandle, useState, forwardRef } from 'react'
+import React, { Ref, useImperativeHandle, useState, forwardRef, useEffect } from 'react'
 import { Box, Icon, IconButton, makeStyles } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
 import { Colors } from '@theme/colors'
 import InputBase from '@material-ui/core/InputBase'
+import { REPLY_REGEX } from '@constants/community.constants'
+import _ from 'lodash'
 
 export interface ClearInputrRef {
   clearInput: () => void
@@ -13,6 +15,7 @@ export interface MessageInputAreaProps {
   onPressSend?: (text: string) => void
   disabled?: boolean
   ref: Ref<ClearInputrRef>
+  replyParam: { hash_key: string; comment_no: number }
 }
 
 const CommentInputArea: React.FC<MessageInputAreaProps> = forwardRef<ClearInputrRef, MessageInputAreaProps>((props, ref) => {
@@ -21,7 +24,7 @@ const CommentInputArea: React.FC<MessageInputAreaProps> = forwardRef<ClearInputr
       setText('')
     },
   }))
-  const { onPressSend, disabled } = props
+  const { onPressSend, disabled, replyParam } = props
 
   const [text, setText] = useState<string>('')
 
@@ -38,12 +41,13 @@ const CommentInputArea: React.FC<MessageInputAreaProps> = forwardRef<ClearInputr
     e.preventDefault()
   }
 
-  // const handleKeyPress = (_evt: React.KeyboardEvent<HTMLTextAreaElement> | React.KeyboardEvent<HTMLInputElement>) => {
-  //   //  if (evt.key === 'Enter' && evt.shiftKey === false) {
-  //   //    onPressSend ? onPressSend(text.trim()) : undefined
-  //   //    evt.preventDefault()
-  //   //  }
-  // }
+  useEffect(() => {
+    if (!_.isEmpty(replyParam)) {
+      if (!_.includes(_.split(text, REPLY_REGEX), `>>${replyParam.comment_no}`)) {
+        setText(text.concat('>>' + replyParam.comment_no))
+      }
+    }
+  }, [replyParam])
 
   return (
     <>
