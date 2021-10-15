@@ -186,7 +186,6 @@ const VideoDetail: React.FC = () => {
 
   useEffect(() => {
     if (detailVideoResult.key_video_id) {
-      console.log('🚀 ~ useEffect ~ videoInfo', videoInfo)
       const { video_status, process_status } = videoInfo
       console.log('🚀 ~ useEffect ~ videoStatus', videoStatus)
       if (videoStatus !== STATUS_VIDEO.ARCHIVE) {

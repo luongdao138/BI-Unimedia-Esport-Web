@@ -56,6 +56,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   const [durationPlayer, setDurationPlayer] = useState(0)
   // console.log('🚀 ~ durationPlayer', durationPlayer)
   const [playedSeconds, setPlayedSeconds] = useState(0)
+  const [autoPlay, setAutoPlay] = useState(true)
   // console.log('🚀 ~ playedSeconds', playedSeconds)
   // const reactPlayerRef = useRef(null)
   const playerContainerRef = useRef(null)
@@ -120,11 +121,10 @@ const VideoPlayer: React.FC<PlayerProps> = ({
 
   useEffect(() => {
     if (isArchived) {
-      console.log('🚀 ~ useEffect ~ isArchived----11111', isArchived)
-      videoEl.current.currentTime = durationPlayer
-      setPlayedSeconds(durationPlayer)
-      // setState({ ...state, playing: false })
-      // setVisible({ ...visible, loading: true, videoLoaded: true })
+      console.log("🚀 ~ useEffect ~ isArchived----11111", isArchived)
+      videoEl.current.currentTime = 0
+      setState({ ...state, playing: false })
+      setAutoPlay(false)
     }
   }, [isArchived])
 
@@ -457,7 +457,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
           muted
           style={{ width: '100%', height: '100%' }}
           src={src}
-          autoPlay
+          autoPlay={autoPlay}
           controls
           //@ts-ignore
           playsinline="playsinline"
@@ -476,7 +476,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
               muted={muted}
               style={{ width: '100%', height: calculateVideoHeight() }}
               // src={'https://cowell-web.exelab.jp/live/CW352202110051226/index.m3u8'}
-              autoPlay={true}
+              autoPlay={autoPlay}
               // poster={thumbnail ?? '/images/live_stream/thumbnail_default.png'}
             />
           )}
