@@ -153,6 +153,8 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'flex-end',
     marginLeft: 5,
+    position: 'relative',
+    top: '-3px',
   },
   inputCont: {
     position: 'relative',
@@ -184,7 +186,7 @@ const useStyles = makeStyles((theme) => ({
     color: Colors.white,
   },
   icon: {
-    fontSize: 24,
+    fontSize: 22,
     color: Colors.primary,
   },
   removeIcon: {
@@ -201,6 +203,7 @@ const useStyles = makeStyles((theme) => ({
   },
   iconButton: {
     padding: 0,
+    borderRadius: 0,
     '&:hover $icon': {
       color: Colors.primary,
       transition: 'all 0.3s ease',
