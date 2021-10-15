@@ -19,6 +19,7 @@ interface dataItem {
   id: number
   type: string
 }
+
 type DistributorInfoProps = {
   video_id?: string | string[]
 }
@@ -62,7 +63,7 @@ const DistributorInfo: React.FC<DistributorInfoProps> = ({ video_id }) => {
   }, [video_id])
 
   const isTruncated = () => {
-    const descriptionDiv = document.getElementById('distributor-info-description')
+    const descriptionDiv = document.getElementById('distribution-info-description')
     if (!descriptionDiv) {
       return false
     }
@@ -193,20 +194,21 @@ const DistributorInfo: React.FC<DistributorInfoProps> = ({ video_id }) => {
   const channelDescription = () => {
     return (
       <Box className={classes.channelDescription}>
-        <div id="distribution-info-description" className={classes.content} />
-        {getChannelDescriptionText.map(({ type, text }) => {
-          if (type === 'text') {
-            return text
-          }
-          return (
-            <div
-              key={text}
-              dangerouslySetInnerHTML={{
-                __html: CommonHelper.linkifyString(text),
-              }}
-            ></div>
-          )
-        })}
+        <div id="distribution-info-description" className={classes.content + ' ' + (descriptionCollapse ? classes.contentCollapse : '')}>
+          {getChannelDescriptionText.map(({ type, text }) => {
+            if (type === 'text') {
+              return text
+            }
+            return (
+              <div
+                key={text}
+                dangerouslySetInnerHTML={{
+                  __html: CommonHelper.linkifyString(text),
+                }}
+              />
+            )
+          })}
+        </div>
         {descriptionCanTruncated && collapseButton()}
       </Box>
     )

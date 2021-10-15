@@ -286,7 +286,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
-    maxHeight: '80px',
+    maxHeight: '120px',
   },
   description: {
     overflowY: 'scroll',
@@ -389,6 +389,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     infoSectionContent: {
       fontSize: '9px',
     },
+    infoContentDescription: {
+      maxHeight: '95px',
+    },
   },
   [theme.breakpoints.down(1167)]: {},
   [theme.breakpoints.down(992)]: {},
@@ -437,6 +440,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     infoSectionTitle: {
       fontSize: '14px',
+    },
+    infoContentDescription: {
+      maxHeight: '130px',
     },
   },
 }))
