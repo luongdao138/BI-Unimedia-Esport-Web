@@ -105,7 +105,7 @@ export const getBattleRoyaleFirstPlace = createSelector(getTournamentDetail, get
     if (TournamentHelper.isBRResultComplete(participants, arena.attributes.rule)) {
       const isTeam = arena.attributes.participant_type > 1
       return {
-        avatar: participants[0].attributes.avatar_url,
+        avatar: isTeam ? participants[0].attributes.team?.data?.attributes.team_avatar : participants[0].attributes.avatar_url,
         name: isTeam ? participants[0].attributes.team?.data?.attributes?.name : participants[0].attributes?.name,
         user_code: isTeam ? '' : participants[0].attributes?.user?.user_code,
       }
