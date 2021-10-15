@@ -184,20 +184,26 @@ const VideoDetailDemo: React.FC = () => {
     if (detailVideoResult.key_video_id) {
       console.log('🚀 ~ useEffect ~ videoInfo', videoInfo)
       const { video_status, process_status } = videoInfo
-
+      console.log("🚀 ~ useEffect ~ videoStatus", videoStatus)
       if (
-        videoStatus !== STATUS_VIDEO.ARCHIVE &&
-        video_status === EVENT_LIVE_STATUS.RECORDING_ARCHIVED &&
-        process_status === EVENT_LIVE_STATUS.RECORDING_END
+        videoStatus !== STATUS_VIDEO.ARCHIVE
       ) {
-        setVideoStatus(STATUS_VIDEO.ARCHIVE)
-        navigateToArchiveUrl()
+        // if end live stream or archive => navigateToArchiveUrl
+        if((video_status === EVENT_LIVE_STATUS.RECORDING_ARCHIVED &&
+        process_status === EVENT_LIVE_STATUS.RECORDING_END) || (+video_status === STATUS_VIDEO.ARCHIVE && process_status === EVENT_LIVE_STATUS.STREAM_END))
+        // setVideoStatus(STATUS_VIDEO.ARCHIVE)
+        console.log('🚀 ~ 00000', videoInfo)
+        setTimeout(() => {
+          navigateToArchiveUrl()
+        }, 3000);
       }
       if (+video_status === STATUS_VIDEO.SCHEDULE) {
+        // catch event video is schedule 
         if (+videoStatus !== STATUS_VIDEO.LIVE_STREAM) {
           setVideoStatus(STATUS_VIDEO.SCHEDULE)
         }
       } else if (+video_status === STATUS_VIDEO.LIVE_STREAM) {
+        // catch event start live 
         if (process_status === EVENT_LIVE_STATUS.STREAM_START) {
           setVideoStatus(STATUS_VIDEO.LIVE_STREAM)
           // window.location.reload()
@@ -223,6 +229,7 @@ const VideoDetailDemo: React.FC = () => {
         statusDetailVideo = STATUS_VIDEO.SCHEDULE
       }
       setVideoStatus(statusDetailVideo)
+      // redirect to archive url if first time user access vid = user_id (scheduled_flag = LIVE_VIDEO_TYPE.LIVE) and video archived
       if (detailVideoResult.status === STATUS_VIDEO.ARCHIVE && detailVideoResult.scheduled_flag === LIVE_VIDEO_TYPE.LIVE) {
         navigateToArchiveUrl()
       }

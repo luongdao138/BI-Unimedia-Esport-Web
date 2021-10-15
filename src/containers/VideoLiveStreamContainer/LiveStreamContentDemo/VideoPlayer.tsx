@@ -24,6 +24,7 @@ interface PlayerProps {
   startLive?: number
   endLive?: string
   type?: number
+  isArchived?: boolean
 }
 
 declare global {
@@ -40,7 +41,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   thumbnail,
   // startLive,
   // endLive,
-  // videoType,
+  isArchived,
   type,
 }) => {
   const checkStatusVideo = 1
@@ -116,6 +117,16 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     // screenfull.request(playerContainerRef.current)
     // }
   }, [isPortrait])
+
+  useEffect(() => {
+    if (isArchived) {
+      console.log("🚀 ~ useEffect ~ isArchived----11111", isArchived)
+      videoEl.current.currentTime = durationPlayer
+      setPlayedSeconds(durationPlayer)
+      // setState({ ...state, playing: false })
+      // setVisible({ ...visible, loading: true, videoLoaded: true })
+    }
+  }, [isArchived])
 
   const handleOrientationChange = (event) => {
     console.log('event::', event)

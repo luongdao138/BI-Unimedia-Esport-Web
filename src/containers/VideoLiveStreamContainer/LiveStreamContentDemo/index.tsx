@@ -31,6 +31,7 @@ import VideoPlayer from './VideoPlayer'
 interface LiveStreamContentProps {
   videoType?: VIDEO_TYPE
   freeToWatch?: boolean | number
+  isArchived?: boolean
   userHasViewingTicket?: boolean | number
   ticketAvailableForSale?: boolean
   softKeyboardIsShown?: boolean
@@ -51,6 +52,7 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
     softKeyboardIsShown,
     clickButtonPurchaseTicket,
     onVideoEnd,
+    isArchived
   } = props
   const [showReportMenu, setShowReportMenu] = useState<boolean>(false)
   const router = useRouter()
@@ -232,6 +234,7 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
           />
         ) : (
           <VideoPlayer
+            isArchived={isArchived}
             key={keyVideoPlayer}
             videoType={videoType}
             src={detailVideoResult?.archived_url}
