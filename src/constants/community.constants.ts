@@ -16,6 +16,11 @@ export const T_TYPE = {
   PRIVATE: 1,
 }
 
+export const IS_OFFICIAL = {
+  OFFICIAL: 1,
+  NOT_OFFICIAL: 0,
+}
+
 export const INITIAL_VALUES = {
   COVER_IMAGE_URL: '',
   NAME: '',
