@@ -74,7 +74,10 @@ const useStyles = makeStyles(() => ({
     // marginLeft: 16,
     // marginRight: 8,
     borderRadius: 2,
-    padding: 0,
+    padding: '3px 0px',
+    '&:hover .MuiSlider-thumb': {
+      visibility: 'visible',
+    },
     '& .MuiSlider-rail': {
       color: '#C3C3C3',
       height: 3,
@@ -85,12 +88,14 @@ const useStyles = makeStyles(() => ({
       height: 3,
       // borderRadius: 2,
     },
-    // '& .MuiSlider-thumb': {
-    //   color: '#fff', //circle
-    //   width: 8,
-    //   height: 8,
-    //   borderRadius: 4,
-    // },
+    '& .MuiSlider-thumb': {
+      // color: '#fff', //circle
+      // width: 8,
+      // height: 8,
+      // borderRadius: 4,
+      visibility: 'hidden',
+    },
+
     '& .MuiSlider-thumb.Mui-focusVisible, .MuiSlider-thumb:hover': {
       boxShadow: 'none',
     },
