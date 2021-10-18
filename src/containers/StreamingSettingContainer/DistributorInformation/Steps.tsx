@@ -10,7 +10,6 @@ import ButtonPrimary from '@components/ButtonPrimary'
 import { Colors } from '@theme/colors'
 import ESButton from '@components/Button'
 import { FormLiveType } from '@containers/arena/UpsertForm/FormLiveSettingsModel/FormLiveSettingsType'
-import { LiveStreamSettingHelper } from '@utils/helpers/LiveStreamSettingHelper'
 import { GetChannelResponse, SetChannelParams } from '@services/liveStream.service'
 import useLiveSetting from '../useLiveSetting'
 import useCheckNgWord from '@utils/hooks/useCheckNgWord'
@@ -39,13 +38,6 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, channel, hasChannel, formik
   // const [status, setStatus] = useState<boolean>(false)
 
   useEffect(() => {
-    formik.validateForm().then(() => {
-      const isRequiredFieldsValid = LiveStreamSettingHelper.checkRequiredFields(3, formik.errors)
-      setError(!isRequiredFieldsValid)
-    })
-  }, [formik?.errors?.stepSettingThree])
-
-  useEffect(() => {
     setSocial(channel?.data)
   }, [channel])
 
@@ -65,6 +57,14 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, channel, hasChannel, formik
   //     setStatus(true)
   //   }
   // }
+
+  const onValidateForm = () => {
+    formik.validateForm().then((err) => {
+      if (_.isEmpty(err) && !hasError) {
+        onClickNext()
+      }
+    })
+  }
 
   const onClickNext = () => {
     const { stepSettingThree } = formik.values
@@ -134,7 +134,6 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, channel, hasChannel, formik
                 fullWidth
                 value={isFirstStep() ? formik?.values?.stepSettingThree?.name : formik?.values?.stepSettingThree?.name.trim()}
                 onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
                 helperText={formik?.touched?.stepSettingThree?.name && formik?.errors?.stepSettingThree?.name}
                 error={formik?.touched?.stepSettingThree?.name && !!formik?.errors?.stepSettingThree?.name}
                 size="big"
@@ -157,7 +156,6 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, channel, hasChannel, formik
                   fullWidth
                   value={formik?.values?.stepSettingThree?.description}
                   onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
                   helperText={formik?.touched?.stepSettingThree?.description && formik?.errors?.stepSettingThree?.description}
                   error={formik?.touched?.stepSettingThree?.description && !!formik?.errors?.stepSettingThree?.description}
                   size="big"
@@ -191,7 +189,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, channel, hasChannel, formik
           {isFirstStep() ? (
             <Grid item xs={12} md={9}>
               <Box maxWidth={280} className={classes.buttonContainer}>
-                <ButtonPrimary type="submit" round fullWidth onClick={onClickNext} disabled={hasError}>
+                <ButtonPrimary type="submit" round fullWidth onClick={onValidateForm}>
                   {i18n.t('common:streaming_setting_screen.check_submit')}
                 </ButtonPrimary>
               </Box>
