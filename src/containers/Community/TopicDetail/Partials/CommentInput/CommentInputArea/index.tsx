@@ -59,7 +59,9 @@ const CommentInputArea: React.FC<MessageInputAreaProps> = forwardRef<ClearInputr
           multiline
           rowsMax={9}
           placeholder={t('common:topic_create.comment_placeholder')}
-          inputProps={{ maxLength: TEXT_INPUT_LIMIT, style: { overflow: 'visible' } }}
+          inputProps={{
+            maxLength: TEXT_INPUT_LIMIT,
+          }}
         />
       </Box>
       <Box className={classes.sendCont}>
@@ -81,7 +83,7 @@ const useStyles = makeStyles((theme) => ({
     width: 'calc(100% - 97px)',
     marginLeft: 13,
     marginRight: theme.spacing(1),
-    minHeight: 36,
+    minHeight: 38,
   },
   sendCont: {
     display: 'flex',
