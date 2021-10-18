@@ -7,6 +7,7 @@ interface Props {
   currentTime?: number
   durationsPlayer?: number
   videoRef: any
+  changeStatusStreaming?: (status: boolean) => void
 }
 
 {
@@ -14,7 +15,7 @@ interface Props {
 timePlayed: time by 100*/
 }
 
-const SeekBar: React.FC<Props & SliderProps> = ({ currentTime, durationsPlayer, videoRef, ...rest }) => {
+const SeekBar: React.FC<Props & SliderProps> = ({ currentTime, durationsPlayer, videoRef, changeStatusStreaming, ...rest }) => {
   const classes = useStyles()
   // const [currentTimeState, setCurrentTime] = useState(0);
   // const [duration, setDuration] = useState(0)
@@ -38,6 +39,11 @@ const SeekBar: React.FC<Props & SliderProps> = ({ currentTime, durationsPlayer, 
     setTimePlayed(value)
     const newSecond = (value * durationsPlayer) / 100
     videoRef.current.currentTime = newSecond
+    if(value === 100){
+      changeStatusStreaming(true)
+    } else {
+      changeStatusStreaming(false)
+    }
     changeSeekCount(Math.floor(newSecond))
   }
 

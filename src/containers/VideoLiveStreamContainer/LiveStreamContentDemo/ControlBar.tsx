@@ -40,7 +40,7 @@ const ControlBarPlayer: React.FC<ControlProps> = ({
   videoStatus,
   onReloadTime,
 }) => {
-  const classes = useStyles({ liveStreaming: durationsPlayer - currentTime <= 13 ? true : false })
+  const classes = useStyles({ liveStreaming: durationsPlayer === currentTime ? true : false })
   const { t } = useTranslation('common')
   const [isFull, setFull] = useState<boolean>(false)
 
