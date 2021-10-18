@@ -1,5 +1,6 @@
 import { Box, Grid, Icon, IconButton, InputAdornment, makeStyles, Theme, Typography } from '@material-ui/core'
 import React, { useCallback, useEffect, useState } from 'react'
+import _ from 'lodash'
 import { FormikProps } from 'formik'
 import ESInput from '@components/Input'
 import i18n from '@locales/i18n'
@@ -16,7 +17,6 @@ import ESLabel from '@components/Label'
 import ESButton from '@components/Button'
 import { FormLiveType } from '@containers/arena/UpsertForm/FormLiveSettingsModel/FormLiveSettingsType'
 
-import { LiveStreamSettingHelper } from '@utils/helpers/LiveStreamSettingHelper'
 import useLiveSetting from '../useLiveSetting'
 import {
   baseViewingURL,
@@ -63,7 +63,6 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
   const { userProfile } = useGetProfile()
   const [showStreamURL, setShowStreamURL] = useState(false)
   const [showStreamKey, setShowStreamKey] = useState(false)
-  const [hasError, setError] = useState(true)
   const { checkNgWordFields, checkNgWordByField } = useCheckNgWord()
   const paid_delivery_flag = userProfile?.attributes?.paid_delivery_flag
   const [showReNew, setShowReNew] = useState<boolean>(false)
@@ -76,15 +75,6 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
     // getLiveSetting()
     checkStatusRecord(liveSettingInformation)
   }, [liveSettingInformation])
-
-  useEffect(() => {
-    // setCounter(counter + 1)
-    // removeField()
-    formik.validateForm().then(() => {
-      const isRequiredFieldsValid = LiveStreamSettingHelper.checkRequiredFields(1, formik.errors)
-      setError(!isRequiredFieldsValid)
-    })
-  }, [formik.errors.stepSettingOne])
 
   useEffect(() => {
     category?.data.forEach((h) => {
@@ -152,6 +142,14 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
       default:
         break
     }
+  }
+
+  const onValidateForm = () => {
+    formik.validateForm().then((err) => {
+      if (_.isEmpty(err)) {
+        onClickNext()
+      }
+    })
   }
 
   const onClickNext = () => {
@@ -379,7 +377,6 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
                 fullWidth
                 value={isFirstStep() ? formik?.values?.stepSettingOne?.title : formik?.values?.stepSettingOne?.title.trim()}
                 onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
                 helperText={formik?.touched?.stepSettingOne?.title && formik?.errors.stepSettingOne?.title}
                 error={formik?.touched?.stepSettingOne?.title && !!formik?.errors.stepSettingOne?.title}
                 size="big"
@@ -402,7 +399,6 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
                   fullWidth
                   value={formik?.values?.stepSettingOne?.description}
                   onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
                   helperText={formik?.touched?.stepSettingOne?.description && formik?.errors?.stepSettingOne?.description}
                   error={formik?.touched?.stepSettingOne?.description && !!formik?.errors?.stepSettingOne?.description}
                   size="big"
@@ -435,7 +431,6 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
                   name="stepSettingOne.category"
                   value={formik?.values?.stepSettingOne?.category}
                   onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
                   label={i18n.t('common:streaming_setting_screen.category')}
                   required={true}
                   size="big"
@@ -480,7 +475,6 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
                     const temp = moment(date).add(5, 's')
                     formik.setFieldValue('stepSettingOne.video_publish_end_time', temp)
                   }}
-                  onBlur={formik.handleBlur}
                   helperText={
                     formik?.touched?.stepSettingOne?.video_publish_end_time && formik?.errors?.stepSettingOne?.video_publish_end_time
                   }
@@ -565,7 +559,6 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
                           : formik?.values?.stepSettingOne?.ticket_price
                       }
                       onChange={formik.handleChange}
-                      onBlur={formik?.values?.stepSettingOne?.use_ticket && formik.handleBlur}
                       helperText={formik?.touched?.stepSettingOne?.ticket_price && formik?.errors?.stepSettingOne?.ticket_price}
                       error={formik?.touched?.stepSettingOne?.ticket_price && !!formik?.errors?.stepSettingOne?.ticket_price}
                       size="big"
@@ -779,7 +772,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
           {isFirstStep() ? (
             <Grid item xs={12} md={9}>
               <Box maxWidth={280} className={classes.buttonContainer}>
-                <ButtonPrimary type="submit" round fullWidth onClick={onClickNext} disabled={hasError}>
+                <ButtonPrimary type="submit" round fullWidth onClick={onValidateForm}>
                   {i18n.t('common:streaming_setting_screen.check_submit')}
                 </ButtonPrimary>
               </Box>

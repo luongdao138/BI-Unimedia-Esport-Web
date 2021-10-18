@@ -1,5 +1,6 @@
 import { Box, Grid, Icon, IconButton, InputAdornment, makeStyles, Theme, Typography } from '@material-ui/core'
 import React, { useCallback, useEffect, useState } from 'react'
+import _ from 'lodash'
 import { FormikProps } from 'formik'
 import ESInput from '@components/Input'
 import i18n from '@locales/i18n'
@@ -62,10 +63,10 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
 
   const [showStreamURL, setShowStreamURL] = useState(false)
   const [showStreamKey, setShowStreamKey] = useState(false)
-  const [hasError, setError] = useState(true)
 
   const { getStreamUrlAndKey, isPending, setLiveStreamConfirm, scheduleInformation } = useLiveSetting()
   const { checkNgWordFields, checkNgWordByField } = useCheckNgWord()
+  const { checkDisplayError } = LiveStreamSettingHelper
   const { userProfile } = useGetProfile()
   const paid_delivery_flag = userProfile?.attributes?.paid_delivery_flag
   const [categoryName, setCategoryName] = useState('')
@@ -120,8 +121,6 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
 
   const onHandleError = () => {
     removeField()
-    const isRequiredFieldsValid = LiveStreamSettingHelper.checkRequiredFields(2, formik.errors, type)
-    setError(!isRequiredFieldsValid)
   }
 
   const removeField = () => {
@@ -172,6 +171,14 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
       default:
         break
     }
+  }
+
+  const onValidateForm = () => {
+    formik.validateForm().then((err) => {
+      if (_.isEmpty(err.stepSettingTwo)) {
+        onClickNext()
+      }
+    })
   }
 
   const onClickNext = () => {
@@ -385,7 +392,6 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
                 fullWidth
                 value={isFirstStep() ? formik?.values?.stepSettingTwo?.title : formik?.values?.stepSettingTwo?.title.trim()}
                 onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
                 helperText={formik?.touched?.stepSettingTwo?.title && formik?.errors?.stepSettingTwo?.title}
                 error={formik?.touched?.stepSettingTwo?.title && !!formik?.errors?.stepSettingTwo?.title}
                 size="big"
@@ -407,7 +413,6 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
                   fullWidth
                   value={formik?.values?.stepSettingTwo?.description}
                   onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
                   helperText={formik?.touched?.stepSettingTwo?.description && formik?.errors?.stepSettingTwo?.description}
                   error={formik?.touched?.stepSettingTwo?.description && !!formik?.errors?.stepSettingTwo?.description}
                   size="big"
@@ -440,7 +445,6 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
                   name="stepSettingTwo.category"
                   value={formik?.values?.stepSettingTwo?.category}
                   onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
                   label={i18n.t('common:delivery_reservation_tab.category')}
                   required={true}
                   size="big"
@@ -484,16 +488,17 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
                   onChange={(date) => {
                     formik.setFieldValue('stepSettingTwo.stream_notify_time', date.toString())
                   }}
-                  onBlur={(e) => {
-                    formik.handleBlur(e)
+                  onBlur={() => {
                     setType(TYPE_RM.NOTIFY)
                   }}
                   helperText={
                     (formik?.touched?.stepSettingTwo?.stream_notify_time && formik?.errors?.stepSettingTwo?.stream_notify_time) ||
-                    // formik?.errors?.stepSettingTwo?.notify_live_start_date ||
                     formik?.errors?.stepSettingTwo?.notify_live_end_date
                   }
-                  error={formik?.touched?.stepSettingTwo?.stream_notify_time && !!formik?.errors?.stepSettingTwo?.stream_notify_time}
+                  error={
+                    (formik?.touched?.stepSettingTwo?.stream_notify_time && !!formik?.errors?.stepSettingTwo?.stream_notify_time) ||
+                    !!formik?.errors?.stepSettingTwo?.notify_live_end_date
+                  }
                   disabled={disable}
                   minDateMessage={''}
                   InputProps={{
@@ -521,17 +526,8 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
                   fullWidth
                   value={formik?.values?.stepSettingTwo?.stream_schedule_start_time}
                   onChange={(date) => formik.setFieldValue('stepSettingTwo.stream_schedule_start_time', date.toString())}
-                  onBlur={formik.handleBlur}
-                  helperText={
-                    (formik?.touched?.stepSettingTwo?.stream_schedule_start_time &&
-                      formik?.errors?.stepSettingTwo?.stream_schedule_start_time) ||
-                    formik?.errors?.stepSettingTwo?.notify_live_start_date
-                    // || formik?.errors?.stepSettingTwo?.schedule_live_date
-                  }
-                  error={
-                    formik?.touched?.stepSettingTwo?.stream_schedule_start_time &&
-                    !!formik?.errors?.stepSettingTwo?.stream_schedule_start_time
-                  }
+                  helperText={checkDisplayError(formik, 'stream_schedule_start_time').helperText}
+                  error={checkDisplayError(formik, 'stream_schedule_start_time').error}
                   disabled={disable}
                   minDateMessage={''}
                   InputProps={{
@@ -558,16 +554,8 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
                   fullWidth
                   value={formik?.values?.stepSettingTwo?.stream_schedule_end_time}
                   onChange={(date) => formik.setFieldValue('stepSettingTwo.stream_schedule_end_time', date.toString())}
-                  onBlur={formik.handleBlur}
-                  helperText={
-                    (formik?.touched?.stepSettingTwo?.stream_schedule_end_time &&
-                      formik?.errors?.stepSettingTwo?.stream_schedule_end_time) ||
-                    formik?.errors?.stepSettingTwo?.schedule_live_date ||
-                    formik?.errors?.stepSettingTwo?.max_schedule_live_date
-                  }
-                  error={
-                    formik?.touched?.stepSettingTwo?.stream_schedule_end_time && !!formik?.errors?.stepSettingTwo?.stream_schedule_end_time
-                  }
+                  helperText={checkDisplayError(formik, 'stream_schedule_end_time').helperText}
+                  error={checkDisplayError(formik, 'stream_schedule_end_time').error}
                   disabled={disable}
                   minDateMessage={''}
                   InputProps={{
@@ -598,19 +586,11 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
                     const temp = moment(date).add(5, 's')
                     formik.setFieldValue('stepSettingTwo.video_publish_end_time', temp)
                   }}
-                  onBlur={(e) => {
-                    formik.handleBlur(e)
+                  onBlur={() => {
                     setType(TYPE_RM.PUBLISH)
                   }}
-                  helperText={
-                    (formik?.touched?.stepSettingTwo?.video_publish_end_time && formik?.errors?.stepSettingTwo?.video_publish_end_time) ||
-                    (type === TYPE_RM.PUBLISH &&
-                      (formik?.errors?.stepSettingTwo?.public_time_less_than_start ||
-                        formik?.errors?.stepSettingTwo?.public_time_more_than_end))
-                  }
-                  error={
-                    formik?.touched?.stepSettingTwo?.video_publish_end_time && !!formik?.errors?.stepSettingTwo?.video_publish_end_time
-                  }
+                  helperText={checkDisplayError(formik, 'video_publish_end_time').helperText}
+                  error={checkDisplayError(formik, 'video_publish_end_time').error}
                   minDateMessage={''}
                   minutesStep={1}
                 />
@@ -689,7 +669,6 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
                           : formik?.values?.stepSettingTwo?.ticket_price
                       }
                       onChange={formik.handleChange}
-                      onBlur={formik?.values?.stepSettingTwo?.use_ticket && formik.handleBlur}
                       helperText={
                         formik?.values?.stepSettingTwo?.use_ticket
                           ? formik?.touched?.stepSettingTwo?.ticket_price && formik?.errors?.stepSettingTwo?.ticket_price
@@ -745,19 +724,11 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
                         const temp = moment(date).add(5, 's')
                         formik.setFieldValue('stepSettingTwo.sell_ticket_start_time', temp)
                       }}
-                      // onBlur={formik.values.stepSettingTwo.use_ticket && formik.handleBlur}
-                      onBlur={(e) => {
-                        formik?.values?.stepSettingTwo?.use_ticket && formik.handleBlur(e)
+                      onBlur={() => {
                         setType(TYPE_RM.SELL)
                       }}
-                      helperText={
-                        (formik?.touched?.stepSettingTwo?.sell_ticket_start_time &&
-                          formik?.errors?.stepSettingTwo?.sell_ticket_start_time) ||
-                        formik?.errors?.stepSettingTwo?.sell_less_than_start
-                      }
-                      error={
-                        formik?.touched?.stepSettingTwo?.sell_ticket_start_time && !!formik?.errors?.stepSettingTwo?.sell_ticket_start_time
-                      }
+                      helperText={checkDisplayError(formik, 'sell_ticket_start_time').helperText}
+                      error={checkDisplayError(formik, 'sell_ticket_start_time').error}
                       readOnly={!formik?.values?.stepSettingTwo?.use_ticket}
                       minDateMessage={''}
                       disabled={isLive}
@@ -984,7 +955,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
           {isFirstStep() ? (
             <Grid item xs={12} md={9}>
               <Box maxWidth={280} className={classes.buttonContainer}>
-                <ButtonPrimary type="submit" round fullWidth onClick={onClickNext} disabled={hasError}>
+                <ButtonPrimary type="submit" round fullWidth onClick={onValidateForm}>
                   {i18n.t('common:streaming_setting_screen.check_submit')}
                 </ButtonPrimary>
               </Box>
