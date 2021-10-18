@@ -550,13 +550,13 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
 
     useEffect(() => {
       // getUsersDonate()
-      document.getElementsByClassName('content-wrapper')[0]['style'].willChange = 'opacity'
-      return () => {
-        const container = document.getElementsByClassName('content-wrapper')
-        if (container && container.length > 0) {
-          document.getElementsByClassName('content-wrapper')[0]['style'].willChange = 'transform'
-        }
-      }
+      // document.getElementsByClassName('content-wrapper')[0]['style'].willChange = 'opacity'
+      // return () => {
+      //   const container = document.getElementsByClassName('content-wrapper')
+      //   if (container && container.length > 0) {
+      //     document.getElementsByClassName('content-wrapper')[0]['style'].willChange = 'transform'
+      //   }
+      // }
     }, [])
     // const filterMessagesDonate = (messages: any, compare_second?: any) => {
     //   const foundMessages = messages.filter((item) => {
@@ -1227,7 +1227,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       } else if (!isEnabledChat) {
         return 16
       }
-      return 120
+      return 0
     }
 
     const chatContent = () => (

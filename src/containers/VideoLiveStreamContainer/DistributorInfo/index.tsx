@@ -14,6 +14,7 @@ import ESLoader from '@components/Loader'
 import useDetailVideo from '../useDetailVideo'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
 import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
+import SmallLoader from '@components/Loader/SmallLoader'
 
 interface dataItem {
   id: number
@@ -36,7 +37,7 @@ const DistributorInfo: React.FC<DistributorInfoProps> = ({ video_id }) => {
 
   const getChannelDescriptionText = CommonHelper.splitToLinkifyComponent(detailVideoResult?.channel_description)
   const [descriptionCollapse, setDescriptionCollapse] = useState(true)
-  const [descriptionCanTruncated, setDescriptionCanTruncated] = useState(false)
+  const [descriptionCanTruncated, setDescriptionCanTruncated] = useState(0 /*0: init, 1: true, -1: false*/)
 
   const [page, setPage] = useState<number>(1)
   const [hasMore, setHasMore] = useState(true)
@@ -65,14 +66,16 @@ const DistributorInfo: React.FC<DistributorInfoProps> = ({ video_id }) => {
   const isTruncated = () => {
     const descriptionDiv = document.getElementById('distribution-info-description')
     if (!descriptionDiv) {
-      return false
+      return -1
     }
-    return descriptionDiv.offsetHeight < descriptionDiv.scrollHeight
+    return descriptionDiv.offsetHeight < descriptionDiv.scrollHeight ? 1 : -1
   }
 
   useEffect(() => {
     if (getChannelDescriptionText) {
-      setDescriptionCanTruncated(isTruncated())
+      setTimeout(() => {
+        setDescriptionCanTruncated(isTruncated())
+      }, 700)
     }
   }, [getChannelDescriptionText.length])
 
@@ -180,16 +183,26 @@ const DistributorInfo: React.FC<DistributorInfoProps> = ({ video_id }) => {
     setDescriptionCollapse(!descriptionCollapse)
   }
 
-  const collapseButton = () => (
-    <Box className={classes.seeMoreContainer}>
-      <Box onClick={toggleDescriptionViewMore} className={classes.seeMore}>
-        <Typography className={classes.seeMoreTitle}>
-          {descriptionCollapse ? i18n.t('common:live_stream_screen.view_more') : i18n.t('common:live_stream_screen.view_less')}
-        </Typography>
-        <Icon className={`fa ${descriptionCollapse ? 'fa-angle-down' : 'fa-angle-up'} ${classes.angleDownIcon}`} fontSize="small" />
+  const collapseButton = () =>
+    descriptionCanTruncated === 0 ? (
+      <div
+        style={{
+          margin: '10px 0 0 0',
+          height: '21px',
+        }}
+      >
+        <SmallLoader />
+      </div>
+    ) : (
+      <Box className={classes.seeMoreContainer}>
+        <Box onClick={toggleDescriptionViewMore} className={classes.seeMore}>
+          <Typography className={classes.seeMoreTitle}>
+            {descriptionCollapse ? i18n.t('common:live_stream_screen.view_more') : i18n.t('common:live_stream_screen.view_less')}
+          </Typography>
+          <Icon className={`fa ${descriptionCollapse ? 'fa-angle-down' : 'fa-angle-up'} ${classes.angleDownIcon}`} fontSize="small" />
+        </Box>
       </Box>
-    </Box>
-  )
+    )
 
   const channelDescription = () => {
     return (
@@ -209,7 +222,7 @@ const DistributorInfo: React.FC<DistributorInfoProps> = ({ video_id }) => {
             )
           })}
         </div>
-        {descriptionCanTruncated && collapseButton()}
+        {descriptionCanTruncated !== -1 ? collapseButton() : <div style={{ height: '31px' }} />}
       </Box>
     )
   }

@@ -282,7 +282,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       // hls.off(Hls.Events.LEVEL_LOADED, handleLoaded)
       // hls.off(Hls.Events.ERROR, handleError)
     }
-  }, [])
+  }, [src])
 
   // useEffect(() => {
   //   if(Math.floor(playedSeconds) !== liveStreamInfo.played_second) {
