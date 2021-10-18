@@ -1420,7 +1420,7 @@ export default {
     },
     community_created_toast: 'コミュニティを作成しました。',
     community_updated_toast: 'コミュニティを編集しました。',
-    title_already_in_use: 'コミュニティ名が既に使用中です。',
+    title_already_in_use: '「コミュニティ名」を見直してください',
   },
   topic_create: {
     title: 'トピックを作成する',
