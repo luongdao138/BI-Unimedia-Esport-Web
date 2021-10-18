@@ -1,8 +1,8 @@
-import { Box, IconButton, Icon } from '@material-ui/core'
+import { Box } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
-import InputBase from '@material-ui/core/InputBase'
-import React, { useEffect, useState, Dispatch, SetStateAction } from 'react'
+
+import React, { useEffect, useState, Dispatch, SetStateAction, useRef } from 'react'
 import useUploadImage from '@utils/hooks/useUploadImage'
 import { useTranslation } from 'react-i18next'
 import ImageUploader from '../ImageUploader'
@@ -15,8 +15,7 @@ import { showDialog } from '@store/common/actions'
 import { NG_WORD_AREA, NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
 import useTopicDetail from '../../useTopicDetail'
 import { REPLY_REGEX } from '@constants/community.constants'
-
-const TEXT_INPUT_LIMIT = 5000
+import CommentInputArea from './CommentInputArea'
 
 type CommunityHeaderProps = {
   reply_param?: { hash_key: string; comment_no: number }
@@ -37,21 +36,14 @@ const Comment: React.FC<CommunityHeaderProps> = ({ reply_param, setPage, setComm
   const { uploadCommentImage } = useUploadImage()
 
   const [isUploading, setUploading] = useState(false)
-  const [isMaxLength, setIsMaxLength] = useState(false)
-  const [imageURL, setImageURL] = useState('')
-  const [inputText, setInputText] = useState('')
 
-  useEffect(() => {
-    if (!_.isEmpty(reply_param)) {
-      if (!_.includes(_.split(inputText, REPLY_REGEX), `>>${reply_param.comment_no}`)) {
-        setInputText(inputText.concat('>>' + reply_param.comment_no))
-      }
-    }
-  }, [reply_param])
+  const inputRef = useRef<{ clearInput: () => void }>(null)
+
+  const [imageURL, setImageURL] = useState('')
 
   useEffect(() => {
     if (!createCommentMeta.pending && createCommentMeta.loaded) {
-      setInputText('')
+      if (inputRef.current) inputRef.current.clearInput()
       setImageURL('')
       setPage(1)
       setCommentCount(commentCount + 1)
@@ -80,13 +72,13 @@ const Comment: React.FC<CommunityHeaderProps> = ({ reply_param, setPage, setComm
     return true
   }
 
-  const send = () => {
+  const send = (text: string) => {
     setShowReply((comments) => _.map(comments, () => false))
-    if (_.isEmpty(checkNgWord(inputText.trim()))) {
-      const reply_comment_nos = _.map(_.filter(_.split(inputText, REPLY_REGEX)), (c) => Number(c.slice(2)))
+    if (_.isEmpty(checkNgWord(text.trim()))) {
+      const reply_comment_nos = _.map(_.filter(_.split(text, REPLY_REGEX)), (c) => Number(c.slice(2)))
       const data = {
         topic_hash: String(topic_hash_key),
-        content: isInputEmpty(inputText) ? '' : inputText,
+        content: isInputEmpty(text) ? '' : text,
         reply_to_comment_nos: reply_comment_nos,
         attachments: imageURL,
       }
@@ -98,45 +90,15 @@ const Comment: React.FC<CommunityHeaderProps> = ({ reply_param, setPage, setComm
     }
   }
 
-  const handleChange = (event) => {
-    if (event.target.value.length > TEXT_INPUT_LIMIT) {
-      setIsMaxLength(true)
-    } else {
-      setIsMaxLength(false)
-    }
-    setInputText(event.target.value)
-  }
-
   return (
-    <>
+    <div className={classes.inputContainer}>
       <Box className={classes.root}>
         <Box className={classes.toolbarCont}>
           <ImageUploader src={imageURL} setSrc={setImageURL} onChange={handleUpload} isUploading={isUploading} />
         </Box>
-        <Box className={classes.inputCont}>
-          <InputBase
-            value={inputText}
-            onChange={handleChange}
-            className={classes.input}
-            multiline
-            rowsMax={9}
-            placeholder={t('common:topic_create.comment_placeholder')}
-            inputProps={{ maxLength: TEXT_INPUT_LIMIT, style: { overflow: 'visible' } }}
-          />
-        </Box>
-        <Box className={classes.sendCont}>
-          <Box display="flex" alignItems="center">
-            <IconButton
-              className={classes.iconButton}
-              onClick={send}
-              disabled={(imageURL === '' && inputText.trim() === '') || isMaxLength}
-            >
-              <Icon className={`${classes.icon} fas fa-paper-plane`} />
-            </IconButton>
-          </Box>
-        </Box>
+        <CommentInputArea replyParam={reply_param} ref={inputRef} onPressSend={send} disabled={imageURL === ''} />
       </Box>
-    </>
+    </div>
   )
 }
 
@@ -149,43 +111,23 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     position: 'relative',
   },
+  inputContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    flexDirection: 'column',
+    bottom: 0,
+    padding: 11,
+    width: '100%',
+    background: '#101010',
+    willChange: 'transform',
+    zIndex: 2,
+  },
   toolbarCont: {
     display: 'flex',
     alignItems: 'flex-end',
     marginLeft: 5,
-  },
-  inputCont: {
     position: 'relative',
-    display: 'flex',
-    alignItems: 'center',
-    width: 'calc(100% - 97px)',
-    marginLeft: 13,
-    marginRight: theme.spacing(1),
-  },
-  reply: {
-    position: 'absolute',
-    top: theme.spacing(1),
-    left: theme.spacing(1.5),
-    zIndex: 2,
-  },
-  sendCont: {
-    display: 'flex',
-    alignItems: 'flex-end',
-    marginBottom: 5,
-    marginRight: 13,
-  },
-  input: {
-    borderRadius: 24,
-    border: '1px solid #777',
-    backgroundColor: '#101010',
-    width: '100%',
-    padding: 9,
-    fontSize: 14,
-    color: Colors.white,
-  },
-  icon: {
-    fontSize: 24,
-    color: Colors.primary,
+    top: '-3px',
   },
   removeIcon: {
     fontSize: 14,
@@ -201,6 +143,7 @@ const useStyles = makeStyles((theme) => ({
   },
   iconButton: {
     padding: 0,
+    borderRadius: 0,
     '&:hover $icon': {
       color: Colors.primary,
       transition: 'all 0.3s ease',

@@ -18,6 +18,8 @@ export interface TopicRowItemProps {
   handleClick?: () => void
   keyword?: string
   isOnlyTitle?: boolean
+  isSearch?: boolean
+  content?: string
 }
 
 const Highlight = ({ search = '', children = '', contentRect = undefined, isTitle = false }) => {
@@ -66,6 +68,8 @@ const TopicRowItem: React.FC<TopicRowItemProps> = ({
   handleClick,
   keyword,
   isOnlyTitle = false,
+  isSearch = false,
+  content,
 }) => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
@@ -77,13 +81,39 @@ const TopicRowItem: React.FC<TopicRowItemProps> = ({
     if (lastCommentData?.deleted_at) {
       return t('common:topic_comment.has_deleted_last_comment')
     }
-    return lastCommentData?.content ? (
+
+    if (!lastCommentData && isSearch) {
+      return (
+        <Highlight search={keyword} contentRect={contentRect}>
+          {content}
+        </Highlight>
+      )
+    }
+
+    const parts = String(content).split(keyword)
+
+    return isSearch && parts.length > 1 ? (
+      <Box>
+        <Typography component="span" variant="body2">
+          <Highlight search={keyword} contentRect={contentRect}>
+            {content}
+          </Highlight>
+        </Typography>
+      </Box>
+    ) : lastCommentData?.content ? (
       isOnlyTitle ? (
         lastCommentData.content
       ) : (
-        <Highlight search={keyword} contentRect={contentRect}>
-          {lastCommentData.content}
-        </Highlight>
+        <Box>
+          {isSearch ? (
+            <Typography component="span" className={classes.comment_no}>
+              {lastCommentData.comment_no}
+            </Typography>
+          ) : null}
+          <Highlight search={keyword} contentRect={contentRect}>
+            {lastCommentData.content}
+          </Highlight>
+        </Box>
       )
     ) : comment_count === 0 ? (
       ''
@@ -169,6 +199,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     textOverflow: 'ellipsis',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
+  },
+  comment_no: {
+    fontSize: 12,
+    marginRight: 12,
   },
   latest_date: {
     color: Colors.white_opacity[30],

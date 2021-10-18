@@ -4,6 +4,7 @@ import { Box, Typography, makeStyles, Theme } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
 import ActionComponent from '../ActionComponent'
 import { UserProfile } from '@services/user.service'
+import useArenaHelper from '@containers/arena/hooks/useArenaHelper'
 
 interface InProgressProps {
   tournament: TournamentDetail
@@ -12,15 +13,9 @@ interface InProgressProps {
 
 const InProgress: React.FC<InProgressProps> = (props) => {
   const classes = useStyles()
-  const { t } = useTranslation(['common'])
+  const { t } = useTranslation('common')
   const { tournament } = props
-
-  const statusName = {
-    admin: t('common:arena.participate_status.ongoing'),
-    co_organizer: t('common:arena.participate_status.ongoing'),
-    interested: t('common:arena.participate_status.loss'),
-    participant: t('common:arena.participate_status.participating'),
-  }
+  const { isModerator, isParticipant, isInterested } = useArenaHelper(tournament)
 
   return (
     <ActionComponent {...props}>
@@ -28,7 +23,13 @@ const InProgress: React.FC<InProgressProps> = (props) => {
         <Box className={classes.body}>
           <Box display="flex" flexDirection="row">
             <Typography className={classes.roundInfoText}>
-              {statusName[tournament.attributes.my_role] || t('common:arena.participate_status.no_entry')}
+              {isModerator
+                ? t('arena.participate_status.ongoing')
+                : isParticipant
+                ? t('arena.participate_status.participating')
+                : isInterested
+                ? t('arena.participate_status.loss')
+                : t('arena.participate_status.no_entry')}
             </Typography>
           </Box>
         </Box>

@@ -126,6 +126,8 @@ const InfoContainer: React.FC = () => {
                     handleClick={() => router.push(`${ESRoutes.TOPIC.replace(/:id/gi, attr.community_hash)}/${attr.hash_key}`)}
                     title={attr.topic_title}
                     last_comment={attr.last_comment.data}
+                    content={attr.content}
+                    isSearch={true}
                     latest_date={latestDate}
                     comment_count={attr.comment_count}
                     keyword={params.keyword}

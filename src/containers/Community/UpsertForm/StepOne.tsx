@@ -2,7 +2,7 @@ import { Box } from '@material-ui/core'
 import { FormikProps } from 'formik'
 import { FormType } from './FormModel/FormType'
 import { EditableTypes } from './useCommunityCreate'
-import { useCallback } from 'react'
+import { Dispatch, SetStateAction, useCallback } from 'react'
 import useUploadImage from '@utils/hooks/useUploadImage'
 import GameSelectorDialog from './Partials/GameSelectorDialog'
 import CoverUploader from './Partials/CoverUploader'
@@ -19,9 +19,10 @@ type Props = {
   formik: FormikProps<FormType>
   prefectures: GetPrefecturesResponse
   editables: EditableTypes
+  setIsDuplicate: Dispatch<SetStateAction<boolean>>
 }
 
-const StepOne: React.FC<Props> = ({ formik, prefectures, editables }) => {
+const StepOne: React.FC<Props> = ({ formik, prefectures, editables, setIsDuplicate }) => {
   const { uploadArenaCoverImage, isUploading } = useUploadImage()
 
   const handleUpload = useCallback((file: File, blob: any) => {
@@ -35,7 +36,6 @@ const StepOne: React.FC<Props> = ({ formik, prefectures, editables }) => {
   }, [])
 
   const handleSelectedTag = useCallback((value) => {
-    // value = value.filter((v) => {id: v.id, feature: v.attributes.feature})
     formik.setFieldValue('stepOne.features', value)
   }, [])
 
@@ -52,12 +52,15 @@ const StepOne: React.FC<Props> = ({ formik, prefectures, editables }) => {
       </Box>
       <Box pb={4}>
         <ESFastInput
-          id="title"
+          id="stepOne.name"
           name="stepOne.name"
           labelPrimary={i18n.t('common:community_create.name')}
           fullWidth
           value={formik.values.stepOne.name}
-          onChange={formik.handleChange}
+          onChange={(e) => {
+            setIsDuplicate(() => false)
+            formik.handleChange(e)
+          }}
           helperText={formik.touched?.stepOne?.name && formik.errors?.stepOne?.name}
           error={formik.touched?.stepOne?.name && !!formik.errors?.stepOne?.name}
           onBlur={formik.handleBlur}

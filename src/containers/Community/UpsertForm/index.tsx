@@ -22,20 +22,20 @@ import { showDialog } from '@store/common/actions'
 import { NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
 import useCommonData from './useCommonData'
 import CancelDialog from './Partials/CancelDialog'
-import { useTranslation } from 'react-i18next'
 import { CommunityFeature } from '@services/community.service'
 import { GameTitle } from '@services/game.service'
 import { useRouter } from 'next/router'
-import * as commonActions from '@store/common/actions'
 import { useConfirm } from '@components/Confirm'
 import { COMMUNITY_DIALOGS } from '@constants/community.constants'
 import useUnload from '@utils/hooks/useUnload'
+import community from '@store/community'
+import ESFullLoader from '@components/FullScreenLoader'
+
+const { actions } = community
 
 type CommunityCreateProps = {
   communityName?: string
 }
-
-const SUBMIT_TITLE_ERROR_MESSAGE = 'Validation failed: Name has already been taken'
 
 const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
   const dispatch = useAppDispatch()
@@ -56,15 +56,15 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
     community,
     getCreateCommunityMeta,
     getUpdateCommunityMeta,
+    checkCommunityNameMeta,
     communityFeatures,
     resetCreateUpdateMeta,
   } = useCommunityCreate()
   const [detailFeatures, setDetailFeatures] = useState([])
   const initialValues = getInitialValues(isEdit ? community : undefined, isEdit && detailFeatures)
 
-  const [isAlreadyUsedTitle, setIsAlreadyUsedTitle] = useState(false)
+  const [isDuplicate, setIsDuplicate] = useState<boolean>(false)
 
-  const { t } = useTranslation(['common'])
   const router = useRouter()
 
   const { checkNgWordFields, checkNgWordByField } = useCheckNgWord()
@@ -99,15 +99,6 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
   }, [community])
 
   useEffect(() => {
-    if ((isEdit ? getUpdateCommunityMeta : getCreateCommunityMeta).error['message'] === SUBMIT_TITLE_ERROR_MESSAGE) {
-      setIsAlreadyUsedTitle(true)
-    } else if ((isEdit ? getUpdateCommunityMeta : getCreateCommunityMeta).error) {
-      renderFailedDataToast()
-    }
-    resetCreateUpdateMeta()
-  }, [getCreateCommunityMeta, getUpdateCommunityMeta])
-
-  useEffect(() => {
     if (isFirstRun.current) {
       isFirstRun.current = false
       return
@@ -123,6 +114,7 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
   useEffect(() => {
     getCommunityFeatures()
     formik.validateForm()
+    return () => resetCreateUpdateMeta()
   }, [])
 
   useEffect(() => {
@@ -142,10 +134,6 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
       )
     }
   }, [isEdit && communityFeatures])
-
-  const renderFailedDataToast = () => {
-    dispatch(commonActions.addToast(t('common:common.failed_to_get_data')))
-  }
 
   const renderEditButton = () => {
     return (
@@ -178,7 +166,6 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
   const handleBack = () => {
     if (isConfirm) {
       setIsConfirm(false)
-      setIsAlreadyUsedTitle(false)
     } else
       isChanged
         ? confirm({
@@ -196,7 +183,7 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
 
   const handleSetConfirm = (e) => {
     e.preventDefault()
-    formik.validateForm().then(() => {
+    formik.validateForm().then(async () => {
       const { stepOne } = formik.values
 
       const fieldIdentifier = checkNgWordFields({
@@ -218,7 +205,16 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
           if (isConfirm) {
             formik.submitForm()
           } else {
-            setIsConfirm(true)
+            const value = formik.values.stepOne.name
+            const resultAction = await dispatch(actions.checkCommunityName({ name: value.trim() }))
+            if (actions.checkCommunityName.fulfilled.match(resultAction)) {
+              if (resultAction.payload.is_unique === false) {
+                setIsDuplicate(true)
+              } else {
+                setIsDuplicate(false)
+                setIsConfirm(true)
+              }
+            }
           }
           return
         } else {
@@ -230,7 +226,6 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
 
   const handleUnsetConfirm = () => {
     setIsConfirm(false)
-    setIsAlreadyUsedTitle(false)
   }
 
   return (
@@ -242,43 +237,44 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
       content={
         <>
           {isConfirm ? (
-            <Box className={classes.footerErrorContainer}>
-              {isAlreadyUsedTitle && (
-                <Box textAlign="center" style={{ marginBottom: 16 }} color={Colors.secondary} px={1}>
-                  <Typography variant="body2">{i18n.t('common:community_create.title_already_in_use')}</Typography>
-                </Box>
-              )}
-              <Box className={classes.reviewButtonContainer}>
-                <ButtonPrimary onClick={handleUnsetConfirm} gradient={false} className={`${classes.footerButton} ${classes.cancelButton}`}>
-                  {i18n.t('common:common.cancel')}
-                </ButtonPrimary>
-                <ButtonPrimary
-                  type="submit"
-                  onClick={handleSetConfirm}
-                  round
-                  disabled={hasError || getCreateCommunityMeta.pending || getUpdateCommunityMeta.pending}
-                  className={classes.footerButton}
-                >
-                  {isEdit ? i18n.t('common:community_create.confirm.submit_edit') : i18n.t('common:community_create.confirm.submit')}
-                </ButtonPrimary>
-              </Box>
+            <Box className={classes.reviewButtonContainer}>
+              <ButtonPrimary onClick={handleUnsetConfirm} gradient={false} className={`${classes.footerButton} ${classes.cancelButton}`}>
+                {i18n.t('common:common.cancel')}
+              </ButtonPrimary>
+              <ButtonPrimary
+                type="submit"
+                onClick={handleSetConfirm}
+                round
+                disabled={hasError || getCreateCommunityMeta.pending || getUpdateCommunityMeta.pending}
+                className={classes.footerButton}
+              >
+                {isEdit ? i18n.t('common:community_create.confirm.submit_edit') : i18n.t('common:community_create.confirm.submit')}
+              </ButtonPrimary>
             </Box>
           ) : isEdit ? (
             renderEditButton()
           ) : (
-            <ButtonPrimary
-              onClick={handleSetConfirm}
-              round
-              className={`${classes.footerButton} ${classes.confirmButton}`}
-              disabled={hasError}
-            >
-              {i18n.t('common:community_create.check_content')}
-            </ButtonPrimary>
+            <Box className={classes.footerErrorContainer}>
+              {isDuplicate && (
+                <Box textAlign="center" style={{ marginBottom: 16 }} color={Colors.secondary} px={1}>
+                  <Typography variant="body2">{i18n.t('common:community_create.title_already_in_use')}</Typography>
+                </Box>
+              )}
+              <ButtonPrimary
+                onClick={handleSetConfirm}
+                round
+                className={`${classes.footerButton} ${classes.confirmButton}`}
+                disabled={hasError || isDuplicate}
+              >
+                {i18n.t('common:community_create.check_content')}
+              </ButtonPrimary>
+            </Box>
           )}
         </>
       }
     >
       <>
+        <ESFullLoader open={checkCommunityNameMeta.pending} />
         <Box pt={7.5} pb={9} className={classes.topContainer}>
           <Box py={2} display="flex" flexDirection="row" alignItems="center">
             <IconButton className={classes.iconButtonBg} onClick={handleBack}>
@@ -304,7 +300,7 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
             ) : (
               <>
                 <Box py={4} className={classes.formContainer}>
-                  {<StepOne formik={formik} prefectures={prefectures || null} editables={editables} />}
+                  {<StepOne formik={formik} prefectures={prefectures || null} editables={editables} setIsDuplicate={setIsDuplicate} />}
                 </Box>
               </>
             )}
