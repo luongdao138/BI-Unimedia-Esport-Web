@@ -1,5 +1,5 @@
 import { Box, Typography, makeStyles, Theme } from '@material-ui/core'
-import React from 'react'
+import React, { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Colors } from '@theme/colors'
 import ButtonPrimary from '@components/ButtonPrimary'
@@ -91,7 +91,7 @@ const DonatePointsConfirmModal: React.FC<ModalProps> = ({
   )
 }
 
-export default DonatePointsConfirmModal
+export default memo(DonatePointsConfirmModal)
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
@@ -127,6 +127,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: 220,
     height: 50,
     marginRight: 16,
+    '&:hover': {
+      boxShadow: 'none',
+      background: Colors.transparent,
+    },
     [theme.breakpoints.down('sm')]: {
       order: 1,
       marginRight: 0,
@@ -134,6 +138,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   actionBtnConfirm: {
     width: '100%',
+    '&:hover': {
+      boxShadow: 'none',
+      background: Colors.transparent,
+    },
     [theme.breakpoints.down('sm')]: {
       order: 0,
       marginBottom: 24,
