@@ -326,11 +326,11 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       }
     })
 
-    videoEl.current.addEventListener('durationchange', (event) => {
+    videoEl.current?.addEventListener('durationchange', (event) => {
       console.log('------->>durationchange<<<-----', event.target.duration)
     })
 
-    videoEl.current.addEventListener('volumechange', () => {
+    videoEl.current?.addEventListener('volumechange', () => {
       setState({
         ...state,
         muted: videoEl.current?.muted,
@@ -340,51 +340,51 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       // setState({ ...state, muted: videoEl.current.volume!==0?false:true, volume:  videoEl.current.volume, playing: !videoEl.current.paused })
     })
 
-    videoEl.current.addEventListener('ended', () => {
+    videoEl.current?.addEventListener('ended', () => {
       setState({ ...state, playing: false })
       setVisible({ ...visible, loading: true, videoLoaded: true })
     })
 
     //check event video
-    videoEl.current.addEventListener('seeking', () => {
+    videoEl.current?.addEventListener('seeking', () => {
       console.log('=================SEEKING===================')
       setVisible({ ...visible, loading: true, videoLoaded: false })
     })
-    videoEl.current.addEventListener('seeked', () => {
+    videoEl.current?.addEventListener('seeked', () => {
       //rewind complete
       console.log('=================SEEKED===================')
       setVisible({ ...visible, loading: false, videoLoaded: false })
     })
 
     //load data
-    videoEl.current.addEventListener('loadedmetadata', (event) => {
+    videoEl.current?.addEventListener('loadedmetadata', (event) => {
       console.log('=================loadedmetadata===================')
       console.log(event)
       setVisible({ ...visible, loading: true, videoLoaded: true })
     })
-    videoEl.current.addEventListener('loadeddata', () => {
+    videoEl.current?.addEventListener('loadeddata', () => {
       console.log('=================loadeddata===================')
       // setVisible({ ...visible, loading: true, videoLoaded: true })
     })
-    videoEl.current.addEventListener('emptied', (event) => {
+    videoEl.current?.addEventListener('emptied', (event) => {
       console.log('=================emptied===================')
       console.log(event)
     })
-    videoEl.current.addEventListener('canplay', (event) => {
+    videoEl.current?.addEventListener('canplay', (event) => {
       console.log('=================canplay===================')
       console.log(event)
       setVisible({ ...visible, loading: videoEl.current?.paused })
     })
-    videoEl.current.addEventListener('error', (event) => {
+    videoEl.current?.addEventListener('error', (event) => {
       console.log('=================error===================')
       console.log(event)
     })
-    videoEl.current.addEventListener('play', (event) => {
+    videoEl.current?.addEventListener('play', (event) => {
       console.log('=================play===================')
       console.log(event)
       setVisible({ ...visible, loading: true, videoLoaded: true })
     })
-    videoEl.current.addEventListener('playing', (event) => {
+    videoEl.current?.addEventListener('playing', (event) => {
       console.log('=================playing===================')
       console.log(event)
       setVisible({ ...visible, loading: false, videoLoaded: false })

@@ -33,13 +33,9 @@ export const getUser = /* GraphQL */ `
       updatedAt
     }
   }
-`;
+`
 export const listUsers = /* GraphQL */ `
-  query ListUsers(
-    $filter: ModelUserFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
+  query ListUsers($filter: ModelUserFilterInput, $limit: Int, $nextToken: String) {
     listUsers(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
@@ -56,7 +52,7 @@ export const listUsers = /* GraphQL */ `
       nextToken
     }
   }
-`;
+`
 export const getMessage = /* GraphQL */ `
   query GetMessage($id: ID!) {
     getMessage(id: $id) {
@@ -90,13 +86,9 @@ export const getMessage = /* GraphQL */ `
       updatedAt
     }
   }
-`;
+`
 export const listMessages = /* GraphQL */ `
-  query ListMessages(
-    $filter: ModelMessageFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
+  query ListMessages($filter: ModelMessageFilterInput, $limit: Int, $nextToken: String) {
     listMessages(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
@@ -128,7 +120,7 @@ export const listMessages = /* GraphQL */ `
       nextToken
     }
   }
-`;
+`
 export const getVideo = /* GraphQL */ `
   query GetVideo($id: ID!) {
     getVideo(id: $id) {
@@ -142,13 +134,9 @@ export const getVideo = /* GraphQL */ `
       updatedAt
     }
   }
-`;
+`
 export const listVideos = /* GraphQL */ `
-  query ListVideos(
-    $filter: ModelVideoFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
+  query ListVideos($filter: ModelVideoFilterInput, $limit: Int, $nextToken: String) {
     listVideos(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
@@ -163,7 +151,7 @@ export const listVideos = /* GraphQL */ `
       nextToken
     }
   }
-`;
+`
 export const getChannel = /* GraphQL */ `
   query GetChannel($id: ID!) {
     getChannel(id: $id) {
@@ -176,13 +164,9 @@ export const getChannel = /* GraphQL */ `
       updatedAt
     }
   }
-`;
+`
 export const listChannels = /* GraphQL */ `
-  query ListChannels(
-    $filter: ModelChannelFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
+  query ListChannels($filter: ModelChannelFilterInput, $limit: Int, $nextToken: String) {
     listChannels(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
@@ -196,22 +180,10 @@ export const listChannels = /* GraphQL */ `
       nextToken
     }
   }
-`;
+`
 export const getUsersByUuid = /* GraphQL */ `
-  query GetUsersByUuid(
-    $uuid: String
-    $sortDirection: ModelSortDirection
-    $filter: ModelUserFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    getUsersByUuid(
-      uuid: $uuid
-      sortDirection: $sortDirection
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
+  query GetUsersByUuid($uuid: String, $sortDirection: ModelSortDirection, $filter: ModelUserFilterInput, $limit: Int, $nextToken: String) {
+    getUsersByUuid(uuid: $uuid, sortDirection: $sortDirection, filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
         uuid
@@ -224,7 +196,7 @@ export const getUsersByUuid = /* GraphQL */ `
       nextToken
     }
   }
-`;
+`
 export const getMessagesByVideoId = /* GraphQL */ `
   query GetMessagesByVideoId(
     $video_id: String
@@ -233,13 +205,7 @@ export const getMessagesByVideoId = /* GraphQL */ `
     $limit: Int
     $nextToken: String
   ) {
-    getMessagesByVideoId(
-      video_id: $video_id
-      sortDirection: $sortDirection
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
+    getMessagesByVideoId(video_id: $video_id, sortDirection: $sortDirection, filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
         owner
@@ -270,7 +236,7 @@ export const getMessagesByVideoId = /* GraphQL */ `
       nextToken
     }
   }
-`;
+`
 export const getVideosByUuid = /* GraphQL */ `
   query GetVideosByUuid(
     $uuid: String
@@ -279,13 +245,7 @@ export const getVideosByUuid = /* GraphQL */ `
     $limit: Int
     $nextToken: String
   ) {
-    getVideosByUuid(
-      uuid: $uuid
-      sortDirection: $sortDirection
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
+    getVideosByUuid(uuid: $uuid, sortDirection: $sortDirection, filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
         uuid
@@ -299,22 +259,10 @@ export const getVideosByUuid = /* GraphQL */ `
       nextToken
     }
   }
-`;
+`
 export const getVideoByUuid = /* GraphQL */ `
-  query GetVideoByUuid(
-    $uuid: String
-    $sortDirection: ModelSortDirection
-    $filter: ModelVideoFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    getVideoByUuid(
-      uuid: $uuid
-      sortDirection: $sortDirection
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
+  query GetVideoByUuid($uuid: String, $sortDirection: ModelSortDirection, $filter: ModelVideoFilterInput, $limit: Int, $nextToken: String) {
+    getVideoByUuid(uuid: $uuid, sortDirection: $sortDirection, filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
         uuid
@@ -328,7 +276,7 @@ export const getVideoByUuid = /* GraphQL */ `
       nextToken
     }
   }
-`;
+`
 export const getChannelByArn = /* GraphQL */ `
   query GetChannelByArn(
     $arn: String
@@ -337,13 +285,7 @@ export const getChannelByArn = /* GraphQL */ `
     $limit: Int
     $nextToken: String
   ) {
-    getChannelByArn(
-      arn: $arn
-      sortDirection: $sortDirection
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
+    getChannelByArn(arn: $arn, sortDirection: $sortDirection, filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
         arn
@@ -356,4 +298,4 @@ export const getChannelByArn = /* GraphQL */ `
       nextToken
     }
   }
-`;
+`
