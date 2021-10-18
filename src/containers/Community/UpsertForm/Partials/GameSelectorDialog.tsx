@@ -72,12 +72,10 @@ const GameSelectorDialog: React.FC<Props> = ({ values, onChange, disabled }) => 
               </Box>
             </Box>
 
-            <Box pt={8} className={classes.container}>
+            <Box pt={4} className={classes.container}>
               <GameSelector values={gameTitles} onChange={onGameChange} />
             </Box>
           </Box>
-
-          <Box className={classes.blankSpace} />
 
           <Box className={classes.stickyFooter}>
             <Box className={classes.nextBtnHolder}>

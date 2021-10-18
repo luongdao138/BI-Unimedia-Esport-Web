@@ -47,7 +47,7 @@ const GameSelector: React.FC<GameSelectorProps> = (props) => {
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
   const windowHeight = use100vh()
-  const topHeight = isMobile ? 256 : 340
+  const topHeight = isMobile ? 244 : 312
   const selectedGamesRef = useRef<HTMLDivElement>(null)
   const { height: selectedGamesHeight } = useRect(selectedGamesRef)
   const contentHeight = windowHeight - topHeight - (selectedGamesHeight || 0)

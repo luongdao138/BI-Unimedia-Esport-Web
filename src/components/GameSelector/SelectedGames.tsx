@@ -44,10 +44,10 @@ const useStyles = makeStyles((theme) => ({
   },
   listContainer: {
     maxWidth: 600,
-    paddingTop: theme.spacing(2),
+    paddingTop: theme.spacing(1),
     paddingLeft: theme.spacing(3),
     paddingRight: theme.spacing(3),
-    maxHeight: 190,
+    maxHeight: 108,
     overflowY: 'auto',
   },
   chip: {
