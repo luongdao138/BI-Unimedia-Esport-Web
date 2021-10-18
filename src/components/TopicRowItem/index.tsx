@@ -96,7 +96,7 @@ const TopicRowItem: React.FC<TopicRowItemProps> = ({
       <Box>
         <Typography component="span" variant="body2">
           <Highlight search={keyword} contentRect={contentRect}>
-            {'1a' + content}
+            {content}
           </Highlight>
         </Typography>
       </Box>
