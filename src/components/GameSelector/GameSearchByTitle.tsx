@@ -26,6 +26,9 @@ const useStyles = makeStyles((theme) => ({
       paddingRight: theme.spacing(0),
       paddingLeft: theme.spacing(0),
     },
+    bottomSpace: {
+      paddingTop: theme.spacing(3),
+    },
   },
   [theme.breakpoints.down('md')]: {
     root: {
@@ -60,37 +63,39 @@ const GameSearchByTitle: React.FC<{ children?: ReactNode }> = ({ children }) => 
   }
   const focusEvent = useFocusState()
   return (
-    <Box pt={4} px={5} className={classes.root}>
-      <Box display="flex">
-        <SquareInput
-          value={keyword}
-          placeholder={i18n.t('common:search_by_keyword')}
-          onChange={(e) => setKeyword(e.target.value)}
-          onBlur={() => {
-            setTimeout(() => {
-              document.body.classList.remove('has-sticky-div')
-            }, 100)
-            focusEvent.onBlur()
-          }}
-          onFocus={() => {
-            document.body.classList.add('has-sticky-div')
-            focusEvent.onFocus()
-          }}
-          fullWidth
-        />
-        <Button onClick={handleClick} className={classes.searchBtn} variant="contained" color="primary">
-          {i18n.t('common:search.search')}
-        </Button>
-      </Box>
-
-      <Box pt={4} />
-      {meta.pending && (
-        <Box textAlign="center">
-          <ESLoader />
+    <>
+      <Box pt={4} px={5} className={classes.root}>
+        <Box display="flex">
+          <SquareInput
+            value={keyword}
+            placeholder={i18n.t('common:search_by_keyword')}
+            onChange={(e) => setKeyword(e.target.value)}
+            onBlur={() => {
+              setTimeout(() => {
+                document.body.classList.remove('has-sticky-div')
+              }, 100)
+              focusEvent.onBlur()
+            }}
+            onFocus={() => {
+              document.body.classList.add('has-sticky-div')
+              focusEvent.onFocus()
+            }}
+            fullWidth
+          />
+          <Button onClick={handleClick} className={classes.searchBtn} variant="contained" color="primary">
+            {i18n.t('common:search.search')}
+          </Button>
         </Box>
-      )}
+
+        <Box pt={4} className={classes.bottomSpace} />
+        {meta.pending && (
+          <Box textAlign="center">
+            <ESLoader />
+          </Box>
+        )}
+      </Box>
       {meta.loaded && !meta.pending && children}
-    </Box>
+    </>
   )
 }
 
