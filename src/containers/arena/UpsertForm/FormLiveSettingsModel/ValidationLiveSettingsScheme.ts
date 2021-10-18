@@ -70,10 +70,6 @@ export const validationScheduleScheme = (): any => {
           .positive(i18n.t('common:streaming_setting_screen.validation.point_ticket_limit'))
           .integer(i18n.t('common:streaming_setting_screen.validation.point_ticket_limit')),
       }),
-      sell_optional: Yup.boolean().when(['use_ticket'], {
-        is: true,
-        then: Yup.boolean().required(i18n.t('common:streaming_setting_screen.validation.input_required')),
-      }),
 
       sell_ticket_start_time: Yup.date()
         .nullable()

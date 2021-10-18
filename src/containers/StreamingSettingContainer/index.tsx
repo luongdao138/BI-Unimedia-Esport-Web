@@ -60,7 +60,6 @@ const StreamingSettingContainer: React.FC<{ default_tab: any }> = ({ default_tab
     initialValues: initialValues,
     validationSchema: validationLiveSettingsScheme(),
     enableReinitialize: true,
-    validateOnChange: false,
     validateOnBlur: false,
     onSubmit: () => {
       //TODO: smt
@@ -71,7 +70,6 @@ const StreamingSettingContainer: React.FC<{ default_tab: any }> = ({ default_tab
     initialValues: initialScheduleValues,
     validationSchema: validationScheduleScheme(),
     enableReinitialize: true,
-    validateOnChange: false,
     validateOnBlur: false,
     onSubmit: () => {
       //TODO: smt
@@ -81,7 +79,6 @@ const StreamingSettingContainer: React.FC<{ default_tab: any }> = ({ default_tab
     initialValues: initialDistributorsValues,
     validationSchema: validationLDistributorScheme(),
     enableReinitialize: true,
-    validateOnChange: false,
     validateOnBlur: false,
     onSubmit: () => {
       //TODO: smt
