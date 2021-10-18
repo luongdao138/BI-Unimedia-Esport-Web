@@ -92,31 +92,28 @@ const TopicRowItem: React.FC<TopicRowItemProps> = ({
 
     const parts = String(content).split(keyword)
 
-    return lastCommentData?.content ? (
+    return isSearch && parts.length > 1 ? (
+      <Box>
+        <Typography component="span" variant="body2">
+          <Highlight search={keyword} contentRect={contentRect}>
+            {'1a' + content}
+          </Highlight>
+        </Typography>
+      </Box>
+    ) : lastCommentData?.content ? (
       isOnlyTitle ? (
         lastCommentData.content
       ) : (
-        <>
-          {isSearch && parts.length > 1 ? (
-            <Box>
-              <Typography component="span" variant="body2">
-                <Highlight search={keyword} contentRect={contentRect}>
-                  {content}
-                </Highlight>
-              </Typography>
-            </Box>
+        <Box>
+          {isSearch ? (
+            <Typography component="span" className={classes.comment_no}>
+              {lastCommentData.comment_no}
+            </Typography>
           ) : null}
-          <Box>
-            {isSearch ? (
-              <Typography component="span" className={classes.comment_no}>
-                {lastCommentData.comment_no}
-              </Typography>
-            ) : null}
-            <Highlight search={keyword} contentRect={contentRect}>
-              {lastCommentData.content}
-            </Highlight>
-          </Box>
-        </>
+          <Highlight search={keyword} contentRect={contentRect}>
+            {lastCommentData.content}
+          </Highlight>
+        </Box>
       )
     ) : comment_count === 0 ? (
       ''
