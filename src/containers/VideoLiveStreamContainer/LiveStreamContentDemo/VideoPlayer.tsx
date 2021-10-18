@@ -87,7 +87,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     // changeIsEndLive,
     // changeIsPausingLive,
     liveStreamInfo,
-    // changeSeekCount,
+    changeSeekCount,
   } = useDetailVideo()
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'), { noSsr: true })
@@ -446,6 +446,10 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   const handleReloadTime = () => {
     // document.querySelector("video").load()
     videoEl.current.currentTime = durationPlayer
+    setPlayedSeconds(durationPlayer)
+    const newDurationPlayer = Math.floor(durationPlayer)
+    changeVideoTime(newDurationPlayer, newDurationPlayer)
+    changeSeekCount(newDurationPlayer)
   }
 
   return (
