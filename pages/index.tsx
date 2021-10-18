@@ -5,7 +5,6 @@ import i18n from '@locales/i18n'
 import { useRouter } from 'next/router'
 import StreamLayout from '@layouts/StreamLayout'
 import VideoLiveStreamContainer from '@containers/VideoLiveStreamContainer'
-import PlainLayoutNoHeader from '@layouts/PlainLayoutNoHeader'
 
 const TopPage: PageWithLayoutType = () => {
   const router = useRouter()
@@ -20,11 +19,9 @@ const TopPage: PageWithLayoutType = () => {
     )
   }
   return (
-    <PlainLayoutNoHeader>
-      <StreamLayout noTopPadding minimizeLayout loginRequired={false} footer={false}>
-        <VideoLiveStreamContainer />
-      </StreamLayout>
-    </PlainLayoutNoHeader>
+    <StreamLayout noTopPadding minimizeLayout loginRequired={false} footer={false}>
+      <VideoLiveStreamContainer />
+    </StreamLayout>
   )
 }
 

@@ -12,6 +12,7 @@ import useDetailVideo from '../useDetailVideo'
 import ESLoader from '@components/Loader'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
 import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
+import SmallLoader from '@components/Loader/SmallLoader'
 
 type ProgramInfoProps = {
   video_id?: string | string[]
@@ -29,7 +30,7 @@ const ProgramInfo: React.FC<ProgramInfoProps> = ({ video_id }) => {
   const getDescription = CommonHelper.splitToLinkifyComponent(detailVideoResult?.description)
 
   const [descriptionCollapse, setDescriptionCollapse] = useState(true)
-  const [descriptionCanTruncated, setDescriptionCanTruncated] = useState(false)
+  const [descriptionCanTruncated, setDescriptionCanTruncated] = useState(0 /*0: init, 1: true, -1: false*/)
 
   const [page, setPage] = useState<number>(1)
   const [hasMore, setHasMore] = useState(true)
@@ -47,7 +48,9 @@ const ProgramInfo: React.FC<ProgramInfoProps> = ({ video_id }) => {
 
   useEffect(() => {
     if (getDescription) {
-      setDescriptionCanTruncated(isTruncated())
+      setTimeout(() => {
+        setDescriptionCanTruncated(isTruncated())
+      }, 700)
     }
   }, [getDescription.length])
   useEffect(() => {
@@ -107,11 +110,30 @@ const ProgramInfo: React.FC<ProgramInfoProps> = ({ video_id }) => {
   const isTruncated = () => {
     const descriptionDiv = document.getElementById('program-info-description')
     if (!descriptionDiv) {
-      return false
+      return -1
     }
-    return descriptionDiv.offsetHeight < descriptionDiv.scrollHeight
+    return descriptionDiv.offsetHeight < descriptionDiv.scrollHeight ? 1 : -1
   }
 
+  const seeMoreButton = () => {
+    return descriptionCanTruncated === 0 ? (
+      <div
+        style={{
+          margin: '10px 0 0 10px',
+          height: '21px',
+        }}
+      >
+        <SmallLoader />
+      </div>
+    ) : (
+      <Box onClick={toggleDescriptionCollapse} className={classes.seeMoreContainer}>
+        <Typography className={classes.seeMoreTitle}>
+          {descriptionCollapse ? i18n.t('common:live_stream_screen.view_more') : i18n.t('common:live_stream_screen.view_less')}
+        </Typography>
+        <Icon className={`fa ${descriptionCollapse ? 'fa-angle-down' : 'fa-angle-up'} ${classes.angleDownIcon}`} fontSize="small" />
+      </Box>
+    )
+  }
   const renderDescription = () => {
     return (
       <>
@@ -130,14 +152,7 @@ const ProgramInfo: React.FC<ProgramInfoProps> = ({ video_id }) => {
             )
           })}
         </div>
-        {descriptionCanTruncated && (
-          <Box onClick={toggleDescriptionCollapse} className={classes.seeMoreContainer}>
-            <Typography className={classes.seeMoreTitle}>
-              {descriptionCollapse ? i18n.t('common:live_stream_screen.view_more') : i18n.t('common:live_stream_screen.view_less')}
-            </Typography>
-            <Icon className={`fa ${descriptionCollapse ? 'fa-angle-down' : 'fa-angle-up'} ${classes.angleDownIcon}`} fontSize="small" />
-          </Box>
-        )}
+        {descriptionCanTruncated !== -1 ? seeMoreButton() : <div style={{ height: '31px' }} />}
       </>
     )
   }
