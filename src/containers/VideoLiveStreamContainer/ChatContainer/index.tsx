@@ -34,7 +34,7 @@ import LoginRequired from '@containers/LoginRequired'
 import moment from 'moment'
 import { STATUS_SEND_MESS } from '@constants/common.constants'
 import { v4 as uuidv4 } from 'uuid'
-import { DELAY_SECONDS } from '@constants/common.constants'
+// import { DELAY_SECONDS } from '@constants/common.constants'
 
 export type ChatContainerProps = {
   onPressDonate?: (donatedPoint: number, purchaseComment: string) => void
@@ -245,14 +245,14 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     const isStreaming = (() => {
       // || liveStreamInfo.is_pausing_live
       console.log('33-played->streaming->range', playedSecond, streamingSecond, streamingSecond - playedSecond)
-      console.log('🚀 ~ isStreaming ~ ---0000', playedSecond + DELAY_SECONDS >= streamingSecond)
-      if (videoType === STATUS_VIDEO.LIVE_STREAM) {
-        if (streamingSecond === Infinity) {
+      console.log('🚀 ~ isStreaming ~ ---0000', playedSecond + 15 >= streamingSecond)
+      if(videoType === STATUS_VIDEO.LIVE_STREAM){
+        if(streamingSecond === Infinity){
           console.log('🚀 ~ isStreaming ~ 0000101111')
           return true
         }
-        if (playedSecond >= streamingSecond || playedSecond + DELAY_SECONDS >= streamingSecond) {
-          // if ((playedSecond >= streamingSecond) && videoType === STATUS_VIDEO.LIVE_STREAM) {
+        if (playedSecond >= streamingSecond) {
+        // if ((playedSecond >= streamingSecond || playedSecond + DELAY_SECONDS >= streamingSecond)) {
           return true
         }
       }
