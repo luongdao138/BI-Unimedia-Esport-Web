@@ -44,7 +44,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   // endLive,
   isArchived,
   type,
-  videoType
+  videoType,
 }) => {
   const checkStatusVideo = 1
   const classes = useStyles({ checkStatusVideo })
@@ -60,7 +60,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   const [playedSeconds, setPlayedSeconds] = useState(0)
   const [autoPlay, setAutoPlay] = useState(true)
   const [isStreaming, setIsStreaming] = useState(true)
-  console.log("🚀 ~ isStreaming--9999", isStreaming)
+  console.log('🚀 ~ isStreaming--9999', isStreaming)
   // console.log('🚀 ~ playedSeconds', playedSeconds)
   // const reactPlayerRef = useRef(null)
   const playerContainerRef = useRef(null)
@@ -91,7 +91,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     // changeIsEndLive,
     // changeIsPausingLive,
     liveStreamInfo,
-    changeSeekCount,
+    // changeSeekCount,
   } = useDetailVideo()
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'), { noSsr: true })
@@ -300,15 +300,15 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   const onUpdateVideoTime = (videoInfo) => {
     const newPlayedSecondTime = videoInfo.currentTime
     let durationTime = videoInfo.duration - DELAY_SECONDS
-    console.log("🚀 ~ videoEl.current?.addEventListener ~ isStreaming", isStreaming)
+    console.log('🚀 ~ videoEl.current?.addEventListener ~ isStreaming', isStreaming)
     // handle delayed time when is living
-    if(isStreaming && videoType === STATUS_VIDEO.LIVE_STREAM){
-      const isDelayedTime = (newPlayedSecondTime < durationTime) || (newPlayedSecondTime > durationTime)
-      console.log("🚀 ~ videoEl.current?.addEventListener ~ isDelayedTime", isDelayedTime)
+    if (isStreaming && videoType === STATUS_VIDEO.LIVE_STREAM) {
+      const isDelayedTime = newPlayedSecondTime < durationTime || newPlayedSecondTime > durationTime
+      console.log('🚀 ~ videoEl.current?.addEventListener ~ isDelayedTime', isDelayedTime)
       // reset duration time to equal played time when live is delayed
-      if(isDelayedTime) {
+      if (isDelayedTime) {
         durationTime = newPlayedSecondTime
-      } 
+      }
     }
     const newDurationTime = durationTime
     // const newDurationTime = videoInfo.duration
@@ -329,12 +329,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       // console.log("🚀 ~ videoEl.current.addEventListener ~ event", event)
       // const delaySeconds = 15
       const videoInfo = event.target
-      console.log(
-        '->current->duration-> range',
-        videoInfo.currentTime,
-        videoInfo.duration,
-        videoInfo.duration - videoInfo.currentTime
-      )
+      console.log('->current->duration-> range', videoInfo.currentTime, videoInfo.duration, videoInfo.duration - videoInfo.currentTime)
       videoInfo ? handleUpdateVideoTime.current(videoInfo) : ''
     })
 
@@ -458,11 +453,6 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   const handleReloadTime = () => {
     // document.querySelector("video").load()
     videoEl.current.currentTime = durationPlayer
-    setPlayedSeconds(durationPlayer)
-    const newDurationPlayer = Math.floor(durationPlayer)
-    changeVideoTime(newDurationPlayer, newDurationPlayer)
-    changeSeekCount(newDurationPlayer)
-    setIsStreaming(true)
   }
 
   return (
@@ -516,9 +506,14 @@ const VideoPlayer: React.FC<PlayerProps> = ({
         </div>
         {!androidPl && !iPhonePl && (
           <div className={classes.processControl}>
-            <SeekBar videoRef={videoEl} durationsPlayer={durationPlayer} currentTime={playedSeconds} changeStatusStreaming={(status) => {
-              setIsStreaming(status)
-            }}/>
+            <SeekBar
+              videoRef={videoEl}
+              durationsPlayer={durationPlayer}
+              currentTime={playedSeconds}
+              changeStatusStreaming={(status) => {
+                setIsStreaming(status)
+              }}
+            />
             <div className={classes.controlOut}>
               <ControlBarPlayer
                 videoRef={videoEl}

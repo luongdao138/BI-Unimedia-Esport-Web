@@ -68,7 +68,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: 'white',
     textAlign: 'center',
   },
-  [theme.breakpoints.down(415)]: {
+  [theme.breakpoints.down(419)]: {
     container: {
       paddingTop: 0,
     },

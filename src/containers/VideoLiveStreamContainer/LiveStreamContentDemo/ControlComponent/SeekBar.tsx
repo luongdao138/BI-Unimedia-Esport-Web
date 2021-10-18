@@ -39,7 +39,7 @@ const SeekBar: React.FC<Props & SliderProps> = ({ currentTime, durationsPlayer, 
     setTimePlayed(value)
     const newSecond = (value * durationsPlayer) / 100
     videoRef.current.currentTime = newSecond
-    if(value === 100){
+    if (value === 100) {
       changeStatusStreaming(true)
     } else {
       changeStatusStreaming(false)
