@@ -19,7 +19,7 @@ const TopPage: PageWithLayoutType = () => {
     )
   }
   return (
-    <StreamLayout noTopPadding minimizeLayout loginRequired={false} footer={false}>
+    <StreamLayout minimizeLayout loginRequired={false} footer={false}>
       <VideoLiveStreamContainer />
     </StreamLayout>
   )

@@ -21,10 +21,9 @@ interface StreamLayoutProps {
   footer?: boolean
   loginRequired?: boolean
   minimizeLayout?: boolean
-  noTopPadding?: boolean
 }
 
-const StreamLayout: React.FC<StreamLayoutProps> = ({ children, patternBg, footer, loginRequired, minimizeLayout, noTopPadding }) => {
+const StreamLayout: React.FC<StreamLayoutProps> = ({ children, patternBg, footer, loginRequired, minimizeLayout }) => {
   const [open, setOpen] = useState<boolean>(false)
   const isAuthenticated = useAppSelector(getIsAuthenticated)
   const dispatch = useAppDispatch()
@@ -90,7 +89,7 @@ const StreamLayout: React.FC<StreamLayoutProps> = ({ children, patternBg, footer
             </Box>
           </aside>
           <main role="minimize_main" className="minimize_main">
-            <div className="minimize_content_wrapper" style={noTopPadding && { paddingTop: 0 }}>
+            <div className="minimize_content_wrapper">
               <div className="minimize_content">{renderContent()}</div>
               {footer ? <Footer /> : ''}
             </div>
