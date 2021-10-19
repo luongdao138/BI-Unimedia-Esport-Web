@@ -91,7 +91,18 @@ const DonatePointsConfirmModal: React.FC<ModalProps> = ({
   )
 }
 
-export default memo(DonatePointsConfirmModal)
+export default memo(DonatePointsConfirmModal, (prevProps, nextProps) => {
+  if (
+    prevProps.hasError !== nextProps.hasError ||
+    prevProps.showConfirmModal !== nextProps.showConfirmModal ||
+    prevProps.myPoint !== nextProps.myPoint ||
+    prevProps.ticketPoint !== nextProps.ticketPoint ||
+    prevProps.msgContent !== nextProps.msgContent
+  ) {
+    return false
+  }
+  return true
+})
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
