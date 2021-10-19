@@ -90,7 +90,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
   // }
 
   const checkStatusRecord = (data) => {
-    if (!data?.data?.stream_key || data?.data?.status === 1) {
+    if (!!data?.data?.id || data?.data?.status === 1) {
       // onReNewUrlAndKey(TYPE_SECRET_KEY.URL, TYPE_SECRET_KEY.GET, false)
       setShowReNew(false)
     } else {
@@ -970,7 +970,9 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
                 </Box>
                 <Box className={classes.actionButton}>
                   <ButtonPrimary round fullWidth onClick={onConfirm}>
-                    {showReNew ? i18n.t('common:streaming_setting_screen.update') : t('common:delivery_reservation_tab.delivery_data_save')}
+                    {showReNew && !isLive
+                      ? t('common:delivery_reservation_tab.delivery_data_save')
+                      : i18n.t('common:streaming_setting_screen.update')}
                   </ButtonPrimary>
                 </Box>
               </Box>
