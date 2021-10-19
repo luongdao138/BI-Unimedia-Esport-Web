@@ -28,12 +28,6 @@ interface PlayerProps {
   isArchived?: boolean
 }
 
-declare global {
-  interface Window {
-    IVSPlayer: any
-  }
-}
-
 const VideoPlayer: React.FC<PlayerProps> = ({
   src,
   // // statusVideo,
@@ -49,12 +43,8 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   const checkStatusVideo = 1
   const classes = useStyles({ checkStatusVideo })
   // const { width: videoDisplayWidth } = useWindowDimensions(0)
-
-  // const player = useRef(null)
   const videoEl = useRef(null)
 
-  // const { IVSPlayer } = window
-  // const isPlayerSupported = IVSPlayer?.isPlayerSupported
   const [durationPlayer, setDurationPlayer] = useState(0)
   // console.log('🚀 ~ durationPlayer', durationPlayer)
   const [playedSeconds, setPlayedSeconds] = useState(0)
@@ -278,6 +268,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       hls.on(Hls.Events.MEDIA_ATTACHED, handleMedia)
     }
     return () => {
+      hls.detachMedia()
       // hls.off(Hls.Events.MEDIA_ATTACHED, handleMedia)
       // hls.off(Hls.Events.LEVEL_LOADED, handleLoaded)
       // hls.off(Hls.Events.ERROR, handleError)
@@ -329,12 +320,13 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       // console.log("🚀 ~ videoEl.current.addEventListener ~ event", event)
       // const delaySeconds = 15
       const videoInfo = event.target
-      console.log('->current->duration-> range', videoInfo.currentTime, videoInfo.duration, videoInfo.duration - videoInfo.currentTime)
+      // console.log('->current->duration-> range', videoInfo.currentTime, videoInfo.duration, videoInfo.duration - videoInfo.currentTime)
+      console.log('->current->duration-> range')
       videoInfo ? handleUpdateVideoTime.current(videoInfo) : ''
     })
 
     videoEl.current?.addEventListener('durationchange', (event) => {
-      console.log('------->>durationchange<<<-----', event.target.duration)
+      console.log('------->>durationchange<<<-----', event.target.duration, playing)
     })
 
     videoEl.current?.addEventListener('volumechange', () => {
@@ -392,7 +384,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       setVisible({ ...visible, loading: true, videoLoaded: true })
     })
     videoEl.current?.addEventListener('playing', (event) => {
-      console.log('=================playing===================')
+      console.log('=================playing===================', playing)
       console.log(event)
       setVisible({ ...visible, loading: false, videoLoaded: false })
       // setState({...state, playing:true})
@@ -400,6 +392,10 @@ const VideoPlayer: React.FC<PlayerProps> = ({
 
     return () => {
       // videoEl.current.removeEventListener('timeupdate',onStateChange)
+      //@ts-ignore
+      window.onscroll = () => {
+        //TODO: remove event onscroll window
+      }
     }
   }, [])
   const toggleFullScreen1 = () => {
@@ -460,6 +456,30 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     setIsStreaming(true)
   }
 
+  // const onObserve = () => {
+  //   if (!!window.IntersectionObserver) {
+  //     let video = document.querySelector('video');
+  //     let observer = new IntersectionObserver((entries, observer) => {
+  //       console.log('=-===onObserve====', playing, entries, observer)
+  //       entries.forEach(entry => {
+  //         // if(entry.intersectionRatio!=1  && !video.paused){
+  //         //   video.pause();
+  //         // }
+  //         // else
+  //         if (playing) { video.play(); }
+
+  //       });
+  //     }, { threshold: 1 });
+  //     observer.observe(video);
+  //   }
+  // }
+
+  window.onscroll = () => {
+    if (playing) {
+      videoEl.current.play()
+    }
+  }
+
   return (
     <div className={classes.videoPlayer}>
       {(iPhonePl || androidPl) && (
@@ -482,15 +502,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       <div ref={playerContainerRef} className={classes.playerContainer}>
         <div style={{ height: '100%' }} onClick={handlePlayPauseOut}>
           {!isMobile && !androidPl && !iPhonePl && (
-            <video
-              id="video"
-              ref={videoEl}
-              muted={muted}
-              style={{ width: '100%', height: calculateVideoHeight() }}
-              // src={'https://cowell-web.exelab.jp/live/CW352202110051226/index.m3u8'}
-              autoPlay={autoPlay}
-              // poster={thumbnail ?? '/images/live_stream/thumbnail_default.png'}
-            />
+            <video id="video" ref={videoEl} muted={muted} style={{ width: '100%', height: calculateVideoHeight() }} autoPlay={autoPlay} />
           )}
           {!androidPl && !iPhonePl && !mediaOverlayIsShown && loading && (
             <div className={classes.playOverView}>
