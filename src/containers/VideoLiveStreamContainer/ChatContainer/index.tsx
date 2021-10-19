@@ -243,6 +243,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     })
 
     const isStreaming = (() => {
+      // return true
       // || liveStreamInfo.is_pausing_live
       console.log('33-played->streaming->range', playedSecond, streamingSecond, streamingSecond - playedSecond)
       console.log('🚀 ~ isStreaming ~ ---0000', playedSecond + 15 >= streamingSecond)
