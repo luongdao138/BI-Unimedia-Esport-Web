@@ -507,47 +507,48 @@ const VideoDetail: React.FC = () => {
   }
 
   return (
-    <Box className={classes.root}>
-      {isPendingPurchaseTicket && <ESLoader />}
-      {isPendingPurchaseSuperChat && <FullESLoader open={isPendingPurchaseSuperChat} />}
-      <Box className={classes.container} style={{ width: isMobile ? '100%' : componentsSize.videoWidth }}>
-        {_.isEmpty(detailVideoResult) && isVideoFreeToWatch === -1 ? (
-          <Box
-            style={{
-              backgroundColor: '#6A6A6C',
-              width: '100%',
-              height: componentsSize.videoHeight,
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              textAlign: 'center',
-              borderRadius: 8,
-            }}
-          >
-            <ESLoader />
-          </Box>
-        ) : (
-          <>
-            <LiveStreamContent
-              // componentsSize={componentsSize} //GHÉP THẬT THÌ PHẢI BỎ COMMENT RA NHÉ
-              isArchived={isArchived}
-              video_id={getVideoId()}
-              userHasViewingTicket={userHasViewingTicket()}
-              videoType={videoStatus}
-              freeToWatch={isVideoFreeToWatch}
-              ticketAvailableForSale={isTicketAvailableForSale()}
-              softKeyboardIsShown={softKeyboardIsShown}
-              ticketPrice={detailVideoResult?.ticket_price}
-              clickButtonPurchaseTicket={handlePurchaseTicket}
-              onVideoEnd={onVideoEnd}
-            />
-            <Grid container direction="row" className={classes.contentContainer}>
-              {getTabs()}
-              {getContent()}
-            </Grid>
-          </>
-        )}
-        <PurchaseTicketSuperChat
+    <React.Fragment>
+      <Box className={classes.root}>
+        {isPendingPurchaseTicket && <ESLoader />}
+        {isPendingPurchaseSuperChat && <FullESLoader open={isPendingPurchaseSuperChat} />}
+        <Box className={classes.container} style={{ width: isMobile ? '100%' : componentsSize.videoWidth }}>
+          {_.isEmpty(detailVideoResult) && isVideoFreeToWatch === -1 ? (
+            <Box
+              style={{
+                backgroundColor: '#6A6A6C',
+                width: '100%',
+                height: componentsSize.videoHeight,
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                textAlign: 'center',
+                borderRadius: 8,
+              }}
+            >
+              <ESLoader />
+            </Box>
+          ) : (
+            <>
+              <LiveStreamContent
+                // componentsSize={componentsSize} //GHÉP THẬT THÌ PHẢI BỎ COMMENT RA NHÉ
+                isArchived={isArchived}
+                video_id={getVideoId()}
+                userHasViewingTicket={userHasViewingTicket()}
+                videoType={videoStatus}
+                freeToWatch={isVideoFreeToWatch}
+                ticketAvailableForSale={isTicketAvailableForSale()}
+                softKeyboardIsShown={softKeyboardIsShown}
+                ticketPrice={detailVideoResult?.ticket_price}
+                clickButtonPurchaseTicket={handlePurchaseTicket}
+                onVideoEnd={onVideoEnd}
+              />
+              <Grid container direction="row" className={classes.contentContainer}>
+                {getTabs()}
+                {getContent()}
+              </Grid>
+            </>
+          )}
+          {/* <PurchaseTicketSuperChat
           myPoints={myPoint}
           donatedPoints={detailVideoResult?.ticket_price}
           showModal={showPurchaseTicketModal}
@@ -569,32 +570,55 @@ const VideoDetail: React.FC = () => {
           lackedPoint={lackedPoint}
           showModalPurchasePoint={showModalPurchasePoint}
           setShowModalPurchasePoint={(value) => setShowModalPurchasePoint(value)}
-        />
-        `
-      </Box>
-      {!isMobile ? (
-        _.isEmpty(detailVideoResult) ? (
-          <Box
-            style={{
-              display: 'flex',
-              marginLeft: 24,
-              marginRight: 24,
-              backgroundColor: 'transparent',
-              height: '100%',
-              width: componentsSize.chatWidth,
-              flexDirection: 'column',
-              borderRadius: 8,
-            }}
-          >
-            <PreloadChatContainer />
-          </Box>
+        /> */}
+        </Box>
+        {!isMobile ? (
+          _.isEmpty(detailVideoResult) ? (
+            <Box
+              style={{
+                display: 'flex',
+                marginLeft: 24,
+                marginRight: 24,
+                backgroundColor: 'transparent',
+                height: '100%',
+                width: componentsSize.chatWidth,
+                flexDirection: 'column',
+                borderRadius: 8,
+              }}
+            >
+              <PreloadChatContainer />
+            </Box>
+          ) : (
+            sideChatContainer()
+          )
         ) : (
-          sideChatContainer()
-        )
-      ) : (
-        ''
-      )}
-    </Box>
+          ''
+        )}
+      </Box>
+      <PurchaseTicketSuperChat
+        myPoints={myPoint}
+        donatedPoints={detailVideoResult?.ticket_price}
+        showModal={showPurchaseTicketModal}
+        setShowModal={setShowPurchaseTicketModal}
+        handlePurchaseTicket={doConfirmPurchaseTicket}
+      />
+      <DialogLoginContainer showDialogLogin={showDialogLogin} onCloseDialogLogin={handleCloseDialogLogin} />
+      <DonatePointsConfirmModal
+        hasError={errorPurchase}
+        showConfirmModal={showConfirmModal}
+        handleClose={handleCloseConfirmModal}
+        myPoint={myPoint}
+        ticketPoint={detailVideoResult?.ticket_price}
+        msgContent={purchaseComment}
+        handleConfirm={handleConfirmPurchaseSuperChat}
+      />
+      <DonatePoints
+        myPoint={myPoint}
+        lackedPoint={lackedPoint}
+        showModalPurchasePoint={showModalPurchasePoint}
+        setShowModalPurchasePoint={(value) => setShowModalPurchasePoint(value)}
+      />
+    </React.Fragment>
   )
 }
 export default VideoDetail

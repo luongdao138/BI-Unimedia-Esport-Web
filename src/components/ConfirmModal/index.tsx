@@ -69,6 +69,9 @@ const useStyles = makeStyles((theme) => ({
       borderRadius: 10,
       maxWidth: 754,
     },
+    '& .MuiDialog-paperScrollPaper': {
+      display: 'unset',
+    },
   },
   [theme.breakpoints.down(321)]: {
     dialog_container: {
