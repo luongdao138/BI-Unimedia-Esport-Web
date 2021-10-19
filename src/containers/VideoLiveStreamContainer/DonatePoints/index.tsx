@@ -281,6 +281,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   [theme.breakpoints.down(769)]: {
     dialogContainer: {
       padding: '0 24px',
+      width: '100%',
     },
   },
   [theme.breakpoints.down(419)]: {

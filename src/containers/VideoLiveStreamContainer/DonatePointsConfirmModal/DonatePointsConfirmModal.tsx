@@ -138,10 +138,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: 220,
     height: 50,
     marginRight: 16,
-    '&:hover': {
-      boxShadow: 'none',
-      background: Colors.transparent,
-    },
     [theme.breakpoints.down('sm')]: {
       order: 1,
       marginRight: 0,
@@ -149,10 +145,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   actionBtnConfirm: {
     width: '100%',
-    '&:hover': {
-      boxShadow: 'none',
-      background: Colors.transparent,
-    },
     [theme.breakpoints.down('sm')]: {
       order: 0,
       marginBottom: 24,
