@@ -101,7 +101,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
   // }
 
   const checkStatusRecord = (data) => {
-    if (!!data?.data?.id || data?.data?.status === 1) {
+    if (data?.data?.status === 1) {
       // onReNewUrlAndKey(TYPE_SECRET_KEY.URL, TYPE_SECRET_KEY.GET, false)
       setShowReNew(false)
     } else {
@@ -834,6 +834,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
                         setType(TYPE_RM.SELL)
                         formik.handleBlur(e)
                       }}
+                      minutesStep={1}
                     />
                   ) : (
                     <Box pt={1}>
