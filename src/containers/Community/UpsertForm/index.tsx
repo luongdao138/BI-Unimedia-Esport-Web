@@ -138,6 +138,11 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
   const renderEditButton = () => {
     return (
       <Box display="flex" flexDirection="column" alignItems="center" className={classes.editButtonContainer}>
+        {isDuplicate && (
+          <Box textAlign="center" style={{ marginBottom: 16 }} color={Colors.secondary} px={1}>
+            <Typography variant="body2">{i18n.t('common:community_create.title_already_in_use')}</Typography>
+          </Box>
+        )}
         <ButtonPrimary
           onClick={handleSetConfirm}
           round
