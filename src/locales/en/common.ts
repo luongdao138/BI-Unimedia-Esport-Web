@@ -1515,6 +1515,7 @@ export default {
       max_time_schedule_live: '配信可能時間内の日時を入力してください',
       public_time_less: 'アーカイブ配信終了日時は、配信日時以降の日付を入力してください',
       sell_less_than_start: 'チケット販売開始日時は、配信開始予定日時より前の日付を入力してください',
+      start_time_at_least_10min: '配信開始予定日時は、10分以上空けた日時を入力してください',
     },
     shared_it: '共有する',
     dont_share: '共有しない',

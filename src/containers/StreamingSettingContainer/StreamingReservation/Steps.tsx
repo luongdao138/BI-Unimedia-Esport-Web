@@ -1,5 +1,5 @@
 import { Box, Grid, Icon, IconButton, InputAdornment, makeStyles, Theme, Typography } from '@material-ui/core'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import _ from 'lodash'
 import { FormikProps } from 'formik'
 import ESInput from '@components/Input'
@@ -66,7 +66,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
 
   const { getStreamUrlAndKey, isPending, setLiveStreamConfirm, scheduleInformation, isPendingSetting } = useLiveSetting()
   const { checkNgWordFields, checkNgWordByField } = useCheckNgWord()
-  const { checkDisplayError } = LiveStreamSettingHelper
+  const { checkDisplayError, checkDisplayErrorOnChange, checkDisplayErrorOnSubmit, getDisplayErrorField } = LiveStreamSettingHelper
   const { userProfile } = useGetProfile()
   const paid_delivery_flag = userProfile?.attributes?.paid_delivery_flag
   const [categoryName, setCategoryName] = useState('')
@@ -76,6 +76,17 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
   const [counter, setCounter] = useState<number>(0)
   const [disable, setDisable] = useState<boolean>(false)
   const [type, setType] = useState(TYPE_RM.NEW)
+  const [validateField, setValidateField] = useState('')
+
+  const formRef = {
+    title: useRef(null),
+    description: useRef(null),
+    stream_notify_time: useRef(null),
+    stream_schedule_start_time: useRef(null),
+    stream_schedule_end_time: useRef(null),
+    video_publish_end_time: useRef(null),
+    sell_ticket_start_time: useRef(null),
+  }
 
   useEffect(() => {
     // getLiveSetting()
@@ -174,9 +185,15 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
   }
 
   const onValidateForm = () => {
+    setValidateField('all')
     formik.validateForm().then((err) => {
       if (_.isEmpty(err.stepSettingTwo)) {
         onClickNext()
+      } else {
+        const errorField = getDisplayErrorField(formik)
+        if (formRef[errorField]) {
+          window.scrollTo({ behavior: 'smooth', top: formRef[errorField].current.offsetTop - 200 })
+        }
       }
     })
   }
@@ -382,7 +399,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
             </Box>
           </Box>
           <Box pb={2} className={classes.wrap_input}>
-            <Box className={classes.firstItem}>
+            <div ref={formRef['title']} className={classes.firstItem}>
               <ESInput
                 id="title"
                 name="stepSettingTwo.title"
@@ -391,17 +408,29 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
                 labelPrimary={i18n.t('common:streaming_setting_screen.label_input_title')}
                 fullWidth
                 value={isFirstStep() ? formik?.values?.stepSettingTwo?.title : formik?.values?.stepSettingTwo?.title.trim()}
-                onChange={formik.handleChange}
-                helperText={formik?.touched?.stepSettingTwo?.title && formik?.errors?.stepSettingTwo?.title}
-                error={formik?.touched?.stepSettingTwo?.title && !!formik?.errors?.stepSettingTwo?.title}
+                onChange={(e) => {
+                  formik.handleChange(e)
+                  setValidateField('title')
+                }}
+                onBlur={formik.handleBlur}
+                helperText={
+                  validateField !== 'all'
+                    ? checkDisplayErrorOnChange(formik, 'title', validateField).helperText
+                    : checkDisplayErrorOnSubmit(formik, 'title').helperText
+                }
+                error={
+                  validateField !== 'all'
+                    ? checkDisplayErrorOnChange(formik, 'title', validateField).error
+                    : checkDisplayErrorOnSubmit(formik, 'title').error
+                }
                 size="big"
                 disabled={!isFirstStep()}
                 className={getAddClassByStep(classes.input_text)}
               />
-            </Box>
+            </div>
           </Box>
           <Box pb={1} className={classes.wrap_input}>
-            <Box className={classes.firstItem}>
+            <div ref={formRef['description']} className={classes.firstItem}>
               {isFirstStep() ? (
                 <ESFastInput
                   id="description"
@@ -412,9 +441,21 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
                   labelPrimary={i18n.t('common:streaming_setting_screen.label_input_description')}
                   fullWidth
                   value={formik?.values?.stepSettingTwo?.description}
-                  onChange={formik.handleChange}
-                  helperText={formik?.touched?.stepSettingTwo?.description && formik?.errors?.stepSettingTwo?.description}
-                  error={formik?.touched?.stepSettingTwo?.description && !!formik?.errors?.stepSettingTwo?.description}
+                  onChange={(e) => {
+                    setValidateField('description')
+                    formik.handleChange(e)
+                  }}
+                  onBlur={formik.handleBlur}
+                  helperText={
+                    validateField !== 'all'
+                      ? checkDisplayErrorOnChange(formik, 'description', validateField).helperText
+                      : checkDisplayErrorOnSubmit(formik, 'description').helperText
+                  }
+                  error={
+                    validateField !== 'all'
+                      ? checkDisplayErrorOnChange(formik, 'description', validateField).error
+                      : checkDisplayErrorOnSubmit(formik, 'description').error
+                  }
                   size="big"
                   required
                   disabled={!isFirstStep()}
@@ -435,7 +476,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
                   </Linkify>
                 </>
               )}
-            </Box>
+            </div>
           </Box>
           <Box pb={2} className={classes.wrap_input}>
             <Box className={classes.firstItem}>
@@ -477,7 +518,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
             </Box>
           </Box>
           <Box pb={2} className={classes.wrap_input}>
-            <Box className={classes.firstItem}>
+            <div ref={formRef['stream_notify_time']} className={classes.firstItem}>
               <ESLabel label={i18n.t('common:delivery_reservation_tab.notification_datetime')} required />
               {isFirstStep() ? (
                 <ESInputDatePicker
@@ -487,17 +528,21 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
                   value={formik?.values?.stepSettingTwo?.stream_notify_time}
                   onChange={(date) => {
                     formik.setFieldValue('stepSettingTwo.stream_notify_time', date.toString())
+                    setValidateField('stream_notify_time')
                   }}
-                  onBlur={() => {
+                  onBlur={(e) => {
                     setType(TYPE_RM.NOTIFY)
+                    formik.handleBlur(e)
                   }}
                   helperText={
-                    (formik?.touched?.stepSettingTwo?.stream_notify_time && formik?.errors?.stepSettingTwo?.stream_notify_time) ||
-                    formik?.errors?.stepSettingTwo?.notify_live_end_date
+                    validateField !== 'all'
+                      ? checkDisplayErrorOnChange(formik, 'stream_notify_time', validateField).helperText
+                      : checkDisplayErrorOnSubmit(formik, 'stream_notify_time').helperText
                   }
                   error={
-                    (formik?.touched?.stepSettingTwo?.stream_notify_time && !!formik?.errors?.stepSettingTwo?.stream_notify_time) ||
-                    !!formik?.errors?.stepSettingTwo?.notify_live_end_date
+                    validateField !== 'all'
+                      ? checkDisplayErrorOnChange(formik, 'stream_notify_time', validateField).error
+                      : checkDisplayErrorOnSubmit(formik, 'stream_notify_time').error
                   }
                   disabled={disable}
                   minDateMessage={''}
@@ -514,10 +559,10 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
                   </Typography>
                 </Box>
               )}
-            </Box>
+            </div>
           </Box>
           <Box pb={2} className={classes.wrap_input}>
-            <Box className={classes.firstItem}>
+            <div ref={formRef['stream_schedule_start_time']} className={classes.firstItem}>
               <ESLabel label={i18n.t('common:delivery_reservation_tab.scheduled_delivery_start_datetime')} required />
               {isFirstStep() ? (
                 <ESInputDatePicker
@@ -525,15 +570,29 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
                   placeholder={i18n.t('common:delivery_reservation_tab.scheduled_delivery_start_datetime')}
                   fullWidth
                   value={formik?.values?.stepSettingTwo?.stream_schedule_start_time}
-                  onChange={(date) => formik.setFieldValue('stepSettingTwo.stream_schedule_start_time', date.toString())}
-                  helperText={checkDisplayError(formik, 'stream_schedule_start_time').helperText}
-                  error={checkDisplayError(formik, 'stream_schedule_start_time').error}
+                  onChange={(date) => {
+                    formik.setFieldValue('stepSettingTwo.stream_schedule_start_time', date.toString())
+                    setValidateField('stream_schedule_start_time')
+                  }}
+                  helperText={
+                    validateField !== 'all'
+                      ? checkDisplayErrorOnChange(formik, 'stream_schedule_start_time', validateField).helperText
+                      : checkDisplayErrorOnSubmit(formik, 'stream_schedule_start_time').helperText
+                  }
+                  error={
+                    validateField !== 'all'
+                      ? checkDisplayErrorOnChange(formik, 'stream_schedule_start_time', validateField).error
+                      : checkDisplayErrorOnSubmit(formik, 'stream_schedule_start_time').error
+                  }
                   disabled={disable}
                   minDateMessage={''}
                   InputProps={{
                     classes: { root: classes.root },
                   }}
                   minutesStep={1}
+                  onBlur={(e) => {
+                    formik.handleBlur(e)
+                  }}
                 />
               ) : (
                 <Box pt={1}>
@@ -542,10 +601,10 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
                   </Typography>
                 </Box>
               )}
-            </Box>
+            </div>
           </Box>
           <Box pb={2} className={classes.wrap_input}>
-            <Box className={classes.firstItem}>
+            <div ref={formRef['stream_schedule_end_time']} className={classes.firstItem}>
               <ESLabel label={i18n.t('common:delivery_reservation_tab.scheduled_end_datetime')} required />
               {isFirstStep() ? (
                 <ESInputDatePicker
@@ -553,15 +612,31 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
                   placeholder={i18n.t('common:delivery_reservation_tab.scheduled_end_datetime')}
                   fullWidth
                   value={formik?.values?.stepSettingTwo?.stream_schedule_end_time}
-                  onChange={(date) => formik.setFieldValue('stepSettingTwo.stream_schedule_end_time', date.toString())}
-                  helperText={checkDisplayError(formik, 'stream_schedule_end_time').helperText}
-                  error={checkDisplayError(formik, 'stream_schedule_end_time').error}
+                  onChange={(date) => {
+                    formik.setFieldValue('stepSettingTwo.stream_schedule_end_time', date.toString())
+                    setValidateField('stream_schedule_end_time')
+                  }}
+                  // helperText={checkDisplayError(formik, 'stream_schedule_end_time').helperText}
+                  // error={checkDisplayError(formik, 'stream_schedule_end_time').error}
+                  helperText={
+                    validateField !== 'all'
+                      ? checkDisplayErrorOnChange(formik, 'stream_schedule_end_time', validateField).helperText
+                      : checkDisplayErrorOnSubmit(formik, 'stream_schedule_end_time').helperText
+                  }
+                  error={
+                    validateField !== 'all'
+                      ? checkDisplayErrorOnChange(formik, 'stream_schedule_end_time', validateField).error
+                      : checkDisplayErrorOnSubmit(formik, 'stream_schedule_end_time').error
+                  }
                   disabled={disable}
                   minDateMessage={''}
                   InputProps={{
                     classes: { root: classes.root },
                   }}
                   minutesStep={1}
+                  onBlur={(e) => {
+                    formik.handleBlur(e)
+                  }}
                 />
               ) : (
                 <Box pt={1}>
@@ -570,11 +645,11 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
                   </Typography>
                 </Box>
               )}
-            </Box>
+            </div>
           </Box>
           {/* public time video archive */}
           <Box pb={2} className={classes.wrap_input} flexDirection="row" display="flex" alignItems="flex-end">
-            <Box className={classes.firstItem}>
+            <div ref={formRef['video_publish_end_time']} className={classes.firstItem}>
               <ESLabel label={i18n.t('common:streaming_setting_screen.public_time_title')} required={false} />
               {isFirstStep() ? (
                 <ESInputDatePicker
@@ -585,14 +660,16 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
                   onChange={(date) => {
                     const temp = moment(date).add(5, 's')
                     formik.setFieldValue('stepSettingTwo.video_publish_end_time', temp)
-                  }}
-                  onBlur={() => {
-                    setType(TYPE_RM.PUBLISH)
+                    setValidateField('stream_schedule_end_time')
                   }}
                   helperText={checkDisplayError(formik, 'video_publish_end_time').helperText}
                   error={checkDisplayError(formik, 'video_publish_end_time').error}
                   minDateMessage={''}
                   minutesStep={1}
+                  onBlur={(e) => {
+                    setType(TYPE_RM.PUBLISH)
+                    formik.handleBlur(e)
+                  }}
                 />
               ) : (
                 <Box pt={1}>
@@ -603,7 +680,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
                   </Typography>
                 </Box>
               )}
-            </Box>
+            </div>
             {isFirstStep() && (
               <Box
                 flexDirection="row"
@@ -709,7 +786,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
               )}
 
               <Box pb={2} className={classes.wrap_input}>
-                <Box className={classes.firstItem}>
+                <div ref={formRef['sell_ticket_start_time']} className={classes.firstItem}>
                   <ESLabel
                     label={i18n.t('common:delivery_reservation_tab.ticket_sales_start_datetime')}
                     required={formik?.values?.stepSettingTwo?.use_ticket}
@@ -723,17 +800,27 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
                       onChange={(date) => {
                         const temp = moment(date).add(5, 's')
                         formik.setFieldValue('stepSettingTwo.sell_ticket_start_time', temp)
+                        setValidateField('sell_ticket_start_time')
                       }}
-                      onBlur={() => {
-                        setType(TYPE_RM.SELL)
-                      }}
-                      helperText={checkDisplayError(formik, 'sell_ticket_start_time').helperText}
-                      error={checkDisplayError(formik, 'sell_ticket_start_time').error}
+                      helperText={
+                        validateField !== 'all'
+                          ? checkDisplayErrorOnChange(formik, 'sell_ticket_start_time', validateField).helperText
+                          : checkDisplayErrorOnSubmit(formik, 'sell_ticket_start_time').helperText
+                      }
+                      error={
+                        validateField !== 'all'
+                          ? checkDisplayErrorOnChange(formik, 'sell_ticket_start_time', validateField).error
+                          : checkDisplayErrorOnSubmit(formik, 'sell_ticket_start_time').error
+                      }
                       readOnly={!formik?.values?.stepSettingTwo?.use_ticket}
                       minDateMessage={''}
                       disabled={isLive}
                       InputProps={{
                         classes: { root: classes.root },
+                      }}
+                      onBlur={(e) => {
+                        setType(TYPE_RM.SELL)
+                        formik.handleBlur(e)
                       }}
                     />
                   ) : (
@@ -745,7 +832,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
                       </Typography>
                     </Box>
                   )}
-                </Box>
+                </div>
               </Box>
             </>
           )}
