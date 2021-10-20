@@ -82,12 +82,14 @@ const LiveStreamContainer: React.FC<Props> = ({ formik }) => {
         arn: channelArn,
         limit: 2000,
       }
-      const channelRs: any = await API.graphql(graphqlOperation(getChannelByArn, listQC))
-      console.log('===>>channelRs<<<===', channelRs)
-      const channelData = channelRs.data.getChannelByArn.items.find((i) => i.arn === channelArn)
-      console.log('====>>data channel find<<====', channelData)
-      if (channelData) {
-        setStateChannelMedia(channelData.state)
+      if (channelArn) {
+        const channelRs: any = await API.graphql(graphqlOperation(getChannelByArn, listQC))
+        console.log('===>>channelRs<<<===', channelRs)
+        const channelData = channelRs?.data?.getChannelByArn?.items?.find((i) => i?.arn === channelArn)
+        console.log('====>>data channel find<<====', channelData)
+        if (channelData) {
+          setStateChannelMedia(channelData.state)
+        }
       }
     } catch (error) {
       console.error(error)

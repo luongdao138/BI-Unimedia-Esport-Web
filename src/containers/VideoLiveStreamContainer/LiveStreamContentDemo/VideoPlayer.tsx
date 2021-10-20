@@ -291,7 +291,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   const onUpdateVideoTime = (videoInfo) => {
     const newPlayedSecondTime = videoInfo.currentTime
     let durationTime = videoType === STATUS_VIDEO.LIVE_STREAM ? videoInfo.duration - DELAY_SECONDS : videoInfo.duration
-    console.log("🚀 ~ onUpdateVideoTime ~ videoType", videoType)
+    console.log('🚀 ~ onUpdateVideoTime ~ videoType', videoType)
     console.log('🚀 ~ videoEl.current?.addEventListener ~ isStreaming', isStreaming)
     // handle delayed time when is living
     if (isStreaming && videoType === STATUS_VIDEO.LIVE_STREAM) {
