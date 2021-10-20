@@ -21,4 +21,5 @@ export const ACTION_VIDEO_TOP = {
   CHANGE_SEEK_COUNT: 'streaming/changeSeekCount',
   RESET_VIDEO_DETAIL_ERROR: 'video/resetVideoDetailError',
   CHANGE_IS_PAUSING_LIVE: 'streaming/changeIsPausingLive',
+  CHANGE_IS_STREAMING_END: 'streaming/changeIsStreamingEnd',
 }

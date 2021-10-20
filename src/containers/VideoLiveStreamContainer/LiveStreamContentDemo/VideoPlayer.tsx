@@ -33,7 +33,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   src,
   // // statusVideo,
   mediaOverlayIsShown,
-  // onVideoEnd,
+  onVideoEnd,
   thumbnail,
   // startLive,
   // endLive,
@@ -93,6 +93,8 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   const androidPl = /Android/i.test(window.navigator.userAgent)
   const iPhonePl = /iPhone/i.test(window.navigator.userAgent)
 
+  const isStreamingEnd = useRef(liveStreamInfo.is_streaming_end);
+  console.log("🚀 ~ isStreamingEnd---000", isStreamingEnd.current)
   const handlePauseAndSeekVideo = () => {
     // // seek to current live stream second if is pausing live and is not playing
     // if (!state.playing && liveStreamInfo.is_pausing_live) {
@@ -113,6 +115,10 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     // screenfull.request(playerContainerRef.current)
     // }
   }, [isPortrait])
+
+  useEffect(() => {
+    isStreamingEnd.current = liveStreamInfo.is_streaming_end
+  }, [liveStreamInfo.is_streaming_end])
 
   useEffect(() => {
     if (isArchived) {
@@ -304,6 +310,10 @@ const VideoPlayer: React.FC<PlayerProps> = ({
         durationTime = newPlayedSecondTime
       }
     }
+    // if(!isStreaming && durationTime < newPlayedSecondTime && videoType === STATUS_VIDEO.LIVE_STREAM){
+    if (!isStreaming && videoType === STATUS_VIDEO.LIVE_STREAM) {
+      durationTime = videoInfo.duration
+    }
     const newDurationTime = durationTime
     // const newDurationTime = videoInfo.duration
     setPlayedSeconds(newPlayedSecondTime)
@@ -317,19 +327,39 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   }
   handleUpdateVideoTime.current = onUpdateVideoTime
 
+  const handleUpdateVideoDuration = useRef(null)
+  const onUpdateVideoduration = (duration) => {
+    console.log('------->>2222<<<-----', state.playing)
+    if (!state.playing) {
+      setDurationPlayer(duration)
+    }
+  }
+  handleUpdateVideoDuration.current = onUpdateVideoduration
+
   //archived
   useEffect(() => {
     videoEl.current.addEventListener('timeupdate', (event) => {
       // console.log("🚀 ~ videoEl.current.addEventListener ~ event", event)
       // const delaySeconds = 15
       const videoInfo = event.target
-      console.log('->current->duration-> range', videoInfo.currentTime, videoInfo.duration, videoInfo.duration - videoInfo.currentTime)
+      console.log(
+        '->current->duration-> range',
+        videoInfo.currentTime,
+        videoInfo.duration,
+        videoInfo.duration - videoInfo.currentTime,
+        videoInfo.duration - DELAY_SECONDS
+      )
+      // liveVideoInfoRef.current = Math.floor(videoInfo.currentTime)
       // console.log('->current->duration-> range')
       videoInfo ? handleUpdateVideoTime.current(videoInfo) : ''
     })
 
-    videoEl.current.addEventListener('durationchange', (event) => {
-      console.log('------->>durationchange<<<-----', event.target.duration)
+    videoEl.current?.addEventListener('durationchange', (event) => {
+      console.log('------->>durationchange<<<-----', event.target.duration, state.playing)
+      if(isStreamingEnd.current) {
+        onVideoEnd()
+      }
+      handleUpdateVideoDuration.current(event.target.duration)
     })
 
     videoEl.current.addEventListener('volumechange', () => {
@@ -351,19 +381,25 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     //check event video
     videoEl.current.addEventListener('seeking', () => {
       console.log('=================SEEKING===================')
-      setVisible({ ...visible, loading: true, videoLoaded: false })
+      if(!isStreamingEnd.current) {
+        setVisible({ ...visible, loading: true, videoLoaded: false })
+      }
     })
     videoEl.current.addEventListener('seeked', () => {
       //rewind complete
       console.log('=================SEEKED===================')
-      setVisible({ ...visible, loading: false, videoLoaded: false })
+      if(!isStreamingEnd.current) {
+        setVisible({ ...visible, loading: false, videoLoaded: false })
+      }
     })
 
     //load data
     videoEl.current.addEventListener('loadedmetadata', (event) => {
       console.log('=================loadedmetadata===================')
       console.log(event)
-      setVisible({ ...visible, loading: true, videoLoaded: true })
+      if(!isStreamingEnd.current) {
+        setVisible({ ...visible, loading: true, videoLoaded: true })
+      }
     })
     videoEl.current.addEventListener('loadeddata', () => {
       console.log('=================loadeddata===================')
@@ -376,7 +412,9 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     videoEl.current.addEventListener('canplay', (event) => {
       console.log('=================canplay===================')
       console.log(event)
-      setVisible({ ...visible, loading: videoEl.current?.paused })
+      if(!isStreamingEnd.current) {
+        setVisible({ ...visible, loading: videoEl.current?.paused })
+      }
     })
     videoEl.current.addEventListener('error', (event) => {
       console.log('=================error===================')
@@ -390,7 +428,9 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     videoEl.current.addEventListener('playing', (event) => {
       console.log('=================playing===================', playing)
       console.log(event)
-      setVisible({ ...visible, loading: false, videoLoaded: false })
+      if(!isStreamingEnd.current) {
+        setVisible({ ...visible, loading: false, videoLoaded: false })
+      }
       // setState({...state, playing:true})
     })
 
@@ -429,6 +469,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       videoEl.current.pause()
       setState({ ...state, playing: false })
       setVisible({ ...visible, loading: true, videoLoaded: false })
+      setIsStreaming(false)
     }
   }
   const handlePlayPause = () => {
@@ -441,6 +482,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       videoEl.current.pause()
       setState({ ...state, playing: false })
       setVisible({ ...visible, loading: true, videoLoaded: false })
+      setIsStreaming(false)
     }
   }
 
