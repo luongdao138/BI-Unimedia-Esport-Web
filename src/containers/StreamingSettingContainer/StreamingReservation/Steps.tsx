@@ -66,7 +66,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
 
   const { getStreamUrlAndKey, isPending, setLiveStreamConfirm, scheduleInformation, isPendingSetting } = useLiveSetting()
   const { checkNgWordFields, checkNgWordByField } = useCheckNgWord()
-  const { checkDisplayError, checkDisplayErrorOnChange, checkDisplayErrorOnSubmit, getDisplayErrorField } = LiveStreamSettingHelper
+  const { checkDisplayErrorOnChange, checkDisplayErrorOnSubmit, getDisplayErrorField } = LiveStreamSettingHelper
   const { userProfile } = useGetProfile()
   const paid_delivery_flag = userProfile?.attributes?.paid_delivery_flag
   const [categoryName, setCategoryName] = useState('')
@@ -660,10 +660,18 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
                   onChange={(date) => {
                     const temp = moment(date).add(5, 's')
                     formik.setFieldValue('stepSettingTwo.video_publish_end_time', temp)
-                    setValidateField('stream_schedule_end_time')
+                    setValidateField('video_publish_end_time')
                   }}
-                  helperText={checkDisplayError(formik, 'video_publish_end_time').helperText}
-                  error={checkDisplayError(formik, 'video_publish_end_time').error}
+                  helperText={
+                    validateField !== 'all'
+                      ? checkDisplayErrorOnChange(formik, 'video_publish_end_time', validateField).helperText
+                      : checkDisplayErrorOnSubmit(formik, 'video_publish_end_time').helperText
+                  }
+                  error={
+                    validateField !== 'all'
+                      ? checkDisplayErrorOnChange(formik, 'video_publish_end_time', validateField).error
+                      : checkDisplayErrorOnSubmit(formik, 'video_publish_end_time').error
+                  }
                   minDateMessage={''}
                   minutesStep={1}
                   onBlur={(e) => {
@@ -687,7 +695,11 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
                 display="flex"
                 className={`${classes.lastItem}`}
                 marginBottom={
-                  formik?.touched?.stepSettingTwo?.video_publish_end_time && !!formik?.errors?.stepSettingTwo?.video_publish_end_time
+                  (
+                    validateField !== 'all'
+                      ? checkDisplayErrorOnChange(formik, 'video_publish_end_time', validateField).error
+                      : checkDisplayErrorOnSubmit(formik, 'video_publish_end_time').error
+                  )
                     ? '22px'
                     : 0
                 }
