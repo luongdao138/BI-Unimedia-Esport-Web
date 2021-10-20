@@ -171,6 +171,10 @@ export default createReducer(initialState, (builder) => {
     state.commentsList = action.payload.data
     state.commentsListMeta = action.payload.meta
   })
+  builder.addCase(actions.resetCommentsList, (state) => {
+    state.commentsList = []
+    state.commentsListMeta = undefined
+  })
   builder.addCase(actions.deleteTopicComment.fulfilled, (state, action) => {
     state.commentsList = _.map(state.commentsList, (comment) => {
       return comment.attributes.comment_no === action.meta.arg.comment_no

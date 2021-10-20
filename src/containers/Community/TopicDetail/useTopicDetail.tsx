@@ -15,6 +15,7 @@ import { useAppDispatch, useAppSelector } from '@store/hooks'
 import { Meta } from '@store/metadata/actions/types'
 import { createMetaSelector } from '@store/metadata/selectors'
 import { clearMetaData } from '@store/metadata/actions'
+import { useEffect } from 'react'
 
 const { selectors, actions } = community
 const getTopicDetailMeta = createMetaSelector(actions.getTopicDetail)
@@ -100,6 +101,20 @@ const useTopicDetail = (): {
     deleteTopicCommentMeta,
     resetCommentCreateMeta,
   }
+}
+
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export const useClearMeta = () => {
+  const dispatch = useAppDispatch()
+  useEffect(() => {
+    return () => {
+      dispatch(actions.resetCommentsList())
+      dispatch(actions.clearCommunityDetail())
+      dispatch(clearMetaData(actions.getTopicDetail.typePrefix))
+      dispatch(clearMetaData(actions.getCommentsList.typePrefix))
+      dispatch(clearMetaData(actions.getCommunityDetail.typePrefix))
+    }
+  }, [])
 }
 
 export default useTopicDetail

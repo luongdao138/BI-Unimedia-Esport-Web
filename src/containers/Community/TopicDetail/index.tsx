@@ -5,7 +5,7 @@ import MainTopic from '@containers/Community/TopicDetail/Partials/MainTopic'
 import { Box } from '@material-ui/core'
 import Pagination from '../Partials/Pagination'
 import CommentInput from './Partials/CommentInput'
-import useTopicDetail from './useTopicDetail'
+import useTopicDetail, { useClearMeta } from './useTopicDetail'
 import ESFullLoader from '@components/FullScreenLoader'
 import { useRouter } from 'next/router'
 import useCommunityDetail from '../Detail/useCommunityDetail'
@@ -73,6 +73,8 @@ const TopicDetailContainer: React.FC = () => {
   const handleDeleteComment = () => {
     deleteComment({ comment_no: selectedCommentNo, topic_hash: String(topic_hash_key) })
   }
+
+  useClearMeta()
 
   useEffect(() => {
     if (deleteTopicMeta.loaded) {
