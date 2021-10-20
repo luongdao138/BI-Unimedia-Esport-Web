@@ -206,14 +206,18 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
             formik.submitForm()
           } else {
             const value = formik.values.stepOne.name
-            const resultAction = await dispatch(actions.checkCommunityName({ name: value.trim() }))
-            if (actions.checkCommunityName.fulfilled.match(resultAction)) {
-              if (resultAction.payload.is_unique === false) {
-                setIsDuplicate(true)
-              } else {
-                setIsDuplicate(false)
-                setIsConfirm(true)
+            if (value !== initialValues.stepOne.name) {
+              const resultAction = await dispatch(actions.checkCommunityName({ name: value.trim() }))
+              if (actions.checkCommunityName.fulfilled.match(resultAction)) {
+                if (resultAction.payload.is_unique === false) {
+                  setIsDuplicate(true)
+                } else {
+                  setIsDuplicate(false)
+                  setIsConfirm(true)
+                }
               }
+            } else {
+              setIsConfirm(true)
             }
           }
           return
