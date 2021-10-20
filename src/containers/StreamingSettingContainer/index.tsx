@@ -131,11 +131,11 @@ const StreamingSettingContainer: React.FC<{ default_tab: any }> = ({ default_tab
 
   const getTabs = () => {
     return (
-      <Grid item xs={12}>
+      <Grid item xs={12} className={classes.tabsContainer}>
         <ESTabs value={tab} onChange={(_, v) => setTab(v)} className={classes.tabs}>
-          <ESTab label={t('streaming_setting_screen.live_stream')} value={0} disabled={disable} />
-          <ESTab label={t('streaming_setting_screen.streaming_reservation')} value={1} disabled={disable} />
-          <ESTab label={t('streaming_setting_screen.distributor_information')} value={2} />
+          <ESTab label={t('streaming_setting_screen.live_stream')} value={0} disabled={disable} className={classes.singleTab} />
+          <ESTab label={t('streaming_setting_screen.streaming_reservation')} value={1} disabled={disable} className={classes.singleTab} />
+          <ESTab label={t('streaming_setting_screen.distributor_information')} value={2} className={classes.singleTab} />
         </ESTabs>
       </Grid>
     )
@@ -172,12 +172,18 @@ const StreamingSettingContainer: React.FC<{ default_tab: any }> = ({ default_tab
 }
 export default StreamingSettingContainer
 
-const useStyles = makeStyles(() => ({
-  tabs: {
-    overflow: 'hidden',
+const useStyles = makeStyles((theme) => ({
+  tabsContainer: {
+    display: 'flex',
+    width: '100%',
     borderBottomColor: Colors.text[300],
     borderBottomWidth: 1,
     borderBottomStyle: 'solid',
+  },
+  tabs: {
+    display: 'flex',
+    width: '100%',
+    overflow: 'hidden',
     paddingLeft: 24,
   },
   forbiddenMessageContainer: {
@@ -186,5 +192,28 @@ const useStyles = makeStyles(() => ({
     justifyContent: 'center',
     marginTop: 30,
     marginBottom: 50,
+  },
+  [theme.breakpoints.down(419)]: {
+    tabs: {
+      display: 'flex',
+      width: '100%',
+      paddingRight: '24px',
+    },
+    singleTab: {
+      width: 'calc((100vw - 48px) / 3)',
+      minWidth: 'unset',
+    },
+  },
+  [theme.breakpoints.down(321)]: {
+    tabs: {
+      display: 'flex',
+      width: '100%',
+      paddingLeft: 0,
+      paddingRight: 0,
+    },
+    singleTab: {
+      width: 'calc(100vw / 3)',
+      minWidth: 'unset',
+    },
   },
 }))

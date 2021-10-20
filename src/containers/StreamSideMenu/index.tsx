@@ -89,26 +89,21 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
             />
           </Box>
         ) : (
-          <>
-            <Box
-              className={classes.clickable}
-              onClick={() => isAuthenticated && router.push(ESRoutes.PROFILE, undefined, { shallow: true })}
-            >
-              <Box className={classes.userInfo}>
-                <ESAvatar className={classes.avatar} alt={userProfile?.attributes?.nickname} src={userProfile ? x : '/images/avatar.png'} />
-                {isAuthenticated && (
-                  <Box width="100%" textAlign="center">
-                    <Typography variant="h2" className={classes.name}>
-                      {userProfile ? userProfile.attributes.nickname : ''}
-                    </Typography>
-                    <Typography variant="body2" className={classes.usercode}>
-                      @{userProfile ? userProfile.attributes.user_code : ''}
-                    </Typography>
-                  </Box>
-                )}
-              </Box>
+          <Box className={classes.clickable} onClick={() => isAuthenticated && router.push(ESRoutes.PROFILE, undefined, { shallow: true })}>
+            <Box className={classes.userInfo}>
+              <ESAvatar className={classes.avatar} alt={userProfile?.attributes?.nickname} src={userProfile ? x : '/images/avatar.png'} />
+              {isAuthenticated && (
+                <Box width="100%" textAlign="center">
+                  <Typography variant="h2" className={classes.name}>
+                    {userProfile ? userProfile.attributes.nickname : ''}
+                  </Typography>
+                  <Typography variant="body2" className={classes.usercode}>
+                    @{userProfile ? userProfile.attributes.user_code : ''}
+                  </Typography>
+                </Box>
+              )}
             </Box>
-          </>
+          </Box>
         )}
         <Box className={classes.menuWrap + getAddClass(classes.noMinimizeMenuWrap, classes.minimizeMenuWrap)}>
           {!minimizeLayout && isAuthenticated && (
@@ -238,6 +233,7 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
           {isAuthenticated && (
             <ListItem
               className={classes.list + getAddClass(classes.noMinimizeList, classes.minimizeList)}
+              style={{ borderBottom: `1px solid ${Colors.white_opacity[30]}`, paddingBottom: 10, marginTop: 0 }}
               button
               disableRipple
               onClick={() => handleModal('logout')}
@@ -424,6 +420,7 @@ const useStyles = makeStyles((theme) => ({
     width: '180px',
   },
   menuWrap: {
+    paddingBottom: 66,
     overflowY: 'auto',
     height: '100%',
     scrollbarColor: '#222 transparent',
