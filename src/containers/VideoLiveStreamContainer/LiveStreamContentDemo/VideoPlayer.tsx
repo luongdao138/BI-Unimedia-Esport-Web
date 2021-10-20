@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable no-console */
 import { Icon, makeStyles, Theme, useMediaQuery, useTheme } from '@material-ui/core'
@@ -66,7 +67,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
 
   const [visible, setVisible] = useState({
     loading: true,
-    videoLoaded: false,
+    videoLoaded: true,
     videoError: false,
   })
 
@@ -203,6 +204,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     return 0
   }
 
+  //@ts-ignore
   const calculateVideoHeight = () => {
     const videoWidth = videoDisplayWidth - (chatBoardWidth() + sizeMenuWidth())
     return (videoWidth * 9) / 16
@@ -317,7 +319,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
 
   //archived
   useEffect(() => {
-    videoEl.current?.addEventListener('timeupdate', (event) => {
+    videoEl.current.addEventListener('timeupdate', (event) => {
       // console.log("🚀 ~ videoEl.current.addEventListener ~ event", event)
       // const delaySeconds = 15
       const videoInfo = event.target
@@ -326,11 +328,11 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       videoInfo ? handleUpdateVideoTime.current(videoInfo) : ''
     })
 
-    videoEl.current?.addEventListener('durationchange', (event) => {
-      console.log('------->>durationchange<<<-----', event.target.duration, playing)
+    videoEl.current.addEventListener('durationchange', (event) => {
+      console.log('------->>durationchange<<<-----', event.target.duration)
     })
 
-    videoEl.current?.addEventListener('volumechange', () => {
+    videoEl.current.addEventListener('volumechange', () => {
       setState({
         ...state,
         muted: videoEl.current?.muted,
@@ -340,51 +342,52 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       // setState({ ...state, muted: videoEl.current.volume!==0?false:true, volume:  videoEl.current.volume, playing: !videoEl.current.paused })
     })
 
-    videoEl.current?.addEventListener('ended', () => {
+    videoEl.current.addEventListener('ended', () => {
+      console.log('================END VIDEO HTML====================')
       setState({ ...state, playing: false })
       setVisible({ ...visible, loading: true, videoLoaded: true })
     })
 
     //check event video
-    videoEl.current?.addEventListener('seeking', () => {
+    videoEl.current.addEventListener('seeking', () => {
       console.log('=================SEEKING===================')
       setVisible({ ...visible, loading: true, videoLoaded: false })
     })
-    videoEl.current?.addEventListener('seeked', () => {
+    videoEl.current.addEventListener('seeked', () => {
       //rewind complete
       console.log('=================SEEKED===================')
       setVisible({ ...visible, loading: false, videoLoaded: false })
     })
 
     //load data
-    videoEl.current?.addEventListener('loadedmetadata', (event) => {
+    videoEl.current.addEventListener('loadedmetadata', (event) => {
       console.log('=================loadedmetadata===================')
       console.log(event)
       setVisible({ ...visible, loading: true, videoLoaded: true })
     })
-    videoEl.current?.addEventListener('loadeddata', () => {
+    videoEl.current.addEventListener('loadeddata', () => {
       console.log('=================loadeddata===================')
       // setVisible({ ...visible, loading: true, videoLoaded: true })
     })
-    videoEl.current?.addEventListener('emptied', (event) => {
+    videoEl.current.addEventListener('emptied', (event) => {
       console.log('=================emptied===================')
       console.log(event)
     })
-    videoEl.current?.addEventListener('canplay', (event) => {
+    videoEl.current.addEventListener('canplay', (event) => {
       console.log('=================canplay===================')
       console.log(event)
       setVisible({ ...visible, loading: videoEl.current?.paused })
     })
-    videoEl.current?.addEventListener('error', (event) => {
+    videoEl.current.addEventListener('error', (event) => {
       console.log('=================error===================')
       console.log(event)
     })
-    videoEl.current?.addEventListener('play', (event) => {
+    videoEl.current.addEventListener('play', (event) => {
       console.log('=================play===================')
       console.log(event)
       setVisible({ ...visible, loading: true, videoLoaded: true })
     })
-    videoEl.current?.addEventListener('playing', (event) => {
+    videoEl.current.addEventListener('playing', (event) => {
       console.log('=================playing===================', playing)
       console.log(event)
       setVisible({ ...visible, loading: false, videoLoaded: false })
@@ -447,6 +450,8 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   //   hls.attachMedia(document.getElementById('video'))
   //   hls.startLoad(-1)
   // }
+
+  //rewind video to time newest
   const handleReloadTime = () => {
     // document.querySelector("video").load()
     videoEl.current.currentTime = durationPlayer
@@ -503,8 +508,16 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       <div ref={playerContainerRef} className={classes.playerContainer}>
         <div style={{ height: '100%' }} onClick={handlePlayPauseOut}>
           {!isMobile && !androidPl && !iPhonePl && (
-            <video id="video" ref={videoEl} muted={muted} style={{ width: '100%', height: calculateVideoHeight() }} autoPlay={autoPlay} />
+            <video
+              id="video"
+              ref={videoEl}
+              muted={muted}
+              style={{ width: '100%', height: '100%' }}
+              autoPlay={autoPlay}
+              // className={classes.video}
+            />
           )}
+
           {!androidPl && !iPhonePl && !mediaOverlayIsShown && loading && (
             <div className={classes.playOverView}>
               {videoLoaded && (
@@ -518,7 +531,13 @@ const VideoPlayer: React.FC<PlayerProps> = ({
                   <div className={classes.loadingThumbBlur} />
                 </div>
               )}
-              {ended || !playing ? <Icon className={`fas fa-play ${classes.fontSizeLarge}`} /> : <ESLoader />}
+              {ended || !playing ? (
+                <Icon className={`fas fa-play ${classes.fontSizeLarge}`} />
+              ) : (
+                <div className={classes.showLoader}>
+                  <ESLoader />
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -809,6 +828,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: 7,
     background: '#FF4786',
     cursor: 'pointer',
+  },
+  showLoader: {
+    zIndex: 2,
   },
 }))
 
