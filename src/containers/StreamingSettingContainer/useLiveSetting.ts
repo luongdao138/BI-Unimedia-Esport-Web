@@ -7,8 +7,10 @@ import i18n from 'i18next'
 
 const { selectors, actions } = stream
 const _getMeta = createMetaSelector(actions.getLiveSettingInfo)
+const _getMetaSchedule = createMetaSelector(actions.getScheduleSettingInfo)
 const _getStreamUrlAndKeyMeta = createMetaSelector(actions.getStreamUrlAndKeyInfo)
 const _getChannelMeta = createMetaSelector(actions.getChannel)
+const _setLiveStreamMeta = createMetaSelector(actions.setLiveStream)
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const useLiveSetting = () => {
@@ -43,14 +45,19 @@ const useLiveSetting = () => {
   const meta = useAppSelector(_getMeta)
   const getStreamUrlAndKeyMeta = useAppSelector(_getStreamUrlAndKeyMeta)
   const getChannelMeta = useAppSelector(_getChannelMeta)
+  const getScheduleMeta = useAppSelector(_getMetaSchedule)
+  const setLiveStreamMeta = useAppSelector(_setLiveStreamMeta)
 
   const getStreamUrlAndKey = async (params: StreamUrlAndKeyParams, onSuccess?: (url, key) => void) => {
     const resultAction = await dispatch(actions.getStreamUrlAndKeyInfo(params))
     if (actions.getStreamUrlAndKeyInfo.fulfilled.match(resultAction)) {
       onSuccess(resultAction.payload.data.STREAM_URL, resultAction.payload.data.STREAM_KEY_VALUE)
+    } else {
+      dispatch(addToast(i18n.t('common:common.failed_to_get_data')))
     }
   }
-  const isPending = meta.pending || getStreamUrlAndKeyMeta.pending || getChannelMeta.pending
+  const isPending = meta.pending || getStreamUrlAndKeyMeta.pending || getChannelMeta.pending || getScheduleMeta.pending
+  const isPendingSetting = setLiveStreamMeta.pending
   const categoryData = useAppSelector(selectors.getCategorySelector)
   const channelInfo = useAppSelector(selectors.getChannelSelector)
 
@@ -58,6 +65,8 @@ const useLiveSetting = () => {
     const resultAction = await dispatch(actions.setChannel(params))
     if (actions.setChannel.fulfilled.match(resultAction)) {
       onSuccess()
+    } else {
+      dispatch(addToast(i18n.t('common:common.failed_to_get_data')))
     }
   }
 
@@ -73,6 +82,7 @@ const useLiveSetting = () => {
     getStreamUrlAndKey,
     getStreamUrlAndKeyMeta,
     isPending,
+    isPendingSetting,
     categoryData,
     channelInfo,
     setChannelConfirm,

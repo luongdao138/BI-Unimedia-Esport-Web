@@ -64,7 +64,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
   const [showStreamURL, setShowStreamURL] = useState(false)
   const [showStreamKey, setShowStreamKey] = useState(false)
 
-  const { getStreamUrlAndKey, isPending, setLiveStreamConfirm, scheduleInformation } = useLiveSetting()
+  const { getStreamUrlAndKey, isPending, setLiveStreamConfirm, scheduleInformation, isPendingSetting } = useLiveSetting()
   const { checkNgWordFields, checkNgWordByField } = useCheckNgWord()
   const { checkDisplayError } = LiveStreamSettingHelper
   const { userProfile } = useGetProfile()
@@ -980,7 +980,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
           )}
         </form>
       </Box>
-      <ESLoader open={isPending} />
+      <ESLoader open={isPending || isPendingSetting} />
     </Box>
   )
 }
