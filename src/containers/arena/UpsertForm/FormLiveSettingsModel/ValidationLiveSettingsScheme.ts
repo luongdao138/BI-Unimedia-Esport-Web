@@ -73,6 +73,7 @@ export const validationScheduleScheme = (): any => {
 
       sell_ticket_start_time: Yup.date()
         .nullable()
+        .min(minStartDate, i18n.t('common:streaming_setting_screen.validation.min_date'))
         .when(['use_ticket'], {
           is: true,
           then: Yup.date()
@@ -91,7 +92,17 @@ export const validationScheduleScheme = (): any => {
       stream_schedule_start_time: Yup.date()
         .nullable()
         .required(i18n.t('common:common.input_required'))
-        .min(minStartDate, i18n.t('common:streaming_setting_screen.validation.min_date')),
+        .min(minStartDate, i18n.t('common:streaming_setting_screen.validation.min_date'))
+        .test(
+          'stream_start_time_validate_10_minutes',
+          i18n.t('common:streaming_setting_screen.validation.start_time_at_least_10min'),
+          (value) => {
+            const minTime = moment()
+              .add(10 * 60, 'seconds')
+              .toDate()
+            return value >= minTime
+          }
+        ),
 
       stream_schedule_end_time: Yup.date()
         .nullable()

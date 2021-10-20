@@ -63,6 +63,161 @@ const checkRequiredFields = (tab: number, errors: FormikErrors<FormLiveType>, ty
   }
 }
 
+const hasErrorField = (message) => ({
+  helperText: message,
+  error: true,
+})
+
+const errorFields = [
+  ['title', 'title'],
+  ['description', 'description'],
+  ['stream_notify_time', 'stream_notify_time'],
+  ['stream_schedule_start_time', 'stream_schedule_start_time'],
+  ['notify_live_start_date', 'stream_schedule_start_time'],
+  ['stream_schedule_end_time', 'stream_schedule_end_time'],
+  ['schedule_live_date', 'stream_schedule_end_time'],
+  ['max_schedule_live_date', 'stream_schedule_end_time'],
+  ['max_schedule_live_date', 'stream_schedule_end_time'],
+  ['video_publish_end_time', 'video_publish_end_time'],
+  ['public_time_more_than_end', 'video_publish_end_time'],
+  ['sell_ticket_start_time', 'sell_ticket_start_time'],
+  ['sell_less_than_start', 'sell_ticket_start_time'],
+]
+
+const getDisplayErrorField = (formik: FormikProps<FormLiveType>) => {
+  const { errors } = formik
+  const { stepSettingTwo } = errors
+  const errorDisplayField = errorFields.find((field) => stepSettingTwo[field[0]])
+  return errorDisplayField[1]
+}
+
+const checkDisplayErrorOnSubmit = (formik: FormikProps<FormLiveType>, field: string): FormError => {
+  const validField = {
+    helperText: null,
+    error: null,
+  }
+  const { errors } = formik
+  const { stepSettingTwo } = errors
+  if (!stepSettingTwo) {
+    return validField
+  }
+  const errorDisplayField = errorFields.find((field) => stepSettingTwo[field[0]])
+  return errorDisplayField[1] === field ? hasErrorField(stepSettingTwo[errorDisplayField[0]]) : validField
+}
+
+const checkDisplayErrorOnChange = (formik: FormikProps<FormLiveType>, field: string, validateField: string): FormError => {
+  const { errors } = formik
+  const { stepSettingTwo } = errors
+  const validField = {
+    helperText: null,
+    error: null,
+  }
+  return {
+    '': () => validField,
+    title: () => {
+      if (field === 'title' && stepSettingTwo?.title) {
+        return hasErrorField(stepSettingTwo?.title)
+      }
+      return validField
+    },
+    description: () => {
+      if (field === 'description' && stepSettingTwo?.description) {
+        return hasErrorField(stepSettingTwo?.description)
+      }
+      return validField
+    },
+    stream_notify_time: () => {
+      if (field === 'stream_notify_time') {
+        return stepSettingTwo?.stream_notify_time ? hasErrorField(stepSettingTwo?.stream_notify_time) : validField
+      }
+      if (field !== 'stream_schedule_start_time') {
+        return validField
+      }
+      if (stepSettingTwo?.notify_live_start_date) {
+        return hasErrorField(stepSettingTwo?.notify_live_start_date)
+      }
+      return validField
+    },
+    stream_schedule_start_time: () => {
+      return {
+        '': () => validField,
+        title: () => validField,
+        description: () => validField,
+        stream_notify_time: () => validField,
+        video_publish_end_time: () => validField,
+        stream_schedule_start_time: () => {
+          if (stepSettingTwo?.stream_schedule_start_time) {
+            return hasErrorField(stepSettingTwo?.stream_schedule_start_time)
+          }
+          if (stepSettingTwo?.notify_live_start_date) {
+            return hasErrorField(stepSettingTwo?.notify_live_start_date)
+          }
+          return validField
+        },
+        stream_schedule_end_time: () => {
+          if (stepSettingTwo?.schedule_live_date) {
+            return hasErrorField(stepSettingTwo?.schedule_live_date)
+          }
+          if (stepSettingTwo?.max_schedule_live_date) {
+            return hasErrorField(stepSettingTwo?.max_schedule_live_date)
+          }
+          return validField
+        },
+        sell_ticket_start_time: () =>
+          stepSettingTwo?.sell_ticket_start_time ? hasErrorField(stepSettingTwo?.sell_ticket_start_time) : validField,
+      }[field]()
+    },
+    stream_schedule_end_time: () => {
+      return {
+        '': () => validField,
+        title: () => validField,
+        description: () => validField,
+        stream_notify_time: () => validField,
+        stream_schedule_start_time: () => validField,
+        sell_ticket_start_time: () => validField,
+        stream_schedule_end_time: () => {
+          if (stepSettingTwo?.stream_schedule_end_time) {
+            return hasErrorField(stepSettingTwo?.stream_schedule_end_time)
+          }
+          if (stepSettingTwo?.max_schedule_live_date) {
+            return hasErrorField(stepSettingTwo?.max_schedule_live_date)
+          }
+          if (stepSettingTwo?.schedule_live_date) {
+            return hasErrorField(stepSettingTwo?.schedule_live_date)
+          }
+          return validField
+        },
+        video_publish_end_time: () =>
+          stepSettingTwo?.public_time_more_than_end ? hasErrorField(stepSettingTwo?.public_time_more_than_end) : validField,
+      }[field]()
+    },
+    video_publish_end_time: () => {
+      if (field !== 'video_publish_end_time') {
+        return validField
+      }
+      if (stepSettingTwo?.video_publish_end_time) {
+        return hasErrorField(stepSettingTwo?.video_publish_end_time)
+      }
+      if (stepSettingTwo?.public_time_more_than_end) {
+        return hasErrorField(stepSettingTwo?.public_time_more_than_end)
+      }
+      return validField
+    },
+    sell_ticket_start_time: () => {
+      if (field !== 'sell_ticket_start_time') {
+        return validField
+      }
+      if (stepSettingTwo?.sell_ticket_start_time) {
+        return hasErrorField(stepSettingTwo?.sell_ticket_start_time)
+      }
+      if (stepSettingTwo?.sell_less_than_start) {
+        return hasErrorField(stepSettingTwo?.sell_less_than_start)
+      }
+      return validField
+    },
+  }[validateField]()
+}
+
 const checkDisplayError = (formik: FormikProps<FormLiveType>, field: string, type_rm?: string): FormError => {
   const { errors, touched } = formik
   const { stepSettingTwo } = errors
@@ -151,4 +306,7 @@ const checkDisplayError = (formik: FormikProps<FormLiveType>, field: string, typ
 export const LiveStreamSettingHelper = {
   checkRequiredFields,
   checkDisplayError,
+  checkDisplayErrorOnChange,
+  checkDisplayErrorOnSubmit,
+  getDisplayErrorField,
 }

@@ -70,7 +70,8 @@ const StreamingSettingContainer: React.FC<{ default_tab: any }> = ({ default_tab
     initialValues: initialScheduleValues,
     validationSchema: validationScheduleScheme(),
     enableReinitialize: true,
-    validateOnBlur: false,
+    validateOnChange: true,
+    validateOnBlur: true,
     onSubmit: () => {
       //TODO: smt
     },
