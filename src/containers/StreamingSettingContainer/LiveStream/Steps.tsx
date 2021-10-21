@@ -468,7 +468,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
               {isFirstStep() ? (
                 <ESInputDatePicker
                   name="stepSettingOne.video_publish_end_time"
-                  placeholder={'2021年7月31日 23:59'}
+                  placeholder={i18n.t('common:streaming_setting_screen.archived_end_time_pl')}
                   fullWidth
                   value={formik?.values?.stepSettingOne?.video_publish_end_time}
                   onChange={(date) => {

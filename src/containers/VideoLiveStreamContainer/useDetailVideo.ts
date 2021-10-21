@@ -55,7 +55,7 @@ const useDetailVideo = () => {
     videoDetailError,
     resetVideoDetailError,
     changeIsPausingLive,
-    changeIsStreamingEnd
+    changeIsStreamingEnd,
   }
 }
 

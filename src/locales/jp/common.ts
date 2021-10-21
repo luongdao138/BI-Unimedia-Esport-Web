@@ -1537,6 +1537,7 @@ export default {
     scroll_to_new_mess: '最新のコメント',
     clear: 'クリア',
     note_loading: 'ただいま処理中です。今しばらくお待ちください',
+    archived_end_time_pl: 'アーカイブ配信終了日時',
   },
   delivery_reservation_tab: {
     category: 'カテゴリー',

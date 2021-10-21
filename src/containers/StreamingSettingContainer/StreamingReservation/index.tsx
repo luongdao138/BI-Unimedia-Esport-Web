@@ -12,9 +12,10 @@ import { FormLiveType } from '@containers/arena/UpsertForm/FormLiveSettingsModel
 
 interface Props {
   formik?: FormikProps<FormLiveType>
+  flagUpdateFieldDate?: (flag: boolean) => void
 }
 
-const StreamingReservationContainer: React.FC<Props> = ({ formik }) => {
+const StreamingReservationContainer: React.FC<Props> = ({ formik, flagUpdateFieldDate }) => {
   // const [step, setStep] = useState(1)
   const router = useRouter()
   const { categoryData } = useLiveSetting()
@@ -54,6 +55,7 @@ const StreamingReservationContainer: React.FC<Props> = ({ formik }) => {
         isShare={isShare}
         titlePost={post.title}
         contentPost={post.content}
+        flagUpdateFieldDate={flagUpdateFieldDate}
       />
       <ESModal open={modal} handleClose={() => setModal(false)}>
         <BlankLayout>
