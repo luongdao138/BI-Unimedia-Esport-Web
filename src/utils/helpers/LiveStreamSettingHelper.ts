@@ -163,8 +163,16 @@ const checkDisplayErrorOnChange = (formik: FormikProps<FormLiveType>, field: str
           }
           return validField
         },
-        sell_ticket_start_time: () =>
-          stepSettingTwo?.sell_ticket_start_time ? hasErrorField(stepSettingTwo?.sell_ticket_start_time) : validField,
+        sell_ticket_start_time: () => {
+          // stepSettingTwo?.sell_ticket_start_time ? hasErrorField(stepSettingTwo?.sell_ticket_start_time) : validField,
+          if (stepSettingTwo?.sell_ticket_start_time) {
+            return hasErrorField(stepSettingTwo?.sell_ticket_start_time)
+          }
+          if (stepSettingTwo?.sell_less_than_start) {
+            return hasErrorField(stepSettingTwo?.sell_less_than_start)
+          }
+          return validField
+        },
       }[field]()
     },
     stream_schedule_end_time: () => {
@@ -243,7 +251,8 @@ const checkDisplayError = (formik: FormikProps<FormLiveType>, field: string, typ
 
       const helperText =
         (touched?.stepSettingTwo?.stream_schedule_start_time && errors?.stepSettingTwo?.stream_schedule_start_time) ||
-        errors?.stepSettingTwo?.notify_live_start_date
+        errors?.stepSettingTwo?.notify_live_start_date ||
+        errors?.stepSettingTwo?.sell_less_than_start
       return {
         helperText,
         error: !!helperText,
