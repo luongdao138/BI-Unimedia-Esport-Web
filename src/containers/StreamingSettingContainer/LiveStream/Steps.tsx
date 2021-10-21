@@ -488,7 +488,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
                   <Typography className={classes.date}>
                     {formik?.values?.stepSettingOne?.video_publish_end_time !== null
                       ? moment(formik?.values?.stepSettingOne?.video_publish_end_time).format(FORMAT_DATE_TIME_JP)
-                      : i18n.t('common:streaming_setting_screen.public_time_title')}
+                      : ''}
                   </Typography>
                   {/* {errPublicTime && <FormHelperText error>{errPublicTime}</FormHelperText>} */}
                 </Box>
