@@ -271,6 +271,7 @@ export default {
       placeholder: 'キーワードからトピックを検索します',
       result: '検索結果',
       no_data: '該当するトピックは見つかりませんでした',
+      content_text: 'トピック本文　',
     },
     follow_list: 'フォローリスト',
     member_list: {
@@ -1420,7 +1421,7 @@ export default {
     },
     community_created_toast: 'コミュニティを作成しました。',
     community_updated_toast: 'コミュニティを編集しました。',
-    title_already_in_use: '「コミュニティ名」を見直してください',
+    title_already_in_use: 'コミュニティ名が既に使用中です',
   },
   topic_create: {
     title: 'トピックを作成する',

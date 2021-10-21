@@ -122,7 +122,7 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
       setDetailFeatures(
         _.filter(communityFeatures, (communityFeature) => {
           let isEqual = false
-          _.map(community.attributes.features, (feature) => {
+          _.map(community?.attributes?.features, (feature) => {
             if (feature.id === Number(communityFeature.id)) {
               isEqual = true
             }
