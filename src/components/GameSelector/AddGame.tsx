@@ -16,6 +16,7 @@ import { NG_WORD_DIALOG_CONFIG, NG_WORD_AREA } from '@constants/common.constants
 import ESFastInput from '@components/FastInput'
 import { useFocusState } from '@utils/hooks/input-focus-context'
 import useToast from '@utils/hooks/useToast'
+import useScrollClass from './useScrollClass'
 
 interface Props {
   genres: GameGenre[]
@@ -81,9 +82,9 @@ const AddGame: React.FC<Props> = ({ genres, handleAdd, height }) => {
   }, [meta.loaded])
 
   const isInitial = formik.values.display_name === '' || formik.values.game_genre_id === -1
-
+  const scrollClass = useScrollClass()
   return (
-    <Box py={4} px={5} className={classes.container} height={height + 100}>
+    <Box py={4} px={5} className={`${classes.container} ${scrollClass}`} height={height + 100}>
       <form onSubmit={formik.handleSubmit} style={{ margin: '0 12px' }}>
         <Select
           id="game_genre_id"
