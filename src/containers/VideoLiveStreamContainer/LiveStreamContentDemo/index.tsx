@@ -318,8 +318,8 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
     return null
   }
 
-  const liveBasicContentVisible = () => !isMobile || !softKeyboardIsShown
-  const mobileRegisterChannelVisible = () => isMobile && !softKeyboardIsShown
+  const liveBasicContentVisible = !isMobile || !softKeyboardIsShown
+  const mobileRegisterChannelVisible = isMobile && !softKeyboardIsShown
   const goToLogin = () => {
     router.push(makeContextualHref({ pathName: ESRoutes.LOGIN }), ESRoutes.LOGIN, { shallow: true })
   }
@@ -379,8 +379,8 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
           {showOverlayOnMediaPlayer() && mediaOverlayPurchaseTicketView()}
         </Box>
       )}
-      {mobileRegisterChannelVisible() && mobileRegisterChannelContainer()}
-      {liveBasicContentVisible() && (
+      {mobileRegisterChannelVisible && mobileRegisterChannelContainer()}
+      {liveBasicContentVisible && (
         <Box className={classes.wrap_info}>
           <Box className={classes.wrap_movie_info}>
             <Box className={classes.wrap_title}>
