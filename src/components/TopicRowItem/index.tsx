@@ -85,7 +85,7 @@ const TopicRowItem: React.FC<TopicRowItemProps> = ({
     if (!lastCommentData && isSearch) {
       return (
         <Highlight search={keyword} contentRect={contentRect}>
-          {content}
+          {t('common:community.detail_search.content_text') + content}
         </Highlight>
       )
     }
@@ -96,7 +96,7 @@ const TopicRowItem: React.FC<TopicRowItemProps> = ({
       <Box>
         <Typography component="span" variant="body2">
           <Highlight search={keyword} contentRect={contentRect}>
-            {content}
+            {t('common:community.detail_search.content_text') + content}
           </Highlight>
         </Typography>
       </Box>
@@ -129,9 +129,13 @@ const TopicRowItem: React.FC<TopicRowItemProps> = ({
           <Box className={classes.container}>
             <Box display="flex" flexDirection="row" width="100%">
               <Typography className={classes.title}>
-                <Highlight isTitle={true} search={keyword}>
-                  {title}
-                </Highlight>
+                {isOnlyTitle ? (
+                  <Highlight isTitle={true} search={keyword}>
+                    {title}
+                  </Highlight>
+                ) : (
+                  title
+                )}
               </Typography>
             </Box>
             <Box height={0.25} />
