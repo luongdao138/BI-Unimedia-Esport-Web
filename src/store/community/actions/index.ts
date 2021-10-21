@@ -388,4 +388,6 @@ export const getCommentsList = createAsyncThunk<services.CommentsListResponse, s
   }
 )
 
+export const resetCommentsList = createAction(COMMUNITY_ACTION_TYPE.RESET_COMMENTS_LIST)
+
 export const resetSearchCommunity = createAction(COMMUNITY_ACTION_TYPE.RESET_SEARCH_COMMUNITY)
