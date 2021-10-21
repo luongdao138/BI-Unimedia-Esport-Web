@@ -62,7 +62,7 @@ const GameEditContainer: React.FC = () => {
         </Box>
 
         {profile && getUserProfileMeta.loaded && (
-          <Box>
+          <Box pt={4}>
             <GameSelector values={profile.game_titles} onChange={onGameChange} />
           </Box>
         )}

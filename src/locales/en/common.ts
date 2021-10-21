@@ -271,6 +271,7 @@ export default {
       placeholder: 'キーワードからトピックを検索します',
       result: '検索結果',
       no_data: '該当するトピックは見つかりませんでした',
+      content_text: 'トピック本文　',
     },
     follow_list: 'フォローリスト',
     member_list: {
@@ -529,7 +530,8 @@ export default {
   arena: {
     entry_after_recruitment_period: '受付時間を過ぎていたため、エントリーに失敗しました',
     leave_after_recruitment_period: '受付時間を過ぎていたため、エントリーを辞退できませんでした',
-    select_two_or_more: '参加枠数と同数のユーザーを選択してください。選択されなかったユーザーは落選となります。',
+    select_two_or_more:
+      '参加枠数と同数の{{isTeam, participation_type}}を選択してください。選択されなかった{{isTeam, participation_type}}は落選となります。',
     enter_own_score: '参加者は自身の対戦の結果のみ入力できます',
     input_result: '結果の入力',
     br_set_score_btn: '結果を反映する',

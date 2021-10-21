@@ -29,7 +29,7 @@ const ArenaBattles: React.FC = () => {
   const { t } = useTranslation(['common'])
 
   const { tournament, meta: detailMeta } = useTournamentDetail()
-  const { isModerator, isParticipant, isTeamLeader, isTeam } = useArenaHelper(tournament)
+  const { isModerator, isParticipant, isTeam, isFreezed } = useArenaHelper(tournament)
   const [hideFooter, setHideFooter] = useState(true)
   const [errors, setErrors] = useState<Record<string, ErrorType>>({})
 
@@ -90,7 +90,7 @@ const ArenaBattles: React.FC = () => {
     } else {
       setBattleRoyaleOwnScore({
         hash_key: tournament.attributes.hash_key,
-        participants: selecteds.filter((p) => p.highlight),
+        participants: selecteds.filter((p) => p.highlight && !p.attributes.is_fixed_score),
       })
     }
   }
@@ -105,10 +105,10 @@ const ArenaBattles: React.FC = () => {
   const isFixedMyScore = useMemo(() => getIsFixedMyScore(selecteds), [selecteds])
 
   useEffect(() => {
-    if (tournament?.attributes.status === 'in_progress' || tournament?.attributes.status === 'completed') {
+    if ((tournament?.attributes.status === 'in_progress' || tournament?.attributes.status === 'completed') && isFreezed) {
       if (isModerator) {
         setHideFooter(false)
-      } else if (isParticipant && isTeamLeader && !isFixedMyScore) {
+      } else if (isParticipant && !isFixedMyScore && tournament?.attributes.status === 'in_progress') {
         setHideFooter(false)
       }
     }
@@ -138,7 +138,7 @@ const ArenaBattles: React.FC = () => {
     >
       {detailMeta.loaded && <HeaderWithButton title={tournament.attributes.title} />}
 
-      <RuleHeader textAlign="center" pt={3} rule={tournament?.attributes.rule} showCaution={isParticipant && isTeamLeader}>
+      <RuleHeader textAlign="center" pt={3} rule={tournament?.attributes.rule} showCaution={isParticipant}>
         <Box textAlign="center" pb={3}>
           {errorObject.time_attack_invalid_value ? (
             <Typography style={{ color: Colors.secondary, paddingTop: 4 }}>
@@ -206,7 +206,7 @@ const ArenaBattles: React.FC = () => {
                 onChange={({ target: { value } }) => setScores(value === '' ? '' : Number(value), v.id)}
                 onAttackError={(val) => handleError(val, v.id)}
                 type={tournament?.attributes.rule}
-                disabled={(v.attributes.is_fixed_score || !v.highlight) && !isModerator}
+                disabled={((v.attributes.is_fixed_score || !v.highlight) && !isModerator) || !isFreezed}
                 participants={participants}
               />
             </BRListItem>
@@ -255,6 +255,6 @@ const mergeErrors = (errors: Record<string, ErrorType>): ErrorType => {
 
 const getIsFixedMyScore = (participants: ParticipantsResponse[]): boolean => {
   const myTeam = participants.filter((p) => p.highlight)
-  if (myTeam.length) return myTeam[0].attributes.is_fixed_score
-  return true
+  const freezedLength = _.compact(myTeam.map((t) => t.attributes.is_fixed_score)).length
+  return freezedLength === myTeam.length
 }

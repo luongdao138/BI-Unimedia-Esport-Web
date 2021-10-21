@@ -14,7 +14,6 @@ import * as commonActions from '@store/common/actions'
 import { showDialog } from '@store/common/actions'
 import { NG_WORD_AREA, NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
 import useTopicDetail from '../../useTopicDetail'
-import { forwardRef } from 'react'
 import { REPLY_REGEX } from '@constants/community.constants'
 import CommentInputArea from './CommentInputArea'
 
@@ -26,93 +25,83 @@ type CommunityHeaderProps = {
   setShowReply: Dispatch<SetStateAction<boolean[]>>
 }
 
-const Comment = forwardRef<HTMLDivElement, CommunityHeaderProps>(
-  ({ reply_param, setPage, setCommentCount, commentCount, setShowReply }, ref) => {
-    const classes = useStyles()
-    const { query } = useRouter()
-    const { topic_hash_key } = query
-    const { t } = useTranslation(['common'])
-    const dispatch = useAppDispatch()
-    const { checkNgWord } = useCheckNgWord()
-    const { createComment, createCommentMeta, resetCommentCreateMeta } = useTopicDetail()
-    const { uploadCommentImage } = useUploadImage()
+const Comment: React.FC<CommunityHeaderProps> = ({ reply_param, setPage, setCommentCount, commentCount, setShowReply }) => {
+  const classes = useStyles()
+  const { query } = useRouter()
+  const { topic_hash_key } = query
+  const { t } = useTranslation(['common'])
+  const dispatch = useAppDispatch()
+  const { checkNgWord } = useCheckNgWord()
+  const { createComment, createCommentMeta, resetCommentCreateMeta } = useTopicDetail()
+  const { uploadCommentImage } = useUploadImage()
 
-    const [isUploading, setUploading] = useState(false)
+  const [isUploading, setUploading] = useState(false)
 
-    const inputRef = useRef<{ clearInput: () => void }>(null)
+  const inputRef = useRef<{ clearInput: () => void }>(null)
 
-    const [imageURL, setImageURL] = useState('')
-    const [inputText, setInputText] = useState('')
+  const [imageURL, setImageURL] = useState('')
 
-    useEffect(() => {
-      if (!_.isEmpty(reply_param)) {
-        if (!_.includes(_.split(inputText, REPLY_REGEX), `>>${reply_param.comment_no}`)) {
-          setInputText(inputText.concat('>>' + reply_param.comment_no))
-        }
-      }
-    }, [reply_param])
-
-    useEffect(() => {
-      if (!createCommentMeta.pending && createCommentMeta.loaded) {
-        if (inputRef.current) inputRef.current.clearInput()
-        setImageURL('')
-        setPage(1)
-        setCommentCount(commentCount + 1)
-      } else if (!createCommentMeta.pending && createCommentMeta.error) {
-        dispatch(commonActions.addToast(t('common:topic.topic_not_found')))
-        router.back()
-      }
-      resetCommentCreateMeta()
-    }, [createCommentMeta])
-
-    const handleUpload = (file: File) => {
-      setUploading(true)
-      uploadCommentImage(file, undefined, (imageUrl) => {
-        setUploading(false)
-        setImageURL(imageUrl)
-      })
+  useEffect(() => {
+    if (!createCommentMeta.pending && createCommentMeta.loaded) {
+      if (inputRef.current) inputRef.current.clearInput()
+      setImageURL('')
+      setPage(1)
+      setCommentCount(commentCount + 1)
+    } else if (!createCommentMeta.pending && createCommentMeta.error) {
+      dispatch(commonActions.addToast(t('common:topic.topic_not_found')))
+      router.back()
     }
+    resetCommentCreateMeta()
+  }, [createCommentMeta])
 
-    const isInputEmpty = (text: string) => {
-      const textArray = _.split(text, '\n')
-      for (let i = 0; i < textArray.length; i++) {
-        if (textArray[i] !== '') {
-          return false
-        }
-      }
-      return true
-    }
-
-    const send = (text: string) => {
-      setShowReply((comments) => _.map(comments, () => false))
-      if (_.isEmpty(checkNgWord(text.trim()))) {
-        const reply_comment_nos = _.map(_.filter(_.split(text, REPLY_REGEX)), (c) => Number(c.slice(2)))
-        const data = {
-          topic_hash: String(topic_hash_key),
-          content: isInputEmpty(text) ? '' : text,
-          reply_to_comment_nos: reply_comment_nos,
-          attachments: imageURL,
-        }
-        if (!createCommentMeta.pending) {
-          createComment(data)
-        }
-      } else {
-        dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: NG_WORD_AREA.comment_section }))
-      }
-    }
-
-    return (
-      <div className={classes.inputContainer} ref={ref}>
-        <Box className={classes.root}>
-          <Box className={classes.toolbarCont}>
-            <ImageUploader src={imageURL} setSrc={setImageURL} onChange={handleUpload} isUploading={isUploading} />
-          </Box>
-          <CommentInputArea ref={inputRef} onPressSend={send} disabled={imageURL === ''} />
-        </Box>
-      </div>
-    )
+  const handleUpload = (file: File) => {
+    setUploading(true)
+    uploadCommentImage(file, undefined, (imageUrl) => {
+      setUploading(false)
+      setImageURL(imageUrl)
+    })
   }
-)
+
+  const isInputEmpty = (text: string) => {
+    const textArray = _.split(text, '\n')
+    for (let i = 0; i < textArray.length; i++) {
+      if (textArray[i] !== '') {
+        return false
+      }
+    }
+    return true
+  }
+
+  const send = (text: string) => {
+    setShowReply((comments) => _.map(comments, () => false))
+    if (_.isEmpty(checkNgWord(text.trim()))) {
+      const reply_comment_nos = _.map(_.filter(_.split(text, REPLY_REGEX)), (c) => Number(c.slice(2)))
+      const data = {
+        topic_hash: String(topic_hash_key),
+        content: isInputEmpty(text) ? '' : text,
+        reply_to_comment_nos: reply_comment_nos,
+        attachments: imageURL,
+      }
+      if (!createCommentMeta.pending) {
+        createComment(data)
+      }
+    } else {
+      dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: NG_WORD_AREA.comment_section }))
+    }
+  }
+
+  return (
+    <div className={classes.inputContainer}>
+      <Box className={classes.root}>
+        <Box className={classes.toolbarCont}>
+          <ImageUploader src={imageURL} setSrc={setImageURL} onChange={handleUpload} isUploading={isUploading} />
+        </Box>
+        <CommentInputArea replyParam={reply_param} ref={inputRef} onPressSend={send} disabled={imageURL === ''} />
+      </Box>
+    </div>
+  )
+}
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flexDirection: 'row',

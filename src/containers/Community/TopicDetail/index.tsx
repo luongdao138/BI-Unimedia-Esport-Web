@@ -5,7 +5,7 @@ import MainTopic from '@containers/Community/TopicDetail/Partials/MainTopic'
 import { Box } from '@material-ui/core'
 import Pagination from '../Partials/Pagination'
 import CommentInput from './Partials/CommentInput'
-import useTopicDetail from './useTopicDetail'
+import useTopicDetail, { useClearMeta } from './useTopicDetail'
 import ESFullLoader from '@components/FullScreenLoader'
 import { useRouter } from 'next/router'
 import useCommunityDetail from '../Detail/useCommunityDetail'
@@ -21,8 +21,6 @@ import { useConfirm } from '@components/Confirm'
 import { COMMUNITY_DIALOGS } from '@constants/community.constants'
 import ListContainer from './Partials/ListContainer'
 import { use100vh } from 'react-div-100vh'
-
-const inputRef = React.createRef<HTMLDivElement>()
 
 const TopicDetailContainer: React.FC = () => {
   const { t } = useTranslation(['common'])
@@ -75,6 +73,8 @@ const TopicDetailContainer: React.FC = () => {
   const handleDeleteComment = () => {
     deleteComment({ comment_no: selectedCommentNo, topic_hash: String(topic_hash_key) })
   }
+
+  useClearMeta()
 
   useEffect(() => {
     if (deleteTopicMeta.loaded) {
@@ -188,6 +188,7 @@ const TopicDetailContainer: React.FC = () => {
                     setShowComment={setShowCommentReply}
                     showComment={showCommentReply[i]}
                     index={i}
+                    windowHeight={height}
                   />
                 )
               })}
@@ -203,7 +204,6 @@ const TopicDetailContainer: React.FC = () => {
             <CommentInput
               reply_param={reply}
               setPage={setPage}
-              ref={inputRef}
               setCommentCount={setCommentCount}
               commentCount={commentCount}
               setShowReply={setShowCommentReply}

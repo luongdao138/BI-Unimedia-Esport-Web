@@ -31,7 +31,17 @@ const BRStatusRecruiting: React.FC<BRStatusRecruitingProps> = ({ arena, userProf
   const dateInterval = `${TournamentHelper.formatDate(arena.attributes.start_date)} ～ ${TournamentHelper.formatDate(
     arena.attributes.end_date
   )}`
-  const { toParticipants, toGroupChat, isTeam, isModerator, isTeamLeader, toMatches, isFreezed, isParticipant } = useArenaHelper(arena)
+  const {
+    toParticipants,
+    toGroupChat,
+    isTeam,
+    isModerator,
+    isTeamLeader,
+    toMatches,
+    isFreezed,
+    isParticipant,
+    isInterested,
+  } = useArenaHelper(arena)
   useEntry()
   const [open, setOpen] = useState(false)
   const handleOpenEntryModal = () => {
@@ -66,7 +76,7 @@ const BRStatusRecruiting: React.FC<BRStatusRecruitingProps> = ({ arena, userProf
                 variant="outlined"
                 fullWidth
                 onClick={toGroupChat}
-                disabled={!((isTeamLeader && isParticipant) || isModerator)}
+                disabled={!(isModerator || isParticipant)}
                 style={{ width: 160 }}
               >
                 {t('tournament.group_chat')}
@@ -77,7 +87,7 @@ const BRStatusRecruiting: React.FC<BRStatusRecruitingProps> = ({ arena, userProf
                 variant="outlined"
                 fullWidth
                 onClick={toGroupChat}
-                disabled={!(isModerator || isTeamLeader)}
+                disabled={!(isModerator || isInterested || isParticipant)}
                 style={{ width: 160 }}
               >
                 {t('tournament.group_chat')}
