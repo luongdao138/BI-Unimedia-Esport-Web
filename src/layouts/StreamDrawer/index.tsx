@@ -23,6 +23,7 @@ export const StreamDrawer: React.FC<StreamDrawerProps> = ({ toggleDrawer, open, 
       className="StreamDrawer"
       open={open}
       onClose={() => toggleDrawer(false)}
+      disableRestoreFocus
     >
       <Box
         className={classes.box}
