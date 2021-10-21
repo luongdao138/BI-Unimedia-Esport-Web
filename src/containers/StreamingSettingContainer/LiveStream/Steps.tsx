@@ -59,7 +59,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
   const dispatch = useAppDispatch()
   const { t } = useTranslation(['common'])
   const [categoryName, setCategoryName] = useState('')
-  const { liveSettingInformation, setLiveStreamConfirm, getStreamUrlAndKey, isPending } = useLiveSetting()
+  const { liveSettingInformation, setLiveStreamConfirm, getStreamUrlAndKey, isPending, isPendingSetting } = useLiveSetting()
   const { userProfile } = useGetProfile()
   const [showStreamURL, setShowStreamURL] = useState(false)
   const [showStreamKey, setShowStreamKey] = useState(false)
@@ -795,7 +795,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
           )}
         </form>
       </Box>
-      <ESLoader open={isPending} />
+      <ESLoader open={isPending || isPendingSetting} />
     </Box>
   )
 }
