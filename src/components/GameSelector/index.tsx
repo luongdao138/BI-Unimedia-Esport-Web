@@ -69,7 +69,7 @@ const GameSelector: React.FC<GameSelectorProps> = (props) => {
         </GameSearchByGenre>
       </TabPanel>
       <TabPanel value={tab} index={2}>
-        <AddGame genres={genres} handleAdd={handleAdd} />
+        <AddGame genres={genres} handleAdd={handleAdd} height={contentHeight} />
       </TabPanel>
       <SelectedGames games={props.values} handleRemove={handleRemove} ref={selectedGamesRef} />
     </Box>
