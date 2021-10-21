@@ -31,6 +31,7 @@ type StateType = {
   videoDetailError?: any
   seeked_second?: number
   is_pausing_live?: boolean
+  is_streaming_end?: boolean
 }
 const initialState: StateType = {
   listVideoAll: {
@@ -70,6 +71,7 @@ const initialState: StateType = {
   seek_count: 0,
   seeked_second: 0,
   is_pausing_live: false,
+  is_streaming_end: false,
 }
 
 export default createReducer(initialState, (builder) => {
@@ -173,5 +175,8 @@ export default createReducer(initialState, (builder) => {
   })
   builder.addCase(actions.changeIsPausingLive, (state, action) => {
     state.is_pausing_live = action.payload.is_pausing_live
+  })
+  builder.addCase(actions.changeIsStreamingEnd, (state, action) => {
+    state.is_streaming_end = action.payload.is_streaming_end
   })
 })

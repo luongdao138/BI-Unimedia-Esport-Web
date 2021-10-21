@@ -328,7 +328,7 @@ export const LIVE_VIDEO_TYPE = {
   SCHEDULE: 1,
 }
 
-export const DELAY_SECONDS = 15
+export const DELAY_SECONDS = 8
 
 export const EVENT_STATE_CHANNEL = {
   CREATING: 'CREATING',

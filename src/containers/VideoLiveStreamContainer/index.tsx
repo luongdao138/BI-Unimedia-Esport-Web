@@ -39,6 +39,7 @@ import DialogLoginContainer from '@containers/DialogLogin'
 import _ from 'lodash'
 import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
 import LiveStreamContent from './LiveStreamContentDemo'
+import { onUpdateChannel } from 'src/graphql/subscriptions'
 
 enum TABS {
   PROGRAM_INFO = 1,
@@ -91,12 +92,13 @@ const VideoDetail: React.FC = () => {
   const [errorPurchase, setErrorPurchase] = useState(false)
   const [videoInfo, setVideoInfo] = useState<VIDEO_INFO>({ video_status: STATUS_VIDEO.SCHEDULE, process_status: '' })
   const [videoStatus, setVideoStatus] = useState(null)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isArchived, setIsArchived] = useState(false)
   console.log('🚀 ~ isArchived', isArchived)
 
   console.log('🚀 ~ videoStatus', videoStatus)
 
-  const { getVideoDetail, detailVideoResult, userResult, videoDetailError, resetVideoDetailError, resetVideoDetailData } = useDetailVideo()
+  const { getVideoDetail, detailVideoResult, userResult, videoDetailError, resetVideoDetailError, resetVideoDetailData, changeIsStreamingEnd } = useDetailVideo()
 
   const isPendingPurchaseTicket = meta_purchase_ticket_super_chat?.pending && purchaseType === PURCHASE_TYPE.PURCHASE_TICKET
 
@@ -185,26 +187,19 @@ const VideoDetail: React.FC = () => {
   }
 
   useEffect(() => {
-    if (!detailVideoResult.key_video_id) return
+    if (!detailVideoResult.key_video_id || videoStatus === STATUS_VIDEO.ARCHIVE) return
 
     const { video_status, process_status } = videoInfo
     console.log('🚀 ~ useEffect ~ videoStatus', videoStatus)
-    if (videoStatus !== STATUS_VIDEO.ARCHIVE) {
-      // if end live stream or archive => navigateToArchiveUrl
-      const isVideoNotStreaming =
-        (video_status === EVENT_LIVE_STATUS.RECORDING_ARCHIVED && process_status === EVENT_LIVE_STATUS.RECORDING_END) ||
-        (+video_status === STATUS_VIDEO.ARCHIVE && process_status === EVENT_LIVE_STATUS.STREAM_END)
+    // if end live stream or archive => navigateToArchiveUrl
+    const isVideoNotStreaming =
+      (video_status === EVENT_LIVE_STATUS.RECORDING_ARCHIVED && process_status === EVENT_LIVE_STATUS.RECORDING_END) ||
+      (+video_status === STATUS_VIDEO.ARCHIVE && process_status === EVENT_LIVE_STATUS.STREAM_END)
 
-      if (isVideoNotStreaming) {
-        // setVideoStatus(STATUS_VIDEO.ARCHIVE)
-        console.log('🚀 ~ 00000', videoInfo)
-        setTimeout(() => {
-          console.log('🚀 ~ 00aaaa000', videoInfo)
-          setVideoStatus(STATUS_VIDEO.ARCHIVE)
-          setIsArchived(true)
-          navigateToArchiveUrl()
-        }, 3000)
-      }
+    if (isVideoNotStreaming) {
+      // setVideoStatus(STATUS_VIDEO.ARCHIVE)
+      console.log('🚀 ~ 00000', videoInfo)
+      changeIsStreamingEnd(true)
     }
     if (+video_status === STATUS_VIDEO.SCHEDULE) {
       // catch event video is schedule
@@ -216,6 +211,9 @@ const VideoDetail: React.FC = () => {
       if (process_status === EVENT_LIVE_STATUS.STREAM_START) {
         setVideoStatus(STATUS_VIDEO.LIVE_STREAM)
         // window.location.reload()
+      } else if (process_status === EVENT_LIVE_STATUS.STREAM_END) {
+        // setVideoStatus(STATUS_VIDEO.ARCHIVE)
+        // navigateToArchiveUrl()
       }
     }
   }, [JSON.stringify(videoInfo)])
@@ -270,11 +268,52 @@ const VideoDetail: React.FC = () => {
     return updateVideoSubscription
   }
 
+  const handleOnUpdateChannel = useRef(null)
+  const handleWhenChangeChannel = (updatedChannel) => {
+    console.log('🚀 ~ updatedChannel--000', updatedChannel)
+    // if (
+    //   videoStatus !== STATUS_VIDEO.ARCHIVE &&
+    //   detailVideoResult.arn &&
+    //   updatedChannel?.arn === detailVideoResult.arn &&
+    //   updatedChannel?.state === EVENT_STATE_CHANNEL.STOPPING
+    // ) {
+    //   console.log('🚀 ~ updatedChannel--000', updatedChannel)
+    //   setTimeout(() => {
+    //     console.log('🚀 ~ 2121', videoInfo)
+    //     setVideoStatus(STATUS_VIDEO.ARCHIVE)
+    //     setIsArchived(true)
+    //     changeIsStreamingEnd(false)
+    //     navigateToArchiveUrl()
+    //   }, 3000)
+    // }
+  }
+  handleOnUpdateChannel.current = handleWhenChangeChannel
+
+  //update channel
+  const subscribeUpdateChannelAction = () => {
+    let updateChannelSubscription = API.graphql(graphqlOperation(onUpdateChannel))
+    updateChannelSubscription = updateChannelSubscription.subscribe({
+      next: (sub: GraphQLResult<APIt.OnUpdateChannelSubscription>) => {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        //@ts-ignore
+        const updatedChannel = sub?.value?.data?.onUpdateChannel
+        console.log('====>>SUB<<===', updatedChannel)
+        handleOnUpdateChannel.current(updatedChannel)
+      },
+      error: (error) => console.warn(error),
+    })
+    return updateChannelSubscription
+  }
+
   useEffect(() => {
     const updateVideoSubscription = subscribeUpdateVideoAction()
+    const updateChannelSubscription = subscribeUpdateChannelAction()
     return () => {
       if (updateVideoSubscription) {
         updateVideoSubscription.unsubscribe()
+      }
+      if (updateChannelSubscription) {
+        updateChannelSubscription.unsubscribe()
       }
       resetVideoDetailData()
     }
@@ -499,6 +538,12 @@ const VideoDetail: React.FC = () => {
   }
 
   const onVideoEnd = () => {
+    if(videoStatus !== STATUS_VIDEO.ARCHIVE) {
+      setVideoStatus(STATUS_VIDEO.ARCHIVE)
+      setIsArchived(true)
+      changeIsStreamingEnd(false)
+      navigateToArchiveUrl()
+    }
     if (video_id) {
       // getVideoDetail({ video_id: `${video_id}` })
     }
