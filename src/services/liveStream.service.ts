@@ -89,6 +89,8 @@ export type LiveStreamSettingResponse = {
     status?: number
     channel_id?: number
     arn?: string
+    live_stream_start_time?: string
+    live_stream_end_time?: string
   }
 }
 export type LiveStreamSettingParams = {

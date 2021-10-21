@@ -126,6 +126,12 @@ const checkDisplayErrorOnChange = (formik: FormikProps<FormLiveType>, field: str
       }
       return validField
     },
+    ticket_price: () => {
+      if (field === 'ticket_price' && stepSettingTwo?.ticket_price) {
+        return hasErrorField(stepSettingTwo?.ticket_price)
+      }
+      return validField
+    },
     stream_notify_time: () => {
       if (field === 'stream_notify_time') {
         return stepSettingTwo?.stream_notify_time ? hasErrorField(stepSettingTwo?.stream_notify_time) : validField
@@ -143,6 +149,7 @@ const checkDisplayErrorOnChange = (formik: FormikProps<FormLiveType>, field: str
         '': () => validField,
         title: () => validField,
         description: () => validField,
+        ticket_price: () => validField,
         stream_notify_time: () => validField,
         video_publish_end_time: () => validField,
         stream_schedule_start_time: () => {
@@ -180,6 +187,7 @@ const checkDisplayErrorOnChange = (formik: FormikProps<FormLiveType>, field: str
         '': () => validField,
         title: () => validField,
         description: () => validField,
+        ticket_price: () => validField,
         stream_notify_time: () => validField,
         stream_schedule_start_time: () => validField,
         sell_ticket_start_time: () => validField,

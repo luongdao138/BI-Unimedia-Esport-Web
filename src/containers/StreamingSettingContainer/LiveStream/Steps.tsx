@@ -103,10 +103,10 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
 
   const checkStatus = (data) => {
     //check live stream isn't it? 1 - live
-    const status = data?.status === 1 ? true : false
+    const status = data?.status === 1 && data?.live_stream_start_time ? true : false
     setIsLive(status)
     //if live, disable btn re-new
-    setShowReNew(data?.status === 1 ? false : true)
+    setShowReNew(data?.status === 1 && data?.live_stream_start_time ? false : true)
     // setStatus(data?.status)
   }
 
@@ -731,7 +731,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
                   <Typography className={classes.textLink}>{t('common:streaming_setting_screen.copy_url')}</Typography>
                 </Box>
 
-                <Box
+                {/* <Box
                   py={1}
                   display="flex"
                   justifyContent="flex-end"
@@ -739,7 +739,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
                   onClick={() => showReNew && !isLive && onReNewUrlAndKey(TYPE_SECRET_KEY.KEY, TYPE_SECRET_KEY.RE_NEW, true)}
                 >
                   <Typography className={classes.textLink}>{t('common:streaming_setting_screen.reissue')}</Typography>
-                </Box>
+                </Box> */}
               </Box>
             )}
           </Box>

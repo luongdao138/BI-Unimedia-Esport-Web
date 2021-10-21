@@ -1,8 +1,9 @@
 import { OutlinedInputProps } from '@material-ui/core'
-import React, { ReactElement, useEffect, useState } from 'react'
+import React, { ReactElement, useCallback, useEffect, useState } from 'react'
 
 import { FormikProps } from 'formik'
 import ESInputStream from './Input'
+import _ from 'lodash'
 
 export type InputProps = {
   helperText?: string
@@ -25,9 +26,17 @@ const ESNumberInputStream: React.FC<OutlinedInputProps & InputProps> = (props) =
     }
   }, [props.value])
 
+  const debouncedChangeHandler = useCallback(
+    _.debounce((e) => {
+      props.onChange(e)
+    }, 300),
+    []
+  )
+
   const handleChange = (e) => {
     e.persist()
     setValue(e.target.value)
+    debouncedChangeHandler(e)
     if (props.formik) props.formik.setFieldValue(props.nameValue, e.target.value)
   }
 
