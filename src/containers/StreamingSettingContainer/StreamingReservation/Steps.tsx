@@ -77,6 +77,8 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
   const [disable, setDisable] = useState<boolean>(false)
   const [type, setType] = useState(TYPE_RM.NEW)
   const [validateField, setValidateField] = useState('')
+  const [statusRecordSetting, setStatusRecordSetting] = useState()
+  const [onChangeFlag, setOnChangeFlag] = useState(false) //1-edit # date, 2 - edit date,
 
   const formRef = {
     title: useRef(null),
@@ -108,6 +110,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
       setShowReNew(true)
     }
     checkStatus(data?.data)
+    setStatusRecordSetting(data?.data?.status)
   }
 
   const checkStatus = (data) => {
@@ -185,17 +188,21 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
   }
 
   const onValidateForm = () => {
-    setValidateField('all')
-    formik.validateForm().then((err) => {
-      if (_.isEmpty(err.stepSettingTwo)) {
-        onClickNext()
-      } else {
-        const errorField = getDisplayErrorField(formik)
-        if (formRef[errorField]) {
-          window.scrollTo({ behavior: 'smooth', top: formRef[errorField].current.offsetTop - 200 })
+    if (onChangeFlag && !statusRecordSetting) {
+      setValidateField('all')
+      formik.validateForm().then((err) => {
+        if (_.isEmpty(err.stepSettingTwo)) {
+          onClickNext()
+        } else {
+          const errorField = getDisplayErrorField(formik)
+          if (formRef[errorField]) {
+            window.scrollTo({ behavior: 'smooth', top: formRef[errorField].current.offsetTop - 200 })
+          }
         }
-      }
-    })
+      })
+    } else {
+      onClickNext()
+    }
   }
 
   const onClickNext = () => {
@@ -444,6 +451,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
                   onChange={(e) => {
                     setValidateField('description')
                     formik.handleChange(e)
+                    if (onChangeFlag) setOnChangeFlag(true)
                   }}
                   onBlur={formik.handleBlur}
                   helperText={
@@ -529,6 +537,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
                   onChange={(date) => {
                     formik.setFieldValue('stepSettingTwo.stream_notify_time', date.toString())
                     setValidateField('stream_notify_time')
+                    setOnChangeFlag(true)
                   }}
                   onBlur={(e) => {
                     setType(TYPE_RM.NOTIFY)
@@ -573,6 +582,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
                   onChange={(date) => {
                     formik.setFieldValue('stepSettingTwo.stream_schedule_start_time', date.toString())
                     setValidateField('stream_schedule_start_time')
+                    setOnChangeFlag(true)
                   }}
                   helperText={
                     validateField !== 'all'
@@ -615,6 +625,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
                   onChange={(date) => {
                     formik.setFieldValue('stepSettingTwo.stream_schedule_end_time', date.toString())
                     setValidateField('stream_schedule_end_time')
+                    setOnChangeFlag(true)
                   }}
                   // helperText={checkDisplayError(formik, 'stream_schedule_end_time').helperText}
                   // error={checkDisplayError(formik, 'stream_schedule_end_time').error}
@@ -661,6 +672,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
                     const temp = moment(date).add(5, 's')
                     formik.setFieldValue('stepSettingTwo.video_publish_end_time', temp)
                     setValidateField('video_publish_end_time')
+                    setOnChangeFlag(true)
                   }}
                   helperText={
                     validateField !== 'all'
@@ -757,16 +769,19 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
                           ? ''
                           : formik?.values?.stepSettingTwo?.ticket_price
                       }
-                      onChange={formik.handleChange}
+                      onChange={(e) => {
+                        setValidateField('ticket_price')
+                        formik.handleChange(e)
+                      }}
                       helperText={
-                        formik?.values?.stepSettingTwo?.use_ticket
-                          ? formik?.touched?.stepSettingTwo?.ticket_price && formik?.errors?.stepSettingTwo?.ticket_price
-                          : null
+                        validateField !== 'all'
+                          ? checkDisplayErrorOnChange(formik, 'ticket_price', validateField).helperText
+                          : checkDisplayErrorOnSubmit(formik, 'ticket_price').helperText
                       }
                       error={
-                        formik?.values?.stepSettingTwo?.use_ticket
-                          ? formik?.touched?.stepSettingTwo?.ticket_price && !!formik?.errors?.stepSettingTwo?.ticket_price
-                          : false
+                        validateField !== 'all'
+                          ? checkDisplayErrorOnChange(formik, 'ticket_price', validateField).error
+                          : checkDisplayErrorOnSubmit(formik, 'ticket_price').error
                       }
                       size="big"
                       isNumber={true}
@@ -813,6 +828,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
                         const temp = moment(date).add(5, 's')
                         formik.setFieldValue('stepSettingTwo.sell_ticket_start_time', temp)
                         setValidateField('sell_ticket_start_time')
+                        setOnChangeFlag(true)
                       }}
                       helperText={
                         validateField !== 'all'
@@ -1014,7 +1030,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
                   <Icon className={`fa fa-link ${classes.link}`} fontSize="small" />
                   <Typography className={classes.textLink}>{t('common:streaming_setting_screen.copy_url')}</Typography>
                 </Box>
-                <Box
+                {/* <Box
                   py={1}
                   display="flex"
                   justifyContent="flex-end"
@@ -1022,7 +1038,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
                   onClick={() => showReNew && !isLive && onReNewUrlAndKey(TYPE_SECRET_KEY.URL, TYPE_SECRET_KEY.RE_NEW, true)}
                 >
                   <Typography className={classes.textLink}>{t('common:streaming_setting_screen.reissue')}</Typography>
-                </Box>
+                </Box> */}
               </Box>
             )}
           </Box>
