@@ -20,9 +20,13 @@ import useToast from '@utils/hooks/useToast'
 interface Props {
   genres: GameGenre[]
   handleAdd: (game: GameTitle['attributes']) => void
+  height: number
 }
 
 const useStyles = makeStyles((theme) => ({
+  container: {
+    overflowY: 'auto',
+  },
   button: {
     paddingLeft: theme.spacing(6),
     paddingRight: theme.spacing(6),
@@ -35,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const AddGame: React.FC<Props> = ({ genres, handleAdd }) => {
+const AddGame: React.FC<Props> = ({ genres, handleAdd, height }) => {
   const { t } = useTranslation('common')
   const classes = useStyles()
   const dispatch = useAppDispatch()
@@ -79,8 +83,8 @@ const AddGame: React.FC<Props> = ({ genres, handleAdd }) => {
   const isInitial = formik.values.display_name === '' || formik.values.game_genre_id === -1
 
   return (
-    <Box pt={4} px={5} className={classes.container}>
-      <form onSubmit={formik.handleSubmit}>
+    <Box py={4} px={5} className={classes.container} height={height + 100}>
+      <form onSubmit={formik.handleSubmit} style={{ margin: '0 12px' }}>
         <Select
           id="game_genre_id"
           name="game_genre_id"
