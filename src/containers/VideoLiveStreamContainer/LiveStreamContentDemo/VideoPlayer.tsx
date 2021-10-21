@@ -485,25 +485,39 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       videoEl.current.play()
     }
   }
+  console.log('video isFullScreen >>>>>>>>>>>>>>', videoEl?.current?.webkitPresentationMode)
 
   return (
     <div className={classes.videoPlayer}>
       {(iPhonePl || androidPl) && (
-        <video
-          id="video"
-          ref={videoEl}
-          muted
-          style={{ width: '100%', height: '100%' }}
-          src={src}
-          autoPlay={autoPlay}
-          controls
-          //@ts-ignore
-          playsinline="playsinline"
-          preload={'auto'}
-          controlslist="noplaybackrate foobar"
-        >
-          <source src={src} type={'video/MP4'} />
-        </video>
+        <div>
+          <video
+            id="video"
+            ref={videoEl}
+            muted
+            className="video_player"
+            style={{ width: '100%', height: '100%' }}
+            onTimeUpdate={() => {
+              console.log('*********** onTimeUpdate >>>>>>>>>>>')
+            }}
+            onSeeking={() => {
+              console.log('*********** onSeeking >>>>>>>>>>>')
+            }}
+            onProgress={() => {
+              console.log('*********** onProgress >>>>>>>>>>>')
+            }}
+            src={src}
+            autoPlay={autoPlay}
+            controls
+            //@ts-ignore
+            playsInline
+            preload={'auto'}
+            controlsList="noplaybackrate foobar"
+            // onSeeked
+          >
+            <source src={src} type={'video/MP4'} />
+          </video>
+        </div>
       )}
       <div ref={playerContainerRef} className={classes.playerContainer}>
         <div style={{ height: '100%' }} onClick={handlePlayPauseOut}>
@@ -611,6 +625,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
+  videoPlayerContainer: {},
   // process: (props: { checkStatusVideo: number }) => {
   //   return {
   //     zIndex: 1,

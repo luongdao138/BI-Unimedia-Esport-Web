@@ -233,7 +233,7 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
           {isAuthenticated && (
             <ListItem
               className={classes.list + getAddClass(classes.noMinimizeList, classes.minimizeList)}
-              style={{ borderBottom: `1px solid ${Colors.white_opacity[30]}`, paddingBottom: 10, marginTop: 0 }}
+              // style={{ borderBottom: `1px solid ${Colors.white_opacity[30]}`, paddingBottom: 10, marginTop: 0 }}
               button
               disableRipple
               onClick={() => handleModal('logout')}
