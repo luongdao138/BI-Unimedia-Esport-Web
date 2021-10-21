@@ -17,7 +17,7 @@ interface Props {
   setFollow?: (value: number) => void
   videoItemStyle?: any
 }
-const LIMIT_ITEM = 12
+const LIMIT_ITEM = 14
 const LiveStreamVideos: React.FC<Props> = ({ follow, setFollow, videoItemStyle }) => {
   const theme = useTheme()
   const downMd = useMediaQuery(theme.breakpoints.down(769))

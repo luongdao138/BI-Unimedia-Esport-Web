@@ -17,7 +17,7 @@ interface Props {
   setFollow?: (value: number) => void
   videoItemStyle?: any
 }
-const LIMIT_ITEM = 12
+const LIMIT_ITEM = 14
 const ScheduleVideos: React.FC<Props> = ({ follow, setFollow, videoItemStyle }) => {
   const classes = useStyles()
   const theme = useTheme()

@@ -13,6 +13,7 @@ import { searchTypes } from '@constants/common.constants'
 import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
 import useVideoSearch from '@containers/Search/useVideoSearch'
+import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
 
 type VideoListProps = {
   setTab: (value: number) => void
@@ -23,8 +24,9 @@ const VideosList: React.FC<VideoListProps> = ({ setTab, videoItemStyle }) => {
   const router = useRouter()
   const theme = useTheme()
   const downMd = useMediaQuery(theme.breakpoints.down(769))
-  const up2569 = useMediaQuery(theme.breakpoints.up(2569))
-  const up1920 = useMediaQuery(theme.breakpoints.up(1920))
+  // const up2569 = useMediaQuery(theme.breakpoints.up(2569))
+  // const up1920 = useMediaQuery(theme.breakpoints.up(1920))
+  const { width: screenWidth } = useWindowDimensions()
 
   const classes = useStyles()
   const { setSearch, setSearchCategoryID } = useVideoSearch()
@@ -131,8 +133,10 @@ const VideosList: React.FC<VideoListProps> = ({ setTab, videoItemStyle }) => {
   }
 
   const listLimitData = (categoryList) => {
-    if (up2569) return categoryList ? 5 : 10
-    if (up1920) return categoryList ? 4 : 8
+    if (screenWidth > 2548) return categoryList ? 7 : 14
+    if (screenWidth > 2198) return categoryList ? 6 : 12
+    if (screenWidth > 1599) return categoryList ? 5 : 10
+    if (screenWidth > 1299) return categoryList ? 4 : 8
     return categoryList ? 3 : 6
   }
 
@@ -300,8 +304,22 @@ const useStyles = makeStyles((theme: Theme) => ({
   [theme.breakpoints.up(960)]: {
     itemContainer: {
       flexGrow: '0',
-      maxWidth: '33.333333%',
-      flexBasis: '33.333333%',
+      maxWidth: '33.3333%',
+      flexBasis: '33.3333%',
+    },
+  },
+  [theme.breakpoints.up(1300)]: {
+    itemContainer: {
+      flexGrow: '0',
+      maxWidth: '25%',
+      flexBasis: '25%',
+    },
+  },
+  [theme.breakpoints.up(1600)]: {
+    itemContainer: {
+      flexGrow: '0',
+      maxWidth: '20%',
+      flexBasis: '20%',
     },
   },
   [theme.breakpoints.up(1920)]: {

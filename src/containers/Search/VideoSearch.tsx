@@ -23,7 +23,7 @@ const VideoSearchContainer: React.FC = () => {
   const [page, setPage] = useState<number>(1)
   const [hasMore, setHasMore] = useState(true)
   const isWideScreen = useMediaQuery(theme.breakpoints.up(1920))
-  const { width: listDisplayWidth } = useWindowDimensions(244)
+  const { width: listDisplayWidth } = useWindowDimensions(182)
   const { width: itemWidthDownMdScreen } = useWindowDimensions(48)
 
   useEffect(() => {
@@ -57,7 +57,7 @@ const VideoSearchContainer: React.FC = () => {
     if (!isWideScreen) {
       return {}
     }
-    const numOfDisplayItem = Math.floor(listDisplayWidth / 419)
+    const numOfDisplayItem = Math.floor(listDisplayWidth / 330)
     const calcWidth = Math.floor(listDisplayWidth / numOfDisplayItem)
     return {
       maxWidth: calcWidth,
@@ -159,6 +159,20 @@ const useStyles = makeStyles((theme: Theme) => ({
       flexGrow: '0',
       maxWidth: '33.333333%',
       flexBasis: '33.333333%',
+    },
+  },
+  [theme.breakpoints.up(1300)]: {
+    itemContainer: {
+      flexGrow: '0',
+      maxWidth: '25%',
+      flexBasis: '25%',
+    },
+  },
+  [theme.breakpoints.up(1600)]: {
+    itemContainer: {
+      flexGrow: '0',
+      maxWidth: '20%',
+      flexBasis: '20%',
     },
   },
   [theme.breakpoints.up(1920)]: {

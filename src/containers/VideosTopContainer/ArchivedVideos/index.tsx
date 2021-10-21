@@ -17,7 +17,8 @@ interface Props {
   setFollow?: (value: number) => void
   videoItemStyle: any
 }
-const LIMIT_ITEM = 12
+
+const LIMIT_ITEM = 14
 const ArchivedVideos: React.FC<Props> = ({ follow, setFollow, videoItemStyle }) => {
   const classes = useStyles()
   const theme = useTheme()
@@ -70,8 +71,17 @@ const ArchivedVideos: React.FC<Props> = ({ follow, setFollow, videoItemStyle }) 
     )
   }
 
+  const listLimitData = () => {
+    const screenWidth = itemWidthDownMdScreen + 48
+    if (screenWidth > 2548) return 21
+    if (screenWidth > 2198) return 18
+    if (screenWidth > 1599) return 15
+    if (screenWidth > 1299) return 12
+    return 9
+  }
+
   const renderPreLoad = () => {
-    const arrayPreLoad = Array(9)
+    const arrayPreLoad = Array(listLimitData())
       .fill('')
       .map((_, i) => ({ i }))
     return arrayPreLoad.map((_item: any, index: number) =>
