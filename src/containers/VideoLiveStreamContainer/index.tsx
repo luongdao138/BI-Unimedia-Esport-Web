@@ -185,65 +185,63 @@ const VideoDetail: React.FC = () => {
   }
 
   useEffect(() => {
-    if (detailVideoResult.key_video_id) {
-      const { video_status, process_status } = videoInfo
-      console.log('🚀 ~ useEffect ~ videoStatus', videoStatus)
-      if (videoStatus !== STATUS_VIDEO.ARCHIVE) {
-        // if end live stream or archive => navigateToArchiveUrl
-        if (
-          (video_status === EVENT_LIVE_STATUS.RECORDING_ARCHIVED && process_status === EVENT_LIVE_STATUS.RECORDING_END) ||
-          (+video_status === STATUS_VIDEO.ARCHIVE && process_status === EVENT_LIVE_STATUS.STREAM_END)
-        ) {
-          // setVideoStatus(STATUS_VIDEO.ARCHIVE)
-          console.log('🚀 ~ 00000', videoInfo)
-          setTimeout(() => {
-            console.log('🚀 ~ 00aaaa000', videoInfo)
-            setVideoStatus(STATUS_VIDEO.ARCHIVE)
-            setIsArchived(true)
-            navigateToArchiveUrl()
-          }, 3000)
-        }
+    if (!detailVideoResult.key_video_id) return
+
+    const { video_status, process_status } = videoInfo
+    console.log('🚀 ~ useEffect ~ videoStatus', videoStatus)
+    if (videoStatus !== STATUS_VIDEO.ARCHIVE) {
+      // if end live stream or archive => navigateToArchiveUrl
+      const isVideoNotStreaming =
+        (video_status === EVENT_LIVE_STATUS.RECORDING_ARCHIVED && process_status === EVENT_LIVE_STATUS.RECORDING_END) ||
+        (+video_status === STATUS_VIDEO.ARCHIVE && process_status === EVENT_LIVE_STATUS.STREAM_END)
+
+      if (isVideoNotStreaming) {
+        // setVideoStatus(STATUS_VIDEO.ARCHIVE)
+        console.log('🚀 ~ 00000', videoInfo)
+        setTimeout(() => {
+          console.log('🚀 ~ 00aaaa000', videoInfo)
+          setVideoStatus(STATUS_VIDEO.ARCHIVE)
+          setIsArchived(true)
+          navigateToArchiveUrl()
+        }, 3000)
       }
-      if (+video_status === STATUS_VIDEO.SCHEDULE) {
-        // catch event video is schedule
-        if (+videoStatus !== STATUS_VIDEO.LIVE_STREAM) {
-          setVideoStatus(STATUS_VIDEO.SCHEDULE)
-        }
-      } else if (+video_status === STATUS_VIDEO.LIVE_STREAM) {
-        // catch event start live
-        if (process_status === EVENT_LIVE_STATUS.STREAM_START) {
-          setVideoStatus(STATUS_VIDEO.LIVE_STREAM)
-          // window.location.reload()
-        } else if (process_status === EVENT_LIVE_STATUS.STREAM_END) {
-          // setVideoStatus(STATUS_VIDEO.ARCHIVE)
-          // navigateToArchiveUrl()
-        }
+    }
+    if (+video_status === STATUS_VIDEO.SCHEDULE) {
+      // catch event video is schedule
+      if (+videoStatus !== STATUS_VIDEO.LIVE_STREAM) {
+        setVideoStatus(STATUS_VIDEO.SCHEDULE)
+      }
+    } else if (+video_status === STATUS_VIDEO.LIVE_STREAM) {
+      // catch event start live
+      if (process_status === EVENT_LIVE_STATUS.STREAM_START) {
+        setVideoStatus(STATUS_VIDEO.LIVE_STREAM)
+        // window.location.reload()
       }
     }
   }, [JSON.stringify(videoInfo)])
 
   useEffect(() => {
-    if (detailVideoResult.key_video_id) {
-      checkVideoStatus()
-      let statusDetailVideo = detailVideoResult.status
-      console.log('🚀 ~ useEffect ~ detailVideoResult', detailVideoResult)
-      console.log('🚀 ~ is Start Live)', moment().isBefore(detailVideoResult.live_stream_start_time, 'second'))
-      // if have not arrive live stream start time => set video status is schedule
-      if (
-        statusDetailVideo === STATUS_VIDEO.LIVE_STREAM &&
-        (!detailVideoResult.live_stream_start_time || moment().isBefore(detailVideoResult.live_stream_start_time, 'second'))
-      ) {
-        statusDetailVideo = STATUS_VIDEO.SCHEDULE
-      }
-      setVideoStatus(statusDetailVideo)
-      // redirect to archive url if first time user access vid = user_id (scheduled_flag = LIVE_VIDEO_TYPE.LIVE) and video archived
-      if (detailVideoResult.status === STATUS_VIDEO.ARCHIVE && detailVideoResult.scheduled_flag === LIVE_VIDEO_TYPE.LIVE) {
-        console.log('🚀 ~ useEffect ~ 111111', detailVideoResult)
-        navigateToArchiveUrl()
-      }
-    }
     // update IsVideoFreeToWatch
     setIsVideoFreeToWatch(detailVideoResult?.use_ticket)
+
+    if (!detailVideoResult.key_video_id) return
+    checkVideoStatus()
+    let statusDetailVideo = detailVideoResult.status
+    console.log('🚀 ~ useEffect ~ detailVideoResult', detailVideoResult)
+    console.log('🚀 ~ is Start Live)', moment().isBefore(detailVideoResult.live_stream_start_time, 'second'))
+    // if have not arrive live stream start time => set video status is schedule
+    if (
+      statusDetailVideo === STATUS_VIDEO.LIVE_STREAM &&
+      (!detailVideoResult.live_stream_start_time || moment().isBefore(detailVideoResult.live_stream_start_time, 'second'))
+    ) {
+      statusDetailVideo = STATUS_VIDEO.SCHEDULE
+    }
+    setVideoStatus(statusDetailVideo)
+    // redirect to archive url if first time user access vid = user_id (scheduled_flag = LIVE_VIDEO_TYPE.LIVE) and video archived
+    if (detailVideoResult.status === STATUS_VIDEO.ARCHIVE && detailVideoResult.scheduled_flag === LIVE_VIDEO_TYPE.LIVE) {
+      console.log('🚀 ~ useEffect ~ 111111', detailVideoResult)
+      navigateToArchiveUrl()
+    }
   }, [JSON.stringify(detailVideoResult)])
 
   const refOnUpdateVideo = useRef(null)
@@ -572,8 +570,8 @@ const VideoDetail: React.FC = () => {
           setShowModalPurchasePoint={(value) => setShowModalPurchasePoint(value)}
         /> */}
         </Box>
-        {!isMobile ? (
-          _.isEmpty(detailVideoResult) ? (
+        {!isMobile &&
+          (_.isEmpty(detailVideoResult) ? (
             <Box
               style={{
                 display: 'flex',
@@ -590,10 +588,7 @@ const VideoDetail: React.FC = () => {
             </Box>
           ) : (
             sideChatContainer()
-          )
-        ) : (
-          ''
-        )}
+          ))}
       </Box>
       <PurchaseTicketSuperChat
         myPoints={myPoint}
