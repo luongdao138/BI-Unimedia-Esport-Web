@@ -115,7 +115,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   videoContainer: {
     borderRadius: 4,
     position: 'relative',
-    paddingBottom: '32.5%',
+    paddingBottom: '55%',
     overflow: 'hidden',
   },
   video: {

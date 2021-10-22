@@ -96,7 +96,7 @@ const VideosTop: React.FC = () => {
     if (!isWideScreen) {
       return {}
     }
-    const numOfDisplayItem = Math.floor(listDisplayWidth / 433.5)
+    const numOfDisplayItem = Math.floor(listDisplayWidth / 350)
     const calcWidth = listDisplayWidth / numOfDisplayItem
 
     return {

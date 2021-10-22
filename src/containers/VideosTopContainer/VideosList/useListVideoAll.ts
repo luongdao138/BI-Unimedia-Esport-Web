@@ -25,12 +25,12 @@ const useListVideoAll = (): {
   // const page = useAppSelector(selectors.getListVideoTop)
   const meta = useAppSelector(_getListVideoAll)
   const getListVideoTop = (params: ListVideoTopParams) => dispatch(actions.getListVideoAll(params))
-  const getListVideoPopular = () => dispatch(actions.getCategoryPopularVideo({ timezone: getTimeZone(), limit: 5 }))
+  const getListVideoPopular = () => dispatch(actions.getCategoryPopularVideo({ timezone: getTimeZone(), limit: 7 }))
   const bannerTop = () => dispatch(actions.getBannerTop())
 
   //TODO: add limit (if you need)
   const listLiveVideo = () => {
-    getListVideoTop({ type: TYPE_VIDEO_TOP.ALL, limit: 10 })
+    getListVideoTop({ type: TYPE_VIDEO_TOP.ALL, limit: 14 })
   }
 
   const videoPopular = () => {

@@ -9,6 +9,7 @@ import useFavoriteVideos from './useFavoriteVideos'
 import React, { useEffect } from 'react'
 import { TypeVideo } from '@services/videoTop.services'
 import PreLoadContainer from '../PreLoadContainer'
+import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
 
 type FavoriteVideosProps = {
   setTab: (value: number) => void
@@ -20,8 +21,7 @@ const FavoriteVideos: React.FC<FavoriteVideosProps> = ({ setTab, setFollow, vide
   const downMd = useMediaQuery(theme.breakpoints.down(769))
   const classes = useStyles()
   const { listFavoriteVideo, meta, listLiveVideo } = useFavoriteVideos()
-  const up2569 = useMediaQuery(theme.breakpoints.up(2569))
-  const up1920 = useMediaQuery(theme.breakpoints.up(1920))
+  const { width: screenWidth } = useWindowDimensions()
 
   const renderLiveItem = (item: TypeVideo, index: number) => {
     return (
@@ -57,7 +57,7 @@ const FavoriteVideos: React.FC<FavoriteVideosProps> = ({ setTab, setFollow, vide
   }
 
   const renderPreLoad = () => {
-    const arrayPreLoad = Array(6)
+    const arrayPreLoad = Array(listLimitData())
       .fill('')
       .map((_, i) => ({ i }))
     return arrayPreLoad.map((_item: any, index: number) =>
@@ -74,12 +74,14 @@ const FavoriteVideos: React.FC<FavoriteVideosProps> = ({ setTab, setFollow, vide
       )
     )
   }
-
   const listLimitData = () => {
-    if (up2569) return 10
-    if (up1920) return 8
-    return 6
+    if (screenWidth > 2548) return 7
+    if (screenWidth > 2198) return 6
+    if (screenWidth > 1599) return 5
+    if (screenWidth > 1299) return 4
+    return 3
   }
+
   const getDisplayData = (fullData) => {
     return fullData.slice(0, listLimitData())
   }
