@@ -199,30 +199,21 @@ const VideoDetail: React.FC = () => {
 
     const { video_status, process_status } = videoInfo
     console.log('🚀 ~ useEffect ~ videoStatus', videoStatus)
-    // if end live stream or archive => navigateToArchiveUrl
-    const isVideoNotStreaming =
+    const isNotStreamingVideo =
       (video_status === EVENT_LIVE_STATUS.RECORDING_ARCHIVED && process_status === EVENT_LIVE_STATUS.RECORDING_END) ||
       (+video_status === STATUS_VIDEO.ARCHIVE && process_status === EVENT_LIVE_STATUS.STREAM_END)
 
-    if (isVideoNotStreaming) {
-      // setVideoStatus(STATUS_VIDEO.ARCHIVE)
+    const isScheduleVideo = +video_status === STATUS_VIDEO.SCHEDULE && +videoStatus !== STATUS_VIDEO.LIVE_STREAM
+    const isLiveStreamVideo = +video_status === STATUS_VIDEO.LIVE_STREAM && process_status === EVENT_LIVE_STATUS.STREAM_START
+
+    if (isNotStreamingVideo) {
       console.log('🚀 ~ 00000', videoInfo)
       changeIsStreamingEnd(true)
     }
-    if (+video_status === STATUS_VIDEO.SCHEDULE) {
-      // catch event video is schedule
-      if (+videoStatus !== STATUS_VIDEO.LIVE_STREAM) {
-        setVideoStatus(STATUS_VIDEO.SCHEDULE)
-      }
-    } else if (+video_status === STATUS_VIDEO.LIVE_STREAM) {
-      // catch event start live
-      if (process_status === EVENT_LIVE_STATUS.STREAM_START) {
-        setVideoStatus(STATUS_VIDEO.LIVE_STREAM)
-        // window.location.reload()
-      } else if (process_status === EVENT_LIVE_STATUS.STREAM_END) {
-        // setVideoStatus(STATUS_VIDEO.ARCHIVE)
-        // navigateToArchiveUrl()
-      }
+    if (isScheduleVideo) {
+      setVideoStatus(STATUS_VIDEO.SCHEDULE)
+    } else if (isLiveStreamVideo) {
+      setVideoStatus(STATUS_VIDEO.LIVE_STREAM)
     }
   }, [JSON.stringify(videoInfo)])
 
@@ -236,10 +227,11 @@ const VideoDetail: React.FC = () => {
     console.log('🚀 ~ useEffect ~ detailVideoResult', detailVideoResult)
     console.log('🚀 ~ is Start Live)', moment().isBefore(detailVideoResult.live_stream_start_time, 'second'))
     // if have not arrive live stream start time => set video status is schedule
-    if (
+    const isBeforeLiveStreamTime =
       statusDetailVideo === STATUS_VIDEO.LIVE_STREAM &&
       (!detailVideoResult.live_stream_start_time || moment().isBefore(detailVideoResult.live_stream_start_time, 'second'))
-    ) {
+
+    if (isBeforeLiveStreamTime) {
       statusDetailVideo = STATUS_VIDEO.SCHEDULE
     }
     setVideoStatus(statusDetailVideo)
@@ -348,8 +340,6 @@ const VideoDetail: React.FC = () => {
   useEffect(() => {
     setTab(isMobile ? TABS.COMMENT : TABS.PROGRAM_INFO)
   }, [isMobile])
-  // console.log('Is Authenticated >>>>>>>>', userProfile)
-  // console.log('Video detail data >>>>>>>>', detailVideoResult, userResult)
 
   useEffect(() => {
     if (videoDetailError) {
@@ -467,7 +457,6 @@ const VideoDetail: React.FC = () => {
 
   const isDown960 = pageWidth <= 960
   const sizeMenuWidth = () => {
-    // if (!isDown960) return 50
     if (!isDown960) return 60
     return 0
   }
@@ -520,8 +509,6 @@ const VideoDetail: React.FC = () => {
     )
   }
 
-  // const getVideoType = () => detailVideoResult?.status
-
   const isTicketAvailableForSale = () => {
     const current = moment().valueOf()
     if (detailVideoResult?.sell_ticket_start_time && detailVideoResult?.use_ticket === 1) {
@@ -532,14 +519,6 @@ const VideoDetail: React.FC = () => {
   }
   const userHasViewingTicket = () => (userResult ? userResult?.buy_ticket : 0)
   const isScheduleAndNotHaveTicket = () => videoStatus === STATUS_VIDEO.SCHEDULE && userResult?.buy_ticket === 0
-  // const getVideoType = () => 1
-  // const isVideoFreeToWatch = () => false
-  // const isTicketAvailableForSale = () => {
-  //   const current = moment().valueOf()
-  //   const available = moment(detailVideoResult?.sell_ticket_start_time).valueOf()
-  //   return true
-  // }
-  // const userHasViewingTicket = () => false
 
   const changeSoftKeyboardVisibleState = (visible: boolean) => {
     setSoftKeyboardIsShown(visible)
@@ -551,9 +530,6 @@ const VideoDetail: React.FC = () => {
       setIsArchived(true)
       changeIsStreamingEnd(false)
       navigateToArchiveUrl()
-    }
-    if (video_id) {
-      // getVideoDetail({ video_id: `${video_id}` })
     }
   }
 
