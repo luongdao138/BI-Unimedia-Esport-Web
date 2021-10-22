@@ -67,19 +67,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     videoError: false,
   })
 
-  const {
-    // changeStreamingSecond,
-    // streamingSecond,
-    // changeIsViewingStream,
-    // isViewingStream,
-    // changePlayedSecond,
-    // playedSecond,
-    changeVideoTime,
-    // changeIsEndLive,
-    // changeIsPausingLive,
-    liveStreamInfo,
-    changeSeekCount,
-  } = useDetailVideo()
+  const { changeVideoTime, liveStreamInfo, changeSeekCount } = useDetailVideo()
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'), { noSsr: true })
   const isDownMd = useMediaQuery(theme.breakpoints.down(769), { noSsr: true })

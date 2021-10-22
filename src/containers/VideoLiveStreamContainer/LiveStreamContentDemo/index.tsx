@@ -10,7 +10,6 @@ import React, { useCallback, useEffect, useState } from 'react'
 import ESMenuItem from '@components/Menu/MenuItem'
 import { VIDEO_TYPE } from '@containers/VideoLiveStreamContainer'
 import OverlayContent from '@containers/VideoLiveStreamContainer/LiveStreamContent/OverlayContent'
-// import VideoPlayer from './VideoPlayer'
 import useLiveStreamDetail from '../useLiveStreamDetail'
 import ReactionButton from './ReactionButton'
 import useDetailVideo from '../useDetailVideo'
@@ -210,11 +209,6 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
 
   const mediaPlayer = () => {
     return (
-      // <VideoPlayer
-      //   src={'https://usher.ttvnw.net/api/lvs/hls/lvs.lvs-client-example.c6341be8-a3c7-42bc-b89a-8dabe040eae9.m3u8'}
-      //   thumbnail={'/images/live_stream/exelab_thumb.png'}
-      //   statusVideo={true}
-      // />
       <>
         {showOverlayOnMediaPlayer() ? (
           <img
@@ -290,7 +284,6 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
   }
 
   const showOverlayOnMediaPlayer = () => {
-    // const { userHasViewingTicket, videoType, freeToWatch, ticketAvailableForSale } = props
     if (videoType === STATUS_VIDEO.SCHEDULE && isVideoFreeToWatch) {
       return true
     }
@@ -303,7 +296,6 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
     if (!isVideoFreeToWatch && !userHasViewingTicket) {
       return true
     }
-    // return !freeToWatch && !userHasViewingTicket
     return null
   }
 
