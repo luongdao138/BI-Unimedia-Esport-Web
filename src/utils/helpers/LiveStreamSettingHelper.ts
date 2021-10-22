@@ -71,6 +71,7 @@ const hasErrorField = (message) => ({
 const errorFields = [
   ['title', 'title'],
   ['description', 'description'],
+  ['ticket_price', 'ticket_price'],
   ['stream_notify_time', 'stream_notify_time'],
   ['stream_schedule_start_time', 'stream_schedule_start_time'],
   ['notify_live_start_date', 'stream_schedule_start_time'],

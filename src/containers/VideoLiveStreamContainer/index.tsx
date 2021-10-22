@@ -98,7 +98,15 @@ const VideoDetail: React.FC = () => {
 
   console.log('🚀 ~ videoStatus', videoStatus)
 
-  const { getVideoDetail, detailVideoResult, userResult, videoDetailError, resetVideoDetailError, resetVideoDetailData, changeIsStreamingEnd } = useDetailVideo()
+  const {
+    getVideoDetail,
+    detailVideoResult,
+    userResult,
+    videoDetailError,
+    resetVideoDetailError,
+    resetVideoDetailData,
+    changeIsStreamingEnd,
+  } = useDetailVideo()
 
   const isPendingPurchaseTicket = meta_purchase_ticket_super_chat?.pending && purchaseType === PURCHASE_TYPE.PURCHASE_TICKET
 
@@ -538,7 +546,7 @@ const VideoDetail: React.FC = () => {
   }
 
   const onVideoEnd = () => {
-    if(videoStatus !== STATUS_VIDEO.ARCHIVE) {
+    if (videoStatus !== STATUS_VIDEO.ARCHIVE) {
       setVideoStatus(STATUS_VIDEO.ARCHIVE)
       setIsArchived(true)
       changeIsStreamingEnd(false)

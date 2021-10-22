@@ -48,6 +48,7 @@ interface StepsProps {
   isShare?: boolean
   titlePost?: string
   contentPost?: string
+  flagUpdateFieldDate?: (flag: boolean) => void
 }
 
 const KEY_TYPE = {
@@ -56,7 +57,7 @@ const KEY_TYPE = {
   UUID: 3,
 }
 
-const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, titlePost, contentPost }) => {
+const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, titlePost, contentPost, flagUpdateFieldDate }) => {
   const classes = useStyles()
   const dispatch = useAppDispatch()
   const { t } = useTranslation(['common'])
@@ -77,7 +78,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
   const [disable, setDisable] = useState<boolean>(false)
   const [type, setType] = useState(TYPE_RM.NEW)
   const [validateField, setValidateField] = useState('')
-  const [statusRecordSetting, setStatusRecordSetting] = useState()
+  // const [statusRecordSetting, setStatusRecordSetting] = useState()
   const [onChangeFlag, setOnChangeFlag] = useState(false) //1-edit # date, 2 - edit date,
 
   const formRef = {
@@ -110,7 +111,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
       setShowReNew(true)
     }
     checkStatus(data?.data)
-    setStatusRecordSetting(data?.data?.status)
+    // setStatusRecordSetting(data?.data?.status)
   }
 
   const checkStatus = (data) => {
@@ -188,21 +189,21 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
   }
 
   const onValidateForm = () => {
-    if (onChangeFlag && !statusRecordSetting) {
-      setValidateField('all')
-      formik.validateForm().then((err) => {
-        if (_.isEmpty(err.stepSettingTwo)) {
-          onClickNext()
-        } else {
-          const errorField = getDisplayErrorField(formik)
-          if (formRef[errorField]) {
-            window.scrollTo({ behavior: 'smooth', top: formRef[errorField].current.offsetTop - 200 })
-          }
+    // if (onChangeFlag && !statusRecordSetting) {
+    setValidateField('all')
+    formik.validateForm().then((err) => {
+      if (_.isEmpty(err.stepSettingTwo)) {
+        onClickNext()
+      } else {
+        const errorField = getDisplayErrorField(formik)
+        if (formRef[errorField]) {
+          window.scrollTo({ behavior: 'smooth', top: formRef[errorField].current.offsetTop - 200 })
         }
-      })
-    } else {
-      onClickNext()
-    }
+      }
+    })
+    // } else {
+    //   onClickNext()
+    // }
   }
 
   const onClickNext = () => {
@@ -418,6 +419,10 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
                 onChange={(e) => {
                   formik.handleChange(e)
                   setValidateField('title')
+                  if (onChangeFlag) {
+                    setOnChangeFlag(true)
+                    flagUpdateFieldDate(true)
+                  }
                 }}
                 onBlur={formik.handleBlur}
                 helperText={
@@ -451,7 +456,10 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
                   onChange={(e) => {
                     setValidateField('description')
                     formik.handleChange(e)
-                    if (onChangeFlag) setOnChangeFlag(true)
+                    if (onChangeFlag) {
+                      setOnChangeFlag(true)
+                      flagUpdateFieldDate(true)
+                    }
                   }}
                   onBlur={formik.handleBlur}
                   helperText={
@@ -497,7 +505,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
                   label={i18n.t('common:delivery_reservation_tab.category')}
                   required={true}
                   size="big"
-                  disabled={isLive}
+                  disabled={false}
                   helperText={formik?.touched?.stepSettingTwo?.category && formik?.errors?.stepSettingTwo?.category}
                   error={formik?.touched?.stepSettingTwo?.category && !!formik?.errors?.stepSettingTwo?.category}
                 >
@@ -538,6 +546,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
                     formik.setFieldValue('stepSettingTwo.stream_notify_time', date.toString())
                     setValidateField('stream_notify_time')
                     setOnChangeFlag(true)
+                    flagUpdateFieldDate(true)
                   }}
                   onBlur={(e) => {
                     setType(TYPE_RM.NOTIFY)
@@ -583,6 +592,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
                     formik.setFieldValue('stepSettingTwo.stream_schedule_start_time', date.toString())
                     setValidateField('stream_schedule_start_time')
                     setOnChangeFlag(true)
+                    flagUpdateFieldDate(true)
                   }}
                   helperText={
                     validateField !== 'all'
@@ -626,6 +636,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
                     formik.setFieldValue('stepSettingTwo.stream_schedule_end_time', date.toString())
                     setValidateField('stream_schedule_end_time')
                     setOnChangeFlag(true)
+                    flagUpdateFieldDate(true)
                   }}
                   // helperText={checkDisplayError(formik, 'stream_schedule_end_time').helperText}
                   // error={checkDisplayError(formik, 'stream_schedule_end_time').error}
@@ -665,7 +676,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
               {isFirstStep() ? (
                 <ESInputDatePicker
                   name="stepSettingTwo.video_publish_end_time"
-                  placeholder={'2021年7月31日 23:59'}
+                  placeholder={i18n.t('common:streaming_setting_screen.archived_end_time_pl')}
                   fullWidth
                   value={formik?.values?.stepSettingTwo?.video_publish_end_time}
                   onChange={(date) => {
@@ -673,6 +684,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
                     formik.setFieldValue('stepSettingTwo.video_publish_end_time', temp)
                     setValidateField('video_publish_end_time')
                     setOnChangeFlag(true)
+                    flagUpdateFieldDate(true)
                   }}
                   helperText={
                     validateField !== 'all'
@@ -772,6 +784,10 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
                       onChange={(e) => {
                         setValidateField('ticket_price')
                         formik.handleChange(e)
+                        if (onChangeFlag) {
+                          setOnChangeFlag(true)
+                          flagUpdateFieldDate(true)
+                        }
                       }}
                       helperText={
                         validateField !== 'all'
@@ -786,8 +802,9 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
                       size="big"
                       isNumber={true}
                       formik={formik}
-                      disabled={!isFirstStep()}
-                      className={getAddClassByStep(classes.input_text)}
+                      disabled={isLive}
+                      // className={getAddClassByStep(classes.input_text_number)}
+                      className={classes.input_text_number}
                       readOnly={!formik?.values?.stepSettingTwo?.use_ticket}
                       nowrapHelperText
                       endAdornment={
@@ -829,6 +846,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
                         formik.setFieldValue('stepSettingTwo.sell_ticket_start_time', temp)
                         setValidateField('sell_ticket_start_time')
                         setOnChangeFlag(true)
+                        flagUpdateFieldDate(true)
                       }}
                       helperText={
                         validateField !== 'all'
@@ -1117,6 +1135,36 @@ const useStyles = makeStyles((theme: Theme) => ({
       display: 'flex',
       alignItems: 'center',
       padding: '4px 0 4px 0',
+    },
+    '& :-webkit-autofill': {
+      WebkitBoxShadow: '0 0 0 100px transparent inset',
+    },
+  },
+  input_text_number: {
+    backgroundColor: Colors.black,
+    borderRadius: 4,
+    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+      borderWidth: 1,
+      borderColor: '#fff',
+    },
+    '&.Mui-error .MuiOutlinedInput-notchedOutline': {
+      background: 'rgba(247, 247, 53, 0.1)',
+    },
+    '&.Mui-disabled': {
+      backgroundColor: '#000000',
+      border: 'solid 1px rgba(255,255,255,.3)',
+      color: 'rgba(255,255,255,.5)',
+      '& .MuiOutlinedInput-notchedOutline': {
+        borderColor: 'transparent',
+      },
+      '&.MuiOutlinedInput-multiline.MuiOutlinedInput-marginDense': {
+        // padding: 0,
+      },
+    },
+    '& .MuiInputBase-input.Mui-disabled': {
+      backgroundColor: '#000000',
+      padding: '10.5px 14px',
+      borderRadius: 4,
     },
     '& :-webkit-autofill': {
       WebkitBoxShadow: '0 0 0 100px transparent inset',

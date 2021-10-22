@@ -55,6 +55,7 @@ const StreamingSettingContainer: React.FC<{ default_tab: any }> = ({ default_tab
   const initialDistributorsValues = getInitialDistributorValues(channelInfo?.data ? channelInfo?.data : null)
   const isFirstRunTab2 = useRef(true)
   const isFirstRunTab3 = useRef(true)
+  const [flagUpdateFieldDate, setFlagUpdateFieldDate] = useState(false)
 
   const formikLive = useFormik<FormLiveType>({
     initialValues: initialValues,
@@ -68,7 +69,7 @@ const StreamingSettingContainer: React.FC<{ default_tab: any }> = ({ default_tab
 
   const formikSchedule = useFormik<FormLiveType>({
     initialValues: initialScheduleValues,
-    validationSchema: validationScheduleScheme(),
+    validationSchema: validationScheduleScheme(flagUpdateFieldDate),
     enableReinitialize: true,
     validateOnChange: true,
     validateOnBlur: true,
@@ -129,6 +130,10 @@ const StreamingSettingContainer: React.FC<{ default_tab: any }> = ({ default_tab
     formikDistributor.validateForm()
   }, [scheduleInformation || channelInfo])
 
+  const onUpdateFlagChangeFieldDate = (flag: boolean) => {
+    setFlagUpdateFieldDate(flag)
+  }
+
   const getTabs = () => {
     return (
       <Grid item xs={12} className={classes.tabsContainer}>
@@ -145,7 +150,7 @@ const StreamingSettingContainer: React.FC<{ default_tab: any }> = ({ default_tab
       case TABS.LIVE_STREAM:
         return <LiveStreamContainer formik={formikLive} />
       case TABS.STREAMING_RESERVATION:
-        return <StreamingReservationContainer formik={formikSchedule} />
+        return <StreamingReservationContainer formik={formikSchedule} flagUpdateFieldDate={onUpdateFlagChangeFieldDate} />
       case TABS.DISTRIBUTOR:
         return <DistributorInformationContainer formik={formikDistributor} />
       default:
