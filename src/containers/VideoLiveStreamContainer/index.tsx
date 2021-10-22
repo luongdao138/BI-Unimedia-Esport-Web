@@ -94,9 +94,6 @@ const VideoDetail: React.FC = () => {
   const [videoStatus, setVideoStatus] = useState(null)
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isArchived, setIsArchived] = useState(false)
-  console.log('🚀 ~ isArchived', isArchived)
-
-  console.log('🚀 ~ videoStatus', videoStatus)
 
   const {
     getVideoDetail,
@@ -115,7 +112,6 @@ const VideoDetail: React.FC = () => {
   // const isLoadingData = isAuthenticated ? !detailVideoResult || !myPointsData || !userResult || !video_id : !detailVideoResult || !video_id
 
   const [isVideoFreeToWatch, setIsVideoFreeToWatch] = useState(detailVideoResult?.use_ticket ? detailVideoResult?.use_ticket : -1)
-  console.log('isVideoFreeToWatch VideoDetail >>>>>>>>', isVideoFreeToWatch)
 
   const handleShowDialogLogin = () => {
     setShowDialogLogin(true)
@@ -125,34 +121,6 @@ const VideoDetail: React.FC = () => {
     setShowDialogLogin(false)
   }
 
-  // const handleCreateVideo = async () => {
-  //   const input = {
-  //     uuid: detailVideoResult.key_video_id,
-  //     arn: detailVideoResult.arn,
-  //   }
-  //   console.log('input', input)
-  //   await API.graphql(graphqlOperation(createVideo, { input }))
-  // }
-
-  // const checkVideoExist = async () => {
-  //   try {
-  //     const listQV: APIt.ListMessagesQueryVariables = {
-  //       filter: {
-  //         uuid: { eq: detailVideoResult.key_video_id },
-  //       },
-  //     }
-  //     const videoRs: any = await API.graphql(graphqlOperation(getVideoByUuid, listQV))
-  //     console.log('🚀 ~ checkVideoExist ~ videoRs', videoRs)
-  //     const videoData = videoRs.data.getVideoByUuid.items
-  //     if (videoData.length === 0) {
-  //       handleCreateVideo()
-  //     } else {
-  //       console.log('🚀 2222', videoRs)
-  //     }
-  //   } catch (error) {
-  //     console.error(error)
-  //   }
-  // }
   const getVideoId = () => {
     return detailVideoResult && detailVideoResult.uuid ? detailVideoResult.uuid : ''
   }
@@ -165,12 +133,9 @@ const VideoDetail: React.FC = () => {
         limit: 2000,
       }
       const videoRs: any = await API.graphql(graphqlOperation(getVideoByUuid, listQV))
-      console.log('🚀 ~ checkVideoExist ~ videoRs', videoRs)
       const videoData = videoRs.data.getVideoByUuid.items.find((item) => item.uuid === videoId)
       if (videoData) {
         setVideoInfo(videoData)
-      } else {
-        console.log('🚀 2222', videoRs)
       }
     } catch (error) {
       console.error(error)
@@ -198,7 +163,6 @@ const VideoDetail: React.FC = () => {
     if (!detailVideoResult.key_video_id || videoStatus === STATUS_VIDEO.ARCHIVE) return
 
     const { video_status, process_status } = videoInfo
-    console.log('🚀 ~ useEffect ~ videoStatus', videoStatus)
     const isNotStreamingVideo =
       (video_status === EVENT_LIVE_STATUS.RECORDING_ARCHIVED && process_status === EVENT_LIVE_STATUS.RECORDING_END) ||
       (+video_status === STATUS_VIDEO.ARCHIVE && process_status === EVENT_LIVE_STATUS.STREAM_END)
@@ -207,7 +171,6 @@ const VideoDetail: React.FC = () => {
     const isLiveStreamVideo = +video_status === STATUS_VIDEO.LIVE_STREAM && process_status === EVENT_LIVE_STATUS.STREAM_START
 
     if (isNotStreamingVideo) {
-      console.log('🚀 ~ 00000', videoInfo)
       changeIsStreamingEnd(true)
     }
     if (isScheduleVideo) {
@@ -224,8 +187,6 @@ const VideoDetail: React.FC = () => {
     if (!detailVideoResult.key_video_id) return
     checkVideoStatus()
     let statusDetailVideo = detailVideoResult.status
-    console.log('🚀 ~ useEffect ~ detailVideoResult', detailVideoResult)
-    console.log('🚀 ~ is Start Live)', moment().isBefore(detailVideoResult.live_stream_start_time, 'second'))
     // if have not arrive live stream start time => set video status is schedule
     const isBeforeLiveStreamTime =
       statusDetailVideo === STATUS_VIDEO.LIVE_STREAM &&
@@ -237,7 +198,6 @@ const VideoDetail: React.FC = () => {
     setVideoStatus(statusDetailVideo)
     // redirect to archive url if first time user access vid = user_id (scheduled_flag = LIVE_VIDEO_TYPE.LIVE) and video archived
     if (detailVideoResult.status === STATUS_VIDEO.ARCHIVE && detailVideoResult.scheduled_flag === LIVE_VIDEO_TYPE.LIVE) {
-      console.log('🚀 ~ useEffect ~ 111111', detailVideoResult)
       navigateToArchiveUrl()
     }
   }, [JSON.stringify(detailVideoResult)])
@@ -258,7 +218,6 @@ const VideoDetail: React.FC = () => {
         //@ts-ignore
         const subMessage = sub?.value
         const updateVideoData = subMessage.data.onUpdateVideo
-        console.log('🚀 ~ subscribeAction ~ updateVideoData', updateVideoData)
         if (updateVideoData) {
           refOnUpdateVideo.current(updateVideoData)
         }
@@ -269,8 +228,7 @@ const VideoDetail: React.FC = () => {
   }
 
   const handleOnUpdateChannel = useRef(null)
-  const handleWhenChangeChannel = (updatedChannel) => {
-    console.log('🚀 ~ updatedChannel--000', updatedChannel)
+  const handleWhenChangeChannel = () => {
     // if (
     //   videoStatus !== STATUS_VIDEO.ARCHIVE &&
     //   detailVideoResult.arn &&
@@ -297,7 +255,6 @@ const VideoDetail: React.FC = () => {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         //@ts-ignore
         const updatedChannel = sub?.value?.data?.onUpdateChannel
-        console.log('====>>SUB<<===', updatedChannel)
         handleOnUpdateChannel.current(updatedChannel)
       },
       error: (error) => console.warn(error),
@@ -484,6 +441,7 @@ const VideoDetail: React.FC = () => {
         <ChatContainer
           ref={refChatContainer}
           myPoint={myPoint}
+          chatWidth={componentsSize.chatWidth}
           key_video_id={detailVideoResult?.key_video_id}
           onPressDonate={confirmDonatePoint}
           userHasViewingTicket={userHasViewingTicket()}
@@ -557,7 +515,7 @@ const VideoDetail: React.FC = () => {
           ) : (
             <>
               <LiveStreamContent
-                // componentsSize={componentsSize} //GHÉP THẬT THÌ PHẢI BỎ COMMENT RA NHÉ
+                componentsSize={componentsSize} 
                 isArchived={isArchived}
                 video_id={getVideoId()}
                 userHasViewingTicket={userHasViewingTicket()}
