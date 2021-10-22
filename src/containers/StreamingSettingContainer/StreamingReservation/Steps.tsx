@@ -196,6 +196,7 @@ const Steps: React.FC<StepsProps> = ({
         onClickNext()
       } else {
         const errorField = getDisplayErrorField(formik)
+        handleUpdateValidateField(errorField)
         if (formRef[errorField]) {
           window.scrollTo({ behavior: 'smooth', top: formRef[errorField].current.offsetTop - 200 })
         }
@@ -506,13 +507,31 @@ const Steps: React.FC<StepsProps> = ({
                   fullWidth
                   name="stepSettingTwo.category"
                   value={formik?.values?.stepSettingTwo?.category}
-                  onChange={formik.handleChange}
+                  onChange={(e) => {
+                    setValidateField('category')
+                    handleUpdateValidateField('category')
+                    if (onChangeFlag) {
+                      setOnChangeFlag(true)
+                      flagUpdateFieldDate(true)
+                    }
+                    formik.handleChange(e)
+                  }}
                   label={i18n.t('common:delivery_reservation_tab.category')}
                   required={true}
                   size="big"
                   disabled={false}
-                  helperText={formik?.touched?.stepSettingTwo?.category && formik?.errors?.stepSettingTwo?.category}
-                  error={formik?.touched?.stepSettingTwo?.category && !!formik?.errors?.stepSettingTwo?.category}
+                  helperText={
+                    validateField !== 'all'
+                      ? checkDisplayErrorOnChange(formik, 'category', validateField).helperText
+                      : checkDisplayErrorOnSubmit(formik, 'category').helperText
+                  }
+                  error={
+                    validateField !== 'all'
+                      ? checkDisplayErrorOnChange(formik, 'category', validateField).error
+                      : checkDisplayErrorOnSubmit(formik, 'category').error
+                  }
+                  // helperText={formik?.touched?.stepSettingTwo?.category && formik?.errors?.stepSettingTwo?.category}
+                  // error={formik?.touched?.stepSettingTwo?.category && !!formik?.errors?.stepSettingTwo?.category}
                 >
                   <option disabled value={-1}>
                     {i18n.t('common:please_select')}
