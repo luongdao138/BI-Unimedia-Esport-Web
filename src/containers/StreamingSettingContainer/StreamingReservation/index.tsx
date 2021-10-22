@@ -47,6 +47,10 @@ const StreamingReservationContainer: React.FC<Props> = ({ formik, flagUpdateFiel
     router.push(ESRoutes.VIDEO_STREAMING_MANAGEMENT)
   }
 
+  const handleClose = () => {
+    setModal(false)
+  }
+
   return (
     <>
       <Steps
@@ -61,7 +65,7 @@ const StreamingReservationContainer: React.FC<Props> = ({ formik, flagUpdateFiel
         handleUpdateValidateField={handleUpdateValidateField}
         validateFieldProps={validateFieldProps}
       />
-      <ESModal open={modal} handleClose={() => setModal(false)}>
+      <ESModal open={modal} handleClose={handleClose}>
         <BlankLayout>
           <SettingsCompleted
             titleNotification={t('common:streaming_setting_screen.tab2_notification_title')}

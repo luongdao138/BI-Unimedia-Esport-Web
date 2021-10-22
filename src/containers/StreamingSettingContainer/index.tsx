@@ -58,6 +58,7 @@ const StreamingSettingContainer: React.FC<{ default_tab: any }> = ({ default_tab
   const [flagUpdateFieldDate, setFlagUpdateFieldDate] = useState(false)
   const [validateField, setValidateField] = useState<string>('')
   const [isUpdate, setIsUpdate] = useState(false)
+  const [isLive, setIsLive] = useState(false)
 
   const formikLive = useFormik<FormLiveType>({
     initialValues: initialValues,
@@ -71,7 +72,7 @@ const StreamingSettingContainer: React.FC<{ default_tab: any }> = ({ default_tab
 
   const formikSchedule = useFormik<FormLiveType>({
     initialValues: initialScheduleValues,
-    validationSchema: validationScheduleScheme(!isUpdate || flagUpdateFieldDate),
+    validationSchema: validationScheduleScheme(!isUpdate || flagUpdateFieldDate, isLive),
     enableReinitialize: true,
     validateOnChange: true,
     validateOnBlur: true,
@@ -132,6 +133,7 @@ const StreamingSettingContainer: React.FC<{ default_tab: any }> = ({ default_tab
     formikDistributor.validateForm()
     if (scheduleInformation) {
       setIsUpdate(scheduleInformation?.data?.id ? true : false)
+      setIsLive(scheduleInformation?.data?.live_stream_start_time ? true : false)
     }
   }, [scheduleInformation || channelInfo])
 

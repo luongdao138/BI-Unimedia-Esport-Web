@@ -1053,6 +1053,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
 
     const chatContent = () => (
       <Box className={classes.chatContent} style={isMobile ? { paddingBottom: chatContentPaddingBottom() } : {}}>
+        {/* <Button onClick={scrollToCurrentMess}>Scroll to chat mess</Button> */}
         <Box className={classes.userWatchingList} style={{ marginTop: getMarginTopOfComponents('userIcon') }}>
           {messagesDonate
             .slice()

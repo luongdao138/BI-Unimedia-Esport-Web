@@ -513,7 +513,7 @@ const VideoDetail: React.FC = () => {
           ) : (
             <>
               <LiveStreamContent
-                componentsSize={componentsSize} 
+                componentsSize={componentsSize}
                 isArchived={isArchived}
                 video_id={getVideoId()}
                 userHasViewingTicket={userHasViewingTicket()}
