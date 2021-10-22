@@ -84,7 +84,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     // marginTop: 16,
-    marginTop: 8,
+    // marginTop: 8,
     scrollbarColor: '#222 transparent',
     '&::-webkit-scrollbar': {
       width: '20px',
@@ -123,7 +123,7 @@ const useStyles = makeStyles((theme) => ({
   chatHeader: {
     paddingLeft: '16px',
     display: 'flex',
-    height: 50,
+    height: 35,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
@@ -221,7 +221,7 @@ const useStyles = makeStyles((theme) => ({
   },
   userWatchingList: {
     marginTop: '16px',
-    marginBottom: '8px',
+    marginBottom: '0px',
     marginLeft: '16px',
     marginRight: '16px',
     display: 'flex',
