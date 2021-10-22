@@ -281,24 +281,30 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
     return false
   }
 
+  const debouncedHandleRenewURLAndKey = useCallback(
+    _.debounce((params: StreamUrlAndKeyParams, showToast?: boolean) => {
+      getStreamUrlAndKey(params, (url, key) => {
+        // if (type === KEY_TYPE.URL) {
+        formik.setFieldValue('stepSettingOne.stream_url', url)
+        formik.setFieldValue('stepSettingOne.stream_key', key)
+        showToast && dispatch(commonActions.addToast(t('common:streaming_setting_screen.renew_success_toast')))
+        // } else {
+        //   formik.setFieldValue('stepSettingOne.stream_key', key)
+        //   showToast && dispatch(commonActions.addToast(t('common:streaming_setting_screen.renew_success_toast')))
+        // }
+      })
+    }, 700),
+    []
+  )
+
   const onReNewUrlAndKey = (type: string, method: string, showToast?: boolean) => {
     const params: StreamUrlAndKeyParams = {
       type: method,
       objected: type,
       is_live: TYPE_SECRET_KEY.LIVE,
     }
-    getStreamUrlAndKey(params, (url, key) => {
-      // if (type === KEY_TYPE.URL) {
-      formik.setFieldValue('stepSettingOne.stream_url', url)
-      formik.setFieldValue('stepSettingOne.stream_key', key)
-      showToast && dispatch(commonActions.addToast(t('common:streaming_setting_screen.renew_success_toast')))
-      // } else {
-      //   formik.setFieldValue('stepSettingOne.stream_key', key)
-      //   showToast && dispatch(commonActions.addToast(t('common:streaming_setting_screen.renew_success_toast')))
-      // }
-    })
+    debouncedHandleRenewURLAndKey(params, showToast)
   }
-  // console.log('formik.values.stepSettingOne.description.trim()', formik.values.stepSettingOne.description);
 
   return (
     <Box py={4} className={classes.container}>
