@@ -513,15 +513,6 @@ const VideoPlayer: React.FC<PlayerProps> = ({
             muted
             className="video_player"
             style={{ width: '100%', height: '100%' }}
-            onTimeUpdate={() => {
-              console.log('*********** onTimeUpdate >>>>>>>>>>>')
-            }}
-            onSeeking={() => {
-              console.log('*********** onSeeking >>>>>>>>>>>')
-            }}
-            onProgress={() => {
-              console.log('*********** onProgress >>>>>>>>>>>')
-            }}
             src={src}
             autoPlay={autoPlay}
             controls

@@ -192,8 +192,22 @@ const useStyles = makeStyles((theme: Theme) => ({
   [theme.breakpoints.up(960)]: {
     itemContainer: {
       flexGrow: '0',
-      maxWidth: '33.333333%',
-      flexBasis: '33.333333%',
+      maxWidth: '33.3333%',
+      flexBasis: '33.3333%',
+    },
+  },
+  [theme.breakpoints.up(1300)]: {
+    itemContainer: {
+      flexGrow: '0',
+      maxWidth: '25%',
+      flexBasis: '25%',
+    },
+  },
+  [theme.breakpoints.up(1600)]: {
+    itemContainer: {
+      flexGrow: '0',
+      maxWidth: '20%',
+      flexBasis: '20%',
     },
   },
   [theme.breakpoints.up(1920)]: {

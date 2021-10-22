@@ -7,16 +7,16 @@ export const PreLoadContainer: React.FC = () => {
     <Box style={{ backgroundColor: 'rgba(0,0,0,0.33)', borderRadius: 8 }}>
       <ContentLoader
         speed={4}
-        viewBox="0 0 465 234"
+        viewBox="0 0 465 368"
         backgroundColor="#6a6a6c"
         foregroundColor="#999999"
         style={{ borderWidth: 1 }}
         // {...props}
       >
-        <circle cx="27" cy="199" r="20" />
-        <rect x="7" y="155" rx="4" ry="4" width="453" height="14" />
-        <rect x="0" y="0" rx="8" ry="8" width="465" height="143" />
-        <rect x="58" y="192" rx="4" ry="4" width="117" height="15" />
+        <rect x="8" y="272" rx="4" ry="4" width="453" height="16" />
+        <rect x="0" y="0" rx="8" ry="8" width="465" height="256" />
+        <circle cx="40" cy="334" r="30" />
+        <rect x="92" y="328" rx="4" ry="4" width="160" height="16" />
       </ContentLoader>
     </Box>
   )
