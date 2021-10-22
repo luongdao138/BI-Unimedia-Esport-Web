@@ -71,7 +71,7 @@ const hasErrorField = (message) => ({
 const errorFields = [
   ['title', 'title'],
   ['description', 'description'],
-  ['ticket_price', 'ticket_price'],
+  ['category', 'category'],
   ['stream_notify_time', 'stream_notify_time'],
   ['stream_schedule_start_time', 'stream_schedule_start_time'],
   ['notify_live_start_date', 'stream_schedule_start_time'],
@@ -80,6 +80,7 @@ const errorFields = [
   ['max_schedule_live_date', 'stream_schedule_end_time'],
   ['max_schedule_live_date', 'stream_schedule_end_time'],
   ['video_publish_end_time', 'video_publish_end_time'],
+  ['ticket_price', 'ticket_price'],
   ['public_time_more_than_end', 'video_publish_end_time'],
   ['sell_ticket_start_time', 'sell_ticket_start_time'],
   ['sell_less_than_start', 'sell_ticket_start_time'],
@@ -127,6 +128,12 @@ const checkDisplayErrorOnChange = (formik: FormikProps<FormLiveType>, field: str
       }
       return validField
     },
+    category: () => {
+      if (field === 'category' && stepSettingTwo?.category) {
+        return hasErrorField(stepSettingTwo?.category)
+      }
+      return validField
+    },
     ticket_price: () => {
       if (field === 'ticket_price' && stepSettingTwo?.ticket_price) {
         return hasErrorField(stepSettingTwo?.ticket_price)
@@ -150,6 +157,7 @@ const checkDisplayErrorOnChange = (formik: FormikProps<FormLiveType>, field: str
         '': () => validField,
         title: () => validField,
         description: () => validField,
+        category: () => validField,
         ticket_price: () => validField,
         stream_notify_time: () => validField,
         video_publish_end_time: () => validField,
@@ -188,6 +196,7 @@ const checkDisplayErrorOnChange = (formik: FormikProps<FormLiveType>, field: str
         '': () => validField,
         title: () => validField,
         description: () => validField,
+        category: () => validField,
         ticket_price: () => validField,
         stream_notify_time: () => validField,
         stream_schedule_start_time: () => validField,
