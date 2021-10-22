@@ -25,12 +25,16 @@ import { ESRoutes } from '@constants/route.constants'
 import { getIsAuthenticated } from '@store/auth/selectors'
 import { debounceTime } from '@constants/common.constants'
 import ESLoader from '@components/Loader'
-import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
 import VideoPlayer from './VideoPlayer'
 
 interface LiveStreamContentProps {
   videoType?: VIDEO_TYPE
   freeToWatch?: boolean | number
+  componentsSize?: {
+    chatWidth: number
+    videoWidth: number
+    videoHeight: number
+  }
   isArchived?: boolean
   userHasViewingTicket?: boolean | number
   ticketAvailableForSale?: boolean
@@ -53,6 +57,7 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
     clickButtonPurchaseTicket,
     onVideoEnd,
     isArchived,
+    componentsSize
   } = props
   const [showReportMenu, setShowReportMenu] = useState<boolean>(false)
   const router = useRouter()
@@ -313,26 +318,6 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
     dispatch(actions.getMemberProfile(detailVideoResult?.user_code))
   }
 
-  //calc height load video
-  const isDownMd = useMediaQuery(theme.breakpoints.down(769))
-  const isDown1100 = useMediaQuery(theme.breakpoints.down(1100))
-  const isDown960 = useMediaQuery(theme.breakpoints.down(960))
-  const { width: videoDisplayWidth } = useWindowDimensions(0)
-  const chatBoardWidth = () => {
-    if (!isDown1100) return 482
-    if (!isDownMd) return 350
-    return 0
-  }
-  const sizeMenuWidth = () => {
-    if (!isDown960) return 98
-    return 0
-  }
-
-  const calculateVideoHeight = () => {
-    const videoWidth = videoDisplayWidth - (chatBoardWidth() + sizeMenuWidth())
-    return (videoWidth * 9) / 16
-  }
-
   const renderReloadPlayer = () => {
     return (
       <Box
@@ -354,11 +339,11 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
   return (
     <Box className={classes.container}>
       {_.isEmpty(detailVideoResult) ? (
-        <Box className={classes.containerLoad} style={{ height: calculateVideoHeight() }}>
+        <Box className={classes.containerLoad} style={{ height: componentsSize.videoHeight }}>
           {renderReloadPlayer()}
         </Box>
       ) : (
-        <Box className={classes.mediaPlayerContainer} style={{ height: calculateVideoHeight() }}>
+        <Box className={classes.mediaPlayerContainer} style={{ height: componentsSize.videoHeight }}>
           {mediaPlayer()}
           {showOverlayOnMediaPlayer() && mediaOverlayPurchaseTicketView()}
         </Box>

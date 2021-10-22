@@ -27,9 +27,7 @@ const SeekBar: React.FC<Props & SliderProps> = ({ currentTime, durationsPlayer, 
   }, [currentTime, durationsPlayer])
 
   const handleChange = (_, value) => {
-    console.log('🚀 ~ handleChange ~ value --0000', value)
     const newSecond = (value * durationsPlayer) / 100
-    console.log('🚀 ~ handleChange ~ newSecond', newSecond)
     setTimePlayed(value)
     if (value === 100) {
       changeStatusStreaming(true)

@@ -48,6 +48,7 @@ export type ChatContainerProps = {
   videoType?: number
   freeToWatch?: boolean | number
   ref: any
+  chatWidth: any
 }
 
 export const purchasePoints = {
@@ -144,6 +145,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       openPurchasePointModal,
       videoType,
       freeToWatch,
+      chatWidth
     },
     ref
   ) => {
@@ -160,8 +162,6 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     const [firstRender, setFirstRender] = useState(false)
     const [allMess, setAllMess] = useState([])
     const isVideoFreeToWatch = freeToWatch === 0 ? true : false
-
-    console.log('video type chat container: ', videoType)
 
     const getChatData = () =>
       Array(30)
@@ -185,16 +185,13 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     //   }
     // }
 
-    // console.log('userProfile', JSON.stringify(userProfile));
     const initialFruits: APIt.Message[] = []
     const [stateMessages, setStateMessages] = useState(initialFruits)
-    console.log('🚀 ~ stateMessages --- 22222', stateMessages)
     const [chatUser, setChatUser] = useState<any>({})
     const theme = useTheme()
     const isMobile = useMediaQuery(theme.breakpoints.down(769))
     const { checkNgWord } = useCheckNgWord()
     const [savedMess, setSavedMess] = useState([])
-    console.log('🚀 ~ savedMess', savedMess)
     const [savedDonateMess, setSavedDonateMess] = useState([])
     const [isChatInBottom, setIsChatInBottom] = useState(false)
     const [isSeeking, setIsSeeking] = useState(false)
@@ -212,7 +209,6 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       successGetListMess &&
       successGetListDonateMess
     // const isEnabledChat = true
-    console.log('🚀 ~ isEnabledChat', isEnabledChat)
 
     const validationSchema = Yup.object().shape({
       message: Yup.string()
@@ -244,12 +240,8 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
 
     const isStreaming = (() => {
       // return true
-      // || liveStreamInfo.is_pausing_live
-      console.log('33-played->streaming->range', playedSecond, streamingSecond, streamingSecond - playedSecond)
-      console.log('🚀 ~ isStreaming ~ ---0000', playedSecond + 15 >= streamingSecond)
       if (videoType === STATUS_VIDEO.LIVE_STREAM) {
         if (streamingSecond === Infinity) {
-          console.log('🚀 ~ isStreaming ~ 0000101111')
           return true
         }
         if (playedSecond >= streamingSecond) {
@@ -257,26 +249,10 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
           return true
         }
       }
-      console.log('🚀 ~ isStreaming ~ false')
       return false
     })()
 
     const handleCreateUserDB = async () => {
-      console.log(
-        `{
-      // id:userProfile?.id,
-      uuid: userProfile?.attributes?.uuid,
-      avatar: userProfile?.attributes?.avatar_url,
-      user_name: userProfile?.attributes?.nickname,
-    }`,
-        JSON.stringify({
-          id: userProfile?.id,
-          uuid: userProfile?.attributes?.uuid,
-          avatar: userProfile?.attributes?.avatar_url,
-          user_name: userProfile?.attributes?.nickname,
-        })
-      )
-
       const result = await API.graphql(
         graphqlOperation(createUser, {
           input: {
@@ -287,7 +263,6 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
           },
         })
       )
-      console.log('abc-111111', result)
       setChatUser(result.data.createUser)
       setSuccessFlagGetAddUSer(true)
     }
@@ -312,19 +287,14 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     const refOnCreateMess = useRef(null)
     const onCreateMess = (createdMessage) => {
       if (createdMessage.video_id === key_video_id && videoType === STATUS_VIDEO.LIVE_STREAM) {
-        console.log('🚀 ~ onCreateMess ~ createdMessage----0909', createdMessage)
         const foundIndex = findMessUpdated(savedMess, createdMessage, 'local_id')
-        console.log('🚀 ~ subscribeAction ~ foundIndex', foundIndex)
         // only add new message if no found message in local
         if (foundIndex === -1) {
-          console.log('🚀 ~ subscribeAction ~ 1234', savedMess)
           // if (playedSecond >= streamingSecond || liveStreamInfo.is_pausing_live) {
           if (isStreaming) {
             // render new messages with savedMess
             const isMessageInBottom = checkMessIsInBottom()
-            // console.log("🚀 ~ 11111")
             setStateMessages([...savedMess, createdMessage])
-            // console.log("🚀 ~ 33333")
             if (isMessageInBottom) {
               scrollToCurrentMess()
             }
@@ -415,13 +385,10 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         if (!firstRender && +realStreamingSecond > 0) {
           setFirstRender(true)
           const newMess = savedMess.filter((item) => +item.video_time <= +realStreamingSecond)
-          console.log('🚀 ~ 222 ~ newMess', newMess)
           const isMessageInBottom = checkMessIsInBottom()
           // render new messages with savedMess
-          console.log('🚀 ~ 11111')
           setStateMessages([...newMess])
 
-          console.log('🚀 ~ 33333')
           if (isMessageInBottom) {
             // if(point){
             setIsChatInBottom(true)
@@ -430,7 +397,6 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
             // }
           }
 
-          console.log('🚀 ~ createMess ~ stateMessages', stateMessages)
           const newMessagesDonate = savedDonateMess.filter(
             (item) => +item.display_avatar_time > +realStreamingSecond && +item.video_time <= +realStreamingSecond
           )
@@ -440,51 +406,10 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
           const newMessagesDonate = messagesDonate.filter(
             (item) => +item.display_avatar_time > +realStreamingSecond && +item.video_time <= +realStreamingSecond
           )
-          // console.log("🚀 ~ useEffect ~ display_avatar_time", display_avatar_time)
           setMessagesDonate(newMessagesDonate)
         }
       }
     }
-
-    // useEffect(() => {
-    //   console.log('🚀 ~ useEffect ~ playedSecond ---> streamingSecond', playedSecond, streamingSecond)
-    //   if ((playedSecond >= streamingSecond || liveStreamInfo.is_pausing_live) && successGetListMess && successGetListDonateMess) {
-    //     // fix bug streaming second is not true when access url first time
-    //     const realStreamingSecond = streamingSecond < playedSecond ? playedSecond : streamingSecond
-    //     // check archive video => no use that case
-    //     if (!firstRender && +realStreamingSecond > 0) {
-    //       setFirstRender(true)
-    //       const newMess = savedMess.filter((item) => +item.video_time <= +realStreamingSecond)
-    //       console.log('🚀 ~ 222 ~ newMess', newMess)
-    //       const isMessageInBottom = checkMessIsInBottom()
-    //       // render new messages with savedMess
-    //       console.log('🚀 ~ 11111')
-    //       setStateMessages([...newMess])
-
-    //       console.log('🚀 ~ 33333')
-    //       if (isMessageInBottom) {
-    //         // if(point){
-    //         setIsChatInBottom(true)
-    //         // } else {
-    //         // scrollToCurrentMess()
-    //         // }
-    //       }
-
-    //       console.log('🚀 ~ createMess ~ stateMessages', stateMessages)
-    //       const newMessagesDonate = savedDonateMess.filter(
-    //         (item) => +item.display_avatar_time > +realStreamingSecond && +item.video_time <= +realStreamingSecond
-    //       )
-    //       setMessagesDonate(newMessagesDonate)
-    //     } else {
-    //       // only check displaying of user donate icon
-    //       const newMessagesDonate = messagesDonate.filter(
-    //         (item) => +item.display_avatar_time > +realStreamingSecond && +item.video_time <= +realStreamingSecond
-    //       )
-    //       // console.log("🚀 ~ useEffect ~ display_avatar_time", display_avatar_time)
-    //       setMessagesDonate(newMessagesDonate)
-    //     }
-    //   }
-    // }, [streamingSecond])
 
     useEffect(() => {
       // hide dialog message if message donate is no longer show
@@ -535,7 +460,6 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     }, [playedSecond])
 
     useEffect(() => {
-      console.log('🚀 isChatInBottom', isChatInBottom)
       if (isChatInBottom) {
         scrollToCurrentMess()
         setIsChatInBottom(false)
@@ -572,8 +496,6 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
 
       const transformMessAsc = sortMessages(transformMess)
       // const transformMess = messagesResults.data.listMessages.items.filter((item) => item.video_id === key_video_id)
-      // console.log("🚀 ~ ------111 ~ playedSecond", playedSecond)
-      console.log('🚀 ~ ------222 ~ streamingSecond', streamingSecond)
       // comment if no get in initial
       if (streamingSecond === Infinity && videoType === STATUS_VIDEO.LIVE_STREAM) {
         setStateMessages(transformMessAsc)
@@ -695,8 +617,6 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
 
     const refUpdateMessBeforeCallApi = useRef(null)
     const handleUpdateMessBeforeCallApi = (updatedMessage, newPropsObj) => {
-      console.log('🚀 ~ handleUpdateMessBeforeCallApi ~ createdMessage', updatedMessage)
-      console.log('🚀 ~ handleUpdateMessBeforeCallApi ~ 1234', stateMessages)
       if (updatedMessage) {
         updateOldMessData(updatedMessage, { ...newPropsObj })
       }
@@ -704,12 +624,10 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     refUpdateMessBeforeCallApi.current = handleUpdateMessBeforeCallApi
 
     async function deleteMsg(message: any) {
-      console.log('🚀 ~ deleteMsg ~ message', message)
       const input = {
         id: message.id,
         delete_flag: true,
       }
-      console.log('start delete-111111')
       refUpdateMessBeforeCallApi.current(message, {
         ...message,
         delete_flag: true,
@@ -821,16 +739,12 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     const updateOldMessData = (updatedMessage, objWithNewProps, compareProp = 'id') => {
       const updatedMessWithNewProp = { ...updatedMessage, ...objWithNewProps }
       let foundIndex = findMessUpdated(stateMessages, updatedMessage, compareProp)
-      console.log('🚀 ~ createMess ~ createdMessage', updatedMessage)
-      console.log('🚀 ~ createMess ~ stateMessages', stateMessages)
-      console.log('🚀 ~ createMess ~ foundIndex', foundIndex)
       if (foundIndex !== -1) {
         const newStateMess = [...stateMessages]
         newStateMess[foundIndex] = { ...updatedMessWithNewProp }
         setStateMessages(newStateMess)
       }
       foundIndex = findMessUpdated(savedMess, updatedMessage, compareProp)
-      console.log('🚀 ~ updateOldMessData ~ foundIndex savedMess', foundIndex)
       if (foundIndex !== -1) {
         const newSavedMess = [...savedMess]
         newSavedMess[foundIndex] = { ...updatedMessWithNewProp }
@@ -910,7 +824,6 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
             // display_avatar_time: videoTime + 20,
           }
         }
-        console.log('input', input)
 
         let local_message = {
           ...input,
@@ -923,7 +836,6 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
             parent: { avatar: avatar_url, user_name: nickname },
           }
         }
-        console.log('🚀 ~ createMess ~ local_message', local_message)
 
         const is_premium_local_message = isPremiumChat(local_message, false)
         // save mess for local
@@ -937,15 +849,12 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         if (isStreaming) {
           const isMessageInBottom = checkMessIsInBottom()
           // render new messages with savedMess
-          console.log('🚀 ~ 11111')
           if (!point) {
             // reset input chat
             values.message = ''
           }
           setStateMessages([...savedMess, local_message])
-          console.log('🚀 ~ createMess ~ stateMessages', stateMessages)
 
-          // console.log("🚀 ~ 33333")
           if (isMessageInBottom) {
             if (point) {
               setIsChatInBottom(true)
@@ -973,69 +882,25 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       }
     }
 
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    //@ts-ignore
     const checkMessIsInBottom = () => {
-      const mess_container = document.getElementById('chatBoard')
-      // mess_container.scrollTo({ top: mess_container.scrollHeight, behavior: 'smooth'});
-      // // if scrollbar is not in container bottom
-      // // height of scroll to top + max height < height of container
-      // if(!isMessInBottom){
-      if (mess_container) {
-        console.log('🚀 ~ 111 ~ scrollHeight', mess_container.scrollHeight)
-        console.log('🚀 ~ 111 ~ offsetHeight', mess_container.offsetHeight)
-        console.log('🚀 ~ 1111 ~ scrollTop', mess_container.scrollTop)
-        console.log(
-          '🚀 ~ 1111 ~ Mess Is InBottom: ',
-          !(mess_container.scrollTop + mess_container.offsetHeight < mess_container.scrollHeight)
-        )
-        if (mess_container.scrollTop + mess_container.offsetHeight < mess_container.scrollHeight) {
-          // setIsMessInBottom(false)
+      const messContainer = document.getElementById('chatBoard')
+      // if scrollbar is not in container bottom
+      // height of scroll to top + max height < height of container
+      if (messContainer) {
+        if (messContainer.scrollTop + messContainer.offsetHeight < messContainer.scrollHeight) {
           setDisplaySeeMore(true)
           return false
         } else {
           // if scrollbar is in container bottom and not scrollbar (as max height is smaller than height of container)
-          // setIsMessInBottom(true)
           setDisplaySeeMore(false)
-          // if (mess_container.offsetHeight < mess_container.scrollHeight) {
-          //   setIsMessInBottom(true)
-          //   setDisplaySeeMore(false)
-          // }
           return true
         }
       }
-      // }
     }
 
-    // console.log("🚀 ~ scrollToCurrentMess ~ offsetTop", current_mess.offsetTop)
-    // mess_container.scrollTop = mess_container.scrollHeight
-    // current_mess.scrollIntoView()
-
-    // let scrollDiv = current_mess.offsetTop;
-
-    // mess_container.scrollTo({ top: current_mess.offsetTop - (142 - 21), behavior: 'smooth'});
-    // mess_container.scrollTo({ top: current_mess.offsetTop - (414 - 42), behavior: 'smooth'});
-
-    // if scrollbar is not in container bottom
-    // height of scroll to top + max height < height of container
-    // if(mess_container.scrollTop + mess_container.offsetHeight < mess_container.scrollHeight) {
-    //   console.log("🚀 ~1111", mess_container.scrollTop + mess_container.offsetHeight)
-    //   setDisplaySeeMore(true)
-    // } else {
-    //   // if scrollbar is in container bottom and not scrollbar (as max height is smaller than height of container)
-    //   if(mess_container.offsetHeight < mess_container.scrollHeight) {
-    //     console.log("🚀 ~2222", mess_container.scrollTop + mess_container.offsetHeight)
-    //     console.log("🚀 ~3", mess_container.scrollHeight)
-    //     mess_container.scrollTo({ top: mess_container.scrollHeight, behavior: 'smooth'});
-    //     setDisplaySeeMore(false)
-    //   }
-    // }
     const scrollToCurrentMess = () => {
-      const mess_container = document.getElementById('chatBoard')
-      console.log('🚀 ~ 222222 ~ scrollHeight', mess_container.scrollHeight)
-      console.log('🚀 ~ 222222 ~ offsetHeight', mess_container.offsetHeight)
-      console.log('🚀 ~ 222222 ~ scrollTop', mess_container.scrollTop)
-      mess_container.scrollTo({ top: mess_container.scrollHeight, behavior: 'smooth' })
+      const messContainer = document.getElementById('chatBoard')
+      messContainer.scrollTo({ top: messContainer.scrollHeight, behavior: 'smooth' })
     }
 
     const handleSubmitChatContent = () => {
@@ -1047,10 +912,6 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         handleSubmitChatContent()
       }
     }
-
-    // const isStreamingStyle = () => {
-    //   return !isMobile && !isStreaming && isEnabledChat
-    // }
 
     const chatInputComponent = () => (
       <Box
@@ -1107,6 +968,43 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       setDisplayDialogMess(false)
     }
 
+    const getMarginTopOfComponents = (componentType = 'chatBoard') => {
+      let marginTop = 0
+      let transformedMess = stateMessages
+      let transformedDonateMess = messagesDonate
+      // filter only message is not deleted if user is not streamer
+      if(!userResult?.streamer) {
+        transformedMess = transformedMess.filter(item => !item.delete_flag)
+        transformedDonateMess = transformedDonateMess.filter(item => !item.delete_flag)
+      } 
+      if(componentType === 'chatBoard') {
+        // no margin top when has not donate message
+        if(transformedDonateMess.length === 0){
+          return 0
+        }
+        // only margin top when has donate message
+        // render margin top higher with donate message is first item
+        if(transformedMess.length !== 0 &&  transformedMess[0].is_premium) {
+          marginTop = 16
+        } else {
+          marginTop = 12
+        }
+      } 
+      if(componentType === 'userIcon') {
+        // margin top 16 when has donate message
+        if(transformedDonateMess.length !== 0){
+          return 16
+        }
+        // render margin top higher with donate message is first item
+        if(transformedMess.length !== 0 &&  transformedMess[0].is_premium) {
+          marginTop = 16
+        } else {
+          marginTop = 12
+        }
+      } 
+      return marginTop
+    }
+
     const chatBoardComponent = () => (
       <Box className={`${classes.chatBoardContainer}`}>
         <ButtonBase
@@ -1136,7 +1034,10 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
             ></Box>
           </Box>
         </ClickAwayListener>
-        <Box className={classes.chatBoard} id="chatBoard" style={{marginTop: messagesDonate.filter(item => !item.delete_flag).length === 0 ? '0px' : '15px'}}>
+        <Box className={classes.chatBoard} id="chatBoard" style={{
+          marginTop: getMarginTopOfComponents('chatBoard'),
+          height: isMobile ? '253px' : chatHeight
+        }}>
           {stateMessages
             // sort messages oldest to newest client-side
             // .sort((a: any, b: any) => +a.video_time - +b.video_time || a.createdAt.localeCompare(b.createdAt))
@@ -1211,13 +1112,11 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       </Box>
     )
 
-    const mess_container = document.getElementById('chatBoard')
-    if (mess_container) {
-      mess_container.onscroll = function () {
-        if (mess_container.scrollTop + mess_container.offsetHeight >= mess_container.scrollHeight) {
-          // console.log("🚀 ~ 000", mess_container)
+    const messContainer = document.getElementById('chatBoard')
+    if (messContainer) {
+      messContainer.onscroll = function () {
+        if (messContainer.scrollTop + messContainer.offsetHeight >= messContainer.scrollHeight) {
           setDisplaySeeMore(false)
-          // you're at the bottom of the page
         }
       }
     }
@@ -1234,7 +1133,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     const chatContent = () => (
       <Box className={classes.chatContent} style={isMobile ? { paddingBottom: chatContentPaddingBottom() } : {}}>
         {/* <Button onClick={scrollToCurrentMess}>Scroll to chat mess</Button> */}
-        <Box className={classes.userWatchingList}>
+        <Box className={classes.userWatchingList} style={{marginTop: getMarginTopOfComponents('userIcon')}}>
           {messagesDonate
             .slice()
             .reverse()
@@ -1294,12 +1193,30 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       return errors?.message ? '132.5px' : '116.5px'
     }
 
+    const chatHeight = (() => {
+      // 35 is chat header, 
+      let newChatHeight = (chatWidth * 250 / 153) - 35
+      if(messagesDonate.filter(item => !item.delete_flag).length !== 0) {
+        // 56 is height of message donate
+        newChatHeight = newChatHeight - 56 - getMarginTopOfComponents('chatBoard')
+      } else {
+        // 16 is margin top of message donate when it is empty
+        newChatHeight = newChatHeight - getMarginTopOfComponents('userIcon')
+      }
+      // height of chat when display chat content
+      if(displayChatContent()) {
+        // 116.5 is input chat when video is streaming
+        newChatHeight = newChatHeight - 116.5
+      }
+      return Math.round((newChatHeight + Number.EPSILON) * 100) / 100
+    })()
+
     return (
       <Box
         className={classes.container}
         style={
           !displayChatContent()
-            ? { height: '757.5px' }
+            ? { height: chatHeight }
             : {
                 paddingBottom: chatBoxPaddingBottom(),
               }

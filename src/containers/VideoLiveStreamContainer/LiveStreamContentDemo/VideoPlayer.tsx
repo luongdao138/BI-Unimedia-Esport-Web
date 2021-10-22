@@ -43,16 +43,12 @@ const VideoPlayer: React.FC<PlayerProps> = ({
 }) => {
   const checkStatusVideo = 1
   const classes = useStyles({ checkStatusVideo })
-  // const { width: videoDisplayWidth } = useWindowDimensions(0)
   const videoEl = useRef(null)
 
   const [durationPlayer, setDurationPlayer] = useState(0)
-  // console.log('🚀 ~ durationPlayer', durationPlayer)
   const [playedSeconds, setPlayedSeconds] = useState(0)
   const [autoPlay, setAutoPlay] = useState(true)
   const [isStreaming, setIsStreaming] = useState(true)
-  console.log('🚀 ~ isStreaming--9999', isStreaming)
-  // console.log('🚀 ~ playedSeconds', playedSeconds)
   // const reactPlayerRef = useRef(null)
   const playerContainerRef = useRef(null)
   const [isLive, setIsLive] = useState(null)
@@ -94,7 +90,6 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   const iPhonePl = /iPhone/i.test(window.navigator.userAgent)
 
   const isStreamingEnd = useRef(liveStreamInfo.is_streaming_end)
-  console.log('🚀 ~ isStreamingEnd---000', isStreamingEnd.current)
   const handlePauseAndSeekVideo = () => {
     // // seek to current live stream second if is pausing live and is not playing
     // if (!state.playing && liveStreamInfo.is_pausing_live) {
@@ -122,7 +117,6 @@ const VideoPlayer: React.FC<PlayerProps> = ({
 
   useEffect(() => {
     if (isArchived) {
-      console.log('🚀 ~ useEffect ~ isArchived----11111', isArchived)
       videoEl.current.currentTime = 0
       setState({ ...state, playing: false })
       setAutoPlay(false)
@@ -299,12 +293,9 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   const onUpdateVideoTime = (videoInfo) => {
     const newPlayedSecondTime = videoInfo.currentTime
     let durationTime = videoType === STATUS_VIDEO.LIVE_STREAM ? videoInfo.duration - DELAY_SECONDS : videoInfo.duration
-    console.log('🚀 ~ onUpdateVideoTime ~ videoType', videoType)
-    console.log('🚀 ~ videoEl.current?.addEventListener ~ isStreaming', isStreaming)
     // handle delayed time when is living
     if (isStreaming && videoType === STATUS_VIDEO.LIVE_STREAM) {
       const isDelayedTime = newPlayedSecondTime < durationTime || newPlayedSecondTime > durationTime
-      console.log('🚀 ~ videoEl.current?.addEventListener ~ isDelayedTime', isDelayedTime)
       // reset duration time to equal played time when live is delayed
       if (isDelayedTime) {
         durationTime = newPlayedSecondTime
@@ -329,7 +320,6 @@ const VideoPlayer: React.FC<PlayerProps> = ({
 
   const handleUpdateVideoDuration = useRef(null)
   const onUpdateVideoduration = (duration) => {
-    console.log('------->>2222<<<-----', state.playing)
     if (!state.playing) {
       setDurationPlayer(duration)
     }
@@ -339,8 +329,6 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   //archived
   useEffect(() => {
     videoEl.current.addEventListener('timeupdate', (event) => {
-      // console.log("🚀 ~ videoEl.current.addEventListener ~ event", event)
-      // const delaySeconds = 15
       const videoInfo = event.target
       console.log(
         '->current->duration-> range',
@@ -349,8 +337,6 @@ const VideoPlayer: React.FC<PlayerProps> = ({
         videoInfo.duration - videoInfo.currentTime,
         videoInfo.duration - DELAY_SECONDS
       )
-      // liveVideoInfoRef.current = Math.floor(videoInfo.currentTime)
-      // console.log('->current->duration-> range')
       videoInfo ? handleUpdateVideoTime.current(videoInfo) : ''
     })
 
