@@ -140,7 +140,7 @@ const useStyles = makeStyles(() => ({
   },
   accountInfo: {
     display: 'flex',
-    marginRight: '13px',
+    marginRight: '16px',
     marginBottom: '13px',
     flexDirection: 'column',
     backgroundColor: 'white',
@@ -155,8 +155,8 @@ const useStyles = makeStyles(() => ({
   accountInfoHeader: {
     position: 'relative',
     display: 'flex',
-    paddingTop: 7,
-    paddingBottom: 7,
+    paddingTop: 2,
+    paddingBottom: 2,
     paddingLeft: 14,
     paddingRight: 32,
     flexDirection: 'row',
@@ -166,8 +166,8 @@ const useStyles = makeStyles(() => ({
   accountInfoContent: {
     paddingLeft: 14,
     paddingRight: 14,
-    paddingTop: 14,
-    paddingBottom: 14,
+    paddingTop: 8,
+    paddingBottom: 8,
     backgroundColor: '#476AFF',
     borderBottomRightRadius: 4,
     borderBottomLeftRadius: 4,

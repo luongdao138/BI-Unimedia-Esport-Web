@@ -71,7 +71,7 @@ const ChatTextMessage = React.memo<ChatContainerProps>(
             </ESMenu>
           ) : (
             ''
-          )}
+          )} 
         </Box>
       </Box>
     )

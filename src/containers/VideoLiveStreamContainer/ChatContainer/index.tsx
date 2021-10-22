@@ -1136,7 +1136,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
             ></Box>
           </Box>
         </ClickAwayListener>
-        <Box className={classes.chatBoard} id="chatBoard">
+        <Box className={classes.chatBoard} id="chatBoard" style={{marginTop: messagesDonate.filter(item => !item.delete_flag).length === 0 ? '0px' : '15px'}}>
           {stateMessages
             // sort messages oldest to newest client-side
             // .sort((a: any, b: any) => +a.video_time - +b.video_time || a.createdAt.localeCompare(b.createdAt))

@@ -268,7 +268,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       }
     }
     // if (Hls.isSupported() && !isMobile) {
-    if (Hls.isSupported() || androidPl) {
+    if ((Hls.isSupported() || androidPl) && src){
       // bind them together
       hls.loadSource(src)
       //@ts-ignore
