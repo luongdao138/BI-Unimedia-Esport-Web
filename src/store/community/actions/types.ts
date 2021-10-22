@@ -33,5 +33,6 @@ export enum COMMUNITY_ACTION_TYPE {
   UNFOLLOW_COMMUNITY = 'community/leave',
   UNFOLLOW_COMMUNITY_PENDING = 'community/leave/pending',
   GET_COMMENTS_LIST = 'comments/list',
+  RESET_COMMENTS_LIST = 'comments/reset_list',
   CHECK_COMMUNITY_NAME = 'community/check_name',
 }

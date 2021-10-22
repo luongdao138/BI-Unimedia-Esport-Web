@@ -14,17 +14,15 @@ import TagSelectorDialog from './Partials/TagSelectorDialog'
 import i18n from '@locales/i18n'
 import { CommunityHelper } from '@utils/helpers/CommunityHelper'
 import { GetPrefecturesResponse } from '@services/common.service'
-import { Colors } from '@theme/colors'
 
 type Props = {
   formik: FormikProps<FormType>
   prefectures: GetPrefecturesResponse
   editables: EditableTypes
-  isDuplicate: boolean
   setIsDuplicate: Dispatch<SetStateAction<boolean>>
 }
 
-const StepOne: React.FC<Props> = ({ formik, prefectures, editables, isDuplicate, setIsDuplicate }) => {
+const StepOne: React.FC<Props> = ({ formik, prefectures, editables, setIsDuplicate }) => {
   const { uploadArenaCoverImage, isUploading } = useUploadImage()
 
   const handleUpload = useCallback((file: File, blob: any) => {
@@ -64,15 +62,12 @@ const StepOne: React.FC<Props> = ({ formik, prefectures, editables, isDuplicate,
             formik.handleChange(e)
           }}
           helperText={formik.touched?.stepOne?.name && formik.errors?.stepOne?.name}
-          error={formik.touched?.stepOne?.name && (!!formik.errors?.stepOne?.name || isDuplicate)}
+          error={formik.touched?.stepOne?.name && !!formik.errors?.stepOne?.name}
           onBlur={formik.handleBlur}
           size="small"
           required
           disabled={!editables.name}
         />
-        <Box color={Colors.secondary} mt="3px" lineHeight={1.66}>
-          {isDuplicate && !formik.errors?.stepOne?.name && i18n.t('common:community_create.title_already_in_use')}
-        </Box>
       </Box>
       <Box pb={4}>
         <ESFastInput

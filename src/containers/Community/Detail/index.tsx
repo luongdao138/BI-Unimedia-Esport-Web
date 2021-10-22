@@ -31,6 +31,12 @@ const CommunityContainer: React.FC = () => {
   }, [router])
 
   useEffect(() => {
+    if (!meta.pending && meta.error) {
+      router.push(ESRoutes.COMMUNITY)
+    }
+  }, [meta])
+
+  useEffect(() => {
     if (communityDetail && !isAutomatic && isNotMember) {
       setShowTopicListAndSearchTab(false)
     } else {

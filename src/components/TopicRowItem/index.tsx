@@ -85,38 +85,35 @@ const TopicRowItem: React.FC<TopicRowItemProps> = ({
     if (!lastCommentData && isSearch) {
       return (
         <Highlight search={keyword} contentRect={contentRect}>
-          {content}
+          {t('common:community.detail_search.content_text') + content}
         </Highlight>
       )
     }
 
     const parts = String(content).split(keyword)
 
-    return lastCommentData?.content ? (
+    return isSearch && parts.length > 1 ? (
+      <Box>
+        <Typography component="span" variant="body2">
+          <Highlight search={keyword} contentRect={contentRect}>
+            {t('common:community.detail_search.content_text') + content}
+          </Highlight>
+        </Typography>
+      </Box>
+    ) : lastCommentData?.content ? (
       isOnlyTitle ? (
         lastCommentData.content
       ) : (
-        <>
-          {isSearch && parts.length > 1 ? (
-            <Box>
-              <Typography component="span" variant="body2">
-                <Highlight search={keyword} contentRect={contentRect}>
-                  {content}
-                </Highlight>
-              </Typography>
-            </Box>
+        <Box>
+          {isSearch ? (
+            <Typography component="span" className={classes.comment_no}>
+              {lastCommentData.comment_no}
+            </Typography>
           ) : null}
-          <Box>
-            {isSearch ? (
-              <Typography component="span" className={classes.comment_no}>
-                {lastCommentData.comment_no}
-              </Typography>
-            ) : null}
-            <Highlight search={keyword} contentRect={contentRect}>
-              {lastCommentData.content}
-            </Highlight>
-          </Box>
-        </>
+          <Highlight search={keyword} contentRect={contentRect}>
+            {lastCommentData.content}
+          </Highlight>
+        </Box>
       )
     ) : comment_count === 0 ? (
       ''
@@ -132,9 +129,13 @@ const TopicRowItem: React.FC<TopicRowItemProps> = ({
           <Box className={classes.container}>
             <Box display="flex" flexDirection="row" width="100%">
               <Typography className={classes.title}>
-                <Highlight isTitle={true} search={keyword}>
-                  {title}
-                </Highlight>
+                {isOnlyTitle ? (
+                  <Highlight isTitle={true} search={keyword}>
+                    {title}
+                  </Highlight>
+                ) : (
+                  title
+                )}
               </Typography>
             </Box>
             <Box height={0.25} />

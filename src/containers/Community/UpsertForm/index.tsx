@@ -122,7 +122,7 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
       setDetailFeatures(
         _.filter(communityFeatures, (communityFeature) => {
           let isEqual = false
-          _.map(community.attributes.features, (feature) => {
+          _.map(community?.attributes?.features, (feature) => {
             if (feature.id === Number(communityFeature.id)) {
               isEqual = true
             }
@@ -138,6 +138,11 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
   const renderEditButton = () => {
     return (
       <Box display="flex" flexDirection="column" alignItems="center" className={classes.editButtonContainer}>
+        {isDuplicate && (
+          <Box textAlign="center" style={{ marginBottom: 16 }} color={Colors.secondary} px={1}>
+            <Typography variant="body2">{i18n.t('common:community_create.title_already_in_use')}</Typography>
+          </Box>
+        )}
         <ButtonPrimary
           onClick={handleSetConfirm}
           round
@@ -206,14 +211,18 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
             formik.submitForm()
           } else {
             const value = formik.values.stepOne.name
-            const resultAction = await dispatch(actions.checkCommunityName({ name: value.trim() }))
-            if (actions.checkCommunityName.fulfilled.match(resultAction)) {
-              if (resultAction.payload.is_unique === false) {
-                setIsDuplicate(true)
-              } else {
-                setIsDuplicate(false)
-                setIsConfirm(true)
+            if (value !== initialValues.stepOne.name) {
+              const resultAction = await dispatch(actions.checkCommunityName({ name: value.trim() }))
+              if (actions.checkCommunityName.fulfilled.match(resultAction)) {
+                if (resultAction.payload.is_unique === false) {
+                  setIsDuplicate(true)
+                } else {
+                  setIsDuplicate(false)
+                  setIsConfirm(true)
+                }
               }
+            } else {
+              setIsConfirm(true)
             }
           }
           return
@@ -237,33 +246,38 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
       content={
         <>
           {isConfirm ? (
-            <Box className={classes.footerErrorContainer}>
-              <Box className={classes.reviewButtonContainer}>
-                <ButtonPrimary onClick={handleUnsetConfirm} gradient={false} className={`${classes.footerButton} ${classes.cancelButton}`}>
-                  {i18n.t('common:common.cancel')}
-                </ButtonPrimary>
-                <ButtonPrimary
-                  type="submit"
-                  onClick={handleSetConfirm}
-                  round
-                  disabled={hasError || getCreateCommunityMeta.pending || getUpdateCommunityMeta.pending}
-                  className={classes.footerButton}
-                >
-                  {isEdit ? i18n.t('common:community_create.confirm.submit_edit') : i18n.t('common:community_create.confirm.submit')}
-                </ButtonPrimary>
-              </Box>
+            <Box className={classes.reviewButtonContainer}>
+              <ButtonPrimary onClick={handleUnsetConfirm} gradient={false} className={`${classes.footerButton} ${classes.cancelButton}`}>
+                {i18n.t('common:common.cancel')}
+              </ButtonPrimary>
+              <ButtonPrimary
+                type="submit"
+                onClick={handleSetConfirm}
+                round
+                disabled={hasError || getCreateCommunityMeta.pending || getUpdateCommunityMeta.pending}
+                className={classes.footerButton}
+              >
+                {isEdit ? i18n.t('common:community_create.confirm.submit_edit') : i18n.t('common:community_create.confirm.submit')}
+              </ButtonPrimary>
             </Box>
           ) : isEdit ? (
             renderEditButton()
           ) : (
-            <ButtonPrimary
-              onClick={handleSetConfirm}
-              round
-              className={`${classes.footerButton} ${classes.confirmButton}`}
-              disabled={hasError || isDuplicate}
-            >
-              {i18n.t('common:community_create.check_content')}
-            </ButtonPrimary>
+            <Box className={classes.footerErrorContainer}>
+              {isDuplicate && (
+                <Box textAlign="center" style={{ marginBottom: 16 }} color={Colors.secondary} px={1}>
+                  <Typography variant="body2">{i18n.t('common:community_create.title_already_in_use')}</Typography>
+                </Box>
+              )}
+              <ButtonPrimary
+                onClick={handleSetConfirm}
+                round
+                className={`${classes.footerButton} ${classes.confirmButton}`}
+                disabled={hasError || isDuplicate}
+              >
+                {i18n.t('common:community_create.check_content')}
+              </ButtonPrimary>
+            </Box>
           )}
         </>
       }
@@ -295,15 +309,7 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
             ) : (
               <>
                 <Box py={4} className={classes.formContainer}>
-                  {
-                    <StepOne
-                      formik={formik}
-                      prefectures={prefectures || null}
-                      editables={editables}
-                      isDuplicate={isDuplicate}
-                      setIsDuplicate={setIsDuplicate}
-                    />
-                  }
+                  {<StepOne formik={formik} prefectures={prefectures || null} editables={editables} setIsDuplicate={setIsDuplicate} />}
                 </Box>
               </>
             )}

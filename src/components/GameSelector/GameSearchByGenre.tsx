@@ -7,6 +7,7 @@ import Button from '@components/Button'
 
 import useGameByGenreId from './useGameByGenreId'
 import { useTranslation } from 'react-i18next'
+import useScrollClass from './useScrollClass'
 
 interface Props {
   genres: GameGenre[]
@@ -57,7 +58,7 @@ const GameSearchByGenre: React.FC<Props> = ({ genres, children, clearGames, cate
     clearGames()
     setSelectedGenre(undefined)
   }
-
+  const scrollClass = useScrollClass()
   return (
     <Box pt={4}>
       {selectedGenre ? (
@@ -68,7 +69,7 @@ const GameSearchByGenre: React.FC<Props> = ({ genres, children, clearGames, cate
           <Box pt={3}>{meta.loaded && !meta.pending && children}</Box>
         </Box>
       ) : (
-        <List style={{ maxHeight: categoryListHeight + 60, overflowY: 'auto' }}>
+        <List className={scrollClass} style={{ maxHeight: categoryListHeight + 60 }}>
           {genres.map((genre, idx) => (
             <ListItem key={idx} onClick={() => handleSelect(genre)} button className={classes.listItem}>
               <ListItemText>{genre.attributes.name}</ListItemText>
