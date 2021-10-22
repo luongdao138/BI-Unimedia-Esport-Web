@@ -56,6 +56,8 @@ const StreamingSettingContainer: React.FC<{ default_tab: any }> = ({ default_tab
   const isFirstRunTab2 = useRef(true)
   const isFirstRunTab3 = useRef(true)
   const [flagUpdateFieldDate, setFlagUpdateFieldDate] = useState(false)
+  const [validateField, setValidateField] = useState<string>('')
+  const [isUpdate, setIsUpdate] = useState(false)
 
   const formikLive = useFormik<FormLiveType>({
     initialValues: initialValues,
@@ -69,7 +71,7 @@ const StreamingSettingContainer: React.FC<{ default_tab: any }> = ({ default_tab
 
   const formikSchedule = useFormik<FormLiveType>({
     initialValues: initialScheduleValues,
-    validationSchema: validationScheduleScheme(flagUpdateFieldDate),
+    validationSchema: validationScheduleScheme(!isUpdate || flagUpdateFieldDate),
     enableReinitialize: true,
     validateOnChange: true,
     validateOnBlur: true,
@@ -128,10 +130,17 @@ const StreamingSettingContainer: React.FC<{ default_tab: any }> = ({ default_tab
   useEffect(() => {
     formikSchedule.validateForm()
     formikDistributor.validateForm()
+    if (scheduleInformation) {
+      setIsUpdate(scheduleInformation?.data?.id ? true : false)
+    }
   }, [scheduleInformation || channelInfo])
 
   const onUpdateFlagChangeFieldDate = (flag: boolean) => {
     setFlagUpdateFieldDate(flag)
+  }
+
+  const handleUpdateValidateField = (value: string) => {
+    setValidateField(value)
   }
 
   const getTabs = () => {
@@ -150,7 +159,14 @@ const StreamingSettingContainer: React.FC<{ default_tab: any }> = ({ default_tab
       case TABS.LIVE_STREAM:
         return <LiveStreamContainer formik={formikLive} />
       case TABS.STREAMING_RESERVATION:
-        return <StreamingReservationContainer formik={formikSchedule} flagUpdateFieldDate={onUpdateFlagChangeFieldDate} />
+        return (
+          <StreamingReservationContainer
+            formik={formikSchedule}
+            flagUpdateFieldDate={onUpdateFlagChangeFieldDate}
+            handleUpdateValidateField={handleUpdateValidateField}
+            validateFieldProps={validateField}
+          />
+        )
       case TABS.DISTRIBUTOR:
         return <DistributorInformationContainer formik={formikDistributor} />
       default:

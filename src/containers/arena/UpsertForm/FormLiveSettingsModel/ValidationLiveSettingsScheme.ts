@@ -42,67 +42,35 @@ export const validationScheduleScheme = (flag: boolean): any => {
   const minEndDate = new Date()
   const maxSchedule = 3 * 3600000 //1h=3600000ms
   const approximateMinDate = moment().subtract(30, 'seconds')
-  if (!flag) {
-    return Yup.object({
-      stepSettingTwo: Yup.object({
-        title: Yup.string()
-          .required(i18n.t('common:common.input_required'))
-          .max(100, i18n.t('common:streaming_setting_screen.validation.title_limit'))
-          .trim(),
-        description: Yup.string()
-          .required(i18n.t('common:common.input_required'))
-          .max(5000, i18n.t('common:streaming_setting_screen.validation.overview_limit'))
-          .trim(),
-        category: Yup.mixed().when(['use_ticket'], {
-          is: (status) => {
-            //0-schedule=>update
-            return status !== 1
-          },
-          then: Yup.mixed().required(i18n.t('common:common.input_required')).notOneOf([-1, ''], i18n.t('common:common.input_required')),
-        }),
-
-        use_ticket: Yup.boolean(),
-        ticket_price: Yup.number().when(['use_ticket'], {
-          is: true,
-          then: Yup.number()
-            .required(i18n.t('common:streaming_setting_screen.validation.point_ticket_limit'))
-            .min(1, i18n.t('common:streaming_setting_screen.validation.point_ticket_limit'))
-            .max(9999999, i18n.t('common:streaming_setting_screen.validation.point_ticket_limit'))
-            .positive(i18n.t('common:streaming_setting_screen.validation.point_ticket_limit'))
-            .integer(i18n.t('common:streaming_setting_screen.validation.point_ticket_limit')),
-        }),
+  return Yup.object({
+    stepSettingTwo: Yup.object({
+      title: Yup.string()
+        .required(i18n.t('common:common.input_required'))
+        .max(100, i18n.t('common:streaming_setting_screen.validation.title_limit'))
+        .trim(),
+      description: Yup.string()
+        .required(i18n.t('common:common.input_required'))
+        .max(5000, i18n.t('common:streaming_setting_screen.validation.overview_limit'))
+        .trim(),
+      category: Yup.mixed().when(['use_ticket'], {
+        is: (status) => {
+          //0-schedule=>update
+          return status !== 1
+        },
+        then: Yup.mixed().required(i18n.t('common:common.input_required')).notOneOf([-1, ''], i18n.t('common:common.input_required')),
       }),
-    })
-  } else {
-    return Yup.object({
-      stepSettingTwo: Yup.object({
-        title: Yup.string()
-          .required(i18n.t('common:common.input_required'))
-          .max(100, i18n.t('common:streaming_setting_screen.validation.title_limit'))
-          .trim(),
-        description: Yup.string()
-          .required(i18n.t('common:common.input_required'))
-          .max(5000, i18n.t('common:streaming_setting_screen.validation.overview_limit'))
-          .trim(),
-        category: Yup.mixed().when(['use_ticket'], {
-          is: (status) => {
-            //0-schedule=>update
-            return status !== 1
-          },
-          then: Yup.mixed().required(i18n.t('common:common.input_required')).notOneOf([-1, ''], i18n.t('common:common.input_required')),
-        }),
 
-        use_ticket: Yup.boolean(),
-        ticket_price: Yup.number().when(['use_ticket'], {
-          is: true,
-          then: Yup.number()
-            .required(i18n.t('common:streaming_setting_screen.validation.point_ticket_limit'))
-            .min(1, i18n.t('common:streaming_setting_screen.validation.point_ticket_limit'))
-            .max(9999999, i18n.t('common:streaming_setting_screen.validation.point_ticket_limit'))
-            .positive(i18n.t('common:streaming_setting_screen.validation.point_ticket_limit'))
-            .integer(i18n.t('common:streaming_setting_screen.validation.point_ticket_limit')),
-        }),
-
+      use_ticket: Yup.boolean(),
+      ticket_price: Yup.number().when(['use_ticket'], {
+        is: true,
+        then: Yup.number()
+          .required(i18n.t('common:streaming_setting_screen.validation.point_ticket_limit'))
+          .min(1, i18n.t('common:streaming_setting_screen.validation.point_ticket_limit'))
+          .max(9999999, i18n.t('common:streaming_setting_screen.validation.point_ticket_limit'))
+          .positive(i18n.t('common:streaming_setting_screen.validation.point_ticket_limit'))
+          .integer(i18n.t('common:streaming_setting_screen.validation.point_ticket_limit')),
+      }),
+      ...(flag && {
         sell_ticket_start_time: Yup.date()
           .nullable()
           .min(minStartDate, i18n.t('common:streaming_setting_screen.validation.min_date'))
@@ -193,8 +161,8 @@ export const validationScheduleScheme = (flag: boolean): any => {
           then: Yup.string().required(i18n.t('common:streaming_setting_screen.validation.sell_less_than_start')),
         }),
       }),
-    })
-  }
+    }),
+  })
 }
 
 export const validationLDistributorScheme = (): any => {

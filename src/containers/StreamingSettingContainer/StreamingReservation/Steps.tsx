@@ -49,6 +49,8 @@ interface StepsProps {
   titlePost?: string
   contentPost?: string
   flagUpdateFieldDate?: (flag: boolean) => void
+  handleUpdateValidateField?: (value: string) => void
+  validateFieldProps?: string
 }
 
 const KEY_TYPE = {
@@ -57,7 +59,18 @@ const KEY_TYPE = {
   UUID: 3,
 }
 
-const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, titlePost, contentPost, flagUpdateFieldDate }) => {
+const Steps: React.FC<StepsProps> = ({
+  step,
+  onNext,
+  category,
+  formik,
+  isShare,
+  titlePost,
+  contentPost,
+  flagUpdateFieldDate,
+  validateFieldProps,
+  handleUpdateValidateField,
+}) => {
   const classes = useStyles()
   const dispatch = useAppDispatch()
   const { t } = useTranslation(['common'])
@@ -128,24 +141,11 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
   }
 
   useEffect(() => {
+    setValidateField(validateFieldProps)
     formik.validateForm().then(() => {
       setCounter(counter + 1)
-      onHandleError()
     })
   }, [formik?.errors?.stepSettingTwo, type])
-
-  const onHandleError = () => {
-    removeField()
-  }
-
-  const removeField = () => {
-    if (counter <= 1 && (isLive || disable)) {
-      formik?.errors?.stepSettingTwo?.stream_notify_time && delete formik?.errors?.stepSettingTwo?.stream_notify_time
-      formik?.errors?.stepSettingTwo?.video_publish_end_time && delete formik?.errors?.stepSettingTwo?.video_publish_end_time
-      formik?.errors?.stepSettingTwo?.sell_ticket_start_time && delete formik?.errors?.stepSettingTwo?.sell_ticket_start_time
-    }
-    return formik.errors
-  }
 
   useEffect(() => {
     category?.data.forEach((h) => {
@@ -201,9 +201,6 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
         }
       }
     })
-    // } else {
-    //   onClickNext()
-    // }
   }
 
   const onClickNext = () => {
@@ -268,22 +265,28 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
     )
   }
 
+  const debouncedHandleRenewURLAndKey = useCallback(
+    _.debounce((params: StreamUrlAndKeyParams, showToast?: boolean) => {
+      getStreamUrlAndKey(params, (url, key) => {
+        // if (type === KEY_TYPE.URL) {
+        formik.setFieldValue('stepSettingTwo.stream_url', url)
+        formik.setFieldValue('stepSettingTwo.stream_key', key)
+        showToast && dispatch(commonActions.addToast(t('common:streaming_setting_screen.renew_success_toast')))
+        // } else {
+        //   formik.setFieldValue('stepSettingTwo.stream_key', key)
+        //   showToast && dispatch(commonActions.addToast(t('common:streaming_setting_screen.renew_success_toast')))
+        // }
+      })
+    }, 700),
+    []
+  )
   const onReNewUrlAndKey = (type: string, method: string, showToast?: boolean) => {
     const params: StreamUrlAndKeyParams = {
       type: method,
       objected: type,
       is_live: TYPE_SECRET_KEY.SCHEDULE,
     }
-    getStreamUrlAndKey(params, (url, key) => {
-      // if (type === KEY_TYPE.URL) {
-      formik.setFieldValue('stepSettingTwo.stream_url', url)
-      formik.setFieldValue('stepSettingTwo.stream_key', key)
-      showToast && dispatch(commonActions.addToast(t('common:streaming_setting_screen.renew_success_toast')))
-      // } else {
-      //   formik.setFieldValue('stepSettingTwo.stream_key', key)
-      //   showToast && dispatch(commonActions.addToast(t('common:streaming_setting_screen.renew_success_toast')))
-      // }
-    })
+    debouncedHandleRenewURLAndKey(params, showToast)
   }
 
   const onConfirm = () => {
@@ -419,6 +422,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
                 onChange={(e) => {
                   formik.handleChange(e)
                   setValidateField('title')
+                  handleUpdateValidateField('title')
                   if (onChangeFlag) {
                     setOnChangeFlag(true)
                     flagUpdateFieldDate(true)
@@ -455,6 +459,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
                   value={formik?.values?.stepSettingTwo?.description}
                   onChange={(e) => {
                     setValidateField('description')
+                    handleUpdateValidateField('description')
                     formik.handleChange(e)
                     if (onChangeFlag) {
                       setOnChangeFlag(true)
@@ -545,6 +550,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
                   onChange={(date) => {
                     formik.setFieldValue('stepSettingTwo.stream_notify_time', date.toString())
                     setValidateField('stream_notify_time')
+                    handleUpdateValidateField('stream_notify_time')
                     setOnChangeFlag(true)
                     flagUpdateFieldDate(true)
                   }}
@@ -591,6 +597,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
                   onChange={(date) => {
                     formik.setFieldValue('stepSettingTwo.stream_schedule_start_time', date.toString())
                     setValidateField('stream_schedule_start_time')
+                    handleUpdateValidateField('stream_schedule_start_time')
                     setOnChangeFlag(true)
                     flagUpdateFieldDate(true)
                   }}
@@ -635,6 +642,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
                   onChange={(date) => {
                     formik.setFieldValue('stepSettingTwo.stream_schedule_end_time', date.toString())
                     setValidateField('stream_schedule_end_time')
+                    handleUpdateValidateField('stream_schedule_end_time')
                     setOnChangeFlag(true)
                     flagUpdateFieldDate(true)
                   }}
@@ -683,6 +691,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
                     const temp = moment(date).add(5, 's')
                     formik.setFieldValue('stepSettingTwo.video_publish_end_time', temp)
                     setValidateField('video_publish_end_time')
+                    handleUpdateValidateField('video_publish_end_time')
                     setOnChangeFlag(true)
                     flagUpdateFieldDate(true)
                   }}
@@ -783,6 +792,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
                       }
                       onChange={(e) => {
                         setValidateField('ticket_price')
+                        handleUpdateValidateField('ticket_price')
                         formik.handleChange(e)
                         if (onChangeFlag) {
                           setOnChangeFlag(true)
@@ -845,6 +855,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
                         const temp = moment(date).add(5, 's')
                         formik.setFieldValue('stepSettingTwo.sell_ticket_start_time', temp)
                         setValidateField('sell_ticket_start_time')
+                        handleUpdateValidateField('sell_ticket_start_time')
                         setOnChangeFlag(true)
                         flagUpdateFieldDate(true)
                       }}
