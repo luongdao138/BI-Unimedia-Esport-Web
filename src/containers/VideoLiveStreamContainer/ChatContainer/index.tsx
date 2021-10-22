@@ -145,12 +145,10 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       openPurchasePointModal,
       videoType,
       freeToWatch,
-      chatWidth
+      chatWidth,
     },
     ref
   ) => {
-    // const { t } = useTranslation('common')
-    // const [messageText, setMessageText] = useState<string>('')
     const [purchaseDialogVisible, setPurchaseDialogVisible] = useState<boolean>(false)
     const [messActiveUser, setMessActiveUser] = useState<any>(null)
     const [successGetListMess, setSuccessGetListMess] = useState(false)
@@ -179,11 +177,6 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     const { selectors } = userProfileStore
 
     const userProfile = useAppSelector<UserProfile>(selectors.getUserProfile)
-    // const userProfile={
-    //   attributes: {
-    //     uuid: "2fdb07560f07e403659fa3ebcdc1ab20"
-    //   }
-    // }
 
     const initialFruits: APIt.Message[] = []
     const [stateMessages, setStateMessages] = useState(initialFruits)
@@ -239,13 +232,11 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     })
 
     const isStreaming = (() => {
-      // return true
       if (videoType === STATUS_VIDEO.LIVE_STREAM) {
         if (streamingSecond === Infinity) {
           return true
         }
         if (playedSecond >= streamingSecond) {
-          // if ((playedSecond >= streamingSecond || playedSecond + DELAY_SECONDS >= streamingSecond)) {
           return true
         }
       }
@@ -256,7 +247,6 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       const result = await API.graphql(
         graphqlOperation(createUser, {
           input: {
-            // id:userProfile?.id,
             uuid: userProfile?.attributes?.uuid,
             avatar: userProfile?.attributes?.avatar_url,
             user_name: userProfile?.attributes?.nickname,
@@ -270,11 +260,6 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     const isPremiumChat = (message: any, is_check_time = true, compare_second?: any) => {
       let compareSecond = compare_second
       if (!compareSecond) {
-        // if (isViewingStream) {
-        //   compareSecond = streamingSecond
-        // } else {
-        //   compareSecond = playedSecond
-        // }
         compareSecond = playedSecond
       }
       const conditionWithoutTime = +message.point > 300 && message.is_premium === true && !message.delete_flag
@@ -377,7 +362,6 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     }, [successGetListMess])
 
     const filterByStreaming = () => {
-      // if ((playedSecond >= streamingSecond || liveStreamInfo.is_pausing_live) && successGetListMess && successGetListDonateMess) {
       if (successGetListMess && successGetListDonateMess) {
         // fix bug streaming second is not true when access url first time
         const realStreamingSecond = playedSecond
@@ -390,11 +374,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
           setStateMessages([...newMess])
 
           if (isMessageInBottom) {
-            // if(point){
             setIsChatInBottom(true)
-            // } else {
-            // scrollToCurrentMess()
-            // }
           }
 
           const newMessagesDonate = savedDonateMess.filter(
@@ -432,16 +412,12 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       }
       // render messages by time of local
       setStateMessages([...newMess])
-      if (isMessageInBottom) {
-        // scrollToCurrentMess()
-      }
       let newMessDonate = [...savedDonateMess]
       newMessDonate = newMessDonate.filter(
         (item) => +item.display_avatar_time > +new_played_second && +item.video_time <= +new_played_second
       )
       // render user donate icon by time of local
       setMessagesDonate(newMessDonate)
-      // scrollToCurrentMess()
     }
 
     useEffect(() => {
@@ -473,23 +449,6 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       }
     }, [liveStreamInfo.seek_count])
 
-    useEffect(() => {
-      // getUsersDonate()
-      // document.getElementsByClassName('content-wrapper')[0]['style'].willChange = 'opacity'
-      // return () => {
-      //   const container = document.getElementsByClassName('content-wrapper')
-      //   if (container && container.length > 0) {
-      //     document.getElementsByClassName('content-wrapper')[0]['style'].willChange = 'transform'
-      //   }
-      // }
-    }, [])
-    // const filterMessagesDonate = (messages: any, compare_second?: any) => {
-    //   const foundMessages = messages.filter((item) => {
-    //     return isPremiumChat(item, true, compare_second)
-    //   })
-    //   return foundMessages
-    // }
-
     const refTransformListMess = useRef(null)
     const handleTransformListMess = () => {
       const transformMess = [...allMess]
@@ -518,10 +477,6 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       try {
         const listQV: APIt.GetMessagesByVideoIdQueryVariables = {
           video_id: key_video_id,
-          // filter: {
-          //   video_id: { eq: key_video_id },
-          //   // delete_flag: { ne: true },
-          // },
           limit: 2000,
           nextToken,
         }
@@ -665,15 +620,6 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       const sortFactor = isSortAsc ? 1 : -1
       return new_mess.sort((a: any, b: any) => sortFactor * (+a.video_time - +b.video_time || a.created_time.localeCompare(b.created_time)))
     }
-
-    // const getChatData = () =>
-    //   Array(30)
-    //     .fill('')
-    //     .map((_, i) => ({
-    //       id: i,
-    //       user: 'Account Name',
-    //       content: 'チャットのコメントははここに表示されます。チャットのコメントははここに表示されます。',
-    //     }))
 
     const handleChatInputOnFocus = () => {
       handleKeyboardVisibleState(true)
@@ -821,7 +767,6 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
             point: point.toString(),
             is_premium: true,
             display_avatar_time: videoTime + purchasePoints[`p_${point}`].displayTime,
-            // display_avatar_time: videoTime + 20,
           }
         }
 
@@ -924,7 +869,6 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
             <Box className={classes.chatInputContainer}>
               {purchaseDialogVisible && !isMobile && purchaseInfoDialog()}
               <LoginRequired>
-                {/* <IconButton onClick={isEnabledChat ? purchaseIconClick : null} id="btnOpenPremiumChatDialog" className={classes.iconPurchase}> */}
                 <IconButton onClick={purchaseIconClick} id="btnOpenPremiumChatDialog" className={classes.iconPurchase}>
                   <img id="btnOpenPremiumChatDialogImage" src="/images/ic_purchase.svg" />
                 </IconButton>
@@ -943,16 +887,13 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
                   helperText={touched.message && errors?.message}
                   error={touched.message && !!errors?.message}
                   onKeyPress={handlePressEnter}
-                  // disabled={!isEnabledChat}
                 />
                 <LoginRequired>
-                  {/* <Button onClick={handleSubmitChatContent} className={classes.iconButtonBg} disabled={!isEnabledChat}> */}
                   <Button onClick={handleSubmitChatContent} className={classes.iconButtonBg}>
                     <Icon className={`fa fa-paper-plane ${classes.sendIcon}`} fontSize="small" />
                   </Button>
                 </LoginRequired>
               </Box>
-              {/* {errors.message && <Typography className={classes.chatInputErrorText}>{errors.message}</Typography>} */}
             </Box>
           ) : (
             <></>
@@ -973,35 +914,35 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       let transformedMess = stateMessages
       let transformedDonateMess = messagesDonate
       // filter only message is not deleted if user is not streamer
-      if(!userResult?.streamer) {
-        transformedMess = transformedMess.filter(item => !item.delete_flag)
-        transformedDonateMess = transformedDonateMess.filter(item => !item.delete_flag)
-      } 
-      if(componentType === 'chatBoard') {
+      if (!userResult?.streamer) {
+        transformedMess = transformedMess.filter((item) => !item.delete_flag)
+        transformedDonateMess = transformedDonateMess.filter((item) => !item.delete_flag)
+      }
+      if (componentType === 'chatBoard') {
         // no margin top when has not donate message
-        if(transformedDonateMess.length === 0){
+        if (transformedDonateMess.length === 0) {
           return 0
         }
         // only margin top when has donate message
         // render margin top higher with donate message is first item
-        if(transformedMess.length !== 0 &&  transformedMess[0].is_premium) {
+        if (transformedMess.length !== 0 && transformedMess[0].is_premium) {
           marginTop = 16
         } else {
           marginTop = 12
         }
-      } 
-      if(componentType === 'userIcon') {
+      }
+      if (componentType === 'userIcon') {
         // margin top 16 when has donate message
-        if(transformedDonateMess.length !== 0){
+        if (transformedDonateMess.length !== 0) {
           return 16
         }
         // render margin top higher with donate message is first item
-        if(transformedMess.length !== 0 &&  transformedMess[0].is_premium) {
+        if (transformedMess.length !== 0 && transformedMess[0].is_premium) {
           marginTop = 16
         } else {
           marginTop = 12
         }
-      } 
+      }
       return marginTop
     }
 
@@ -1034,54 +975,42 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
             ></Box>
           </Box>
         </ClickAwayListener>
-        <Box className={classes.chatBoard} id="chatBoard" style={{
-          marginTop: getMarginTopOfComponents('chatBoard'),
-          height: isMobile ? '253px' : chatHeight
-        }}>
-          {stateMessages
-            // sort messages oldest to newest client-side
-            // .sort((a: any, b: any) => +a.video_time - +b.video_time || a.createdAt.localeCompare(b.createdAt))
-            .map((msg: any, i: number) => {
-              // only display message is not deleted or display all mess if user is streamer
-              return !msg.delete_flag || userResult.streamer ? (
-                msg.is_premium ? (
-                  <DonateMessage
-                    // key={msg?.id || i}
-                    key={i}
-                    message={msg}
-                    videoType={videoType}
-                    deleteMess={deleteMsg}
-                    getMessageWithoutNgWords={getMessageWithoutNgWords}
-                    is_streamer={userResult?.streamer}
-                    resendMess={resendMess}
-                    reDeleteMess={reDeleteMess}
-                  />
-                ) : (
-                  <ChatTextMessage
-                    // key={msg?.id || i}
-                    key={i}
-                    message={msg}
-                    videoType={videoType}
-                    getMessageWithoutNgWords={getMessageWithoutNgWords}
-                    deleteMess={deleteMsg}
-                    is_streamer={userResult?.streamer}
-                    resendMess={resendMess}
-                    reDeleteMess={reDeleteMess}
-                  />
-                )
+        <Box
+          className={classes.chatBoard}
+          id="chatBoard"
+          style={{
+            marginTop: getMarginTopOfComponents('chatBoard'),
+            height: isMobile ? '253px' : chatHeight,
+          }}
+        >
+          {stateMessages.map((msg: any, i: number) => {
+            // only display message is not deleted or display all mess if user is streamer
+            return !msg.delete_flag || userResult.streamer ? (
+              msg.is_premium ? (
+                <DonateMessage
+                  key={i}
+                  message={msg}
+                  videoType={videoType}
+                  deleteMess={deleteMsg}
+                  getMessageWithoutNgWords={getMessageWithoutNgWords}
+                  is_streamer={userResult?.streamer}
+                  resendMess={resendMess}
+                  reDeleteMess={reDeleteMess}
+                />
               ) : (
-                ''
+                <ChatTextMessage
+                  key={i}
+                  message={msg}
+                  videoType={videoType}
+                  getMessageWithoutNgWords={getMessageWithoutNgWords}
+                  deleteMess={deleteMsg}
+                  is_streamer={userResult?.streamer}
+                  resendMess={resendMess}
+                  reDeleteMess={reDeleteMess}
+                />
               )
-            })}
-          {/* {chartDataFake.map((message, index) => {
-          const { user, content, id } = message
-          return (
-            <Typography key={id} id={`chat_${id}`}>
-              <span className={classes.chatMessageUser}>{`${user}: `}</span>
-              {index + ' ' + content}
-            </Typography>
-          )
-        })}   */}
+            ) : null
+          })}
         </Box>
         {isMobile ? chatComponentMobile() : chatInputComponent()}
       </Box>
@@ -1090,14 +1019,6 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     const chatComponentMobile = () => {
       return purchaseDialogVisible ? purchaseInfoDialog() : chatInputComponent()
     }
-
-    // const getUserWatchingList = () =>
-    //   Array(20)
-    //     .fill('')
-    //     .map((_, i) => ({
-    //       id: i,
-    //       user_avatar: '/images/dataVideoFake/fake_avatar.png',
-    //     }))
 
     const chatNotAvailableMessage = () => {
       if (videoType === STATUS_VIDEO.SCHEDULE && (isVideoFreeToWatch || userHasViewingTicket)) {
@@ -1132,12 +1053,10 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
 
     const chatContent = () => (
       <Box className={classes.chatContent} style={isMobile ? { paddingBottom: chatContentPaddingBottom() } : {}}>
-        {/* <Button onClick={scrollToCurrentMess}>Scroll to chat mess</Button> */}
-        <Box className={classes.userWatchingList} style={{marginTop: getMarginTopOfComponents('userIcon')}}>
+        <Box className={classes.userWatchingList} style={{ marginTop: getMarginTopOfComponents('userIcon') }}>
           {messagesDonate
             .slice()
             .reverse()
-            // .sort((a: any, b: any) => -(+a.video_time - +b.video_time || a.createdAt.localeCompare(b.createdAt)))
             .map((item, index) =>
               !item.delete_flag ? (
                 <Box
@@ -1171,7 +1090,6 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
             <ButtonBase onClick={() => scrollToCurrentMess()} className={`${classes.btn_scroll_mess}`}>
               {i18n.t('common:streaming_setting_screen.scroll_to_new_mess')}
             </ButtonBase>
-            {/* <Button onClick={scrollToCurrentMess}>{i18n.t('common:streaming_setting_screen.scroll_to_new_mess')}</Button> */}
           </Box>
         ) : (
           <></>
@@ -1194,9 +1112,9 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     }
 
     const chatHeight = (() => {
-      // 35 is chat header, 
-      let newChatHeight = (chatWidth * 250 / 153) - 35
-      if(messagesDonate.filter(item => !item.delete_flag).length !== 0) {
+      // 35 is chat header,
+      let newChatHeight = (chatWidth * 250) / 153 - 35
+      if (messagesDonate.filter((item) => !item.delete_flag).length !== 0) {
         // 56 is height of message donate
         newChatHeight = newChatHeight - 56 - getMarginTopOfComponents('chatBoard')
       } else {
@@ -1204,7 +1122,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         newChatHeight = newChatHeight - getMarginTopOfComponents('userIcon')
       }
       // height of chat when display chat content
-      if(displayChatContent()) {
+      if (displayChatContent()) {
         // 116.5 is input chat when video is streaming
         newChatHeight = newChatHeight - 116.5
       }

@@ -159,13 +159,10 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
         setLike(0)
         setLikeCount(likeCount > 0 ? likeCount - 1 : 0)
       }
-      // console.log('enter unlike')
       debouncedHandleReactionVideo(0, 1, video_id)
     } else {
       setUnlike(0)
       setUnlikeCount(unlikeCount > 0 ? unlikeCount - 1 : 0)
-
-      // console.log('enter unlike')
       debouncedHandleReactionVideo(like, 0, video_id)
     }
   }
@@ -223,11 +220,6 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
 
   const mediaPlayer = () => {
     return (
-      // <VideoPlayer
-      //   src={'https://usher.ttvnw.net/api/lvs/hls/lvs.lvs-client-example.c6341be8-a3c7-42bc-b89a-8dabe040eae9.m3u8'}
-      //   thumbnail={'/images/live_stream/exelab_thumb.png'}
-      //   statusVideo={true}
-      // />
       <>
         {showOverlayOnMediaPlayer() ? (
           <img
@@ -289,6 +281,7 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
 
     return null
   }
+
   const mediaOverlayPurchaseTicketView = () => {
     return (
       <Box className={classes.overlayPurchaseContainer}>
@@ -303,7 +296,6 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
   }
 
   const showOverlayOnMediaPlayer = () => {
-    // const { userHasViewingTicket, videoType, freeToWatch, ticketAvailableForSale } = props
     if (videoType === STATUS_VIDEO.SCHEDULE && isVideoFreeToWatch) {
       return true
     }
@@ -316,12 +308,11 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
     if (!isVideoFreeToWatch && !userHasViewingTicket) {
       return true
     }
-    // return !freeToWatch && !userHasViewingTicket
     return null
   }
 
-  const liveBasicContentVisible = () => !isMobile || !softKeyboardIsShown
-  const mobileRegisterChannelVisible = () => isMobile && !softKeyboardIsShown
+  const liveBasicContentVisible = !isMobile || !softKeyboardIsShown
+  const mobileRegisterChannelVisible = isMobile && !softKeyboardIsShown
   const goToLogin = () => {
     router.push(makeContextualHref({ pathName: ESRoutes.LOGIN }), ESRoutes.LOGIN, { shallow: true })
   }
@@ -361,8 +352,8 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
           {showOverlayOnMediaPlayer() && mediaOverlayPurchaseTicketView()}
         </Box>
       )}
-      {mobileRegisterChannelVisible() && mobileRegisterChannelContainer()}
-      {liveBasicContentVisible() && (
+      {mobileRegisterChannelVisible && mobileRegisterChannelContainer()}
+      {liveBasicContentVisible && (
         <Box className={classes.wrap_info}>
           <Box className={classes.wrap_movie_info}>
             <Box className={classes.wrap_title}>
@@ -429,10 +420,8 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
       {isAuthenticated && (
         <ESReport
           reportType={REPORT_TYPE.VIDEO_STREAM}
-          // reportType={REPORT_TYPE.USER_LIST}
           target_id={userProfile?.attributes?.user_code}
           data={detailVideoResult}
-          // data={streamerProfile}
           open={showReportMenu}
           handleClose={() => setShowReportMenu(false)}
         />

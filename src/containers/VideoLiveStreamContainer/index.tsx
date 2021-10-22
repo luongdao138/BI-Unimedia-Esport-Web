@@ -109,8 +109,6 @@ const VideoDetail: React.FC = () => {
 
   const isPendingPurchaseSuperChat = meta_purchase_ticket_super_chat.pending && purchaseType === PURCHASE_TYPE.PURCHASE_SUPER_CHAT
 
-  // const isLoadingData = isAuthenticated ? !detailVideoResult || !myPointsData || !userResult || !video_id : !detailVideoResult || !video_id
-
   const [isVideoFreeToWatch, setIsVideoFreeToWatch] = useState(detailVideoResult?.use_ticket ? detailVideoResult?.use_ticket : -1)
 
   const handleShowDialogLogin = () => {
