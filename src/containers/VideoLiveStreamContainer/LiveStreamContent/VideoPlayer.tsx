@@ -318,13 +318,13 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   useEffect(() => {
     videoEl.current.addEventListener('timeupdate', (event) => {
       const videoInfo = event.target
-      console.log(
-        '->current->duration-> range',
-        videoInfo.currentTime,
-        videoInfo.duration,
-        videoInfo.duration - videoInfo.currentTime,
-        videoInfo.duration - DELAY_SECONDS
-      )
+      // console.log(
+      //   '->current->duration-> range',
+      //   videoInfo.currentTime,
+      //   videoInfo.duration,
+      //   videoInfo.duration - videoInfo.currentTime,
+      //   videoInfo.duration - DELAY_SECONDS
+      // )
       videoInfo ? handleUpdateVideoTime.current(videoInfo) : ''
     })
 
@@ -501,7 +501,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       videoEl.current.play()
     }
   }
-  console.log('video isFullScreen >>>>>>>>>>>>>>', videoEl?.current?.webkitPresentationMode)
+  // console.log('video isFullScreen >>>>>>>>>>>>>>', videoEl?.current?.webkitPresentationMode)
 
   return (
     <div className={classes.videoPlayer}>

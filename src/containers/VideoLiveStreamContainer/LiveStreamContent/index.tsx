@@ -75,13 +75,16 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
   const { userReactionVideoStream, userFollowChannel } = useLiveStreamDetail()
   // const isLoadingReaction = meta_reaction_video_stream?.pending
   // const isLoadingVideoDetail = meta?.pending
-  const [like, setLike] = useState(userResult?.like ?? 0)
-  const [unlike, setUnlike] = useState(userResult?.unlike ?? 0)
-  const [likeCount, setLikeCount] = useState(detailVideoResult?.like_count ?? 0)
-  const [unlikeCount, setUnlikeCount] = useState(detailVideoResult?.unlike_count ?? 0)
-  const [subscribe, setSubscribe] = useState(userResult?.follow ?? 0)
-  const [subscribeCount, setSubscribeCount] = useState(detailVideoResult?.channel_follow_count ?? 0)
-  const isVideoFreeToWatch = freeToWatch === 0 ? true : false
+  const [like, setLike] = useState(userResult?.like ? userResult.like : 0)
+  const [unlike, setUnlike] = useState(userResult?.unlike ? userResult.unlike : 0)
+  const [likeCount, setLikeCount] = useState(detailVideoResult?.like_count ? detailVideoResult?.like_count : 0)
+  const [unlikeCount, setUnlikeCount] = useState(detailVideoResult?.unlike_count ? detailVideoResult?.unlike_count : 0)
+  const [subscribe, setSubscribe] = useState(userResult?.follow ? userResult?.follow : 0)
+  const [subscribeCount, setSubscribeCount] = useState(
+    detailVideoResult?.channel_follow_count ? detailVideoResult?.channel_follow_count : 0
+  )
+
+  const isVideoFreeToWatch = freeToWatch === 0
 
   const [keyVideoPlayer, setKeyVideoPlayer] = useState(0)
   // get url browser video live stream
@@ -125,7 +128,10 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
   )
 
   const toggleLikeVideo = () => {
-    if (like === 0) {
+    // console.log('toggleLikeVideo like:', like, '- likecount:', likeCount,
+    //   '\n-unlike: ', unlike, '- unlikecount:', unlikeCount);
+
+    if (!like) {
       setLike(1)
       setLikeCount(likeCount + 1)
       if (unlike === 1) {
@@ -141,7 +147,9 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
   }
 
   const toggleUnLikeVideo = () => {
-    if (unlike === 0) {
+    // console.log('toggleUnLikeVideo like:', like, '- likecount:', likeCount,
+    //   '\n-unlike: ', unlike, '- unlikecount:', unlikeCount);
+    if (!unlike) {
       setUnlike(1)
       setUnlikeCount(unlikeCount + 1)
       if (like === 1) {
