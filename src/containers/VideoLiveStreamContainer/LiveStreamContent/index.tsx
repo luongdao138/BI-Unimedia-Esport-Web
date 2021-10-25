@@ -10,7 +10,6 @@ import React, { useCallback, useEffect, useState } from 'react'
 import ESMenuItem from '@components/Menu/MenuItem'
 import { VIDEO_TYPE } from '@containers/VideoLiveStreamContainer'
 import OverlayContent from '@containers/VideoLiveStreamContainer/LiveStreamContent/OverlayContent'
-import VideoPlayer from './VideoPlayer'
 import useLiveStreamDetail from '../useLiveStreamDetail'
 import ReactionButton from './ReactionButton'
 import useDetailVideo from '../useDetailVideo'
@@ -25,6 +24,7 @@ import { ESRoutes } from '@constants/route.constants'
 import { getIsAuthenticated } from '@store/auth/selectors'
 import { debounceTime } from '@constants/common.constants'
 import ESLoader from '@components/Loader'
+import VideoPlayer from './VideoPlayer'
 
 interface LiveStreamContentProps {
   videoType?: VIDEO_TYPE
@@ -34,6 +34,7 @@ interface LiveStreamContentProps {
     videoWidth: number
     videoHeight: number
   }
+  isArchived?: boolean
   userHasViewingTicket?: boolean | number
   ticketAvailableForSale?: boolean
   softKeyboardIsShown?: boolean
@@ -54,6 +55,7 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
     softKeyboardIsShown,
     clickButtonPurchaseTicket,
     onVideoEnd,
+    isArchived,
     componentsSize,
   } = props
   const [showReportMenu, setShowReportMenu] = useState<boolean>(false)
@@ -73,14 +75,12 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
   const { userReactionVideoStream, userFollowChannel } = useLiveStreamDetail()
   // const isLoadingReaction = meta_reaction_video_stream?.pending
   // const isLoadingVideoDetail = meta?.pending
-  const [like, setLike] = useState(userResult?.like !== null ? userResult.like : 0)
-  const [unlike, setUnlike] = useState(userResult?.unlike !== null ? userResult.unlike : 0)
-  const [likeCount, setLikeCount] = useState(detailVideoResult?.like_count !== null ? detailVideoResult?.like_count : 0)
-  const [unlikeCount, setUnlikeCount] = useState(detailVideoResult?.unlike_count !== null ? detailVideoResult?.unlike_count : 0)
-  const [subscribe, setSubscribe] = useState(userResult?.follow !== null ? userResult?.follow : 0)
-  const [subscribeCount, setSubscribeCount] = useState(
-    detailVideoResult?.channel_follow_count !== null ? detailVideoResult?.channel_follow_count : 0
-  )
+  const [like, setLike] = useState(userResult?.like ?? 0)
+  const [unlike, setUnlike] = useState(userResult?.unlike ?? 0)
+  const [likeCount, setLikeCount] = useState(detailVideoResult?.like_count ?? 0)
+  const [unlikeCount, setUnlikeCount] = useState(detailVideoResult?.unlike_count ?? 0)
+  const [subscribe, setSubscribe] = useState(userResult?.follow ?? 0)
+  const [subscribeCount, setSubscribeCount] = useState(detailVideoResult?.channel_follow_count ?? 0)
   const isVideoFreeToWatch = freeToWatch === 0 ? true : false
 
   const [keyVideoPlayer, setKeyVideoPlayer] = useState(0)
@@ -92,26 +92,18 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
   const classes = useStyles({ isSubscribed: isSubscribed() })
 
   const toggleSubscribeClick = () => {
-    if (subscribe === 0) {
-      setSubscribe(1)
-      setSubscribeCount(subscribeCount + 1)
-      // console.log('enter Subscribe')
-      if (detailVideoResult?.channel_id) {
-        debouncedHandleSubscribe(1, detailVideoResult?.channel_id, video_id)
-      }
-    } else {
-      setSubscribe(0)
-      setSubscribeCount(subscribeCount - 1)
-      // console.log('enter unSubscribe')
-      if (detailVideoResult?.channel_id) {
-        debouncedHandleSubscribe(0, detailVideoResult?.channel_id, video_id)
-      }
+    const newSubscribe = subscribe === 0 ? 1 : 0
+    const newSubscribeCount = subscribe === 0 ? subscribeCount + 1 : subscribeCount - 1
+
+    setSubscribe(newSubscribe)
+    setSubscribeCount(newSubscribeCount)
+    if (detailVideoResult?.channel_id) {
+      debouncedHandleSubscribe(newSubscribe, detailVideoResult?.channel_id, video_id)
     }
   }
 
   const debouncedHandleSubscribe = useCallback(
     _.debounce((followValue: number, channelIdValue: number, videoIdValue: string | string[]) => {
-      // console.log('debounced HandleSubscribeVideo')
       userFollowChannel({
         video_id: videoIdValue,
         channel_id: channelIdValue,
@@ -123,7 +115,6 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
 
   const debouncedHandleReactionVideo = useCallback(
     _.debounce((likeValue: number, unlikeValue: number, videoIdValue: string | string[]) => {
-      // console.log('debounced HandleReactionVideo')
       userReactionVideoStream({
         video_id: videoIdValue,
         like: likeValue,
@@ -141,12 +132,10 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
         setUnlike(0)
         setUnlikeCount(unlikeCount > 0 ? unlikeCount - 1 : 0)
       }
-      // console.log('enter like')
       debouncedHandleReactionVideo(1, 0, video_id)
     } else {
       setLike(0)
       setLikeCount(likeCount > 0 ? likeCount - 1 : 0)
-      // console.log('enter like')
       debouncedHandleReactionVideo(0, unlike, video_id)
     }
   }
@@ -228,7 +217,7 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
           />
         ) : (
           <VideoPlayer
-            componentsSize={componentsSize}
+            isArchived={isArchived}
             key={keyVideoPlayer}
             videoType={videoType}
             src={detailVideoResult?.archived_url}
@@ -281,7 +270,6 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
 
     return null
   }
-
   const mediaOverlayPurchaseTicketView = () => {
     return (
       <Box className={classes.overlayPurchaseContainer}>
@@ -420,8 +408,10 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
       {isAuthenticated && (
         <ESReport
           reportType={REPORT_TYPE.VIDEO_STREAM}
+          // reportType={REPORT_TYPE.USER_LIST}
           target_id={userProfile?.attributes?.user_code}
           data={detailVideoResult}
+          // data={streamerProfile}
           open={showReportMenu}
           handleClose={() => setShowReportMenu(false)}
         />
@@ -663,10 +653,10 @@ const useStyles = makeStyles((theme) => ({
       },
     },
     wrap_title: {
+      marginRight: 0,
       paddingRight: 0,
       flex: 1,
       justifyContent: 'space-between',
-      marginRight: 0,
     },
     mobileRegisterChannelContainer: {
       backgroundColor: 'black',

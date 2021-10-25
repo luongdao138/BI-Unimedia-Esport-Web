@@ -7,6 +7,7 @@ interface Props {
   currentTime?: number
   durationsPlayer?: number
   videoRef: any
+  changeStatusStreaming?: (status: boolean) => void
 }
 
 {
@@ -14,7 +15,7 @@ interface Props {
 timePlayed: time by 100*/
 }
 
-const SeekBar: React.FC<Props & SliderProps> = ({ currentTime, durationsPlayer, videoRef, ...rest }) => {
+const SeekBar: React.FC<Props & SliderProps> = ({ currentTime, durationsPlayer, videoRef, changeStatusStreaming, ...rest }) => {
   const classes = useStyles()
   // const [currentTimeState, setCurrentTime] = useState(0);
   // const [duration, setDuration] = useState(0)
@@ -22,49 +23,25 @@ const SeekBar: React.FC<Props & SliderProps> = ({ currentTime, durationsPlayer, 
   const { changeSeekCount } = useDetailVideo()
 
   useEffect(() => {
-    // trigger change streaming second in redux
-    // if (Math.floor(durationsPlayer) !== streamingSecond) {
-    //   let is_viewing_video = true
-    //   if (Math.floor(currentTime) < Math.floor(durationsPlayer)) {
-    //     is_viewing_video = false
-    //   }
-    //   if (isViewingStream !== is_viewing_video) {
-    //     changeIsViewingStream(is_viewing_video)
-    //   }
-    //   changeStreamingSecond(Math.floor(durationsPlayer))
-    // }
-    // if (Math.floor(currentTime) !== playedSecond) {
-    //   changePlayedSecond(Math.floor(currentTime))
-    // }
-
-    // console.log(' 🚀 🚀 🚀 🚀 🚀 🚀 🚀  ', currentTime, durationsPlayer)
-    // setCurrentTime(videoRef.current.getCurrentTime()) //
     setTimePlayed((currentTime / durationsPlayer) * 100)
   }, [currentTime, durationsPlayer])
 
   const handleChange = (_, value) => {
-    // console.log('🚀 ~ 11111', value)
     const newSecond = (value * durationsPlayer) / 100
     setTimePlayed(value)
-    videoRef.current.seekTo(newSecond, 'seconds')
-    // trigger change played second in redux
-    // if(Math.floor(newSecond) !== playedSecond) {
-    //   changePlayedSecond(Math.floor(newSecond))
-    // }
-    // let is_viewing_video = true
-    // if(Math.floor(newSecond) < Math.floor(streamingSecond)) {
-    //   is_viewing_video = false
-    // }
-    // if(isViewingStream !== is_viewing_video) {
-    //   changeIsViewingStream(is_viewing_video)
-    // }
+    if (value === 100) {
+      changeStatusStreaming(true)
+    } else {
+      changeStatusStreaming(false)
+    }
+    videoRef.current.currentTime = newSecond
   }
 
   const handleCommit = (_, value) => {
+    console.log('~~~VALUE SEEK TO ~~~~~', value, (value * durationsPlayer) / 100)
     setTimePlayed(value)
-    videoRef.current.seekTo((value * durationsPlayer) / 100, 'seconds')
     const newSecond = (value * durationsPlayer) / 100
-    console.log('🚀 ~ handleChange ~ newSecond--- 0000', newSecond)
+    videoRef.current.currentTime = newSecond
     changeSeekCount(Math.floor(newSecond))
   }
 
@@ -86,43 +63,49 @@ const SeekBar: React.FC<Props & SliderProps> = ({ currentTime, durationsPlayer, 
 
 const useStyles = makeStyles(() => ({
   sliderSeek: {
-    width: '100%',
+    // width: '100%',
     display: 'block',
     transition: 'width 0.4s ease-in',
     alignItems: 'flex-end',
     justifyContent: 'center',
     // backgroundColor: 'pink',
-    paddingBottom: 10,
+    // paddingBottom: 10,
     // height:20,
+    margin: '0px 5px',
   },
   seekBar: {
     // width: 90,
     // marginLeft: 16,
     // marginRight: 8,
     borderRadius: 2,
-    padding: 0,
+    padding: '3px 0px',
+    '&:hover .MuiSlider-thumb': {
+      visibility: 'visible',
+    },
     '& .MuiSlider-rail': {
       color: '#C3C3C3',
-      height: 7,
-      borderRadius: 2,
+      height: 3,
+      // borderRadius: 2,
     },
     '& .MuiSlider-track': {
       color: '#FF4786',
-      height: 7,
-      borderRadius: 2,
+      height: 3,
+      // borderRadius: 2,
     },
     '& .MuiSlider-thumb': {
-      color: 'transparent', //circle
-      width: 14,
-      height: 14,
-      borderRadius: 7,
+      // color: '#fff', //circle
+      // width: 8,
+      // height: 8,
+      // borderRadius: 4,
+      visibility: 'hidden',
     },
+
     '& .MuiSlider-thumb.Mui-focusVisible, .MuiSlider-thumb:hover': {
       boxShadow: 'none',
     },
-    '& .MuiSlider-root': {
-      padding: 0,
-    },
+    // '& .MuiSlider-root': {
+    //   // padding: 0,
+    // },
   },
 }))
 

@@ -108,7 +108,7 @@ const App = ({ Component, pageProps }: Props) => {
 
   const { previousRoute } = useRouteUrlHistory()
   const handleLoadScript = () => {
-    console.warn('https://cdn.jsdelivr.net/npm/hls.js@latest ', window?.IVSPlayer)
+    console.warn('https://cdn.jsdelivr.net/npm/hls.js@latest ')
   }
   return (
     <>
