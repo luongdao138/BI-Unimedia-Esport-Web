@@ -83,32 +83,28 @@ export const validationScheduleScheme = (flag: boolean, isLive?: boolean): any =
         !isLive && {
           sell_ticket_start_time: Yup.date()
             .nullable()
-            .min(minStartDate, i18n.t('common:streaming_setting_screen.validation.min_date'))
+            // .min(minStartDate, i18n.t('common:streaming_setting_screen.validation.min_date'))
             .when(['use_ticket'], {
               is: true,
-              then: Yup.date()
-                .nullable()
-                .required(i18n.t('common:streaming_setting_screen.validation.input_required'))
-                .min(approximateMinDate, i18n.t('common:streaming_setting_screen.validation.min_date')),
+              then: Yup.date().nullable().required(i18n.t('common:streaming_setting_screen.validation.input_required')),
+              // .min(approximateMinDate, i18n.t('common:streaming_setting_screen.validation.min_date')),
             }),
 
           status: Yup.number().oneOf([0, 1, 2]),
 
-          stream_notify_time: Yup.date()
-            .nullable()
-            .required(i18n.t('common:common.input_required'))
-            .min(minStartDate, i18n.t('common:streaming_setting_screen.validation.min_date')),
+          stream_notify_time: Yup.date().nullable().required(i18n.t('common:common.input_required')),
+          // .min(minStartDate, i18n.t('common:streaming_setting_screen.validation.min_date')),
 
           stream_schedule_start_time: Yup.date()
             .nullable()
             .required(i18n.t('common:common.input_required'))
             .min(minStartDate, i18n.t('common:streaming_setting_screen.validation.min_date'))
             .test(
-              'stream_start_time_validate_10_minutes',
-              i18n.t('common:streaming_setting_screen.validation.start_time_at_least_10min'),
+              'stream_start_time_validate_30_minutes',
+              i18n.t('common:streaming_setting_screen.validation.start_time_at_least_30min'),
               (value) => {
                 const minTime = moment()
-                  .add(10 * 60, 'seconds')
+                  .add(30 * 60, 'seconds')
                   .toDate()
                 return value >= minTime
               }
