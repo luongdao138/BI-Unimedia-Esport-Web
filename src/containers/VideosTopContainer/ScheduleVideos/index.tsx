@@ -21,7 +21,7 @@ const LIMIT_ITEM = 14
 const ScheduleVideos: React.FC<Props> = ({ follow, setFollow, videoItemStyle }) => {
   const classes = useStyles()
   const theme = useTheme()
-  const downMd = useMediaQuery(theme.breakpoints.down(769))
+  const downMd = useMediaQuery(theme.breakpoints.down(650))
   const { listScheduleVideo, meta, resetScheduleVideos, getListVideoTop } = useScheduleVideos()
   const [page, setPage] = useState<number>(1)
   const [hasMore, setHasMore] = useState(true)
@@ -210,7 +210,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexWrap: 'wrap',
     overflow: 'hidden',
   },
-  [theme.breakpoints.down(769)]: {
+  [theme.breakpoints.down(650)]: {
     wrapContentContainer: {
       width: 'calc(100vw - 24px)',
       overflow: 'auto',

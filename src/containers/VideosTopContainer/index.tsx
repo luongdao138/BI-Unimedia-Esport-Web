@@ -223,7 +223,7 @@ const useStyles = makeStyles((theme) => ({
   },
   [theme.breakpoints.down(769)]: {
     tabContent: {
-      paddingRight: 0,
+      // paddingRight: 0,
     },
     tabs: {
       display: 'flex',

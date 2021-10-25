@@ -226,7 +226,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: 'black',
     fontSize: 12,
   },
-  [theme.breakpoints.down(769)]: {
+  [theme.breakpoints.down(650)]: {
     container: {
       width: 465,
     },

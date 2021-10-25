@@ -20,7 +20,7 @@ interface Props {
 const LIMIT_ITEM = 14
 const LiveStreamVideos: React.FC<Props> = ({ follow, setFollow, videoItemStyle }) => {
   const theme = useTheme()
-  const downMd = useMediaQuery(theme.breakpoints.down(769))
+  const downMd = useMediaQuery(theme.breakpoints.down(650))
   const { listLiveVideo, meta, getListVideoTop, resetLiveVideos } = useLiveVideos()
   const classes = useStyles()
   const [page, setPage] = useState<number>(1)
@@ -193,7 +193,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       flexBasis: '25%',
     },
   },
-  [theme.breakpoints.down(769)]: {
+  [theme.breakpoints.down(650)]: {
     wrapContentContainer: {
       width: 'calc(100vw - 24px)',
       overflow: 'auto',
