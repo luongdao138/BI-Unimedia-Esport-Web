@@ -37,7 +37,7 @@ export const validationLiveSettingsScheme = (): any => {
   })
 }
 
-export const validationScheduleScheme = (flag: boolean, isLive?: boolean): any => {
+export const validationScheduleScheme = (flag: boolean, isLive?: boolean, isUpdate?: boolean): any => {
   const minStartDate = new Date()
   const minEndDate = new Date()
   const maxSchedule = 3 * 3600000 //1h=3600000ms
@@ -81,19 +81,33 @@ export const validationScheduleScheme = (flag: boolean, isLive?: boolean): any =
 
       ...(flag &&
         !isLive && {
-          sell_ticket_start_time: Yup.date()
-            .nullable()
-            // .min(minStartDate, i18n.t('common:streaming_setting_screen.validation.min_date'))
-            .when(['use_ticket'], {
-              is: true,
-              then: Yup.date().nullable().required(i18n.t('common:streaming_setting_screen.validation.input_required')),
-              // .min(approximateMinDate, i18n.t('common:streaming_setting_screen.validation.min_date')),
-            }),
+          //sell_ticket_start_time,stream_notify_time: if update -> uncheck min date
+          sell_ticket_start_time: isUpdate
+            ? Yup.date()
+                .nullable()
+                .when(['use_ticket'], {
+                  is: true,
+                  then: Yup.date().nullable().required(i18n.t('common:streaming_setting_screen.validation.input_required')),
+                })
+            : Yup.date()
+                .nullable()
+                .min(minStartDate, i18n.t('common:streaming_setting_screen.validation.min_date'))
+                .when(['use_ticket'], {
+                  is: true,
+                  then: Yup.date()
+                    .nullable()
+                    .required(i18n.t('common:streaming_setting_screen.validation.input_required'))
+                    .min(approximateMinDate, i18n.t('common:streaming_setting_screen.validation.min_date')),
+                }),
 
           status: Yup.number().oneOf([0, 1, 2]),
 
-          stream_notify_time: Yup.date().nullable().required(i18n.t('common:common.input_required')),
-          // .min(minStartDate, i18n.t('common:streaming_setting_screen.validation.min_date')),
+          stream_notify_time: isUpdate
+            ? Yup.date().nullable().required(i18n.t('common:common.input_required'))
+            : Yup.date()
+                .nullable()
+                .required(i18n.t('common:common.input_required'))
+                .min(minStartDate, i18n.t('common:streaming_setting_screen.validation.min_date')),
 
           stream_schedule_start_time: Yup.date()
             .nullable()
@@ -104,7 +118,7 @@ export const validationScheduleScheme = (flag: boolean, isLive?: boolean): any =
               i18n.t('common:streaming_setting_screen.validation.start_time_at_least_30min'),
               (value) => {
                 const minTime = moment()
-                  .add(30 * 60, 'seconds')
+                  .add(5 * 60, 'seconds') //release:30'
                   .toDate()
                 return value >= minTime
               }

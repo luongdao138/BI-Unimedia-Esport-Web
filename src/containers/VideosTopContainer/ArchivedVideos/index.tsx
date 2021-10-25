@@ -242,6 +242,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       paddingBottom: theme.spacing(2),
       display: 'flex',
       height: '100%',
+      margin: 0,
       // overflow: 'auto',
     },
     xsItemContainer: {

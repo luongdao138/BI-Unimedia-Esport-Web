@@ -72,7 +72,7 @@ const StreamingSettingContainer: React.FC<{ default_tab: any }> = ({ default_tab
 
   const formikSchedule = useFormik<FormLiveType>({
     initialValues: initialScheduleValues,
-    validationSchema: validationScheduleScheme(!isUpdate || flagUpdateFieldDate, isLive),
+    validationSchema: validationScheduleScheme(!isUpdate || flagUpdateFieldDate, isLive, isUpdate),
     enableReinitialize: true,
     validateOnChange: true,
     validateOnBlur: true,
