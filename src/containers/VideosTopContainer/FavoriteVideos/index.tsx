@@ -18,7 +18,7 @@ type FavoriteVideosProps = {
 }
 const FavoriteVideos: React.FC<FavoriteVideosProps> = ({ setTab, setFollow, videoItemStyle }) => {
   const theme = useTheme()
-  const downMd = useMediaQuery(theme.breakpoints.down(769))
+  const downMd = useMediaQuery(theme.breakpoints.down(650))
   const classes = useStyles()
   const { listFavoriteVideo, meta, listLiveVideo } = useFavoriteVideos()
   const { width: screenWidth } = useWindowDimensions()
@@ -255,7 +255,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       flexBasis: '25%',
     },
   },
-  [theme.breakpoints.down(769)]: {
+  [theme.breakpoints.down(650)]: {
     wrapContentContainer: {
       marginLeft: '-24px',
       width: 'calc(100vw)',

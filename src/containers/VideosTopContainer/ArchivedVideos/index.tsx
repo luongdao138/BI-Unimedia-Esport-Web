@@ -22,7 +22,7 @@ const LIMIT_ITEM = 14
 const ArchivedVideos: React.FC<Props> = ({ follow, setFollow, videoItemStyle }) => {
   const classes = useStyles()
   const theme = useTheme()
-  const downMd = useMediaQuery(theme.breakpoints.down(769))
+  const downMd = useMediaQuery(theme.breakpoints.down(650))
   const { listArchivedVideo, meta, getListVideoTop, resetArchiveVideos } = useArchivedVideos()
   const [page, setPage] = useState<number>(1)
   const [hasMore, setHasMore] = useState(true)
@@ -189,6 +189,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   spViewMore: {
     display: 'none',
   },
+  [theme.breakpoints.up(650)]: {
+    itemContainer: {
+      flexGrow: '0',
+      maxWidth: '50%',
+      flexBasis: '50%',
+    },
+  },
   [theme.breakpoints.up(960)]: {
     itemContainer: {
       flexGrow: '0',
@@ -224,18 +231,18 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   [theme.breakpoints.down(769)]: {
     wrapContentContainer: {
-      width: 'calc(100vw - 24px)',
+      // width: 'calc(100vw - 24px)',
       overflow: 'auto',
     },
     wrapPreLoadContainer: {
       width: 290,
     },
     contentContainer: {
-      flexWrap: 'nowrap',
-      margin: '0px',
-      paddingBottom: '0px',
+      marginTop: theme.spacing(0),
+      paddingBottom: theme.spacing(2),
+      display: 'flex',
+      height: '100%',
       // overflow: 'auto',
-      flexDirection: 'column',
     },
     xsItemContainer: {
       paddingRight: '24px',
@@ -246,9 +253,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       //   paddingRight: 0,
       // },
     },
-    titleContainer: {
-      paddingBottom: 12,
-    },
+    titleContainer: {},
     spViewMore: {
       display: 'block',
       padding: '15px 0 26px 0',

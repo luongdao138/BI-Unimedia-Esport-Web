@@ -23,7 +23,7 @@ type VideoListProps = {
 const VideosList: React.FC<VideoListProps> = ({ setTab, videoItemStyle }) => {
   const router = useRouter()
   const theme = useTheme()
-  const downMd = useMediaQuery(theme.breakpoints.down(769))
+  const downMd = useMediaQuery(theme.breakpoints.down(650))
   // const up2569 = useMediaQuery(theme.breakpoints.up(2569))
   // const up1920 = useMediaQuery(theme.breakpoints.up(1920))
   const { width: screenWidth } = useWindowDimensions()
@@ -329,7 +329,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       flexBasis: '25%',
     },
   },
-  [theme.breakpoints.down(769)]: {
+  [theme.breakpoints.down(650)]: {
     wrapContentContainer: {
       marginLeft: '-24px',
       width: 'calc(100vw)',
@@ -354,7 +354,8 @@ const useStyles = makeStyles((theme: Theme) => ({
       },
     },
     noDataWrapContentContainer: {
-      width: 'calc(100vw - 24px)',
+      width: 'calc(100vw)',
+      marginLeft: '-24px',
       overflow: 'hidden',
       scrollbarColor: '#222 transparent',
       scrollbarWidth: 'thin',
