@@ -573,7 +573,7 @@ const Steps: React.FC<StepsProps> = ({
                   }}
                   minutesStep={1}
                   minDate={'0'}
-                  disablePast={false}
+                  disablePast={!(!!status || status === 0)}
                   // readOnly={!isFirstStep()}
                 />
               ) : (
@@ -875,7 +875,7 @@ const Steps: React.FC<StepsProps> = ({
                       }}
                       onBlur={formik.handleBlur}
                       minutesStep={1}
-                      disablePast={false}
+                      disablePast={!(!!status || status === 0)}
                     />
                   ) : (
                     <Box pt={1}>
