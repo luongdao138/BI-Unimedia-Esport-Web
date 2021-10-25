@@ -65,7 +65,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
   const [showStreamKey, setShowStreamKey] = useState(false)
   const { checkNgWordFields, checkNgWordByField } = useCheckNgWord()
   const paid_delivery_flag = userProfile?.attributes?.paid_delivery_flag
-  const [showReNew, setShowReNew] = useState<boolean>(false)
+  const [obsNotEnable, setObsNotEnable] = useState<boolean>(false)
   // const [errPublicTime, setErrPublicTime] = useState(false)
   const [isLive, setIsLive] = useState<boolean>(false)
   // const [status, setStatus] = useState<number>(0)
@@ -73,7 +73,8 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
 
   useEffect(() => {
     // getLiveSetting()
-    checkStatusRecord(liveSettingInformation)
+    // checkStatusRecord(liveSettingInformation)
+    checkStatus(liveSettingInformation?.data)
   }, [liveSettingInformation])
 
   useEffect(() => {
@@ -91,22 +92,13 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
   //   return formik.errors
   // }
 
-  const checkStatusRecord = (data) => {
-    // if (!data?.data?.created_at) {
-    //   // onReNewUrlAndKey(TYPE_SECRET_KEY.URL, TYPE_SECRET_KEY.GET, false)
-    //   setShowReNew(false)
-    // } else {
-    //   setShowReNew(true)
-    // }
-    checkStatus(data?.data)
-  }
-
   const checkStatus = (data) => {
     //check live stream isn't it? 1 - live
     const status = data?.status === 1 && data?.live_stream_start_time ? true : false
     setIsLive(status)
     //if live, disable btn re-new
-    setShowReNew(data?.status === 1 && data?.live_stream_start_time ? false : true)
+    // setShowReNew(data?.status === 1 && data?.live_stream_start_time ? false : true)
+    setObsNotEnable(data?.status === 1 ? true : false)
     // setStatus(data?.status)
   }
 
@@ -677,8 +669,8 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
                   py={1}
                   display="flex"
                   justifyContent="flex-end"
-                  className={showReNew && !isLive ? classes.urlCopy : classes.linkDisable}
-                  onClick={() => showReNew && !isLive && onReNewUrlAndKey(TYPE_SECRET_KEY.URL, TYPE_SECRET_KEY.RE_NEW, true)}
+                  className={!isLive ? classes.urlCopy : classes.linkDisable}
+                  onClick={() => !isLive && onReNewUrlAndKey(TYPE_SECRET_KEY.URL, TYPE_SECRET_KEY.RE_NEW, true)}
                 >
                   <Typography className={classes.textLink}>{t('common:streaming_setting_screen.reissue')}</Typography>
                 </Box>
@@ -793,7 +785,9 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
                 </Box>
                 <Box className={classes.actionButton}>
                   <ButtonPrimary round fullWidth onClick={onConfirm}>
-                    {isLive ? i18n.t('common:streaming_setting_screen.update') : t('common:streaming_setting_screen.start_live_stream')}
+                    {obsNotEnable
+                      ? i18n.t('common:streaming_setting_screen.update')
+                      : t('common:streaming_setting_screen.start_live_stream')}
                   </ButtonPrimary>
                 </Box>
               </Box>

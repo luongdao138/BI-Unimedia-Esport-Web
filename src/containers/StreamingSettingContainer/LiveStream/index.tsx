@@ -41,6 +41,10 @@ const LiveStreamContainer: React.FC<Props> = ({ formik }) => {
     }
   }
 
+  const handleClose = () => {
+    setModal(false)
+  }
+
   const onClose = (): void => {
     router.push(ESRoutes.VIDEO_STREAMING_MANAGEMENT)
   }
@@ -89,6 +93,8 @@ const LiveStreamContainer: React.FC<Props> = ({ formik }) => {
         console.log('====>>data channel find<<====', channelData)
         if (channelData) {
           setStateChannelMedia(channelData.state)
+        } else {
+          setStateChannelMedia(null)
         }
       }
     } catch (error) {
@@ -110,12 +116,12 @@ const LiveStreamContainer: React.FC<Props> = ({ formik }) => {
         titlePost={post.title}
         contentPost={post.content}
       />
-      <ESModal open={modal && stateChannelMedia === EVENT_STATE_CHANNEL.RUNNING} handleClose={() => setModal(false)}>
+      <ESModal open={modal && (stateChannelMedia === EVENT_STATE_CHANNEL.RUNNING || !stateChannelMedia)} handleClose={handleClose}>
         <BlankLayout>
           <SettingsCompleted onClose={onClose} onComplete={onComplete} />
         </BlankLayout>
       </ESModal>
-      {step === 3 && stateChannelMedia !== EVENT_STATE_CHANNEL.RUNNING && <ESLoader open={true} />}
+      {step === 3 && stateChannelMedia && stateChannelMedia !== EVENT_STATE_CHANNEL.RUNNING && <ESLoader open={true} />}
     </>
   )
 }

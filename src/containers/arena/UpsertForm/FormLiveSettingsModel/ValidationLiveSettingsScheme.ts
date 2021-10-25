@@ -37,7 +37,7 @@ export const validationLiveSettingsScheme = (): any => {
   })
 }
 
-export const validationScheduleScheme = (flag: boolean): any => {
+export const validationScheduleScheme = (flag: boolean, isLive?: boolean): any => {
   const minStartDate = new Date()
   const minEndDate = new Date()
   const maxSchedule = 3 * 3600000 //1h=3600000ms
@@ -70,97 +70,107 @@ export const validationScheduleScheme = (flag: boolean): any => {
           .positive(i18n.t('common:streaming_setting_screen.validation.point_ticket_limit'))
           .integer(i18n.t('common:streaming_setting_screen.validation.point_ticket_limit')),
       }),
-      ...(flag && {
-        sell_ticket_start_time: Yup.date()
-          .nullable()
-          .min(minStartDate, i18n.t('common:streaming_setting_screen.validation.min_date'))
-          .when(['use_ticket'], {
-            is: true,
-            then: Yup.date()
-              .nullable()
-              .required(i18n.t('common:streaming_setting_screen.validation.input_required'))
-              .min(approximateMinDate, i18n.t('common:streaming_setting_screen.validation.min_date')),
+      ...(!flag &&
+        isLive && {
+          video_publish_end_time: Yup.date()
+            .nullable()
+            // .notRequired()
+            // .required(i18n.t('common:streaming_setting_screen.validation.input_required'))
+            .min(approximateMinDate, i18n.t('common:streaming_setting_screen.validation.min_date')),
+        }),
+
+      ...(flag &&
+        !isLive && {
+          sell_ticket_start_time: Yup.date()
+            .nullable()
+            .min(minStartDate, i18n.t('common:streaming_setting_screen.validation.min_date'))
+            .when(['use_ticket'], {
+              is: true,
+              then: Yup.date()
+                .nullable()
+                .required(i18n.t('common:streaming_setting_screen.validation.input_required'))
+                .min(approximateMinDate, i18n.t('common:streaming_setting_screen.validation.min_date')),
+            }),
+
+          status: Yup.number().oneOf([0, 1, 2]),
+
+          stream_notify_time: Yup.date()
+            .nullable()
+            .required(i18n.t('common:common.input_required'))
+            .min(minStartDate, i18n.t('common:streaming_setting_screen.validation.min_date')),
+
+          stream_schedule_start_time: Yup.date()
+            .nullable()
+            .required(i18n.t('common:common.input_required'))
+            .min(minStartDate, i18n.t('common:streaming_setting_screen.validation.min_date'))
+            .test(
+              'stream_start_time_validate_10_minutes',
+              i18n.t('common:streaming_setting_screen.validation.start_time_at_least_10min'),
+              (value) => {
+                const minTime = moment()
+                  .add(10 * 60, 'seconds')
+                  .toDate()
+                return value >= minTime
+              }
+            ),
+
+          stream_schedule_end_time: Yup.date()
+            .nullable()
+            .required(i18n.t('common:common.input_required'))
+            .min(minEndDate, i18n.t('common:streaming_setting_screen.validation.min_date')),
+
+          video_publish_end_time: Yup.date()
+            .nullable()
+            // .notRequired()
+            // .required(i18n.t('common:streaming_setting_screen.validation.input_required'))
+            .min(approximateMinDate, i18n.t('common:streaming_setting_screen.validation.min_date')),
+
+          //cross-fields validations
+          schedule_live_date: Yup.string().when(['stream_schedule_start_time', 'stream_schedule_end_time'], {
+            is: (stream_schedule_start_time, stream_schedule_end_time) => {
+              return Date.parse(stream_schedule_start_time) >= Date.parse(stream_schedule_end_time)
+            },
+            then: Yup.string().required(i18n.t('common:streaming_setting_screen.validation.start_end_date')),
           }),
 
-        status: Yup.number().oneOf([0, 1, 2]),
+          max_schedule_live_date: Yup.string().when(['stream_schedule_start_time', 'stream_schedule_end_time'], {
+            is: (stream_schedule_start_time, stream_schedule_end_time) => {
+              return Date.parse(stream_schedule_end_time) - Date.parse(stream_schedule_start_time) > maxSchedule
+            },
+            then: Yup.string().required(i18n.t('common:streaming_setting_screen.validation.max_time_schedule_live')),
+          }),
 
-        stream_notify_time: Yup.date()
-          .nullable()
-          .required(i18n.t('common:common.input_required'))
-          .min(minStartDate, i18n.t('common:streaming_setting_screen.validation.min_date')),
-
-        stream_schedule_start_time: Yup.date()
-          .nullable()
-          .required(i18n.t('common:common.input_required'))
-          .min(minStartDate, i18n.t('common:streaming_setting_screen.validation.min_date'))
-          .test(
-            'stream_start_time_validate_10_minutes',
-            i18n.t('common:streaming_setting_screen.validation.start_time_at_least_10min'),
-            (value) => {
-              const minTime = moment()
-                .add(10 * 60, 'seconds')
-                .toDate()
-              return value >= minTime
-            }
-          ),
-
-        stream_schedule_end_time: Yup.date()
-          .nullable()
-          .required(i18n.t('common:common.input_required'))
-          .min(minEndDate, i18n.t('common:streaming_setting_screen.validation.min_date')),
-
-        video_publish_end_time: Yup.date()
-          .nullable()
-          // .notRequired()
-          // .required(i18n.t('common:streaming_setting_screen.validation.input_required'))
-          .min(approximateMinDate, i18n.t('common:streaming_setting_screen.validation.min_date')),
-
-        //cross-fields validations
-        schedule_live_date: Yup.string().when(['stream_schedule_start_time', 'stream_schedule_end_time'], {
-          is: (stream_schedule_start_time, stream_schedule_end_time) => {
-            return Date.parse(stream_schedule_start_time) >= Date.parse(stream_schedule_end_time)
-          },
-          then: Yup.string().required(i18n.t('common:streaming_setting_screen.validation.start_end_date')),
+          notify_live_start_date: Yup.string().when(['stream_notify_time', 'stream_schedule_start_time'], {
+            is: (stream_notify_time, stream_schedule_start_time) => {
+              return Date.parse(stream_notify_time) > Date.parse(stream_schedule_start_time)
+            },
+            then: Yup.string().required(i18n.t('common:streaming_setting_screen.validation.date_limit')),
+          }),
+          notify_live_end_date: Yup.string().when(['stream_notify_time', 'stream_schedule_end_time'], {
+            is: (stream_notify_time, stream_schedule_end_time) => {
+              return Date.parse(stream_notify_time) >= Date.parse(stream_schedule_end_time)
+            },
+            then: Yup.string().required(i18n.t('common:streaming_setting_screen.validation.date_limit')),
+          }),
+          public_time_less_than_start: Yup.string().when(['video_publish_end_time', 'stream_schedule_start_time'], {
+            is: (video_publish_end_time, stream_schedule_start_time) => {
+              return Date.parse(video_publish_end_time) < Date.parse(stream_schedule_start_time)
+            },
+            then: Yup.string().required(i18n.t('common:streaming_setting_screen.validation.public_time_less')),
+          }),
+          public_time_more_than_end: Yup.string().when(['video_publish_end_time', 'stream_schedule_end_time'], {
+            is: (video_publish_end_time, stream_schedule_end_time) => {
+              return Date.parse(video_publish_end_time) < Date.parse(stream_schedule_end_time)
+            },
+            then: Yup.string().required(i18n.t('common:streaming_setting_screen.validation.public_time_less')),
+          }),
+          sell_less_than_start: Yup.string().when(['sell_ticket_start_time', 'stream_schedule_start_time'], {
+            is: (sell_ticket_start_time, stream_schedule_start_time) => {
+              return new Date(sell_ticket_start_time).setSeconds(0) > new Date(stream_schedule_start_time).setSeconds(0)
+            },
+            then: Yup.string().required(i18n.t('common:streaming_setting_screen.validation.sell_less_than_start')),
+          }),
         }),
-
-        max_schedule_live_date: Yup.string().when(['stream_schedule_start_time', 'stream_schedule_end_time'], {
-          is: (stream_schedule_start_time, stream_schedule_end_time) => {
-            return Date.parse(stream_schedule_end_time) - Date.parse(stream_schedule_start_time) > maxSchedule
-          },
-          then: Yup.string().required(i18n.t('common:streaming_setting_screen.validation.max_time_schedule_live')),
-        }),
-
-        notify_live_start_date: Yup.string().when(['stream_notify_time', 'stream_schedule_start_time'], {
-          is: (stream_notify_time, stream_schedule_start_time) => {
-            return Date.parse(stream_notify_time) > Date.parse(stream_schedule_start_time)
-          },
-          then: Yup.string().required(i18n.t('common:streaming_setting_screen.validation.date_limit')),
-        }),
-        notify_live_end_date: Yup.string().when(['stream_notify_time', 'stream_schedule_end_time'], {
-          is: (stream_notify_time, stream_schedule_end_time) => {
-            return Date.parse(stream_notify_time) >= Date.parse(stream_schedule_end_time)
-          },
-          then: Yup.string().required(i18n.t('common:streaming_setting_screen.validation.date_limit')),
-        }),
-        public_time_less_than_start: Yup.string().when(['video_publish_end_time', 'stream_schedule_start_time'], {
-          is: (video_publish_end_time, stream_schedule_start_time) => {
-            return Date.parse(video_publish_end_time) < Date.parse(stream_schedule_start_time)
-          },
-          then: Yup.string().required(i18n.t('common:streaming_setting_screen.validation.public_time_less')),
-        }),
-        public_time_more_than_end: Yup.string().when(['video_publish_end_time', 'stream_schedule_end_time'], {
-          is: (video_publish_end_time, stream_schedule_end_time) => {
-            return Date.parse(video_publish_end_time) < Date.parse(stream_schedule_end_time)
-          },
-          then: Yup.string().required(i18n.t('common:streaming_setting_screen.validation.public_time_less')),
-        }),
-        sell_less_than_start: Yup.string().when(['sell_ticket_start_time', 'stream_schedule_start_time'], {
-          is: (sell_ticket_start_time, stream_schedule_start_time) => {
-            return new Date(sell_ticket_start_time).setSeconds(0) > new Date(stream_schedule_start_time).setSeconds(0)
-          },
-          then: Yup.string().required(i18n.t('common:streaming_setting_screen.validation.sell_less_than_start')),
-        }),
-      }),
     }),
   })
 }

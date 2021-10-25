@@ -56,7 +56,7 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
     clickButtonPurchaseTicket,
     onVideoEnd,
     isArchived,
-    componentsSize
+    componentsSize,
   } = props
   const [showReportMenu, setShowReportMenu] = useState<boolean>(false)
   const router = useRouter()

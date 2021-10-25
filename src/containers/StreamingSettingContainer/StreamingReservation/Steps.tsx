@@ -24,7 +24,6 @@ import {
   GetCategoryResponse,
   SetLiveStreamParams,
   StreamUrlAndKeyParams,
-  TYPE_RM,
   TYPE_SECRET_KEY,
 } from '@services/liveStream.service'
 import useCheckNgWord from '@utils/hooks/useCheckNgWord'
@@ -84,15 +83,13 @@ const Steps: React.FC<StepsProps> = ({
   const { userProfile } = useGetProfile()
   const paid_delivery_flag = userProfile?.attributes?.paid_delivery_flag
   const [categoryName, setCategoryName] = useState('')
-  const [showReNew, setShowReNew] = useState<boolean>(false)
   const [isLive, setIsLive] = useState<boolean>(false)
-  // const [status, setStatus] = useState<number>(0)
+  const [status, setStatus] = useState<number>(null)
   const [counter, setCounter] = useState<number>(0)
   const [disable, setDisable] = useState<boolean>(false)
-  const [type, setType] = useState(TYPE_RM.NEW)
   const [validateField, setValidateField] = useState('')
   // const [statusRecordSetting, setStatusRecordSetting] = useState()
-  const [onChangeFlag, setOnChangeFlag] = useState(false) //1-edit # date, 2 - edit date,
+  const [onChangeFlag, setOnChangeFlag] = useState(false) //false-edit # date, true - edit date,
 
   const formRef = {
     title: useRef(null),
@@ -106,7 +103,8 @@ const Steps: React.FC<StepsProps> = ({
 
   useEffect(() => {
     // getLiveSetting()
-    checkStatusRecord(scheduleInformation)
+    // checkStatusRecord(scheduleInformation)
+    checkStatus(scheduleInformation?.data)
   }, [scheduleInformation])
 
   // const getLiveSetting = () => {
@@ -116,28 +114,12 @@ const Steps: React.FC<StepsProps> = ({
   //   })
   // }
 
-  const checkStatusRecord = (data) => {
-    if (data?.data?.status === 1) {
-      // onReNewUrlAndKey(TYPE_SECRET_KEY.URL, TYPE_SECRET_KEY.GET, false)
-      setShowReNew(false)
-    } else {
-      setShowReNew(true)
-    }
-    checkStatus(data?.data)
-    // setStatusRecordSetting(data?.data?.status)
-  }
-
   const checkStatus = (data) => {
     //check live stream isn't it? 1 - live
     const status = data?.status === 1 ? true : false
-    const isAvailable =
-      formik?.values?.stepSettingTwo?.status === 0 &&
-      (!!formik?.values?.stepSettingTwo?.stream_notify_time ||
-        !!formik?.values?.stepSettingTwo?.sell_ticket_start_time ||
-        !!formik?.values?.stepSettingTwo?.video_publish_end_time)
     setIsLive(status)
     setDisable(data?.status === 0 || !data?.status ? false : true)
-    setType(isAvailable ? TYPE_RM.ALL : TYPE_RM.NEW)
+    setStatus(data?.status)
   }
 
   useEffect(() => {
@@ -145,7 +127,7 @@ const Steps: React.FC<StepsProps> = ({
     formik.validateForm().then(() => {
       setCounter(counter + 1)
     })
-  }, [formik?.errors?.stepSettingTwo, type])
+  }, [formik?.errors?.stepSettingTwo])
 
   useEffect(() => {
     category?.data.forEach((h) => {
@@ -573,10 +555,7 @@ const Steps: React.FC<StepsProps> = ({
                     setOnChangeFlag(true)
                     flagUpdateFieldDate(true)
                   }}
-                  onBlur={(e) => {
-                    setType(TYPE_RM.NOTIFY)
-                    formik.handleBlur(e)
-                  }}
+                  onBlur={formik.handleBlur}
                   helperText={
                     validateField !== 'all'
                       ? checkDisplayErrorOnChange(formik, 'stream_notify_time', validateField).helperText
@@ -636,9 +615,7 @@ const Steps: React.FC<StepsProps> = ({
                     classes: { root: classes.root },
                   }}
                   minutesStep={1}
-                  onBlur={(e) => {
-                    formik.handleBlur(e)
-                  }}
+                  onBlur={formik.handleBlur}
                 />
               ) : (
                 <Box pt={1}>
@@ -683,9 +660,7 @@ const Steps: React.FC<StepsProps> = ({
                     classes: { root: classes.root },
                   }}
                   minutesStep={1}
-                  onBlur={(e) => {
-                    formik.handleBlur(e)
-                  }}
+                  onBlur={formik.handleBlur}
                 />
               ) : (
                 <Box pt={1}>
@@ -711,8 +686,13 @@ const Steps: React.FC<StepsProps> = ({
                     formik.setFieldValue('stepSettingTwo.video_publish_end_time', temp)
                     setValidateField('video_publish_end_time')
                     handleUpdateValidateField('video_publish_end_time')
-                    setOnChangeFlag(true)
-                    flagUpdateFieldDate(true)
+                    if (!isLive) {
+                      setOnChangeFlag(true)
+                      flagUpdateFieldDate(true)
+                    } else {
+                      setOnChangeFlag(false)
+                      flagUpdateFieldDate(false)
+                    }
                   }}
                   helperText={
                     validateField !== 'all'
@@ -726,10 +706,7 @@ const Steps: React.FC<StepsProps> = ({
                   }
                   minDateMessage={''}
                   minutesStep={1}
-                  onBlur={(e) => {
-                    setType(TYPE_RM.PUBLISH)
-                    formik.handleBlur(e)
-                  }}
+                  onBlur={formik.handleBlur}
                 />
               ) : (
                 <Box pt={1}>
@@ -894,10 +871,7 @@ const Steps: React.FC<StepsProps> = ({
                       InputProps={{
                         classes: { root: classes.root },
                       }}
-                      onBlur={(e) => {
-                        setType(TYPE_RM.SELL)
-                        formik.handleBlur(e)
-                      }}
+                      onBlur={formik.handleBlur}
                       minutesStep={1}
                     />
                   ) : (
@@ -1004,8 +978,8 @@ const Steps: React.FC<StepsProps> = ({
                   py={1}
                   display="flex"
                   justifyContent="flex-end"
-                  className={showReNew && !isLive ? classes.urlCopy : classes.linkDisable}
-                  onClick={() => showReNew && !isLive && onReNewUrlAndKey(TYPE_SECRET_KEY.URL, TYPE_SECRET_KEY.RE_NEW, true)}
+                  className={!isLive ? classes.urlCopy : classes.linkDisable}
+                  onClick={() => !isLive && onReNewUrlAndKey(TYPE_SECRET_KEY.URL, TYPE_SECRET_KEY.RE_NEW, true)}
                 >
                   <Typography className={classes.textLink}>{t('common:streaming_setting_screen.reissue')}</Typography>
                 </Box>
@@ -1134,9 +1108,9 @@ const Steps: React.FC<StepsProps> = ({
                 </Box>
                 <Box className={classes.actionButton}>
                   <ButtonPrimary round fullWidth onClick={onConfirm}>
-                    {showReNew && !isLive
-                      ? t('common:delivery_reservation_tab.delivery_data_save')
-                      : i18n.t('common:streaming_setting_screen.update')}
+                    {status || status === 0
+                      ? i18n.t('common:streaming_setting_screen.update')
+                      : t('common:delivery_reservation_tab.delivery_data_save')}
                   </ButtonPrimary>
                 </Box>
               </Box>
