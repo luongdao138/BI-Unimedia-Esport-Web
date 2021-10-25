@@ -38,7 +38,7 @@ import { EVENT_LIVE_STATUS, LIVE_VIDEO_TYPE } from '@constants/common.constants'
 import DialogLoginContainer from '@containers/DialogLogin'
 import _ from 'lodash'
 import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
-import LiveStreamContent from './LiveStreamContentDemo'
+import LiveStreamContent from './LiveStreamContent'
 import { onUpdateChannel } from 'src/graphql/subscriptions'
 
 enum TABS {

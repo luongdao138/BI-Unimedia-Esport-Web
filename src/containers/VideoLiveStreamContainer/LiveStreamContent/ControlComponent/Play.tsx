@@ -19,7 +19,7 @@ const Play: React.FC<Props> = ({ onPlayPause, playing = false }) => {
       <PlayerTooltip
         id={'togglePlay'}
         title={!playing ? t('videos_top_tab.play') : t('videos_top_tab.pause')}
-        offset={{ top: -10, left: 0 }}
+        offset={{ top: -15, left: 0 }}
       />
     </Box>
   )
@@ -28,8 +28,8 @@ const useStyles = makeStyles(() => ({
   buttonNormal: {
     alignItems: 'center',
     display: 'flex',
-    paddingLeft: 16,
     cursor: 'pointer',
+    padding: '0px 8px',
   },
   pauseSmall: {
     color: Colors.white,
