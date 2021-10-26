@@ -229,6 +229,10 @@ const useStyles = makeStyles((theme) => ({
       display: 'flex',
       paddingLeft: 0,
     },
+    tabMin: {
+      display: 'flex',
+      minWidth: 720 / 5,
+    },
   },
   [theme.breakpoints.down(549)]: {
     tabsContainer: {
@@ -238,13 +242,16 @@ const useStyles = makeStyles((theme) => ({
       justifyContent: 'center',
       alignItems: 'center',
     },
+    tabContent: {
+      paddingRight: '0px',
+    },
     tabs: {
       display: 'flex',
       paddingLeft: 0,
     },
     tabMin: {
       display: 'flex',
-      minWidth: 500 / 5,
+      minWidth: 'calc((100vw - 48px) / 5)',
     },
   },
   [theme.breakpoints.down(419)]: {
@@ -254,6 +261,9 @@ const useStyles = makeStyles((theme) => ({
       paddingRight: 0,
       justifyContent: 'center',
       alignItems: 'center',
+    },
+    tabContent: {
+      paddingRight: '0px',
     },
     tabs: {
       display: 'flex',
