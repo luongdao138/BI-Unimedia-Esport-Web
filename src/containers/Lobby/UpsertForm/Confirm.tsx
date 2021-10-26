@@ -9,6 +9,7 @@ import moment from 'moment'
 import { UserLoginResponse } from '@services/auth.service'
 import ESChip from '@components/Chip'
 import ESLabel from '@components/Label'
+import ReactDOM from 'react-dom'
 
 interface ConfirmProps {
   values: FormikProps<FormType>['values']
@@ -42,6 +43,13 @@ const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, prefectures, isEdi
       }
     })
   }, [values.stepOne.game_hardware_id])
+
+  useEffect(() => {
+    const node = document.getElementById('es-modal')
+    // eslint-disable-next-line react/no-find-dom-node
+    const component = ReactDOM.findDOMNode(node)
+    component.scrollTo(0, 0)
+  }, [])
 
   const formatDate = (label: string, beginDateStr: string, endDateStr: string) => {
     const beginDate = moment(beginDateStr).format('YYYY年MM月DD日')

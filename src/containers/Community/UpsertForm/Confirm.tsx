@@ -10,6 +10,7 @@ import { CommunityFeature } from '@services/community.service'
 import { JOIN_CONDITION, OPEN_RANGE } from '@constants/community.constants'
 import { Colors } from '@theme/colors'
 import { GameTitle } from '@services/game.service'
+import ReactDOM from 'react-dom'
 
 interface ConfirmProps {
   values: FormikProps<FormType>['values']
@@ -45,6 +46,13 @@ const Confirm: React.FC<ConfirmProps> = ({ values, prefectures }) => {
         ? t('common:community_create.private')
         : t('common:community_create.public')
     setOpenRange(openRangeName)
+  }, [])
+
+  useEffect(() => {
+    const node = document.getElementById('es-modal')
+    // eslint-disable-next-line react/no-find-dom-node
+    const component = ReactDOM.findDOMNode(node)
+    component.scrollTo(0, 0)
   }, [])
 
   return (
