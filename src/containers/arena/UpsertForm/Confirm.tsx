@@ -58,7 +58,7 @@ const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, prefectures, user,
     const node = document.getElementById('es-modal')
     // eslint-disable-next-line react/no-find-dom-node
     const component = ReactDOM.findDOMNode(node)
-    component.scrollTo(0, 0)
+    if (component) component.scrollTo(0, 0)
   }, [])
 
   const [participationType, setParticipationType] = useState('')
