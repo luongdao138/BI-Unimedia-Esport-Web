@@ -275,6 +275,9 @@ const useStyles = makeStyles((theme) => ({
       justifyContent: 'center',
       alignItems: 'center',
     },
+    tabContent: {
+      paddingRight: '0px',
+    },
     tabs: {
       display: 'flex',
       paddingLeft: 0,
