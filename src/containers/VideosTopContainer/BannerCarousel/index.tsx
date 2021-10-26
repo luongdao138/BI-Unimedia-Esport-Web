@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { StackedCarousel, ResponsiveContainer, StackedCarouselSlideProps } from './src/index'
+import { StackedCarousel, ResponsiveContainer, StackedCarouselSlideProps } from './src'
 import Fab from '@material-ui/core/Fab'
 import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft'
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight'
