@@ -38,10 +38,10 @@ export const validationLiveSettingsScheme = (): any => {
 }
 
 export const validationScheduleScheme = (flag: boolean, isLive?: boolean, isUpdate?: boolean): any => {
-  const minStartDate = new Date()
-  const minEndDate = new Date()
+  const minStartDate = moment().set('second', 0)
+  const minEndDate = moment().set('second', 0)
   const maxSchedule = 3 * 3600000 //1h=3600000ms
-  const approximateMinDate = moment().subtract(30, 'seconds')
+  const approximateMinDate = moment().set('second', 0).subtract(30, 'seconds')
   return Yup.object({
     stepSettingTwo: Yup.object({
       title: Yup.string()
@@ -118,6 +118,7 @@ export const validationScheduleScheme = (flag: boolean, isLive?: boolean, isUpda
               i18n.t('common:streaming_setting_screen.validation.start_time_at_least_30min'),
               (value) => {
                 const minTime = moment()
+                  .set('second', 0)
                   .add(5 * 60, 'seconds') //release:30'
                   .toDate()
                 return value >= minTime

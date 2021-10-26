@@ -216,6 +216,10 @@ const VideoDetail: React.FC = () => {
         //@ts-ignore
         const subMessage = sub?.value
         const updateVideoData = subMessage.data.onUpdateVideo
+        console.log('=======onUpdateVideo + updateVideoData=======')
+        console.log(subMessage)
+        console.log(updateVideoData)
+        console.log('====================================')
         if (updateVideoData) {
           refOnUpdateVideo.current(updateVideoData)
         }
