@@ -39,7 +39,7 @@ const RegularModal: React.FC<ESDialogProps> = ({ open, handleClose, children, ..
           e.preventDefault()
         },
       }}
-      PaperProps={{ classes: { root: classes.paper } }}
+      PaperProps={{ classes: { root: classes.paper }, id: 'es-modal' }}
       {...rest}
     >
       {children}
