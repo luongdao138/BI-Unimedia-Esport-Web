@@ -226,7 +226,7 @@ const useStyles = makeStyles((theme) => ({
     marginRight: '16px',
     display: 'flex',
     flexDirection: 'row',
-    width: '100%',
+    // width: '100%',
     overflow: 'auto',
     scrollbarColor: '#222 transparent',
     scrollbarWidth: 'thin',
@@ -253,6 +253,9 @@ const useStyles = makeStyles((theme) => ({
     marginRight: 4,
     padding: 4,
     cursor: 'pointer',
+    '&:last-child': {
+      marginRight: 0,
+    }
   },
   ...purchasePoints,
   purchaseCommentRoot: {
