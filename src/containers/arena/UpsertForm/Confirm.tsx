@@ -9,6 +9,7 @@ import moment from 'moment'
 import { RULES, PARTICIPATION_TYPES } from '@constants/tournament.constants'
 import { UserLoginResponse } from '@services/auth.service'
 import _ from 'lodash'
+import ReactDOM from 'react-dom'
 
 interface ConfirmProps {
   values: FormikProps<FormType>['values']
@@ -52,6 +53,13 @@ const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, prefectures, user,
       }
     })
   }, [values.stepTwo.rule])
+
+  useEffect(() => {
+    const node = document.getElementById('es-modal')
+    // eslint-disable-next-line react/no-find-dom-node
+    const component = ReactDOM.findDOMNode(node)
+    component.scrollTo(0, 0)
+  }, [])
 
   const [participationType, setParticipationType] = useState('')
   useEffect(() => {
