@@ -49,7 +49,7 @@ const LobbyCreate: React.FC = () => {
   const initialValues = getInitialValues(isEdit ? lobby : undefined)
   const [isConfirm, setIsConfirm] = useState(false)
   const isEnded = [LOBBY_STATUS.CANCELLED, LOBBY_STATUS.ENDED].includes(_.get(lobby, 'attributes.status', LOBBY_STATUS.ENDED))
-  const isFreezed = _.get(lobby, 'attributes.is_freezed', false)
+  // const isFreezed = _.get(lobby, 'attributes.is_freezed', false)
   const confirm = useConfirm()
 
   const { checkNgWordFields, checkNgWordByField } = useCheckNgWord()
@@ -184,7 +184,7 @@ const LobbyCreate: React.FC = () => {
         >
           {i18n.t('common:lobby_create.check_content_button')}
         </ButtonPrimary>
-        {!isEnded && !isFreezed ? <CancelDialog lobby={lobby} hashKey={`${router.query.hash_key}`} /> : <Box mt={8} />}
+        {!isEnded ? <CancelDialog lobby={lobby} hashKey={`${router.query.hash_key}`} /> : <Box mt={8} />}
       </Box>
     )
   }
