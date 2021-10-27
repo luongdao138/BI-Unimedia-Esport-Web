@@ -159,6 +159,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     const [displayDialogMess, setDisplayDialogMess] = useState(false)
     const [firstRender, setFirstRender] = useState(false)
     const [allMess, setAllMess] = useState([])
+    const [scrollBehavior, setScrollBehavior] = useState('smooth')
     const isVideoFreeToWatch = freeToWatch === 0 ? true : false
 
     const getChatData = () =>
@@ -242,6 +243,15 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       }
       return false
     })()
+
+    const messContainer = document.getElementById('chatBoard')
+    if (messContainer) {
+      messContainer.onscroll = function () {
+        if (messContainer.scrollTop + messContainer.offsetHeight >= messContainer.scrollHeight) {
+          setDisplaySeeMore(false)
+        }
+      }
+    }
 
     const handleCreateUserDB = async () => {
       const result = await API.graphql(
@@ -374,6 +384,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
           setStateMessages([...newMess])
 
           if (isMessageInBottom) {
+            setScrollBehavior('smooth')
             setIsChatInBottom(true)
           }
 
@@ -398,7 +409,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       }
     }, [messagesDonate])
 
-    const filterMessByPlayedSecond = (new_played_second) => {
+    const filterMessByPlayedSecond = (new_played_second, behaviorOfScroll) => {
       const oldMessCount = stateMessages.length
       let newMess = [...savedMess]
       newMess = newMess.filter((item) => +item.video_time <= +new_played_second)
@@ -408,6 +419,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       }
       const isMessageInBottom = isCheckSeeMore ? checkMessIsInBottom() : false
       if (isMessageInBottom) {
+        setScrollBehavior(behaviorOfScroll)
         setIsChatInBottom(true)
       }
       // render messages by time of local
@@ -427,7 +439,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       } else {
         // filter mess when user no seeking or pausing live video
         if (!isSeeking && !liveStreamInfo.is_pausing_live) {
-          filterMessByPlayedSecond(playedSecond)
+          filterMessByPlayedSecond(playedSecond, 'instant')
         }
       }
       if (isSeeking) {
@@ -437,13 +449,13 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
 
     useEffect(() => {
       if (isChatInBottom) {
-        scrollToCurrentMess()
+        scrollToCurrentMess(scrollBehavior)
         setIsChatInBottom(false)
       }
     }, [isChatInBottom])
 
     useEffect(() => {
-      filterMessByPlayedSecond(liveStreamInfo.seeked_second)
+      filterMessByPlayedSecond(liveStreamInfo.seeked_second, 'smooth')
       if (!isSeeking) {
         setIsSeeking(true)
       }
@@ -466,7 +478,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       const transformDonateMess = transformMess.filter((item) => item.is_premium && +item.point > 300)
       const transformDonateMessAsc = sortMessages(transformDonateMess)
       // comment if no get in initial
-      // setMessagesDonate(filterMessagesDonate(transformMess, streamingSecond))
+      // setMessagesDonate([...transformDonateMessAsc])
       // save mess for use in local
       setSavedDonateMess([...transformDonateMessAsc])
       setSuccessGetListDonateMess(true)
@@ -545,8 +557,18 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       }
     }, [userProfile])
 
+    const resetMessages = () => {
+      setAllMess([])
+      setStateMessages([])
+      setSavedMess([])
+      setMessagesDonate([])
+      setSavedDonateMess([])
+      setMessActiveUser(null)
+    }
+
     useEffect(() => {
       if (key_video_id) {
+        resetMessages()
         getMessages()
       }
     }, [key_video_id])
@@ -802,6 +824,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
 
           if (isMessageInBottom) {
             if (point) {
+              setScrollBehavior('instant')
               setIsChatInBottom(true)
             } else {
               scrollToCurrentMess()
@@ -828,7 +851,6 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     }
 
     const checkMessIsInBottom = () => {
-      const messContainer = document.getElementById('chatBoard')
       // if scrollbar is not in container bottom
       // height of scroll to top + max height < height of container
       if (messContainer) {
@@ -843,9 +865,15 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       }
     }
 
-    const scrollToCurrentMess = () => {
-      const messContainer = document.getElementById('chatBoard')
-      messContainer.scrollTo({ top: messContainer.scrollHeight, behavior: 'smooth' })
+    const scrollToCurrentMess = (behavior = '') => {
+      if(!behavior) {
+        if(isEnabledChat && isStreaming) {
+          behavior = "instant"
+        }
+      }
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      //@ts-ignore
+      messContainer.scrollTo({ top: messContainer.scrollHeight, behavior: behavior })
     }
 
     const handleSubmitChatContent = () => {
@@ -949,7 +977,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     const chatBoardComponent = () => (
       <Box className={`${classes.chatBoardContainer}`}>
         <ButtonBase
-          onClick={() => scrollToCurrentMess()}
+          onClick={() => scrollToCurrentMess('smooth')}
           className={`${classes.btn_show_more} ${displaySeeMore ? classes.displaySeeMore : ''}`}
         >
           {i18n.t('common:live_stream_screen.show_more_mess')}
@@ -1033,15 +1061,6 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       </Box>
     )
 
-    const messContainer = document.getElementById('chatBoard')
-    if (messContainer) {
-      messContainer.onscroll = function () {
-        if (messContainer.scrollTop + messContainer.offsetHeight >= messContainer.scrollHeight) {
-          setDisplaySeeMore(false)
-        }
-      }
-    }
-
     const chatContentPaddingBottom = () => {
       if (purchaseDialogVisible) {
         return 325
@@ -1088,7 +1107,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         {chatBoardComponent()}
         {isEnabledChat && !isStreaming ? (
           <Box className={classes.chatInputContainer}>
-            <ButtonBase onClick={() => scrollToCurrentMess()} className={`${classes.btn_scroll_mess}`}>
+            <ButtonBase onClick={() => scrollToCurrentMess('smooth')} className={`${classes.btn_scroll_mess}`}>
               {i18n.t('common:streaming_setting_screen.scroll_to_new_mess')}
             </ButtonBase>
           </Box>
