@@ -159,18 +159,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: '#707070',
     marginLeft: '-16px',
   },
-  popularCategoryTitle: {
-    paddingTop: theme.spacing(7),
-    paddingBottom: theme.spacing(7),
-    justifyContent: 'center',
-    alignItems: 'center',
-    alignContent: 'center',
-  },
-  popularText: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
   wrapVideos: {},
   wrapContentContainer: {
     overflow: 'hidden',
