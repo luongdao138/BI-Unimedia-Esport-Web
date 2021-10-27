@@ -31,7 +31,7 @@ export const StreamDrawer: React.FC<StreamDrawerProps> = ({ toggleDrawer, open, 
           !downMd ? toggleDrawer(false) : ''
         }}
       >
-        <StreamSideMenu isStreamer={isStreamer} isExpandEffect={true} />
+        <StreamSideMenu isStreamer={isStreamer} isExpandEffect={true} toggleDrawer={toggleDrawer} />
       </Box>
     </Drawer>
   )

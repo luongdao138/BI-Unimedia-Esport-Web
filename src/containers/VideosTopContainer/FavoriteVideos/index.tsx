@@ -10,6 +10,7 @@ import React, { useEffect } from 'react'
 import { TypeVideo } from '@services/videoTop.services'
 import PreLoadContainer from '../PreLoadContainer'
 import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
+import { isMobile } from 'react-device-detect'
 
 type FavoriteVideosProps = {
   setTab: (value: number) => void
@@ -83,7 +84,7 @@ const FavoriteVideos: React.FC<FavoriteVideosProps> = ({ setTab, setFollow, vide
   }
 
   const getDisplayData = (fullData) => {
-    return fullData.slice(0, listLimitData())
+    return fullData?.slice(0, listLimitData())
   }
 
   return (
@@ -113,7 +114,7 @@ const FavoriteVideos: React.FC<FavoriteVideosProps> = ({ setTab, setFollow, vide
             ) : getDisplayData(listFavoriteVideo?.live)?.length === 0 && meta.pending ? (
               renderPreLoad()
             ) : (
-              <Box paddingTop={2} paddingBottom={2} paddingLeft={2}>
+              <Box paddingTop={2} paddingBottom={2} paddingLeft={isMobile ? 5 : 2}>
                 <Typography className={classes.noDataText}>{i18n.t('common:videos_top_tab.no_data_text')}</Typography>
               </Box>
             )}
@@ -143,7 +144,7 @@ const FavoriteVideos: React.FC<FavoriteVideosProps> = ({ setTab, setFollow, vide
             ) : getDisplayData(listFavoriteVideo?.schedule)?.length === 0 && meta.pending ? (
               renderPreLoad()
             ) : (
-              <Box paddingTop={2} paddingBottom={2} paddingLeft={2}>
+              <Box paddingTop={2} paddingBottom={2} paddingLeft={isMobile ? 5 : 2}>
                 <Typography className={classes.noDataText}>{i18n.t('common:videos_top_tab.no_data_text')}</Typography>
               </Box>
             )}
@@ -170,7 +171,7 @@ const FavoriteVideos: React.FC<FavoriteVideosProps> = ({ setTab, setFollow, vide
             ) : getDisplayData(listFavoriteVideo?.archived)?.length === 0 && meta.pending ? (
               renderPreLoad()
             ) : (
-              <Box paddingTop={2} paddingBottom={2} paddingLeft={2}>
+              <Box paddingTop={2} paddingBottom={2} paddingLeft={isMobile ? 5 : 2}>
                 <Typography className={classes.noDataText}>{i18n.t('common:videos_top_tab.no_data_text')}</Typography>
               </Box>
             )}
@@ -219,20 +220,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   noDataText: {
     color: '#707070',
   },
-  popularCategoryTitle: {
-    paddingTop: theme.spacing(7),
-    paddingBottom: theme.spacing(7),
-    justifyContent: 'center',
-    alignItems: 'center',
-    alignContent: 'center',
-  },
-  popularText: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
   wrapVideos: {},
-  wrapContentContainer: {},
+  wrapContentContainer: {
+    overflow: 'hidden',
+  },
   spViewMore: {
     display: 'none',
   },

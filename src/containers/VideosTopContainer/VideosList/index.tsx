@@ -14,6 +14,7 @@ import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
 import useVideoSearch from '@containers/Search/useVideoSearch'
 import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
+import { isMobile } from 'react-device-detect'
 
 type VideoListProps = {
   setTab: (value: number) => void
@@ -69,7 +70,7 @@ const VideosList: React.FC<VideoListProps> = ({ setTab, videoItemStyle }) => {
             {item?.videos.length > 0 ? (
               getDisplayData(item?.videos, true).map((item, index) => renderLiveItem(item, index))
             ) : (
-              <Box paddingTop={2} paddingBottom={2} paddingLeft={2}>
+              <Box paddingTop={2} paddingBottom={2} paddingLeft={isMobile ? 5 : 2}>
                 <Typography className={classes.viewMoreStyle}>{i18n.t('common:videos_top_tab.no_data_text')}</Typography>
               </Box>
             )}
@@ -141,7 +142,7 @@ const VideosList: React.FC<VideoListProps> = ({ setTab, videoItemStyle }) => {
   }
 
   const getDisplayData = (fullData, categoryList = false) => {
-    return fullData.slice(0, listLimitData(categoryList))
+    return fullData?.slice(0, listLimitData(categoryList))
   }
 
   return (
@@ -169,7 +170,7 @@ const VideosList: React.FC<VideoListProps> = ({ setTab, videoItemStyle }) => {
             ) : getDisplayData(videoTop?.live)?.length === 0 && meta.pending ? (
               renderPreLoad(6)
             ) : (
-              <Box paddingTop={2} paddingBottom={2} paddingLeft={2}>
+              <Box paddingTop={2} paddingBottom={2} paddingLeft={isMobile ? 5 : 2}>
                 <Typography className={classes.noDataText}>{i18n.t('common:videos_top_tab.no_data_text')}</Typography>
               </Box>
             )}
@@ -197,7 +198,7 @@ const VideosList: React.FC<VideoListProps> = ({ setTab, videoItemStyle }) => {
             ) : getDisplayData(videoTop?.schedule)?.length === 0 && meta.pending ? (
               renderPreLoad(6)
             ) : (
-              <Box paddingTop={2} paddingBottom={2} paddingLeft={2}>
+              <Box paddingTop={2} paddingBottom={2} paddingLeft={isMobile ? 5 : 2}>
                 <Typography className={classes.noDataText}>{i18n.t('common:videos_top_tab.no_data_text')}</Typography>
               </Box>
             )}
@@ -225,7 +226,7 @@ const VideosList: React.FC<VideoListProps> = ({ setTab, videoItemStyle }) => {
             ) : getDisplayData(videoTop?.archived)?.length === 0 && meta.pending ? (
               renderPreLoad(6)
             ) : (
-              <Box paddingTop={2} paddingBottom={2} paddingLeft={2}>
+              <Box paddingTop={2} paddingBottom={2} paddingLeft={isMobile ? 5 : 2}>
                 <Typography className={classes.noDataText}>{i18n.t('common:videos_top_tab.no_data_text')}</Typography>
               </Box>
             )}

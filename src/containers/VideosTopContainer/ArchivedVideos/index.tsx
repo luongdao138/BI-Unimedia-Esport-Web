@@ -171,19 +171,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: '#707070',
     marginLeft: '-16px',
   },
-  popularCategoryTitle: {
-    paddingTop: theme.spacing(7),
-    paddingBottom: theme.spacing(7),
-    justifyContent: 'center',
-    alignItems: 'center',
-    alignContent: 'center',
-  },
-  popularText: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  wrapVideos: {},
   wrapContentContainer: {
     overflow: 'hidden',
   },
@@ -255,7 +242,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       //   paddingRight: 0,
       // },
     },
-    titleContainer: {},
+    titleContainer: {
+      paddingBottom: 12,
+    },
     spViewMore: {
       display: 'block',
       padding: '15px 0 26px 0',

@@ -157,9 +157,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   wrapContentContainer: {
     overflow: 'hidden',
   },
-  spViewMore: {
-    display: 'none',
-  },
   scrollContainer: {
     display: 'flex',
     // flexWrap: 'wrap',
@@ -213,9 +210,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginBottom: '24px',
       display: 'flex',
       justifyContent: 'center',
-      // '&:last-child': {
-      //   paddingRight: 0,
-      // },
     },
     xsItemContainerBonus: {
       marginRight: '20.7px',
@@ -225,11 +219,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     titleContainer: {
       paddingBottom: 12,
-    },
-    spViewMore: {
-      display: 'block',
-      padding: '15px 0 26px 0',
-      textAlign: 'center',
     },
   },
 }))

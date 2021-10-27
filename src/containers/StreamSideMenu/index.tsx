@@ -21,15 +21,17 @@ import { useTheme } from '@material-ui/core/styles'
 import SideFooter from '@containers/SideMenu/SideFooter'
 import AppDialog from '@containers/SideMenu/AppDialog'
 import usePointsManage from '@containers/PointManage/usePointsManage'
+
 // import moment from 'moment'
 
 interface StreamSideMenuProps {
   minimizeLayout?: boolean
   isStreamer: boolean
   isExpandEffect?: boolean
+  toggleDrawer?: (open: boolean) => void
 }
 
-const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStreamer, isExpandEffect }) => {
+const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStreamer, isExpandEffect, toggleDrawer }) => {
   const [modal, setModal] = useState(false)
   const [appModal, setAppModal] = useState(false)
   const [content, setContent] = useState('')
@@ -70,7 +72,11 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
     setAppModal(value)
   }
   const x = userProfile?.attributes?.avatar_url
-  // console.log('STEAM SIDE MENU',x);
+
+  const closeDrawer = (): void => {
+    toggleDrawer(false)
+  }
+
   return (
     <>
       <Box
@@ -133,7 +139,9 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
                   <Icon fontSize="small" className="fab fa-youtube" />
                 </ListItemIcon>
                 {/* link to top video page and videos top tab(お気に入り) is selected*/}
-                {!minimizeLayout && <ListItemText className={classes.listText} primary={t('common:home.stream_menu_video_top')} />}
+                {!minimizeLayout && (
+                  <ListItemText className={classes.listText} primary={t('common:home.stream_menu_video_top')} onClick={closeDrawer} />
+                )}
               </ListItem>
             </Link>
             {/* Favorite Tab */}
@@ -151,7 +159,9 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
                     <Icon fontSize="small" className="fa fa-heart" />
                   </ListItemIcon>
                   {/* link to top video page and tab favorite(お気に入り) is selected*/}
-                  {!minimizeLayout && <ListItemText className={classes.listText} primary={t('common:home.top_video')} />}
+                  {!minimizeLayout && (
+                    <ListItemText className={classes.listText} primary={t('common:home.top_video')} onClick={closeDrawer} />
+                  )}
                 </ListItem>
               </Link>
             </LoginRequired>
