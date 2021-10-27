@@ -8,7 +8,6 @@ export const searchTypes = {
   COMMUNITY: 2,
   TOURNAMENT: 3,
   LOBBY: 4,
-  RECRUITMENT: 4,
   VIDEO: 5,
 }
 
