@@ -259,12 +259,6 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     }
     return () => {
       hls.detachMedia()
-      setAutoPlay(false)
-      setState({ ...state, playing: false })
-      setVisible({ ...visible, videoLoaded: true, loading: true })
-      // hls.off(Hls.Events.MEDIA_ATTACHED, handleMedia)
-      // hls.off(Hls.Events.LEVEL_LOADED, handleLoaded)
-      // hls.off(Hls.Events.ERROR, handleError)
     }
   }, [src])
 
