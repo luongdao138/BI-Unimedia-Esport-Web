@@ -34,6 +34,7 @@ import LoginRequired from '@containers/LoginRequired'
 import moment from 'moment'
 import { STATUS_SEND_MESS } from '@constants/common.constants'
 import { v4 as uuidv4 } from 'uuid'
+import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
 // import { DELAY_SECONDS } from '@constants/common.constants'
 
 export type ChatContainerProps = {
@@ -190,19 +191,21 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     const [isChatInBottom, setIsChatInBottom] = useState(false)
     const [isSeeking, setIsSeeking] = useState(false)
 
+    const { width: pageWidth } = useWindowDimensions(0)
+    const isDesktopDown1280 = pageWidth > 768 && pageWidth <= 1280
     const { userResult, streamingSecond, playedSecond, liveStreamInfo } = useDetailVideo()
     // const { streamingSecond, playedSecond, isViewingStream, liveStreamInfo } = useDetailVideo()
     // const userResult = {streamer: 1}
     const { dataPurchaseTicketSuperChat } = usePurchaseTicketSuperChat()
     // const dispatch = useAppDispatch()
 
-    const isEnabledChat =
-      videoType === STATUS_VIDEO.LIVE_STREAM &&
-      !liveStreamInfo.is_end_live &&
-      (+streamingSecond >= 0 || streamingSecond === Infinity) &&
-      successGetListMess &&
-      successGetListDonateMess
-    // const isEnabledChat = true
+    // const isEnabledChat =
+    //   videoType === STATUS_VIDEO.LIVE_STREAM &&
+    //   !liveStreamInfo.is_end_live &&
+    //   (+streamingSecond >= 0 || streamingSecond === Infinity) &&
+    //   successGetListMess &&
+    //   successGetListDonateMess
+    const isEnabledChat = true
 
     const validationSchema = Yup.object().shape({
       message: Yup.string()
@@ -233,15 +236,16 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     })
 
     const isStreaming = (() => {
-      if (videoType === STATUS_VIDEO.LIVE_STREAM) {
-        if (streamingSecond === Infinity) {
-          return true
-        }
-        if (playedSecond >= streamingSecond) {
-          return true
-        }
-      }
-      return false
+      return true
+      // if (videoType === STATUS_VIDEO.LIVE_STREAM) {
+      //   if (streamingSecond === Infinity) {
+      //     return true
+      //   }
+      //   if (playedSecond >= streamingSecond) {
+      //     return true
+      //   }
+      // }
+      // return false
     })()
 
     const messContainer = document.getElementById('chatBoard')
@@ -885,11 +889,18 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         handleSubmitChatContent()
       }
     }
+    const getChatInputHeight = () => {
+      if(errors?.message) {
+        return isDesktopDown1280 ? '99px' : '132.5px'
+      } else {
+        return isDesktopDown1280 ? '77px' : '116.5px'
+      }
+    }
 
     const chatInputComponent = () => (
       <Box
         className={`${classes.chatInputMobileContainer}`}
-        style={{ bottom: isMobile ? '0px' : errors?.message ? '-132.5px' : '-116.5px' }}
+        style={{ bottom: isMobile ? '0px' : ('-' + getChatInputHeight()) }}
       >
         {purchaseDialogVisible && isMobile && purchaseInfoDialog()}
         {isEnabledChat &&
@@ -954,21 +965,21 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         // only margin top when has donate message
         // render margin top higher with donate message is first item
         if (transformedMess.length !== 0 && transformedMess[0].is_premium) {
-          marginTop = 16
+          marginTop = isDesktopDown1280 ? 8 : 16
         } else {
-          marginTop = 12
+          marginTop = isDesktopDown1280 ? 5 : 12
         }
       }
       if (componentType === 'userIcon') {
         // margin top 16 when has donate message
         if (transformedDonateMess.length !== 0) {
-          return 16
+          return isDesktopDown1280 ? 8 : 16
         }
         // render margin top higher with donate message is first item
         if (transformedMess.length !== 0 && transformedMess[0].is_premium) {
-          marginTop = 16
+          marginTop = isDesktopDown1280 ? 8 : 16
         } else {
-          marginTop = 12
+          marginTop = isDesktopDown1280 ? 5 : 12
         }
       }
       return marginTop
@@ -1097,7 +1108,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
                     }
                   }}
                 >
-                  <ESAvatar src={item?.parent?.avatar} size={32} alt={item.parent.user_name} />
+                  <ESAvatar src={item?.parent?.avatar} size={isDesktopDown1280 ? 26 : 32} alt={item.parent.user_name} />
                 </Box>
               ) : (
                 ''
@@ -1128,7 +1139,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       if (!isStreaming) {
         return '0px'
       }
-      return errors?.message ? '132.5px' : '116.5px'
+      return getChatInputHeight()
     }
 
     const chatHeight = (() => {
@@ -1136,7 +1147,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       let newChatHeight = (chatWidth * 250) / 153 - 35
       if (messagesDonate.filter((item) => !item.delete_flag).length !== 0) {
         // 56 is height of message donate
-        newChatHeight = newChatHeight - 56 - getMarginTopOfComponents('chatBoard')
+        newChatHeight = newChatHeight - (isDesktopDown1280 ? 34 : 56) - getMarginTopOfComponents('chatBoard')
       } else {
         // 16 is margin top of message donate when it is empty
         newChatHeight = newChatHeight - getMarginTopOfComponents('userIcon')
@@ -1144,7 +1155,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       // height of chat when display chat content
       if (displayChatContent()) {
         // 116.5 is input chat when video is streaming
-        newChatHeight = newChatHeight - 116.5
+        newChatHeight = newChatHeight - (isDesktopDown1280 ? 77 : 116.5)
       }
       return Math.round((newChatHeight + Number.EPSILON) * 100) / 100
     })()
