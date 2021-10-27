@@ -7,6 +7,8 @@ import { FormType } from './FormModel/FormType'
 import { Box } from '@material-ui/core'
 import { useAppSelector } from '@store/hooks'
 import { getAuth } from '@store/auth/selectors'
+import ReactDOM from 'react-dom'
+import { useEffect } from 'react'
 
 interface ConfirmProps {
   values: FormikProps<FormType>['values']
@@ -19,6 +21,12 @@ ESInput.defaultProps = {
 const Confirm: React.FC<ConfirmProps> = ({ values }) => {
   const { t } = useTranslation(['common'])
   const user = useAppSelector(getAuth)
+  useEffect(() => {
+    const node = document.getElementById('es-modal')
+    // eslint-disable-next-line react/no-find-dom-node
+    const component = ReactDOM.findDOMNode(node)
+    if (component) component.scrollTo(0, 0)
+  }, [])
 
   return (
     <Box pb={9}>
