@@ -121,7 +121,7 @@ const LiveStreamContainer: React.FC<Props> = ({ formik }) => {
           <SettingsCompleted onClose={onClose} onComplete={onComplete} />
         </BlankLayout>
       </ESModal>
-      {step === 3 && stateChannelMedia && stateChannelMedia !== EVENT_STATE_CHANNEL.RUNNING && <ESLoader open={true} />}
+      {step === 3 && stateChannelMedia !== EVENT_STATE_CHANNEL.RUNNING && <ESLoader open={true} />}
     </>
   )
 }
