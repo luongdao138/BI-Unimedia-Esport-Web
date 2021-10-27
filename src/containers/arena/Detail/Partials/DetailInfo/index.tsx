@@ -313,9 +313,11 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
         )}
         {!extended && (
           <Box display="flex" flexDirection="row" flexWrap="wrap" marginTop={2}>
-            <Box mt={1} mr={1}>
-              <ESChip label={data.area_name} />
-            </Box>
+            {data.area_name ? (
+              <Box mt={1} mr={1}>
+                <ESChip label={data.area_name} />
+              </Box>
+            ) : null}
             <Box mt={1} mr={1}>
               <ESChip label={TournamentHelper.participantTypeText(data.participant_type)} />
             </Box>
