@@ -314,7 +314,7 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
         {!extended && (
           <Box display="flex" flexDirection="row" flexWrap="wrap" marginTop={2}>
             <Box mt={1} mr={1}>
-              <ESChip label={data.area_name} />
+              <ESChip label={data.area_name == t('common:tournament.online') ? data.area_name : t('common:tournament.offline')} />
             </Box>
             <Box mt={1} mr={1}>
               <ESChip label={TournamentHelper.participantTypeText(data.participant_type)} />

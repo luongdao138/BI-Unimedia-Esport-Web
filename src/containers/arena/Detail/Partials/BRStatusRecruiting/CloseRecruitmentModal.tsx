@@ -53,7 +53,7 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ tournamen
             </Box>
             <Box pb={4}>
               <Typography variant="h2" className={classes.desc}>
-                {t('common:tournament.close_recruitment.dialog_description_br')}
+                {t('common:tournament.close_recruitment.dialog_description')}
               </Typography>
             </Box>
 
