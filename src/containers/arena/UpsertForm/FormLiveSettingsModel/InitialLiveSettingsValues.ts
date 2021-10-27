@@ -14,7 +14,7 @@ export const getInitialLiveSettingValues = (data?: LiveStreamSetting): FormLiveT
     ticket_price: data && data.ticket_price ? data.ticket_price : 0,
     use_ticket: data && data.use_ticket ? (data.use_ticket == 1 ? true : false) : false,
     share_sns_flag: data && data.share_sns_flag ? (data.share_sns_flag == 1 ? true : false) : false,
-    publish_flag: data && data.share_sns_flag ? (data.publish_flag == 1 ? true : false) : true,
+    publish_flag: data && data.publish_flag?.toString() ? (data.publish_flag?.toString() == '1' ? true : false) : true,
     video_publish_end_time: data && data.video_publish_end_time ? CommonHelper.formatDateTime(data.video_publish_end_time) : null,
     // video_publish_end_time:
     //   data && data.video_publish_end_time
@@ -45,7 +45,7 @@ export const getInitialScheduleValues = (data?: LiveStreamSetting): FormLiveType
     share_sns_flag: data && data.share_sns_flag ? (data.share_sns_flag == 1 ? true : false) : false,
     stream_url: data && data.stream_url ? data.stream_url : '',
     stream_key: data && data.stream_key ? data.stream_key : '',
-    publish_flag: data && data.publish_flag ? (data.publish_flag == 1 ? true : false) : true,
+    publish_flag: data && data.publish_flag?.toString() ? (data.publish_flag?.toString() == '1' ? true : false) : true,
     video_publish_end_time: data && data.video_publish_end_time ? CommonHelper.formatDateTime(data.video_publish_end_time) : null,
     // video_publish_end_time:
     //   data && data.video_publish_end_time
