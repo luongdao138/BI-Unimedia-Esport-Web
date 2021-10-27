@@ -246,8 +246,8 @@ const useStyles = makeStyles((theme) => ({
   },
   userWatchingItem: {
     display: 'flex',
-    width: 40,
-    height: 40,
+    // width: 40,
+    // height: 40,
     backgroundColor: '#476AFF',
     borderRadius: 4,
     marginRight: 4,
@@ -335,17 +335,20 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     width: '100%',
   },
-  // purchaseItem: {},
-  // purchaseItemText: {},
-  // purchaseItemUnselected: {},
-  // pointList: {},
-  // pointListRow: {},
-  // purchaseButton: {},
-  // purchaseButtonText: {},
-  // premiumChatError: {},
-  // dialogFooter: {},
-  // totalPointText: {},
-  // purchasePointText: {},
+  [theme.breakpoints.between(769, 1281)]: {
+    chatInputContainer: {
+      padding: '6px 16px 8px 16px',
+    },
+    input: () => ({
+      height: 36,
+    }),
+    iconButtonBg: {
+      height: 36,
+    },
+    iconPurchase: {
+      marginBottom: 5,
+    },
+  },
   [theme.breakpoints.down(1100)]: {
     container: {
       // width: 350,
