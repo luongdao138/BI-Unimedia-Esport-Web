@@ -176,7 +176,6 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
 
                   <IconButton
                     onClick={() => router.push(`${ESRoutes.MESSAGE}?active=true`)}
-                    // className={`${classes.button}`} // CW_CA
                     className={`visible-mobile ${classes.button}`}
                     disableRipple
                     color="inherit"
