@@ -173,17 +173,20 @@ const Steps: React.FC<StepsProps> = ({
   const onValidateForm = () => {
     // if (onChangeFlag && !statusRecordSetting) {
     setValidateField('all')
-    formik.validateForm().then((err) => {
-      if (_.isEmpty(err.stepSettingTwo)) {
-        onClickNext()
-      } else {
-        const errorField = getDisplayErrorField(formik)
-        handleUpdateValidateField(errorField)
-        if (formRef[errorField]) {
-          window.scrollTo({ behavior: 'smooth', top: formRef[errorField].current.offsetTop - 200 })
+    handleUpdateValidateField('all')
+    setTimeout(() => {
+      formik.validateForm().then((err) => {
+        if (_.isEmpty(err.stepSettingTwo)) {
+          onClickNext()
+        } else {
+          const errorField = getDisplayErrorField(err)
+          handleUpdateValidateField(errorField)
+          if (formRef[errorField]) {
+            window.scrollTo({ behavior: 'smooth', top: formRef[errorField].current.offsetTop - 200 })
+          }
         }
-      }
-    })
+      })
+    }, 300)
   }
 
   const onClickNext = () => {
@@ -240,11 +243,17 @@ const Steps: React.FC<StepsProps> = ({
     }
   }
 
+  const currentDate = () => {
+    const current = new Date()
+    current.setSeconds(0)
+    return current
+  }
+
   const checkUseTicket = () => {
     formik.setFieldValue('stepSettingTwo.use_ticket', !formik?.values?.stepSettingTwo?.use_ticket)
     formik.setFieldValue(
       'stepSettingTwo.sell_ticket_start_time',
-      !formik?.values?.stepSettingTwo?.use_ticket ? new Date().toString() : null
+      !formik?.values?.stepSettingTwo?.use_ticket ? currentDate().toString() : null
     )
   }
 

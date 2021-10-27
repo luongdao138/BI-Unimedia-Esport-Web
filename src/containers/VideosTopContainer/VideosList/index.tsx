@@ -170,7 +170,7 @@ const VideosList: React.FC<VideoListProps> = ({ setTab, videoItemStyle }) => {
               renderPreLoad(6)
             ) : (
               <Box paddingTop={2} paddingBottom={2} paddingLeft={2}>
-                <Typography className={classes.viewMoreStyle}>{i18n.t('common:videos_top_tab.no_data_text')}</Typography>
+                <Typography className={classes.noDataText}>{i18n.t('common:videos_top_tab.no_data_text')}</Typography>
               </Box>
             )}
           </Grid>
@@ -198,7 +198,7 @@ const VideosList: React.FC<VideoListProps> = ({ setTab, videoItemStyle }) => {
               renderPreLoad(6)
             ) : (
               <Box paddingTop={2} paddingBottom={2} paddingLeft={2}>
-                <Typography className={classes.viewMoreStyle}>{i18n.t('common:videos_top_tab.no_data_text')}</Typography>
+                <Typography className={classes.noDataText}>{i18n.t('common:videos_top_tab.no_data_text')}</Typography>
               </Box>
             )}
           </Grid>
@@ -226,7 +226,7 @@ const VideosList: React.FC<VideoListProps> = ({ setTab, videoItemStyle }) => {
               renderPreLoad(6)
             ) : (
               <Box paddingTop={2} paddingBottom={2} paddingLeft={2}>
-                <Typography className={classes.viewMoreStyle}>{i18n.t('common:videos_top_tab.no_data_text')}</Typography>
+                <Typography className={classes.noDataText}>{i18n.t('common:videos_top_tab.no_data_text')}</Typography>
               </Box>
             )}
           </Grid>
@@ -282,6 +282,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   viewMoreStyle: {
     color: '#707070',
   },
+  noDataText: {
+    color: '#707070',
+  },
   popularCategoryTitle: {
     paddingTop: theme.spacing(7),
     paddingBottom: theme.spacing(7),
@@ -330,6 +333,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   [theme.breakpoints.down(650)]: {
+    noDataText: {
+      marginLeft: '8px',
+    },
     wrapContentContainer: {
       marginLeft: '-24px',
       width: 'calc(100vw)',

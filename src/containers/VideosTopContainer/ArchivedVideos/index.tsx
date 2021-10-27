@@ -169,6 +169,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   viewMoreStyle: {
     color: '#707070',
+    marginLeft: '-16px',
   },
   popularCategoryTitle: {
     paddingTop: theme.spacing(7),

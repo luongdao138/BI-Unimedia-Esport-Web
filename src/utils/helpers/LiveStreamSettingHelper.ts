@@ -86,9 +86,8 @@ const errorFields = [
   ['sell_less_than_start', 'sell_ticket_start_time'],
 ]
 
-const getDisplayErrorField = (formik: FormikProps<FormLiveType>) => {
-  const { errors } = formik
-  const { stepSettingTwo } = errors
+const getDisplayErrorField = (formik) => {
+  const { stepSettingTwo } = formik
   const errorDisplayField = errorFields.find((field) => stepSettingTwo[field[0]])
   return errorDisplayField[1]
 }

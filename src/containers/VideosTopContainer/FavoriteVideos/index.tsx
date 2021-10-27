@@ -103,7 +103,10 @@ const FavoriteVideos: React.FC<FavoriteVideosProps> = ({ setTab, setFollow, vide
             onPress={onClickSeeMoreLiveStream}
           />
         </Box>
-        <Box className={listFavoriteVideo?.live?.length > 0 ? classes.wrapContentContainer : classes.noDataWrapContentContainer}>
+        <Box
+          className={listFavoriteVideo?.live?.length > 0 ? classes.wrapContentContainer : classes.noDataWrapContentContainer}
+          style={getDisplayData(listFavoriteVideo?.live)?.length === 0 ? { overflow: 'hidden' } : {}}
+        >
           <Grid container spacing={3} className={classes.contentContainer}>
             {getDisplayData(listFavoriteVideo?.live)?.length > 0 ? (
               getDisplayData(listFavoriteVideo?.live)?.map(renderLiveItem)
@@ -111,7 +114,7 @@ const FavoriteVideos: React.FC<FavoriteVideosProps> = ({ setTab, setFollow, vide
               renderPreLoad()
             ) : (
               <Box paddingTop={2} paddingBottom={2} paddingLeft={2}>
-                <Typography className={classes.viewMoreStyle}>{i18n.t('common:videos_top_tab.no_data_text')}</Typography>
+                <Typography className={classes.noDataText}>{i18n.t('common:videos_top_tab.no_data_text')}</Typography>
               </Box>
             )}
           </Grid>
@@ -130,7 +133,10 @@ const FavoriteVideos: React.FC<FavoriteVideosProps> = ({ setTab, setFollow, vide
             onPress={onClickSeeMoreSchedule}
           />
         </Box>
-        <Box className={listFavoriteVideo?.schedule?.length > 0 ? classes.wrapContentContainer : classes.noDataWrapContentContainer}>
+        <Box
+          className={listFavoriteVideo?.schedule?.length > 0 ? classes.wrapContentContainer : classes.noDataWrapContentContainer}
+          style={getDisplayData(listFavoriteVideo?.live)?.length === 0 ? { overflow: 'hidden' } : {}}
+        >
           <Grid container spacing={3} className={classes.contentContainer}>
             {getDisplayData(listFavoriteVideo?.schedule)?.length > 0 ? (
               getDisplayData(listFavoriteVideo?.schedule)?.map(renderLiveItem)
@@ -138,7 +144,7 @@ const FavoriteVideos: React.FC<FavoriteVideosProps> = ({ setTab, setFollow, vide
               renderPreLoad()
             ) : (
               <Box paddingTop={2} paddingBottom={2} paddingLeft={2}>
-                <Typography className={classes.viewMoreStyle}>{i18n.t('common:videos_top_tab.no_data_text')}</Typography>
+                <Typography className={classes.noDataText}>{i18n.t('common:videos_top_tab.no_data_text')}</Typography>
               </Box>
             )}
           </Grid>
@@ -165,7 +171,7 @@ const FavoriteVideos: React.FC<FavoriteVideosProps> = ({ setTab, setFollow, vide
               renderPreLoad()
             ) : (
               <Box paddingTop={2} paddingBottom={2} paddingLeft={2}>
-                <Typography className={classes.viewMoreStyle}>{i18n.t('common:videos_top_tab.no_data_text')}</Typography>
+                <Typography className={classes.noDataText}>{i18n.t('common:videos_top_tab.no_data_text')}</Typography>
               </Box>
             )}
           </Grid>
@@ -208,6 +214,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: '100%',
   },
   viewMoreStyle: {
+    color: '#707070',
+  },
+  noDataText: {
     color: '#707070',
   },
   popularCategoryTitle: {
@@ -256,16 +265,22 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   [theme.breakpoints.down(650)]: {
+    noDataText: {
+      color: '#707070',
+      marginLeft: '8px',
+    },
     wrapContentContainer: {
       marginLeft: '-24px',
       width: 'calc(100vw)',
       overflow: 'auto',
     },
     noDataWrapContentContainer: {
-      overflow: 'hidden',
+      overflow: 'auto',
+      width: 'calc(100vw)',
+      marginLeft: '-24px',
     },
     wrapPreLoadContainer: {
-      width: 290,
+      width: 260,
     },
     contentContainer: {
       flexWrap: 'nowrap',
