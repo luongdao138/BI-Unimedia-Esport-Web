@@ -255,7 +255,7 @@ const useStyles = makeStyles((theme) => ({
     cursor: 'pointer',
     '&:last-child': {
       marginRight: 0,
-    }
+    },
   },
   ...purchasePoints,
   purchaseCommentRoot: {

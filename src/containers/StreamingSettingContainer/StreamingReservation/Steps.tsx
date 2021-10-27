@@ -981,8 +981,12 @@ const Steps: React.FC<StepsProps> = ({
                   py={1}
                   display="flex"
                   justifyContent="flex-end"
-                  className={!isLive ? classes.urlCopy : classes.linkDisable}
-                  onClick={() => !isLive && onReNewUrlAndKey(TYPE_SECRET_KEY.URL, TYPE_SECRET_KEY.RE_NEW, true)}
+                  className={!isLive && formik?.values?.stepSettingTwo?.stream_url ? classes.urlCopy : classes.linkDisable}
+                  onClick={() =>
+                    !isLive &&
+                    formik?.values?.stepSettingTwo?.stream_url &&
+                    onReNewUrlAndKey(TYPE_SECRET_KEY.URL, TYPE_SECRET_KEY.RE_NEW, true)
+                  }
                 >
                   <Typography className={classes.textLink}>{t('common:streaming_setting_screen.reissue')}</Typography>
                 </Box>

@@ -119,7 +119,7 @@ export const validationScheduleScheme = (flag: boolean, isLive?: boolean, isUpda
               (value) => {
                 const minTime = moment()
                   .set('second', 0)
-                  .add(5 * 60, 'seconds') //release:30'
+                  .add(10 * 60, 'seconds') //release:30'
                   .toDate()
                 return value >= minTime
               }

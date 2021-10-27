@@ -47,7 +47,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
 
   const [durationPlayer, setDurationPlayer] = useState(0)
   const [playedSeconds, setPlayedSeconds] = useState(0)
-  const [autoPlay, setAutoPlay] = useState(false)
+  const [autoPlay, setAutoPlay] = useState(true)
   const [isStreaming, setIsStreaming] = useState(true)
   // const reactPlayerRef = useRef(null)
   const playerContainerRef = useRef(null)
@@ -55,9 +55,9 @@ const VideoPlayer: React.FC<PlayerProps> = ({
 
   //As of Chrome 66, videos must be muted in order to play automatically
   const [state, setState] = useState({
-    playing: false,
-    muted: false,
-    volume: 1,
+    playing: true,
+    muted: true,
+    volume: 0,
     ended: false,
   })
 
@@ -214,7 +214,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       console.log('video and hls.js are now bound together !')
       // video.play(); //auto play video
       //@ts-ignore
-      video.muted = false
+      video.muted = true
       hls.on(Hls.Events.LEVEL_LOADED, handleLoaded)
       hls.on(Hls.Events.ERROR, handleError)
     }
