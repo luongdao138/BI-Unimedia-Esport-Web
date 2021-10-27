@@ -354,7 +354,7 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
           <Box className={classes.wrap_movie_info}>
             <Box className={classes.wrap_title}>
               <Typography className={classes.movie_title}>{detailVideoResult?.title}</Typography>
-              {!isMobile && detailVideoResult?.status === 1 ? (
+              {!isMobile && detailVideoResult?.status === 1 && videoType === STATUS_VIDEO.LIVE_STREAM ? (
                 <Box className={classes.live_stream_status}>
                   <Typography className={classes.txtVideoStatus}>{t('live_stream_screen.live_stream_status')}</Typography>
                 </Box>

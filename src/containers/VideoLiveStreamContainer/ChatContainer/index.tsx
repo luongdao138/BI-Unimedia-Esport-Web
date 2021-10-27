@@ -866,9 +866,9 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     }
 
     const scrollToCurrentMess = (behavior = '') => {
-      if(!behavior) {
-        if(isEnabledChat && isStreaming) {
-          behavior = "instant"
+      if (!behavior) {
+        if (isEnabledChat && isStreaming) {
+          behavior = 'instant'
         }
       }
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
