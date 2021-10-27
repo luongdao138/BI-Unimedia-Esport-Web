@@ -106,14 +106,12 @@ const App = ({ Component, pageProps }: Props) => {
   const Layout = Component.Layout ?? React.Fragment
 
   const { previousRoute } = useRouteUrlHistory()
-  const handleLoadScript = () => {
-    console.warn('https://cdn.jsdelivr.net/npm/hls.js@latest ')
-  }
+
   return (
     <>
       <ESHead title={pageProps.title || 'eXeLAB'} desc={pageProps.desc} keywords={pageProps.keywords} image={pageProps.image} />
       {/* <Script url="https://player.live-video.net/1.5.0/amazon-ivs-player.min.js" onError={console.error} onLoad={handleLoadScript} /> */}
-      <Script url="https://cdn.jsdelivr.net/npm/hls.js@latest" onError={console.error} onLoad={handleLoadScript} />
+      <Script url="https://cdn.jsdelivr.net/npm/hls.js@latest" onError={console.error} />
       <PersistGate persistor={persistStore(store)}>
         <RouteContext.Provider
           value={{
