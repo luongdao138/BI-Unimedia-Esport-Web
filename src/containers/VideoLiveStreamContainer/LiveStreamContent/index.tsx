@@ -513,17 +513,15 @@ const useStyles = makeStyles((theme) => ({
     position: 'relative',
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
     marginRight: 24,
   },
   movie_title: {
-    paddingRight: '30px',
+    paddingRight: '64px',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     fontSize: '20px',
     fontWeight: 'bold',
     color: '#FFFFFF',
-    width: '80%',
   },
   device_name: {
     fontSize: '15px',
@@ -534,6 +532,7 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     backgroundColor: Colors.primary,
     borderRadius: 2,
+    minWidth: '84px',
   },
   txtVideoStatus: {
     fontSize: '12px',

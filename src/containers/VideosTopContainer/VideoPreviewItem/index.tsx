@@ -70,9 +70,7 @@ const VideoPreviewItem: React.FC<VideoPreviewItemProps> = ({ data, containerStyl
             {data?.status !== 2 && (
               <Typography className={classes.nameStyle}>
                 {data?.type !== 'related'
-                  ? (data?.status === 1
-                      ? FormatHelper.currencyFormat(`${data?.live_view_count}`)
-                      : FormatHelper.currencyFormat(`${data?.view_count}`)) +
+                  ? FormatHelper.currencyFormat(`${data?.view_count}`) +
                     (data?.status === 1 ? t('common:videos_top_tab.view_count_text') : t('common:videos_top_tab.view_count_schedule_text'))
                   : '2021/06/22'}
               </Typography>
