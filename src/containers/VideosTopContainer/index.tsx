@@ -97,7 +97,7 @@ const VideosTop: React.FC = () => {
       return {}
     }
     const numOfDisplayItem = Math.floor(listDisplayWidth / 350)
-    const calcWidth = listDisplayWidth / numOfDisplayItem
+    const calcWidth = Math.floor(listDisplayWidth / numOfDisplayItem)
 
     return {
       maxWidth: calcWidth,
