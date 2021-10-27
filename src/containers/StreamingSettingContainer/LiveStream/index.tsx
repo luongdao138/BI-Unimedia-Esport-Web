@@ -59,9 +59,11 @@ const LiveStreamContainer: React.FC<Props> = ({ formik }) => {
     updateChannelSubscription = updateChannelSubscription.subscribe({
       next: (sub: GraphQLResult<APIt.OnUpdateChannelSubscription>) => {
         //@ts-ignore
-        console.log('====>>SUB<<===', sub?.value?.data?.onUpdateChannel?.state, step)
+        console.log('====>>SUB<<===', sub?.value?.data?.onUpdateChannel, sub?.value?.data?.onUpdateChannel?.state, step)
         //@ts-ignore
         if (sub?.value?.data?.onUpdateChannel?.arn === formik?.values?.stepSettingOne?.arn) {
+          //@ts-ignore
+          console.log('=== ONLY MY ARN ===', sub?.value?.data?.onUpdateChannel?.state)
           //@ts-ignore
           setStateChannelMedia(sub?.value?.data?.onUpdateChannel?.state)
         }

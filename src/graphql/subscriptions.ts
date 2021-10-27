@@ -201,6 +201,7 @@ export const onUpdateChannel = /* GraphQL */ `
   subscription OnUpdateChannel {
     onUpdateChannel {
       id
+      arn
       state
       alarm_state
     }
