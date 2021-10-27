@@ -7,7 +7,6 @@ import { UserLoginResponse } from '@services/auth.service'
 type StateType = {
   user?: UserLoginResponse
   confirmType?: 'register' | 'forgot'
-  loginPreAction?: string
 }
 
 const initialState: StateType = {}

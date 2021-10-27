@@ -26,7 +26,16 @@ const useReturnHref = () => {
     if (previousRoute === ESRoutes.TOP) {
       router.push(ESRoutes.HOME)
     } else if (previousRoute === ESRoutes.VIDEO_TOP) {
-      router.push({ pathname: returnHref, search: '?default_tab=4' }, undefined, { shallow: true })
+      // [CW] Active tab favorite when user click on favorite tab then login successfully from video top screen.
+      const { favoriteTabClick } = router.query
+      router.push(
+        {
+          pathname: returnHref,
+          search: favoriteTabClick ? '?default_tab=4' : '',
+        },
+        undefined,
+        { shallow: true }
+      )
     } else if (!isRegistered) {
       router.push(ESRoutes.REGISTER_PROFILE)
     } else {

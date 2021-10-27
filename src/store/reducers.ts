@@ -48,6 +48,7 @@ const reducer = combineReducers({
   socket: socket.reducers,
   liveEvent: liveEventsReducer,
   chatHistory,
+  // [CW] Add reducer setting livestream, video top, video detail, purchase point, point manager screens.
   liveSetting: stream.reducers,
   videoTop: videoTop.reducers,
   purchasePoint: purchasePoint.reducers,

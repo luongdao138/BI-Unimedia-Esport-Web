@@ -25,6 +25,7 @@ const kFormatter = (inputNum: number): number | string => {
   return result
 }
 
+// [CW] convert number to wan unit
 const japaneseWanFormatter = (inputNumber: number): number | string => {
   /*
       Reference:
@@ -41,6 +42,7 @@ const japaneseWanFormatter = (inputNumber: number): number | string => {
   return `${Math.round(wanValue * 10) / 10}万`
 }
 
+// [CW] currency formatter
 const currencyFormat = (nStr: string): string => {
   nStr += ''
   const x = nStr.split('.')
@@ -88,11 +90,13 @@ const spacedLinks = function (content: string): string {
   return content
 }
 
+// [CW] collapse text when its length more than limit characters
 const textSizeMode = (str?: string, limit?: number): string => {
   const text = !str ? '...' : str?.length <= limit ? str : `${str?.slice(0, limit)}...`
   return text
 }
 
+// [CW] convert time to HH:MM:SS
 const formatTime = (seconds: number, guide?: number): string | number => {
   if (seconds === void 0) {
     seconds = 0

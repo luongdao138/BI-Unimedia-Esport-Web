@@ -1,7 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit'
 import { v4 as uuidv4 } from 'uuid'
 import * as actions from '../actions'
-import { Dialog, NotFoundType, ErrorModal } from '../actions/types'
+import { Dialog, NotFoundType } from '../actions/types'
 import { GetPrefecturesResponse, HardwareResponse } from '@services/common.service'
 
 type StateType = {
@@ -11,7 +11,6 @@ type StateType = {
   dialog?: Dialog
   action: string | null
   notFound: NotFoundType | null
-  errorModal?: ErrorModal
 }
 
 const initialState: StateType = {
@@ -49,12 +48,5 @@ export default createReducer(initialState, (builder) => {
     })
     .addCase(actions.setNotFound, (state, action) => {
       state.notFound = action.payload.notFound
-    })
-
-    .addCase(actions.showErrorModal, (state, action) => {
-      state.errorModal = action.payload
-    })
-    .addCase(actions.closeErrorModal, (state) => {
-      state.errorModal = undefined
     })
 })

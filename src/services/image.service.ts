@@ -21,8 +21,6 @@ export type CoverPresignedDataParams = {
 
 export const getPreSignedUrl = async (params: PresignedDataParams): Promise<any> => {
   const { data } = await api.post<any>(URI.S3_PRESIGNED_URL, params)
-  // console.log("========getPreSignedUrl CONFIG========", config)
-  // console.log("========getPreSignedUrl DATA========", data)
   return data
 }
 
@@ -41,15 +39,13 @@ export const getCoverPreSignedUrl = async (params: CoverPresignedDataParams): Pr
   return data
 }
 
+//[CW] upload thumbnail live stream
 export const getThumbnailPreSignedUrl = async (params: PresignedDataParams): Promise<any> => {
   const { data } = await api.post<any>(URI.S3_THUMBNAIL_PRESIGNED_URL, params)
-  // console.log("========getPreSignedUrl CONFIG========", config)
-  // console.log("========getPreSignedUrl DATA========", data)
   return data
 }
 
 export const upload = async (file: File, signed_url: string, uploadListener?: (p: number) => void): Promise<any> => {
-  // console.log('===PUT signed_url=====',signed_url)
   const { status } = await axios.put(signed_url, file, {
     onUploadProgress: (ProgressEvent) => {
       if (uploadListener) uploadListener(Math.round((ProgressEvent.loaded / ProgressEvent.total) * 100))

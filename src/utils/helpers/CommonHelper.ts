@@ -252,10 +252,12 @@ const formatTimeVideo = (date: string): string => {
   return `${dateTime}～配信予定`
 }
 
+// calculate money with tax
 export const calValueFromTax = (value: number): number => {
   return Math.round(value * (1 + TAX))
 }
 
+// format card number has space between each 4 number
 export const formatCardNumber = (origin_card_number: string): string => {
   let card_number = origin_card_number.split(' ').join('')
   if (card_number.length > 0) {
@@ -264,6 +266,7 @@ export const formatCardNumber = (origin_card_number: string): string => {
   return card_number
 }
 
+// detect branches of cards
 export const detectCardType = (cardNumber: string): number => {
   let cardType = 0
   REGEX_DETECT_BRANCH.forEach((element) => {
@@ -274,6 +277,7 @@ export const detectCardType = (cardNumber: string): number => {
   return cardType
 }
 
+// convert color form hex to rgba format
 export const hexToRgba = (hex: string, opacity: number): string => {
   if (!/^[#]*([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/i.test(hex)) {
     return ''

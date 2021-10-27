@@ -25,12 +25,6 @@ export const SORTING_METHOD = [
   { label: '昇順', value: 'by_asc' },
   { label: '降順', value: 'by_desc' },
 ]
-export const LIVE_CATEGORIES = [
-  { label: 'カテゴリーを選択', value: 1 },
-  { label: 'ゲーム：ゲームタイトル', value: 2 },
-  { label: 'ゲーム：ゲームタイトル', value: 3 },
-  { label: 'その他：雑談', value: 4 },
-]
 
 export const T_TYPES = [
   { label: '公開', value: 0 },

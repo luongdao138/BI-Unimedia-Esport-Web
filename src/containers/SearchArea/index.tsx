@@ -44,6 +44,7 @@ const SearchArea: React.FC<SearchAreaProps> = (props) => {
     }
   }, [value])
 
+  // [CW] Determined if current route is video detail screen
   const isInVideoDetailPage = () => {
     if (router.pathname !== ESRoutes.TOP) {
       return false
@@ -54,8 +55,9 @@ const SearchArea: React.FC<SearchAreaProps> = (props) => {
   }
 
   useEffect(() => {
+    // [CW] set default option of search area is video when current route is video detail screen
     if (router.pathname == ESRoutes.VIDEO_TOP || router.pathname == ESRoutes.SEARCH_VIDEO || isInVideoDetailPage()) {
-      //only search video
+      //[CW] only search video category
       setOption(searchTypes.VIDEO)
     } else {
       setOption(searchType)

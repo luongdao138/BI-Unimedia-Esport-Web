@@ -24,6 +24,7 @@ const SettingsPage: PageWithLayoutType = () => {
             >
               <SettingsRowItem key="account_settings" title={t('settings.account_settings')} showSwitch={false} />
             </div>
+            {/* add link to user point management page*/}
             <div
               onClick={() => {
                 router.push(ESRoutes.USER_POINT_MANAGEMENT)
