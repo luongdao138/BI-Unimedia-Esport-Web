@@ -105,7 +105,7 @@ const useUploadImage = (): {
     }
   }
 
-  //upload thumbnail live stream
+  //[CW] upload thumbnail live stream
   const uploadThumbnail = async (file, blob, params, onSuccess) => {
     setIsUploading(true)
 
@@ -134,6 +134,7 @@ const useUploadImage = (): {
     }
   }
 
+  //[CW] upload thumbnail live stream
   const uploadLiveStreamThumbnailImage = async (file, blob, onSuccess) => {
     await uploadThumbnail(
       file,

@@ -38,6 +38,7 @@ export const calculateDimensionsCover = (width: number, height: number, S_W: num
   return { height: h, width: w }
 }
 
+// [CW] Calculate dimension thumbnail of setting livestream
 export const calculateDimensionsThumbStream = (
   width: number,
   height: number,

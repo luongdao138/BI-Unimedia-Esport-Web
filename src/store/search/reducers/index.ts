@@ -8,7 +8,7 @@ type StateType = {
   searchUsersMeta?: Meta
   type: number
   keyword: string
-  //only search video
+  //[CW] only search video
   typeSearchVideo: number
   categoryID: number
 }
@@ -25,7 +25,7 @@ export default createReducer(initialState, (builder) => {
     state.searchUsers = tmpSearchUsers
     state.searchUsersMeta = action.payload.meta
   })
-
+  //[CW] stored search type state when back on search screen.
   builder.addCase(actions.setSearchParams, (state, action) => {
     if (action.payload.type !== searchTypes.VIDEO) {
       state.type = action.payload.type
@@ -40,7 +40,7 @@ export default createReducer(initialState, (builder) => {
     state.searchUsersMeta = undefined
   })
 
-  //only search video
+  //[CW] only search video
   builder.addCase(actions.setSearchVideoParams, (state, action) => {
     state.typeSearchVideo = action.payload.type
     state.keyword = action.payload.keyword

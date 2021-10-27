@@ -21,10 +21,3 @@ export enum NotFoundType {
   USER_NOT_FOUND = 1,
   ARENA_NOT_FOUND = 2,
 }
-
-export type ErrorModal = {
-  showModal?: boolean
-  title?: string | null
-  handleConfirm?: () => void
-  msgContent?: string | null
-}

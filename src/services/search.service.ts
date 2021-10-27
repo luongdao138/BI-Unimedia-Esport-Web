@@ -31,6 +31,7 @@ export type SearchParams = {
   keyword: string
 }
 
+// [CW] search video category id only
 export type CategoryIDParams = {
   type: number
   category_id: number

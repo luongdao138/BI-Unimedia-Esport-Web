@@ -262,6 +262,7 @@ const ESReport: React.FC<ESReportProps> = ({
         break
     }
   }
+  // [CW] Add video title on report pop up
   const reportVideo = () => {
     return <Box className={classes.videoInfoContainer}>{data?.title && <Typography variant="h2">{data.title}</Typography>}</Box>
   }
@@ -341,6 +342,7 @@ const ESReport: React.FC<ESReportProps> = ({
               <Box mt={8}>
                 <Typography className={classes.desc}>{t('user_report.desc')}</Typography>
               </Box>
+              {/*[CW] Update title of video report pop-up if report type is video stream*/}
               <Box py={4}>{attr ? reportInfo : REPORT_TYPE.VIDEO_STREAM && reportVideo}</Box>
               <Grid container>
                 <Hidden xsDown smDown>
@@ -471,6 +473,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
   },
+  // [CW] Update style of video info container
   videoInfoContainer: {
     backgroundColor: Colors.black,
     marginTop: theme.spacing(3),

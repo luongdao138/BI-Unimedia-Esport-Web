@@ -55,7 +55,7 @@ const SearchModal: React.FC<SearchModalProps> = ({ show, selectData, onSearch, h
 
   useEffect(() => {
     if (router.pathname == ESRoutes.VIDEO_TOP || router.pathname == ESRoutes.SEARCH_VIDEO) {
-      //only search video
+      //[CW] only search video
       setOption(searchTypes.VIDEO)
     } else {
       setOption(searchType)

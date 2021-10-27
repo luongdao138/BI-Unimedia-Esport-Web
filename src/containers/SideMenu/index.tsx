@@ -1,3 +1,4 @@
+// create side menu for live stream feature
 import { useState, useEffect } from 'react'
 import { Box, List, ListItem as MuiListItem, ListItemIcon, ListItemText, Typography } from '@material-ui/core'
 import Link from 'next/link'
