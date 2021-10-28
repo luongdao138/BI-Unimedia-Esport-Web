@@ -66,12 +66,14 @@ const SearchPage: PageWithLayoutType = () => {
         return <></>
     }
   }
-
+  const handleBack = () => {
+    router.back()
+  }
   return (
     <MainLayout loginRequired={false}>
       <Box>
         <Box py={2} pl={3} display="flex" flexDirection="row" alignItems="center" borderBottom="1px solid #70707070">
-          <IconButton className={classes.iconButtonBg} onClick={() => router.back()}>
+          <IconButton className={classes.iconButtonBg} onClick={handleBack}>
             <Icon className={`fa fa-arrow-left ${classes.icon}`} fontSize="small" />
           </IconButton>
           <Typography variant="h2" className={classes.label}>
