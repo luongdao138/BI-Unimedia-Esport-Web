@@ -199,13 +199,13 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     const { dataPurchaseTicketSuperChat } = usePurchaseTicketSuperChat()
     // const dispatch = useAppDispatch()
 
-    // const isEnabledChat =
-    //   videoType === STATUS_VIDEO.LIVE_STREAM &&
-    //   !liveStreamInfo.is_end_live &&
-    //   (+streamingSecond >= 0 || streamingSecond === Infinity) &&
-    //   successGetListMess &&
-    //   successGetListDonateMess
-    const isEnabledChat = true
+    const isEnabledChat =
+      videoType === STATUS_VIDEO.LIVE_STREAM &&
+      !liveStreamInfo.is_end_live &&
+      (+streamingSecond >= 0 || streamingSecond === Infinity) &&
+      successGetListMess &&
+      successGetListDonateMess
+    // const isEnabledChat = true
 
     const validationSchema = Yup.object().shape({
       message: Yup.string()
@@ -236,16 +236,16 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     })
 
     const isStreaming = (() => {
-      return true
-      // if (videoType === STATUS_VIDEO.LIVE_STREAM) {
-      //   if (streamingSecond === Infinity) {
-      //     return true
-      //   }
-      //   if (playedSecond >= streamingSecond) {
-      //     return true
-      //   }
-      // }
-      // return false
+      // return true
+      if (videoType === STATUS_VIDEO.LIVE_STREAM) {
+        if (streamingSecond === Infinity) {
+          return true
+        }
+        if (playedSecond >= streamingSecond) {
+          return true
+        }
+      }
+      return false
     })()
 
     const messContainer = document.getElementById('chatBoard')
