@@ -280,6 +280,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     border: '1px solid #4c4c4c',
     borderRadius: '4px',
     width: '100%',
+    height: '100%',
     whiteSpace: 'pre-wrap',
   },
   infoContentDescription: {
@@ -381,13 +382,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     infoRowRightItem: {
       marginLeft: '10px',
-      flex: 0.8,
-    },
-    infoSectionTitle: {
-      fontSize: '9px',
-    },
-    infoSectionContent: {
-      fontSize: '9px',
+      flex: 0.85,
     },
     infoContentDescription: {
       maxHeight: '95px',
@@ -420,7 +415,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       },
     },
   },
-  [theme.breakpoints.down(576)]: {
+  [theme.breakpoints.down(768)]: {
     infoRowRightItem: {
       marginLeft: '0px !important',
     },
