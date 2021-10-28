@@ -118,7 +118,13 @@ const hasEmail = (email: string): boolean => {
 
 const isMediaURL = (str: string): boolean => {
   const domain = 'https://s3-ap-northeast-1.amazonaws.com/'
-  const buckets = ['dev-esporst-chat-media', 'stg-esporst-chat-media', 'esporst-chat-media', 'feature-esporst-chat-media']
+  const buckets = [
+    'dev-esporst-chat-media',
+    'stg-esporst-chat-media',
+    'esporst-chat-media',
+    'feature-esporst-chat-media',
+    'cowell-dev-chat-media',
+  ]
   if (str && str.startsWith(domain)) {
     for (let i = 0; i < buckets.length; i++) {
       const bucket = buckets[i]
