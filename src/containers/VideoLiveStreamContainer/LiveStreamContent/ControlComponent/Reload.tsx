@@ -11,9 +11,10 @@ interface Props {
   currentTime?: number
   durationsPlayer?: number
   isLive?: boolean
+  onPressCallback?: () => void
 }
 
-const ReloadButton: React.FC<Props> = ({ videoRef, typeButton, currentTime, isLive }) => {
+const ReloadButton: React.FC<Props> = ({ videoRef, typeButton, currentTime, isLive, onPressCallback }) => {
   const classes = useStyles({ isLive })
   const { t } = useTranslation('common')
   const { changeSeekCount } = useDetailVideo()
@@ -37,6 +38,9 @@ const ReloadButton: React.FC<Props> = ({ videoRef, typeButton, currentTime, isLi
     // eslint-disable-next-line no-console
     changeSeekCount(Math.floor(newSecond))
     // }
+    if (onPressCallback && typeof onPressCallback === 'function') {
+      onPressCallback()
+    }
   }
   if (typeButton === 'reload') {
     return (

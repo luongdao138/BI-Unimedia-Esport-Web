@@ -22,6 +22,7 @@ interface ControlProps {
   isLive?: boolean | null
   videoStatus?: number
   onReloadTime?: () => void
+  handleOnRestart?: () => void
 }
 
 const ControlBarPlayer: React.FC<ControlProps> = ({
@@ -39,6 +40,7 @@ const ControlBarPlayer: React.FC<ControlProps> = ({
   isLive = null,
   videoStatus,
   onReloadTime,
+  handleOnRestart,
 }) => {
   const classes = useStyles({ liveStreaming: durationsPlayer === currentTime ? true : false })
   const { t } = useTranslation('common')
@@ -72,7 +74,7 @@ const ControlBarPlayer: React.FC<ControlProps> = ({
     <>
       <div className={classes.controlLeft}>
         <Play onPlayPause={onPlayPause} playing={playing} />
-        <Reload videoRef={videoRef} typeButton={'reload'} />
+        <Reload videoRef={videoRef} typeButton={'reload'} onPressCallback={handleOnRestart} />
         <Box className={classes.buttonVolume}>
           <Box className={classes.boxIconVolume} onClick={onMute} data-tip data-for="mute">
             {!muted ? (

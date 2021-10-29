@@ -500,6 +500,10 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   }
   // console.log('video isFullScreen >>>>>>>>>>>>>>', videoEl?.current?.webkitPresentationMode)
 
+  const handleOnRestart = () => {
+    setIsStreaming(false)
+  }
+
   return (
     <div className={classes.videoPlayer}>
       {(iPhonePl || androidPl) && (
@@ -585,6 +589,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
                 isLive={isLive}
                 videoStatus={type}
                 onReloadTime={handleReloadTime}
+                handleOnRestart={handleOnRestart}
               />
             </div>
           </div>
@@ -816,11 +821,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     backdropFilter: 'blur(5px)',
   },
   tryAgain: {
-    color: '#fff',
+    color: '#FFFFFF',
     fontSize: 14,
   },
   errorType: {
-    color: '#fff',
+    color: '#FFFFFF',
   },
   boxError: {
     display: 'flex',
