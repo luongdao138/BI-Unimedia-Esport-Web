@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="25.156" height="17.051" viewBox="0 0 25.156 17.051">
+  <g id="Group_7582" data-name="Group 7582" transform="translate(-519.482)">
+    <g id="Group_7581" data-name="Group 7581" transform="translate(519.482)">
+      <g id="Group_7580" data-name="Group 7580">
+        <g id="Group_7577" data-name="Group 7577" transform="translate(16.325 4.183)" opacity="0">
+          <path id="Path_16922" data-name="Path 16922" d="M356.151,177.077l2.841-2.841a.8.8,0,0,0-1.134-1.134l-2.841,2.841-2.841-2.841a.8.8,0,0,0-1.134,1.134l2.841,2.841-2.841,2.841a.8.8,0,0,0,1.134,1.134l2.841-2.841,2.841,2.841a.8.8,0,0,0,1.134-1.134Z" transform="translate(-350.807 -172.867)" fill="#fff"/>
+        </g>
+        <g id="Group_7578" data-name="Group 7578" transform="translate(15.87 1.046)">
+          <path id="Path_16923" data-name="Path 16923" d="M393.77,158.368a.715.715,0,0,0-1.063.958,5.866,5.866,0,0,1,0,7.835.715.715,0,1,0,1.063.958,7.3,7.3,0,0,0,0-9.751Z" transform="translate(-389.89 -155.764)" fill="#fff"/>
+          <path id="Path_16924" data-name="Path 16924" d="M444.129,113.04a.716.716,0,0,0-1.063.958,9.411,9.411,0,0,1,0,12.571.715.715,0,1,0,1.063.958,10.842,10.842,0,0,0,0-14.487Z" transform="translate(-437.618 -112.804)" fill="#fff"/>
+          <path id="Path_16925" data-name="Path 16925" d="M342.344,203.689a.715.715,0,0,0-.053,1.01,2.313,2.313,0,0,1,0,3.1.715.715,0,1,0,1.063.958,3.744,3.744,0,0,0,0-5.011A.715.715,0,0,0,342.344,203.689Z" transform="translate(-342.108 -198.767)" fill="#fff"/>
+        </g>
+        <g id="Group_7579" data-name="Group 7579">
+          <path id="Path_16926" data-name="Path 16926" d="M0,168.454v5.34C0,174.9.668,175.8,1.492,175.8H4.271v-9.356H1.492C.668,166.446,0,167.345,0,168.454Z" transform="translate(0 -162.598)" fill="#fff"/>
+          <path id="Path_16927" data-name="Path 16927" d="M141.148,92.886a.682.682,0,0,0-.666-.027l-7.43,3.774v9.356l7.43,3.774a.682.682,0,0,0,.991-.608V93.467A.681.681,0,0,0,141.148,92.886Z" transform="translate(-128.102 -92.785)" fill="#fff"/>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>
