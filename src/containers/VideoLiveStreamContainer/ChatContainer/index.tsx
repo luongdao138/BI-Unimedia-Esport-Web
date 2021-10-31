@@ -392,15 +392,11 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
             setIsChatInBottom(true)
           }
 
-          const newMessagesDonate = savedDonateMess.filter(
-            (item) => +item.display_avatar_time > +realStreamingSecond 
-          )
+          const newMessagesDonate = savedDonateMess.filter((item) => +item.display_avatar_time > +realStreamingSecond)
           setMessagesDonate(newMessagesDonate)
         } else {
           // only check displaying of user donate icon
-          const newMessagesDonate = messagesDonate.filter(
-            (item) => +item.display_avatar_time > +realStreamingSecond
-          )
+          const newMessagesDonate = messagesDonate.filter((item) => +item.display_avatar_time > +realStreamingSecond)
           setMessagesDonate(newMessagesDonate)
         }
       }
@@ -890,7 +886,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       }
     }
     const getChatInputHeight = () => {
-      if(errors?.message) {
+      if (errors?.message) {
         return isDesktopDown1280 ? '99px' : '132.5px'
       } else {
         return isDesktopDown1280 ? '77px' : '116.5px'
@@ -898,10 +894,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     }
 
     const chatInputComponent = () => (
-      <Box
-        className={`${classes.chatInputMobileContainer}`}
-        style={{ bottom: isMobile ? '0px' : ('-' + getChatInputHeight()) }}
-      >
+      <Box className={`${classes.chatInputMobileContainer}`} style={{ bottom: isMobile ? '0px' : '-' + getChatInputHeight() }}>
         {purchaseDialogVisible && isMobile && purchaseInfoDialog()}
         {isEnabledChat &&
           (isStreaming ? (
