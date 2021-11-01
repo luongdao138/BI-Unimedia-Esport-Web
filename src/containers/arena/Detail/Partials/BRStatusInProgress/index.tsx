@@ -21,9 +21,17 @@ const BRStatusRecruiting: React.FC<BRStatusRecruitingProps> = ({ arena }) => {
   const dateInterval = `${TournamentHelper.formatDate(arena.attributes.start_date)} ～ ${TournamentHelper.formatDate(
     arena.attributes.end_date
   )}`
-  const { toParticipants, toGroupChat, isModerator, isTeamLeader, toMatches, isFreezed, isParticipant, isInterested } = useArenaHelper(
-    arena
-  )
+  const {
+    toParticipants,
+    toGroupChat,
+    isModerator,
+    isTeam,
+    isTeamLeader,
+    toMatches,
+    isFreezed,
+    isParticipant,
+    isInterested,
+  } = useArenaHelper(arena)
 
   return (
     <BRHeaderContent
@@ -50,7 +58,7 @@ const BRStatusRecruiting: React.FC<BRStatusRecruitingProps> = ({ arena }) => {
             {isFreezed ? (
               <>
                 <ESButton onClick={toParticipants} variant="outlined" fullWidth>
-                  {t('tournament.participants')}
+                  {t('tournament.br_participants', { isTeam })}
                 </ESButton>
                 <ActionLabelButton
                   variant="outlined"
@@ -80,7 +88,7 @@ const BRStatusRecruiting: React.FC<BRStatusRecruitingProps> = ({ arena }) => {
                 </ESButton>
                 {isModerator ? (
                   <ESButton variant="outlined" fullWidth onClick={toMatches}>
-                    {t('tournament.select_br_participants')}
+                    {t('tournament.select_br_participants', { isTeam })}
                   </ESButton>
                 ) : null}
                 <ActionLabelButton
