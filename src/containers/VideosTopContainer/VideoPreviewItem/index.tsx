@@ -27,10 +27,16 @@ const VideoPreviewItem: React.FC<VideoPreviewItemProps> = ({ data, containerStyl
     if (data.status === STATUS_VIDEO.LIVE_STREAM && data.scheduled_flag === LIVE_VIDEO_TYPE.LIVE) {
       vid = data?.user_id
     }
-    router.push({
-      pathname: ESRoutes.TOP,
-      query: { vid: vid },
-    })
+    router.push(
+      {
+        pathname: ESRoutes.TOP,
+        query: { vid: vid },
+      },
+      undefined,
+      {
+        shallow: true,
+      }
+    )
   }
 
   return (
