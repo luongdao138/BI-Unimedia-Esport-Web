@@ -155,6 +155,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: 'row',
     display: 'flex',
     justifyContent: 'center',
+
     color: Colors.white_opacity[70],
   },
   wrap_message_error: {
@@ -183,6 +184,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     textAlign: 'center',
   },
   content: {
+    wordBreak: 'break-all',
     padding: '64px 0 73px 0',
     [theme.breakpoints.down('sm')]: {
       paddingTop: 16,
