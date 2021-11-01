@@ -32,6 +32,7 @@ const RelatedVideos: React.FC<RelatedVideosProps> = ({ video_id }) => {
     }
     return () => {
       setPage(1)
+      setHasMore(true)
       resetRelatedVideoStream()
     }
   }, [video_id])
