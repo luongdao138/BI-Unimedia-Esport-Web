@@ -150,10 +150,16 @@ const VideoDetail: React.FC = () => {
       if (refChatContainer && refChatContainer.current) {
         refChatContainer.current.resetStates()
       }
-      router.replace({
-        pathname: ESRoutes.TOP,
-        query: { vid: detailVideoResult.uuid },
-      })
+      router.replace(
+        {
+          pathname: ESRoutes.TOP,
+          query: { vid: detailVideoResult.uuid },
+        },
+        undefined,
+        {
+          shallow: true,
+        }
+      )
     }
   }
 
