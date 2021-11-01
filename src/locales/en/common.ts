@@ -1644,6 +1644,7 @@ export default {
     live_stream_status: 'ライブ配信中',
     share_btn: 'シェア',
     channel_register: 'チャンネル登録',
+    channel_registered: '登録済み',
     register_person_label: '登録者数',
     streamer_name: '配信者の名前がはいります',
     archived_stream_video: 'アーカイブ',

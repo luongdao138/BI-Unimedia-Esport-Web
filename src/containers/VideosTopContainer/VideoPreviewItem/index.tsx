@@ -29,7 +29,7 @@ const VideoPreviewItem: React.FC<VideoPreviewItemProps> = ({ data, containerStyl
     }
     router.push({
       pathname: ESRoutes.TOP,
-      query: { vid },
+      query: { vid: vid },
     })
   }
 
