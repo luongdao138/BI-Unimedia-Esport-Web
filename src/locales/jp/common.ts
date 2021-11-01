@@ -1644,6 +1644,7 @@ export default {
     channel_register: 'チャンネル登録',
     register_person_label: '登録者数',
     streamer_name: '配信者の名前がはいります',
+    channel_registered: '登録済み',
     archived_stream_video: 'アーカイブ',
     premium_comment: 'プレミアムコメント',
     please_enter_a_comment: 'コメントを入力してください',
