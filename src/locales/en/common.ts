@@ -1575,6 +1575,8 @@ export default {
     use_point_information: '[動画] - チケット交換',
     no_data_used_point: '利用履歴がありません',
     no_data_purchase_point: '購入履歴がありません',
+    no_data_usage_point_history: '利用履歴がありません',
+    no_data_point_active_tab: '所持ポイントがありません',
   },
   purchase_point_tab: {
     point_number_select: '購入したいポイント数を選択',
@@ -1592,7 +1594,7 @@ export default {
     register_toggle_name: 'このカードを支払い手段に登録する（最大5枚）',
     title_delete_card: 'このカードの登録を削除する',
     clear_section: '選択をクリア',
-    btn_buy: '確認する',
+    btn_buy: '購入する',
     purchase_confirm: '購入確認',
     purchase_exe_points: '購入eXeポイント',
     purchase_fee: '購入料金',

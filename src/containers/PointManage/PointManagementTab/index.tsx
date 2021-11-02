@@ -12,8 +12,6 @@ import useMediaQuery from '@material-ui/core/useMediaQuery'
 const PointManagementTab: FC = () => {
   const classes = useStyles()
   const { getMyPointData, meta_my_points, myPointsData } = usePointsManage()
-  // const totalMyPoints = myPointsData?.total_point
-  // const listMyPointsData = myPointsData?.aggregate_points
   const totalPages = Math.ceil(myPointsData?.total / 10)
   const isLoading = meta_my_points.pending
   const theme = useTheme()
@@ -22,22 +20,12 @@ const PointManagementTab: FC = () => {
   const limit = 10
   const [page, setPage] = useState<number>(1)
 
-  // useEffect(() => {
-  //   if (!myPointsData) {
-  //     getMyPointData({ page: page, limit: limit })
-  //   }
-  //   return () => {
-  //     resetMyPointsActive()
-  //   }
-  // }, [])
-
   useEffect(() => {
     getMyPointData({ page: page, limit: limit })
   }, [page])
 
   const onChangePage = (_event: React.ChangeEvent<unknown>, value: number): void => {
     setPage(value)
-    // getMyPointData({ page: value, limit })
   }
   return (
     <Box className={classes.container}>
@@ -48,7 +36,7 @@ const PointManagementTab: FC = () => {
         {myPointsData?.aggregate_points?.length > 0 ? (
           <>
             {myPointsData?.aggregate_points.map((item, i) => (
-              <PointsPurchasedItem data={item} key={i} serialNumber={page > 1 ? (page - 1) * limit + i + 1 : i + 1} />
+              <PointsPurchasedItem key={item?.uuid || i} data={item} serialNumber={page > 1 ? (page - 1) * limit + i + 1 : i + 1} />
             ))}
             {totalPages > 1 && (
               <Box className={classes.paginationContainer}>
@@ -70,7 +58,7 @@ const PointManagementTab: FC = () => {
           </>
         ) : (
           <Box className={classes.noDataContainer}>
-            <Typography className={classes.noDataText}>{i18n.t('common:point_management_tab.no_data_purchase_point')}</Typography>
+            <Typography className={classes.noDataText}>{i18n.t('common:point_management_tab.no_data_point_active_tab')}</Typography>
           </Box>
         )}
       </Box>
@@ -99,11 +87,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderWidth: 1,
     borderColor: Colors.grey['200'],
     borderStyle: 'solid',
-    // marginTop: 18,
     marginTop: 16,
   },
   spacingBottom: {
-    // paddingBottom: 24,
     paddingBottom: 8,
   },
   paginationContainer: {
@@ -114,14 +100,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   noDataContainer: {
     backgroundColor: '#171717',
     alignItems: 'center',
-    // margin: 16,
     margin: 8,
     borderRadius: 4,
   },
   noDataText: {
-    // paddingTop: 16,
-    // paddingBottom: 16,
-    // paddingLeft: 16,
     padding: 8,
   },
   paginationStyle: {
