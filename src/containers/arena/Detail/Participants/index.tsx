@@ -104,7 +104,7 @@ const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
               </IconButton>
               <Box pl={2}>
                 <Typography variant="h2">
-                  {data.is_freezed ? t('common:tournament.participant.back') : t('common:tournament.entry_back')}
+                  {data.is_freezed ? t('common:tournament.participants', { isTeam }) : t('common:tournament.entry_back')}
                 </Typography>
               </Box>
             </Box>
