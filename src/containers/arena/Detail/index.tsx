@@ -1,5 +1,5 @@
 import { ReactNode } from 'react'
-import useTournamentDetail from '../hooks/useTournamentDetail'
+import useTournamentDetail, { useArenaClearResults } from '../hooks/useTournamentDetail'
 import TournamentDetailHeader from '@components/TournamentDetailHeader'
 import { TournamentStatus } from '@services/arena.service'
 import DetailInfo from '@containers/arena/Detail/Partials/DetailInfo'
@@ -24,6 +24,7 @@ import BRStatusComplete from './Partials/BRStatusComplete'
 
 const TournamentDetail: React.FC = () => {
   const { tournament, meta, userProfile, handleBack } = useTournamentDetail()
+  useArenaClearResults(tournament)
   const { toEdit, isBattleRoyale } = useArenaHelper(tournament)
   const router = useRouter()
 
