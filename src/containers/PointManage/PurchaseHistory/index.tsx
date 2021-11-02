@@ -80,7 +80,7 @@ const PurchaseHistory: FC = () => {
         {listPurchaseHistoryData?.length > 0 ? (
           <>
             {listPurchaseHistoryData.map((item, i) => (
-              <PurchaseHistoryItem data={item} key={i} serialNumber={page > 1 ? (page - 1) * limit + i + 1 : i + 1} />
+              <PurchaseHistoryItem key={item?.uuid || i} data={item} serialNumber={page > 1 ? (page - 1) * limit + i + 1 : i + 1} />
             ))}
             {totalPages > 1 && (
               <Box className={classes.paginationContainer}>
@@ -143,14 +143,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   noDataContainer: {
     backgroundColor: '#171717',
     alignItems: 'center',
-    // margin: 16,
     margin: 8,
     borderRadius: 4,
   },
   noDataText: {
-    // paddingTop: 16,
-    // paddingBottom: 16,
-    // paddingLeft: 16,
     padding: 8,
   },
   paginationStyle: {
