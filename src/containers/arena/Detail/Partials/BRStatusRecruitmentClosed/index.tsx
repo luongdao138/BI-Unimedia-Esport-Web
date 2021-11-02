@@ -64,7 +64,7 @@ const BRStatusRecruiting: React.FC<BRStatusRecruitingProps> = ({ arena, userProf
           <RemainingDate tournament={arena} />
           <ButtonGroup mt={3}>
             <ESButton onClick={toParticipants} variant="outlined" fullWidth style={{ maxWidth: 160 }}>
-              {isFreezed ? t('tournament.br_participants', { isTeam }) : t('tournament.entry_members')}
+              {isFreezed ? t('tournament.participants', { isTeam }) : t('tournament.entry_members')}
             </ESButton>
             {isModerator && !isFreezed ? (
               <ESButton variant="outlined" fullWidth onClick={toMatches}>

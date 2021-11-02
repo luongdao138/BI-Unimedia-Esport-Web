@@ -189,13 +189,14 @@ const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
 interface ParticipantsButtonProps {
   onClick?: MouseEventHandler<HTMLButtonElement>
   isFreezed: boolean
+  isTeam: boolean
 }
 
-export const ParticipantsButton: React.FC<ParticipantsButtonProps> = ({ onClick, isFreezed }) => {
+export const ParticipantsButton: React.FC<ParticipantsButtonProps> = ({ onClick, isFreezed, isTeam }) => {
   const { t } = useTranslation('common')
   return (
     <ESButton variant="outlined" fullWidth onClick={onClick}>
-      {isFreezed ? t('tournament.participants') : t('tournament.entry_members')}
+      {isFreezed ? t('tournament.participants', { isTeam }) : t('tournament.entry_members')}
     </ESButton>
   )
 }
