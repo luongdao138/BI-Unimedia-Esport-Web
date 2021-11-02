@@ -69,7 +69,7 @@ const BRStatusComplete: React.FC<BRStatusBRStatusCompleteProps> = ({ arena }) =>
               )}
               <ButtonGroup mt={3}>
                 <ESButton onClick={toParticipants} variant="outlined" fullWidth>
-                  {t('tournament.br_participants', { isTeam })}
+                  {t('tournament.participants', { isTeam })}
                 </ESButton>
                 {isModerator ? (
                   <ActionLabelButton variant="outlined" fullWidth onClick={toMatches}>
