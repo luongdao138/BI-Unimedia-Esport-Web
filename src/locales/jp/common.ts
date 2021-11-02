@@ -590,8 +590,7 @@ export default {
       },
       score_attack_errors: {
         format_invalid: 'スコアは半角数字で入力してください',
-        score_attack_max_exceeds: 'スコアを8桁までに入力して下さい。',
-        invalid_value: '半角数字を入力してください',
+        score_attack_max_exceeds: '入力上限は8桁となります',
       },
     },
     status: {

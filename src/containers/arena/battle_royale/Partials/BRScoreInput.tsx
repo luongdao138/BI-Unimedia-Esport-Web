@@ -59,7 +59,7 @@ const BRScoreInput: React.FC<
   return (
     <BRInput
       value={score.value}
-      inputProps={{ maxLength: 8 }}
+      // inputProps={{ maxLength: 8 }}
       style={{ color: hasError ? Colors.secondary : Colors.white_opacity[70] }}
       onChange={handleChange}
       placeholder={i18n.t('common:arena.not_entered')}
