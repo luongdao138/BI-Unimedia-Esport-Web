@@ -1638,6 +1638,7 @@ export default {
     exit_full_screen: '全画面モードの終了',
     previous: '10 秒巻き戻し',
     next: '10 秒早送り',
+    premium: 'プレミアム',
   },
   live_stream_screen: {
     program_info: '番組情報',

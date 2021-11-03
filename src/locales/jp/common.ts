@@ -1624,6 +1624,7 @@ export default {
     title_schedule_videos: '配信前動画',
     popular_category: '人気カテゴリー',
     view_more: 'もっと見る',
+    type_live_stream: 'ライブ配信中',
     no_data_text: '対象のコンテンツがありません。',
     view_count_text: '人 視聴中',
     view_count_schedule_text: '人 待機中',
@@ -1636,6 +1637,7 @@ export default {
     exit_full_screen: '全画面モードの終了',
     previous: '10 秒巻き戻し',
     next: '10 秒早送り',
+    premium: 'プレミアム',
   },
   live_stream_screen: {
     program_info: '番組情報',
