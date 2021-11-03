@@ -29,7 +29,7 @@ const SubActionButtons: React.FC<Props> = ({ lobby, openChat, openMemberList }) 
    * [1] Show other than ready, deleted, canceled status
    * [2] Different text for after confirmed
    */
-    if (status !== LOBBY_STATUS.READY && status !== LOBBY_STATUS.DELETED && status !== LOBBY_STATUS.CANCELLED) {
+    if (status !== LOBBY_STATUS.READY) {
       const buttonText = isFreezed ? i18n.t('common:lobby.buttons.member_list_confirmed') : i18n.t('common:lobby.buttons.member_list')
 
       return (
@@ -53,7 +53,7 @@ const SubActionButtons: React.FC<Props> = ({ lobby, openChat, openMemberList }) 
    * [4] Admin always sees except ready
    * [?] Additional condition might be needed for not selected user show or not
    */
-    if (status !== LOBBY_STATUS.READY && status !== LOBBY_STATUS.DELETED && status !== LOBBY_STATUS.CANCELLED && isOwner) {
+    if (status !== LOBBY_STATUS.READY && isOwner) {
       return (
         <Box className={classes.actionButton}>
           <LoginRequired>
@@ -68,13 +68,7 @@ const SubActionButtons: React.FC<Props> = ({ lobby, openChat, openMemberList }) 
           </LoginRequired>
         </Box>
       )
-    } else if (
-      status !== LOBBY_STATUS.READY &&
-      status !== LOBBY_STATUS.DELETED &&
-      status !== LOBBY_STATUS.CANCELLED &&
-      status !== LOBBY_STATUS.ENDED &&
-      participantStatus === LOBBY_PARTICIPANT_STATUS.ENTERED
-    ) {
+    } else if (status !== LOBBY_STATUS.READY && status !== LOBBY_STATUS.ENDED && participantStatus === LOBBY_PARTICIPANT_STATUS.ENTERED) {
       return (
         <Box className={classes.actionButton}>
           <LoginRequired>
@@ -89,13 +83,7 @@ const SubActionButtons: React.FC<Props> = ({ lobby, openChat, openMemberList }) 
           </LoginRequired>
         </Box>
       )
-    } else if (
-      status !== LOBBY_STATUS.READY &&
-      status !== LOBBY_STATUS.DELETED &&
-      status !== LOBBY_STATUS.CANCELLED &&
-      afterClosed.includes(status) &&
-      participantStatus === LOBBY_PARTICIPANT_STATUS.SELECTED
-    ) {
+    } else if (status !== LOBBY_STATUS.READY && afterClosed.includes(status) && participantStatus === LOBBY_PARTICIPANT_STATUS.SELECTED) {
       return (
         <Box className={classes.actionButton}>
           <LoginRequired>
@@ -114,7 +102,7 @@ const SubActionButtons: React.FC<Props> = ({ lobby, openChat, openMemberList }) 
   }
 
   const renderSpacing = () => {
-    if (status !== LOBBY_STATUS.READY && status !== LOBBY_STATUS.DELETED && status !== LOBBY_STATUS.CANCELLED) {
+    if (status !== LOBBY_STATUS.READY) {
       return <Box mt={2} />
     }
   }
