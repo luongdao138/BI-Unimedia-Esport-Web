@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
 import { createMetaSelector } from '@store/metadata/selectors'
@@ -46,7 +46,6 @@ const useTournamentDetail = (): {
   useEffect(() => {
     return function () {
       dispatch(clearMetaData(actions.getTournamentDetail.typePrefix))
-      dispatch(actions.clearArenaDetail())
     }
   }, [])
 
@@ -63,20 +62,3 @@ const useTournamentDetail = (): {
 }
 
 export default useTournamentDetail
-
-export const useArenaClearResults = (arena: TournamentDetail) => {
-  const dispatch = useAppDispatch()
-  const completedRef = useRef(false)
-  useEffect(() => {
-    if (arena?.attributes?.status === 'completed') {
-      completedRef.current = true
-    }
-  }, [arena])
-  useEffect(() => {
-    return function () {
-      if (completedRef.current) {
-        dispatch(actions.clearArenaWinners())
-      }
-    }
-  }, [])
-}
