@@ -21,7 +21,7 @@ const SubActionButtons: React.FC<Props> = ({ lobby, openChat, openMemberList }) 
   const isOwner = _.get(lobby, 'attributes.is_owner', false)
   const participantStatus: LOBBY_PARTICIPANT_STATUS | null = _.get(lobby, 'attributes.participant_status', null)
 
-  const afterClosed = [LOBBY_STATUS.ENTRY_CLOSED, LOBBY_STATUS.IN_PROGRESS, LOBBY_STATUS.ENDED]
+  const afterClosed = [LOBBY_STATUS.ENTRY_CLOSED, LOBBY_STATUS.IN_PROGRESS, LOBBY_STATUS.ENDED, LOBBY_STATUS.CANCELLED]
 
   const renderMemberList = () => {
     /*
