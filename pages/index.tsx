@@ -2,11 +2,29 @@ import TopContainer from '@containers/Top'
 import PlainLayout from '@layouts/PlainLayout'
 import PageWithLayoutType from '@constants/page'
 import i18n from '@locales/i18n'
-const TopPage: PageWithLayoutType = () => {
-  return <TopContainer />
-}
+import { useRouter } from 'next/router'
+import StreamLayout from '@layouts/StreamLayout'
+import VideoLiveStreamContainer from '@containers/VideoLiveStreamContainer'
 
-TopPage.Layout = PlainLayout
+const TopPage: PageWithLayoutType = () => {
+  const router = useRouter()
+  // https://github.com/vercel/next.js/discussions/11484#discussioncomment-60563
+  // [CW] Check type video, edit url of video detail and add preview item (lazy load item video top)
+  const queryKey = 'vid'
+  const video_id = router.query[queryKey] || router.asPath.match(new RegExp(`[&?]${queryKey}=(.*)(&|$)`))
+  if (!video_id) {
+    return (
+      <PlainLayout>
+        <TopContainer />
+      </PlainLayout>
+    )
+  }
+  return (
+    <StreamLayout minimizeLayout loginRequired={false} footer={false}>
+      <VideoLiveStreamContainer />
+    </StreamLayout>
+  )
+}
 
 export async function getStaticProps(): Promise<{
   props: {

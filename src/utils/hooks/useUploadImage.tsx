@@ -1,5 +1,5 @@
 import { UPLOADER_TYPE, ACTION_TYPE } from '@constants/image.constants'
-import { getPreSignedUrl, upload, getLobbyPreSignedUrl } from '@services/image.service'
+import { getPreSignedUrl, upload, getLobbyPreSignedUrl, getThumbnailPreSignedUrl } from '@services/image.service'
 import { useState } from 'react'
 
 const useUploadImage = (): {
@@ -7,6 +7,7 @@ const useUploadImage = (): {
   uploadArenaTeamImage: (file: File, blob: any, id: number, isCreate: boolean, onSuccess: (imageUrl: string) => void) => void
   uploadArenaCoverImage: (file: File, blob: any, id: number, isCreate: boolean, onSuccess: (imageUrl: string) => void) => void
   uploadArenaSummaryImage: (file: File, blob: any, id: number, isCreate: boolean, onSuccess: (imageUrl: string) => void) => void
+  uploadLiveStreamThumbnailImage: (file: File, blob: any, onSuccess: (imageUrl: string) => void) => void
   uploadCommentImage: (file: File, blob: any, onSuccess: (imageUrl: string) => void) => void
   uploadLobbyCoverImage: (file: File, blob: any, id: number, isCreate: boolean, onSuccess: (imageUrl: string) => void) => void
   isUploading: boolean
@@ -104,6 +105,21 @@ const useUploadImage = (): {
     }
   }
 
+  //[CW] upload thumbnail live stream
+  const uploadThumbnail = async (file, blob, params, onSuccess) => {
+    setIsUploading(true)
+
+    try {
+      const res = await getThumbnailPreSignedUrl(params)
+      await upload(blob ? blob : file, res.url, (_progress) => setProgress(_progress))
+      onSuccess(`https://${res.file_url}`)
+    } catch (error) {
+      setHasError(true)
+    } finally {
+      setIsUploading(false)
+    }
+  }
+
   const uploadLobbyImage = async (file, blob, params, onSuccess) => {
     setIsUploading(true)
 
@@ -118,6 +134,19 @@ const useUploadImage = (): {
     }
   }
 
+  //[CW] upload thumbnail live stream
+  const uploadLiveStreamThumbnailImage = async (file, blob, onSuccess) => {
+    await uploadThumbnail(
+      file,
+      blob,
+      {
+        thumbnail: file.name,
+        contentType: file.type,
+      },
+      onSuccess
+    )
+  }
+
   return {
     progress,
     isUploading,
@@ -126,6 +155,7 @@ const useUploadImage = (): {
     uploadArenaCoverImage,
     uploadArenaSummaryImage,
     uploadCommentImage,
+    uploadLiveStreamThumbnailImage,
     uploadLobbyCoverImage,
   }
 }

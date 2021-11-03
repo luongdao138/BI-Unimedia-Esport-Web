@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+  <g id="Group_7626" data-name="Group 7626" transform="translate(-177 -4.999)">
+    <g id="Group_7640" data-name="Group 7640">
+      <g id="Group_7678" data-name="Group 7678" transform="translate(-833 2)">
+        <g id="長方形_3127" data-name="長方形 3127" transform="translate(26.91 2.999)">
+          <path id="Path_16935" data-name="Path 16935" d="M988.09,324.69v5h-5v-3a2,2,0,0,1,2-2Z" transform="translate(0 -324.69)" fill="none"/>
+          <path id="Path_16936" data-name="Path 16936" d="M988.09,335.69v5h-3a2.006,2.006,0,0,1-2-2v-3Z" transform="translate(0 -324.69)" fill="none"/>
+          <path id="Path_16937" data-name="Path 16937" d="M999.09,335.69v3a2,2,0,0,1-2,2h-3v-5Z" transform="translate(0 -324.69)" fill="none"/>
+          <path id="Path_16938" data-name="Path 16938" d="M999.09,326.69v3h-5v-5h3A1.993,1.993,0,0,1,999.09,326.69Z" transform="translate(0 -324.69)" fill="none"/>
+          <path id="Path_16939" data-name="Path 16939" d="M984.09,338.69v-3h-1v3a2.006,2.006,0,0,0,2,2h3v-1h-3A1,1,0,0,1,984.09,338.69Zm1-14a2,2,0,0,0-2,2v3h1v-3a1,1,0,0,1,1-1h3v-1Zm13,14a1,1,0,0,1-1,1h-3v1h3a2,2,0,0,0,2-2v-3h-1Zm-1-14h-3v1h3a1,1,0,0,1,1,1v3h1v-3A1.993,1.993,0,0,0,997.09,324.69Z" transform="translate(0 -324.69)" fill="#fff"/>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

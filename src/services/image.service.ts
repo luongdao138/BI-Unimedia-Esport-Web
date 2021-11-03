@@ -39,6 +39,12 @@ export const getCoverPreSignedUrl = async (params: CoverPresignedDataParams): Pr
   return data
 }
 
+//[CW] upload thumbnail live stream
+export const getThumbnailPreSignedUrl = async (params: PresignedDataParams): Promise<any> => {
+  const { data } = await api.post<any>(URI.S3_THUMBNAIL_PRESIGNED_URL, params)
+  return data
+}
+
 export const upload = async (file: File, signed_url: string, uploadListener?: (p: number) => void): Promise<any> => {
   const { status } = await axios.put(signed_url, file, {
     onUploadProgress: (ProgressEvent) => {

@@ -23,6 +23,7 @@ export const calculateDimensions = (width: number, height: number, S_W: number, 
   }
   return { height: h, width: w }
 }
+
 export const calculateDimensionsCover = (width: number, height: number, S_W: number, S_H: number): { height: number; width: number } => {
   let h = height,
     w = width,
@@ -30,6 +31,26 @@ export const calculateDimensionsCover = (width: number, height: number, S_W: num
   w = S_W
   h = h * gap
   if (h * 4 < w) {
+    gap = S_H / h
+    h = S_H
+    w = w * gap
+  }
+  return { height: h, width: w }
+}
+
+// [CW] Calculate dimension thumbnail of setting livestream
+export const calculateDimensionsThumbStream = (
+  width: number,
+  height: number,
+  S_W: number,
+  S_H: number
+): { height: number; width: number } => {
+  let h = height,
+    w = width,
+    gap = S_W / w
+  w = S_W
+  h = h * gap
+  if (h * 16 < w * 9) {
     gap = S_H / h
     h = S_H
     w = w * gap
