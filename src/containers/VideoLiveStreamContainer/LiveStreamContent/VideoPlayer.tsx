@@ -258,7 +258,11 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       hls.on(Hls.Events.MEDIA_ATTACHED, handleMedia)
     }
     return () => {
-      hls.detachMedia()
+      if (hls && src) {
+        hls.detachMedia()
+        hls.destroy()
+        hls.stopLoad()
+      }
     }
   }, [src])
 
