@@ -300,8 +300,6 @@ export const getRecommendedUsersByName = createAsyncThunk<services.RecommendedUs
 
 export const clearRecommendedUsers = createAction(CLEAR_RECOMMENDED_USERS)
 export const clearTournamentResult = createAction(CLEAR_TOURNAMENT_RESULT)
-export const clearArenaDetail = createAction(types.CLEAR_ARENA_DETAIL)
-export const clearArenaWinners = createAction(types.CLEAR_ARENA_WINNERS)
 
 export const createTournament = createAsyncThunk<services.CreateTournamentResponse, services.TournamentFormParams>(
   types.CREATE_TOURNAMENT,
