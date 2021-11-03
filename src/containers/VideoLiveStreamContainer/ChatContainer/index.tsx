@@ -392,15 +392,11 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
             setIsChatInBottom(true)
           }
 
-          const newMessagesDonate = savedDonateMess.filter(
-            (item) => +item.display_avatar_time > +realStreamingSecond && +item.video_time <= +realStreamingSecond
-          )
+          const newMessagesDonate = savedDonateMess.filter((item) => +item.display_avatar_time > +realStreamingSecond)
           setMessagesDonate(newMessagesDonate)
         } else {
           // only check displaying of user donate icon
-          const newMessagesDonate = messagesDonate.filter(
-            (item) => +item.display_avatar_time > +realStreamingSecond && +item.video_time <= +realStreamingSecond
-          )
+          const newMessagesDonate = messagesDonate.filter((item) => +item.display_avatar_time > +realStreamingSecond)
           setMessagesDonate(newMessagesDonate)
         }
       }
