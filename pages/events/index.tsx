@@ -4,6 +4,8 @@ import Events from '@containers/Events/FreeStreamEvents'
 import LiveThemeProvider from '@theme/live/LiveThemeProvider'
 import { ESRoutes } from '@constants/route.constants'
 import withAuth from '@utils/withAuth'
+import { useRouter } from 'next/router'
+import { useEffect } from 'react'
 
 interface IProps {
   banners: string[]
@@ -39,6 +41,11 @@ export async function getStaticProps(): Promise<{
 }
 
 const EventsPage: React.FC<IProps> = (props) => {
+  const router = useRouter()
+  useEffect(() => {
+    router.replace(ESRoutes.VIDEO_TOP)
+  }, [])
+
   return (
     <MainLayout>
       <LiveThemeProvider>

@@ -8,9 +8,12 @@ type StateType = {
   searchUsersMeta?: Meta
   type: number
   keyword: string
+  //[CW] only search video
+  typeSearchVideo: number
+  categoryID: number
 }
 
-const initialState: StateType = { searchUsers: [], type: searchTypes.USER, keyword: '' }
+const initialState: StateType = { searchUsers: [], type: searchTypes.USER, keyword: '', typeSearchVideo: searchTypes.VIDEO, categoryID: 0 }
 
 export default createReducer(initialState, (builder) => {
   builder.addCase(actions.userSearch.fulfilled, (state, action) => {
@@ -22,14 +25,29 @@ export default createReducer(initialState, (builder) => {
     state.searchUsers = tmpSearchUsers
     state.searchUsersMeta = action.payload.meta
   })
-
+  //[CW] stored search type state when back on search screen.
   builder.addCase(actions.setSearchParams, (state, action) => {
-    state.type = action.payload.type
+    if (action.payload.type !== searchTypes.VIDEO) {
+      state.type = action.payload.type
+    } else {
+      state.typeSearchVideo = action.payload.type
+    }
     state.keyword = action.payload.keyword
   })
 
   builder.addCase(actions.resetSearchUsers, (state) => {
     state.searchUsers = []
     state.searchUsersMeta = undefined
+  })
+
+  //[CW] only search video
+  builder.addCase(actions.setSearchVideoParams, (state, action) => {
+    state.typeSearchVideo = action.payload.type
+    state.keyword = action.payload.keyword
+  })
+
+  builder.addCase(actions.setCategoryIdParams, (state, action) => {
+    state.typeSearchVideo = action.payload.type
+    state.categoryID = action.payload.category_id
   })
 })

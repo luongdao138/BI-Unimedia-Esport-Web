@@ -40,6 +40,11 @@ i18n
             return 'チーム'
           }
           return 'ユーザー'
+        } else if (format === 'member_type') {
+          if (value === true) {
+            return 'チーム'
+          }
+          return 'メンバー'
         } else if (format === 'arena_rule') {
           switch (value) {
             case 'single': {

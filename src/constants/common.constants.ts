@@ -2,11 +2,13 @@ import i18n from '@locales/i18n'
 import { Dialog } from '@store/common/actions/types'
 import { ConfirmOptions } from '@components/Confirm/types'
 
+export const debounceTime = 700
 export const searchTypes = {
   USER: 1,
   COMMUNITY: 2,
   TOURNAMENT: 3,
   LOBBY: 4,
+  VIDEO: 5,
 }
 
 export const searchOptions = [
@@ -25,6 +27,14 @@ export const searchOptions = [
   {
     value: searchTypes.COMMUNITY,
     name: i18n.t('common:search.community'),
+  },
+  // {
+  //   value: searchTypes.RECRUITMENT,
+  //   name: 'ロビー',
+  // },
+  {
+    value: searchTypes.VIDEO,
+    name: '動画',
   },
 ]
 
@@ -91,6 +101,7 @@ export enum REPORT_TYPE {
   TOPIC_COMMENT = 4,
   LOBBY = 5,
   TOURNAMENT = 6,
+  VIDEO_STREAM = 7,
 }
 
 export const CHAT_CONSTANTS = {
@@ -192,3 +203,141 @@ export const defaultConfirmationOptions: ConfirmOptions = {
 }
 
 export const AVATAR_PATH = '/images/avatar_o.png'
+export const FORMAT_DATE_TIME_JP = 'YYYY年MM月DD日 HH:mm'
+export const FORMAT_SCHEDULE_TIME = 'YYYY年MM月DD日HH時mm分'
+export const FORMAT_DATE_SIMPLE = 'YYYY年MM月DD日'
+export const FORMAT_DATE_ARCHIVED = 'YYYY/MM/DD'
+export const FORMAT_YEAR_MONTH = 'YYYY年MM月'
+export const FORMAT_YEAR_MONTH_FILTER = 'YYYY/MM'
+export const FORMAT_TIME_SIMPLE = 'HH時mm分'
+
+export const POINTS = [500, 1000, 2000, 3000, 5000, 10000]
+export const TAX = 0.1
+
+export const OTHER_CARD = 0
+export const JCB_CARD = 1
+export const MASTER_CARD = 2
+export const VISA_CARD = 3
+export const AMEX_CARD = 4
+
+export const CARD_TYPES = [
+  {
+    value: 0,
+    code: 'other',
+    label: 'Other',
+  },
+  {
+    value: 1,
+    code: 'jcb',
+    label: 'JCB',
+  },
+  {
+    value: 2,
+    code: 'master_card',
+    label: 'Master',
+  },
+  {
+    value: 3,
+    code: 'visa',
+    label: 'Visa',
+  },
+  {
+    value: 4,
+    code: 'amex',
+    label: 'American Express',
+  },
+]
+
+export const REGEX_DETECT_BRANCH = [
+  { value: AMEX_CARD, branch: 'AMEX', regex: /^3[47][0-9]{13}$/ },
+  { value: VISA_CARD, branch: 'VISA', regex: /^4[0-9]{12}(?:[0-9]{3})?$/ },
+  { value: MASTER_CARD, branch: 'MASTER', regex: /^5[1-5][0-9]{14}$/ },
+  { value: JCB_CARD, branch: 'JCB', regex: /^(?:2131|1800|35\d{3})\d{11}$/ },
+]
+
+export const TOKEN_ERROR = {
+  '000': 'トークン取得正常終了',
+  '100': 'カード番号必須チェックエラー',
+  '101': 'カード番号フォーマットエラー(数字以外を含む)',
+  '102': 'カード番号フォーマットエラー(10-16 桁の範囲外)',
+  '110': '有効期限必須チェックエラー',
+  '111': '有効期限フォーマットエラー(数字以外を含む)',
+  '112': '有効期限フォーマットエラー(6 又は 4 桁以外)',
+  '113': '有効期限フォーマットエラー(月が 13 以上)',
+  '121': 'セキュリティコードフォーマットエラー(数字以外を含む)',
+  '122': 'セキュリティコード桁数エラー',
+  '131': '名義人フォーマットエラー(半角英数字、一部の記号以外を含む)',
+  '132': '名義人フォーマットエラー(51 桁以上)',
+  '141': '発行数フォーマットエラー(数字以外を含む)',
+  '142': '発行数フォーマットエラー(1-10 の範囲外)',
+  '150': 'カード情報を暗号化した情報必須チェックエラー',
+  '160': 'ショップ ID 必須チェックエラー',
+  '161': 'ショップ ID フォーマットエラー(14 桁以上)',
+  '162': 'ショップ ID フォーマットエラー(半角英数字以外)',
+  '170': '公開鍵ハッシュ値必須チェックエラー',
+  '180': 'ショップ ID または公開鍵ハッシュ値がマスターに存在しない',
+  '190': 'カード情報(Encrypted)が復号できない',
+  '191': 'カード情報(Encrypted)復号化後フォーマットエラー',
+  '501': 'トークン用パラメータ(id)が送信されていない',
+  '502': 'トークン用パラメータ(id)がマスターに存在しない',
+  '511': 'トークン用パラメータ(cardInfo)が送信されていない',
+  '512': 'トークン用パラメータ(cardInfo)が復号できない',
+  '521': 'トークン用パラメータ(key)が送信されていない',
+  '522': 'トークン用パラメータ(key)が復号できない',
+  '531': 'トークン用パラメータ(callBack)が送信されていない',
+  '541': 'トークン用パラメータ(hash)が存在しない',
+  '551': 'トークン用 apikey が存在しない ID',
+  '552': 'トークン用 apikey が有効ではない',
+  '901': 'マルチペイメント内部のシステムエラー',
+  '902': '処理が混み合っている',
+}
+
+export const GMO_ERROR_CODE = {
+  E92000001: '只今、大変混み合っています\n\nしばらくお時間を空けて、再度ご購入手続きをお願いいたします',
+  E92000002: '只今、大変混み合っています\n\nしばらくお時間を空けて、再度ご購入手続きをお願いいたします',
+  E01230009: 'カードの最大登録可能枚数を超えています\n\n登録中のカード情報を削除してから再度お試しください',
+}
+
+export const EVENT_LIVE_STATUS = {
+  STREAM_END: 'STREAM_END',
+  STREAM_FAILURE: 'STREAM_FAILURE',
+  STARVATION_START: 'STARVATION_START',
+  STARVATION_END: 'STARVATION_END',
+  INGEST_BITRATE: 'INGEST_BITRATE',
+  INGEST_RESOLUTION: 'INGEST_RESOLUTION',
+  CONCURRENT_BROADCASTS: 'CONCURRENT_BROADCASTS',
+  CONCURRENT_VIEWERS: 'CONCURRENT_VIEWERS',
+  RECORDING_START: 'RECORDING_START',
+  RECORDING_END: 'RECORDING_END',
+  RECORDING_START_FAILURE: 'RECORDING_START_FAILURE',
+  RECORDING_END_FAILURE: 'RECORDING_END_FAILURE',
+  RECORDING_ARCHIVED: 'RECORDING_ARCHIVED',
+  STREAM_START: 'STREAM_START',
+}
+
+export const STATUS_SEND_MESS = {
+  PENDING: 1,
+  LOADED: 2,
+  ERROR_SEND: 3,
+  ERROR_DELETE: 4,
+}
+
+export const LIVE_VIDEO_TYPE = {
+  LIVE: 0,
+  SCHEDULE: 1,
+}
+
+export const DELAY_SECONDS = 8
+
+export const EVENT_STATE_CHANNEL = {
+  CREATING: 'CREATING',
+  CREATE_FAILED: 'CREATE_FAILED',
+  IDLE: 'IDLE',
+  STARTING: 'STARTING',
+  RUNNING: 'RUNNING',
+  RECOVERING: 'RECOVERING',
+  STOPPING: 'STOPPING',
+  STOPPED: 'STOPPED',
+  DELETING: 'DELETING',
+  DELETED: 'DELETED',
+}

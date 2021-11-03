@@ -19,7 +19,6 @@ export type ErrorType = {
   time_attack_invalid_value?: boolean
   score_attack_format_invalid?: boolean
   score_attack_max_exceeds?: boolean
-  score_attack_invalid_value?: boolean
   placement_min_max_range_invalid?: boolean
 }
 

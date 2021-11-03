@@ -25,6 +25,7 @@ const SubActionButtons: React.FC<Props> = ({ tournament }) => {
     isReady,
     isRecruiting,
     isModerator,
+    isTeam,
     toParticipants,
   } = useArenaHelper(tournament)
   const isFreezed = tournament?.attributes?.is_freezed
@@ -36,7 +37,7 @@ const SubActionButtons: React.FC<Props> = ({ tournament }) => {
         {isCompleted ? (
           <>
             <Box className={classes.actionButton}>
-              <ParticipantsButton isFreezed={isFreezed} onClick={toParticipants} />
+              <ParticipantsButton isFreezed={isFreezed} onClick={toParticipants} isTeam={isTeam} />
             </Box>
 
             <Box className={classes.actionButton}>
@@ -55,7 +56,7 @@ const SubActionButtons: React.FC<Props> = ({ tournament }) => {
             {isReady || isRecruiting ? (
               <>
                 <Box className={classes.actionButton}>
-                  <ParticipantsButton isFreezed={isFreezed} onClick={toParticipants} />
+                  <ParticipantsButton isFreezed={isFreezed} onClick={toParticipants} isTeam={isTeam} />
                 </Box>
                 {(isModerator || isEntered) && (
                   <Box className={classes.actionButton}>
@@ -76,7 +77,7 @@ const SubActionButtons: React.FC<Props> = ({ tournament }) => {
             ) : (
               <>
                 <Box className={classes.actionButton}>
-                  <ParticipantsButton isFreezed={isFreezed} onClick={toParticipants} />
+                  <ParticipantsButton isFreezed={isFreezed} onClick={toParticipants} isTeam={isTeam} />
                 </Box>
                 <Box className={classes.actionButton}>
                   <LoginRequired>
