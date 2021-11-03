@@ -48,6 +48,11 @@ const VideoPreviewItem: React.FC<VideoPreviewItemProps> = ({ data, containerStyl
             <Typography className={classes.tagStyle}>{t('common:videos_top_tab.type_live_stream')}</Typography>
           </Box>
         )}
+        {data?.status === 2 && data?.use_ticket === 1 && (
+          <Box className={classes.premiumTagContainer}>
+            <Typography className={classes.tagStyle}>{t('common:videos_top_tab.premium')}</Typography>
+          </Box>
+        )}
         {/* <Box className={classes.previewUser}> */}
         {/* <img src={data?.user_avatar ? data.user_avatar : IMG_PLACEHOLDER} className={classes.previewUser} /> */}
         {/* </Box> */}
@@ -110,6 +115,17 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: '#FF4786',
     marginTop: 10,
     marginLeft: 10,
+  },
+  premiumTagContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 3,
+    position: 'absolute',
+    backgroundColor: '#212121',
+    marginTop: 10,
+    marginLeft: 10,
+    filter: 'drop-shadow(0px 0px 2px #FFFFFF)',
   },
   tagStyle: {
     textAlign: 'center',
