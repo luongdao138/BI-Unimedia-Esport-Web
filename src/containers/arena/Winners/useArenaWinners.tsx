@@ -92,10 +92,14 @@ const useWinners = (isImmediately = true) => {
 
 function hasWinnersData(arenaWinners: ArenaWinners): boolean {
   if (!arenaWinners) return false
-  for (const i of Object.keys(arenaWinners)) {
-    if (arenaWinners[i].length) return false
-  }
-  return true
+  let hasData = false
+  Object.keys(arenaWinners).forEach((place) => {
+    const placement = arenaWinners[place]
+    if (!!placement && placement.length > 0) {
+      hasData = true
+    }
+  })
+  return hasData
 }
 
 export default useWinners
