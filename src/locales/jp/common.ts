@@ -1649,7 +1649,7 @@ export default {
     streamer_name: '配信者の名前がはいります',
     channel_registered: '登録済み',
     archived_stream_video: 'アーカイブ',
-    premium_comment: 'プレミアムコメント',
+    premium_comment: 'プレミアムチャット',
     please_enter_a_comment: 'コメントを入力してください',
     send: '送る',
     purchase_points: 'ポイント購入',
