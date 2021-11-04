@@ -189,7 +189,7 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
         <Icon className={`far fa-heart ${classes.heartIcon}`} fontSize="small" />
       </Box>
       <Box pl={1} className={classes.subscribeLabel}>
-        {t('live_stream_screen.channel_register')}
+        {isSubscribed() ? t('live_stream_screen.channel_registered') : t('live_stream_screen.channel_register')}
       </Box>
     </ButtonBase>
   )

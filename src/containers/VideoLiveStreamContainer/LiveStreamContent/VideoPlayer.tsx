@@ -38,7 +38,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   // startLive,
   // endLive,
   isArchived,
-  type,
+  // type,
   videoType,
 }) => {
   const checkStatusVideo = 1
@@ -258,7 +258,11 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       hls.on(Hls.Events.MEDIA_ATTACHED, handleMedia)
     }
     return () => {
-      hls.detachMedia()
+      if (hls && src) {
+        hls.detachMedia()
+        hls.destroy()
+        hls.stopLoad()
+      }
     }
   }, [src])
 
@@ -587,7 +591,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
                 onChangeVolDrag={handleChangeVolDrag}
                 volume={volume}
                 isLive={isLive}
-                videoStatus={type}
+                videoStatus={videoType}
                 onReloadTime={handleReloadTime}
                 handleOnRestart={handleOnRestart}
               />

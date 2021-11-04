@@ -246,4 +246,10 @@ export default createReducer(initialState, (builder) => {
   builder.addCase(actions.getBattleRoyaleWinners.fulfilled, (state, action) => {
     state.tournamentParticipants = action.payload.data
   })
+  builder.addCase(actions.summaryTournament.fulfilled, (state, action) => {
+    if (state.tournamentDetail?.attributes) {
+      state.tournamentDetail.attributes.summary = action.meta.arg.data.value
+      state.tournamentDetail.attributes.summary_image = action.meta.arg.data.summary_image_url
+    }
+  })
 })
