@@ -46,6 +46,7 @@ const SummaryModal: React.FC<SummaryModalProps> = ({ tournament, open, handleClo
       summary_image: data.summary_image,
     },
     validationSchema,
+    enableReinitialize: true,
     onSubmit: (values) => {
       if (_.isEmpty(checkNgWord(values.summary))) {
         summary({ data: { summary_image_url: values.summary_image, value: values.summary }, hash_key: data.hash_key })
