@@ -502,7 +502,6 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       videoEl.current.play()
     }
   }
-  // console.log('video isFullScreen >>>>>>>>>>>>>>', videoEl?.current?.webkitPresentationMode)
 
   const handleOnRestart = () => {
     setIsStreaming(false)
@@ -525,15 +524,14 @@ const VideoPlayer: React.FC<PlayerProps> = ({
             playsInline
             preload={'auto'}
             controlsList="noplaybackrate foobar"
-            // onSeeked
           >
             <source src={src} type={'video/MP4'} />
           </video>
         </div>
       )}
-      <div ref={playerContainerRef} className={classes.playerContainer}>
-        <div style={{ height: '100%' }} onClick={handlePlayPauseOut}>
-          {!isMobile && !androidPl && !iPhonePl && (
+      {!isMobile && !androidPl && !iPhonePl && (
+        <div ref={playerContainerRef} className={classes.playerContainer}>
+          <div style={{ height: '100%' }} onClick={handlePlayPauseOut}>
             <video
               id="video"
               ref={videoEl}
@@ -542,32 +540,30 @@ const VideoPlayer: React.FC<PlayerProps> = ({
               autoPlay={autoPlay}
               // className={classes.video}
             />
-          )}
 
-          {!androidPl && !iPhonePl && !mediaOverlayIsShown && loading && (
-            <div className={classes.playOverView}>
-              {videoLoaded && (
-                <div
-                  className={classes.thumbBegin}
-                  style={{
-                    backgroundImage: `url(${thumbnail ?? '/images/live_stream/thumbnail_default.png'})`,
-                    backgroundSize: 'cover',
-                  }}
-                >
-                  <div className={classes.loadingThumbBlur} />
-                </div>
-              )}
-              {ended || !playing ? (
-                <Icon className={`fas fa-play ${classes.fontSizeLarge}`} />
-              ) : (
-                <div className={classes.showLoader}>
-                  <ESLoader />
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-        {!androidPl && !iPhonePl && (
+            {!androidPl && !iPhonePl && !mediaOverlayIsShown && loading && (
+              <div className={classes.playOverView}>
+                {videoLoaded && (
+                  <div
+                    className={classes.thumbBegin}
+                    style={{
+                      backgroundImage: `url(${thumbnail ?? '/images/live_stream/thumbnail_default.png'})`,
+                      backgroundSize: 'cover',
+                    }}
+                  >
+                    <div className={classes.loadingThumbBlur} />
+                  </div>
+                )}
+                {ended || !playing ? (
+                  <Icon className={`fas fa-play ${classes.fontSizeLarge}`} />
+                ) : (
+                  <div className={classes.showLoader}>
+                    <ESLoader />
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
           <div className={classes.processControl}>
             <SeekBar
               videoRef={videoEl}
@@ -597,23 +593,8 @@ const VideoPlayer: React.FC<PlayerProps> = ({
               />
             </div>
           </div>
-        )}
-        {/* {loading && (
-          <div
-            className={classes.loading}
-            style={{
-              ...((!videoLoaded || playState === 'Buffering') && {
-                backgroundImage: `url(${thumbnail ?? '/images/live_stream/thumbnail_default.png'})`,
-              }),
-              ...(videoLoaded && { backgroundImage: '' }),
-              backgroundSize: 'cover',
-            }}
-          >
-            <ESLoader />
-          </div>
-        )}
-        {errorVideo && <div className={classes.loading} />} */}
-        {/* {visible.videoError && (
+          {/*errorVideo && <div className={classes.loading} />} */}
+          {/* {visible.videoError && (
           <div className={classes.overViewError}>
             <div
               className={classes.thumbBegin}
@@ -632,7 +613,8 @@ const VideoPlayer: React.FC<PlayerProps> = ({
             </Box>
           </div>
         )} */}
-      </div>
+        </div>
+      )}
     </div>
   )
 }
