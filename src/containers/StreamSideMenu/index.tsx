@@ -21,6 +21,7 @@ import { useTheme } from '@material-ui/core/styles'
 import SideFooter from '@containers/SideMenu/SideFooter'
 import AppDialog from '@containers/SideMenu/AppDialog'
 import usePointsManage from '@containers/PointManage/usePointsManage'
+import SideMenuLoginRequired from '@containers/LoginRequired/SideMenuLoginRequired'
 
 // import moment from 'moment'
 
@@ -145,11 +146,11 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
               </ListItem>
             </Link>
             {/* Favorite Tab */}
-            <LoginRequired>
+            <SideMenuLoginRequired>
               <Link
                 href={{
                   pathname: ESRoutes.VIDEO_TOP,
-                  query: { default_tab: 4 },
+                  query: { default_tab: 4, favoriteTabClick: true },
                 }}
                 passHref
                 as={ESRoutes.VIDEO_TOP}
@@ -164,7 +165,7 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
                   )}
                 </ListItem>
               </Link>
-            </LoginRequired>
+            </SideMenuLoginRequired>
             {/*{isStreamer && (*/}
             {/*  <Link*/}
             {/*    href={{*/}

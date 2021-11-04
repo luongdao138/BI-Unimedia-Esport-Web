@@ -38,7 +38,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   // startLive,
   // endLive,
   isArchived,
-  type,
+  // type,
   videoType,
 }) => {
   const checkStatusVideo = 1
@@ -591,7 +591,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
                 onChangeVolDrag={handleChangeVolDrag}
                 volume={volume}
                 isLive={isLive}
-                videoStatus={type}
+                videoStatus={videoType}
                 onReloadTime={handleReloadTime}
                 handleOnRestart={handleOnRestart}
               />

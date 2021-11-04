@@ -34,7 +34,7 @@ const ChatTextMessage = React.memo<ChatContainerProps>(
           <Typography className={classes.chatMessage}>
             <span className={`${message.delete_flag ? '' : classes.chatMessageUser} ${getClassDeletedMess()}`}>{`${message.owner}: `}</span>
             {/* <span className={getClassDeletedMess()}>{getMessageWithoutNgWords(message.text) + ' ' + message.video_time + 's'}</span> */}
-            <span className={getClassDeletedMess()}>{getMessageWithoutNgWords(message.text)}</span>
+            <span className={`${getClassDeletedMess()} ${classes.normalMessage}`}>{getMessageWithoutNgWords(message.text)}</span>
           </Typography>
           <Box className={classes.mess_status}>
             {message.mess_status === STATUS_SEND_MESS.PENDING ? <CircularProgress size={12} /> : ''}
@@ -82,6 +82,9 @@ const ChatTextMessage = React.memo<ChatContainerProps>(
 )
 
 const useStyles = makeStyles(() => ({
+  normalMessage: {
+    wordBreak: 'break-all',
+  },
   icon: {},
   resendIcon: {
     cursor: 'pointer',
@@ -120,6 +123,7 @@ const useStyles = makeStyles(() => ({
   container: {
     display: 'flex',
     flexDirection: 'row',
+    marginRight: 16,
   },
   chatMessage: {
     fontSize: 14,
