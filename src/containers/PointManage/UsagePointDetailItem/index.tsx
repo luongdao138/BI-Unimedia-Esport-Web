@@ -13,7 +13,6 @@ interface UsagePointDetailItemProps {
 }
 const UsagePointDetailItem: FC<UsagePointDetailItemProps> = ({ data, serialNumber }) => {
   const classes = useStyles()
-
   const getAddClass = (firstClass, secClass) => {
     if (serialNumber.toString().length === 2) {
       return firstClass
@@ -23,8 +22,9 @@ const UsagePointDetailItem: FC<UsagePointDetailItemProps> = ({ data, serialNumbe
     }
     return ''
   }
+
   return (
-    <Box className={classes.container} key={serialNumber}>
+    <Box className={classes.container}>
       <Box className={classes.wrapTitle}>
         <Box className={`${classes.serialContainer} ${getAddClass(classes.letterSecSerial, classes.letterThirdSerial)}`}>
           <Typography className={classes.serialStyle}>{serialNumber}</Typography>
@@ -62,12 +62,6 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: Colors.white_opacity['6'],
     alignContent: 'center',
     borderRadius: 4,
-    // marginLeft: 16,
-    // marginRight: 16,
-    // paddingLeft: 16,
-    // paddingTop: 16,
-    // paddingBottom: 18,
-    // marginTop: 16,
     padding: 8,
     margin: 8,
     marginBottom: 0,
@@ -81,7 +75,6 @@ const useStyles = makeStyles((theme) => ({
   },
   serialStyle: {
     textAlign: 'center',
-    // marginBottom: 8,
   },
   titleContainer: {
     display: 'flex',

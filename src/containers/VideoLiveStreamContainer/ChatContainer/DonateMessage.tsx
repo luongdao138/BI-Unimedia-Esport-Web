@@ -171,6 +171,7 @@ const useStyles = makeStyles(() => ({
     backgroundColor: '#476AFF',
     borderBottomRightRadius: 4,
     borderBottomLeftRadius: 4,
+    wordBreak: 'break-all',
   },
   accountInfoContentText: {
     fontSize: 14,

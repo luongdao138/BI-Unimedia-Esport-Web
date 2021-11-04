@@ -33,7 +33,7 @@ const useReturnHref = () => {
           pathname: returnHref,
           search: favoriteTabClick ? '?default_tab=4' : '',
         },
-        undefined,
+        ESRoutes.VIDEO_TOP,
         { shallow: true }
       )
     } else if (!isRegistered) {

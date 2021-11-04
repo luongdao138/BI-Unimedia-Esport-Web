@@ -27,10 +27,16 @@ const VideoPreviewItem: React.FC<VideoPreviewItemProps> = ({ data, containerStyl
     if (data.status === STATUS_VIDEO.LIVE_STREAM && data.scheduled_flag === LIVE_VIDEO_TYPE.LIVE) {
       vid = data?.user_id
     }
-    router.push({
-      pathname: ESRoutes.TOP,
-      query: { vid },
-    })
+    router.push(
+      {
+        pathname: ESRoutes.TOP,
+        query: { vid: vid },
+      },
+      undefined,
+      {
+        shallow: true,
+      }
+    )
   }
 
   return (
@@ -40,6 +46,11 @@ const VideoPreviewItem: React.FC<VideoPreviewItemProps> = ({ data, containerStyl
         {data?.status === 1 && (
           <Box className={classes.tagContainer}>
             <Typography className={classes.tagStyle}>{t('common:videos_top_tab.type_live_stream')}</Typography>
+          </Box>
+        )}
+        {data?.status === 2 && data?.use_ticket === 1 && (
+          <Box className={classes.premiumTagContainer}>
+            <Typography className={classes.tagStyle}>{t('common:videos_top_tab.premium')}</Typography>
           </Box>
         )}
         {/* <Box className={classes.previewUser}> */}
@@ -104,6 +115,17 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: '#FF4786',
     marginTop: 10,
     marginLeft: 10,
+  },
+  premiumTagContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 3,
+    position: 'absolute',
+    backgroundColor: '#212121',
+    marginTop: 10,
+    marginLeft: 10,
+    filter: 'drop-shadow(0px 0px 2px #FFFFFF)',
   },
   tagStyle: {
     textAlign: 'center',
