@@ -203,10 +203,26 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
     </Box>
   )
 
-  const mobileRegisterChannelContainer = () => (
-    <Box className={classes.mobileRegisterChannelContainer}>
-      <ESAvatar className={classes.smallAvatar} alt={detailVideoResult?.user_nickname} src={detailVideoResult?.user_avatar} size={36} />
-      <Typography className={classes.channelName}>{detailVideoResult?.user_nickname}</Typography>
+  const streamerInfoContainer = () => (
+    <Box className={classes.wrap_streamer_info}>
+      <Box className={classes.streamer_info}>
+        <ESAvatar
+          size={mobileRegisterChannelVisible ? 36 : 72}
+          className={classes.avatar}
+          alt={detailVideoResult?.user_nickname}
+          src={detailVideoResult?.user_avatar}
+        />
+        <Box className={classes.streamer_data}>
+          {detailVideoResult?.user_nickname && <Box className={classes.streamer_name}>{detailVideoResult?.user_nickname}</Box>}
+          <Box className={classes.registration}>
+            <Typography className={classes.register_person_label}>{t('live_stream_screen.register_person_label')}</Typography>
+            <Typography className={classes.register_person_number}>
+              {FormatHelper.japaneseWanFormatter(subscribeCount)}
+              {t('common.man')}
+            </Typography>
+          </Box>
+        </Box>
+      </Box>
       {registerChannelButton()}
     </Box>
   )
@@ -348,7 +364,7 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
           {showOverlayOnMediaPlayer() && mediaOverlayPurchaseTicketView()}
         </Box>
       )}
-      {mobileRegisterChannelVisible && mobileRegisterChannelContainer()}
+      {mobileRegisterChannelVisible && streamerInfoContainer()}
       {liveBasicContentVisible && (
         <Box className={classes.wrap_info}>
           <Box className={classes.wrap_movie_info}>
@@ -394,24 +410,7 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
           </Box>
         </Box>
       )}
-      {!isMobile && (
-        <Box className={classes.wrap_streamer_info}>
-          <Box className={classes.streamer_info}>
-            <ESAvatar className={classes.avatar} alt={detailVideoResult?.user_nickname} src={detailVideoResult?.user_avatar} />
-            <Box className={classes.streamer_data}>
-              {detailVideoResult?.user_nickname && <Box className={classes.streamer_name}>{detailVideoResult?.user_nickname}</Box>}
-              <Box className={classes.registration}>
-                <Typography className={classes.register_person_label}>{t('live_stream_screen.register_person_label')}</Typography>
-                <Typography className={classes.register_person_number}>
-                  {FormatHelper.japaneseWanFormatter(subscribeCount)}
-                  {t('common.man')}
-                </Typography>
-              </Box>
-            </Box>
-          </Box>
-          {registerChannelButton()}
-        </Box>
-      )}
+      {!isMobile && streamerInfoContainer()}
       {/* Show Report Modal */}
       {isAuthenticated && (
         <ESReport
@@ -676,10 +675,6 @@ const useStyles = makeStyles((theme) => ({
       paddingBottom: '5px',
       width: '100%',
     },
-    register_channel_btn: {
-      padding: '1px 8px',
-      marginRight: '8px',
-    },
     icon: {
       marginRight: '11px',
     },
@@ -701,6 +696,52 @@ const useStyles = makeStyles((theme) => ({
     buyTicketNote: {
       marginBottom: '52px',
     },
+    wrap_streamer_info: {
+      backgroundColor: 'black',
+      flexDirection: 'row',
+      paddingTop: '16px',
+      paddingBottom: '5px',
+      height: 'auto',
+    },
+    avatar: {
+      width: '36px',
+      height: '36px',
+      borderRadius: '18px',
+    },
+    streamer_name: {
+      fontSize: '14px',
+      fontWeight: 'bold',
+      whiteSpace: 'nowrap',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      flex: 1,
+    },
+    subscribeLabel: {
+      fontSize: 12,
+    },
+    heartIcon: {
+      fontSize: 12,
+    },
+    register_channel_btn: () => ({
+      padding: '4px 10px',
+    }),
+  },
+  [theme.breakpoints.down(321)]: {
+    subscribeLabel: {
+      fontSize: 10,
+    },
+    heartIcon: {
+      fontSize: 10,
+    },
+    avatar: {
+      marginRight: 8,
+    },
+    register_person_label: {
+      paddingRight: 13,
+    },
+    register_channel_btn: () => ({
+      padding: '2x 10px',
+    }),
   },
   process: {
     zIndex: 1,
