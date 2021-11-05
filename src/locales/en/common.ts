@@ -1650,7 +1650,7 @@ export default {
     register_person_label: '登録者数',
     streamer_name: '配信者の名前がはいります',
     archived_stream_video: 'アーカイブ',
-    premium_comment: 'プレミアムコメント',
+    premium_comment: 'プレミアムチャット',
     please_enter_a_comment: 'コメントを入力してください',
     send: '送る',
     purchase_points: 'ポイント購入',
