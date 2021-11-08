@@ -208,6 +208,8 @@ export type SetChannelResponse = {
   data: CHANNEL_DATA
 }
 
+export const CODE_ERROR_RENEW_SPECIAL = 'CHA099'
+
 export const getLiveSetting = async (params: LiveStreamSettingParams): Promise<LiveStreamSettingResponse> => {
   const { data } = await api.get<LiveStreamSettingResponse>(URI.LIVE_SETTING, { params })
   return data
