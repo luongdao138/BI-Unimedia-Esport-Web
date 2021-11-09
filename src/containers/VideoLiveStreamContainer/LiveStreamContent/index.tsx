@@ -432,7 +432,7 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     flexWrap: 'wrap',
     background: '#000000',
-    height: '100%',
+    // height: '100%',
   },
   containerLoad: {
     display: 'flex',
