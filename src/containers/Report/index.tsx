@@ -225,11 +225,7 @@ const ESReport: React.FC<ESReportProps> = ({
           </Grid>
         )
       case REPORT_TYPE.TOURNAMENT:
-        return (
-          <Typography variant="h2" style={{ marginTop: _theme.spacing(2) }}>
-            {data.attributes.title}
-          </Typography>
-        )
+        return <Typography variant="h2">{data.attributes.title}</Typography>
       case REPORT_TYPE.COMMUNITY:
         return (
           <>
@@ -263,11 +259,7 @@ const ESReport: React.FC<ESReportProps> = ({
           </>
         )
       case REPORT_TYPE.LOBBY:
-        return (
-          <Typography variant="h2" className={classes.wordBreak} style={{ marginTop: _theme.spacing(2) }}>
-            {data.attributes.title}
-          </Typography>
-        )
+        return <Typography variant="h2">{data.attributes.title}</Typography>
 
       default:
         return null
