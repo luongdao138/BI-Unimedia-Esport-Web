@@ -1,4 +1,10 @@
-import { LiveStreamSettingParams, SetChannelParams, SetLiveStreamParams, StreamUrlAndKeyParams } from '@services/liveStream.service'
+import {
+  CODE_ERROR_RENEW_SPECIAL,
+  LiveStreamSettingParams,
+  SetChannelParams,
+  SetLiveStreamParams,
+  StreamUrlAndKeyParams,
+} from '@services/liveStream.service'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
 import { createMetaSelector } from '@store/metadata/selectors'
 import stream from '@store/stream'
@@ -53,7 +59,13 @@ const useLiveSetting = () => {
     if (actions.getStreamUrlAndKeyInfo.fulfilled.match(resultAction)) {
       onSuccess(resultAction.payload.data.STREAM_URL, resultAction.payload.data.STREAM_KEY_VALUE)
     } else {
-      dispatch(addToast(i18n.t('common:common.failed_to_get_data')))
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      //@ts-ignore
+      if (resultAction.payload?.code === CODE_ERROR_RENEW_SPECIAL) {
+        dispatch(addToast(i18n.t('common:common.failed_to_renew')))
+      } else {
+        dispatch(addToast(i18n.t('common:common.failed_to_get_data')))
+      }
     }
   }
   const isPending = meta.pending || getStreamUrlAndKeyMeta.pending || getChannelMeta.pending || getScheduleMeta.pending
