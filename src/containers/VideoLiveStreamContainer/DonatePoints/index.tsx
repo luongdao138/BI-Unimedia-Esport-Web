@@ -215,7 +215,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingTop: 51,
   },
   stepItemContainer: {
-    display: 'flex',
+    // display: 'flex',
     flexDirection: 'column',
   },
   stepViewActive: {

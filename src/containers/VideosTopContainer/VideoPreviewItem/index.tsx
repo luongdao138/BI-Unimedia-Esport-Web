@@ -43,16 +43,18 @@ const VideoPreviewItem: React.FC<VideoPreviewItemProps> = ({ data, containerStyl
     <Box className={classes.container} key={data?.id} onClick={() => onNavigateLive(data)} style={containerStyle}>
       <Box className={classes.videoContainer}>
         <Box className={classes.video} style={{ backgroundImage: `url(${data?.thumbnail ? data.thumbnail : IMG_PLACEHOLDER})` }} />
-        {data?.status === 1 && (
-          <Box className={classes.tagContainer}>
-            <Typography className={classes.tagStyle}>{t('common:videos_top_tab.type_live_stream')}</Typography>
-          </Box>
-        )}
-        {data?.status === 2 && data?.use_ticket === 1 && (
-          <Box className={classes.premiumTagContainer}>
-            <Typography className={classes.tagStyle}>{t('common:videos_top_tab.premium')}</Typography>
-          </Box>
-        )}
+        <Box className={classes.tagContainer}>
+          {data?.use_ticket === 1 && (
+            <Box className={classes.premiumTagContainer}>
+              <Typography className={classes.tagStyle}>{t('common:videos_top_tab.premium')}</Typography>
+            </Box>
+          )}
+          {data?.status === 1 && (
+            <Box className={classes.liveTagContainer} style={data?.use_ticket === 1 ? { marginLeft: '10px' } : {}}>
+              <Typography className={classes.tagStyle}>{t('common:videos_top_tab.type_live_stream')}</Typography>
+            </Box>
+          )}
+        </Box>
         {/* <Box className={classes.previewUser}> */}
         {/* <img src={data?.user_avatar ? data.user_avatar : IMG_PLACEHOLDER} className={classes.previewUser} /> */}
         {/* </Box> */}
@@ -108,23 +110,24 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   tagContainer: {
     display: 'flex',
+    position: 'absolute',
+    marginTop: 10,
+    marginLeft: 10,
+    flexDirection: 'row',
+  },
+  liveTagContainer: {
+    display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 2,
-    position: 'absolute',
     backgroundColor: '#FF4786',
-    marginTop: 10,
-    marginLeft: 10,
   },
   premiumTagContainer: {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 3,
-    position: 'absolute',
     backgroundColor: '#212121',
-    marginTop: 10,
-    marginLeft: 10,
     filter: 'drop-shadow(0px 0px 2px #FFFFFF)',
   },
   tagStyle: {

@@ -126,9 +126,13 @@ const VideosList: React.FC<VideoListProps> = ({ setTab, videoItemStyle }) => {
         <Box className={classes.popularCategoryTitle}>
           <Typography className={classes.popularText}> {i18n.t('common:videos_top_tab.popular_category')} </Typography>
         </Box>
-        <Grid container spacing={3} className={classes.contentContainer}>
-          {renderPreLoad(9)}
-        </Grid>
+        <Box
+          className={getDisplayData(videoCategoryPopular)?.length > 0 ? classes.wrapContentContainer : classes.noDataWrapContentContainer}
+        >
+          <Grid container spacing={3} className={classes.contentContainer}>
+            {renderPreLoad(9)}
+          </Grid>
+        </Box>
       </>
     )
   }

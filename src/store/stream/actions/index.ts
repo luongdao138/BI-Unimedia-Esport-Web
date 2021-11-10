@@ -63,7 +63,7 @@ export const getStreamUrlAndKeyInfo = createAsyncThunk<services.GetStreamUrlAndK
         return res
       } else {
         // throw res.message
-        return rejectWithValue(JSON.stringify(res.message))
+        return rejectWithValue(res)
       }
     } catch (error) {
       if (!error.response) {
