@@ -42,7 +42,7 @@ const UsagePointsItem: FC<UsagePointsItemProps> = ({ data, serialNumber, setShow
     )
   }
   return (
-    <Box className={classes.container} key={serialNumber}>
+    <Box className={classes.container}>
       <Box className={`${classes.serialContainer} ${getAddClass(classes.letterSecSerial, classes.letterThirdSerial)}`}>
         <Typography className={classes.serialStyle}>{serialNumber}</Typography>
       </Box>
@@ -105,12 +105,6 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: Colors.white_opacity['6'],
     alignContent: 'center',
     borderRadius: 4,
-    // marginLeft: 16,
-    // marginRight: 16,
-    // paddingLeft: 16,
-    // paddingTop: 16,
-    // paddingBottom: 18,
-    // marginTop: 16,
     padding: 8,
     margin: 8,
     marginBottom: 0,

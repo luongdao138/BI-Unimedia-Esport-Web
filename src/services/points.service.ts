@@ -83,6 +83,7 @@ export type ListUsagePointHistoryData = {
   canceled_at: string
   type: number
   status: string
+  id?: number | string
 }
 
 export type ListMyPointsData = {

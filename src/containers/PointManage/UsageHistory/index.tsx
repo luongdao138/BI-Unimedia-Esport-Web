@@ -145,11 +145,11 @@ const UsageHistory: FC = () => {
               <>
                 {UsagePointsHistoryData?.length > 0 ? (
                   <>
-                    {UsagePointsHistoryData?.map((item, i) => (
+                    {UsagePointsHistoryData?.map((item, index) => (
                       <UsagePointDetailItem
-                        key={item.purchase_id}
+                        key={item?.id || index}
                         data={item}
-                        serialNumber={pageDetail > 1 ? (pageDetail - 1) * limit + i + 1 : i + 1}
+                        serialNumber={pageDetail > 1 ? (pageDetail - 1) * limit + index + 1 : index + 1}
                       />
                     ))}
                     {totalPagesDetail > 1 && (
@@ -172,7 +172,9 @@ const UsageHistory: FC = () => {
                   </>
                 ) : (
                   <Box className={classes.noDataContainer}>
-                    <Typography className={classes.noDataText}>{i18n.t('common:point_management_tab.no_data_purchase_point')}</Typography>
+                    <Typography className={classes.noDataText}>
+                      {i18n.t('common:point_management_tab.no_data_usage_point_history')}
+                    </Typography>
                   </Box>
                 )}
               </>
@@ -187,8 +189,8 @@ const UsageHistory: FC = () => {
                 <>
                   {listUsageHistoryData?.map((item, i) => (
                     <UsagePointsItem
+                      key={item?.uuid || i}
                       data={item}
-                      key={i}
                       maxPage={(page - 1) * limit + listUsageHistoryData.length}
                       serialNumber={page > 1 ? (page - 1) * limit + i + 1 : i + 1}
                       setShowDetail={setUsageHistoryDetail}
@@ -213,7 +215,9 @@ const UsageHistory: FC = () => {
                 </>
               ) : (
                 <Box className={classes.noDataContainer}>
-                  <Typography className={classes.noDataText}>{i18n.t('common:point_management_tab.no_data_purchase_point')}</Typography>
+                  <Typography className={classes.noDataText}>
+                    {i18n.t('common:point_management_tab.no_data_usage_point_history')}
+                  </Typography>
                 </Box>
               )}
             </>
