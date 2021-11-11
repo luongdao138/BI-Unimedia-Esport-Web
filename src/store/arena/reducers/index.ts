@@ -252,4 +252,11 @@ export default createReducer(initialState, (builder) => {
       state.tournamentDetail.attributes.summary_image = action.meta.arg.data.summary_image_url
     }
   })
+  builder.addCase(actions.clearArenaDetail, (state) => {
+    state.tournamentDetail = undefined
+  })
+  builder.addCase(actions.clearArenaWinners, (state) => {
+    state.arenaWinners = {}
+    state.tournamentParticipants = []
+  })
 })
