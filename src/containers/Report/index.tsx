@@ -258,8 +258,11 @@ const ESReport: React.FC<ESReportProps> = ({
             {renderTopic(true)}
           </>
         )
+      case REPORT_TYPE.LOBBY:
+        return <Typography variant="h2">{data.attributes.title}</Typography>
+
       default:
-        break
+        return null
     }
   }
   // [CW] Add video title on report pop up
