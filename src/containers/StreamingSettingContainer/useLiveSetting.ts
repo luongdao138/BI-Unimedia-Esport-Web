@@ -54,10 +54,15 @@ const useLiveSetting = () => {
   const getScheduleMeta = useAppSelector(_getMetaSchedule)
   const setLiveStreamMeta = useAppSelector(_setLiveStreamMeta)
 
-  const getStreamUrlAndKey = async (params: StreamUrlAndKeyParams, onSuccess?: (url, key) => void) => {
+  const getStreamUrlAndKey = async (params: StreamUrlAndKeyParams, onSuccess?: (url, key, arn, data) => void) => {
     const resultAction = await dispatch(actions.getStreamUrlAndKeyInfo(params))
     if (actions.getStreamUrlAndKeyInfo.fulfilled.match(resultAction)) {
-      onSuccess(resultAction.payload.data.STREAM_URL, resultAction.payload.data.STREAM_KEY_VALUE)
+      onSuccess(
+        resultAction.payload.data?.STREAM_URL,
+        resultAction.payload.data?.STREAM_KEY_VALUE,
+        resultAction.payload.data?.CHANNEL_ARN,
+        resultAction.payload.data
+      )
     } else {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       //@ts-ignore
