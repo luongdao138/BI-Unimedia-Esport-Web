@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Box, ButtonBase, Icon, makeStyles, Typography, useMediaQuery, useTheme } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
-import userProfileStore from '@store/userProfile'
 import ESAvatar from '@components/Avatar'
-import { useAppDispatch, useAppSelector } from '@store/hooks'
+import { useAppSelector } from '@store/hooks'
 import { Colors } from '@theme/colors'
 import { FormatHelper } from '@utils/helpers/FormatHelper'
 import React, { useCallback, useEffect, useState } from 'react'
@@ -63,11 +62,7 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
   const { makeContextualHref } = useContextualRouting()
   const theme = useTheme()
   const { t } = useTranslation('common')
-  const { actions, selectors } = userProfileStore
-  const dispatch = useAppDispatch()
   const isAuthenticated = useAppSelector(getIsAuthenticated)
-  const userProfile = useAppSelector(selectors.getUserProfile)
-  // const streamerProfile = useAppSelector(selectors.getLastSeenUserData)
 
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
   // const downMd = useMediaQuery(theme.breakpoints.down(769))
@@ -331,7 +326,10 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
   const handleReportOpen = () => {
     setShowReportMenu(true)
     //get profile streamer
-    dispatch(actions.getMemberProfile(detailVideoResult?.user_code))
+    // dispatch(actions.getMemberProfile(detailVideoResult?.user_code))
+  }
+  const handleCloseReport = () => {
+    setShowReportMenu(false)
   }
 
   const renderReloadPlayer = () => {
@@ -415,12 +413,10 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
       {isAuthenticated && (
         <ESReport
           reportType={REPORT_TYPE.VIDEO_STREAM}
-          // reportType={REPORT_TYPE.USER_LIST}
-          target_id={userProfile?.attributes?.user_code}
+          target_id={detailVideoResult?.id}
           data={detailVideoResult}
-          // data={streamerProfile}
           open={showReportMenu}
-          handleClose={() => setShowReportMenu(false)}
+          handleClose={handleCloseReport}
         />
       )}
     </Box>
