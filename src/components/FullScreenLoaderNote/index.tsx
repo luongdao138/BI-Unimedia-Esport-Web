@@ -30,6 +30,8 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 13,
     color: '#fff',
     marginTop: 7,
+    textAlign: 'center',
+    // fontWeight:'bold'
   },
   overView: {
     display: 'flex',
