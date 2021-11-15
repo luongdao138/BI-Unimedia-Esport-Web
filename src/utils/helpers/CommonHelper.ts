@@ -244,7 +244,7 @@ const nearestFutureMinutes = (interval: number): string => {
 }
 
 const formatDateTime = (date: string): string => {
-  const dateTime = new Date(date).toString()
+  const dateTime = moment(date).toString()
   // const dateResult = moment(dateTime).format(FORMAT_DATE_TIME_JP)
   return dateTime
 }
