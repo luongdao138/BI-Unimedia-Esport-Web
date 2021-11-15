@@ -22,6 +22,7 @@ import SideFooter from '@containers/SideMenu/SideFooter'
 import AppDialog from '@containers/SideMenu/AppDialog'
 import usePointsManage from '@containers/PointManage/usePointsManage'
 import SideMenuLoginRequired from '@containers/LoginRequired/SideMenuLoginRequired'
+import useUserData from '@containers/Home/useUserData'
 
 // import moment from 'moment'
 
@@ -43,6 +44,8 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
   const isAuthenticated = useAppSelector(getIsAuthenticated)
   const userProfile = useAppSelector(selectors.getUserProfile)
   const { getMyPointData, myPointsData } = usePointsManage()
+  const { getUserProfile } = useUserData()
+
   const totalMyPoints = myPointsData?.total_point
   const theme = useTheme()
   const downSm = useMediaQuery(theme.breakpoints.down('sm'))
@@ -76,6 +79,13 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
 
   const closeDrawer = (): void => {
     toggleDrawer(false)
+  }
+
+  const navigateToStreamerManagementScreen = () => {
+    getUserProfile()
+    router.push({
+      pathname: ESRoutes.VIDEO_STREAMING_MANAGEMENT,
+    })
   }
 
   return (
@@ -186,7 +196,7 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
             {/*)}*/}
             {/*{!minimizeLayout && <Box paddingBottom={1} />}*/}
             {isStreamer && (
-              <Link href={ESRoutes.VIDEO_STREAMING_MANAGEMENT} passHref>
+              <Box onClick={navigateToStreamerManagementScreen}>
                 <ListItem className={classes.list + getAddClass(classes.noMinimizeList, classes.minimizeList)} button disableRipple>
                   <ListItemIcon className={classes.icon}>
                     <Icon fontSize="small" className="fa fa-users" />
@@ -194,7 +204,7 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
                   {/* link to stream management */}
                   {!minimizeLayout && <ListItemText className={classes.listText} primary={t('common:home.delivery_management')} />}
                 </ListItem>
-              </Link>
+              </Box>
             )}
             {!isStreamer && isAuthenticated && (
               <a
