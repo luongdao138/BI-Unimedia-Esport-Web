@@ -1595,6 +1595,7 @@ export default {
     title_delete_card: 'このカードの登録を削除する',
     clear_section: '選択をクリア',
     btn_buy: '購入する',
+    btn_confirm: '確認する',
     purchase_confirm: '購入確認',
     purchase_exe_points: '購入eXeポイント',
     purchase_fee: '購入料金',
