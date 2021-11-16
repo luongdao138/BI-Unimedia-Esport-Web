@@ -157,12 +157,11 @@ export type GetStreamUrlAndKeyResponse = {
   data?: {
     // stream_url: string
     // stream_key: string
-    CHANNEL_ARN: string
-    INGEST_ENDPOINT: string
-    PLAYBACK_URL: string
-    STREAM_KEY_VALUE: string
-    STREAM_URL: string
-    STREAM_KEY_ARN: string
+    channel_arn: string
+    playback_url: string
+    stream_key_value: string
+    stream_url: string
+    stream_key_arn: string
   }
 }
 

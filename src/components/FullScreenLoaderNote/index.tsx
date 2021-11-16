@@ -6,16 +6,17 @@ import { useTranslation } from 'react-i18next'
 
 interface Props {
   open: boolean
+  showNote?: boolean
 }
 
-const FullScreenLoaderNote: React.FC<Props> = ({ open }) => {
+const FullScreenLoaderNote: React.FC<Props> = ({ open, showNote = true }) => {
   const classes = useStyles()
   const { t } = useTranslation('common')
   return (
     <Backdrop className={classes.backdrop} open={open}>
       <div className={classes.overView}>
         <ESLoader />
-        <Typography className={classes.textLoading}>{t('streaming_setting_screen.note_loading')}</Typography>
+        {showNote && <Typography className={classes.textLoading}>{t('streaming_setting_screen.note_loading')}</Typography>}
       </div>
     </Backdrop>
   )

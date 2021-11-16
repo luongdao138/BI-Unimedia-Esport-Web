@@ -30,7 +30,7 @@ import { FIELD_TITLES } from '../field_titles.constants'
 import { showDialog } from '@store/common/actions'
 import { EVENT_STATE_CHANNEL, FORMAT_DATE_TIME_JP, NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
 import useCheckNgWord from '@utils/hooks/useCheckNgWord'
-import ESLoader from '@components/FullScreenLoader'
+import ESLoader from '@components/FullScreenLoaderNote'
 import useGetProfile from '@utils/hooks/useGetProfile'
 import useUploadImage from '@utils/hooks/useUploadImage'
 import ESNumberInputStream from '@components/NumberInput/stream'
@@ -285,10 +285,6 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
           formik.setFieldValue('stepSettingOne.arn', arn)
           showToast && dispatch(commonActions.addToast(t('common:streaming_setting_screen.renew_success_toast')))
         }
-        // } else {
-        //   formik.setFieldValue('stepSettingOne.stream_key', key)
-        //   showToast && dispatch(commonActions.addToast(t('common:streaming_setting_screen.renew_success_toast')))
-        // }
       })
     }, 700),
     []
@@ -305,7 +301,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
 
   useEffect(() => {
     if (stateChannelArn === EVENT_STATE_CHANNEL.UPDATED && clickRenew) {
-      onReNewUrlAndKey(TYPE_SECRET_KEY.URL, TYPE_SECRET_KEY.RE_NEW, true)
+      onReNewUrlAndKey(TYPE_SECRET_KEY.URL, TYPE_SECRET_KEY.GET, true)
     }
   }, [stateChannelArn])
   return (
@@ -805,7 +801,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
           )}
         </form>
       </Box>
-      <ESLoader open={isPending || isPendingSetting || isLoading} />
+      <ESLoader open={isPending || isPendingSetting || isLoading} showNote={clickRenew} />
     </Box>
   )
 }

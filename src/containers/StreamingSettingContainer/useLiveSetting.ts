@@ -58,9 +58,9 @@ const useLiveSetting = () => {
     const resultAction = await dispatch(actions.getStreamUrlAndKeyInfo(params))
     if (actions.getStreamUrlAndKeyInfo.fulfilled.match(resultAction)) {
       onSuccess(
-        resultAction.payload.data?.STREAM_URL,
-        resultAction.payload.data?.STREAM_KEY_VALUE,
-        resultAction.payload.data?.CHANNEL_ARN,
+        resultAction.payload.data?.stream_url,
+        resultAction.payload.data?.stream_key_value,
+        resultAction.payload.data?.channel_arn,
         resultAction.payload.data
       )
     } else {
