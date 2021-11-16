@@ -310,7 +310,7 @@ const Steps: React.FC<StepsProps> = ({
         setLoading(!dataRenew)
       }
     }
-    if (stateChannelArn === EVENT_STATE_CHANNEL.UPDATED && clickRenew && (status || status === 0)) {
+    if (stateChannelArn === EVENT_STATE_CHANNEL.UPDATED && clickRenew && (status || status === 0) && flagArn) {
       onReNewUrlAndKey(TYPE_SECRET_KEY.URL, TYPE_SECRET_KEY.GET)
     }
   }, [stateChannelArn, isLoading])
