@@ -71,6 +71,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
   const [isLive, setIsLive] = useState<boolean>(false)
   const [isLoading, setLoading] = useState(false)
   const [clickRenew, setClickRenew] = useState(false)
+  const [renewData, setRenewData] = useState(null)
 
   useEffect(() => {
     // getLiveSetting()
@@ -275,35 +276,48 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
   }
 
   const debouncedHandleRenewURLAndKey = useCallback(
-    _.debounce((params: StreamUrlAndKeyParams, showToast?: boolean) => {
+    _.debounce((params: StreamUrlAndKeyParams) => {
       setClickRenew(true)
       getStreamUrlAndKey(params, (url, key, arn, data) => {
-        setLoading(!data)
+        setRenewData(data)
+        setLoading(true)
         if (data) {
           formik.setFieldValue('stepSettingOne.stream_url', url)
           formik.setFieldValue('stepSettingOne.stream_key', key)
           formik.setFieldValue('stepSettingOne.arn', arn)
-          showToast && dispatch(commonActions.addToast(t('common:streaming_setting_screen.renew_success_toast')))
         }
       })
     }, 700),
     []
   )
 
-  const onReNewUrlAndKey = (type: string, method: string, showToast?: boolean) => {
+  const onReNewUrlAndKey = (type: string, method: string) => {
     const params: StreamUrlAndKeyParams = {
       type: method,
       objected: type,
       is_live: TYPE_SECRET_KEY.LIVE,
     }
-    debouncedHandleRenewURLAndKey(params, showToast)
+    debouncedHandleRenewURLAndKey(params)
   }
 
   useEffect(() => {
-    if (stateChannelArn === EVENT_STATE_CHANNEL.UPDATED && clickRenew) {
-      onReNewUrlAndKey(TYPE_SECRET_KEY.URL, TYPE_SECRET_KEY.GET, true)
+    if (isLoading) {
+      if (!obsNotEnable) {
+        setLoading(!renewData)
+      } else if (renewData) {
+        setLoading(stateChannelArn !== EVENT_STATE_CHANNEL.RUNNING && !obsNotEnable)
+        if (stateChannelArn === EVENT_STATE_CHANNEL.RUNNING) {
+          dispatch(commonActions.addToast(t('common:streaming_setting_screen.renew_success_toast')))
+        }
+      } else {
+        setLoading(true)
+      }
     }
-  }, [stateChannelArn])
+    if (stateChannelArn === EVENT_STATE_CHANNEL.UPDATED && clickRenew && obsNotEnable) {
+      onReNewUrlAndKey(TYPE_SECRET_KEY.URL, TYPE_SECRET_KEY.GET)
+    }
+  }, [stateChannelArn, isLoading])
+
   return (
     <Box py={4} className={classes.container}>
       <Box className={classes.formContainer}>
@@ -676,7 +690,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
                   display="flex"
                   justifyContent="flex-end"
                   className={!isLive ? classes.urlCopy : classes.linkDisable}
-                  onClick={() => !isLive && onReNewUrlAndKey(TYPE_SECRET_KEY.URL, TYPE_SECRET_KEY.RE_NEW, true)}
+                  onClick={() => !isLive && onReNewUrlAndKey(TYPE_SECRET_KEY.URL, TYPE_SECRET_KEY.RE_NEW)}
                 >
                   <Typography className={classes.textLink}>{t('common:streaming_setting_screen.reissue')}</Typography>
                 </Box>

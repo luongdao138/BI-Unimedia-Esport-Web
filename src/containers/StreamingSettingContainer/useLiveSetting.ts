@@ -24,7 +24,9 @@ const useLiveSetting = () => {
   const dispatch = useAppDispatch()
   const getLiveSettingTab = async (param: LiveStreamSettingParams) => {
     const result = await dispatch(actions.getLiveSettingInfo(param))
-    if (!actions.getLiveSettingInfo.fulfilled.match(result) || result?.payload?.code !== 200) {
+    if (!actions.getLiveSettingInfo.fulfilled.match(result) || result?.payload?.code === 400) {
+      dispatch(addToast(i18n.t('common:common.channel_busy_to_renew')))
+    } else if (!actions.getLiveSettingInfo.fulfilled.match(result) || result?.payload?.code !== 200) {
       dispatch(addToast(i18n.t('common:common.failed_to_get_data')))
     } else {
       return result
