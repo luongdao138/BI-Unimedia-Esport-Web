@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import {
   CODE_ERROR_RENEW_SPECIAL,
   LiveStreamSettingParams,
@@ -64,10 +65,13 @@ const useLiveSetting = () => {
         resultAction.payload.data
       )
     } else {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       //@ts-ignore
-      if (resultAction.payload?.code === CODE_ERROR_RENEW_SPECIAL) {
+      if (resultAction.payload?.code === CODE_ERROR_RENEW_SPECIAL.CHA099) {
         dispatch(addToast(i18n.t('common:common.failed_to_renew')))
+      }
+      //@ts-ignore
+      if (resultAction.payload?.code === CODE_ERROR_RENEW_SPECIAL.SERVICE_BUSY) {
+        dispatch(addToast(i18n.t('common:common.channel_busy_to_renew')))
       } else {
         dispatch(addToast(i18n.t('common:common.failed_to_get_data')))
       }
