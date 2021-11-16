@@ -95,6 +95,7 @@ const Steps: React.FC<StepsProps> = ({
   const [isLoading, setLoading] = useState(false)
   const [clickRenew, setClickRenew] = useState(false)
   const [dataRenew, setDataRenew] = useState(null)
+  const [flagArn, setFlagArn] = useState(false)
 
   const formRef = {
     title: useRef(null),
@@ -289,14 +290,21 @@ const Steps: React.FC<StepsProps> = ({
   }
 
   useEffect(() => {
+    if (stateChannelArn === EVENT_STATE_CHANNEL.RUNNING) {
+      setFlagArn(true)
+    }
     if (isLoading) {
       if (status || status === 0) {
-        if (dataRenew) {
-          setLoading(stateChannelArn !== EVENT_STATE_CHANNEL.RUNNING)
-          stateChannelArn === EVENT_STATE_CHANNEL.RUNNING &&
-            dispatch(commonActions.addToast(t('common:streaming_setting_screen.renew_success_toast')))
+        if (flagArn) {
+          if (dataRenew) {
+            setLoading(stateChannelArn !== EVENT_STATE_CHANNEL.RUNNING)
+            stateChannelArn === EVENT_STATE_CHANNEL.RUNNING &&
+              dispatch(commonActions.addToast(t('common:streaming_setting_screen.renew_success_toast')))
+          } else {
+            setLoading(true)
+          }
         } else {
-          setLoading(true)
+          setLoading(!dataRenew)
         }
       } else {
         setLoading(!dataRenew)
