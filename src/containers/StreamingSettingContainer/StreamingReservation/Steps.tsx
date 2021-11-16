@@ -28,12 +28,12 @@ import {
 } from '@services/liveStream.service'
 import useCheckNgWord from '@utils/hooks/useCheckNgWord'
 import { FIELD_TITLES } from '../field_titles.constants'
-import { FORMAT_DATE_TIME_JP, NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
+import { EVENT_STATE_CHANNEL, FORMAT_DATE_TIME_JP, NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
 import { showDialog } from '@store/common/actions'
 import useReturnHref from '@utils/hooks/useReturnHref'
 import moment from 'moment'
 import useGetProfile from '@utils/hooks/useGetProfile'
-import ESLoader from '@components/FullScreenLoader'
+import ESLoader from '@components/FullScreenLoaderNote'
 import useUploadImage from '@utils/hooks/useUploadImage'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
 import ESNumberInputStream from '@components/NumberInput/stream'
@@ -50,6 +50,7 @@ interface StepsProps {
   flagUpdateFieldDate?: (flag: boolean) => void
   handleUpdateValidateField?: (value: string) => void
   validateFieldProps?: string
+  stateChannelArn?: string
 }
 
 const KEY_TYPE = {
@@ -69,6 +70,7 @@ const Steps: React.FC<StepsProps> = ({
   flagUpdateFieldDate,
   validateFieldProps,
   handleUpdateValidateField,
+  stateChannelArn,
 }) => {
   const classes = useStyles()
   const dispatch = useAppDispatch()
@@ -90,6 +92,8 @@ const Steps: React.FC<StepsProps> = ({
   const [validateField, setValidateField] = useState('')
   // const [statusRecordSetting, setStatusRecordSetting] = useState()
   const [onChangeFlag, setOnChangeFlag] = useState(false) //false-edit # date, true - edit date,
+  const [isLoading, setLoading] = useState(false)
+  const [clickRenew, setClickRenew] = useState(false)
 
   const formRef = {
     title: useRef(null),
@@ -259,15 +263,15 @@ const Steps: React.FC<StepsProps> = ({
 
   const debouncedHandleRenewURLAndKey = useCallback(
     _.debounce((params: StreamUrlAndKeyParams, showToast?: boolean) => {
-      getStreamUrlAndKey(params, (url, key) => {
-        // if (type === KEY_TYPE.URL) {
-        formik.setFieldValue('stepSettingTwo.stream_url', url)
-        formik.setFieldValue('stepSettingTwo.stream_key', key)
-        showToast && dispatch(commonActions.addToast(t('common:streaming_setting_screen.renew_success_toast')))
-        // } else {
-        //   formik.setFieldValue('stepSettingTwo.stream_key', key)
-        //   showToast && dispatch(commonActions.addToast(t('common:streaming_setting_screen.renew_success_toast')))
-        // }
+      setClickRenew(true)
+      getStreamUrlAndKey(params, (url, key, arn, data) => {
+        setLoading(!data && stateChannelArn === EVENT_STATE_CHANNEL.RUNNING)
+        if (data) {
+          formik.setFieldValue('stepSettingTwo.stream_url', url)
+          formik.setFieldValue('stepSettingTwo.stream_key', key)
+          formik.setFieldValue('stepSettingTwo.arn', arn)
+          showToast && dispatch(commonActions.addToast(t('common:streaming_setting_screen.renew_success_toast')))
+        }
       })
     }, 700),
     []
@@ -280,6 +284,12 @@ const Steps: React.FC<StepsProps> = ({
     }
     debouncedHandleRenewURLAndKey(params, showToast)
   }
+
+  useEffect(() => {
+    if (stateChannelArn === EVENT_STATE_CHANNEL.UPDATED && clickRenew) {
+      onReNewUrlAndKey(TYPE_SECRET_KEY.URL, TYPE_SECRET_KEY.GET, true)
+    }
+  }, [stateChannelArn])
 
   const onConfirm = () => {
     const { stepSettingTwo } = formik.values
@@ -1134,7 +1144,8 @@ const Steps: React.FC<StepsProps> = ({
           )}
         </form>
       </Box>
-      <ESLoader open={isPending || isPendingSetting} />
+      {/* <ESLoader open={isPending || isPendingSetting} /> */}
+      <ESLoader open={isPending || isPendingSetting || isLoading} showNote={clickRenew} />
     </Box>
   )
 }
