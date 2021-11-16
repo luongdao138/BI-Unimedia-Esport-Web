@@ -157,12 +157,11 @@ export type GetStreamUrlAndKeyResponse = {
   data?: {
     // stream_url: string
     // stream_key: string
-    CHANNEL_ARN: string
-    INGEST_ENDPOINT: string
-    PLAYBACK_URL: string
-    STREAM_KEY_VALUE: string
-    STREAM_URL: string
-    STREAM_KEY_ARN: string
+    channel_arn: string
+    playback_url: string
+    stream_key_value: string
+    stream_url: string
+    stream_key_arn: string
   }
 }
 
@@ -208,7 +207,10 @@ export type SetChannelResponse = {
   data: CHANNEL_DATA
 }
 
-export const CODE_ERROR_RENEW_SPECIAL = 'CHA099'
+export const CODE_ERROR_RENEW_SPECIAL = {
+  CHA099: 'CHA099',
+  SERVICE_BUSY: 503,
+}
 
 export const getLiveSetting = async (params: LiveStreamSettingParams): Promise<LiveStreamSettingResponse> => {
   const { data } = await api.get<LiveStreamSettingResponse>(URI.LIVE_SETTING, { params })
