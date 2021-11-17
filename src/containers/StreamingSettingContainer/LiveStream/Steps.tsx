@@ -303,20 +303,16 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
   useEffect(() => {
     if (isLoading) {
       if (!obsNotEnable) {
+        //created
         setLoading(!renewData)
       } else if (renewData) {
-        setLoading(stateChannelArn !== EVENT_STATE_CHANNEL.RUNNING && !obsNotEnable)
-        if (stateChannelArn === EVENT_STATE_CHANNEL.RUNNING) {
+        setLoading(stateChannelArn !== EVENT_STATE_CHANNEL.STOPPED)
+        if (stateChannelArn === EVENT_STATE_CHANNEL.STOPPED) {
           dispatch(commonActions.addToast(t('common:streaming_setting_screen.renew_success_toast')))
         }
-      } else {
-        setLoading(true)
       }
     }
-    if (stateChannelArn === EVENT_STATE_CHANNEL.UPDATED && clickRenew && obsNotEnable) {
-      onReNewUrlAndKey(TYPE_SECRET_KEY.URL, TYPE_SECRET_KEY.GET)
-    }
-  }, [stateChannelArn, isLoading])
+  }, [stateChannelArn, isLoading, formik?.values?.stepSettingOne?.stream_key])
 
   return (
     <Box py={4} className={classes.container}>
