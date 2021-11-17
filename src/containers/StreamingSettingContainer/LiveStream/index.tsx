@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
+import { Box } from '@material-ui/core'
 import SettingsCompleted from '@components/SettingsCompleted'
 import React, { useEffect, useState } from 'react'
 import Steps from './Steps'
@@ -126,7 +127,9 @@ const LiveStreamContainer: React.FC<Props> = ({ formik }) => {
           <SettingsCompleted onClose={onClose} onComplete={onComplete} />
         </BlankLayout>
       </ESModal>
-      {step === 3 && stateChannelMedia && stateChannelMedia !== EVENT_STATE_CHANNEL.RUNNING && <ESLoader open={true} />}
+      <Box style={{ display: step === 3 && stateChannelMedia && stateChannelMedia !== EVENT_STATE_CHANNEL.RUNNING ? 'flex' : 'none' }}>
+        <ESLoader open={true} />
+      </Box>
     </>
   )
 }
