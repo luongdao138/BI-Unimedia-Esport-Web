@@ -132,8 +132,11 @@ const StreamingReservationContainer: React.FC<Props> = ({ formik, flagUpdateFiel
     let unSub
     if (step === 3 && stateChannelMedia && stateChannelMedia !== EVENT_STATE_CHANNEL.RUNNING) {
       setLoading(true)
+      setShowResultDialog(false)
     } else {
       if (!loading) {
+        setLoading(false)
+        setShowResultDialog(true)
         return
       }
       unSub = setTimeout(() => {
