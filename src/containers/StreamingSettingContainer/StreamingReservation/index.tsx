@@ -15,6 +15,8 @@ import API, { GraphQLResult, graphqlOperation } from '@aws-amplify/api'
 import { onUpdateChannel } from 'src/graphql/subscriptions'
 import * as APIt from 'src/types/graphqlAPI'
 import { getChannelByArn } from 'src/graphql/queries'
+import { EVENT_STATE_CHANNEL } from '@constants/common.constants'
+import ESLoader from '@components/FullScreenLoaderNote'
 
 interface Props {
   formik?: FormikProps<FormLiveType>
@@ -24,7 +26,7 @@ interface Props {
 }
 
 const StreamingReservationContainer: React.FC<Props> = ({ formik, flagUpdateFieldDate, handleUpdateValidateField, validateFieldProps }) => {
-  // const [step, setStep] = useState(1)
+  const [step, setStep] = useState(1)
   const router = useRouter()
   const { categoryData } = useLiveSetting()
 
@@ -36,10 +38,11 @@ const StreamingReservationContainer: React.FC<Props> = ({ formik, flagUpdateFiel
     content: '',
   })
   const [stateChannelMedia, setStateChannelMedia] = useState(null)
+  const [initStateChannelMedia, setInitStateChannelMedia] = useState(null)
 
   const onChangeStep = (step: number, isShare?: boolean, post?: { title: string; content: string }): void => {
     // console.log('SCHEDULE: click next step', step, stateChannelMedia)
-    // setStep(step)
+    setStep(step)
     setShare(isShare)
     setPost(post)
     if (step === 3) {
@@ -100,6 +103,9 @@ const StreamingReservationContainer: React.FC<Props> = ({ formik, flagUpdateFiel
         console.log('====>>SCHEDULE: data channel find<<====', channelData)
         if (channelData) {
           setStateChannelMedia(channelData.state)
+          if (!initStateChannelMedia) {
+            setInitStateChannelMedia(channelData.state)
+          }
         } else {
           setStateChannelMedia(null)
         }
@@ -126,8 +132,10 @@ const StreamingReservationContainer: React.FC<Props> = ({ formik, flagUpdateFiel
         handleUpdateValidateField={handleUpdateValidateField}
         validateFieldProps={validateFieldProps}
         stateChannelArn={stateChannelMedia}
+        visibleLoading={step === 3 && stateChannelMedia && stateChannelMedia !== EVENT_STATE_CHANNEL.RUNNING}
+        disableLoader={modal && (stateChannelMedia === EVENT_STATE_CHANNEL.RUNNING || !stateChannelMedia)}
       />
-      <ESModal open={modal} handleClose={handleClose}>
+      <ESModal open={modal && (stateChannelMedia === EVENT_STATE_CHANNEL.RUNNING || !stateChannelMedia)} handleClose={handleClose}>
         <BlankLayout>
           <SettingsCompleted
             titleNotification={t('common:streaming_setting_screen.tab2_notification_title')}
@@ -137,6 +145,15 @@ const StreamingReservationContainer: React.FC<Props> = ({ formik, flagUpdateFiel
           />
         </BlankLayout>
       </ESModal>
+      {step === 3 && stateChannelMedia && stateChannelMedia !== EVENT_STATE_CHANNEL.RUNNING && (
+        <ESLoader
+          open={true}
+          showNote={
+            (stateChannelMedia === EVENT_STATE_CHANNEL.STOPPED || stateChannelMedia === EVENT_STATE_CHANNEL.UPDATED) &&
+            initStateChannelMedia === EVENT_STATE_CHANNEL.RUNNING
+          }
+        />
+      )}
     </>
   )
 }

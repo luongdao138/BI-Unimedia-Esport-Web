@@ -41,7 +41,7 @@ import { CommonHelper } from '@utils/helpers/CommonHelper'
 
 interface StepsProps {
   step: number
-  onNext: (step: number, isShare?: boolean, post?: { title: string; content: string }, existText?: boolean) => void
+  onNext: (step: number, isShare?: boolean, post?: { title: string; content: string }) => void
   category: GetCategoryResponse
   formik?: FormikProps<FormLiveType>
   isShare?: boolean

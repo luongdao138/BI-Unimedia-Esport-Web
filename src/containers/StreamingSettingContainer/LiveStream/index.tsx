@@ -32,8 +32,8 @@ const LiveStreamContainer: React.FC<Props> = ({ formik }) => {
   })
   const [stateChannelMedia, setStateChannelMedia] = useState(null)
 
-  const onChangeStep = (step: number, isShare?: boolean, post?: { title: string; content: string }, existText?: boolean): void => {
-    console.log('click next step', step, stateChannelMedia, existText)
+  const onChangeStep = (step: number, isShare?: boolean, post?: { title: string; content: string }): void => {
+    console.log('click next step', step, stateChannelMedia)
     setStep(step)
     setShare(isShare)
     setPost(post)

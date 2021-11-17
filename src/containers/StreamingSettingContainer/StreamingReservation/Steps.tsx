@@ -51,6 +51,8 @@ interface StepsProps {
   handleUpdateValidateField?: (value: string) => void
   validateFieldProps?: string
   stateChannelArn?: string
+  visibleLoading?: boolean
+  disableLoader?: boolean
 }
 
 const KEY_TYPE = {
@@ -71,6 +73,8 @@ const Steps: React.FC<StepsProps> = ({
   validateFieldProps,
   handleUpdateValidateField,
   stateChannelArn,
+  visibleLoading,
+  disableLoader,
 }) => {
   const classes = useStyles()
   const dispatch = useAppDispatch()
@@ -93,7 +97,6 @@ const Steps: React.FC<StepsProps> = ({
   // const [statusRecordSetting, setStatusRecordSetting] = useState()
   const [onChangeFlag, setOnChangeFlag] = useState(false) //false-edit # date, true - edit date,
   const [isLoading, setLoading] = useState(false)
-  const [clickRenew, setClickRenew] = useState(false)
   const [dataRenew, setDataRenew] = useState(null)
   const [flagArn, setFlagArn] = useState(false)
 
@@ -180,7 +183,6 @@ const Steps: React.FC<StepsProps> = ({
     // if (onChangeFlag && !statusRecordSetting) {
     setValidateField('all')
     handleUpdateValidateField('all')
-    setClickRenew(false)
     setTimeout(() => {
       formik.validateForm().then((err) => {
         if (_.isEmpty(err.stepSettingTwo)) {
@@ -266,7 +268,6 @@ const Steps: React.FC<StepsProps> = ({
 
   const debouncedHandleRenewURLAndKey = useCallback(
     _.debounce((params: StreamUrlAndKeyParams) => {
-      setClickRenew(true)
       getStreamUrlAndKey(params, (url, key, arn, data) => {
         setDataRenew(data)
         setLoading(true)
@@ -293,25 +294,21 @@ const Steps: React.FC<StepsProps> = ({
     if (stateChannelArn === EVENT_STATE_CHANNEL.RUNNING) {
       setFlagArn(true)
     }
-    if (isLoading) {
-      if (status || status === 0) {
-        if (flagArn) {
-          if (dataRenew) {
-            setLoading(stateChannelArn !== EVENT_STATE_CHANNEL.RUNNING)
-            stateChannelArn === EVENT_STATE_CHANNEL.RUNNING &&
-              dispatch(commonActions.addToast(t('common:streaming_setting_screen.renew_success_toast')))
-          } else {
-            setLoading(true)
-          }
+    if (!isLoading) return
+    if (status || status === 0) {
+      if (flagArn) {
+        if (dataRenew) {
+          setLoading(stateChannelArn !== EVENT_STATE_CHANNEL.STOPPED && stateChannelArn !== EVENT_STATE_CHANNEL.UPDATED)
+          stateChannelArn === EVENT_STATE_CHANNEL.STOPPED &&
+            dispatch(commonActions.addToast(t('common:streaming_setting_screen.renew_success_toast')))
         } else {
-          setLoading(!dataRenew)
+          setLoading(true)
         }
       } else {
         setLoading(!dataRenew)
       }
-    }
-    if (stateChannelArn === EVENT_STATE_CHANNEL.UPDATED && clickRenew && (status || status === 0) && flagArn) {
-      onReNewUrlAndKey(TYPE_SECRET_KEY.URL, TYPE_SECRET_KEY.GET)
+    } else {
+      setLoading(!dataRenew)
     }
   }, [stateChannelArn, isLoading])
 
@@ -1166,8 +1163,7 @@ const Steps: React.FC<StepsProps> = ({
           )}
         </form>
       </Box>
-      {/* <ESLoader open={isPending || isPendingSetting} /> */}
-      <ESLoader open={isPending || isPendingSetting || isLoading} showNote={clickRenew} />
+      {!visibleLoading && !disableLoader && <ESLoader open={isPending || isPendingSetting || isLoading} showNote={false} />}
     </Box>
   )
 }
