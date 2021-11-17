@@ -111,16 +111,20 @@ const LiveStreamContainer: React.FC<Props> = ({ formik }) => {
   }, [formik?.values?.stepSettingOne?.arn])
 
   useEffect(() => {
+    let unSub
     if (step === 3 && stateChannelMedia && stateChannelMedia !== EVENT_STATE_CHANNEL.RUNNING) {
       setLoading(true)
     } else {
       if (!loading) {
         return
       }
-      setTimeout(() => {
+      unSub = setTimeout(() => {
         setLoading(false)
         setShowResultDialog(true)
       }, CONFIRM_SETTING_DELAY)
+    }
+    return () => {
+      clearTimeout(unSub)
     }
   }, [step, stateChannelMedia])
 
