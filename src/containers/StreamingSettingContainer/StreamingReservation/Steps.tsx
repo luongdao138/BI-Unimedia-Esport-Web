@@ -306,9 +306,13 @@ const Steps: React.FC<StepsProps> = ({
         }
       } else {
         setLoading(!dataRenew)
+        stateChannelArn === EVENT_STATE_CHANNEL.STOPPED &&
+          dispatch(commonActions.addToast(t('common:streaming_setting_screen.renew_success_toast')))
       }
     } else {
       setLoading(!dataRenew)
+      stateChannelArn === EVENT_STATE_CHANNEL.STOPPED &&
+        dispatch(commonActions.addToast(t('common:streaming_setting_screen.renew_success_toast')))
     }
   }, [stateChannelArn, isLoading])
 

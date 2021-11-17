@@ -322,6 +322,9 @@ const Steps: React.FC<StepsProps> = ({
       if (!obsNotEnable) {
         //created
         setLoading(!renewData)
+        if (stateChannelArn === EVENT_STATE_CHANNEL.STOPPED || stateChannelArn === EVENT_STATE_CHANNEL.UPDATED) {
+          dispatch(commonActions.addToast(t('common:streaming_setting_screen.renew_success_toast')))
+        }
       } else if (renewData) {
         setLoading(!(stateChannelArn === EVENT_STATE_CHANNEL.STOPPED || stateChannelArn === EVENT_STATE_CHANNEL.UPDATED))
         if (stateChannelArn === EVENT_STATE_CHANNEL.STOPPED || stateChannelArn === EVENT_STATE_CHANNEL.UPDATED) {
