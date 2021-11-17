@@ -39,6 +39,7 @@ import moment from 'moment'
 import Linkify from 'react-linkify'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
 import { LiveStreamSettingHelper } from '@utils/helpers/LiveStreamSettingHelper'
+import CharacterLimited from '@components/CharacterLimited'
 
 interface StepsProps {
   step: number
@@ -455,6 +456,7 @@ const Steps: React.FC<StepsProps> = ({
                 size="big"
                 disabled={!isFirstStep()}
                 className={getAddClassByStep(classes.input_text)}
+                endAdornment={isFirstStep() && <CharacterLimited value={formik.values.stepSettingOne.title} limit={100} />}
               />
             </div>
           </Box>
@@ -492,6 +494,9 @@ const Steps: React.FC<StepsProps> = ({
                   size="big"
                   disabled={!isFirstStep()}
                   className={getAddClassByStep(classes.input_text)}
+                  endAdornment={
+                    isFirstStep() && <CharacterLimited value={formik.values.stepSettingOne.description} limit={5000} multiLines />
+                  }
                 />
               ) : (
                 <>
