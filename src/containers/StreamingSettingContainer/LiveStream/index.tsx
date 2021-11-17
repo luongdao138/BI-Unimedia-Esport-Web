@@ -30,10 +30,10 @@ const LiveStreamContainer: React.FC<Props> = ({ formik }) => {
     title: '',
     content: '',
   })
-  const [stateChannelMedia, setStateChannelMedia] = useState(EVENT_STATE_CHANNEL.STARTING)
+  const [stateChannelMedia, setStateChannelMedia] = useState(null)
 
-  const onChangeStep = (step: number, isShare?: boolean, post?: { title: string; content: string }): void => {
-    console.log('click next step', step, stateChannelMedia)
+  const onChangeStep = (step: number, isShare?: boolean, post?: { title: string; content: string }, existText?: boolean): void => {
+    console.log('click next step', step, stateChannelMedia, existText)
     setStep(step)
     setShare(isShare)
     setPost(post)
@@ -118,6 +118,8 @@ const LiveStreamContainer: React.FC<Props> = ({ formik }) => {
         titlePost={post.title}
         contentPost={post.content}
         stateChannelArn={stateChannelMedia}
+        visibleLoading={step === 3 && stateChannelMedia && stateChannelMedia !== EVENT_STATE_CHANNEL.RUNNING}
+        disableLoader={modal && (stateChannelMedia === EVENT_STATE_CHANNEL.RUNNING || !stateChannelMedia)}
       />
       <ESModal open={modal && (stateChannelMedia === EVENT_STATE_CHANNEL.RUNNING || !stateChannelMedia)} handleClose={handleClose}>
         <BlankLayout>
