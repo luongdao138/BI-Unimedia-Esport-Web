@@ -4,7 +4,7 @@ import ESTabs from '@components/Tabs'
 import i18n from '@locales/i18n'
 import { Box, Grid, makeStyles, Typography } from '@material-ui/core'
 import { Colors } from '@theme/colors'
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState, useRef, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import DistributorInfo from './DistributorInfo'
 import ProgramInfo from './ProgramInfo'
@@ -40,6 +40,7 @@ import _ from 'lodash'
 import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
 import LiveStreamContent from './LiveStreamContent'
 import { onUpdateChannel } from 'src/graphql/subscriptions'
+import { PurchaseTicketParams } from '@services/points.service'
 
 enum TABS {
   PROGRAM_INFO = 1,
@@ -370,15 +371,30 @@ const VideoDetail: React.FC = () => {
     setShowPurchaseTicketModal(false)
   }
   // purchase ticket
-  const doConfirmPurchaseTicket = async () => {
-    await purchaseTicketSuperChat({
+  const debouncedHandleConfirmPurchaseTicket = useCallback(
+    _.debounce((params: PurchaseTicketParams) => {
+      purchaseTicketSuperChat(params)
+    }, 700),
+    []
+  )
+  const doConfirmPurchaseTicket = () => {
+    debouncedHandleConfirmPurchaseTicket({
       point: detailVideoResult?.ticket_price,
       type: PURCHASE_TYPE.PURCHASE_TICKET,
-      video_id: getVideoId(),
+      video_id: detailVideoResult && detailVideoResult.uuid ? detailVideoResult.uuid : '',
       handleError: handleShowErrorPurchaseTicketModal,
       handleSuccess: handlePurchaseTicketSuccess,
     })
   }
+  // const doConfirmPurchaseTicket = async () => {
+  //   await purchaseTicketSuperChat({
+  //     point: detailVideoResult?.ticket_price,
+  //     type: PURCHASE_TYPE.PURCHASE_TICKET,
+  //     video_id: getVideoId(),
+  //     handleError: handleShowErrorPurchaseTicketModal,
+  //     handleSuccess: handlePurchaseTicketSuccess,
+  //   })
+  // }
 
   const getTabs = () => {
     return (

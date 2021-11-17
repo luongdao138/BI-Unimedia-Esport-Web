@@ -1689,6 +1689,7 @@ export default {
     after_stream_ended: '配信終了後から',
     live_streaming: '配信設定',
     refresh_new_live: '最新を再生',
+    warning_confirm_purchase_ticket: '決裁中はボタンを複数回押さないでください',
   },
   video_search: {
     video_results: '動画「:key」 の検索結果',
