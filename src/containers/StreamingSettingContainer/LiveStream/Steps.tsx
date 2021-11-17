@@ -41,13 +41,15 @@ import { CommonHelper } from '@utils/helpers/CommonHelper'
 
 interface StepsProps {
   step: number
-  onNext: (step: number, isShare?: boolean, post?: { title: string; content: string }) => void
+  onNext: (step: number, isShare?: boolean, post?: { title: string; content: string }, existText?: boolean) => void
   category: GetCategoryResponse
   formik?: FormikProps<FormLiveType>
   isShare?: boolean
   titlePost?: string
   contentPost?: string
   stateChannelArn?: string
+  visibleLoading?: boolean
+  disableLoader?: boolean
 }
 const KEY_TYPE = {
   URL: 1,
@@ -55,7 +57,18 @@ const KEY_TYPE = {
   UUID: 3,
 }
 
-const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, titlePost, contentPost, stateChannelArn }) => {
+const Steps: React.FC<StepsProps> = ({
+  step,
+  onNext,
+  category,
+  formik,
+  isShare,
+  titlePost,
+  contentPost,
+  stateChannelArn,
+  visibleLoading,
+  disableLoader,
+}) => {
   const classes = useStyles()
   const dispatch = useAppDispatch()
   const { t } = useTranslation(['common'])
@@ -70,7 +83,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
   // const [errPublicTime, setErrPublicTime] = useState(false)
   const [isLive, setIsLive] = useState<boolean>(false)
   const [isLoading, setLoading] = useState(false)
-  const [clickRenew, setClickRenew] = useState(false)
+  const [clickShowText, setClickShowText] = useState(false)
   const [renewData, setRenewData] = useState(null)
 
   useEffect(() => {
@@ -176,6 +189,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
     }
   }
   const onClickPrev = () => {
+    setClickShowText(false)
     onNext(step - 1, formik.values.stepSettingOne.share_sns_flag, {
       title: formik.values.stepSettingOne.title,
       content: `${baseViewingURL}${formik.values.stepSettingOne.linkUrl}`,
@@ -238,6 +252,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
       stream_key: stream_key,
       video_publish_end_time: video_publish_end_time !== null ? CommonHelper.formatDateTimeJP(video_publish_end_time) : null,
     }
+    setClickShowText(true)
     setLiveStreamConfirm(data, () => {
       onNext(step + 1, share_sns_flag, {
         title: formik.values.stepSettingOne.title,
@@ -277,7 +292,6 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
 
   const debouncedHandleRenewURLAndKey = useCallback(
     _.debounce((params: StreamUrlAndKeyParams) => {
-      setClickRenew(true)
       getStreamUrlAndKey(params, (url, key, arn, data) => {
         setRenewData(data)
         setLoading(true)
@@ -301,6 +315,9 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
   }
 
   useEffect(() => {
+    //keep (loading + text) when reload page : update + STARTING
+    setLoading(stateChannelArn === EVENT_STATE_CHANNEL.STARTING && obsNotEnable)
+    setClickShowText(stateChannelArn === EVENT_STATE_CHANNEL.STARTING && obsNotEnable)
     if (isLoading) {
       if (!obsNotEnable) {
         //created
@@ -811,7 +828,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
           )}
         </form>
       </Box>
-      <ESLoader open={isPending || isPendingSetting || isLoading} showNote={clickRenew} />
+      {!visibleLoading && !disableLoader && <ESLoader open={isPending || isPendingSetting || isLoading} showNote={clickShowText} />}
     </Box>
   )
 }
