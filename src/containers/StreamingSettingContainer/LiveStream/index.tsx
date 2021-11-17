@@ -12,7 +12,7 @@ import BlankLayout from '@layouts/BlankLayout'
 import { FormLiveType } from '@containers/arena/UpsertForm/FormLiveSettingsModel/FormLiveSettingsType'
 import { FormikProps } from 'formik'
 import ESLoader from '@components/FullScreenLoaderNote'
-import { EVENT_STATE_CHANNEL } from '@constants/common.constants'
+import { CONFIRM_SETTING_DELAY, EVENT_STATE_CHANNEL } from '@constants/common.constants'
 import API, { GraphQLResult, graphqlOperation } from '@aws-amplify/api'
 import { onUpdateChannel } from 'src/graphql/subscriptions'
 import * as APIt from 'src/types/graphqlAPI'
@@ -32,6 +32,8 @@ const LiveStreamContainer: React.FC<Props> = ({ formik }) => {
     content: '',
   })
   const [stateChannelMedia, setStateChannelMedia] = useState(null)
+  const [loading, setLoading] = useState(false)
+  const [showResultDialog, setShowResultDialog] = useState(false)
 
   const onChangeStep = (step: number, isShare?: boolean, post?: { title: string; content: string }): void => {
     console.log('click next step', step, stateChannelMedia)
@@ -108,6 +110,20 @@ const LiveStreamContainer: React.FC<Props> = ({ formik }) => {
     checkChannelState()
   }, [formik?.values?.stepSettingOne?.arn])
 
+  useEffect(() => {
+    if (step === 3 && stateChannelMedia && stateChannelMedia !== EVENT_STATE_CHANNEL.RUNNING) {
+      setLoading(true)
+    } else {
+      if (!loading) {
+        return
+      }
+      setTimeout(() => {
+        setLoading(false)
+        setShowResultDialog(true)
+      }, CONFIRM_SETTING_DELAY)
+    }
+  }, [step, stateChannelMedia])
+
   return (
     <>
       <Steps
@@ -122,12 +138,12 @@ const LiveStreamContainer: React.FC<Props> = ({ formik }) => {
         visibleLoading={step === 3 && stateChannelMedia && stateChannelMedia !== EVENT_STATE_CHANNEL.RUNNING}
         disableLoader={modal && (stateChannelMedia === EVENT_STATE_CHANNEL.RUNNING || !stateChannelMedia)}
       />
-      <ESModal open={modal && (stateChannelMedia === EVENT_STATE_CHANNEL.RUNNING || !stateChannelMedia)} handleClose={handleClose}>
+      <ESModal open={modal && showResultDialog} handleClose={handleClose}>
         <BlankLayout>
           <SettingsCompleted onClose={onClose} onComplete={onComplete} />
         </BlankLayout>
       </ESModal>
-      <Box style={{ display: step === 3 && stateChannelMedia && stateChannelMedia !== EVENT_STATE_CHANNEL.RUNNING ? 'flex' : 'none' }}>
+      <Box style={{ display: loading ? 'flex' : 'none' }}>
         <ESLoader open={true} />
       </Box>
     </>
