@@ -41,7 +41,7 @@ import Linkify from 'react-linkify'
 
 interface StepsProps {
   step: number
-  onNext: (step: number, isShare?: boolean, post?: { title: string; content: string }) => void
+  onNext: (step: number, isShare?: boolean, post?: { title: string; content: string }, channel_progress?: string) => void
   category: GetCategoryResponse
   formik?: FormikProps<FormLiveType>
   isShare?: boolean
@@ -335,11 +335,17 @@ const Steps: React.FC<StepsProps> = ({
       video_publish_end_time:
         stepSettingTwo.video_publish_end_time !== null ? CommonHelper.formatDateTimeJP(stepSettingTwo.video_publish_end_time) : null,
     }
-    setLiveStreamConfirm(data, () => {
-      onNext(step + 1, stepSettingTwo.share_sns_flag, {
-        title: stepSettingTwo.title,
-        content: `${baseViewingURL}${stepSettingTwo.uuid}`,
-      })
+    setLiveStreamConfirm(data, (process) => {
+      // console.log('process===', process);
+      onNext(
+        step + 1,
+        stepSettingTwo.share_sns_flag,
+        {
+          title: stepSettingTwo.title,
+          content: `${baseViewingURL}${stepSettingTwo.uuid}`,
+        },
+        process
+      )
       formik.setFieldValue('stepSettingTwo.step_setting', step + 1)
       const { left, top } = getBoxPositionOnWindowCenter(550, 400)
       if (isShare) {

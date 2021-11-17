@@ -141,6 +141,7 @@ export type SetLiveStreamResponse = {
     status?: number
     user_id?: string
     thumbnail?: string
+    channel_progress?: string
   }
 }
 

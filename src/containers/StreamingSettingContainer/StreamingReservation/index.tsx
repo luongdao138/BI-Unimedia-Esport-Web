@@ -40,9 +40,16 @@ const StreamingReservationContainer: React.FC<Props> = ({ formik, flagUpdateFiel
   })
   const [stateChannelMedia, setStateChannelMedia] = useState(null)
   const [initStateChannelMedia, setInitStateChannelMedia] = useState(null)
+  const [channelProgress, setChannelProgress] = useState(null)
 
-  const onChangeStep = (step: number, isShare?: boolean, post?: { title: string; content: string }): void => {
-    // console.log('SCHEDULE: click next step', step, stateChannelMedia)
+  const onChangeStep = (step: number, isShare?: boolean, post?: { title: string; content: string }, channel_progress?: string): void => {
+    console.log('SCHEDULE: click next step', step, stateChannelMedia, channel_progress)
+    if (channel_progress === undefined || channel_progress === null) {
+      setChannelProgress('data')
+    } else {
+      setChannelProgress(null)
+    }
+
     setStep(step)
     setShare(isShare)
     setPost(post)
@@ -148,11 +155,8 @@ const StreamingReservationContainer: React.FC<Props> = ({ formik, flagUpdateFiel
       </ESModal>
       <Box style={{ display: step === 3 && stateChannelMedia && stateChannelMedia !== EVENT_STATE_CHANNEL.RUNNING ? 'flex' : 'none' }}>
         <ESLoader
-          open={true}
-          showNote={
-            (stateChannelMedia === EVENT_STATE_CHANNEL.STOPPED || stateChannelMedia === EVENT_STATE_CHANNEL.UPDATED) &&
-            initStateChannelMedia === EVENT_STATE_CHANNEL.RUNNING
-          }
+          open={!channelProgress}
+          showNote={!!formik?.values?.stepSettingTwo?.status || formik?.values?.stepSettingTwo?.status === 0}
         />
       </Box>
     </>

@@ -43,10 +43,10 @@ const useLiveSetting = () => {
   const liveSettingInformation = useAppSelector(selectors.getLiveStreamSetting)
   const scheduleInformation = useAppSelector(selectors.getScheduleSetting)
   const streamUrlAndKeyInformation = useAppSelector(selectors.getStreamUrlAndKey)
-  const setLiveStreamConfirm = async (param: SetLiveStreamParams, onSuccess: () => void) => {
+  const setLiveStreamConfirm = async (param: SetLiveStreamParams, onSuccess: (channel_progress) => void) => {
     const resultAction = await dispatch(actions.setLiveStream(param))
     if (actions.setLiveStream.fulfilled.match(resultAction)) {
-      onSuccess()
+      onSuccess(resultAction.payload.data?.channel_progress)
     } else {
       dispatch(addToast(i18n.t('common:common.failed_to_get_data')))
     }
