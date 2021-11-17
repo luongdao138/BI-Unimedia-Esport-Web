@@ -258,7 +258,7 @@ export default {
     viewing_history: '視聴履歴',
     delivery_management: '配信管理',
     video_distribution_application: '動画配信申請',
-    eXeLAB_link: 'eXeLABへ',
+    eXeLAB_link: 'eXeLAB TOPへ',
     stream_menu_video_top: '動画TOPへ',
   },
   community: {
