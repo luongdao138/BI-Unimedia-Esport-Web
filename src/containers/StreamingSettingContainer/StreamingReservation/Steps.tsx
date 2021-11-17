@@ -1038,9 +1038,14 @@ const Steps: React.FC<StepsProps> = ({
             )}
           </Box>
           {isFirstStep() && (
-            <Typography className={`${classes.captionNote} ${classes.addPaddingNote}`}>
-              {i18n.t('common:streaming_setting_screen.note_stream_url')}
-            </Typography>
+            <>
+              <Typography className={`${classes.captionNote} ${classes.addPaddingNote}`}>
+                {i18n.t('common:streaming_setting_screen.note_stream_url')}
+              </Typography>
+              <Typography className={`${classes.captionNote} ${classes.addPaddingNote}`}>
+                {i18n.t('common:streaming_setting_screen.note_stream_url_bottom')}
+              </Typography>
+            </>
           )}
           {/* stream key */}
           <Box pb={2} pt={2} className={classes.wrap_input} flexDirection="row" display="flex" alignItems="flex-end">
