@@ -342,3 +342,5 @@ export const EVENT_STATE_CHANNEL = {
   DELETED: 'DELETED',
   UPDATED: 'UPDATED',
 }
+
+export const CONFIRM_SETTING_DELAY = 10 * 1000
