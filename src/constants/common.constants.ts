@@ -343,4 +343,4 @@ export const EVENT_STATE_CHANNEL = {
   UPDATED: 'UPDATED',
 }
 
-export const CONFIRM_SETTING_DELAY = 10 * 1000
+export const CONFIRM_SETTING_DELAY = 20 * 1000
