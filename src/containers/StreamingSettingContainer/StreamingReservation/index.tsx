@@ -143,7 +143,10 @@ const StreamingReservationContainer: React.FC<Props> = ({ formik, flagUpdateFiel
         visibleLoading={step === 3 && stateChannelMedia && stateChannelMedia !== EVENT_STATE_CHANNEL.RUNNING}
         disableLoader={modal && (stateChannelMedia === EVENT_STATE_CHANNEL.RUNNING || !stateChannelMedia)}
       />
-      <ESModal open={modal && (stateChannelMedia === EVENT_STATE_CHANNEL.RUNNING || !stateChannelMedia)} handleClose={handleClose}>
+      <ESModal
+        open={modal && (stateChannelMedia === EVENT_STATE_CHANNEL.RUNNING || !stateChannelMedia || channelProgress)}
+        handleClose={handleClose}
+      >
         <BlankLayout>
           <SettingsCompleted
             titleNotification={t('common:streaming_setting_screen.tab2_notification_title')}
