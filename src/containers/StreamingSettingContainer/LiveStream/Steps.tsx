@@ -828,7 +828,9 @@ const Steps: React.FC<StepsProps> = ({
           )}
         </form>
       </Box>
-      {!visibleLoading && !disableLoader && <ESLoader open={isPending || isPendingSetting || isLoading} showNote={clickShowText} />}
+      <Box style={{ display: !visibleLoading && !disableLoader ? 'flex' : 'none' }}>
+        <ESLoader open={isPending || isPendingSetting || isLoading} showNote={clickShowText} />
+      </Box>
     </Box>
   )
 }

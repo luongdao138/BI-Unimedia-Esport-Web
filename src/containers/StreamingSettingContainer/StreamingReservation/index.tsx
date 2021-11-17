@@ -17,6 +17,7 @@ import * as APIt from 'src/types/graphqlAPI'
 import { getChannelByArn } from 'src/graphql/queries'
 import { EVENT_STATE_CHANNEL } from '@constants/common.constants'
 import ESLoader from '@components/FullScreenLoaderNote'
+import { Box } from '@material-ui/core'
 
 interface Props {
   formik?: FormikProps<FormLiveType>
@@ -145,7 +146,7 @@ const StreamingReservationContainer: React.FC<Props> = ({ formik, flagUpdateFiel
           />
         </BlankLayout>
       </ESModal>
-      {step === 3 && stateChannelMedia && stateChannelMedia !== EVENT_STATE_CHANNEL.RUNNING && (
+      <Box style={{ display: step === 3 && stateChannelMedia && stateChannelMedia !== EVENT_STATE_CHANNEL.RUNNING ? 'flex' : 'none' }}>
         <ESLoader
           open={true}
           showNote={
@@ -153,7 +154,7 @@ const StreamingReservationContainer: React.FC<Props> = ({ formik, flagUpdateFiel
             initStateChannelMedia === EVENT_STATE_CHANNEL.RUNNING
           }
         />
-      )}
+      </Box>
     </>
   )
 }
