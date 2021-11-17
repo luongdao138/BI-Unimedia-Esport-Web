@@ -9,6 +9,7 @@ import i18n from '@locales/i18n'
 import ESInput from '@components/Input'
 import { Colors } from '@theme/colors'
 import Yup from '@utils/Yup'
+import CharacterLimited from '@components/CharacterLimited'
 
 export type SnsInfoParams = {
   instagram_link: string
@@ -81,6 +82,7 @@ const SnsInfoStream: React.FC<SnsInfoStreamProps> = ({ social, onDataChange, han
                 error={!!errors?.discord_link}
                 disabled={showPreview}
                 className={getAddClassByShowPreview(classes.input_text)}
+                endAdornment={<CharacterLimited value={values.discord_link} limit={250} />}
               />
             </Box>
           </Grid>
@@ -99,6 +101,7 @@ const SnsInfoStream: React.FC<SnsInfoStreamProps> = ({ social, onDataChange, han
                 placeholder={!isFirstStep && !values.twitter_link ? '' : i18n.t('common:streaming_setting_screen.twitter_placeholder')}
                 disabled={showPreview}
                 className={getAddClassByShowPreview(classes.input_text)}
+                endAdornment={<CharacterLimited value={values.twitter_link} limit={250} />}
               />
             </Box>
           </Grid>
@@ -116,6 +119,7 @@ const SnsInfoStream: React.FC<SnsInfoStreamProps> = ({ social, onDataChange, han
                 placeholder={!isFirstStep && !values.instagram_link ? '' : i18n.t('common:streaming_setting_screen.instagram_placeholder')}
                 disabled={showPreview}
                 className={getAddClassByShowPreview(classes.input_text)}
+                endAdornment={<CharacterLimited value={values.instagram_link} limit={250} />}
               />
             </Box>
           </Grid>

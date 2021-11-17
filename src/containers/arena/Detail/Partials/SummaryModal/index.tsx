@@ -19,6 +19,7 @@ import { showDialog } from '@store/common/actions'
 import { NG_WORD_DIALOG_CONFIG, NG_WORD_AREA } from '@constants/common.constants'
 import useDocTitle from '@utils/hooks/useDocTitle'
 import _ from 'lodash'
+import CharacterLimited from '@components/CharacterLimited'
 
 interface SummaryModalProps {
   tournament: TournamentDetail
@@ -138,6 +139,7 @@ const SummaryModal: React.FC<SummaryModalProps> = ({ tournament, open, handleClo
                 size="small"
                 multiline
                 rows={7}
+                endAdornment={<CharacterLimited value={values.summary} limit={5000} />}
               />
             </Box>
             <Box className={classes.stickyFooter}>

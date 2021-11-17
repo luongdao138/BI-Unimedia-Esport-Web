@@ -26,6 +26,7 @@ import { ESRoutes } from '@constants/route.constants'
 import { useRouter } from 'next/router'
 import { FocusContext, FocusContextProvider } from '@utils/hooks/input-focus-context'
 import i18n from '@locales/i18n'
+import CharacterLimited from '@components/CharacterLimited'
 
 interface EntryEditModalProps {
   tournament: TournamentDetail
@@ -194,6 +195,7 @@ const InidividualEntryEditModal: React.FC<EntryEditModalProps> = ({
                         error={!!errors.nickname}
                         required
                         {...focusEvent}
+                        endAdornment={<CharacterLimited value={values.nickname} limit={40} />}
                       />
                     </Box>
                   </Box>
