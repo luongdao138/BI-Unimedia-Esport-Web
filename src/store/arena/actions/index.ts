@@ -2,6 +2,7 @@ import { createAsyncThunk, createAction } from '@reduxjs/toolkit'
 import * as services from '@services/arena.service'
 import { SEARCH_ACTION_TYPE, TOURNAMENT_ACTION_TYPE, CLEAR_RECOMMENDED_USERS, CLEAR_TOURNAMENT_RESULT } from './types'
 import * as types from './types'
+import { SetBattleRoyaleScoresResponse } from '@services/arena.service'
 
 export const tournamentSearch = createAsyncThunk<services.TournamentSearchResponse, services.TournamentSearchParams>(
   SEARCH_ACTION_TYPE.TOURNAMENT_SEARCH,
@@ -161,6 +162,21 @@ export const getTournamentParticipants = createAsyncThunk<services.GetParticipan
   }
 )
 
+export const getBattleRoyaleParticipants = createAsyncThunk<services.GetParticipantsResponse, services.GetParticipantsParams>(
+  types.GET_BATTLE_ROYALE_PARTICIPANTS,
+  async (param, { rejectWithValue }) => {
+    try {
+      const res = await services.getBattleRoyaleParticipants(param)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
 export const resetParticipants = createAction(types.RESET_TOURNAMENT_PARTICIPANTS)
 
 export const getSuggestedTeamMembers = createAsyncThunk<services.GetSuggestedTeamMembersResponse, services.GetSuggestedTeamMembersParams>(
@@ -284,6 +300,8 @@ export const getRecommendedUsersByName = createAsyncThunk<services.RecommendedUs
 
 export const clearRecommendedUsers = createAction(CLEAR_RECOMMENDED_USERS)
 export const clearTournamentResult = createAction(CLEAR_TOURNAMENT_RESULT)
+export const clearArenaDetail = createAction(types.CLEAR_ARENA_DETAIL)
+export const clearArenaWinners = createAction(types.CLEAR_ARENA_WINNERS)
 
 export const createTournament = createAsyncThunk<services.CreateTournamentResponse, services.TournamentFormParams>(
   types.CREATE_TOURNAMENT,
@@ -431,4 +449,49 @@ export const updateTournamentTeamDetail = createAsyncThunk<void, services.Update
 
 export const teamMemberFollowStageChanged = createAction<{ userId: number; state: number }>(
   TOURNAMENT_ACTION_TYPE.TEAM_MEMBER_FOLLOW_STATE_CHANGED
+)
+
+export const setBattleRoyaleScores = createAsyncThunk<SetBattleRoyaleScoresResponse, services.SetBattleRoyaleScoresParams>(
+  types.SET_BATTLE_ROYALE_SCORES,
+  async (param, { rejectWithValue }) => {
+    try {
+      const res = await services.setBattleRoyalScores({ ...param })
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
+export const setBattleRoyaleOwnScore = createAsyncThunk<SetBattleRoyaleScoresResponse, services.SetBattleRoyaleScoresParams>(
+  types.SET_BATTLE_ROYALE_SCORES,
+  async (param, { rejectWithValue }) => {
+    try {
+      const res = await services.setBattleRoyalOwnScore(param)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
+export const getBattleRoyaleWinners = createAsyncThunk<services.GetParticipantsResponse, string>(
+  types.GET_BATTLE_ROYALE_WINNERS,
+  async (param, { rejectWithValue }) => {
+    try {
+      const res = await services.getBattleRoyalWinners(param)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
 )

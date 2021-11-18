@@ -6,6 +6,8 @@ import reducer from './reducers'
 import { authMiddleware } from './middlewares/authMiddleware'
 import { webSocketMiddle } from './middlewares/socketMiddleware'
 import { webSyncMiddle } from './middlewares/webSyncMiddleware'
+import { lobbyMiddlware } from './middlewares/lobbyMiddleware'
+import { communityMiddleware } from './middlewares/communityMiddleware'
 import liveSocketMiddleware from './middlewares/liveSocketMiddleware'
 
 const initStore = () => {
@@ -34,7 +36,7 @@ const initStore = () => {
         serializableCheck: {
           ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
         },
-      }).concat(authMiddleware, webSocketMiddle, webSyncMiddle, liveSocketMiddleware),
+      }).concat(authMiddleware, webSocketMiddle, webSyncMiddle, lobbyMiddlware, communityMiddleware, liveSocketMiddleware),
     })
 
     return store

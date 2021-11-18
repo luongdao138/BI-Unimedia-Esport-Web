@@ -20,8 +20,8 @@ export const ESRoutes = {
   MESSAGE: '/message/',
   MESSAGE_PATHNAME: '/message',
   MESSAGE_ROOM_CREATE: '/message/create',
-  RECRUITMENT_RECOMMENDED: '/recruitment/recommended',
-  RECRUITMENT_FOLLOWER: '/recruitment/follower',
+  LOBBY_RECOMMENDED: '/lobby/recommended',
+  LOBBY_FOLLOWER: '/lobby/follower',
   EVENT_RECOMMENDED: '/event/recommended',
   TOURNAMENT_FOLLOWER_ENTERING: '/arena/follower/entering',
   TOURNAMENT_FOLLOWER_ENDED: '/arena/follower/ended',
@@ -52,10 +52,34 @@ export const ESRoutes = {
   ARENA_DETAIL: '/arena/:id',
   GROUP_CHAT: '/message/:id',
   SEARCH: '/search',
+  LOBBY: '/lobby',
+  LOBBY_CREATE: '/lobby/create',
+  LOBBY_DETAIL: '/lobby/:id',
+  COMMUNITY: '/community',
+  COMMUNITY_DETAIL: '/community/:id',
+  COMMUNITY_CREATE: '/community/create',
+  TOPIC: '/community/:id/topic',
+  TOPIC_CREATE: '/community/:id/topic/create',
   EVENTS: '/events',
   STREAM: '/stream',
   ARCHIVE: '/archive',
   PR: '/pr',
   LINE_CALLBACK: '/line/callback',
   TWITTER_CALLBACK: '/twitter/callback',
+  // w01-01
+  VIDEO_STREAMING_MANAGEMENT: '/video/streaming_manage',
+  // w01-02
+  VIDEO_STREAMING_SETTING: '/video/streaming_setting',
+  // w02-01
+  VIDEO_TOP: '/videos/top',
+  // w02-02
+  VIDEO_LIVE_STREAM: '/live',
+  VIDEO_ARCHIVED: '/archived',
+  VIDEO_RESERVED: '/reserved',
+  //w02-05
+  DONATE_POINTS: '/live/donate_points',
+  // w03-02
+  USER_POINT_MANAGEMENT: '/settings/points',
+  // w00
+  SEARCH_VIDEO: '/search/video',
 }

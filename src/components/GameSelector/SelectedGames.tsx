@@ -1,18 +1,22 @@
 import { Container, List, useMediaQuery, useTheme } from '@material-ui/core'
 import Chip from '@components/Chip'
+import { forwardRef } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { GameTitle } from '@services/game.service'
 import { Colors } from '@theme/colors'
+import useScrollClass from './useScrollClass'
 
 type SelectedGamesProps = { games: GameTitle['attributes'][]; handleRemove: (game: GameTitle['attributes']) => void }
-const SelectedGames: React.FC<SelectedGamesProps> = ({ games, handleRemove }) => {
+
+const SelectedGames = forwardRef<HTMLDivElement, SelectedGamesProps>(({ games, handleRemove }, ref) => {
   const _theme = useTheme()
   const isMobile = useMediaQuery(_theme.breakpoints.down('sm'))
   const classes = useStyles({ isMobile })
+  const scrollClass = useScrollClass()
   return (
-    <div className={isMobile ? `sticky-div ${classes.root}` : classes.root}>
+    <div className={isMobile ? `sticky-div ${classes.root}` : classes.root} ref={ref}>
       {games.length > 0 && (
-        <Container maxWidth="md" className={classes.listContainer}>
+        <Container maxWidth="md" className={`${scrollClass} ${classes.listContainer}`}>
           <List>
             {games.map((g, idx) => (
               <Chip key={idx} isGameList={true} label={g.display_name} className={classes.chip} onDelete={() => handleRemove(g)} />
@@ -22,7 +26,7 @@ const SelectedGames: React.FC<SelectedGamesProps> = ({ games, handleRemove }) =>
       )}
     </div>
   )
-}
+})
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -41,11 +45,11 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   listContainer: {
-    maxWidth: 600,
-    paddingTop: theme.spacing(2),
+    maxWidth: 574,
+    paddingTop: theme.spacing(1),
     paddingLeft: theme.spacing(3),
     paddingRight: theme.spacing(3),
-    maxHeight: 190,
+    maxHeight: 108,
     overflowY: 'auto',
   },
   chip: {

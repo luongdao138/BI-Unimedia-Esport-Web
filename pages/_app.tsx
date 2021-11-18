@@ -27,11 +27,32 @@ import useRouteUrlHistory from '@utils/hooks/useRouterUrlHistory'
 import ToastContainer from '@containers/ToastContainer'
 import DialogContainer from '@containers/DialogContainer'
 import ESHead from '@components/ESHead'
+import { ConfirmProvider } from '@components/Confirm'
+import { defaultConfirmationOptions } from '@constants/common.constants'
 import 'video.js/src/css/video-js.scss'
 import 'src/containers/VideoPlayer/theme.scss'
 import 'src/containers/VideoPlayer/position.scss'
 import 'src/containers/VideoPlayer/customPlugins/plugin.scss'
 import 'src/theme/globalcss/layout.scss'
+import Script from 'react-load-script'
+import Amplify from 'aws-amplify'
+// [CW] Configure Amplify for chat realtime in live stream video
+const AWS_PROJECT_REGION = process.env.NEXT_PUBLIC_AWS_PROJECT_REGION
+const AWS_APPSYNC_GRAPHQLENDPOINT = process.env.NEXT_PUBLIC_AWS_APPSYNC_GRAPHQLENDPOINT
+const AWS_APPSYNC_REGION = process.env.NEXT_PUBLIC_AWS_APPSYNC_REGION
+const AWS_APPSYNC_AUTHENTICATIONTYPE = process.env.NEXT_PUBLIC_AWS_APPSYNC_AUTHENTICATIONTYPE
+const AWS_APPSYNC_APIKEY = process.env.NEXT_PUBLIC_AWS_APPSYNC_APIKEY
+
+Amplify.configure({
+  ...{
+    aws_project_region: AWS_PROJECT_REGION,
+    aws_appsync_graphqlEndpoint: AWS_APPSYNC_GRAPHQLENDPOINT,
+    aws_appsync_region: AWS_APPSYNC_REGION,
+    aws_appsync_authenticationType: AWS_APPSYNC_AUTHENTICATIONTYPE,
+    aws_appsync_apiKey: AWS_APPSYNC_APIKEY,
+  },
+  ssr: true,
+})
 
 type Props = AppProps & {
   Component: PageWithLayoutType
@@ -89,6 +110,8 @@ const App = ({ Component, pageProps }: Props) => {
   return (
     <>
       <ESHead title={pageProps.title || 'eXeLAB'} desc={pageProps.desc} keywords={pageProps.keywords} image={pageProps.image} />
+      {/* <Script url="https://player.live-video.net/1.5.0/amazon-ivs-player.min.js" onError={console.error} onLoad={handleLoadScript} /> */}
+      <Script url="https://cdn.jsdelivr.net/npm/hls.js@1.0.11" onError={console.error} />
       <PersistGate persistor={persistStore(store)}>
         <RouteContext.Provider
           value={{
@@ -100,10 +123,12 @@ const App = ({ Component, pageProps }: Props) => {
             <ToastContainer />
             <DialogContainer />
             <SimpleReactLightbox>
-              <Layout>
-                <CssBaseline />
-                <Component {...pageProps} />
-              </Layout>
+              <ConfirmProvider defaultOptions={defaultConfirmationOptions}>
+                <Layout>
+                  <CssBaseline />
+                  <Component {...pageProps} />
+                </Layout>
+              </ConfirmProvider>
             </SimpleReactLightbox>
           </ThemeProvider>
         </RouteContext.Provider>

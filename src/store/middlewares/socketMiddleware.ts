@@ -65,6 +65,15 @@ const onMessage = (store: StoreType) => (event: MessageEvent) => {
             roomId: message.chatRoomId,
           })
         )
+      } else if (message.chatRoomId && message.type === ENTRY_TYPE.UPDATE) {
+        store.dispatch({ type: CHAT_ACTION_TYPE.UPDATE_AVATAR, data: message })
+        if (message.chatRoomId === _.defaultTo(store.getState().socket.selectedRoomInfo.chatRoomId, undefined))
+          socket.send(
+            JSON.stringify({
+              action: CHAT_ACTION_TYPE.GET_ROOM_AND_MESSAGE,
+              roomId: store.getState().socket.selectedRoomInfo.chatRoomId,
+            })
+          )
       } else {
         // this case is removed member
         store.dispatch({ type: message.action, data: message })

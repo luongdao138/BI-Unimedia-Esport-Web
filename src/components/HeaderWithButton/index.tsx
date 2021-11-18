@@ -12,7 +12,18 @@ const HeaderWithButton: React.FC<HeaderWithButtonProps> = ({ title, withBackButt
   const classes = useStyles()
   const router = useRouter()
   return (
-    <Box className={classes.header}>
+    <Box
+      display="flex"
+      flexDirection="row"
+      position="sticky"
+      alignItems="center"
+      justifyContent="flex-start"
+      p={2}
+      paddingX={3}
+      borderBottom="1px solid #212121"
+      bgcolor="#000"
+      minHeight={60}
+    >
       {withBackButton ? (
         <IconButton className={classes.iconButton} disableRipple onClick={() => router.back()}>
           <Icon className={`fa fa-arrow-left ${classes.icon}`} />
@@ -60,20 +71,6 @@ const useStyles = makeStyles((theme) => ({
       width: 0,
       height: 0,
     },
-  },
-  header: {
-    padding: 16,
-    paddingLeft: theme.spacing(3),
-    paddingRight: theme.spacing(3),
-    width: '100%',
-    position: 'sticky',
-    background: Colors.black,
-    zIndex: 10,
-    left: 0,
-    top: 0,
-    right: 0,
-    height: 60,
-    borderBottom: '1px solid #212121',
   },
 }))
 

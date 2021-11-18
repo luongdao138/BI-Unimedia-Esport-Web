@@ -1,9 +1,16 @@
 import { PARTICIPATION_TYPES, RULE, T_TYPE, TOURNAMENT_STATUS, ROLE } from '@constants/tournament.constants'
 import moment from 'moment'
 import _ from 'lodash'
-import { TournamentDetail, TournamentMatchRound } from '@services/arena.service'
+import { ParticipantsResponse, TournamentDetail, TournamentMatchRound, TournamentRule } from '@services/arena.service'
 import { FormikErrors } from 'formik'
 import { FormType } from '@containers/arena/UpsertForm/FormModel/FormType'
+
+interface TimeProps {
+  hours: string | number
+  minutes: string | number
+  seconds: string | number
+  millis: string | number
+}
 
 const participantTypeText = (participant_type: number): string => {
   const type = PARTICIPATION_TYPES.filter((t) => t.value === participant_type)[0]
@@ -92,7 +99,7 @@ const checkRoles = (roles, role): boolean => {
   return roles.includes(role)
 }
 
-const getDetailData = (tournament: TournamentDetail): any => {
+const getDetailData = (tournament: TournamentDetail) => {
   const _data = { ...tournament.attributes }
   const isTeam = _data.participant_type > 1
   const isAdmin = _data.my_role === ROLE.ADMIN || _data.my_role === ROLE.CO_ORGANIZER
@@ -237,7 +244,72 @@ const getLabelName = (field: string): string => {
   return ''
 }
 
+const formatArenaScore = (score: number, rule: TournamentRule): string => {
+  if (rule === 'time_attack') {
+    const { hours, minutes, seconds, millis } = millisToTime(score)
+    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}:${String(
+      millis
+    ).padStart(3, '0')}`
+  } else if (rule === 'score_attack') return new Intl.NumberFormat().format(score)
+
+  return String(score)
+}
+
+function isBattleRoyale(rule: TournamentRule) {
+  if (rule === 'battle_royale') return true
+  if (rule === 'score_attack') return true
+  if (rule === 'time_attack') return true
+  return false
+}
+
+function isTournament(rule: TournamentRule) {
+  return rule === 'single'
+}
+
+function isBRResultComplete(participants: ParticipantsResponse[], rule: TournamentRule) {
+  for (const p of participants) {
+    if (rule === 'battle_royale') {
+      if (p.attributes.position === null) return false
+    } else {
+      if (p.attributes.attack_score === null) return false
+    }
+  }
+  return true
+}
+
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+const millisToTime = (duration: number | string) => {
+  if (duration === '') {
+    return { hours: '', minutes: '', seconds: '', millis: '' }
+  }
+  const numberDuration = Number(duration)
+  const millis: number = Math.floor(numberDuration % 1000)
+  const seconds: number = Math.floor((numberDuration / 1000) % 60)
+  const minutes: number = Math.floor((numberDuration / (1000 * 60)) % 60)
+  const hours: number = Math.floor(numberDuration / (1000 * 60 * 60))
+
+  return {
+    hours: String(hours).padStart(2, '0'),
+    minutes: String(minutes).padStart(2, '0'),
+    seconds: String(seconds).padStart(2, '0'),
+    millis: String(millis).padStart(3, '0'),
+  }
+}
+
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+const timeToMillis = (time: TimeProps) => {
+  const { hours, minutes, seconds, millis } = time
+  if (hours === '' && minutes === '' && seconds === '' && millis === '') {
+    return ''
+  }
+  const result =
+    Number(hours) * 60 * 60 * 1000 + Number(minutes) * 60 * 1000 + Number(seconds) * 1000 + Number(String(millis).padEnd(3, '0')) * 1
+  return result
+}
+
 export const TournamentHelper = {
+  millisToTime,
+  timeToMillis,
   participantTypeText,
   ruleText,
   formatDate,
@@ -251,4 +323,8 @@ export const TournamentHelper = {
   isStatusPassed,
   checkRequiredFields,
   getLabelName,
+  formatArenaScore,
+  isBattleRoyale,
+  isTournament,
+  isBRResultComplete,
 }

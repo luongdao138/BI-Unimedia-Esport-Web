@@ -1,5 +1,6 @@
+import { memo } from 'react'
 import { Typography, Box, makeStyles, Icon, Chip } from '@material-ui/core'
-import ESChip from '@components/Chip'
+import CardChip from '@components/TournamentCard/CardChip'
 import ESAvatar from '@components/Avatar'
 import ESCard from '@components/Card'
 import ESCardMedia from '@components/Card/CardMedia'
@@ -9,9 +10,11 @@ import { ESRoutes } from '@constants/route.constants'
 import { Colors } from '@theme/colors'
 import { TournamentListItem } from '@services/arena.service'
 import { useTranslation } from 'react-i18next'
-import { TOURNAMENT_STATUS as TS, TOURNAMENT_RULE as TR } from '@constants/common.constants'
+import { TOURNAMENT_STATUS as TS } from '@constants/common.constants'
 import i18n from '@locales/i18n'
 import moment from 'moment'
+
+import StatusChip from './StatusChip'
 
 interface Props {
   tournament: TournamentListItem
@@ -26,9 +29,11 @@ const TournamentCard: React.FC<Props> = ({ tournament }) => {
   const participant = tournament.attributes.participant ? tournament.attributes.participant : tournament.attributes.winner
   const cover = attr.cover ? attr.cover : '/images/default_card.png'
   const organizer = attr.organizer_name ? attr.organizer_name : ''
-  const startDate = moment(attr.start_date).format('YYYY/MM/DD')
+  const startDate = moment(attr.start_date).format('MM/DD HH:mm')
+  const entryEndDate = moment(attr.acceptance_end_date).format('MM/DD HH:mm [まで]')
 
   const getMediaScreen = () => {
+    const status = t('common:arena.status.status', { status: tournament.attributes.status })
     const p_type =
       attr.participant_type === 1 ? i18n.t('common:tournament:type_single') : `${attr.participant_type}on${attr.participant_type}`
     return (
@@ -42,15 +47,19 @@ const TournamentCard: React.FC<Props> = ({ tournament }) => {
           padding={1}
         >
           <ESAvatar size={36} src={attr.organizer_avatar} alt={attr.organizer_name} />
+          {status ? (
+            <Box position="absolute" top={0} right={0} margin={0.6} zIndex={3}>
+              <StatusChip label={status} color={tournament.attributes.status === TS.COMPLETED ? 'black' : 'white'} />
+            </Box>
+          ) : null}
+
           <Box display="flex" flexDirection="column" alignItems="flex-end">
             <Chip
               className={classes.chipPrimary}
               size="small"
               label={
                 <Box color={Colors.white} justifyContent="flex-">
-                  <Typography variant="overline">
-                    {attr.rule === TR.BATTLE_ROYAL ? i18n.t('common:tournament:rule_battle') : i18n.t('common:tournament:rule_tournament')}
-                  </Typography>
+                  <Typography variant="overline">{t('common:arena.rules.rule', { rule: attr.rule })}</Typography>
                 </Box>
               }
             />
@@ -58,14 +67,14 @@ const TournamentCard: React.FC<Props> = ({ tournament }) => {
               className={classes.chipPrimary}
               size="small"
               label={
-                <Box color={Colors.white} justifyContent="flex-">
+                <Box color={Colors.white}>
                   <Typography variant="overline">{p_type}</Typography>
                 </Box>
               }
             />
           </Box>
         </Box>
-        {participant?.position && attr.status === TS.COMPLETED && (
+        {attr.status === TS.COMPLETED && (
           <Box
             zIndex={2}
             className={`${classes.mediaOverlay} ${classes.blurOverlay}`}
@@ -74,31 +83,33 @@ const TournamentCard: React.FC<Props> = ({ tournament }) => {
             flexDirection="column"
             alignItems="center"
           >
-            {/* <img className={classes.firstIcon} src="/images/first_icon.png" /> */}
-
-            <span
-              className={`${classes.text} ${participant.position === 1 && classes.first} ${participant.position === 2 && classes.second} ${
-                participant.position === 3 && classes.third
-              }`}
-            >
-              {participant.position}
-              {participant.position === 1 && <span>st</span>}
-              {participant.position === 2 && <span>nd</span>}
-              {participant.position === 3 && <span>rd</span>}
-            </span>
-            <ESAvatar
-              onClick={() => {
-                participant?.user_code ? router.push(`${ESRoutes.PROFILE}/${participant.user_code}`) : null
-              }}
-              className={classes.marginV}
-              alt={participant?.name}
-              src={participant?.profile_image}
-            />
-            <Box className={classes.captionTitle}>
-              <Typography noWrap variant="overline">
-                {participant?.name}
-              </Typography>
-            </Box>
+            {participant?.position ? (
+              <>
+                <span
+                  className={`${classes.text} ${participant.position === 1 && classes.first} ${
+                    participant.position === 2 && classes.second
+                  } ${participant.position === 3 && classes.third}`}
+                >
+                  {participant.position}
+                  {participant.position === 1 && <span>st</span>}
+                  {participant.position === 2 && <span>nd</span>}
+                  {participant.position === 3 && <span>rd</span>}
+                </span>
+                <ESAvatar
+                  onClick={() => {
+                    participant?.user_code ? router.push(`${ESRoutes.PROFILE}/${participant.user_code}`) : null
+                  }}
+                  className={classes.marginV}
+                  alt={participant?.name}
+                  src={participant?.profile_image}
+                />
+                <Box className={classes.captionTitle}>
+                  <Typography noWrap variant="overline">
+                    {participant?.name}
+                  </Typography>
+                </Box>
+              </>
+            ) : null}
           </Box>
         )}
       </>
@@ -115,25 +126,7 @@ const TournamentCard: React.FC<Props> = ({ tournament }) => {
   const getInfoRow = (value: string) => {
     return <Typography className={classes.organizer}>{value}</Typography>
   }
-  const getChippedRow = (chipLabel: string, value: string | number, extra?: string | number, topGutter?: number) => {
-    return (
-      <Box display="flex" flexDirection="row" mt={topGutter ? topGutter : 1} alignItems="center">
-        <ESChip
-          className={classes.chip}
-          size="small"
-          label={
-            <Box color={Colors.white}>
-              <Typography variant="overline">{chipLabel}</Typography>
-            </Box>
-          }
-        />
-        <Box ml={1} color={Colors.white}>
-          <Typography variant="caption">{value}</Typography>
-        </Box>
-        {extra ? <Typography variant="caption">{extra}</Typography> : null}
-      </Box>
-    )
-  }
+
   const getParticipants = () => {
     const participants = attr.participants
     return (
@@ -170,8 +163,9 @@ const TournamentCard: React.FC<Props> = ({ tournament }) => {
         {getTitle()}
         {getInfoRow(attr.game_of_title)}
         {getInfoRow(`${t('common:tournament.organizer')} ${organizer}`)}
-        {getChippedRow(t('common:tournament.card_date'), startDate)}
-        {getChippedRow(t('common:tournament.entry'), pCount(), `/${attr.max_participants}`, 0.5)}
+        <CardChip chipLabel={t('common:lobby.card.start_date')} value={startDate} />
+        <CardChip chipLabel={t('common:lobby.card.entry_period')} value={entryEndDate} />
+        <CardChip chipLabel={t('common:tournament.entry')} value={`${pCount()}/${attr.max_participants}`} />
         {getParticipants()}
       </ESCardContent>
     </ESCard>
@@ -204,6 +198,24 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: 5,
     backgroundColor: Colors.black_opacity[90],
     borderRadius: 10,
+    '&:last-child': {
+      marginBottom: 0,
+    },
+  },
+  chipSecondary: {
+    width: 64,
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    margin: 5,
+    height: 17,
+    backgroundColor: Colors.black_opacity[90],
+    borderRadius: 4,
+    border: `0.2px solid ${Colors.grey[300]}`,
+  },
+  label: {
+    fontWeight: 'bold',
+    fontSize: 8,
   },
   mediaOverlay: {
     position: 'absolute',
@@ -270,9 +282,6 @@ const useStyles = makeStyles((theme) => ({
       WebkitTextStroke: '1px #FFC962',
     },
   },
-  first: {},
-  second: {},
-  third: {},
   title: {
     display: '-webkit-box',
     WebkitBoxOrient: 'vertical',
@@ -290,6 +299,9 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'center',
   },
+  first: {},
+  second: {},
+  third: {},
   [theme.breakpoints.down('sm')]: {
     firstIcon: {
       marginTop: 10,
@@ -298,4 +310,4 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-export default TournamentCard
+export default memo(TournamentCard)

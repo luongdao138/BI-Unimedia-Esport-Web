@@ -19,6 +19,7 @@ import _ from 'lodash'
 import useDocTitle from '@utils/hooks/useDocTitle'
 import ServerError from './ServerError'
 import { FocusContext, FocusContextProvider } from '@utils/hooks/input-focus-context'
+import i18n from '@locales/i18n'
 
 interface IndividualEntryModalProps {
   tournament: TournamentDetail
@@ -35,7 +36,13 @@ const IndividualEntryModal: React.FC<IndividualEntryModalProps> = ({ tournament,
   const dispatch = useAppDispatch()
 
   const validationSchema = Yup.object().shape({
-    nickname: Yup.string().required(t('common:common.input_required')).max(40),
+    nickname: Yup.string()
+      .required(t('common:common.input_required'))
+      .test('empty-check', i18n.t('common:common.input_incorrect'), (val) => {
+        if (val && val.length > 0 && val.trim().length === 0) return false
+        return true
+      })
+      .max(40),
   })
 
   const { values, errors, isValid, handleSubmit, handleChange, setFieldValue } = useFormik({
@@ -46,7 +53,7 @@ const IndividualEntryModal: React.FC<IndividualEntryModalProps> = ({ tournament,
     onSubmit: (values) => {
       if (values.nickname) {
         if (_.isEmpty(checkNgWord(values.nickname))) {
-          join({ hash_key: tournament.attributes.hash_key, data: { name: values.nickname } })
+          join({ hash_key: tournament.attributes.hash_key, data: { name: values.nickname.trim() } })
         } else {
           dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: NG_WORD_AREA.join_nickname }))
         }

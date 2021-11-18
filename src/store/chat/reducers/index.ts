@@ -1,5 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit'
-import { FriendItem, DmUserData, MessageTournamentResponse } from '@services/chat.service'
+import { FriendItem, DmUserData, MessageTournamentResponse, MessageLobbyResponse } from '@services/chat.service'
 import * as actions from '../actions'
 import { CHAT_ACTION_TYPE } from '@constants/socket.constants'
 import { MESSAGE_ACTION_TYPE } from '../actions/types'
@@ -10,6 +10,7 @@ type State = {
   singleUser: DmUserData | null
   redirectDm: string | null
   tournamentDetail?: MessageTournamentResponse
+  lobbyDetail?: MessageLobbyResponse
 }
 
 const initialState: State = {
@@ -29,6 +30,9 @@ export default createReducer(initialState, (builder) => {
   })
   builder.addCase(actions.getMessageTournamentDetail.fulfilled, (state, action) => {
     state.tournamentDetail = action.payload
+  })
+  builder.addCase(actions.getMessageLobbyDetail.fulfilled, (state, action) => {
+    state.lobbyDetail = action.payload
   })
   builder.addCase(CHAT_ACTION_TYPE.CLEAN_ROOM, (state) => {
     state.tournamentDetail = undefined

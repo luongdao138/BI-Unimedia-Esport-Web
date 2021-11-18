@@ -45,7 +45,12 @@ const roomListUpdate = (roomList: ChatDataType[] | undefined, message: MessageTy
       } else {
         updatedRoom = _.map(clonedList, function (a: ChatDataType) {
           return a.chatRoomId === msg.chatRoomId
-            ? { ...a, lastMsgAt: msg.createdAt, lastMsg: msg.formattedMsg, unseenCount: a.unseenCount + 1 }
+            ? {
+                ...a,
+                lastMsgAt: msg.createdAt,
+                lastMsg: msg.formattedMsg,
+                unseenCount: _.get(msg, 'isMe', false) === true ? a.unseenCount : a.unseenCount + 1,
+              }
             : a
         })
       }
@@ -171,6 +176,16 @@ const addListForceDate = (state: ChatDataType[], room: ChatDataType): ChatDataTy
   return data
 }
 
+const updateAvatar = (roomList: ChatDataType[], imgUrl: string, chatRoomId: string): ChatDataType[] => {
+  if (roomList !== undefined) {
+    return _.map(roomList, (o) => {
+      return o.chatRoomId === chatRoomId ? { ...o, roomImg: imgUrl } : o
+    })
+  } else {
+    return undefined
+  }
+}
+
 export const ChatHelper = {
   messagesMerge,
   roomListUpdate,
@@ -181,5 +196,6 @@ export const ChatHelper = {
   roomListAddRemove,
   roomUpdateWithUnseen,
   addList,
+  updateAvatar,
   addListForceDate,
 }

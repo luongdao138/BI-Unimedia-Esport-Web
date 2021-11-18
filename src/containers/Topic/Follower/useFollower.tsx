@@ -3,8 +3,10 @@ import { useAppDispatch, useAppSelector } from '@store/hooks'
 import community from '@store/community'
 import { clearMetaData } from '@store/metadata/actions'
 import { TopicFollowersParams } from '@services/community.service'
+import { createMetaSelector } from '@store/metadata/selectors'
 
 const { selectors, actions } = community
+const getTopicFollowersMeta = createMetaSelector(actions.getTopicFollowers)
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const useFollower = () => {
@@ -14,10 +16,15 @@ const useFollower = () => {
 
   const followersTopicList = useAppSelector(selectors.getTopicFollowersList)
   const pages = useAppSelector(selectors.getTopicFollowersListMeta)
-  const getFollowersTopicList = (params: TopicFollowersParams) => dispatch(actions.getTopicFollowers(params))
-  const resetMeta = () => dispatch(clearMetaData(actions.getTopicFollowers.typePrefix))
+  const meta = useAppSelector(getTopicFollowersMeta)
 
-  return { handleClick, followersTopicList, getFollowersTopicList, pages, resetMeta }
+  const getFollowersTopicList = (params: TopicFollowersParams) => dispatch(actions.getTopicFollowers(params))
+  const resetMeta = () => {
+    dispatch(clearMetaData(actions.getTopicFollowers.typePrefix))
+    dispatch(actions.resetTopicFollowers())
+  }
+
+  return { handleClick, followersTopicList, getFollowersTopicList, pages, meta, resetMeta }
 }
 
 export default useFollower

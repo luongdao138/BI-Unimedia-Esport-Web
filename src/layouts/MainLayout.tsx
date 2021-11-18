@@ -64,7 +64,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, patternBg, loginRequi
         <SideMenu />
       </aside>
       <main role="main" className={patternBg ? 'main' : 'main no-pattern'} style={{ minHeight: height }}>
-        <div className="content-wrapper">
+        <div className="content-wrapper" id="content-main">
           <div className="content">{renderContent()}</div>
         </div>
         <aside className="aside-right">{isAuthenticated ? <ChatSideBar expand={expand} toggleChatBar={toggleChatBar} /> : null}</aside>

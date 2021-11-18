@@ -116,7 +116,7 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: 5,
     paddingTop: 10,
     '&:hover': {
-      background: 'rgba(255,255,255, 0.1)',
+      background: (props: StyleProps) => (props.expand ? 'rgba(255,255,255, 0.1)' : 'inherit'),
       transition: 'all 0.2s ease',
     },
   },

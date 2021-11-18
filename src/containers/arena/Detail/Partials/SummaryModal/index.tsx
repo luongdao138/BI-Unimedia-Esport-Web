@@ -37,15 +37,16 @@ const SummaryModal: React.FC<SummaryModalProps> = ({ tournament, open, handleClo
   const { checkNgWord } = useCheckNgWord()
   const dispatch = useAppDispatch()
   const validationSchema = Yup.object().shape({
-    summary: Yup.string().required(t('common:common.input_required')).max(5000),
+    summary: Yup.string().max(5000),
   })
 
-  const { handleChange, handleBlur, values, errors, touched, setFieldValue, validateForm, handleSubmit } = useFormik({
+  const { handleChange, handleBlur, values, errors, touched, setFieldValue, validateForm, handleSubmit, resetForm } = useFormik({
     initialValues: {
       summary: data.summary || '',
       summary_image: data.summary_image,
     },
     validationSchema,
+    enableReinitialize: true,
     onSubmit: (values) => {
       if (_.isEmpty(checkNgWord(values.summary))) {
         summary({ data: { summary_image_url: values.summary_image, value: values.summary }, hash_key: data.hash_key })
@@ -58,6 +59,11 @@ const SummaryModal: React.FC<SummaryModalProps> = ({ tournament, open, handleClo
   useEffect(() => {
     if (open) {
       changeTitle(t('common:page_head.arena_summary_title'))
+    }
+    return () => {
+      if (!open) {
+        resetForm()
+      }
     }
   }, [open])
 
@@ -79,6 +85,10 @@ const SummaryModal: React.FC<SummaryModalProps> = ({ tournament, open, handleClo
       setUploading(false)
       setFieldValue('summary_image', imageUrl)
     })
+  }
+
+  const onRemove = () => {
+    setFieldValue('summary_image', '')
   }
 
   return (
@@ -105,7 +115,13 @@ const SummaryModal: React.FC<SummaryModalProps> = ({ tournament, open, handleClo
               <Typography className={classes.summaryTitle}>{data.title}</Typography>
             </Box>
             <Box width="100%" pb={4} pt={4}>
-              <CoverUploader ratio={25 / 7} src={values.summary_image} onChange={handleImageUpload} isUploading={isUploading} />
+              <CoverUploader
+                ratio={25 / 7}
+                src={values.summary_image}
+                onChange={handleImageUpload}
+                isUploading={isUploading}
+                onRemove={onRemove}
+              />
             </Box>
             <Box width="100%" pb={1}>
               <ESFastInput
@@ -113,7 +129,7 @@ const SummaryModal: React.FC<SummaryModalProps> = ({ tournament, open, handleClo
                 name="summary"
                 labelPrimary={t('common:arena.summary')}
                 fullWidth
-                placeholder={t('common:tournament_create.please_enter')}
+                placeholder={t('common:arena.summary_input_placeholder')}
                 value={values.summary}
                 onChange={handleChange}
                 onBlur={handleBlur}

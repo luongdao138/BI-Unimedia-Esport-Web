@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react'
-import { Box, Typography, Slider, Link } from '@material-ui/core'
+import { Box, Typography, Slider } from '@material-ui/core'
 import getCroppedImg from './Partials/cropImage'
 import { calculateDimensions } from './Partials/calculateDimensions'
 import ESDialog from '@components/Dialog'
@@ -12,6 +12,7 @@ import { CameraAlt as Camera, Crop169 as RectIcon } from '@material-ui/icons'
 import ESLoader from '@components/Loader'
 import { makeStyles, withStyles } from '@material-ui/core/styles'
 import { REMOVE_TYPE } from '@constants/image.constants'
+import LinkButton from '@components/LinkButton'
 
 interface AvatarSelectorProps {
   src?: string
@@ -220,9 +221,7 @@ const AvatarSelector: React.FC<AvatarSelectorProps> = ({ src, alt, is_required, 
           </ButtonPrimary>
         </Box>
         <Box className={classes.linkContainer}>
-          <Link className={classes.link} onClick={reset}>
-            {i18n.t('common:profile.reset')}
-          </Link>
+          <LinkButton onClick={reset}>{i18n.t('common:profile.reset')}</LinkButton>
         </Box>
 
         {uploading ? (
@@ -354,15 +353,6 @@ const useStyles = makeStyles(() => ({
     marginTop: 50,
     marginBottom: 20,
   },
-  link: {
-    color: '#FFFFFF30',
-    '&:focus': {
-      color: '#ffffff9c',
-    },
-    marginTop: 20,
-    cursor: 'pointer',
-    textDecoration: 'underline',
-  },
   linkDisabled: {
     color: '#FFFFFF30',
     '&:focus': {
@@ -382,7 +372,8 @@ const useStyles = makeStyles(() => ({
   },
   button: {
     minWidth: 170,
-    marginLeft: 20,
+    marginRight: 10,
+    marginLeft: 10,
     marginTop: 10,
   },
 }))

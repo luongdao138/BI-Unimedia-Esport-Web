@@ -1,10 +1,17 @@
+import { FORMAT_DATE_TIME_JP, FORMAT_SCHEDULE_TIME, TAX, REGEX_DETECT_BRANCH } from '@constants/common.constants'
 import { StoreType } from '@store/store'
 import moment from 'moment'
+import * as mTimeZone from 'moment-timezone'
 
 /* eslint-disable no-useless-escape */
 const validateEmail = (email: string): boolean => {
   const emailValidationRegex = /^[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
   return emailValidationRegex.test(String(email).toLowerCase())
+}
+
+const validateImageUrl = (imageUrl: string): boolean => {
+  const imageUrlRegex = /^(http(s?):)([/|.|\w|\s|-])*\.(?:jpe?g|gif|png|bmp)$/i
+  return imageUrlRegex.test(String(imageUrl))
 }
 
 const replaceSingleByteString = (value: string): string => {
@@ -111,7 +118,13 @@ const hasEmail = (email: string): boolean => {
 
 const isMediaURL = (str: string): boolean => {
   const domain = 'https://s3-ap-northeast-1.amazonaws.com/'
-  const buckets = ['dev-esporst-chat-media', 'stg-esporst-chat-media', 'esporst-chat-media', 'feature-esporst-chat-media']
+  const buckets = [
+    'dev-esporst-chat-media',
+    'stg-esporst-chat-media',
+    'esporst-chat-media',
+    'feature-esporst-chat-media',
+    'cowell-dev-chat-media',
+  ]
   if (str && str.startsWith(domain)) {
     for (let i = 0; i < buckets.length; i++) {
       const bucket = buckets[i]
@@ -230,6 +243,95 @@ const nearestFutureMinutes = (interval: number): string => {
   }
 }
 
+const formatDateTime = (date: string): string => {
+  const dateTime = moment(date).toString()
+  // const dateResult = moment(dateTime).format(FORMAT_DATE_TIME_JP)
+  return dateTime
+}
+const formatDateTimeJP = (date: string): string => {
+  const dateResult = moment(date).format(FORMAT_DATE_TIME_JP)
+  return dateResult
+}
+
+const formatTimeVideo = (date: string): string => {
+  const dateTime = moment(date).format(FORMAT_SCHEDULE_TIME)
+  return `${dateTime}～配信予定`
+}
+
+// calculate money with tax
+export const calValueFromTax = (value: number): number => {
+  return Math.round(value * (1 + TAX))
+}
+
+// format card number has space between each 4 number
+export const formatCardNumber = (origin_card_number: string): string => {
+  let card_number = origin_card_number.split(' ').join('')
+  if (card_number.length > 0) {
+    card_number = card_number.match(new RegExp('.{1,4}', 'g')).join(' ')
+  }
+  return card_number
+}
+
+// detect branches of cards
+export const detectCardType = (cardNumber: string): number => {
+  let cardType = 0
+  REGEX_DETECT_BRANCH.forEach((element) => {
+    if (element.regex.test(cardNumber.replace(/\s/g, ''))) {
+      cardType = element.value
+    }
+  })
+  return cardType
+}
+
+// convert color form hex to rgba format
+export const hexToRgba = (hex: string, opacity: number): string => {
+  if (!/^[#]*([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/i.test(hex)) {
+    return ''
+  }
+  hex = hex.replace('#', '')
+  if (hex.length === 3) {
+    hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2]
+  }
+  const rgba = []
+  rgba.push(parseInt(hex.slice(0, 2), 16))
+  rgba.push(parseInt(hex.slice(2, 4), 16))
+  rgba.push(parseInt(hex.slice(4, 6), 16))
+  rgba.push(opacity)
+  return 'rgb(' + rgba.toString() + ')'
+}
+
+export const getTimeZone = (): string => {
+  return mTimeZone.tz.guess()
+}
+
+const regex = {
+  url: /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi,
+}
+
+const linkifyString = (url = ''): string => {
+  return '<a target="_blank" href="' + url + '" style="color:#FFF">' + url + '</a>'
+}
+
+const splitToLinkifyComponent = (text = '') => {
+  const { url: linkifyRegex } = regex
+  const urlFromText = text.match(linkifyRegex)
+  if (!urlFromText || urlFromText.length === 0) {
+    return [{ type: 'text', text }]
+  }
+  let _text = text
+  const results = []
+  urlFromText.forEach((url) => {
+    const idx = _text.indexOf(url)
+    results.push({ type: 'text', text: _text.slice(0, idx) })
+    results.push({ type: 'link', text: url })
+    _text = text.slice(idx + url.length)
+  })
+  if (_text.length) {
+    results.push({ type: 'text', text: _text })
+  }
+  return results
+}
+
 export const CommonHelper = {
   validateEmail,
   genRanHex,
@@ -248,4 +350,10 @@ export const CommonHelper = {
   isDoubleByte,
   nearestFutureMinutes,
   startOfNextDay,
+  formatDateTime,
+  formatDateTimeJP,
+  formatTimeVideo,
+  validateImageUrl,
+  linkifyString,
+  splitToLinkifyComponent,
 }

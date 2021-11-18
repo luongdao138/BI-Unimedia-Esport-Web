@@ -54,5 +54,20 @@ export const getMessageTournamentDetail = createAsyncThunk<services.MessageTourn
   }
 )
 
+export const getMessageLobbyDetail = createAsyncThunk<services.MessageLobbyResponse, string>(
+  MESSAGE_ACTION_TYPE.GET_LOBBY_DETAIL,
+  async (roomId, { rejectWithValue }) => {
+    try {
+      const res = await services.getMessageLobbyDetail(roomId)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
 export const resetAddUsers = createAction(MESSAGE_ACTION_TYPE.RESET_ADD_USERS)
 export const resetDmRoom = createAction(MESSAGE_ACTION_TYPE.RESET_DM_ROOM)

@@ -3,100 +3,78 @@ import { makeStyles } from '@material-ui/core/styles'
 import ArrowBack from '@material-ui/icons/ArrowBack'
 import { Colors } from '@theme/colors'
 import Avatar from '@components/Avatar'
-import { Typography, IconButton, Box, Divider, ButtonBase } from '@material-ui/core'
+import { Typography, IconButton, Box, Divider } from '@material-ui/core'
 import ArenaAvatar from './ArenaAvatar'
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState } from 'react'
 import ESButton from '@components/Button'
+import ESLoader from '@components/FullScreenLoader'
 import { useTranslation } from 'react-i18next'
 import Linkify from 'react-linkify'
-import _ from 'lodash'
-import { PlacementItem } from '@services/arena.service'
-import useGetProfile from '@utils/hooks/useGetProfile'
+import { ParticipantsResponse, PlacementItem } from '@services/arena.service'
 import TeamEntryEditModal from '@containers/arena/Detail/Partials/ActionComponent/TeamEntryEditModal'
 import InidividualEntryEditModal from '@containers/arena/Detail/Partials/ActionComponent/InidividualEntryEditModal'
-import { ROLE } from '@constants/tournament.constants'
+import ResultListItem from './ResultListItem'
+import ResultList from './ResultList'
+import { useArenaClearResults } from '../hooks/useTournamentDetail'
 
 const ArenaWinners: React.FC = () => {
   const { t } = useTranslation(['common'])
-  const { arenaWinners, arena, handleBack, toDetail, resetMeta } = useArenaWinners()
-  const showWinner = arenaWinners['1'] && !!arenaWinners['1'].length
+
+  const {
+    arenaWinners,
+    arena,
+    arenaMeta,
+    handleBack,
+    toDetail,
+    isTeam,
+    hasWinnersData,
+    userProfile,
+    isBattleRoyale,
+    arenaBRWinners,
+    winner,
+    winnersMeta,
+    brWinnersMeta,
+    resetMeta,
+    isCancelled,
+    isNotHeld,
+  } = useArenaWinners()
+  useArenaClearResults(arena)
   const classes = useStyles()
   const [showSummary, setShowSummary] = useState(false)
-  const [, setUpdate] = useState(false)
-  const winnerListRef = useRef(null)
-  const backButtonRef = useRef(null)
-  const [selectedItem, setSelectedItem] = useState(null as PlacementItem | null)
-  const { userProfile } = useGetProfile()
+  const [selectedItem, setSelectedItem] = useState<{ id: number; highlight: boolean } | null>(null)
 
-  useEffect(() => {
-    window.onscroll = () => {
-      const winnerListTopOffset = getClientRect(winnerListRef).top
-      const backButtonBottomOffset = getClientRect(backButtonRef).bottom
-      setUpdate(winnerListTopOffset < 620 || backButtonBottomOffset > 60)
-    }
+  useEffect(() => () => resetMeta(), [])
 
-    return () => resetMeta()
-  }, [])
-
-  const getClientRect = (ref) => {
-    if (ref && ref.current) {
-      return ref.current.getBoundingClientRect()
-    }
-    return { top: 0, bottom: 0 }
+  const selectTournamentParticipant = (item: PlacementItem) => {
+    const id = isTeam ? item.team_id : item.id
+    setSelectedItem({ id, highlight: item.highlight })
   }
 
-  const isTeam = () => {
-    const pType = _.get(arena, 'attributes.participant_type', 0)
-    if (_.isNumber(pType)) {
-      return pType > 1
-    }
-    return false
+  const selectBRParticipant = (item: ParticipantsResponse) => {
+    const id = Number(item.attributes.team?.data.id || item.id)
+    setSelectedItem({ id, highlight: item.highlight })
   }
 
-  const toEntryDetail = (placementItem: PlacementItem) => {
-    setSelectedItem(placementItem)
-  }
-
-  const getTeamId = (participant: PlacementItem) => {
-    return _.get(participant, 'team.id')
-  }
-
-  const isMyTeam = (participant: PlacementItem) => {
-    const myInfo = _.get(arena, 'attributes.my_info', [])
-    const interestedInfos = myInfo
-      .filter((info) => info.role === ROLE.INTERESTED || info.role === ROLE.PARTICIPANT)
-      .map((info) => `${info.team_id}`)
-    if (!interestedInfos || !interestedInfos.length) return false
-    return interestedInfos.includes(`${getTeamId(participant)}`)
-  }
-
-  const isMe = (participant: PlacementItem) => {
-    return `${userProfile?.id}` === `${_.get(participant, 'attributes.user.id', '')}`
-  }
-
-  const hasWinnersData = () => {
-    if (!arenaWinners) return false
-
-    let hasData = false
-    Object.keys(arenaWinners).forEach((place) => {
-      const placement = arenaWinners[place]
-      if (!!placement && placement.length > 0) {
-        hasData = true
-      }
-    })
-    return hasData
-  }
-
-  return (
-    <div className={classes.root}>
-      <div ref={backButtonRef} className={classes.backButtonWrapper}>
+  return arenaMeta.pending && (winnersMeta.pending || brWinnersMeta.pending) ? (
+    <ESLoader open={true} />
+  ) : arenaMeta.loaded && arena && !(isNotHeld || isCancelled) ? (
+    <div
+      className={classes.root}
+      style={{
+        backgroundImage: 'url(/images/arena_cover_min.png)',
+        backgroundPosition: 'top center',
+        backgroundAttachment: 'fixed',
+        backgroundSize: `auto 600px`,
+        backgroundRepeat: 'no-repeat',
+      }}
+    >
+      <div className={classes.backButtonWrapper}>
         <IconButton className={classes.backButton} onClick={handleBack}>
           <ArrowBack />
         </IconButton>
       </div>
-      <div className={classes.coverWrapper}>
-        <img src={'/images/arena_cover.png'} className={classes.cover} />
-      </div>
+      <div className={classes.coverWrapper} />
+
       <div className={classes.topWrapper}>
         <Box color={Colors.white} textAlign="center" mb={3}>
           <Typography variant="h3" className={classes.title}>
@@ -105,22 +83,11 @@ const ArenaWinners: React.FC = () => {
         </Box>
         <Divider />
         <Box position="relative">
-          <div
-            className={`${classes.winnerAvatarWrapper} ${!showWinner && classes.winnerFull}`}
-            onClick={() => setShowSummary(!showSummary)}
-          >
-            {showWinner ? (
-              <ArenaAvatar
-                src={arenaWinners['1'][0].avatar}
-                name={arenaWinners['1'][0].name}
-                user_code={arenaWinners['1'][0].user?.user_code}
-                win
-                leaf
-                nameWhite
-              />
-            ) : (
+          <div className={`${classes.winnerAvatarWrapper} ${!winner && classes.winnerFull}`} onClick={() => setShowSummary(!showSummary)}>
+            {winner ? <ArenaAvatar src={winner.avatar} name={winner.name} user_code={winner.user_code} win leaf nameWhite /> : null}
+            {!winner && (winnersMeta.loaded || brWinnersMeta.loaded) ? (
               <Typography variant="h3">{t('common:arena.result_not_decided')}</Typography>
-            )}
+            ) : null}
           </div>
         </Box>
       </div>
@@ -143,50 +110,54 @@ const ArenaWinners: React.FC = () => {
           {t('common:tournament.tournament_detail')}
         </ESButton>
       </Box>
-      {hasWinnersData() && (
-        <div ref={winnerListRef} className={classes.listContainer}>
-          {Object.keys(arenaWinners).map((key) =>
-            (arenaWinners[key] || []).map((p, idx) => (
-              <div className={classes.listItem} key={idx}>
-                <div className={classes.placementWrapper}>
-                  <p
-                    className={`${classes.text} ${p.position === 1 && classes.first} ${p.position === 2 && classes.second} ${
-                      p.position === 3 && classes.third
-                    }`}
-                  >
-                    {p.position}
-                    {p.position === 1 && <span>st</span>}
-                    {p.position === 2 && <span>nd</span>}
-                    {p.position === 3 && <span>rd</span>}
-                  </p>
-                </div>
-                <ButtonBase className={classes.itemAvatar} onClick={() => toEntryDetail(p)}>
-                  <Avatar src={p.avatar} alt={p.name} />
-                </ButtonBase>
-                <div className={classes.nameWrapper}>
-                  <Typography className={classes.breakWord} variant="h3" component="p">
-                    {p.name}
-                  </Typography>
-                  {p.user && (
-                    <Typography variant="body2" className={`${classes.user_code} ${classes.breakWord}`}>
-                      {`@${p.user.user_code}`}
-                    </Typography>
-                  )}
-                </div>
-              </div>
-            ))
-          )}
-        </div>
-      )}
-      {!selectedItem ? null : isTeam() ? (
+      <div className={classes.listContainer}>
+        {hasWinnersData && !isBattleRoyale && winnersMeta.loaded ? (
+          <ResultList rule={arena?.attributes.rule}>
+            {Object.keys(arenaWinners).map((key) =>
+              (arenaWinners[key] || []).map((p, idx) => (
+                <ResultListItem
+                  key={idx}
+                  position={p.position}
+                  avatar={<Avatar src={p.avatar} alt={p.name} />}
+                  onClickAvatar={() => selectTournamentParticipant(p)}
+                  name={p.name}
+                  nameSecondary={p.user ? `@${p.user.user_code}` : ''}
+                  score={p.position}
+                />
+              ))
+            )}
+          </ResultList>
+        ) : null}
+        {isBattleRoyale && winner ? (
+          <ResultList rule={arena?.attributes.rule}>
+            {arenaBRWinners.map((p, idx) => (
+              <ResultListItem
+                key={idx}
+                position={p.attributes.position}
+                avatar={
+                  <Avatar
+                    src={isTeam ? p.attributes.team.data.attributes.team_avatar : p.attributes.avatar_url || ''}
+                    alt={isTeam ? p.attributes.team.data.attributes.name : p.attributes.name}
+                  />
+                }
+                onClickAvatar={() => selectBRParticipant(p)}
+                name={p.attributes.team ? p.attributes.team.data.attributes.name : p.attributes.name}
+                nameSecondary={p.attributes.user ? `@${p.attributes.user.user_code}` : ''}
+                score={p.attributes.attack_score}
+              />
+            ))}
+          </ResultList>
+        ) : null}
+      </div>
+      {!selectedItem ? null : isTeam ? (
         <TeamEntryEditModal
           tournament={arena}
           userProfile={userProfile}
           previewMode
           open={true}
-          initialTeamId={`${getTeamId(selectedItem)}`}
+          initialTeamId={String(selectedItem.id)}
           onClose={() => setSelectedItem(null)}
-          myTeam={isMyTeam(selectedItem)}
+          myTeam={selectedItem.highlight}
           toDetail={toDetail}
         />
       ) : (
@@ -194,14 +165,14 @@ const ArenaWinners: React.FC = () => {
           tournament={arena}
           previewMode
           open={true}
-          initialParticipantId={`${selectedItem.id}`}
+          initialParticipantId={String(selectedItem.id)}
           onClose={() => setSelectedItem(null)}
-          me={isMe(selectedItem)}
+          me={selectedItem.highlight}
           toDetail={toDetail}
         />
       )}
     </div>
-  )
+  ) : null
 }
 
 export default ArenaWinners
@@ -209,6 +180,7 @@ export default ArenaWinners
 const useStyles = makeStyles((theme) => ({
   multiline: {
     whiteSpace: 'pre-wrap',
+    wordBreak: 'break-word',
   },
   link: {
     color: Colors.white,
@@ -217,6 +189,8 @@ const useStyles = makeStyles((theme) => ({
   root: {
     position: 'relative',
     paddingBottom: theme.spacing(3),
+    paddingTop: 30,
+    top: -30,
   },
   backButton: {
     backgroundColor: '#4D4D4D',
@@ -236,19 +210,10 @@ const useStyles = makeStyles((theme) => ({
     zIndex: 1,
   },
   coverWrapper: {
-    position: 'sticky',
     zIndex: 0,
     top: 60,
     height: 560,
     marginBottom: -100,
-    '&:before': {
-      content: "''",
-      position: 'absolute',
-      background: 'linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.3) 70%, rgba(33,33,33,1) 100%)',
-      bottom: 0,
-      height: 560,
-      width: '100%',
-    },
   },
   cover: {
     width: '100%',
@@ -269,7 +234,7 @@ const useStyles = makeStyles((theme) => ({
   topWrapper: {
     position: 'absolute',
     width: '100%',
-    top: 80,
+    top: 100,
   },
   title: {
     wordBreak: 'break-word',
@@ -304,94 +269,15 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   listContainer: {
-    borderRadius: theme.spacing(0.5),
-    border: `1px solid ${Colors.white_opacity['30']}`,
     marginRight: theme.spacing(3),
     marginLeft: theme.spacing(3),
-    padding: theme.spacing(3),
-    paddingLeft: theme.spacing(1),
-    paddingBottom: theme.spacing(1),
-    background: Colors.black_opacity['70'],
-    position: 'sticky',
-    zIndex: 1,
   },
-  listItem: {
-    height: 66,
-    marginBottom: theme.spacing(2),
-    borderRadius: theme.spacing(0.5),
-    paddingLeft: theme.spacing(2),
-    display: 'flex',
-    alignItems: 'center',
-    '&:hover': {
-      backgroundColor: Colors.white_opacity['10'],
-    },
-  },
-  nameWrapper: {
-    color: Colors.white,
-    paddingLeft: theme.spacing(2),
-    flex: 1,
-  },
-  breakWord: {
-    wordBreak: 'break-word',
-  },
-  user_code: {
-    color: Colors.white_opacity['70'],
-  },
-  text: {
-    fontSize: 30,
-    fontFamily: 'Futura Lt BT',
-    fontWeight: 300,
-    fontStyle: 'normal',
-    textAlign: 'center',
-    '& span': {
-      fontSize: '0.5em',
-    },
-    '&$first': {
-      fontFamily: 'Futura Hv BT',
-      fontWeight: 'normal',
-      fontSize: 36,
-      fontStyle: 'italic',
-      background: 'linear-gradient(55deg, rgba(247,247,53,1) 0%, rgba(195,247,53,1) 100%)',
-      WebkitBackgroundClip: 'text',
-      WebkitTextFillColor: 'transparent',
-      WebkitTextStroke: '1px #FFFF65',
-      '& span': {
-        marginLeft: -4,
-      },
-    },
-    '&$second': {
-      fontFamily: 'Futura Hv BT',
-      fontWeight: 'normal',
-      fontSize: 36,
-      fontStyle: 'italic',
-      background: 'linear-gradient(55deg, rgba(198,198,198,1) 0%, rgba(109,157,234,1) 100%)',
-      WebkitBackgroundClip: 'text',
-      WebkitTextFillColor: 'transparent',
-      WebkitTextStroke: '1px #C3D0E3',
-    },
-    '&$third': {
-      fontFamily: 'Futura Hv BT',
-      fontWeight: 'normal',
-      fontSize: 36,
-      fontStyle: 'italic',
-      background: 'linear-gradient(55deg, rgba(255,182,65,1) 0%, rgba(227,111,60,1) 100%)',
-      WebkitBackgroundClip: 'text',
-      WebkitTextFillColor: 'transparent',
-      WebkitTextStroke: '1px #FFC962',
-    },
-  },
-  first: {},
-  second: {},
-  third: {},
   placementImage: {
     height: 40,
   },
   placementWrapper: {
     width: 55,
     marginRight: theme.spacing(1),
-  },
-  itemAvatar: {
-    width: 40,
   },
   bottomButton: {
     borderRadius: 4,
@@ -400,5 +286,11 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: theme.spacing(7),
     paddingRight: theme.spacing(7),
     alignSelf: 'center',
+  },
+  [theme.breakpoints.down('sm')]: {
+    listContainer: {
+      marginRight: theme.spacing(1),
+      marginLeft: theme.spacing(1),
+    },
   },
 }))

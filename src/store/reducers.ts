@@ -9,6 +9,7 @@ import report from '@store/report'
 import ngWords from '@store/ngWords'
 import community from '@store/community'
 import arena from '@store/arena'
+import lobby from '@store/lobby'
 import chat from '@store/chat'
 import recruitment from './recruitment'
 import game from '@store/game'
@@ -19,6 +20,11 @@ import liveSocket from '@store/live_socket/reducers'
 import { liveEventsReducer } from '@store/liveEvents/reducers'
 import chatHistory from '@store/chatHistory/reducers'
 import { prReducer as pr } from '@store/pr/reducers'
+import stream from '@store/stream'
+import videoTop from '@store/videoTop'
+import purchasePoint from '@store/purchasePoint'
+import pointsManage from '@store/pointsManage'
+import liveStreamDetail from '@store/liveStreamDetail'
 
 const reducer = combineReducers({
   liveSocket,
@@ -34,6 +40,7 @@ const reducer = combineReducers({
   userProfile: userProfile.reducers,
   community: community.reducers,
   arena: arena.reducers,
+  lobby: lobby.reducers,
   recruitment: recruitment.reducers,
   gameTitle: game.reducers,
   notification: notification.reducers,
@@ -41,6 +48,12 @@ const reducer = combineReducers({
   socket: socket.reducers,
   liveEvent: liveEventsReducer,
   chatHistory,
+  // [CW] Add reducer setting livestream, video top, video detail, purchase point, point manager screens.
+  liveSetting: stream.reducers,
+  videoTop: videoTop.reducers,
+  purchasePoint: purchasePoint.reducers,
+  pointsManage: pointsManage.reducers,
+  liveStreamDetail: liveStreamDetail.reducers,
 })
 export default reducer
 

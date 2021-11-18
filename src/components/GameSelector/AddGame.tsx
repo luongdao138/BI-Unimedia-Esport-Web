@@ -16,13 +16,18 @@ import { NG_WORD_DIALOG_CONFIG, NG_WORD_AREA } from '@constants/common.constants
 import ESFastInput from '@components/FastInput'
 import { useFocusState } from '@utils/hooks/input-focus-context'
 import useToast from '@utils/hooks/useToast'
+import useScrollClass from './useScrollClass'
 
 interface Props {
   genres: GameGenre[]
   handleAdd: (game: GameTitle['attributes']) => void
+  height: number
 }
 
 const useStyles = makeStyles((theme) => ({
+  container: {
+    overflowY: 'auto',
+  },
   button: {
     paddingLeft: theme.spacing(6),
     paddingRight: theme.spacing(6),
@@ -35,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const AddGame: React.FC<Props> = ({ genres, handleAdd }) => {
+const AddGame: React.FC<Props> = ({ genres, handleAdd, height }) => {
   const { t } = useTranslation('common')
   const classes = useStyles()
   const dispatch = useAppDispatch()
@@ -43,7 +48,7 @@ const AddGame: React.FC<Props> = ({ genres, handleAdd }) => {
   const { createGame, meta, createdGame } = useAddGame()
   const focusEvent = useFocusState()
   const validationSchema = Yup.object().shape({
-    display_name: Yup.string().required(i18n.t('common:common.game_display_name_error')).max(60),
+    display_name: Yup.string().trim().required(i18n.t('common:common.game_display_name_error')).max(60),
     game_genre_id: Yup.number().test('game_genre_id', '', (value) => {
       return value !== -1
     }),
@@ -77,10 +82,10 @@ const AddGame: React.FC<Props> = ({ genres, handleAdd }) => {
   }, [meta.loaded])
 
   const isInitial = formik.values.display_name === '' || formik.values.game_genre_id === -1
-
+  const scrollClass = useScrollClass()
   return (
-    <Box pt={4} px={5} className={classes.container}>
-      <form onSubmit={formik.handleSubmit}>
+    <Box py={4} px={5} className={`${classes.container} ${scrollClass}`} height={height + 100}>
+      <form onSubmit={formik.handleSubmit} style={{ margin: '0 12px' }}>
         <Select
           id="game_genre_id"
           name="game_genre_id"

@@ -3,15 +3,12 @@ import { GameTitle } from '@services/game.service'
 import ESChip from '@components/Chip'
 import { Box, Container, List, Typography } from '@material-ui/core'
 import i18n from '@locales/i18n'
+import useScrollClass from './useScrollClass'
 
 const useStyles = makeStyles((theme) => ({
   chip: {
     marginRight: theme.spacing(2),
     marginBottom: theme.spacing(2),
-  },
-  listContainer: {
-    maxHeight: 330,
-    overflowY: 'auto',
   },
 }))
 
@@ -19,9 +16,10 @@ type GameListProps = {
   games: GameTitle['attributes'][]
   selectedGames: GameTitle['attributes'][]
   handleAdd: (game: GameTitle['attributes']) => void
+  height: number
 }
 
-const GameList: React.FC<GameListProps> = ({ games, selectedGames, handleAdd }) => {
+const GameList: React.FC<GameListProps> = ({ games, selectedGames, handleAdd, height }) => {
   const classes = useStyles()
   if (games.length === 0) {
     return (
@@ -32,11 +30,11 @@ const GameList: React.FC<GameListProps> = ({ games, selectedGames, handleAdd }) 
   }
 
   const checkIsSelected = (id: number) => selectedGames.find((g) => g.id === id)
-
+  const scrollClass = useScrollClass()
   return (
     <>
       {games.length > 0 && (
-        <Container maxWidth="md" className={classes.listContainer}>
+        <Container maxWidth="md" className={scrollClass} style={{ maxHeight: height }}>
           <List>
             {games.map((g, idx) => (
               <ESChip

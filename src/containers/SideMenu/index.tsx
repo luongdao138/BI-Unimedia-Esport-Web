@@ -1,4 +1,5 @@
-import { useState } from 'react'
+// create side menu for live stream feature
+import { useState, useEffect } from 'react'
 import { Box, List, ListItem as MuiListItem, ListItemIcon, ListItemText, Typography } from '@material-ui/core'
 import Link from 'next/link'
 import { makeStyles, withStyles } from '@material-ui/core/styles'
@@ -18,6 +19,7 @@ import LogoutContainer from '@containers/Logout'
 import LoginRequired from '@containers/LoginRequired'
 import SideFooter from './SideFooter'
 import AppDialog from './AppDialog'
+import usePointsManage from '@containers/PointManage/usePointsManage'
 
 const SideMenu: React.FC = () => {
   const [modal, setModal] = useState(false)
@@ -29,6 +31,18 @@ const SideMenu: React.FC = () => {
   const { selectors } = userProfileStore
   const isAuthenticated = useAppSelector(getIsAuthenticated)
   const userProfile = useAppSelector(selectors.getUserProfile)
+  const { getMyPointData, myPointsData } = usePointsManage()
+  const totalMyPoints = myPointsData?.total_point
+
+  useEffect(() => {
+    if (isAuthenticated && !myPointsData) {
+      const params = {
+        page: 1,
+        limit: 10,
+      }
+      getMyPointData(params)
+    }
+  }, [isAuthenticated])
   const isSelected = (routeName: string): boolean => {
     return router.pathname && router.pathname.startsWith(routeName)
   }
@@ -66,12 +80,26 @@ const SideMenu: React.FC = () => {
         </Box>
 
         <Box className={`${classes.menuWrap}`}>
+          {isAuthenticated && (
+            <Box className={classes.wrap_point}>
+              <Box className={classes.text_point}>{t('common:common.eXe_points')}</Box>
+              <Box className={classes.point}>{totalMyPoints ?? 0}</Box>
+              <Box className={classes.link_point}>
+                {/* redirect to point management */}
+                <Link href={ESRoutes.USER_POINT_MANAGEMENT}>
+                  <a>{t('common:common.eXe_point_management')}</a>
+                </Link>
+              </Box>
+            </Box>
+          )}
           <List component="nav" aria-labelledby="nested-list-subheader" className={classes.root}>
             <LoginRequired>
               <Link href={ESRoutes.HOME} passHref>
                 <ListItem className={classes.list} button disableRipple selected={isSelected(ESRoutes.HOME)}>
                   <ListItemIcon className={classes.icon}>
-                    <Icon fontSize="small" className="fa fa-home" />
+                    <Box className={classes.iconContainer}>
+                      <Icon fontSize="small" className={`fa fa-home ${classes.faIcon}`} />
+                    </Box>
                   </ListItemIcon>
                   <ListItemText className={classes.listText} primary={t('common:home.home')} />
                 </ListItem>
@@ -80,9 +108,31 @@ const SideMenu: React.FC = () => {
             <Link href={ESRoutes.ARENA} passHref>
               <ListItem className={classes.list} button disableRipple selected={isSelected(ESRoutes.ARENA)}>
                 <ListItemIcon className={classes.icon}>
-                  <Icon fontSize="small" className="fa fa-trophy" />
+                  <Box className={classes.iconContainer}>
+                    <Icon fontSize="small" className={`fa fa-trophy ${classes.faIcon}`} />
+                  </Box>
                 </ListItemIcon>
                 <ListItemText className={classes.listText} primary={t('common:home.tournament')} />
+              </ListItem>
+            </Link>
+            <Link href={ESRoutes.LOBBY} passHref>
+              <ListItem className={classes.list} button disableRipple selected={isSelected(ESRoutes.LOBBY)}>
+                <ListItemIcon className={classes.icon}>
+                  <Box className={classes.iconContainer}>
+                    <Icon fontSize="small" className={`fa fa-university ${classes.faIcon}`} />
+                  </Box>
+                </ListItemIcon>
+                <ListItemText className={classes.listText} primary={t('common:home.lobby')} />
+              </ListItem>
+            </Link>
+            <Link href={ESRoutes.COMMUNITY} passHref>
+              <ListItem className={classes.list} button disableRipple selected={isSelected(ESRoutes.COMMUNITY)}>
+                <ListItemIcon className={classes.icon}>
+                  <Box className={classes.iconContainer}>
+                    <Icon fontSize="small" className={`fa fa-users ${classes.faIcon}`} />
+                  </Box>
+                </ListItemIcon>
+                <ListItemText className={classes.listText} primary={t('common:home.community')} />
               </ListItem>
             </Link>
             {/* <ListItem className={classes.list} button disableRipple>
@@ -104,8 +154,9 @@ const SideMenu: React.FC = () => {
             </ListItemIcon>
             <ListItemText className={classes.listText} primary={t('common:home.video')} />
           </ListItem> */}
-            <Link href={ESRoutes.EVENTS} passHref>
-              <ListItem className={classes.list} button disableRipple selected={isSelected(ESRoutes.EVENTS)}>
+            {/* link to top video */}
+            <Link href={ESRoutes.VIDEO_TOP} passHref>
+              <ListItem className={classes.list} button disableRipple selected={isSelected(ESRoutes.VIDEO_TOP)}>
                 <ListItemIcon className={classes.icon}>
                   <Icon fontSize="small" className="fa fa-play-circle" />
                 </ListItemIcon>
@@ -196,6 +247,15 @@ const useStyles = makeStyles((theme) => ({
   icon: {
     minWidth: 30,
   },
+  faIcon: {
+    width: 'auto',
+  },
+  iconContainer: {
+    width: 15,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   userInfo: {
     justifyContent: 'center',
     alignItems: 'center',
@@ -274,6 +334,27 @@ const useStyles = makeStyles((theme) => ({
       borderRadius: 6,
       opacity: 1,
       visibility: 'visible',
+    },
+  },
+  wrap_point: {
+    borderTop: `1px solid ${Colors.white_opacity[30]}`,
+    borderBottom: `1px solid ${Colors.white_opacity[30]}`,
+    padding: '15px 5px',
+    marginBottom: '17px',
+  },
+  text_point: {
+    fontSize: '12px',
+    color: Colors.white_opacity[70],
+  },
+  point: {
+    fontSize: '20px',
+    color: Colors.primary,
+    padding: '10px 0px',
+  },
+  link_point: {
+    fontSize: '9px',
+    '& a': {
+      color: Colors.white_opacity[70],
     },
   },
 }))

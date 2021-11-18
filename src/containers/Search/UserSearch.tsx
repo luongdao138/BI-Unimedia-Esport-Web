@@ -6,23 +6,34 @@ import UserListItem from '@components/UserItem'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useTranslation } from 'react-i18next'
 import useSearch from '@containers/Search/useSearch'
+import useLogout from '@containers/Logout/useLogout'
 
 const UserSearchContainer: React.FC = () => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const { searchKeyword } = useSearch()
+  const { meta: logoutMeta } = useLogout()
   const { searchUsers, userSearch, page, meta, resetMeta, resetSearchUsers } = useUserSearch()
   const [keyword, setKeyword] = useState<string>('')
 
   useEffect(() => {
-    setKeyword(searchKeyword)
-    userSearch({ page: 1, keyword: searchKeyword })
+    if (!logoutMeta.pending) {
+      setKeyword(searchKeyword)
+      userSearch({ page: 1, keyword: searchKeyword })
+    }
 
     return () => {
       resetSearchUsers()
       resetMeta()
     }
   }, [searchKeyword])
+
+  useEffect(() => {
+    return () => {
+      resetSearchUsers()
+      resetMeta()
+    }
+  }, [])
 
   const loadMore = () => {
     if (page && page.current_page !== page.total_pages) {

@@ -6,11 +6,13 @@
 export const Colors = {
   primary: '#FF4786',
   secondary: '#F7F735',
+  transparent: 'transparent',
   grey: {
     '10': '#060606',
     '100': '#212121',
     '200': '#4D4D4D',
     '300': '#ADABAB',
+    '350': '#545454',
     '400': '#707070',
   },
   text: {
@@ -22,11 +24,14 @@ export const Colors = {
   black: '#000000',
   white: '#ffffff',
   white_opacity: {
+    '6': 'rgba(255,255,255,.06)',
+    '7': 'rgba(255,255,255,.07)',
     '10': 'rgba(255,255,255,.1)',
     '15': 'rgba(255,255,255,.15)',
     '20': 'rgba(255,255,255,.2)',
     '30': 'rgba(255,255,255,.3)',
     '70': 'rgba(255,255,255,.7)',
+    '87': 'rgba(255,255,255,.87)',
   },
   black_card: '#0A0A0A',
   black_opacity: {

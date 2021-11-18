@@ -5,6 +5,7 @@ export interface SwitchIOSProps {
   title?: string
   checked?: boolean
   name?: string
+  disabled?: boolean
   handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void
 }
 
@@ -44,8 +45,8 @@ const AntSwitch = withStyles((theme: Theme) =>
   })
 )(Switch)
 
-const ESSwitchIOS: React.FC<SwitchIOSProps> = ({ checked, handleChange, ...rest }) => {
-  return <AntSwitch checked={checked} onChange={handleChange} {...rest} />
+const ESSwitchIOS: React.FC<SwitchIOSProps> = ({ checked, disabled, handleChange, ...rest }) => {
+  return <AntSwitch checked={checked} onChange={handleChange} {...rest} disabled={disabled} />
 }
 
 export default ESSwitchIOS

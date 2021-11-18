@@ -63,7 +63,6 @@ export default createReducer(initialState, (builder) => {
     if (action.payload.meta != undefined && action.payload.meta.current_page > 1) {
       searchTournaments = _.unionBy(state.searchTournaments, action.payload.data, 'attributes.hash_key')
     }
-
     state.searchTournaments = searchTournaments
     state.searchTournamentsMeta = action.payload.meta
   })
@@ -111,9 +110,27 @@ export default createReducer(initialState, (builder) => {
     if (action.payload.meta != undefined && action.payload.meta.current_page > 1) {
       _participants = state.tournamentParticipants.concat(action.payload.data)
     }
-    state.tournamentDetail.attributes.interested_count = action.payload.meta.total_count
+    if (!action.meta.arg.role) {
+      state.tournamentDetail.attributes.interested_count = action.payload.meta.total_count
+    }
     state.tournamentParticipants = _participants
     state.participantsMeta = action.payload.meta
+  })
+  builder.addCase(actions.getBattleRoyaleParticipants.fulfilled, (state, action) => {
+    let _participants = action.payload.data
+    if (action.payload.meta != undefined && action.payload.meta.current_page > 1) {
+      _participants = state.tournamentParticipants.concat(action.payload.data)
+    }
+    if (!action.meta.arg.role) {
+      state.tournamentDetail.attributes.interested_count = action.payload.meta.total_count
+    }
+    state.tournamentParticipants = _participants
+    state.participantsMeta = {
+      total_count: _participants.length,
+      per_page: 0,
+      current_page: 1,
+      total_pages: 1,
+    }
   })
   builder.addCase(actions.resetParticipants, (state) => {
     state.tournamentParticipants = []
@@ -137,7 +154,11 @@ export default createReducer(initialState, (builder) => {
     state.interestedsMeta = action.payload.meta
   })
   builder.addCase(actions.getTournamentMatches.fulfilled, (state, action) => {
-    state.tournamentMatches = action.payload
+    state.tournamentMatches.matches = action.payload.matches
+    state.tournamentMatches.third_place_match = action.payload.third_place_match.map((match) => ({
+      ...match,
+      match_no: match.match_no + 1,
+    }))
   })
   builder.addCase(actions.getTournamentMatchesInterval.fulfilled, (state, action) => {
     state.tournamentMatches = action.payload
@@ -218,5 +239,24 @@ export default createReducer(initialState, (builder) => {
         },
       }
     })
+  })
+  builder.addCase(actions.setBattleRoyaleScores.fulfilled, (state, action) => {
+    state.tournamentParticipants = action.payload.data
+  })
+  builder.addCase(actions.getBattleRoyaleWinners.fulfilled, (state, action) => {
+    state.tournamentParticipants = action.payload.data
+  })
+  builder.addCase(actions.summaryTournament.fulfilled, (state, action) => {
+    if (state.tournamentDetail?.attributes) {
+      state.tournamentDetail.attributes.summary = action.meta.arg.data.value
+      state.tournamentDetail.attributes.summary_image = action.meta.arg.data.summary_image_url
+    }
+  })
+  builder.addCase(actions.clearArenaDetail, (state) => {
+    state.tournamentDetail = undefined
+  })
+  builder.addCase(actions.clearArenaWinners, (state) => {
+    state.arenaWinners = {}
+    state.tournamentParticipants = []
   })
 })

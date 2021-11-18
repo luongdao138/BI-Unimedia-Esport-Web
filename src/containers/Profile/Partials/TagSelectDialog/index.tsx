@@ -76,7 +76,7 @@ const TagSelectDialog: React.FC<TagSelectDialogProps> = ({ selected, features, o
                         <Typography variant="h2">{t('common:user_profile.tag_edit')}</Typography>
                       </Box>
                     </Box>
-
+                    <Typography className={classes.tag_up_to}>{t('common:profile.tag_up_to')}</Typography>
                     <TagSelect
                       features={features}
                       selectedFeatures={selected}
@@ -84,7 +84,6 @@ const TagSelectDialog: React.FC<TagSelectDialogProps> = ({ selected, features, o
                         if ((max && selected.length < max) || max === undefined || data.length <= max) onFeatureSelect(data)
                       }}
                     />
-
                     <Box className={classes.blankSpace}></Box>
                   </Box>
                 </BlankLayout>
@@ -119,6 +118,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   blankSpace: {
     height: 169,
+  },
+  tag_up_to: {
+    padding: '20px 0',
+    textAlign: 'center',
   },
   [theme.breakpoints.down('sm')]: {
     container: {

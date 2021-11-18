@@ -1,10 +1,23 @@
 import { useEffect } from 'react'
-import { Box, Typography, Grid, FormControlLabel, DialogActions, Radio, Hidden, IconButton, Icon } from '@material-ui/core'
+import {
+  Box,
+  Typography,
+  Grid,
+  FormControlLabel,
+  DialogActions,
+  Radio,
+  Hidden,
+  IconButton,
+  Icon,
+  useTheme,
+  ButtonBase,
+} from '@material-ui/core'
 import Input from '@components/Input'
 import RadioVertical from '@components/RadioVertical'
 import ESLoader from '@components/Loader'
 import ESDialog from '@components/Modal'
 import ESStickyFooter from '@components/StickyFooter'
+import ESLabel from '@components/Label'
 import Avatar from '@components/Avatar'
 import ButtonPrimary from '@components/ButtonPrimary'
 import { ReportParams } from '@services/report.service'
@@ -24,6 +37,12 @@ import { REPORT_TYPE } from '@constants/common.constants'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
 import BlankLayout from '@layouts/BlankLayout'
+import router from 'next/router'
+import { ESRoutes } from '@constants/route.constants'
+import { LIGHTBOX_OPTIONS } from '@constants/common.constants'
+import { SRLWrapper } from 'simple-react-lightbox'
+import { TextMessage } from '@components/Chat/elements'
+import { ChatSuggestionList } from '@components/Chat/types/chat.types'
 
 export interface ESReportProps {
   chat_id?: string
@@ -35,10 +54,23 @@ export interface ESReportProps {
   open?: boolean
   reportType?: number
   handleClose?: () => void
-  members?: any
+  members?: ChatSuggestionList[]
+  title?: string
 }
 
-const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, reportType, msg_body, open, handleClose }) => {
+const ESReport: React.FC<ESReportProps> = ({
+  data,
+  target_id,
+  room_id,
+  chat_id,
+  title,
+  members,
+  reportType,
+  msg_body,
+  open,
+  handleClose,
+}) => {
+  const _theme = useTheme()
   const classes = useStyles()
   const dispatch = useAppDispatch()
   const { checkNgWordByField } = useCheckNgWord()
@@ -51,13 +83,21 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
     fetchReasons({ page: 1 })
   }, [])
 
+  const toProfile = (user_code) => router.push(`${ESRoutes.PROFILE}/${user_code}`)
+
   const validationSchema = Yup.object().shape({
     user_email: Yup.string()
+      .required(t('common.input_required'))
       .test('email-validation', t('user_report.email_test_result'), (value) => {
         return CommonHelper.validateEmail(value)
+      }),
+    description: Yup.string()
+      .required(t('common.input_required'))
+      .test('empty-check', t('user_report.email_test_result'), (val) => {
+        if (val && val.length > 0 && val.trim().length === 0) return false
+        return true
       })
-      .required(t('common.input_required')),
-    description: Yup.string().required(t('common.input_required')).max(5000),
+      .max(5000),
     reason_id: Yup.number()
       .test('reason_id', '', (value) => {
         return value !== -1
@@ -104,6 +144,62 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
     },
   })
 
+  const renderClickableImage = (image_url: string, isPopOver?: boolean) => {
+    return (
+      <SRLWrapper options={LIGHTBOX_OPTIONS}>
+        <img className={`${classes.imageBox} ${isPopOver && classes.popOverImage}`} src={image_url} />
+      </SRLWrapper>
+    )
+  }
+
+  const renderTopic = (isComment?: boolean) => {
+    return (
+      <>
+        <Box
+          className={classes.userInfoContainer}
+          flexDirection="column"
+          style={{ alignItems: 'flex-start', marginTop: _theme.spacing(1) }}
+        >
+          <Box display="flex" mr={2} mb={2} width="100%">
+            <Icon className={'fas fa-comment-alt'} fontSize="small" style={{ color: Colors.white, paddingTop: _theme.spacing(0.5) }} />
+            <Box color={Colors.white} fontSize={14} ml={1} width="calc(100% - 15px)">
+              <Typography className={classes.topicEllipsis}>{attr.topic_title}</Typography>
+            </Box>
+          </Box>
+          {isComment && (
+            <Typography variant="body1" style={{ marginBottom: _theme.spacing(1) }}>
+              {attr.number}
+            </Typography>
+          )}
+          <Box display="flex" mb={2}>
+            <ButtonBase onClick={() => toProfile(attr.user_code)} className={classes.topicAvatarWrap}>
+              <Avatar className={classes.topicAvatar} alt={attr.nickname} src={attr.avatar_image} />
+            </ButtonBase>
+
+            <Box ml={1} maxWidth="100%">
+              <Typography variant="h3" className={classes.topicEllipsis} style={{ color: Colors.white }}>
+                {attr.nickname}
+              </Typography>
+              <Typography className={classes.topicEllipsis} variant="body2">
+                {'@' + attr.user_code}
+              </Typography>
+            </Box>
+          </Box>
+
+          <Box display="flex" mb={1} flexDirection="column">
+            <Typography variant="body1" style={{ color: Colors.white_opacity[70] }}>
+              {attr.date}
+            </Typography>
+            <Typography variant="body1" className={classes.wordBreak}>
+              {attr.content}
+            </Typography>
+          </Box>
+          {attr.image && renderClickableImage(attr.image)}
+        </Box>
+      </>
+    )
+  }
+
   const reportInfo = () => {
     switch (reportType) {
       case REPORT_TYPE.USER_LIST:
@@ -121,7 +217,7 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
                   </Box>
                 ) : msg_body ? (
                   <Box className={classes.msgBox}>
-                    <Typography className={classes.msg}>{msg_body}</Typography>
+                    <TextMessage members={members} color={Colors.white} text={msg_body} />
                   </Box>
                 ) : null}
               </Grid>
@@ -130,16 +226,68 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
         )
       case REPORT_TYPE.TOURNAMENT:
         return <Typography variant="h2">{data.attributes.title}</Typography>
+      case REPORT_TYPE.COMMUNITY:
+        return (
+          <>
+            <ESLabel label={t('community.community_to_report')} size="small" />
+            <Box className={classes.userInfoContainer}>
+              <Box display="flex" alignItems="center" mr={2}>
+                <Icon className={`fas fa-users ${classes.communityIcon}`} />
+              </Box>
+              <Typography variant="h2" className={classes.wordBreak}>
+                {data.attributes.name}
+              </Typography>
+            </Box>
+          </>
+        )
+      case REPORT_TYPE.TOPIC:
+        return (
+          <>
+            <Typography variant="body1" style={{ marginTop: _theme.spacing(2) }}>
+              {t('topic.report.title')}
+            </Typography>
+            {renderTopic()}
+          </>
+        )
+      case REPORT_TYPE.TOPIC_COMMENT:
+        return (
+          <>
+            <Typography variant="body1" style={{ marginTop: _theme.spacing(2) }}>
+              {t('topic_comment.report.title')}
+            </Typography>
+            {renderTopic(true)}
+          </>
+        )
+      case REPORT_TYPE.LOBBY:
+        return <Typography variant="h2">{data.attributes.title}</Typography>
+
       default:
-        break
+        return null
     }
+  }
+  // [CW] Add video title on report pop up
+  const reportVideo = () => {
+    return <Box className={classes.videoInfoContainer}>{data?.title && <Typography variant="h2">{data.title}</Typography>}</Box>
   }
 
   useEffect(() => {
     if (meta.loaded && !meta.error) {
       handleClose()
       formik.resetForm()
-      dispatch(actions.addToast(t('messages.report_sent')))
+      switch (reportType) {
+        case REPORT_TYPE.COMMUNITY:
+          dispatch(actions.addToast(t('community.reported_community')))
+          break
+        case REPORT_TYPE.TOPIC:
+          dispatch(actions.addToast(t('topic.report.reported_topic')))
+          break
+        case REPORT_TYPE.TOPIC_COMMENT:
+          dispatch(actions.addToast(t('topic_comment.report.reported_comment')))
+          break
+        default:
+          dispatch(actions.addToast(t('messages.report_sent')))
+          break
+      }
     } else if (meta.error) {
       dispatch(actions.addToast(t('error.failed')))
     }
@@ -160,12 +308,9 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
         <ESStickyFooter
           disabled={false}
           noScroll
+          noBottomSpace
           content={
             <Box display="flex" flexDirection="column" alignItems="center">
-              <Box mb={2} className={classes.desc}>
-                <Typography align="center">{t('user_report.desc_first')}</Typography>
-                <Typography align="center">{t('user_report.desc_second')}</Typography>
-              </Box>
               <DialogActions style={{ justifyContent: 'center' }}>
                 <ButtonPrimary
                   style={{ width: 280 }}
@@ -194,10 +339,14 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
                   <Icon className="fa fa-arrow-left" fontSize="small" />
                 </IconButton>
                 <Box pl={2}>
-                  <Typography variant="h2">{t('user_report.title')}</Typography>
+                  <Typography variant="h2">{title || t('user_report.title')}</Typography>
                 </Box>
               </Box>
-              <Box py={4}>{attr && reportInfo()}</Box>
+              <Box mt={8}>
+                <Typography className={classes.desc}>{t('user_report.desc')}</Typography>
+              </Box>
+              {/*[CW] Update title of video report pop-up if report type is video stream*/}
+              <Box py={4}>{attr ? reportInfo : REPORT_TYPE.VIDEO_STREAM && reportVideo}</Box>
               <Grid container>
                 <Hidden xsDown smDown>
                   <Box style={{ minWidth: 24 }}></Box>
@@ -224,15 +373,16 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
                       id="description"
                       name="description"
                       value={formik.values.description}
+                      onBlur={formik.handleBlur}
                       onChange={formik.handleChange}
                       labelPrimary={t('user_report.reason_desc')}
-                      placeholder={t('user_report.reason_desc')}
+                      placeholder={t('user_report.reason_desc_placeholder')}
                       fullWidth
                       required
-                      helperText={formik.errors.description}
-                      error={!!formik.errors.description}
+                      helperText={formik.touched?.description && formik.errors.description}
+                      error={formik.touched?.description && !!formik.errors.description}
                       multiline
-                      rows={4}
+                      rows={6}
                     />
                   </Box>
                   <Box mt={4} mb={1}>
@@ -253,12 +403,14 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
                         id="user_email"
                         name="user_email"
                         value={formik.values.user_email}
+                        onBlur={formik.handleBlur}
                         onChange={formik.handleChange}
                         labelPrimary={t('user_report.reporter_email')}
+                        placeholder={t('user_report.reporter_email_placeholder')}
                         fullWidth
                         required
-                        helperText={formik.errors.user_email}
-                        error={!!formik.errors.user_email}
+                        helperText={formik.touched?.user_email && formik.errors.user_email}
+                        error={formik.touched?.user_email && !!formik.errors.user_email}
                       />
                     )}
                   </Box>
@@ -280,10 +432,56 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
 }
 
 const useStyles = makeStyles((theme) => ({
+  topicEllipsis: {
+    display: '-webkit-box',
+    WebkitBoxOrient: 'vertical',
+    WebkitLineClamp: 1,
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    wordBreak: 'break-all',
+  },
+  wordBreak: {
+    wordBreak: 'break-all',
+  },
+  topicAvatarWrap: {
+    '& > span': {
+      borderRadius: '50%',
+    },
+  },
+  popOverImage: {
+    maxHeight: '50vh',
+    objectFit: 'cover',
+  },
+  topicAvatar: {
+    width: theme.spacing(5),
+    height: theme.spacing(5),
+  },
+  imageBox: {
+    display: 'flex',
+    transition: 'all 0.5s ease',
+    borderRadius: 7,
+    maxHeight: 300,
+    maxWidth: 300,
+    objectFit: 'contain',
+  },
+
   userInfoContainer: {
     backgroundColor: Colors.black,
-    marginTop: 24,
-    padding: 16,
+    marginTop: theme.spacing(3),
+    padding: theme.spacing(2),
+    borderStyle: 'solid',
+    borderColor: Colors.grey[400],
+    borderRadius: 4,
+    borderWidth: 0.5,
+    display: 'flex',
+    alignItems: 'center',
+  },
+  // [CW] Update style of video info container
+  videoInfoContainer: {
+    backgroundColor: Colors.black,
+    marginTop: theme.spacing(3),
+    marginBottom: theme.spacing(3),
+    padding: theme.spacing(2),
     borderStyle: 'solid',
     borderColor: Colors.grey[400],
     borderRadius: 4,
@@ -296,10 +494,8 @@ const useStyles = makeStyles((theme) => ({
     paddingRight: 10,
   },
   desc: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    color: Colors.grey[400],
+    color: Colors.grey[300],
+    whiteSpace: 'pre-line',
   },
   message: {
     marginLeft: 15,
@@ -383,6 +579,10 @@ const useStyles = makeStyles((theme) => ({
     zIndex: 50,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  communityIcon: {
+    fontSize: 20,
+    color: Colors.white,
   },
   [theme.breakpoints.down('sm')]: {
     actionButtonContainer: {
