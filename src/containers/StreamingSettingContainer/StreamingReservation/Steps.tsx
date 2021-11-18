@@ -239,7 +239,7 @@ const Steps: React.FC<StepsProps> = ({
     if (step === 2) {
       return ' ' + addClass
     } else {
-      return otherClass ? ' ' + otherClass : ''
+      return otherClass ? ' ' + otherClass : ' ' + addClass
     }
   }
 
