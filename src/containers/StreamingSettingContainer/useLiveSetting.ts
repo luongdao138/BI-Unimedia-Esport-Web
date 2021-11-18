@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import {
   CODE_ERROR_RENEW_SPECIAL,
   LiveStreamSettingParams,
@@ -23,7 +24,9 @@ const useLiveSetting = () => {
   const dispatch = useAppDispatch()
   const getLiveSettingTab = async (param: LiveStreamSettingParams) => {
     const result = await dispatch(actions.getLiveSettingInfo(param))
-    if (!actions.getLiveSettingInfo.fulfilled.match(result) || result?.payload?.code !== 200) {
+    if (!actions.getLiveSettingInfo.fulfilled.match(result) || result?.payload?.code === 400) {
+      dispatch(addToast(i18n.t('common:common.channel_busy_to_renew')))
+    } else if (!actions.getLiveSettingInfo.fulfilled.match(result) || result?.payload?.code !== 200) {
       dispatch(addToast(i18n.t('common:common.failed_to_get_data')))
     } else {
       return result
@@ -40,10 +43,10 @@ const useLiveSetting = () => {
   const liveSettingInformation = useAppSelector(selectors.getLiveStreamSetting)
   const scheduleInformation = useAppSelector(selectors.getScheduleSetting)
   const streamUrlAndKeyInformation = useAppSelector(selectors.getStreamUrlAndKey)
-  const setLiveStreamConfirm = async (param: SetLiveStreamParams, onSuccess: () => void) => {
+  const setLiveStreamConfirm = async (param: SetLiveStreamParams, onSuccess: (channel_progress) => void) => {
     const resultAction = await dispatch(actions.setLiveStream(param))
     if (actions.setLiveStream.fulfilled.match(resultAction)) {
-      onSuccess()
+      onSuccess(resultAction.payload.data?.channel_progress)
     } else {
       dispatch(addToast(i18n.t('common:common.failed_to_get_data')))
     }
@@ -54,15 +57,23 @@ const useLiveSetting = () => {
   const getScheduleMeta = useAppSelector(_getMetaSchedule)
   const setLiveStreamMeta = useAppSelector(_setLiveStreamMeta)
 
-  const getStreamUrlAndKey = async (params: StreamUrlAndKeyParams, onSuccess?: (url, key) => void) => {
+  const getStreamUrlAndKey = async (params: StreamUrlAndKeyParams, onSuccess?: (url, key, arn, data) => void) => {
     const resultAction = await dispatch(actions.getStreamUrlAndKeyInfo(params))
     if (actions.getStreamUrlAndKeyInfo.fulfilled.match(resultAction)) {
-      onSuccess(resultAction.payload.data.STREAM_URL, resultAction.payload.data.STREAM_KEY_VALUE)
+      onSuccess(
+        resultAction.payload.data?.stream_url,
+        resultAction.payload.data?.stream_key_value,
+        resultAction.payload.data?.channel_arn,
+        resultAction.payload.data
+      )
     } else {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       //@ts-ignore
-      if (resultAction.payload?.code === CODE_ERROR_RENEW_SPECIAL) {
+      if (resultAction.payload?.code === CODE_ERROR_RENEW_SPECIAL.CHA099) {
         dispatch(addToast(i18n.t('common:common.failed_to_renew')))
+      }
+      //@ts-ignore
+      if (resultAction.payload?.code === CODE_ERROR_RENEW_SPECIAL.SERVICE_BUSY) {
+        dispatch(addToast(i18n.t('common:common.channel_busy_to_renew')))
       } else {
         dispatch(addToast(i18n.t('common:common.failed_to_get_data')))
       }

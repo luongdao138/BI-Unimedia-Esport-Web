@@ -28,9 +28,9 @@ import {
 import useReturnHref from '@utils/hooks/useReturnHref'
 import { FIELD_TITLES } from '../field_titles.constants'
 import { showDialog } from '@store/common/actions'
-import { FORMAT_DATE_TIME_JP, NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
+import { EVENT_STATE_CHANNEL, FORMAT_DATE_TIME_JP, NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
 import useCheckNgWord from '@utils/hooks/useCheckNgWord'
-import ESLoader from '@components/FullScreenLoader'
+import ESLoader from '@components/FullScreenLoaderNote'
 import useGetProfile from '@utils/hooks/useGetProfile'
 import useUploadImage from '@utils/hooks/useUploadImage'
 import ESNumberInputStream from '@components/NumberInput/stream'
@@ -47,6 +47,9 @@ interface StepsProps {
   isShare?: boolean
   titlePost?: string
   contentPost?: string
+  stateChannelArn?: string
+  visibleLoading?: boolean
+  disableLoader?: boolean
 }
 const KEY_TYPE = {
   URL: 1,
@@ -54,7 +57,18 @@ const KEY_TYPE = {
   UUID: 3,
 }
 
-const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, titlePost, contentPost }) => {
+const Steps: React.FC<StepsProps> = ({
+  step,
+  onNext,
+  category,
+  formik,
+  isShare,
+  titlePost,
+  contentPost,
+  stateChannelArn,
+  visibleLoading,
+  disableLoader,
+}) => {
   const classes = useStyles()
   const dispatch = useAppDispatch()
   const { t } = useTranslation(['common'])
@@ -68,8 +82,9 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
   const [obsNotEnable, setObsNotEnable] = useState<boolean>(false)
   // const [errPublicTime, setErrPublicTime] = useState(false)
   const [isLive, setIsLive] = useState<boolean>(false)
-  // const [status, setStatus] = useState<number>(0)
-  // const [counter, setCounter] = useState<number>(0)
+  const [isLoading, setLoading] = useState(false)
+  const [clickShowText, setClickShowText] = useState(false)
+  const [renewData, setRenewData] = useState(null)
 
   useEffect(() => {
     // getLiveSetting()
@@ -174,6 +189,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
     }
   }
   const onClickPrev = () => {
+    setClickShowText(false)
     onNext(step - 1, formik.values.stepSettingOne.share_sns_flag, {
       title: formik.values.stepSettingOne.title,
       content: `${baseViewingURL}${formik.values.stepSettingOne.linkUrl}`,
@@ -236,6 +252,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
       stream_key: stream_key,
       video_publish_end_time: video_publish_end_time !== null ? CommonHelper.formatDateTimeJP(video_publish_end_time) : null,
     }
+    setClickShowText(true)
     setLiveStreamConfirm(data, () => {
       onNext(step + 1, share_sns_flag, {
         title: formik.values.stepSettingOne.title,
@@ -274,29 +291,48 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
   }
 
   const debouncedHandleRenewURLAndKey = useCallback(
-    _.debounce((params: StreamUrlAndKeyParams, showToast?: boolean) => {
-      getStreamUrlAndKey(params, (url, key) => {
-        // if (type === KEY_TYPE.URL) {
-        formik.setFieldValue('stepSettingOne.stream_url', url)
-        formik.setFieldValue('stepSettingOne.stream_key', key)
-        showToast && dispatch(commonActions.addToast(t('common:streaming_setting_screen.renew_success_toast')))
-        // } else {
-        //   formik.setFieldValue('stepSettingOne.stream_key', key)
-        //   showToast && dispatch(commonActions.addToast(t('common:streaming_setting_screen.renew_success_toast')))
-        // }
+    _.debounce((params: StreamUrlAndKeyParams) => {
+      getStreamUrlAndKey(params, (url, key, arn, data) => {
+        setRenewData(data)
+        setLoading(true)
+        if (data) {
+          formik.setFieldValue('stepSettingOne.stream_url', url)
+          formik.setFieldValue('stepSettingOne.stream_key', key)
+          formik.setFieldValue('stepSettingOne.arn', arn)
+        }
       })
     }, 700),
     []
   )
 
-  const onReNewUrlAndKey = (type: string, method: string, showToast?: boolean) => {
+  const onReNewUrlAndKey = (type: string, method: string) => {
     const params: StreamUrlAndKeyParams = {
       type: method,
       objected: type,
       is_live: TYPE_SECRET_KEY.LIVE,
     }
-    debouncedHandleRenewURLAndKey(params, showToast)
+    debouncedHandleRenewURLAndKey(params)
   }
+
+  useEffect(() => {
+    //keep (loading + text) when reload page : update + STARTING
+    setLoading(stateChannelArn === EVENT_STATE_CHANNEL.STARTING && obsNotEnable)
+    setClickShowText(stateChannelArn === EVENT_STATE_CHANNEL.STARTING && obsNotEnable)
+    if (isLoading) {
+      if (!obsNotEnable) {
+        //created
+        setLoading(!renewData)
+        if (stateChannelArn === EVENT_STATE_CHANNEL.STOPPED || stateChannelArn === EVENT_STATE_CHANNEL.UPDATED) {
+          dispatch(commonActions.addToast(t('common:streaming_setting_screen.renew_success_toast')))
+        }
+      } else if (renewData) {
+        setLoading(!(stateChannelArn === EVENT_STATE_CHANNEL.STOPPED || stateChannelArn === EVENT_STATE_CHANNEL.UPDATED))
+        if (stateChannelArn === EVENT_STATE_CHANNEL.STOPPED || stateChannelArn === EVENT_STATE_CHANNEL.UPDATED) {
+          dispatch(commonActions.addToast(t('common:streaming_setting_screen.renew_success_toast')))
+        }
+      }
+    }
+  }, [stateChannelArn, isLoading, formik?.values?.stepSettingOne?.stream_key])
 
   return (
     <Box py={4} className={classes.container}>
@@ -670,7 +706,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
                   display="flex"
                   justifyContent="flex-end"
                   className={!isLive ? classes.urlCopy : classes.linkDisable}
-                  onClick={() => !isLive && onReNewUrlAndKey(TYPE_SECRET_KEY.URL, TYPE_SECRET_KEY.RE_NEW, true)}
+                  onClick={() => !isLive && onReNewUrlAndKey(TYPE_SECRET_KEY.URL, TYPE_SECRET_KEY.RE_NEW)}
                 >
                   <Typography className={classes.textLink}>{t('common:streaming_setting_screen.reissue')}</Typography>
                 </Box>
@@ -678,9 +714,14 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
             )}
           </Box>
           {isFirstStep() && (
-            <Typography className={`${classes.captionNote} ${classes.addPaddingNote}`}>
-              {i18n.t('common:streaming_setting_screen.note_stream_url')}
-            </Typography>
+            <>
+              <Typography className={`${classes.captionNote} ${classes.addPaddingNote}`}>
+                {i18n.t('common:streaming_setting_screen.note_stream_url')}
+              </Typography>
+              <Typography className={`${classes.captionNote} ${classes.addPaddingNote}`}>
+                {i18n.t('common:streaming_setting_screen.note_stream_url_bottom')}
+              </Typography>
+            </>
           )}
           {/* stream key */}
           <Box pt={2} className={classes.wrap_input} flexDirection="row" display="flex" alignItems="flex-end">
@@ -795,7 +836,9 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category, formik, isShare, 
           )}
         </form>
       </Box>
-      <ESLoader open={isPending || isPendingSetting} />
+      <Box style={{ display: !visibleLoading && !disableLoader ? 'flex' : 'none' }}>
+        <ESLoader open={isPending || isPendingSetting || isLoading} showNote={clickShowText} />
+      </Box>
     </Box>
   )
 }
@@ -818,6 +861,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       display: 'flex',
       alignItems: 'center',
       padding: '4px 0 4px 0',
+      color: Colors.white_opacity['70'],
     },
     '& :-webkit-autofill': {
       WebkitBoxShadow: '0 0 0 100px transparent inset',

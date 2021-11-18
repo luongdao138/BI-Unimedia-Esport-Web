@@ -15,9 +15,11 @@ import TeamEntryEditModal from '@containers/arena/Detail/Partials/ActionComponen
 import InidividualEntryEditModal from '@containers/arena/Detail/Partials/ActionComponent/InidividualEntryEditModal'
 import ResultListItem from './ResultListItem'
 import ResultList from './ResultList'
+import { useArenaClearResults } from '../hooks/useTournamentDetail'
 
 const ArenaWinners: React.FC = () => {
   const { t } = useTranslation(['common'])
+
   const {
     arenaWinners,
     arena,
@@ -36,6 +38,7 @@ const ArenaWinners: React.FC = () => {
     isCancelled,
     isNotHeld,
   } = useArenaWinners()
+  useArenaClearResults(arena)
   const classes = useStyles()
   const [showSummary, setShowSummary] = useState(false)
   const [selectedItem, setSelectedItem] = useState<{ id: number; highlight: boolean } | null>(null)

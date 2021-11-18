@@ -380,7 +380,7 @@ const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
           fullWidth
           onClick={confirmPurchasePoint}
         >
-          {t('purchase_point_tab.btn_buy')}
+          {t('purchase_point_tab.btn_confirm')}
         </ButtonPrimary>
       </Box>
       {isShowPurchasePointModal && (

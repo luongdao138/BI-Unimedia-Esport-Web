@@ -48,6 +48,7 @@ export type FormLiveType = {
     sell_optional?: string
     //check step
     step_setting?: number
+    arn?: string
   }
   stepSettingThree?: {
     name?: string
