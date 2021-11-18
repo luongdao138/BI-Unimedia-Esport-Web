@@ -230,6 +230,7 @@ export type VideoDetailData = {
   arn?: string
   live_stream_start_time?: string
   live_stream_end_time?: string
+  id?: number
 }
 
 export type DetailUserData = {

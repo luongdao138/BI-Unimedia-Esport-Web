@@ -63,6 +63,10 @@ const PurchaseTicketSuperChat: React.FC<PurchaseTicketSuperChatProps> = ({
               {i18n.t('common:donate_points.purchase_ticket_button_text')}
             </ButtonPrimary>
           </Box>
+          {/* Show warning Text */}
+          <Box textAlign="center" pt={4}>
+            <Typography className={classes.warningText}>{i18n.t('common:live_stream_screen.warning_confirm_purchase_ticket')}</Typography>
+          </Box>
         </Box>
       </ESModal>
     </Box>
@@ -155,6 +159,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     buttonBack: {
       paddingLeft: 0,
     },
+  },
+  warningText: {
+    fontSize: '14px',
+    color: '#F7F735',
+    textAlign: 'center',
   },
 }))
 export default PurchaseTicketSuperChat
