@@ -120,6 +120,9 @@ const StreamingReservationContainer: React.FC<Props> = ({ formik, flagUpdateFiel
           setStateChannelMedia(null)
         }
       }
+      // else {
+      //   setStateChannelMedia('-')
+      // }
     } catch (error) {
       console.error(error)
     }
