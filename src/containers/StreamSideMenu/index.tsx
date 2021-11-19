@@ -209,7 +209,7 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
             {!isStreamer && isAuthenticated && (
               <a
                 target="_blank"
-                href="https://docs.google.com/forms/d/1Jjj0HnsmysqystYIwQTqmHmjO1h3ol7lipAkBDZJzuY/viewform?edit_requested=true"
+                href="https://docs.google.com/forms/d/1TWTVVMraTJJzpFC8VXhMHkpp0hk96izjlLp5KyiqfSo/"
                 rel="noopener noreferrer"
                 className={classes.linkTag}
               >
