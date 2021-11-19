@@ -204,7 +204,8 @@ const Steps: React.FC<StepsProps> = ({
     if (step === 2) {
       return ' ' + addClass
     } else {
-      return otherClass ? ' ' + otherClass : ' ' + addClass
+      // return otherClass ? ' ' + otherClass : ' ' + addClass
+      return otherClass ? ' ' + otherClass : ''
     }
   }
 
@@ -861,6 +862,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       display: 'flex',
       alignItems: 'center',
       padding: '4px 0 4px 0',
+      color: Colors.white_opacity['70'],
     },
     '& :-webkit-autofill': {
       WebkitBoxShadow: '0 0 0 100px transparent inset',
