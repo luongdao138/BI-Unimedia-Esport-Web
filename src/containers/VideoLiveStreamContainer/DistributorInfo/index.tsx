@@ -242,6 +242,7 @@ const DistributorInfo: React.FC<DistributorInfoProps> = ({ video_id }) => {
       </>
     )
   }
+
   return (
     <Box className={classes.container}>
       <Box className={classes.titleContainer}>
@@ -251,7 +252,7 @@ const DistributorInfo: React.FC<DistributorInfoProps> = ({ video_id }) => {
               <ESAvatar className={classes.avatar} alt={detailVideoResult?.user_nickname} src={detailVideoResult?.user_avatar} />
               <Box className={classes.textContainer}>
                 {/* <Typography className={classes.title}>{'配信者の名前がはいります'}</Typography> */}
-                {detailVideoResult?.channel_name && <Typography className={classes.title}>{detailVideoResult?.channel_name}</Typography>}
+                {detailVideoResult?.user_nickname && <Typography className={classes.title}>{detailVideoResult?.user_nickname}</Typography>}
                 {channelDescription()}
               </Box>
             </Box>
