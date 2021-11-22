@@ -30,6 +30,7 @@ interface ProgramInfoProps {
   videoInfo?: any
   videoItemStyle?: any
 }
+
 const LIMIT_ITEM = 12
 const ProgramInfoNoViewingTicket: React.FC<ProgramInfoProps> = ({ videoInfo, videoItemStyle }) => {
   const { meta_archived_video_stream, archivedVideoStreamData, getArchivedVideoStream, resetArchivedVideoStream } = useLiveStreamDetail()
@@ -393,7 +394,8 @@ const useStyles = makeStyles((theme: Theme) => ({
       flex: 0.85,
     },
     infoContentDescription: {
-      maxHeight: '95px',
+      lineHeight: '20px',
+      maxHeight: '230px',
     },
   },
   [theme.breakpoints.down(1167)]: {},
