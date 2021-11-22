@@ -214,12 +214,15 @@ const DistributorInfo: React.FC<DistributorInfoProps> = ({ video_id }) => {
               return text
             }
             return (
-              <div
+              <a
+                href={text}
+                // eslint-disable-next-line react/jsx-no-target-blank
+                target={'_blank'}
                 key={text}
-                dangerouslySetInnerHTML={{
-                  __html: CommonHelper.linkifyString(text),
-                }}
-              />
+                className={classes.linkInnerDescription}
+              >
+                {text}
+              </a>
             )
           })}
         </div>
@@ -450,6 +453,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexWrap: 'wrap',
     overflow: 'hidden',
+  },
+  linkInnerDescription: {
+    fontSize: 14,
+    color: '#FFFFFF',
+    opacity: 1,
   },
   [theme.breakpoints.up(1167)]: {
     itemContainer: {

@@ -957,7 +957,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   detectLink: {
     whiteSpace: 'pre-line',
-    paddingTop: '12px',
     // color: '#ffffffb3',
     display: 'inline-block',
     fontSize: '14px',
