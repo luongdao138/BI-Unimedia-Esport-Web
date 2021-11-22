@@ -208,7 +208,7 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
           src={detailVideoResult?.user_avatar}
         />
         <Box className={classes.streamer_data}>
-          {detailVideoResult?.user_nickname && <Box className={classes.streamer_name}>{detailVideoResult?.user_nickname}</Box>}
+          {detailVideoResult?.channel_name && <Box className={classes.streamer_name}>{detailVideoResult?.channel_name}</Box>}
           <Box className={classes.registration}>
             <Typography className={classes.register_person_label}>{t('live_stream_screen.register_person_label')}</Typography>
             <Typography className={classes.register_person_number}>
