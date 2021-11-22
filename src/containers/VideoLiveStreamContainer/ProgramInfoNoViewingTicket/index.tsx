@@ -233,12 +233,15 @@ const ProgramInfoNoViewingTicket: React.FC<ProgramInfoProps> = ({ videoInfo, vid
                   return text
                 }
                 return (
-                  <div
+                  <a
+                    href={text}
+                    // eslint-disable-next-line react/jsx-no-target-blank
+                    target={'_blank'}
                     key={text}
-                    dangerouslySetInnerHTML={{
-                      __html: CommonHelper.linkifyString(text),
-                    }}
-                  ></div>
+                    className={classes.linkInnerDescription}
+                  >
+                    {text}
+                  </a>
                 )
               })}
             </div>
@@ -357,6 +360,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   infoRowRightItem: {
     marginLeft: '81px',
+  },
+  linkInnerDescription: {
+    fontSize: 14,
+    color: '#FFFFFF',
+    opacity: 1,
   },
   [theme.breakpoints.down(1680)]: {
     itemContainer: {
