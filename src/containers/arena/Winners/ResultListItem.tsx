@@ -10,27 +10,32 @@ interface ResultListItemProps {
   avatar: JSX.Element
   onClickAvatar: () => void
   name: string
+  undefeated?: boolean
   nameSecondary?: string | undefined
   score?: number
 }
 
-const ResultListItem: React.FC<ResultListItemProps> = ({ position, avatar, onClickAvatar, name, nameSecondary, score }) => {
+const ResultListItem: React.FC<ResultListItemProps> = ({ position, avatar, onClickAvatar, name, nameSecondary, score, undefeated }) => {
   const classes = useStyles()
   const rule = useArenaResult()
   return (
     <div className={classes.root}>
       <div className={classes.contentWrapper}>
         <div className={classes.placementWrapper}>
-          <p
-            className={`${classes.text} ${position === 1 && classes.first} ${position === 2 && classes.second} ${
-              position === 3 && classes.third
-            }`}
-          >
-            {position}
-            {position === 1 && <span>st</span>}
-            {position === 2 && <span>nd</span>}
-            {position === 3 && <span>rd</span>}
-          </p>
+          {undefeated ? (
+            '—'
+          ) : (
+            <p
+              className={`${classes.text} ${position === 1 && classes.first} ${position === 2 && classes.second} ${
+                position === 3 && classes.third
+              }`}
+            >
+              {position}
+              {position === 1 && <span>st</span>}
+              {position === 2 && <span>nd</span>}
+              {position === 3 && <span>rd</span>}
+            </p>
+          )}
         </div>
         <ButtonBase className={classes.itemAvatar} onClick={onClickAvatar}>
           {avatar}
@@ -46,7 +51,7 @@ const ResultListItem: React.FC<ResultListItemProps> = ({ position, avatar, onCli
           )}
         </div>
         {score !== null && (rule === 'score_attack' || rule === 'time_attack') ? (
-          <Typography className={classes.score}>{TournamentHelper.formatArenaScore(score, rule)}</Typography>
+          <Typography className={classes.score}>{undefeated ? '—' : TournamentHelper.formatArenaScore(score, rule)}</Typography>
         ) : null}
       </div>
     </div>

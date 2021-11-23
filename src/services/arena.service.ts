@@ -338,6 +338,7 @@ export type ParticipantsResponse = {
     }
     position: number | null
     attack_score: number | null
+    undefeated?: boolean
     is_fixed_score?: boolean
   }
   highlight?: boolean
@@ -746,7 +747,8 @@ export const setBattleRoyalScores = async ({
 }: SetBattleRoyaleScoresParams): Promise<{ data: ParticipantsResponse[] }> => {
   const scores = {}
   for (const p of participants) {
-    if (p.attributes.attack_score || p.attributes.attack_score === 0) scores[p.id] = p.attributes.attack_score
+    if (p.attributes.undefeated) scores[p.id] = -1
+    else if (p.attributes.attack_score || p.attributes.attack_score === 0) scores[p.id] = p.attributes.attack_score
   }
   const { data } = await api.post(URI.BATTLE_ROYALE_SET_SCORES.replace(/:id/gi, `${hash_key}`), { scores })
 
@@ -764,5 +766,12 @@ export const setBattleRoyalOwnScore = async ({ hash_key, participants }: SetBatt
 
 export const getBattleRoyalWinners = async (hash_key: string) => {
   const { data } = await api.post(URI.BATTLE_ROYALE_WINNERS.replace(/:id/gi, `${hash_key}`))
+
+  data.data.sort((a, b) => {
+    if (b.attributes?.undefeated && !a.attributes?.undefeated) return -1
+    if (a.attributes?.undefeated && !b.attributes?.undefeated) return 1
+    return 0
+  })
+
   return data as GetParticipantsResponse
 }

@@ -137,6 +137,7 @@ const ArenaWinners: React.FC = () => {
               <ResultListItem
                 key={idx}
                 position={p.attributes.position}
+                undefeated={p.attributes?.undefeated ?? false}
                 avatar={
                   <Avatar
                     src={isTeam ? p.attributes.team.data.attributes.team_avatar : p.attributes.avatar_url || ''}
