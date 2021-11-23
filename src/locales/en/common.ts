@@ -643,6 +643,13 @@ export default {
         confirmationText: '確定する',
         cancellationText: 'キャンセル',
       },
+      enter_score_information_dialog: {
+        title: 'スコア入力方法',
+        row1col1: '勝者の決定 [tab]',
+        row1col2: '対戦の勝者アイコンを選択してください。',
+        row2col1: 'スコア入力 [tab]',
+        row2col2: 'スコアを2桁で入力してください。尚、スコアは勝者の選択には影響ありません。',
+      },
     },
     dialog: {
       randomize_title: '{{isTeam, participation_type}}をランダムに配置します',
@@ -698,6 +705,7 @@ export default {
     update_with_content: 'この内容で更新する',
     see_app: 'バトルロイヤル形式の大会はアプリでご覧ください。',
     install_app: 'お手持ちのスマートフォンより、アプリをインストールしてください。',
+    enter_score_info_title_dialog: 'スコア入力について',
   },
   recruitment: {
     recommended_recruitment_list: 'おすすめの募集一覧',
