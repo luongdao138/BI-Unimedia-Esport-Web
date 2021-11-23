@@ -82,4 +82,7 @@ export const ESRoutes = {
   USER_POINT_MANAGEMENT: '/settings/points',
   // w00
   SEARCH_VIDEO: '/search/video',
+  LIVE_STREAM_LIST: '/live_stream_list',
+  ARCHIVED_LIST: '/archived_list',
+  PAYMENT_INFO: '/payment_info',
 }

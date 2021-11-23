@@ -1466,9 +1466,18 @@ export default {
   streaming_manage_screen: {
     title: '配信管理',
     delivery_settings: '配信設定',
-    distribution_data_management: '配信データ管理',
-    archive_list: 'アーカイブ一覧',
+    live_stream_list: '配信データ管理',
+    archived_list: 'アーカイブ一覧',
     payment_information: '入金情報',
+  },
+  live_stream_list_screen: {
+    title: '配信データ管理',
+  },
+  archived_list_screen: {
+    title: 'アーカイブ一覧',
+  },
+  payment_information_screen: {
+    title: '入金情報',
   },
   streaming_setting_screen: {
     title: '配信設定',
