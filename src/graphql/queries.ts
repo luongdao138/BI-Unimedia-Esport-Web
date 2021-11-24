@@ -159,6 +159,7 @@ export const getChannel = /* GraphQL */ `
       arn
       state
       alarm_state
+      obs_status
       createdAt
       updatedAt
     }
@@ -172,6 +173,7 @@ export const listChannels = /* GraphQL */ `
         arn
         state
         alarm_state
+        obs_status
         createdAt
         updatedAt
       }
@@ -289,6 +291,7 @@ export const getChannelByArn = /* GraphQL */ `
         arn
         state
         alarm_state
+        obs_status
         createdAt
         updatedAt
       }
