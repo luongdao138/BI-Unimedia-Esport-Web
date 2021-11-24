@@ -65,10 +65,10 @@ const DialogLoginContainer: React.FC<DialogLoginProps> = ({ showDialogLogin, onC
   }
 
   useEffect(() => {
-    if (meta.loaded) {
+    if (meta.loaded || social.meta.loaded) {
       onCloseDialogLogin()
     }
-  }, [meta.loaded])
+  }, [meta.loaded, social])
 
   return (
     <ESModal open={showDialogLogin} handleClose={onCloseDialogLogin}>
