@@ -1478,6 +1478,11 @@ export default {
   },
   payment_information_screen: {
     title: '入金情報',
+    time: '年月',
+    status: 'ステータス',
+    moneyAmount: '金額',
+    date_and_time: '日時',
+    stream_title: '配信タイトル',
   },
   streaming_setting_screen: {
     title: '配信設定',
