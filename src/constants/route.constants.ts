@@ -85,4 +85,5 @@ export const ESRoutes = {
   LIVE_STREAM_LIST: '/live_stream_list',
   ARCHIVED_LIST: '/archived_list',
   PAYMENT_INFO: '/payment_info',
+  PAYMENT_INFO_DETAIL: '/payment_info/:id',
 }
