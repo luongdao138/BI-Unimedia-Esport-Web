@@ -1475,6 +1475,13 @@ export default {
   },
   archived_list_screen: {
     title: 'アーカイブ一覧',
+    delivery_date_time: '配信日時',
+    release: '公開',
+    titleVideo: 'タイトル',
+    viewNumber: '視聴数',
+    commentNumber: 'コメント数',
+    receivedPointNumber: 'eXeポイント受領数',
+    times: '回',
   },
   payment_information_screen: {
     title: '入金情報',
