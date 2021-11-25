@@ -6,6 +6,8 @@ import ESTooltip from '@components/ESTooltip'
 import { FormatHelper } from '@utils/helpers/FormatHelper'
 import { Pagination } from '@material-ui/lab'
 import { Colors } from '@theme/colors'
+import { ESRoutes } from '@constants/route.constants'
+import Link from 'next/link'
 
 const ArchivedListContainer: React.FC = () => {
   const { t } = useTranslation('common')
@@ -46,9 +48,15 @@ const ArchivedListContainer: React.FC = () => {
                       {!isMobile && <td>{t('archived_list_screen.titleVideo')}</td>}
                       <td colSpan={isMobile ? 2 : 1}>
                         <Box className={`${classes.titleVideo} ${classes.textEllipsis}`}>
-                          <ESTooltip title="Title" arrow placement="top-start">
-                            <div>Title</div>
-                          </ESTooltip>
+                          <Link
+                            href={{
+                              pathname: ESRoutes.ARCHIVE_DETAIL,
+                            }}
+                          >
+                            <ESTooltip title="Title" arrow placement="top-start">
+                              <div style={{ cursor: 'pointer' }}>Title</div>
+                            </ESTooltip>
+                          </Link>
                         </Box>
                       </td>
                     </tr>
