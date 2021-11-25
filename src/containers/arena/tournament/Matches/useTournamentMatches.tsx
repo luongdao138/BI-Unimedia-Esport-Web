@@ -106,7 +106,10 @@ const useTournamentMatches = (): {
 
   const handleBack = () => back()
 
-  const setScore = (param: SetScoreParams) => dispatch(actions.setScore(param))
+  const setScore = async (param: SetScoreParams) => {
+    await dispatch(actions.setScore(param))
+    fetchMatches()
+  }
   return { matches, third_place_match, meta, fetchMatches, roundTitles, setScore, scoreMeta, handleBack }
 }
 
