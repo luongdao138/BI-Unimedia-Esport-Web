@@ -86,4 +86,5 @@ export const ESRoutes = {
   ARCHIVED_LIST: '/archived_list',
   PAYMENT_INFO: '/payment_info',
   PAYMENT_INFO_DETAIL: '/payment_info/:id',
+  ARCHIVE_DETAIL: '/archive_detail',
 }
