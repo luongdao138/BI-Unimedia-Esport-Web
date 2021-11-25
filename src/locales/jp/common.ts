@@ -251,6 +251,7 @@ export default {
     copyright_symbol: '© ',
     copyright_text: ' NTTe-Sports',
     download_app_version: 'アプリ版ダウンロードはこちら',
+    app_info: 'info.eXelab.jp',
     app_version: 'アプリ版eXeLAB',
     app_desc: '以下のボタンから「アプリ版eXeLAB」をインストールすることができます。',
     top_video: 'お気に入りチャンネル',

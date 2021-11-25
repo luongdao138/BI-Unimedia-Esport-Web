@@ -23,6 +23,11 @@ const SideFooter: React.FC<Props> = ({ handleAppModal }) => {
             <ListItemText className={classes.label}>{t('common:top.footer_twitter_official')}</ListItemText>
           </div>
         </Link>
+        <Link href={'https://info.exelab.jp/'} underline={'none'} target="_blank">
+          <div className={classes.iconText}>
+            <ListItemText className={classes.label}>{t('common:home.app_info')}</ListItemText>
+          </div>
+        </Link>
         <Link className={classes.appLink} underline={'none'} onClick={() => handleAppModal(true)}>
           <div className={classes.iconAppText}>
             <ListItemText className={classes.label}>{t('common:home.app_version')}</ListItemText>
