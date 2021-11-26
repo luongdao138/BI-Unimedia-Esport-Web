@@ -23,6 +23,7 @@ import {
   GetCategoryResponse,
   SetLiveStreamParams,
   StreamUrlAndKeyParams,
+  TAG_STATUS_RECORD,
   TYPE_SECRET_KEY,
 } from '@services/liveStream.service'
 import useReturnHref from '@utils/hooks/useReturnHref'
@@ -50,6 +51,7 @@ interface StepsProps {
   stateChannelArn?: string
   visibleLoading?: boolean
   disableLoader?: boolean
+  obsStatusDynamo?: string | number
 }
 const KEY_TYPE = {
   URL: 1,
@@ -68,8 +70,8 @@ const Steps: React.FC<StepsProps> = ({
   stateChannelArn,
   visibleLoading,
   disableLoader,
+  obsStatusDynamo,
 }) => {
-  const classes = useStyles()
   const dispatch = useAppDispatch()
   const { t } = useTranslation(['common'])
   const [categoryName, setCategoryName] = useState('')
@@ -85,6 +87,8 @@ const Steps: React.FC<StepsProps> = ({
   const [isLoading, setLoading] = useState(false)
   const [clickShowText, setClickShowText] = useState(false)
   const [renewData, setRenewData] = useState(null)
+  // const [statusTag, setStatusTag] = useState<number>(0)
+  const classes = useStyles({ statusRecord: obsStatusDynamo })
 
   useEffect(() => {
     // getLiveSetting()
@@ -231,6 +235,7 @@ const Steps: React.FC<StepsProps> = ({
       stream_url,
       stream_key,
       video_publish_end_time,
+      uuid_clone,
     } = formik.values.stepSettingOne
     const data: SetLiveStreamParams = {
       // ...formik.values.stepSettingOne,
@@ -251,6 +256,7 @@ const Steps: React.FC<StepsProps> = ({
       stream_url: stream_url,
       stream_key: stream_key,
       video_publish_end_time: video_publish_end_time !== null ? CommonHelper.formatDateTimeJP(video_publish_end_time) : null,
+      uuid_clone: uuid_clone,
     }
     setClickShowText(true)
     setLiveStreamConfirm(data, () => {
@@ -334,9 +340,45 @@ const Steps: React.FC<StepsProps> = ({
     }
   }, [stateChannelArn, isLoading, formik?.values?.stepSettingOne?.stream_key])
 
+  const handleNavigateToDetailLink = () => {
+    if (obsStatusDynamo == TAG_STATUS_RECORD.UPDATED_NOT_START) {
+      window.open(`${baseViewingURL}${formik?.values?.stepSettingOne?.linkUrl}`, '_blank')
+    }
+  }
+
+  useEffect(() => {
+    // console.log('===OBS STATUS===', obsStatusDynamo);
+  })
+
   return (
     <Box py={4} className={classes.container}>
       <Box className={classes.formContainer}>
+        <Box className={`${classes.wrap_input} ${classes.sp_wrap_input_tag}`} display="flex" flexDirection="row" alignItems="center">
+          <Box className={classes.firstItem} display="flex" flexDirection="row" alignItems="center">
+            <div className={classes.dot} />
+            <Typography className={classes.textTagStatus}>
+              {obsStatusDynamo == TAG_STATUS_RECORD.CREATED_n || obsStatusDynamo == TAG_STATUS_RECORD.CREATED_in
+                ? i18n.t('common:streaming_setting_screen.status_tag_created')
+                : obsStatusDynamo == TAG_STATUS_RECORD.UPDATED_NOT_START
+                ? i18n.t('common:streaming_setting_screen.status_tag_updated')
+                : i18n.t('common:streaming_setting_screen.status_tag_live_streaming')}
+            </Typography>
+          </Box>
+          <Box
+            py={1}
+            display="flex"
+            justifyContent="center"
+            alignItems={'center'}
+            className={`${classes.urlCopyTag} ${classes.lastItem}`}
+            onClick={handleNavigateToDetailLink}
+          >
+            {/* <img src={'/images/ic_play_box.png'} style={{ width: 16, height: 14, marginRight: 5, }} /> */}
+            <Icon className={`fab fa-youtube ${classes.linkVideoIcon}`} fontSize="small" />
+            <Typography className={`${classes.textLink} ${classes.textNavigateDetail}`}>
+              {t('common:streaming_setting_screen.navigate_to_detail')}
+            </Typography>
+          </Box>
+        </Box>
         <form onSubmit={formik.handleSubmit}>
           <Box className={classes.wrap_input} display="flex" flexDirection="row" alignItems="flex-end">
             <Box className={classes.firstItem}>
@@ -1002,6 +1044,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     coverImg: {
       height: 'calc((100vw - 48px) * 9/16)',
     },
+    sp_wrap_input_tag: {
+      paddingBottom: 13,
+    },
   },
   addPaddingNote: {
     paddingTop: 8,
@@ -1019,4 +1064,39 @@ const useStyles = makeStyles((theme: Theme) => ({
       WebkitBoxShadow: '0 0 0 100px #000000 inset',
     },
   },
+  statusTag: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingBottom: 13,
+  },
+  tagLeft: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '494px',
+  },
+  dot: (props: { statusRecord?: number | string }) => ({
+    width: 12,
+    height: 12,
+    background: props.statusRecord === TAG_STATUS_RECORD.LIVE_STREAMING ? '#FF0000' : '#707070',
+    borderRadius: 6,
+    marginRight: 6,
+  }),
+  textTagStatus: {
+    fontSize: 14,
+    color: '#FFFFFF',
+  },
+  textNavigateDetail: {
+    marginLeft: 6,
+  },
+  linkVideoIcon: {
+    fontSize: 14,
+  },
+  urlCopyTag: (props: { statusRecord?: number | string }) => ({
+    paddingLeft: 12,
+    cursor: props.statusRecord === TAG_STATUS_RECORD.LIVE_STREAMING ? 'pointer' : 'not-allowed',
+    color: props.statusRecord === TAG_STATUS_RECORD.LIVE_STREAMING ? '#FF4786' : '#B5B5B5',
+  }),
 }))

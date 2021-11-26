@@ -43,6 +43,7 @@ const StreamingReservationContainer: React.FC<Props> = ({ formik, flagUpdateFiel
   const [channelProgress, setChannelProgress] = useState(null)
   const [loading, setLoading] = useState(false)
   const [showResultDialog, setShowResultDialog] = useState(false)
+  // const [obsStatusDynamo, setObsStatusDynamo] = useState(null)
 
   const onChangeStep = (step: number, isShare?: boolean, post?: { title: string; content: string }, channel_progress?: string): void => {
     console.log('SCHEDULE: click next step', step, stateChannelMedia, channel_progress)
@@ -168,6 +169,7 @@ const StreamingReservationContainer: React.FC<Props> = ({ formik, flagUpdateFiel
         stateChannelArn={stateChannelMedia}
         visibleLoading={step === 3 && stateChannelMedia && stateChannelMedia !== EVENT_STATE_CHANNEL.RUNNING}
         disableLoader={stateChannelMedia === EVENT_STATE_CHANNEL.RUNNING || !stateChannelMedia}
+        // obsStatusDynamo={obsStatusDynamo}
       />
       <ESModal open={modal && (showResultDialog || channelProgress)} handleClose={handleClose}>
         <BlankLayout>

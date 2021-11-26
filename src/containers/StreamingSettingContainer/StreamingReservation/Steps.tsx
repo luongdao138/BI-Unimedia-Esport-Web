@@ -53,6 +53,7 @@ interface StepsProps {
   stateChannelArn?: string
   visibleLoading?: boolean
   disableLoader?: boolean
+  obsStatusDynamo?: string
 }
 
 const KEY_TYPE = {
@@ -75,10 +76,14 @@ const Steps: React.FC<StepsProps> = ({
   stateChannelArn,
   visibleLoading,
   disableLoader,
+  // obsStatusDynamo
 }) => {
-  const classes = useStyles()
   const dispatch = useAppDispatch()
   const { t } = useTranslation(['common'])
+
+  const current = moment().set('second', 0).unix()
+  const notifyTime =
+    formik?.values?.stepSettingTwo?.stream_notify_time && moment(formik?.values?.stepSettingTwo?.stream_notify_time).set('second', 0).unix()
 
   const [showStreamURL, setShowStreamURL] = useState(false)
   const [showStreamKey, setShowStreamKey] = useState(false)
@@ -99,6 +104,12 @@ const Steps: React.FC<StepsProps> = ({
   const [isLoading, setLoading] = useState(false)
   const [dataRenew, setDataRenew] = useState(null)
   const [flagArn, setFlagArn] = useState(false)
+  const handleEnableLink = () => {
+    if (status === 1 || (notifyTime && notifyTime >= current)) return true
+    return false
+  }
+
+  const classes = useStyles({ statusRecord: status, isEnable: handleEnableLink() })
 
   const formRef = {
     title: useRef(null),
@@ -375,9 +386,41 @@ const Steps: React.FC<StepsProps> = ({
     return `https://twitter.com/intent/tweet?text=${titlePost}%0a${contentPost}`
   }
 
+  const handleNavigateToDetailLink = () => {
+    if (status === 1 || (notifyTime && notifyTime >= current)) {
+      window.open(`${baseViewingURL}${formik?.values?.stepSettingTwo?.uuid}`, '_blank')
+    }
+  }
+
   return (
     <Box py={4} className={classes.container}>
       <Box className={classes.formContainer}>
+        <Box className={`${classes.wrap_input} ${classes.sp_wrap_input_tag}`} display="flex" flexDirection="row" alignItems="center">
+          <Box className={classes.firstItem} display="flex" flexDirection="row" alignItems="center">
+            <div className={classes.dot} />
+            <Typography className={classes.textTagStatus}>
+              {!status
+                ? i18n.t('common:streaming_setting_screen.status_tag_created')
+                : status || status === 0
+                ? i18n.t('common:streaming_setting_screen.status_tag_updated')
+                : i18n.t('common:streaming_setting_screen.status_tag_live_streaming')}
+            </Typography>
+          </Box>
+          <Box
+            py={1}
+            display="flex"
+            justifyContent="center"
+            alignItems={'center'}
+            className={`${classes.urlCopyTag} ${classes.lastItem}`}
+            onClick={handleNavigateToDetailLink}
+          >
+            {/* <img src={'/images/ic_play_box.png'} style={{ width: 16, height: 14, marginRight: 5, }} /> */}
+            <Icon className={`fab fa-youtube ${classes.linkVideoIcon}`} fontSize="small" />
+            <Typography className={`${classes.textLink} ${classes.textNavigateDetail}`}>
+              {t('common:streaming_setting_screen.navigate_to_detail')}
+            </Typography>
+          </Box>
+        </Box>
         <form onSubmit={formik.handleSubmit}>
           <Box className={classes.wrap_input} pb={2} display="flex" flexDirection="row" alignItems="flex-end">
             <Box className={classes.firstItem}>
@@ -1386,6 +1429,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     coverImg: {
       height: 'calc((100vw - 48px) * 9/16)',
     },
+    sp_wrap_input_tag: {
+      paddingBottom: 13,
+    },
   },
   addPaddingNote: {
     paddingTop: 8,
@@ -1414,4 +1460,39 @@ const useStyles = makeStyles((theme: Theme) => ({
   iconEye: {
     filter: 'opacity(0.5)',
   },
+  statusTag: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingBottom: 13,
+  },
+  tagLeft: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '494px',
+  },
+  dot: (props: { statusRecord?: number; isEnable?: boolean }) => ({
+    width: 12,
+    height: 12,
+    background: props.statusRecord === 1 ? '#FF0000' : 'rgba(255,255,255,0.7)',
+    borderRadius: 6,
+    marginRight: 6,
+  }),
+  textTagStatus: {
+    fontSize: 14,
+    color: '#FFFFFF',
+  },
+  textNavigateDetail: {
+    marginLeft: 6,
+  },
+  linkVideoIcon: {
+    fontSize: 14,
+  },
+  urlCopyTag: (props: { statusRecord?: number; isEnable?: boolean }) => ({
+    paddingLeft: 12,
+    cursor: props.isEnable ? 'pointer' : 'not-allowed',
+    color: props.isEnable ? '#EB5686' : 'rgba(255,255,255,0.7)',
+  }),
 }))
