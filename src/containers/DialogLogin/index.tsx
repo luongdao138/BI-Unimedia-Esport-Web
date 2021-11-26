@@ -39,6 +39,7 @@ const DialogLoginContainer: React.FC<DialogLoginProps> = ({ showDialogLogin, onC
   const [isAgreementChecked, setAgreementChecked] = useState(false)
 
   const { loginByEmail, meta, resetMeta, handleClick } = useLoginByEmail()
+
   const _router = useRouter()
 
   const resetMetas = () => {

@@ -188,7 +188,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   userStyle: {
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'center',
+    width: 'calc(100% - 100px)',
+    justifyContent: 'flex-start',
   },
   iconStyle: {
     width: 36,
@@ -200,23 +201,30 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignContent: 'center',
     alignItems: 'center',
+    width: 'calc(100% - 52px)',
   },
   nameStyle: {
     textAlign: 'center',
     fontSize: 12,
     color: '#FFFFFF',
+    display: 'flex',
+    justifyContent: 'flex-end',
   },
   userNameStyle: {
     textAlign: 'left',
     fontSize: 12,
     color: '#FFFFFF',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
   },
   watchContainer: {
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'space-between',
     alignContent: 'center',
     alignSelf: 'center',
+    width: '90px',
+    justifyContent: 'flex-end',
   },
   label: {
     textAlign: 'left',
@@ -229,6 +237,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   valorantStyle: {
     textAlign: 'right',
     color: '#424242',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
   },
   scheduleContainer: {
     display: 'flex',

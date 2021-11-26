@@ -81,7 +81,7 @@ const BannerCarousel: React.FC<BannerCarouselProps> = ({ data, ...props }) => {
   const handleUpdateActivePosition = (index: number) => () => {
     const halfOfList = Math.round(data.length / 2)
     console.log('\n----Vị trí hiện tại : ', centerSlideDataIndex, '\n----Vị trí muốn nhảy tới: ', index, 'Vị trí 1/2 list ', halfOfList)
-    if (centerSlideDataIndex == 0 && index > halfOfList) {
+    if (centerSlideDataIndex == 0 && index >= halfOfList) {
       // Nếu vị trí hiện tại =0 và vị trí muốn nhảy tới > 1/2 list
       if (index == data.length - 1) {
         // nếu vị trí nhảy tới là item cuối cùng, index hiện tại =0 => lùi lại 1 bước
