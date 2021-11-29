@@ -18,6 +18,8 @@ import { onUpdateChannel, onUpdateVideo } from 'src/graphql/subscriptions'
 import * as APIt from 'src/types/graphqlAPI'
 import { getChannelByArn, getVideoByUuid } from 'src/graphql/queries'
 import { STATUS_VIDEO } from '@services/videoTop.services'
+import { onCreateVideo } from 'src/graphql/subscriptions'
+
 interface Props {
   formik?: FormikProps<FormLiveType>
 }
@@ -131,7 +133,6 @@ const LiveStreamContainer: React.FC<Props> = ({ formik }) => {
 
   //query video
   const checkVideoStatus = async () => {
-    console.log('====>>>', formik.values?.stepSettingOne?.uuid_clone)
     try {
       const videoId = formik.values?.stepSettingOne?.uuid_clone
       const listQV: APIt.GetVideoByUuidQueryVariables = {
@@ -140,22 +141,23 @@ const LiveStreamContainer: React.FC<Props> = ({ formik }) => {
       }
       const videoRs: any = await API.graphql(graphqlOperation(getVideoByUuid, listQV))
       const videoData = videoRs.data.getVideoByUuid.items.find((item) => item.uuid === videoId)
-      console.log('LIVE::data===>', videoData, videoRs)
+      console.log('LIVE::queryVideoByUUID===>', videoData, videoRs)
       if (videoData) {
-        console.log('LIVE:==video data query::::', videoData)
         if (videoData?.process_status === EVENT_LIVE_STATUS.STREAM_OFF) {
           //Updated
+          setObsStatusDynamo(0)
         }
         if (videoData?.process_status === EVENT_LIVE_STATUS.STREAM_START) {
           //live streaming
+          setObsStatusDynamo(1)
         }
         if (videoData?.process_status === EVENT_LIVE_STATUS.STREAM_END && videoData?.video_status === STATUS_VIDEO.ARCHIVE) {
           //archived
+          setObsStatusDynamo(-1)
         }
       } else {
-        //!videoData || videoData (vid is archived) => created
-        console.log('LIVE::else ::::')
-        setObsStatusDynamo(null)
+        //!videoData => created
+        setObsStatusDynamo(-1)
       }
     } catch (error) {
       console.error(error)
@@ -168,14 +170,26 @@ const LiveStreamContainer: React.FC<Props> = ({ formik }) => {
       next: (sub: GraphQLResult<APIt.OnUpdateVideoSubscription>) => {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         //@ts-ignore
-        const subMessage = sub?.value
-        const updateVideoData = subMessage.data.onUpdateVideo
-        console.log('LIVE:=======onUpdateVideo + updateVideoData=======')
-        console.log(subMessage)
+        const subUpdatedVideo = sub?.value
+        const updateVideoData = subUpdatedVideo.data.onUpdateVideo
+        console.log('LIVE:=subUpdatedVideo + updateVideoData=')
+        console.log(subUpdatedVideo)
         console.log(updateVideoData)
-        console.log('LIVE:====================================')
         if (updateVideoData) {
-          console.log('LIVE::subcription video ===>')
+          if (updateVideoData?.uuid === formik.values?.stepSettingOne?.uuid_clone) {
+            if (updateVideoData?.process_status === EVENT_LIVE_STATUS.STREAM_START) {
+              //live
+              setObsStatusDynamo(1)
+            }
+            if (updateVideoData?.process_status === EVENT_LIVE_STATUS.STREAM_END && updateVideoData?.video_status == STATUS_VIDEO.ARCHIVE) {
+              //archived
+              setObsStatusDynamo(-1)
+            }
+            if (updateVideoData?.process_status === EVENT_LIVE_STATUS.STREAM_OFF) {
+              //updated
+              setObsStatusDynamo(0)
+            }
+          }
         }
       },
       error: (error) => console.warn(error),
@@ -189,15 +203,51 @@ const LiveStreamContainer: React.FC<Props> = ({ formik }) => {
     }
   }, [formik.values?.stepSettingOne?.uuid_clone])
 
+  //sub created video
+  const subscribeCreateVideoAction = () => {
+    let createVideoSubscription = API.graphql(graphqlOperation(onCreateVideo))
+    createVideoSubscription = createVideoSubscription.subscribe({
+      next: (sub: GraphQLResult<APIt.OnCreateVideoSubscription>) => {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        //@ts-ignore
+        const subVideo = sub?.value
+        const createdVideo = subVideo.data.onCreateVideo
+        console.log('LIVE:::createdVideo:', createdVideo, subVideo)
+        if (createdVideo) {
+          if (createdVideo?.uuid === formik.values?.stepSettingOne?.uuid_clone) {
+            if (createdVideo?.process_status === EVENT_LIVE_STATUS.STREAM_START) {
+              //live
+              setObsStatusDynamo(1)
+            }
+            if (createdVideo?.process_status === EVENT_LIVE_STATUS.STREAM_END && createdVideo?.video_status == STATUS_VIDEO.ARCHIVE) {
+              //archived
+              setObsStatusDynamo(-1)
+            }
+            if (createdVideo?.process_status === EVENT_LIVE_STATUS.STREAM_OFF) {
+              //updated
+              setObsStatusDynamo(0)
+            }
+          }
+        }
+      },
+      error: (error) => console.warn(error),
+    })
+    return createVideoSubscription
+  }
+
   useEffect(() => {
     const updateChannelSubscription = subscribeUpdateChannelAction()
     const updateVideoSubscription = subscribeUpdateVideoAction()
+    const createdVideoSubscription = subscribeCreateVideoAction()
     return () => {
       if (updateChannelSubscription) {
         updateChannelSubscription.unsubscribe()
       }
       if (updateVideoSubscription) {
         updateVideoSubscription.unsubscribe()
+      }
+      if (createdVideoSubscription) {
+        createdVideoSubscription.unsubscribe()
       }
     }
   })

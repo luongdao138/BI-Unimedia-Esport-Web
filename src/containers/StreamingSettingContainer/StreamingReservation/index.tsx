@@ -12,12 +12,13 @@ import { useTranslation } from 'react-i18next'
 import { FormikProps } from 'formik'
 import { FormLiveType } from '@containers/arena/UpsertForm/FormLiveSettingsModel/FormLiveSettingsType'
 import API, { GraphQLResult, graphqlOperation } from '@aws-amplify/api'
-import { onUpdateChannel } from 'src/graphql/subscriptions'
+import { onCreateVideo, onUpdateChannel, onUpdateVideo } from 'src/graphql/subscriptions'
 import * as APIt from 'src/types/graphqlAPI'
-import { getChannelByArn } from 'src/graphql/queries'
-import { CONFIRM_SETTING_DELAY, EVENT_STATE_CHANNEL } from '@constants/common.constants'
+import { getChannelByArn, getVideoByUuid } from 'src/graphql/queries'
+import { CONFIRM_SETTING_DELAY, EVENT_LIVE_STATUS, EVENT_STATE_CHANNEL } from '@constants/common.constants'
 import ESLoader from '@components/FullScreenLoaderNote'
 import { Box } from '@material-ui/core'
+import { STATUS_VIDEO } from '@services/videoTop.services'
 
 interface Props {
   formik?: FormikProps<FormLiveType>
@@ -43,7 +44,7 @@ const StreamingReservationContainer: React.FC<Props> = ({ formik, flagUpdateFiel
   const [channelProgress, setChannelProgress] = useState(null)
   const [loading, setLoading] = useState(false)
   const [showResultDialog, setShowResultDialog] = useState(false)
-  // const [obsStatusDynamo, setObsStatusDynamo] = useState(null)
+  const [obsStatusDynamo, setObsStatusDynamo] = useState(null)
 
   const onChangeStep = (step: number, isShare?: boolean, post?: { title: string; content: string }, channel_progress?: string): void => {
     console.log('SCHEDULE: click next step', step, stateChannelMedia, channel_progress)
@@ -92,14 +93,14 @@ const StreamingReservationContainer: React.FC<Props> = ({ formik, flagUpdateFiel
     })
     return updateChannelSubscription
   }
-  useEffect(() => {
-    const updateChannelSubscription = subscribeUpdateChannelAction()
-    return () => {
-      if (updateChannelSubscription) {
-        updateChannelSubscription.unsubscribe()
-      }
-    }
-  })
+  // useEffect(() => {
+  //   const updateChannelSubscription = subscribeUpdateChannelAction()
+  //   return () => {
+  //     if (updateChannelSubscription) {
+  //       updateChannelSubscription.unsubscribe()
+  //     }
+  //   }
+  // })
   const checkChannelState = async () => {
     try {
       const channelArn = formik?.values?.stepSettingTwo?.arn
@@ -153,6 +154,127 @@ const StreamingReservationContainer: React.FC<Props> = ({ formik, flagUpdateFiel
     }
   }, [step, stateChannelMedia])
 
+  //query video
+  const checkVideoStatus = async () => {
+    try {
+      const videoId = formik.values?.stepSettingTwo?.uuid
+      const listQV: APIt.GetVideoByUuidQueryVariables = {
+        uuid: videoId,
+        limit: 2000,
+      }
+      const videoRs: any = await API.graphql(graphqlOperation(getVideoByUuid, listQV))
+      const videoData = videoRs.data.getVideoByUuid.items.find((item) => item.uuid === videoId)
+      console.log('SCHEDULE::queryVideoByUUID===>', videoData, videoRs)
+      if (videoData) {
+        if (videoData?.process_status === EVENT_LIVE_STATUS.STREAM_OFF) {
+          //Updated
+          setObsStatusDynamo(0)
+        }
+        if (videoData?.process_status === EVENT_LIVE_STATUS.STREAM_START) {
+          //live streaming
+          setObsStatusDynamo(1)
+        }
+        if (videoData?.process_status === EVENT_LIVE_STATUS.STREAM_END && videoData?.video_status === STATUS_VIDEO.ARCHIVE) {
+          //archived
+          setObsStatusDynamo(-1)
+        }
+      } else {
+        //!videoData => created
+        setObsStatusDynamo(-1)
+      }
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  const subscribeUpdateVideoAction = () => {
+    let updateVideoSubscription = API.graphql(graphqlOperation(onUpdateVideo))
+    updateVideoSubscription = updateVideoSubscription.subscribe({
+      next: (sub: GraphQLResult<APIt.OnUpdateVideoSubscription>) => {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        //@ts-ignore
+        const subUpdatedVideo = sub?.value
+        const updateVideoData = subUpdatedVideo.data.onUpdateVideo
+        console.log('SCHEDULE:=subUpdatedVideo + updateVideoData=')
+        console.log(subUpdatedVideo)
+        console.log(updateVideoData)
+        if (updateVideoData) {
+          if (updateVideoData?.uuid === formik.values?.stepSettingTwo?.uuid) {
+            if (updateVideoData?.process_status === EVENT_LIVE_STATUS.STREAM_START) {
+              //live
+              setObsStatusDynamo(1)
+            }
+            if (updateVideoData?.process_status === EVENT_LIVE_STATUS.STREAM_END && updateVideoData?.video_status == STATUS_VIDEO.ARCHIVE) {
+              //archived
+              setObsStatusDynamo(-1)
+            }
+            if (updateVideoData?.process_status === EVENT_LIVE_STATUS.STREAM_OFF) {
+              //updated
+              setObsStatusDynamo(0)
+            }
+          }
+        }
+      },
+      error: (error) => console.warn(error),
+    })
+    return updateVideoSubscription
+  }
+
+  useEffect(() => {
+    if (formik.values?.stepSettingTwo?.uuid) {
+      checkVideoStatus()
+    }
+  }, [formik.values?.stepSettingTwo?.uuid])
+
+  //sub created video
+  const subscribeCreateVideoAction = () => {
+    let createVideoSubscription = API.graphql(graphqlOperation(onCreateVideo))
+    createVideoSubscription = createVideoSubscription.subscribe({
+      next: (sub: GraphQLResult<APIt.OnCreateVideoSubscription>) => {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        //@ts-ignore
+        const subVideo = sub?.value
+        const createdVideo = subVideo.data.onCreateVideo
+        console.log('SCHEDULE:::createdVideo:', createdVideo, subVideo)
+        if (createdVideo) {
+          if (createdVideo?.uuid === formik.values?.stepSettingTwo?.uuid) {
+            if (createdVideo?.process_status === EVENT_LIVE_STATUS.STREAM_START) {
+              //live
+              setObsStatusDynamo(1)
+            }
+            if (createdVideo?.process_status === EVENT_LIVE_STATUS.STREAM_END && createdVideo?.video_status == STATUS_VIDEO.ARCHIVE) {
+              //archived
+              setObsStatusDynamo(-1)
+            }
+            if (createdVideo?.process_status === EVENT_LIVE_STATUS.STREAM_OFF) {
+              //updated
+              setObsStatusDynamo(0)
+            }
+          }
+        }
+      },
+      error: (error) => console.warn(error),
+    })
+    return createVideoSubscription
+  }
+
+  useEffect(() => {
+    const updateChannelSubscription = subscribeUpdateChannelAction()
+    const updateVideoSubscription = subscribeUpdateVideoAction()
+    const createdVideoSubscription = subscribeCreateVideoAction()
+    return () => {
+      if (updateChannelSubscription) {
+        updateChannelSubscription.unsubscribe()
+      }
+      if (updateVideoSubscription) {
+        updateVideoSubscription.unsubscribe()
+      }
+      if (createdVideoSubscription) {
+        createdVideoSubscription.unsubscribe()
+      }
+    }
+  })
+
   return (
     <>
       <Steps
@@ -169,7 +291,7 @@ const StreamingReservationContainer: React.FC<Props> = ({ formik, flagUpdateFiel
         stateChannelArn={stateChannelMedia}
         visibleLoading={step === 3 && stateChannelMedia && stateChannelMedia !== EVENT_STATE_CHANNEL.RUNNING}
         disableLoader={stateChannelMedia === EVENT_STATE_CHANNEL.RUNNING || !stateChannelMedia}
-        // obsStatusDynamo={obsStatusDynamo}
+        obsStatusDynamo={obsStatusDynamo}
       />
       <ESModal open={modal && (showResultDialog || channelProgress)} handleClose={handleClose}>
         <BlankLayout>

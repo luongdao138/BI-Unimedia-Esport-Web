@@ -39,6 +39,7 @@ import ESInputDatePicker from '@components/InputDatePicker'
 import moment from 'moment'
 import Linkify from 'react-linkify'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
+import SmallLoader from '@components/Loader/SmallLoader'
 
 interface StepsProps {
   step: number
@@ -346,39 +347,46 @@ const Steps: React.FC<StepsProps> = ({
     }
   }
 
-  useEffect(() => {
-    // console.log('===OBS STATUS===', obsStatusDynamo);
-  })
-
   return (
     <Box py={4} className={classes.container}>
       <Box className={classes.formContainer}>
-        <Box className={`${classes.wrap_input} ${classes.sp_wrap_input_tag}`} display="flex" flexDirection="row" alignItems="center">
-          <Box className={classes.firstItem} display="flex" flexDirection="row" alignItems="center">
-            <div className={classes.dot} />
-            <Typography className={classes.textTagStatus}>
-              {obsStatusDynamo == TAG_STATUS_RECORD.CREATED_n || obsStatusDynamo == TAG_STATUS_RECORD.CREATED_in
-                ? i18n.t('common:streaming_setting_screen.status_tag_created')
-                : obsStatusDynamo == TAG_STATUS_RECORD.UPDATED_NOT_START
-                ? i18n.t('common:streaming_setting_screen.status_tag_updated')
-                : i18n.t('common:streaming_setting_screen.status_tag_live_streaming')}
-            </Typography>
-          </Box>
-          <Box
-            py={1}
-            display="flex"
-            justifyContent="center"
-            alignItems={'center'}
-            className={`${classes.urlCopyTag} ${classes.lastItem}`}
-            onClick={handleNavigateToDetailLink}
+        {obsStatusDynamo === null ? (
+          <div
+            style={{
+              margin: '10px 0 0 10px',
+              height: '21px',
+            }}
           >
-            {/* <img src={'/images/ic_play_box.png'} style={{ width: 16, height: 14, marginRight: 5, }} /> */}
-            <Icon className={`fab fa-youtube ${classes.linkVideoIcon}`} fontSize="small" />
-            <Typography className={`${classes.textLink} ${classes.textNavigateDetail}`}>
-              {t('common:streaming_setting_screen.navigate_to_detail')}
-            </Typography>
+            <SmallLoader />
+          </div>
+        ) : (
+          <Box className={`${classes.wrap_input} ${classes.sp_wrap_input_tag}`} display="flex" flexDirection="row" alignItems="center">
+            <Box className={classes.firstItem} display="flex" flexDirection="row" alignItems="center">
+              <div className={classes.dot} />
+              <Typography className={classes.textTagStatus}>
+                {obsStatusDynamo == TAG_STATUS_RECORD.CREATED_n || obsStatusDynamo == TAG_STATUS_RECORD.CREATED_in
+                  ? i18n.t('common:streaming_setting_screen.status_tag_created')
+                  : obsStatusDynamo == TAG_STATUS_RECORD.UPDATED_NOT_START
+                  ? i18n.t('common:streaming_setting_screen.status_tag_updated')
+                  : i18n.t('common:streaming_setting_screen.status_tag_live_streaming')}
+              </Typography>
+            </Box>
+            <Box
+              py={1}
+              display="flex"
+              justifyContent="center"
+              alignItems={'center'}
+              className={`${classes.urlCopyTag} ${classes.lastItem}`}
+              onClick={handleNavigateToDetailLink}
+            >
+              {/* <img src={'/images/ic_play_box.png'} style={{ width: 16, height: 14, marginRight: 5, }} /> */}
+              <Icon className={`fab fa-youtube ${classes.linkVideoIcon}`} fontSize="small" />
+              <Typography className={`${classes.textLink} ${classes.textNavigateDetail}`}>
+                {t('common:streaming_setting_screen.navigate_to_detail')}
+              </Typography>
+            </Box>
           </Box>
-        </Box>
+        )}
         <form onSubmit={formik.handleSubmit}>
           <Box className={classes.wrap_input} display="flex" flexDirection="row" alignItems="flex-end">
             <Box className={classes.firstItem}>
@@ -1096,7 +1104,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   urlCopyTag: (props: { statusRecord?: number | string }) => ({
     paddingLeft: 12,
-    cursor: props.statusRecord === TAG_STATUS_RECORD.LIVE_STREAMING ? 'pointer' : 'not-allowed',
-    color: props.statusRecord === TAG_STATUS_RECORD.LIVE_STREAMING ? '#FF4786' : '#B5B5B5',
+    cursor:
+      props.statusRecord === TAG_STATUS_RECORD.LIVE_STREAMING || props.statusRecord === TAG_STATUS_RECORD.UPDATED_NOT_START
+        ? 'pointer'
+        : 'not-allowed',
+    color:
+      props.statusRecord === TAG_STATUS_RECORD.LIVE_STREAMING || props.statusRecord === TAG_STATUS_RECORD.UPDATED_NOT_START
+        ? '#FF4786'
+        : '#B5B5B5',
   }),
 }))
