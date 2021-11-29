@@ -85,6 +85,8 @@ const errorFields = [
   ['sell_ticket_start_time', 'sell_ticket_start_time'],
   ['sell_less_than_start', 'sell_ticket_start_time'],
 ]
+const scheduleTextOnlyFields = ['title', 'description', 'category', 'ticket_price']
+const liveTextOnlyFields = ['title', 'description', 'category', 'ticket_price']
 
 const liveErrorFields = ['title', 'description', 'category', 'video_publish_end_time', 'ticket_price']
 
@@ -110,7 +112,10 @@ const checkLiveDisplayErrorOnSubmit = (formik: FormikProps<FormLiveType>, field:
     return validField
   }
   const errorDisplayField = liveErrorFields.find((field) => stepSettingOne[field])
-  return errorDisplayField === field ? hasErrorField(stepSettingOne[errorDisplayField]) : validField
+  if (!liveTextOnlyFields.includes(errorDisplayField)) {
+    return errorDisplayField === field ? hasErrorField(stepSettingOne[errorDisplayField]) : validField
+  }
+  return stepSettingOne[field] && liveTextOnlyFields.includes(field) ? hasErrorField(stepSettingOne[field]) : validField
 }
 
 const checkDisplayErrorOnSubmit = (formik: FormikProps<FormLiveType>, field: string): FormError => {
@@ -124,7 +129,10 @@ const checkDisplayErrorOnSubmit = (formik: FormikProps<FormLiveType>, field: str
     return validField
   }
   const errorDisplayField = errorFields.find((field) => stepSettingTwo[field[0]])
-  return errorDisplayField[1] === field ? hasErrorField(stepSettingTwo[errorDisplayField[0]]) : validField
+  if (!scheduleTextOnlyFields.includes(errorDisplayField[1])) {
+    return errorDisplayField[1] === field ? hasErrorField(stepSettingTwo[errorDisplayField[0]]) : validField
+  }
+  return stepSettingTwo[field] && scheduleTextOnlyFields.includes(field) ? hasErrorField(stepSettingTwo[field]) : validField
 }
 
 const checkDisplayErrorOnChange = (formik: FormikProps<FormLiveType>, field: string, validateField: string): FormError => {
