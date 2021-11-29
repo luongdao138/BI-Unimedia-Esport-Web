@@ -57,6 +57,7 @@ const StreamingSettingContainer: React.FC<{ default_tab: any }> = ({ default_tab
   const isFirstRunTab3 = useRef(true)
   const [flagUpdateFieldDate, setFlagUpdateFieldDate] = useState(false)
   const [validateField, setValidateField] = useState<string>('')
+  const [liveValidateField, setLiveValidateField] = useState<string>('')
   const [isUpdate, setIsUpdate] = useState(false)
   const [isLive, setIsLive] = useState(false)
 
@@ -64,7 +65,8 @@ const StreamingSettingContainer: React.FC<{ default_tab: any }> = ({ default_tab
     initialValues: initialValues,
     validationSchema: validationLiveSettingsScheme(),
     enableReinitialize: true,
-    validateOnBlur: false,
+    validateOnBlur: true,
+    validateOnChange: true,
     onSubmit: () => {
       //TODO: smt
     },
@@ -145,6 +147,10 @@ const StreamingSettingContainer: React.FC<{ default_tab: any }> = ({ default_tab
     setValidateField(value)
   }
 
+  const handleUpdateLiveValidateField = (value: string) => {
+    setLiveValidateField(value)
+  }
+
   const getTabs = () => {
     return (
       <Grid item xs={12} className={classes.tabsContainer}>
@@ -159,7 +165,13 @@ const StreamingSettingContainer: React.FC<{ default_tab: any }> = ({ default_tab
   const getContent = () => {
     switch (tab) {
       case TABS.LIVE_STREAM:
-        return <LiveStreamContainer formik={formikLive} />
+        return (
+          <LiveStreamContainer
+            formik={formikLive}
+            validateField={liveValidateField}
+            handleUpdateValidateField={handleUpdateLiveValidateField}
+          />
+        )
       case TABS.STREAMING_RESERVATION:
         return (
           <StreamingReservationContainer
