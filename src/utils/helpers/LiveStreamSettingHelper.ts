@@ -86,10 +86,31 @@ const errorFields = [
   ['sell_less_than_start', 'sell_ticket_start_time'],
 ]
 
+const liveErrorFields = ['title', 'description', 'category', 'video_publish_end_time', 'ticket_price']
+
+const getLiveDisplayErrorField = (formik) => {
+  const { stepSettingOne } = formik
+  return liveErrorFields.find((field) => stepSettingOne[field])
+}
+
 const getDisplayErrorField = (formik) => {
   const { stepSettingTwo } = formik
   const errorDisplayField = errorFields.find((field) => stepSettingTwo[field[0]])
   return errorDisplayField[1]
+}
+
+const checkLiveDisplayErrorOnSubmit = (formik: FormikProps<FormLiveType>, field: string): FormError => {
+  const validField = {
+    helperText: null,
+    error: null,
+  }
+  const { errors } = formik
+  const { stepSettingOne } = errors
+  if (!stepSettingOne) {
+    return validField
+  }
+  const errorDisplayField = liveErrorFields.find((field) => stepSettingOne[field])
+  return errorDisplayField === field ? hasErrorField(stepSettingOne[errorDisplayField]) : validField
 }
 
 const checkDisplayErrorOnSubmit = (formik: FormikProps<FormLiveType>, field: string): FormError => {
@@ -335,4 +356,6 @@ export const LiveStreamSettingHelper = {
   checkDisplayErrorOnChange,
   checkDisplayErrorOnSubmit,
   getDisplayErrorField,
+  getLiveDisplayErrorField,
+  checkLiveDisplayErrorOnSubmit,
 }
