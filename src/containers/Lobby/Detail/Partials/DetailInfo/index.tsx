@@ -86,7 +86,13 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit }) => {
                 <Icon className={`fa fa-link ${classes.link}`} fontSize="small" />
                 <Typography>{t('common:lobby.copy_shared_url')}</Typography>
               </Box>
-              <ESTwitterShareButton title={detail.attributes.title} url={window.location.toString()} />
+              <ESTwitterShareButton
+                title={detail.attributes.title}
+                url={`${window.location.toString()}/?utm_source=twitter&utm_medium=social&utm_campaign=${
+                  detail.attributes.title
+                }&utm_content=${data.hash_key}`}
+                hashtags={['eXeLAB', 'エグゼラボ', '募集']}
+              />
             </>
           )}
         </Box>
