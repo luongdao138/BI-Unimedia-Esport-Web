@@ -175,7 +175,6 @@ const Steps: React.FC<StepsProps> = ({
           handleUpdateValidateField('')
         } else {
           const errorField = getLiveDisplayErrorField(err)
-          handleUpdateValidateField(errorField)
           if (formRef[errorField]) {
             window.scrollTo({ behavior: 'smooth', top: formRef[errorField].current.offsetTop - 200 })
           }
