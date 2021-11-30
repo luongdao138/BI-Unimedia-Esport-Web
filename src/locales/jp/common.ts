@@ -645,9 +645,9 @@ export default {
       },
       enter_score_information_dialog: {
         title: 'スコア入力方法',
-        row1col1: '勝者の決定 [tab]',
+        row1col1: '勝者の決定',
         row1col2: '対戦の勝者アイコンを選択してください。',
-        row2col1: 'スコア入力 [tab]',
+        row2col1: 'スコア入力',
         row2col2: 'スコアを2桁で入力してください。尚、スコアは勝者の選択には影響ありません。',
       },
     },
