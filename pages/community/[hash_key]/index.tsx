@@ -28,10 +28,12 @@ interface Props {
 
 const CommunityDetailPage: React.FC<Props> = ({ image, title }) => {
   return (
-    <MainLayout loginRequired={false} patternBg={true}>
+    <>
       <TwitterHead title={title} image={image} />
-      <CommunityDetailContainer />
-    </MainLayout>
+      <MainLayout loginRequired={false} patternBg={true}>
+        <CommunityDetailContainer />
+      </MainLayout>
+    </>
   )
 }
 

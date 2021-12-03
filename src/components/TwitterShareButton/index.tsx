@@ -10,7 +10,7 @@ interface TwitterShareButtonProps {
 const ESTwitterShareButton: React.FC<TwitterShareButtonProps> = (props) => {
   const { title, url, hashtags } = props
   return (
-    <TwitterShareButton title={_.defaultTo(title, '')} url={_.defaultTo(url, '')} hashtags={hashtags}>
+    <TwitterShareButton title={_.defaultTo(title, '')} url={_.defaultTo(url, '')} hashtags={hashtags} windowHeight={600}>
       <TwitterIcon round size={23} style={{ marginLeft: 12 }} />
     </TwitterShareButton>
   )

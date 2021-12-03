@@ -28,10 +28,12 @@ interface Props {
 
 const TournamentsPage: React.FC<Props> = ({ image, title }) => {
   return (
-    <MainLayout loginRequired={false}>
+    <>
       <TwitterHead title={title} image={image} />
-      <DetailContainer />
-    </MainLayout>
+      <MainLayout loginRequired={false}>
+        <DetailContainer />
+      </MainLayout>
+    </>
   )
 }
 
