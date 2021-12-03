@@ -14,7 +14,7 @@ class Document extends NextDocument<Props> {
           <link rel="manifest" href="/manifest.json" />
           <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"></link>
           <link href="/fonts/fontawesome-free-5.15.3-web/css/all.css" rel="stylesheet"></link>
-
+          <meta name="twitter:card" content="summary_large_image" />
           {/* Global Site Tag (gtag.js) - Google Analytics */}
           <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`} />
           <script
