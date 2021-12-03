@@ -60,7 +60,7 @@ export default class StackedCarousel extends React.PureComponent<props, state> {
       : newRenderedSlides.findIndex(({ slideIndex }) => {
           return slideIndex === 0
         })
-    const newCenterDataIndex = constructor ? 0 : newRenderedSlides[newCenterSlideRelativeIndex].dataIndex
+    const newCenterDataIndex = constructor ? 0 : newRenderedSlides[newCenterSlideRelativeIndex]?.dataIndex
 
     let filledWidth = 0
     const centerPosition = carouselWidth / 2 - slideWidth / 2
@@ -82,7 +82,7 @@ export default class StackedCarousel extends React.PureComponent<props, state> {
           slideIndex: slideIndex,
           opacity: opacity,
           zIndex: renderedSlidePerSide - Math.abs(slideIndex),
-          key: constructor ? slideIndex : newRenderedSlides[relativeIndex].key,
+          key: constructor ? slideIndex : newRenderedSlides[relativeIndex]?.key,
         }
 
         slideInfoMap[slideIndex] = {
@@ -132,9 +132,9 @@ export default class StackedCarousel extends React.PureComponent<props, state> {
           const slideIndex = direct === 1 ? i : -i
           const scalePositionIndex = constructor ? prevIndex : insertIndex
           newRenderedSlides[insertIndex] = {
-            scale: newRenderedSlides[scalePositionIndex].scale,
-            position: newRenderedSlides[scalePositionIndex].position,
-            key: constructor ? -slideIndex : newRenderedSlides[insertIndex].key,
+            scale: newRenderedSlides[scalePositionIndex]?.scale,
+            position: newRenderedSlides[scalePositionIndex]?.position,
+            key: constructor ? -slideIndex : newRenderedSlides[insertIndex]?.key,
             dataIndex: -1,
             slideIndex,
             opacity: 0,

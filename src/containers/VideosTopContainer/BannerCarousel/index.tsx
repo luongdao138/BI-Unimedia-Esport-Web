@@ -155,7 +155,7 @@ const BannerCarousel: React.FC<BannerCarouselProps> = ({ data, ...props }) => {
         carouselRef={ref}
         render={(parentWidth, carouselRef) => {
           let currentVisibleSlide = checkCurrentVisible() //1|3|5
-          if (parentWidth <= 992) currentVisibleSlide = 3
+          if (parentWidth <= 992) currentVisibleSlide = checkCurrentVisible() === 1 ? 1 : 3
           if (parentWidth <= 768) currentVisibleSlide = 1
           const { bannerHeight, bannerMaxVisibleSlide, bannerCurrentVisibleSlide, bannerCustomScales } = props
 
