@@ -49,7 +49,6 @@ export type LiveStreamSetting = {
   status?: number
   channel_id?: number
   arn?: string
-  uuid_clone?: string
 }
 
 export type DistributorStepSetting = {
@@ -118,7 +117,6 @@ export type SetLiveStreamParams = {
   status?: string
   video_publish_end_time?: string
   timezone?: string
-  uuid_clone?: string
 }
 export type SetLiveStreamResponse = {
   code: number
@@ -213,13 +211,6 @@ export type SetChannelResponse = {
 export const CODE_ERROR_RENEW_SPECIAL = {
   CHA099: 'CHA099',
   SERVICE_BUSY: 503,
-}
-
-export const TAG_STATUS_RECORD = {
-  CREATED_n: null,
-  CREATED_in: -1,
-  UPDATED_NOT_START: 0,
-  LIVE_STREAMING: 1, //STARTED OBS
 }
 
 export const getLiveSetting = async (params: LiveStreamSettingParams): Promise<LiveStreamSettingResponse> => {

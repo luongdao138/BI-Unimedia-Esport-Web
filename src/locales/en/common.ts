@@ -1563,10 +1563,6 @@ export default {
     clear: 'クリア',
     note_loading: 'チャンネル作成中です。こちらの作業には最大5分程度かかる場合があります。',
     archived_end_time_pl: 'アーカイブ配信終了日時',
-    status_tag_created: '未設定',
-    status_tag_updated: '設定済み',
-    status_tag_live_streaming: '配信中',
-    navigate_to_detail: '配信ページへ',
   },
   delivery_reservation_tab: {
     category: 'カテゴリー',
