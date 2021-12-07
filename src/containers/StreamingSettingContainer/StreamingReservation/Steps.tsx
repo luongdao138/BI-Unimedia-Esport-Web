@@ -107,7 +107,7 @@ const Steps: React.FC<StepsProps> = ({
   const [dataRenew, setDataRenew] = useState(null)
   const [flagArn, setFlagArn] = useState(false)
   const handleEnableLink = () => {
-    if (status === 1 || (notifyTime && notifyTime >= current) || obsStatusDynamo == TAG_STATUS_RECORD.LIVE_STREAMING) return true
+    if (status === 1 || (notifyTime && notifyTime <= current) || obsStatusDynamo == TAG_STATUS_RECORD.LIVE_STREAMING) return true
     return false
   }
 
@@ -389,12 +389,7 @@ const Steps: React.FC<StepsProps> = ({
   }
 
   const handleNavigateToDetailLink = () => {
-    if (
-      status === 1 ||
-      (notifyTime && notifyTime >= current) ||
-      obsStatusDynamo == TAG_STATUS_RECORD.UPDATED_NOT_START ||
-      obsStatusDynamo == TAG_STATUS_RECORD.LIVE_STREAMING
-    ) {
+    if (status === 1 || (notifyTime && notifyTime <= current) || obsStatusDynamo == TAG_STATUS_RECORD.LIVE_STREAMING) {
       window.open(`${baseViewingURL}${formik?.values?.stepSettingTwo?.uuid}`, '_blank')
     }
   }
