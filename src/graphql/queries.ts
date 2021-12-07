@@ -159,7 +159,6 @@ export const getChannel = /* GraphQL */ `
       arn
       state
       alarm_state
-      obs_status
       createdAt
       updatedAt
     }
@@ -173,7 +172,6 @@ export const listChannels = /* GraphQL */ `
         arn
         state
         alarm_state
-        obs_status
         createdAt
         updatedAt
       }
@@ -200,12 +198,20 @@ export const getUsersByUuid = /* GraphQL */ `
 export const getMessagesByVideoId = /* GraphQL */ `
   query GetMessagesByVideoId(
     $video_id: String
+    $created_time: ModelStringKeyConditionInput
     $sortDirection: ModelSortDirection
     $filter: ModelMessageFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    getMessagesByVideoId(video_id: $video_id, sortDirection: $sortDirection, filter: $filter, limit: $limit, nextToken: $nextToken) {
+    getMessagesByVideoId(
+      video_id: $video_id
+      created_time: $created_time
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
       items {
         id
         owner
@@ -291,7 +297,6 @@ export const getChannelByArn = /* GraphQL */ `
         arn
         state
         alarm_state
-        obs_status
         createdAt
         updatedAt
       }
