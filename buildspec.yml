@@ -16,6 +16,8 @@ phases:
   build:
     commands:
       - yarn build
+      - pm2 kill
+      - NODE_ENV=production pm2 start server.js -i max
   post_build:
     commands:
       - rm -rf node_modules
