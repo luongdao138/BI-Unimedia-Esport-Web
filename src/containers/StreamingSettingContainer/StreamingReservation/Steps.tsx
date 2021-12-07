@@ -239,8 +239,7 @@ const Steps: React.FC<StepsProps> = ({
     if (step === 2) {
       return ' ' + addClass
     } else {
-      // return otherClass ? ' ' + otherClass : ' ' + addClass
-      return otherClass ? ' ' + otherClass : ''
+      return otherClass ? ' ' + otherClass : ' ' + addClass
     }
   }
 
@@ -1341,12 +1340,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   detectLink: {
     whiteSpace: 'pre-line',
-    paddingTop: '12px',
     color: '#FFFFFFB3',
     display: 'inline-block',
     fontSize: '14px',
     fontWeight: 400,
-    paddingBottom: 16,
     '& a': {
       color: '#FF4786',
     },
