@@ -15,6 +15,8 @@ import Hls from 'hls.js'
 import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
 import { DELAY_SECONDS } from '@constants/common.constants'
 import { STATUS_VIDEO } from '@services/videoTop.services'
+import { clearInterval } from 'timers'
+import moment from 'moment'
 
 interface PlayerProps {
   src?: string
@@ -93,6 +95,9 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   }
 
   const [isPortrait, setIsPortrait] = useState<boolean>(!!isMobile)
+
+  // const [flagPaused, setFlagPaused] = useState(null)
+
   useEffect(() => {
     // if (!isPortrait) {
     // screenfull.request(playerContainerRef.current)
@@ -437,6 +442,8 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     handlePauseAndSeekVideo()
     if (videoEl.current.paused || videoEl.current.ended) {
       videoEl.current.play()
+      //new version
+      videoEl.current.currentTime = durationPlayer
       setState({ ...state, playing: true })
       setVisible({ ...visible, loading: false, videoLoaded: false })
     } else {
@@ -448,6 +455,8 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   }
   const handlePlayPause = () => {
     handlePauseAndSeekVideo()
+    //new version
+    videoEl.current.currentTime = durationPlayer
     if (videoEl.current.paused || videoEl.current.ended) {
       videoEl.current.play()
       setState({ ...state, playing: true })
@@ -487,6 +496,33 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   const handleOnRestart = () => {
     setIsStreaming(false)
   }
+
+  //new version
+  // useEffect(() => {
+  //   let interval
+  //   if (videoType === STATUS_VIDEO.LIVE_STREAM ) {
+  //     if(videoEl.current.paused ){
+  //       interval = setTimeout(() => {
+  //         console.log('playedSeconds:::', playedSeconds)
+  //         setPlayedSeconds(playedSeconds+1)
+  //       }, 1000)
+  //     }else{
+  //       if(interval){
+  //         clearTimeout(interval)
+  //       }
+
+  //     }
+  //   }else{
+  //     if(interval){
+  //       clearTimeout(interval)
+  //     }
+  //   }
+  //   return () => {
+  //     if(interval){
+  //       clearTimeout(interval)
+  //     }
+  //   }
+  // }, [playing, playedSeconds])
 
   return (
     <div className={classes.videoPlayer}>
