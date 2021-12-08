@@ -342,7 +342,7 @@ const Steps: React.FC<StepsProps> = ({
   }, [stateChannelArn, isLoading, formik?.values?.stepSettingOne?.stream_key])
 
   const handleNavigateToDetailLink = () => {
-    if (obsStatusDynamo == TAG_STATUS_RECORD.UPDATED_NOT_START) {
+    if (obsStatusDynamo == TAG_STATUS_RECORD.UPDATED_NOT_START || obsStatusDynamo == TAG_STATUS_RECORD.LIVE_STREAMING) {
       window.open(`${baseViewingURL}${formik?.values?.stepSettingOne?.linkUrl}`, '_blank')
     }
   }
