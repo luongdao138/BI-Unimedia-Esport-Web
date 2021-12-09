@@ -15,7 +15,7 @@ import CssBaseline from '@material-ui/core/CssBaseline'
 import userProfile from '@store/userProfile'
 import theme from '@theme/index'
 import PageWithLayoutType from '@constants/page'
-import { WEBSOCKET_PREFIX } from '@constants/socket.constants'
+import { WEBSOCKET_PREFIX, SYSTEMSYNC_PREFIX } from '@constants/socket.constants'
 import { WEBSYNC_PREFIX } from '@constants/sync.constants'
 import 'src/locales/i18n'
 import 'swiper/swiper.min.css'
@@ -78,6 +78,9 @@ const App = ({ Component, pageProps }: Props) => {
     })
     store.dispatch({
       type: `${WEBSYNC_PREFIX}:CONNECT`,
+    })
+    store.dispatch({
+      type: `${SYSTEMSYNC_PREFIX}:CONNECT`,
     })
   }, [accessToken])
 
