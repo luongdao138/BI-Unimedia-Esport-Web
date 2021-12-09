@@ -1664,7 +1664,7 @@ export default {
     ticket_sales_date_and_time: 'チケット販売日時',
     archive_publication_period: 'アーカイブ公開期間',
     point_required_for_viewing: '配信視聴に必要なeXeポイント',
-    explanation: '説明',
+    explanation: '概要',
     chat_input_text_validate_msg_50_char_exceed: 'メッセージは50文字までです',
     chat_input_text_validate_msg_empty: 'メッセージが未入力です',
     report: '通報',
@@ -1689,7 +1689,7 @@ export default {
     after_stream_ended: '配信終了後から',
     live_streaming: '配信設定',
     refresh_new_live: '最新を再生',
-    warning_confirm_purchase_ticket: '決裁中はボタンを複数回押さないでください',
+    warning_confirm_purchase_ticket: '決済中はボタンを複数回押さないでください',
   },
   video_search: {
     video_results: '動画「:key」 の検索結果',
