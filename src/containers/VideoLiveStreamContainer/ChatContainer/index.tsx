@@ -238,12 +238,13 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     const isStreaming = (() => {
       // return true
       if (videoType === STATUS_VIDEO.LIVE_STREAM) {
-        if (streamingSecond === Infinity) {
-          return true
-        }
-        if (playedSecond >= streamingSecond) {
-          return true
-        }
+        return true
+        // if (streamingSecond === Infinity) {
+        //   return true
+        // }
+        // if (playedSecond >= streamingSecond) {
+        //   return true
+        // }
       }
       return false
     })()
