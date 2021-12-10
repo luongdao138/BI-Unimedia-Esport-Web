@@ -156,10 +156,7 @@ const VideoDetail: React.FC = () => {
           pathname: ESRoutes.TOP,
           query: { vid: detailVideoResult.uuid },
         },
-        undefined,
-        {
-          shallow: true,
-        }
+        `${ESRoutes.TOP}?vid=${detailVideoResult.uuid}`
       )
     }
   }
