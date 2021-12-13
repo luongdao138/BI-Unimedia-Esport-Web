@@ -18,24 +18,33 @@ interface ResultListItemProps {
 const ResultListItem: React.FC<ResultListItemProps> = ({ position, avatar, onClickAvatar, name, nameSecondary, score, undefeated }) => {
   const classes = useStyles()
   const rule = useArenaResult()
+
+  const renderScore = () => {
+    if (rule === 'score_attack' || rule === 'time_attack') {
+      if (undefeated) {
+        return '—'
+      }
+      if (score !== null) {
+        return TournamentHelper.formatArenaScore(score, rule)
+      }
+    }
+    return null
+  }
+
   return (
     <div className={classes.root}>
       <div className={classes.contentWrapper}>
         <div className={classes.placementWrapper}>
-          {undefeated ? (
-            '—'
-          ) : (
-            <p
-              className={`${classes.text} ${position === 1 && classes.first} ${position === 2 && classes.second} ${
-                position === 3 && classes.third
-              }`}
-            >
-              {position}
-              {position === 1 && <span>st</span>}
-              {position === 2 && <span>nd</span>}
-              {position === 3 && <span>rd</span>}
-            </p>
-          )}
+          <p
+            className={`${classes.text} ${position === 1 && classes.first} ${position === 2 && classes.second} ${
+              position === 3 && classes.third
+            }`}
+          >
+            {position}
+            {position === 1 && <span>st</span>}
+            {position === 2 && <span>nd</span>}
+            {position === 3 && <span>rd</span>}
+          </p>
         </div>
         <ButtonBase className={classes.itemAvatar} onClick={onClickAvatar}>
           {avatar}
@@ -50,9 +59,7 @@ const ResultListItem: React.FC<ResultListItemProps> = ({ position, avatar, onCli
             </Typography>
           )}
         </div>
-        {score !== null && (rule === 'score_attack' || rule === 'time_attack') ? (
-          <Typography className={classes.score}>{undefeated ? '—' : TournamentHelper.formatArenaScore(score, rule)}</Typography>
-        ) : null}
+        <Typography className={classes.score}>{renderScore()}</Typography>
       </div>
     </div>
   )
@@ -143,7 +150,7 @@ const useStyles = makeStyles((theme) => ({
   },
   score: {
     position: 'absolute',
-    right: 8,
+    right: theme.spacing(3),
     top: '50%',
     transform: 'translateY(-50%)',
     fontSize: 20,

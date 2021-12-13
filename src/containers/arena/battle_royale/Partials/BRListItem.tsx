@@ -117,6 +117,7 @@ const useStyles = makeStyles((theme) => ({
   },
   undefeatedButton: {
     marginRight: theme.spacing(1.5),
+    zIndex: 0,
   },
   [theme.breakpoints.down('xs')]: {
     contentWrapper: {
