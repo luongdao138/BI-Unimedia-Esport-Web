@@ -38,6 +38,12 @@ const BRPlacementInput: React.FC<
   const classes = useStyles()
 
   useEffect(() => {
+    if (value === '') {
+      setPlacement({ value })
+    }
+  }, [value])
+
+  useEffect(() => {
     setError(validateError(placement, participantCount))
     onChange({ target: { value: String(placement.value) } })
   }, [placement])

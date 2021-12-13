@@ -40,6 +40,12 @@ const BRScoreInput: React.FC<
   const [error, setError] = useState<ErrorType>({})
 
   useEffect(() => {
+    if (value === '') {
+      setScore({ value })
+    }
+  }, [value])
+
+  useEffect(() => {
     setError(validateError(score))
     onChange({ target: { value: String(score.value) } })
   }, [score])

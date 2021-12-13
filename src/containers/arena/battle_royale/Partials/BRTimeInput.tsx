@@ -83,6 +83,12 @@ const BRTimeInput: React.FC<
   const [error, setError] = useState<TimeInputError>(errorDefault)
 
   useEffect(() => {
+    if (value === '') {
+      setTime(() => TournamentHelper.millisToTime(value))
+    }
+  }, [value])
+
+  useEffect(() => {
     setError(validateError(time))
     onChange({ target: { value: TournamentHelper.timeToMillis(time) } })
   }, [time])
