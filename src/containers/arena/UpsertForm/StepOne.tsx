@@ -112,7 +112,7 @@ const StepOne: React.FC<Props> = ({ formik, hardwares, editables }) => {
             error={formik.values.stepOne.has_prize && formik.touched?.stepOne?.prize_amount && !!formik.errors?.stepOne?.prize_amount}
             size="small"
             disabled={!editables.prize}
-            endAdornment={<CharacterLimited value={formik.values.stepOne.prize_amount} limit={40} />}
+            endAdornment={<CharacterLimited value={formik.values.stepOne.prize_amount} limit={150} />}
           />
         )}
       </Box>

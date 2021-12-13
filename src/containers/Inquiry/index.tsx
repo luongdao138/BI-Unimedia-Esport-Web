@@ -183,7 +183,7 @@ const ESInquiry: React.FC = () => {
                 disabled={!!hasEmail || showPreview}
                 readOnly={!!hasEmail}
                 size="small"
-                endAdornment={<CharacterLimited value={values.email} limit={100} />}
+                endAdornment={!hasEmail && <CharacterLimited value={values.email} limit={100} />}
               />
             </Box>
 

@@ -105,7 +105,7 @@ const NameInfo: React.FC<NameInfoProps> = ({ profile, onDataChange, handleError 
             onChange={handleChange}
             helperText={errors.bio}
             error={!!errors.bio}
-            endAdornment={<CharacterLimited value={values.bio} limit={5000} />}
+            endAdornment={<CharacterLimited value={values.bio} limit={5000} multiLines />}
           />
         </Grid>
       </Grid>
