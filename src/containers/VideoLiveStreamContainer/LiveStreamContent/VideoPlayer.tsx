@@ -15,9 +15,6 @@ import Hls from 'hls.js'
 import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
 import { DELAY_SECONDS } from '@constants/common.constants'
 import { STATUS_VIDEO } from '@services/videoTop.services'
-import { clearInterval } from 'timers'
-import moment from 'moment'
-
 interface PlayerProps {
   src?: string
   thumbnail?: string
