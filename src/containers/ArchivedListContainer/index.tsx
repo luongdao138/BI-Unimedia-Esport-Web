@@ -8,8 +8,10 @@ import { Pagination } from '@material-ui/lab'
 import { Colors } from '@theme/colors'
 import { ESRoutes } from '@constants/route.constants'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 
 const ArchivedListContainer: React.FC = () => {
+  const router = useRouter()
   const { t } = useTranslation('common')
   const classes = useStyles()
   const IMG_PLACEHOLDER = '/images/live_stream/thumbnail_default.png'
@@ -20,6 +22,9 @@ const ArchivedListContainer: React.FC = () => {
   const isSmallScreen = useMediaQuery(theme.breakpoints.down(475))
   const archivedList = Array(5).fill('')
 
+  const redirectArchivedDetail = () => {
+    router.push(ESRoutes.ARCHIVE_DETAIL)
+  }
   return (
     <div>
       <HeaderWithButton title={t('archived_list_screen.title')} />
@@ -45,7 +50,7 @@ const ArchivedListContainer: React.FC = () => {
           {archivedList.length > 0 &&
             archivedList.map((k) => {
               return (
-                <Box className={classes.wrapItem} key={k}>
+                <Box className={classes.wrapItem} key={k} onClick={isMobile ? redirectArchivedDetail : null}>
                   <table className={classes.outerTable}>
                     <colgroup>
                       <col style={{ width: colFirstWidth }} />
@@ -72,9 +77,16 @@ const ArchivedListContainer: React.FC = () => {
                         {!isMobile && <td>{t('archived_list_screen.titleVideo')}</td>}
                         <td colSpan={isMobile ? 2 : 1}>
                           <Box className={`${classes.titleVideo} ${classes.textEllipsis}`}>
-                            <ESTooltip title="Title" arrow placement="top-start">
-                              <div>Title</div>
-                            </ESTooltip>
+                            {isMobile && (
+                              <Typography component="span">
+                                <div>Title</div>
+                              </Typography>
+                            )}
+                            {!isMobile && (
+                              <ESTooltip title="Title" arrow placement="top-start">
+                                <div>Title</div>
+                              </ESTooltip>
+                            )}
                           </Box>
                         </td>
                       </tr>
@@ -301,7 +313,7 @@ const useStyles = makeStyles((theme) => ({
       background: 'transparent',
     },
     wrapper: {
-      margin: '24px 63px 24px 63px',
+      margin: '24px 30px 24px 30px',
     },
     wrapItem: {
       background: '#000',
@@ -344,6 +356,9 @@ const useStyles = makeStyles((theme) => ({
       '& .MuiPaginationItem-root': {
         fontSize: '11px',
       },
+    },
+    wrapper: {
+      margin: '24px 15px 24px 15px',
     },
   },
 }))
