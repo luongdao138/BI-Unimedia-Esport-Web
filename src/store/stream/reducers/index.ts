@@ -21,12 +21,11 @@ type StateType = {
 const initialState: StateType = {
   getStreamUrlAndKeyInfo: {
     data: {
-      CHANNEL_ARN: null,
-      INGEST_ENDPOINT: null,
-      PLAYBACK_URL: null,
-      STREAM_KEY_VALUE: null,
-      STREAM_URL: null,
-      STREAM_KEY_ARN: null,
+      channel_arn: null,
+      playback_url: null,
+      stream_key_value: null,
+      stream_url: null,
+      stream_key_arn: null,
     },
   },
 }

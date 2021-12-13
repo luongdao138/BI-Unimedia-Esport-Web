@@ -204,6 +204,8 @@ export const onUpdateChannel = /* GraphQL */ `
       arn
       state
       alarm_state
+      createdAt
+      updatedAt
     }
   }
 `

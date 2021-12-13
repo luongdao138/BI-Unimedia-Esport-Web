@@ -64,6 +64,7 @@ export const getInitialScheduleValues = (data?: LiveStreamSetting): FormLiveType
     sell_optional: '',
     //check step
     step_setting: 1,
+    arn: data && data.arn ? data.arn : '',
   },
 })
 

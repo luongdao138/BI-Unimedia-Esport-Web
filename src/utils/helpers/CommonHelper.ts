@@ -244,7 +244,7 @@ const nearestFutureMinutes = (interval: number): string => {
 }
 
 const formatDateTime = (date: string): string => {
-  const dateTime = new Date(date).toString()
+  const dateTime = moment(date).toString()
   // const dateResult = moment(dateTime).format(FORMAT_DATE_TIME_JP)
   return dateTime
 }
@@ -323,8 +323,9 @@ const splitToLinkifyComponent = (text = '') => {
   urlFromText.forEach((url) => {
     const idx = _text.indexOf(url)
     results.push({ type: 'text', text: _text.slice(0, idx) })
+    const pureText = _text.slice(0, idx)
     results.push({ type: 'link', text: url })
-    _text = text.slice(idx + url.length)
+    _text = _text.slice(pureText.length + url.length)
   })
   if (_text.length) {
     results.push({ type: 'text', text: _text })
