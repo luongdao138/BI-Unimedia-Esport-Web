@@ -607,6 +607,7 @@ export default {
     },
     result_incomplete: '結果の入力がまだ行われていません',
     not_entered: '未入力',
+    undefeated: '不戦敗',
     match_not_yet: 'まだ作成されていません',
     third_place: '（3位決定戦あり）',
     no_third_place: '（3位決定戦なし）',

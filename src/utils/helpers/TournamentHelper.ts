@@ -267,13 +267,16 @@ function isTournament(rule: TournamentRule) {
 }
 
 function isBRResultComplete(participants: ParticipantsResponse[], rule: TournamentRule) {
+  let undefeatedQuantity = 0
   for (const p of participants) {
+    if (p.attributes?.undefeated) undefeatedQuantity++
     if (rule === 'battle_royale') {
-      if (p.attributes.position === null) return false
+      if (p.attributes.position === null && !p.attributes?.undefeated) return false
     } else {
-      if (p.attributes.attack_score === null) return false
+      if (p.attributes.attack_score === null && !p.attributes?.undefeated) return false
     }
   }
+  if (undefeatedQuantity === participants.length) return false
   return true
 }
 
