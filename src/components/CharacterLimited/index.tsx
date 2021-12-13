@@ -1,5 +1,6 @@
 import { InputAdornment, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
+import { isMobile } from 'react-device-detect'
 
 export type LimitedProps = {
   value?: string
@@ -9,11 +10,18 @@ export type LimitedProps = {
 
 const ESCharacterLimited: React.FC<LimitedProps> = ({ value, limit, multiLines }) => {
   const classes = useStyles()
-  const styleText = {
-    alignSelf: multiLines ? 'flex-end' : 'center',
+  const styleTextNormal = {
+    alignSelf: 'center',
   }
+  const styleTextMultiline = {
+    alignSelf: 'flex-end',
+    position: 'absolute',
+    right: isMobile ? 8 : value?.length > 0 ? 32 : 8,
+    bottom: 16,
+  }
+
   return (
-    <InputAdornment position="end" style={styleText}>
+    <InputAdornment position="end" style={multiLines ? styleTextMultiline : styleTextNormal}>
       <Typography className={classes.textLimit}>{`${value?.length} / ${limit}`}</Typography>
     </InputAdornment>
   )
