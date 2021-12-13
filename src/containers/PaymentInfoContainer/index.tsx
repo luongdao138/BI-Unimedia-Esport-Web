@@ -77,20 +77,26 @@ const PaymentInfoContainer: React.FC = () => {
   const tableRow = useCallback(() => {
     return (
       <Box className={classes.tableContentContainer}>
-        {data.map((item, index) => {
-          const backgroundColor = index % 2 === 0 ? '#323232' : '#606060'
-          const displayDate = item?.date
-          const displayStatus = item?.status
-          const displayAmount = `${FormatHelper.currencyFormat(item?.amount.toString())} ${t('common.money')}`
-          const key = item?.date
-          return (
-            <Box key={key} onClick={navigateToDetail(123)} style={{ backgroundColor }} className={classes.row}>
-              <Typography className={`${classes.yearMonthRow}`}>{displayDate}</Typography>
-              <Typography className={`${classes.statusRow}`}>{displayStatus}</Typography>
-              <Typography className={`${classes.amountOfMoney}`}>{displayAmount}</Typography>
-            </Box>
-          )
-        })}
+        {data.length > 0 &&
+          data.map((item, index) => {
+            const backgroundColor = index % 2 === 0 ? '#323232' : '#606060'
+            const displayDate = item?.date
+            const displayStatus = item?.status
+            const displayAmount = `${FormatHelper.currencyFormat(item?.amount.toString())} ${t('common.money')}`
+            const key = item?.date
+            return (
+              <Box key={key} onClick={navigateToDetail(123)} style={{ backgroundColor }} className={classes.row}>
+                <Typography className={`${classes.yearMonthRow}`}>{displayDate}</Typography>
+                <Typography className={`${classes.statusRow}`}>{displayStatus}</Typography>
+                <Typography className={`${classes.amountOfMoney}`}>{displayAmount}</Typography>
+              </Box>
+            )
+          })}
+        {data.length === 0 && (
+          <Box className={classes.tableContentContainer}>
+            <Typography component="span">{t('payment_information_screen.no_deposit_information')}</Typography>
+          </Box>
+        )}
       </Box>
     )
   }, [data])

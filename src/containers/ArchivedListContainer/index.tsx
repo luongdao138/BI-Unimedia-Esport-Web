@@ -165,7 +165,7 @@ const ArchivedListContainer: React.FC = () => {
             })}
           {archivedList.length === 0 && (
             <Box>
-              <Typography>アーカイブがありません</Typography>
+              <Typography>{t('archived_list_screen.no_archive')}</Typography>
             </Box>
           )}
         </Box>

@@ -6,6 +6,7 @@ import React, { useCallback } from 'react'
 import { FormatHelper } from '@utils/helpers/FormatHelper'
 import { Pagination } from '@material-ui/lab'
 import { Colors } from '@theme/colors'
+import ESTooltip from '@components/ESTooltip'
 
 const PaymentInfoDetailContainer: React.FC = () => {
   const { t } = useTranslation('common')
@@ -87,7 +88,11 @@ const PaymentInfoDetailContainer: React.FC = () => {
             <Box key={key} style={{ backgroundColor }} className={classes.row}>
               <Box className={classes.rowUpper}>
                 <Typography className={`${classes.rowText} ${classes.yearMonthRow}`}>{displayDate}</Typography>
-                {!isMobile && <Typography className={`${classes.rowText} ${classes.streamTitleRow}`}>{displayTitle}</Typography>}
+                {!isMobile && (
+                  <ESTooltip title={displayTitle}>
+                    <Typography className={`${classes.rowText} ${classes.streamTitleRow}`}>{displayTitle}</Typography>
+                  </ESTooltip>
+                )}
                 <Typography className={`${classes.rowText} ${classes.statusRow}`}>{displayStatus}</Typography>
                 <Typography className={`${classes.rowText} ${classes.amountOfMoneyRow}`}>{displayAmount}</Typography>
               </Box>

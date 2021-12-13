@@ -1482,6 +1482,7 @@ export default {
     commentNumber: 'コメント数',
     receivedPointNumber: 'eXeポイント受領数',
     times: '回',
+    no_archive: 'アーカイブがありません',
   },
   payment_information_screen: {
     title: '入金情報',
@@ -1490,6 +1491,7 @@ export default {
     moneyAmount: '金額',
     date_and_time: '日時',
     stream_title: '配信タイトル',
+    no_deposit_information: '入金情報がありません',
   },
   streaming_setting_screen: {
     title: '配信設定',
