@@ -88,6 +88,7 @@ export default {
     error_message_content: 'データの取得に失敗しました',
     failed_to_renew: '時間を置いてから再度試してください',
     channel_busy_to_renew: 'チャンネル立ち上げ中です。しばらくしてから再度お試しください',
+    deactivate_key_setting_error: 'ストリームタイトルが無効です。管理者にお問い合わせください。',
   },
   confirm_member: {
     confirm: 'メンバーの確定',
