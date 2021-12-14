@@ -26,8 +26,13 @@ const SideFooter: React.FC<Props> = ({ handleAppModal }) => {
             <ListItemText className={classes.label}>{t('common:top.footer_twitter_official')}</ListItemText>
           </div>
         </Link>
-        <Link className={classes.iconTextWrapper} href={'https://info.exelab.jp/'} underline={'none'} target="_blank">
-          <ListItemText className={classes.listText}>{t('common:home.app_info')}</ListItemText>
+        <Link href={'https://info.exelab.jp/'} underline={'none'} target="_blank">
+          <div className={classes.iconTextWrapper}>
+            <Box className={classes.iconContainer}>
+              <Icon className="fa fa-info-circle" fontSize="small" />
+            </Box>
+            <ListItemText className={classes.listText}>{t('common:home.app_info')}</ListItemText>
+          </div>
         </Link>
         <Link className={classes.appLink} underline={'none'} onClick={() => handleAppModal(true)}>
           <div className={classes.iconTextWrapper}>
