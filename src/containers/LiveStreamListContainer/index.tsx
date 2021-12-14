@@ -15,7 +15,7 @@ const LiveStreamDataManage = [
   { id: 2, title: '合計視聴者数', value: '180' },
   { id: 3, title: 'チャット人数', value: '150' },
   { id: 4, title: 'プレミアムチャット人数', value: '2' },
-  { id: 5, title: 'eXeポイント受領総数', value: '15000' },
+  { id: 5, title: 'eXeポイント受領総数', value: '1500' },
 ]
 
 type StreamDataItemProps = {
@@ -136,6 +136,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     justifyContent: 'flex-end',
     color: Colors.white,
+    wordBreak: 'break-word',
+    textAlign: 'right',
   },
   itemContainer: {
     display: 'flex',
@@ -145,6 +147,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     border: `1px solid ${Colors.grey['200']}`,
     borderRadius: 4,
     padding: '8px 12px 8px 12px',
+    height: '100%',
   },
   [theme.breakpoints.down(576)]: {
     container: {

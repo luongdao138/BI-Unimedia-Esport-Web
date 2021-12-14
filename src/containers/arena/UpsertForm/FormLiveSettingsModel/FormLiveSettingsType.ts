@@ -17,7 +17,6 @@ export type FormLiveType = {
     //check step
     step_setting?: number
     arn?: string
-    uuid_clone?: string
   }
   stepSettingTwo?: {
     uuid: string

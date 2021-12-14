@@ -153,6 +153,7 @@ export const onCreateVideo = /* GraphQL */ `
       video_status
       live_start_time
       createdAt
+      updatedAt
     }
   }
 `
