@@ -10,13 +10,27 @@ interface ResultListItemProps {
   avatar: JSX.Element
   onClickAvatar: () => void
   name: string
+  undefeated?: boolean
   nameSecondary?: string | undefined
   score?: number
 }
 
-const ResultListItem: React.FC<ResultListItemProps> = ({ position, avatar, onClickAvatar, name, nameSecondary, score }) => {
+const ResultListItem: React.FC<ResultListItemProps> = ({ position, avatar, onClickAvatar, name, nameSecondary, score, undefeated }) => {
   const classes = useStyles()
   const rule = useArenaResult()
+
+  const renderScore = () => {
+    if (rule === 'score_attack' || rule === 'time_attack') {
+      if (undefeated) {
+        return '—'
+      }
+      if (score !== null) {
+        return TournamentHelper.formatArenaScore(score, rule)
+      }
+    }
+    return null
+  }
+
   return (
     <div className={classes.root}>
       <div className={classes.contentWrapper}>
@@ -45,9 +59,7 @@ const ResultListItem: React.FC<ResultListItemProps> = ({ position, avatar, onCli
             </Typography>
           )}
         </div>
-        {score !== null && (rule === 'score_attack' || rule === 'time_attack') ? (
-          <Typography className={classes.score}>{TournamentHelper.formatArenaScore(score, rule)}</Typography>
-        ) : null}
+        <Typography className={classes.score}>{renderScore()}</Typography>
       </div>
     </div>
   )
@@ -138,7 +150,7 @@ const useStyles = makeStyles((theme) => ({
   },
   score: {
     position: 'absolute',
-    right: 8,
+    right: theme.spacing(3),
     top: '50%',
     transform: 'translateY(-50%)',
     fontSize: 20,

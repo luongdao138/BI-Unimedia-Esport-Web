@@ -9685,6 +9685,11 @@ rc@^1.0.1, rc@^1.1.6:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
+react-aspect-ratio@^1.0.50:
+  version "1.0.50"
+  resolved "https://registry.yarnpkg.com/react-aspect-ratio/-/react-aspect-ratio-1.0.50.tgz#b46bfc6a701d829bd0cb6d001cf271e443874213"
+  integrity sha512-AEAPqmPMLlcuhp4t3z6crb+gGckc0lFPYNL/654a6rrcblcvZGtgh+VpcUbC7AwIE+MT8u5uGeJ7shx0hUOKSw==
+
 react-content-loader@6.0.3:
   version "6.0.3"
   resolved "https://registry.yarnpkg.com/react-content-loader/-/react-content-loader-6.0.3.tgz#32e28ca7120e0a2552fc26655d0d4448cc1fc0c5"

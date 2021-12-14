@@ -1,6 +1,7 @@
 import useArenaWinners from './useArenaWinners'
 import { makeStyles } from '@material-ui/core/styles'
 import ArrowBack from '@material-ui/icons/ArrowBack'
+import { AspectRatio } from 'react-aspect-ratio'
 import { Colors } from '@theme/colors'
 import Avatar from '@components/Avatar'
 import { Typography, IconButton, Box, Divider } from '@material-ui/core'
@@ -93,7 +94,9 @@ const ArenaWinners: React.FC = () => {
       </div>
       <div className={classes.summary}>
         {arena?.attributes?.summary_image && (
-          <div className={classes.summarImageWrapper}>{<img src={arena.attributes.summary_image} />}</div>
+          <AspectRatio ratio="16/9" className={classes.summarImageWrapper}>
+            <img src={arena.attributes.summary_image} />
+          </AspectRatio>
         )}
         <Linkify
           componentDecorator={(decoratedHref, decoratedText, key) => (
@@ -134,6 +137,7 @@ const ArenaWinners: React.FC = () => {
               <ResultListItem
                 key={idx}
                 position={p.attributes.position}
+                undefeated={p.attributes?.undefeated ?? false}
                 avatar={
                   <Avatar
                     src={isTeam ? p.attributes.team.data.attributes.team_avatar : p.attributes.avatar_url || ''}
@@ -258,13 +262,15 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: '28%',
     overflow: 'hidden',
     zIndex: 2,
+    backgroundColor: Colors.black,
     '& img': {
       zIndex: 1,
       position: 'absolute',
       objectFit: 'cover',
-      left: 0,
+      left: '50%',
       top: 0,
-      width: '100%',
+      transform: 'translate(-50%, 0)',
+      width: 'auto',
       height: '100%',
     },
   },

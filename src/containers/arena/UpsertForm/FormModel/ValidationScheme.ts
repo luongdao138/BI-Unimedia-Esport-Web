@@ -39,7 +39,7 @@ export const getValidationScheme = (data: TournamentDetail, editables: EditableT
         is: true,
         then: Yup.string()
           .required(i18n.t('common:common.input_required'))
-          .max(40, i18n.t('common:common.validation.char_limit', { char_limit: 40 })),
+          .max(150, i18n.t('common:common.validation.char_limit', { char_limit: 150 })),
       }),
       game_title_id: Yup.array().min(1, i18n.t('common:common.input_required')),
       game_hardware_id: Yup.number()

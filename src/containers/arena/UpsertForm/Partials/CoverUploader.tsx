@@ -5,7 +5,7 @@ import { Box, Typography } from '@material-ui/core'
 import { CameraAlt as Camera } from '@material-ui/icons'
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
-import CoverSelector from '@components/ImagePicker/CoverSelector'
+import WinnerSelector from '@components/ImagePicker/WinnerSelector'
 import ESLoader from '@components/Loader'
 
 type ProfileAvatarProps = {
@@ -86,7 +86,7 @@ const CoverUploader: React.FC<ProfileAvatarProps> = ({
         ) : null}
       </label>
       {open && (
-        <CoverSelector
+        <WinnerSelector
           src={_.isEmpty(localSrc) ? '' : localSrc.toString()}
           ratio={ratio}
           cancel={() => setOpen(false)}
