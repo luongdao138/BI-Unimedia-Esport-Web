@@ -89,7 +89,7 @@ const Steps: React.FC<StepsProps> = ({
   const [clickShowText, setClickShowText] = useState(false)
   const [renewData, setRenewData] = useState(null)
   // const [statusTag, setStatusTag] = useState<number>(0)
-  const classes = useStyles({ statusRecord: obsStatusDynamo })
+  const classes = useStyles({ statusRecord: obsStatusDynamo, channelArn: stateChannelArn })
 
   useEffect(() => {
     // getLiveSetting()
@@ -342,7 +342,10 @@ const Steps: React.FC<StepsProps> = ({
   }, [stateChannelArn, isLoading, formik?.values?.stepSettingOne?.stream_key])
 
   const handleNavigateToDetailLink = () => {
-    if (obsStatusDynamo == TAG_STATUS_RECORD.UPDATED_NOT_START || obsStatusDynamo == TAG_STATUS_RECORD.LIVE_STREAMING) {
+    if (
+      (obsStatusDynamo == TAG_STATUS_RECORD.UPDATED_NOT_START || obsStatusDynamo == TAG_STATUS_RECORD.LIVE_STREAMING) &&
+      stateChannelArn !== EVENT_STATE_CHANNEL.STOPPED
+    ) {
       window.open(`${baseViewingURL}${formik?.values?.stepSettingOne?.linkUrl}`, '_blank')
     }
   }
@@ -364,7 +367,9 @@ const Steps: React.FC<StepsProps> = ({
             <Box className={classes.firstItem} display="flex" flexDirection="row" alignItems="center">
               <div className={classes.dot} />
               <Typography className={classes.textTagStatus}>
-                {obsStatusDynamo == TAG_STATUS_RECORD.CREATED_n || obsStatusDynamo == TAG_STATUS_RECORD.CREATED_in
+                {obsStatusDynamo == TAG_STATUS_RECORD.CREATED_n ||
+                obsStatusDynamo == TAG_STATUS_RECORD.CREATED_in ||
+                (obsStatusDynamo == TAG_STATUS_RECORD.LIVE_STREAMING && stateChannelArn === EVENT_STATE_CHANNEL.STOPPED)
                   ? i18n.t('common:streaming_setting_screen.status_tag_created')
                   : obsStatusDynamo == TAG_STATUS_RECORD.UPDATED_NOT_START
                   ? i18n.t('common:streaming_setting_screen.status_tag_updated')
@@ -1085,10 +1090,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     width: '494px',
   },
-  dot: (props: { statusRecord?: number | string }) => ({
+  dot: (props: { statusRecord?: number | string; channelArn?: string }) => ({
     width: 12,
     height: 12,
-    background: props.statusRecord === TAG_STATUS_RECORD.LIVE_STREAMING ? '#FF0000' : '#707070',
+    background:
+      props.statusRecord === TAG_STATUS_RECORD.LIVE_STREAMING && props.channelArn !== EVENT_STATE_CHANNEL.STOPPED ? '#FF0000' : '#707070',
     borderRadius: 6,
     marginRight: 6,
   }),
@@ -1102,14 +1108,16 @@ const useStyles = makeStyles((theme: Theme) => ({
   linkVideoIcon: {
     fontSize: 14,
   },
-  urlCopyTag: (props: { statusRecord?: number | string }) => ({
+  urlCopyTag: (props: { statusRecord?: number | string; channelArn?: string }) => ({
     paddingLeft: 12,
     cursor:
-      props.statusRecord === TAG_STATUS_RECORD.LIVE_STREAMING || props.statusRecord === TAG_STATUS_RECORD.UPDATED_NOT_START
+      props.statusRecord === (TAG_STATUS_RECORD.LIVE_STREAMING || props.statusRecord === TAG_STATUS_RECORD.UPDATED_NOT_START) &&
+      props.channelArn !== EVENT_STATE_CHANNEL.STOPPED
         ? 'pointer'
         : 'not-allowed',
     color:
-      props.statusRecord === TAG_STATUS_RECORD.LIVE_STREAMING || props.statusRecord === TAG_STATUS_RECORD.UPDATED_NOT_START
+      props.statusRecord === (TAG_STATUS_RECORD.LIVE_STREAMING || props.statusRecord === TAG_STATUS_RECORD.UPDATED_NOT_START) &&
+      props.channelArn !== EVENT_STATE_CHANNEL.STOPPED
         ? '#FF4786'
         : '#B5B5B5',
   }),

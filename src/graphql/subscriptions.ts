@@ -191,7 +191,6 @@ export const onCreateChannel = /* GraphQL */ `
       arn
       state
       alarm_state
-      obs_status
       createdAt
       updatedAt
     }
@@ -204,7 +203,6 @@ export const onUpdateChannel = /* GraphQL */ `
       arn
       state
       alarm_state
-      obs_status
       createdAt
       updatedAt
     }
@@ -217,7 +215,6 @@ export const onDeleteChannel = /* GraphQL */ `
       arn
       state
       alarm_state
-      obs_status
       createdAt
       updatedAt
     }
