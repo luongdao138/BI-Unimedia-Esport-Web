@@ -8,6 +8,7 @@ import { FormikProps } from 'formik'
 import { TeamJoinBase } from '@services/arena.service'
 import _ from 'lodash'
 import { useFocusState } from '@utils/hooks/input-focus-context'
+import CharacterLimited from '@components/CharacterLimited'
 
 interface TeamEntryMemberListProps {
   isLeader?: boolean
@@ -67,6 +68,7 @@ const TeamEntryMemberListItem: React.FC<TeamEntryMemberListProps> = ({
                 focusEvent.onBlur()
               }}
               onFocus={focusEvent.onFocus}
+              endAdornment={<CharacterLimited value={nickname} limit={40} />}
             />
           </Box>
         </Box>
