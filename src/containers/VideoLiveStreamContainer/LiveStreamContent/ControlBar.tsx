@@ -74,7 +74,13 @@ const ControlBarPlayer: React.FC<ControlProps> = ({
     <>
       <div className={classes.controlLeft}>
         <Play onPlayPause={onPlayPause} playing={playing} />
-        <Reload videoRef={videoRef} typeButton={'reload'} onPressCallback={handleOnRestart} />
+        <Reload
+          videoRef={videoRef}
+          typeButton={'reload'}
+          onPressCallback={handleOnRestart}
+          videoStatus={videoStatus}
+          durationsPlayer={durationsPlayer}
+        />
         <Box className={classes.buttonVolume}>
           <Box className={classes.boxIconVolume} onClick={onMute} data-tip data-for="mute">
             {!muted ? (
