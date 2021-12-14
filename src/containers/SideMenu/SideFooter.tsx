@@ -26,6 +26,9 @@ const SideFooter: React.FC<Props> = ({ handleAppModal }) => {
             <ListItemText className={classes.label}>{t('common:top.footer_twitter_official')}</ListItemText>
           </div>
         </Link>
+        <Link className={classes.iconTextWrapper} href={'https://info.exelab.jp/'} underline={'none'} target="_blank">
+          <ListItemText className={classes.listText}>{t('common:home.app_info')}</ListItemText>
+        </Link>
         <Link className={classes.appLink} underline={'none'} onClick={() => handleAppModal(true)}>
           <div className={classes.iconTextWrapper}>
             <PhoneIphone fontSize="small" />
@@ -47,9 +50,6 @@ const SideFooter: React.FC<Props> = ({ handleAppModal }) => {
             </Box>
             <ListItemText className={classes.listText}>{t('common:home.contact_us')}</ListItemText>
           </div>
-        </Link>
-        <Link href={'https://info.exelab.jp/'} underline={'none'} target="_blank">
-          <ListItemText className={classes.listText}>{t('common:home.app_info')}</ListItemText>
         </Link>
         <Link href={ESRoutes.TERMS} underline={'none'}>
           <ListItemText className={classes.listText}>{t('common:home.terms_of_use')}</ListItemText>
