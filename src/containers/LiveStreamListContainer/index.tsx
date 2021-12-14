@@ -147,6 +147,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     border: `1px solid ${Colors.grey['200']}`,
     borderRadius: 4,
     padding: '8px 12px 8px 12px',
+    height: '100%',
   },
   [theme.breakpoints.down(576)]: {
     container: {
