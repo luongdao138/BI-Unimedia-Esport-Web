@@ -53,7 +53,7 @@ const ImageSlider = withStyles({
 })(Slider)
 
 const STATIC_WIDTH = 600
-const STATIC_HEIGHT = 200
+const STATIC_HEIGHT = (600 / 16) * 9
 
 const WinnerSelector: React.FC<WinnerSelectorProps> = ({ src, ratio, is_required, cancel, onUpdate, onRemove }) => {
   const [rawFile, setRawFile] = useState<null | File>(null)
@@ -190,7 +190,7 @@ const WinnerSelector: React.FC<WinnerSelectorProps> = ({ src, ratio, is_required
         crop={crop}
         zoom={zoom}
         objectFit={fitType}
-        aspect={ratio || 4 / 1}
+        aspect={ratio || 16 / 9}
         style={{
           containerStyle: { width: dynamicWidth, height: STATIC_HEIGHT, position: 'relative' },
           mediaStyle: { width: mediaDimensions.width, height: mediaDimensions.height, position: 'relative' },
