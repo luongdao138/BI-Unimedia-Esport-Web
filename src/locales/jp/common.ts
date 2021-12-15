@@ -1484,12 +1484,16 @@ export default {
     times: '回',
   },
   payment_information_screen: {
+    header_title: '内訳',
     title: '入金情報',
     time: '年月',
     status: 'ステータス',
     moneyAmount: '金額',
     date_and_time: '日時',
     stream_title: '配信タイトル',
+    no_deposit_information: '入金情報がありません',
+    confirm_status_title: '確定',
+    schedule_status_title: '予定',
   },
   streaming_setting_screen: {
     title: '配信設定',

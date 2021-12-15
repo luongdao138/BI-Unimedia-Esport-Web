@@ -1,12 +1,17 @@
 import HeaderWithButton from '@components/HeaderWithButton'
 import { Box, makeStyles, Theme, Typography, useMediaQuery, useTheme } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
-import React, { useCallback } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { FormatHelper } from '@utils/helpers/FormatHelper'
 import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
 import { Pagination } from '@material-ui/lab'
 import { Colors } from '@theme/colors'
+import useFinancialStatement from './useFinancialStatement'
+import { FINANCIAL_STATUS_TITLE, FORMAT_YEAR_MONTH_FILTER, LIMIT_FINANCIAL_STATEMENT } from '@constants/common.constants'
+import ESLoader from '@components/FullScreenLoader'
+import { DateHelper } from '@utils/helpers/DateHelper'
+import moment from 'moment'
 
 const PaymentInfoContainer: React.FC = () => {
   const { t } = useTranslation('common')
@@ -14,34 +19,22 @@ const PaymentInfoContainer: React.FC = () => {
   const router = useRouter()
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down(576))
+  const { financialStatementData, meta_financial_statement, fetchFinancialStatement } = useFinancialStatement()
+  const [page, setPage] = useState<number>(1)
+  const totalPages = Math.ceil(financialStatementData?.total / LIMIT_FINANCIAL_STATEMENT)
+  const data = financialStatementData?.points
 
-  const data = [
-    {
-      date: '2021年7月',
-      status: '予定',
-      amount: 3000,
-    },
-    {
-      date: '2021年8月',
-      status: '予定',
-      amount: 3000,
-    },
-    {
-      date: '2021年9月',
-      status: '予定',
-      amount: 3000,
-    },
-    {
-      date: '2021年10月',
-      status: '予定',
-      amount: 3000,
-    },
-    {
-      date: '2021年11月',
-      status: '予定',
-      amount: 3000,
-    },
-  ]
+  const onChangePage = (_event: React.ChangeEvent<unknown>, value: number): void => {
+    setPage(value)
+  }
+
+  useEffect(() => {
+    fetchFinancialStatement({ page: page, limit: LIMIT_FINANCIAL_STATEMENT })
+  }, [page])
+
+  const navigateToDetail = (id) => () => {
+    router.push(ESRoutes.PAYMENT_INFO_DETAIL.replace(/:id/gi, DateHelper.formatMonthFinancial(id)))
+  }
 
   const tableHeader = useCallback(() => {
     return (
@@ -53,22 +46,19 @@ const PaymentInfoContainer: React.FC = () => {
     )
   }, [])
 
-  const navigateToDetail = (id) => () => {
-    router.push(ESRoutes.PAYMENT_INFO_DETAIL.replace(/:id/gi, id))
-  }
-
   const paging = useCallback(() => {
     return (
       <Box className={classes.paginationContainer}>
         <Pagination
           defaultPage={1}
-          page={1}
-          count={10}
+          page={page}
+          count={totalPages}
           variant="outlined"
           shape="rounded"
           className={classes.paginationStyle}
           siblingCount={1}
           size={isMobile ? 'small' : 'medium'}
+          onChange={onChangePage}
         />
       </Box>
     )
@@ -77,22 +67,29 @@ const PaymentInfoContainer: React.FC = () => {
   const tableRow = useCallback(() => {
     return (
       <Box className={classes.tableContentContainer}>
-        {data.length > 0 &&
-          data.map((item, index) => {
+        {data?.length > 0 &&
+          data?.map((item, index) => {
             const backgroundColor = index % 2 === 0 ? '#323232' : '#606060'
-            const displayDate = item?.date
-            const displayStatus = item?.status
-            const displayAmount = `${FormatHelper.currencyFormat(item?.amount.toString())} ${t('common.money')}`
-            const key = item?.date
+            const displayDate = DateHelper.formatMonthFilter(item?.date_report)
+            const displayStatus =
+              item?.date_report === DateHelper.formatMonth(moment().format(FORMAT_YEAR_MONTH_FILTER))
+                ? FINANCIAL_STATUS_TITLE.SCHEDULE
+                : FINANCIAL_STATUS_TITLE.CONFIRM
+            const displayAmount = `${FormatHelper.currencyFormat(item?.point.toString())} ${t('common.money')}`
             return (
-              <Box key={key} onClick={navigateToDetail(123)} style={{ backgroundColor }} className={classes.row}>
+              <Box
+                key={item?.date_report}
+                onClick={navigateToDetail(item?.date_report)}
+                style={{ backgroundColor }}
+                className={classes.row}
+              >
                 <Typography className={`${classes.yearMonthRow}`}>{displayDate}</Typography>
                 <Typography className={`${classes.statusRow}`}>{displayStatus}</Typography>
                 <Typography className={`${classes.amountOfMoney}`}>{displayAmount}</Typography>
               </Box>
             )
           })}
-        {data.length === 0 && (
+        {data?.length === 0 && (
           <Box className={classes.tableContentContainer}>
             <Typography component="span">{t('payment_information_screen.no_deposit_information')}</Typography>
           </Box>
@@ -101,19 +98,20 @@ const PaymentInfoContainer: React.FC = () => {
     )
   }, [data])
   return (
-    <div>
+    <div style={{ height: '100%' }}>
       <HeaderWithButton title={t('payment_information_screen.title')} />
-      {paging()}
+      {totalPages > 1 && paging()}
       {tableHeader()}
       {tableRow()}
+      {totalPages > 1 && paging()}
+      <ESLoader open={meta_financial_statement.pending} />
     </div>
   )
 }
 const useStyles = makeStyles((theme: Theme) => ({
   row: {
     cursor: 'pointer',
-    paddingTop: '17px',
-    paddingBottom: '17px',
+    padding: '16px',
     display: 'flex',
     flexDirection: 'row',
     borderLeft: '1px solid #707070',
@@ -133,23 +131,23 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: '#000000',
     paddingLeft: '16px',
     paddingRight: '16px',
-    paddingTop: '23px',
-    paddingBottom: '28px',
+    paddingTop: '24px',
+    paddingBottom: '24px',
     marginLeft: '24px',
     marginRight: '24px',
   },
   headerContainer: {
     display: 'flex',
     flexDirection: 'row',
-    paddingLeft: '40px',
-    paddingRight: '24px',
+    paddingLeft: '56px',
+    paddingRight: '56px',
+    position: 'relative',
     paddingTop: '8px',
     paddingBottom: '8px',
     borderBottom: '1px solid #4c4c4c',
   },
   yearMonthRow: {
     flex: 2,
-    paddingLeft: '16px',
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
@@ -159,8 +157,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
-    marginLeft: '10px',
-    marginRight: '10px',
+    marginLeft: '8px',
+    marginRight: '8px',
   },
   amountOfMoney: {
     flex: 1,
@@ -188,12 +186,28 @@ const useStyles = makeStyles((theme: Theme) => ({
   paginationContainer: {
     display: 'flex',
     flexDirection: 'row-reverse',
-    marginTop: '17px',
-    marginBottom: '3px',
+    marginTop: '16px',
+    marginBottom: '8px',
   },
   [theme.breakpoints.down(576)]: {
+    tableContentContainer: {
+      marginLeft: '16px',
+      marginRight: '16px',
+    },
+    headerContainer: {
+      paddingLeft: '40px',
+      paddingRight: '40px',
+    },
+    row: {
+      paddingLeft: '8px',
+      paddingRight: '8px',
+    },
     yearMonthRow: {
-      flex: 1,
+      flex: 1.5,
+    },
+    paginationContainer: {
+      paddingLeft: '16px',
+      paddingRight: '16px',
     },
   },
 }))
