@@ -48,7 +48,12 @@ const useLiveSetting = () => {
     if (actions.setLiveStream.fulfilled.match(resultAction)) {
       onSuccess(resultAction.payload.data?.channel_progress)
     } else {
-      dispatch(addToast(i18n.t('common:common.failed_to_get_data')))
+      //@ts-ignore
+      if (resultAction.payload?.code === CODE_ERROR_RENEW_SPECIAL.STK01) {
+        dispatch(addToast(i18n.t('common:common.deactivate_key_setting_error')))
+      } else {
+        dispatch(addToast(i18n.t('common:common.failed_to_get_data')))
+      }
     }
   }
   const meta = useAppSelector(_getMeta)
@@ -74,10 +79,6 @@ const useLiveSetting = () => {
       //@ts-ignore
       if (resultAction.payload?.code === CODE_ERROR_RENEW_SPECIAL.SERVICE_BUSY) {
         dispatch(addToast(i18n.t('common:common.channel_busy_to_renew')))
-      }
-      //@ts-ignore
-      if (resultAction.payload?.code === CODE_ERROR_RENEW_SPECIAL.STK01) {
-        dispatch(addToast(i18n.t('common:common.deactivate_key_setting_error')))
       } else {
         dispatch(addToast(i18n.t('common:common.failed_to_get_data')))
       }
