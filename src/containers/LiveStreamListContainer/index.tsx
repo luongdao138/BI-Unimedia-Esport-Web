@@ -1,90 +1,63 @@
 import HeaderWithButton from '@components/HeaderWithButton'
 import ESSelect from '@components/Select'
-import { Box, Grid, makeStyles, Theme, Typography, useMediaQuery, useTheme } from '@material-ui/core'
+import { Box, Grid, makeStyles, Theme, useMediaQuery, useTheme } from '@material-ui/core'
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Colors } from '@theme/colors'
-import { FormatHelper } from '@utils/helpers/FormatHelper'
-// import { FORMAT_YEAR_MONTH } from '@constants/common.constants'
-// import moment from 'moment'
+
 import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
+// import ESLoader from '@components/Loader'
+import useLiveStreamReport from './useLiveStreamReport'
+import { CommonHelper, getTimeZone } from '@utils/helpers/CommonHelper'
+import StreamDataItem from './StreamDataItem'
 
-const LiveStreamDataManage = [
-  { id: 0, title: '総配信時間（ｈ）', value: '12' },
-  { id: 1, title: '総視聴時間（ｈ）', value: '12' },
-  { id: 2, title: '合計視聴者数', value: '180' },
-  { id: 3, title: 'チャット人数', value: '150' },
-  { id: 4, title: 'プレミアムチャット人数', value: '2' },
-  { id: 5, title: 'eXeポイント受領総数', value: '1500' },
-]
-
-type StreamDataItemProps = {
-  data?: any
-  containerStyle?: any
-}
 const LiveStreamListContainer: React.FC = () => {
   const classes = useStyles()
   const { t } = useTranslation('common')
   const theme = useTheme()
-
   const isMobile = useMediaQuery(theme.breakpoints.down(576))
   const { width: itemWidthMobile } = useWindowDimensions(48)
-
-  const filterOptionsData = [
-    { label: t('point_management_tab.choosing'), value: '' },
-    { label: '2020年6月', value: '' },
-    { label: '2020年5月', value: '' },
-    { label: '2020年4月', value: '' },
-  ]
-  const [querySelected, setQuerySelected] = useState<string>(null)
-  const [filterOptions, setFilterOptions] = useState(filterOptionsData)
+  const { fetchLiveStreamReportData, itemLiveStreamReport, meta, sortOptionsDateByVideos } = useLiveStreamReport()
+  const [enteredSort, setEnteredSort] = useState<string>('')
 
   useEffect(() => {
-    setFilterOptions(filterOptionsData)
-  }, [])
+    if (enteredSort) {
+      if (enteredSort === t('point_management_tab.choosing')) {
+        fetchLiveStreamReportData({ period: '', timezone: getTimeZone() })
+      } else {
+        fetchLiveStreamReportData({ period: enteredSort, timezone: getTimeZone() })
+      }
+    } else {
+      fetchLiveStreamReportData({ period: '', timezone: getTimeZone() })
+    }
+  }, [enteredSort])
 
-  //set list filter
-  // useEffect(() => {
-  //   if (listFilterData) {
-  //     setFilterOptions(filterOptionsData)
-  //     const newObjects = listFilterData.map((item) => {
-  //       return { label: moment(new Date(item)).format(FORMAT_YEAR_MONTH), value: moment(new Date(item)).format(FORMAT_YEAR_MONTH_FILTER) }
-  //     })
-  //     const newFilterData = filterOptionsData.concat(newObjects)
-  //     setFilterOptions(newFilterData)
-  //   }
-  // }, [listFilterData])
-
-  const handleSelectedQuery = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    setQuerySelected(event.target.value)
+  const onChangeSort = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    setEnteredSort(event.target.value)
   }
-  const StreamDataItem: React.FC<StreamDataItemProps> = ({ data, containerStyle }) => {
+
+  const totalTimeVideo = itemLiveStreamReport['total_time_video'] || 0
+  const totalTimeUserWatch = itemLiveStreamReport['total_time_user_watch'] || 0
+  const totalUserWatch = itemLiveStreamReport['total_user_watch'] || 0
+  const totalUserChat = itemLiveStreamReport['total_user_chat'] || 0
+  const totalUserChatPremium = itemLiveStreamReport['total_user_chat_premium'] || 0
+  const totalPoint = itemLiveStreamReport['total_point'] || 0
+  if (meta.error) {
     return (
-      <Box className={classes.itemContainer} style={containerStyle}>
-        <Typography className={classes.titleStyle} style={{ display: 'inline-block' }}>
-          {data?.title}
-        </Typography>
-        <Typography className={classes.numberStyle}>{FormatHelper.currencyFormat(data?.value)}</Typography>
+      <Box>
+        <HeaderWithButton title={t('live_stream_list_screen.title')} />
       </Box>
     )
   }
-  const renderItem = (item, index) => {
-    return (
-      <React.Fragment key={item?.id.toString() || index}>
-        {isMobile ? (
-          <Box style={{ display: 'flex', width: '100%', paddingLeft: 22, paddingRight: 22, paddingBottom: 20 }}>
-            <StreamDataItem data={item} containerStyle={{ width: itemWidthMobile }} />
-          </Box>
-        ) : (
-          <Grid item xs={6}>
-            <StreamDataItem data={item} />
-          </Grid>
-        )}
-      </React.Fragment>
-    )
-  }
+  // if (!meta.loaded && meta.pending) {
+  //   return (
+  //     <Box display="flex" justifyContent="center" alignItems="center" marginTop="20px">
+  //       <ESLoader />
+  //     </Box>
+  //   )
+  // }
   return (
-    <div>
+    <Box>
       <HeaderWithButton title={t('live_stream_list_screen.title')} />
       <Box className={classes.container}>
         <Grid item xs={12} md={7}>
@@ -96,22 +69,88 @@ const LiveStreamListContainer: React.FC = () => {
             name={'query'}
             disabled={false}
             className={classes.comboBox}
-            value={querySelected}
-            onChange={handleSelectedQuery}
+            value={enteredSort}
+            onChange={onChangeSort}
           >
-            {filterOptions &&
-              filterOptions.map((rule, index) => (
-                <option key={index} value={rule.value}>
-                  {rule.label}
+            {sortOptionsDateByVideos &&
+              sortOptionsDateByVideos.map((date, index) => (
+                <option key={index} value={date}>
+                  {date === t('point_management_tab.choosing') ? date : CommonHelper.formatDateYearMonth(date)}
                 </option>
               ))}
           </ESSelect>
         </Grid>
         <Grid container spacing={2} style={{ marginTop: 16 }}>
-          {LiveStreamDataManage?.map(renderItem)}
+          {isMobile ? (
+            <>
+              <Box style={{ display: 'flex', width: '100%', paddingLeft: 22, paddingRight: 22, paddingBottom: 20 }}>
+                <StreamDataItem
+                  title={t('live_stream_list_screen.total_time_video')}
+                  value={totalTimeVideo}
+                  containerStyle={{ width: itemWidthMobile }}
+                />
+              </Box>
+              <Box style={{ display: 'flex', width: '100%', paddingLeft: 22, paddingRight: 22, paddingBottom: 20 }}>
+                <StreamDataItem
+                  title={t('live_stream_list_screen.total_time_user_watch')}
+                  value={totalTimeUserWatch}
+                  containerStyle={{ width: itemWidthMobile }}
+                />
+              </Box>
+              <Box style={{ display: 'flex', width: '100%', paddingLeft: 22, paddingRight: 22, paddingBottom: 20 }}>
+                <StreamDataItem
+                  title={t('live_stream_list_screen.total_user_watch')}
+                  value={totalUserWatch}
+                  containerStyle={{ width: itemWidthMobile }}
+                />
+              </Box>
+              <Box style={{ display: 'flex', width: '100%', paddingLeft: 22, paddingRight: 22, paddingBottom: 20 }}>
+                <StreamDataItem
+                  title={t('live_stream_list_screen.total_user_chat')}
+                  value={totalUserChat}
+                  containerStyle={{ width: itemWidthMobile }}
+                />
+              </Box>
+              <Box style={{ display: 'flex', width: '100%', paddingLeft: 22, paddingRight: 22, paddingBottom: 20 }}>
+                <StreamDataItem
+                  title={t('live_stream_list_screen.total_user_chat_premium')}
+                  value={totalUserChatPremium}
+                  containerStyle={{ width: itemWidthMobile }}
+                />
+              </Box>
+              <Box style={{ display: 'flex', width: '100%', paddingLeft: 22, paddingRight: 22, paddingBottom: 20 }}>
+                <StreamDataItem
+                  title={t('live_stream_list_screen.total_point')}
+                  value={totalPoint}
+                  containerStyle={{ width: itemWidthMobile }}
+                />
+              </Box>
+            </>
+          ) : (
+            <>
+              <Grid item xs={6}>
+                <StreamDataItem title={t('live_stream_list_screen.total_time_video')} value={totalTimeVideo} />
+              </Grid>
+              <Grid item xs={6}>
+                <StreamDataItem title={t('live_stream_list_screen.total_time_user_watch')} value={totalTimeUserWatch} />
+              </Grid>
+              <Grid item xs={6}>
+                <StreamDataItem title={t('live_stream_list_screen.total_user_watch')} value={totalUserWatch} />
+              </Grid>
+              <Grid item xs={6}>
+                <StreamDataItem title={t('live_stream_list_screen.total_user_chat')} value={totalUserChat} />
+              </Grid>
+              <Grid item xs={6}>
+                <StreamDataItem title={t('live_stream_list_screen.total_user_chat_premium')} value={totalUserChatPremium} />
+              </Grid>
+              <Grid item xs={6}>
+                <StreamDataItem title={t('live_stream_list_screen.total_point')} value={totalPoint} />
+              </Grid>
+            </>
+          )}
         </Grid>
       </Box>
-    </div>
+    </Box>
   )
 }
 

@@ -3,6 +3,7 @@ import {
   GetCategoryResponse,
   GetChannelResponse,
   GetStreamUrlAndKeyResponse,
+  LiveStreamReportResponse,
   LiveStreamSettingResponse,
   SetChannelResponse,
   SetLiveStreamResponse,
@@ -17,6 +18,7 @@ type StateType = {
   getCategory?: GetCategoryResponse
   getChannel?: GetChannelResponse
   setChannel?: SetChannelResponse
+  liveStreamReport?: LiveStreamReportResponse
 }
 const initialState: StateType = {
   getStreamUrlAndKeyInfo: {
@@ -26,6 +28,12 @@ const initialState: StateType = {
       stream_key_value: null,
       stream_url: null,
       stream_key_arn: null,
+    },
+  },
+  liveStreamReport: {
+    data: {
+      date_by_videos: [] || null,
+      item: null,
     },
   },
 }
@@ -52,5 +60,12 @@ export default createReducer(initialState, (builder) => {
     })
     .addCase(actions.setChannel.fulfilled, (state, action) => {
       state.setChannel = action.payload
+    })
+    .addCase(actions.getLiveStreamReport.fulfilled, (state, action) => {
+      if (action.meta.arg.period && action.payload.message === 'success') {
+        state.liveStreamReport.data.item = action.payload.data.item
+      } else {
+        state.liveStreamReport = action.payload
+      }
     })
 })
