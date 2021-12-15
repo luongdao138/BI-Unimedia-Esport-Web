@@ -38,7 +38,7 @@ const LiveStreamContainer: React.FC<Props> = ({ formik }) => {
   const [loading, setLoading] = useState(false)
   const [showResultDialog, setShowResultDialog] = useState(false)
   const [obsStatusDynamo, setObsStatusDynamo] = useState(null)
-  // const [flagStatusDynamo, setFlagStatusDynamo] = useState(false)
+  const [videoStatusDynamo, setVideoStatusDynamo] = useState(null)
 
   const onChangeStep = (step: number, isShare?: boolean, post?: { title: string; content: string }): void => {
     console.log('click next step', step, stateChannelMedia)
@@ -75,8 +75,6 @@ const LiveStreamContainer: React.FC<Props> = ({ formik }) => {
           console.log('=== ONLY MY ARN ===', sub?.value?.data?.onUpdateChannel?.state)
           //@ts-ignore
           setStateChannelMedia(sub?.value?.data?.onUpdateChannel?.state)
-          //@ts-ignore
-          // setObsStatusDynamo(sub?.value?.data?.onUpdateChannel?.obs_status)
         }
       },
       error: (error) => console.warn(error),
@@ -143,6 +141,7 @@ const LiveStreamContainer: React.FC<Props> = ({ formik }) => {
       const videoData = videoRs.data.getVideoByUuid.items.find((item) => item.uuid === videoId)
       console.log('LIVE::queryVideoByUUID===>', videoData, videoRs)
       if (videoData) {
+        setVideoStatusDynamo(videoData?.video_status)
         if (videoData?.process_status === EVENT_LIVE_STATUS.STREAM_OFF) {
           //Updated
           setObsStatusDynamo(0)
@@ -177,6 +176,7 @@ const LiveStreamContainer: React.FC<Props> = ({ formik }) => {
         console.log(updateVideoData)
         if (updateVideoData) {
           if (updateVideoData?.uuid === formik.values?.stepSettingOne?.uuid_clone) {
+            setVideoStatusDynamo(updateVideoData?.video_status)
             if (updateVideoData?.process_status === EVENT_LIVE_STATUS.STREAM_START) {
               //live
               setObsStatusDynamo(1)
@@ -215,6 +215,7 @@ const LiveStreamContainer: React.FC<Props> = ({ formik }) => {
         console.log('LIVE:::createdVideo:', createdVideo, subVideo)
         if (createdVideo) {
           if (createdVideo?.uuid === formik.values?.stepSettingOne?.uuid_clone) {
+            setVideoStatusDynamo(createdVideo?.video_status)
             if (createdVideo?.process_status === EVENT_LIVE_STATUS.STREAM_START) {
               //live
               setObsStatusDynamo(1)
@@ -266,6 +267,7 @@ const LiveStreamContainer: React.FC<Props> = ({ formik }) => {
         visibleLoading={step === 3 && stateChannelMedia && stateChannelMedia !== EVENT_STATE_CHANNEL.RUNNING}
         disableLoader={modal && (stateChannelMedia === EVENT_STATE_CHANNEL.RUNNING || !stateChannelMedia)}
         obsStatusDynamo={obsStatusDynamo}
+        videoStatusDynamo={videoStatusDynamo}
       />
       <ESModal open={modal && showResultDialog} handleClose={handleClose}>
         <BlankLayout>

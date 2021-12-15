@@ -40,6 +40,7 @@ import { CommonHelper } from '@utils/helpers/CommonHelper'
 import ESNumberInputStream from '@components/NumberInput/stream'
 import Linkify from 'react-linkify'
 import SmallLoader from '@components/Loader/SmallLoader'
+import { STATUS_VIDEO } from '@services/videoTop.services'
 
 interface StepsProps {
   step: number
@@ -56,6 +57,7 @@ interface StepsProps {
   visibleLoading?: boolean
   disableLoader?: boolean
   obsStatusDynamo?: string | number
+  videoStatusDynamo?: string | number
 }
 
 const KEY_TYPE = {
@@ -79,6 +81,7 @@ const Steps: React.FC<StepsProps> = ({
   visibleLoading,
   disableLoader,
   obsStatusDynamo,
+  videoStatusDynamo,
 }) => {
   const dispatch = useAppDispatch()
   const { t } = useTranslation(['common'])
@@ -107,11 +110,19 @@ const Steps: React.FC<StepsProps> = ({
   const [dataRenew, setDataRenew] = useState(null)
   const [flagArn, setFlagArn] = useState(false)
   const handleEnableLink = () => {
-    if (status === 1 || (notifyTime && notifyTime <= current) || obsStatusDynamo == TAG_STATUS_RECORD.LIVE_STREAMING) return true
+    if (
+      status === 1 ||
+      (notifyTime && notifyTime <= current) ||
+      (obsStatusDynamo == TAG_STATUS_RECORD.LIVE_STREAMING && stateChannelArn !== EVENT_STATE_CHANNEL.STOPPED)
+    ) {
+      if (obsStatusDynamo == TAG_STATUS_RECORD.UPDATED_NOT_START && videoStatusDynamo == STATUS_VIDEO.OVER_LOAD) return false
+      return true
+    }
+
     return false
   }
 
-  const classes = useStyles({ statusRecord: obsStatusDynamo, isEnable: handleEnableLink() })
+  const classes = useStyles({ statusRecord: obsStatusDynamo, isEnable: handleEnableLink(), channelArn: stateChannelArn, videoStatusDynamo })
 
   const formRef = {
     title: useRef(null),
@@ -389,7 +400,10 @@ const Steps: React.FC<StepsProps> = ({
   }
 
   const handleNavigateToDetailLink = () => {
-    if (status === 1 || (notifyTime && notifyTime <= current) || obsStatusDynamo == TAG_STATUS_RECORD.LIVE_STREAMING) {
+    if (
+      (status === 1 || (notifyTime && notifyTime <= current) || obsStatusDynamo == TAG_STATUS_RECORD.LIVE_STREAMING) &&
+      stateChannelArn !== EVENT_STATE_CHANNEL.STOPPED
+    ) {
       window.open(`${baseViewingURL}${formik?.values?.stepSettingTwo?.uuid}`, '_blank')
     }
   }
@@ -411,9 +425,12 @@ const Steps: React.FC<StepsProps> = ({
             <Box className={classes.firstItem} display="flex" flexDirection="row" alignItems="center">
               <div className={classes.dot} />
               <Typography className={classes.textTagStatus}>
-                {obsStatusDynamo == TAG_STATUS_RECORD.CREATED_n || obsStatusDynamo == TAG_STATUS_RECORD.CREATED_in
+                {obsStatusDynamo == TAG_STATUS_RECORD.CREATED_n ||
+                obsStatusDynamo == TAG_STATUS_RECORD.CREATED_in ||
+                (obsStatusDynamo == TAG_STATUS_RECORD.LIVE_STREAMING && stateChannelArn === EVENT_STATE_CHANNEL.STOPPED) ||
+                (obsStatusDynamo == TAG_STATUS_RECORD.UPDATED_NOT_START && videoStatusDynamo == '3')
                   ? i18n.t('common:streaming_setting_screen.status_tag_created')
-                  : obsStatusDynamo == TAG_STATUS_RECORD.UPDATED_NOT_START
+                  : obsStatusDynamo == TAG_STATUS_RECORD.UPDATED_NOT_START && videoStatusDynamo == '0'
                   ? i18n.t('common:streaming_setting_screen.status_tag_updated')
                   : i18n.t('common:streaming_setting_screen.status_tag_live_streaming')}
               </Typography>
@@ -1486,10 +1503,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     width: '494px',
   },
-  dot: (props: { statusRecord?: number | string; isEnable?: boolean }) => ({
+  dot: (props: { statusRecord?: number | string; isEnable?: boolean; channelArn?: string; videoStatusDynamo?: string }) => ({
     width: 12,
     height: 12,
-    background: props.statusRecord === TAG_STATUS_RECORD.LIVE_STREAMING ? '#FF0000' : 'rgba(255,255,255,0.7)',
+    background:
+      props.statusRecord === TAG_STATUS_RECORD.LIVE_STREAMING && props.channelArn !== EVENT_STATE_CHANNEL.STOPPED
+        ? '#FF0000'
+        : props.statusRecord === TAG_STATUS_RECORD.UPDATED_NOT_START && props.videoStatusDynamo == '3'
+        ? '#707070'
+        : 'rgba(255,255,255,0.7)',
     borderRadius: 6,
     marginRight: 6,
   }),
@@ -1503,9 +1525,22 @@ const useStyles = makeStyles((theme: Theme) => ({
   linkVideoIcon: {
     fontSize: 14,
   },
-  urlCopyTag: (props: { statusRecord?: number | string; isEnable?: boolean }) => ({
+  urlCopyTag: (props: {
+    statusRecord?: number | string
+    isEnable?: boolean
+    channelArn?: string
+    videoStatusDynamo?: string | number
+  }) => ({
     paddingLeft: 12,
-    cursor: props.isEnable ? 'pointer' : 'not-allowed',
-    color: props.isEnable ? '#FF4786' : 'rgba(255,255,255,0.7)',
+    cursor: props.isEnable
+      ? 'pointer'
+      : props.statusRecord === TAG_STATUS_RECORD.UPDATED_NOT_START && props.videoStatusDynamo == STATUS_VIDEO.OVER_LOAD
+      ? 'not-allowed'
+      : 'not-allowed',
+    color: props.isEnable
+      ? '#FF4786'
+      : props.statusRecord === TAG_STATUS_RECORD.UPDATED_NOT_START && props.videoStatusDynamo == STATUS_VIDEO.OVER_LOAD
+      ? 'rgba(255,255,255,0.7)'
+      : 'rgba(255,255,255,0.7)',
   }),
 }))

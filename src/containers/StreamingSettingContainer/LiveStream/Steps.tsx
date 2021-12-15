@@ -53,6 +53,7 @@ interface StepsProps {
   visibleLoading?: boolean
   disableLoader?: boolean
   obsStatusDynamo?: string | number
+  videoStatusDynamo?: string | number
 }
 const KEY_TYPE = {
   URL: 1,
@@ -72,6 +73,7 @@ const Steps: React.FC<StepsProps> = ({
   visibleLoading,
   disableLoader,
   obsStatusDynamo,
+  videoStatusDynamo,
 }) => {
   const dispatch = useAppDispatch()
   const { t } = useTranslation(['common'])
@@ -89,7 +91,7 @@ const Steps: React.FC<StepsProps> = ({
   const [clickShowText, setClickShowText] = useState(false)
   const [renewData, setRenewData] = useState(null)
   // const [statusTag, setStatusTag] = useState<number>(0)
-  const classes = useStyles({ statusRecord: obsStatusDynamo, channelArn: stateChannelArn })
+  const classes = useStyles({ statusRecord: obsStatusDynamo, channelArn: stateChannelArn, videoStatusDynamo })
 
   useEffect(() => {
     // getLiveSetting()
@@ -353,7 +355,7 @@ const Steps: React.FC<StepsProps> = ({
   return (
     <Box py={4} className={classes.container}>
       <Box className={classes.formContainer}>
-        {obsStatusDynamo === null ? (
+        {obsStatusDynamo === null && stateChannelArn === null ? (
           <div
             style={{
               margin: '10px 0 0 10px',
@@ -369,9 +371,10 @@ const Steps: React.FC<StepsProps> = ({
               <Typography className={classes.textTagStatus}>
                 {obsStatusDynamo == TAG_STATUS_RECORD.CREATED_n ||
                 obsStatusDynamo == TAG_STATUS_RECORD.CREATED_in ||
-                (obsStatusDynamo == TAG_STATUS_RECORD.LIVE_STREAMING && stateChannelArn === EVENT_STATE_CHANNEL.STOPPED)
+                (obsStatusDynamo == TAG_STATUS_RECORD.LIVE_STREAMING && stateChannelArn === EVENT_STATE_CHANNEL.STOPPED) ||
+                (obsStatusDynamo == TAG_STATUS_RECORD.UPDATED_NOT_START && videoStatusDynamo == '3')
                   ? i18n.t('common:streaming_setting_screen.status_tag_created')
-                  : obsStatusDynamo == TAG_STATUS_RECORD.UPDATED_NOT_START
+                  : obsStatusDynamo == TAG_STATUS_RECORD.UPDATED_NOT_START && videoStatusDynamo == '0'
                   ? i18n.t('common:streaming_setting_screen.status_tag_updated')
                   : i18n.t('common:streaming_setting_screen.status_tag_live_streaming')}
               </Typography>
@@ -1090,11 +1093,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     width: '494px',
   },
-  dot: (props: { statusRecord?: number | string; channelArn?: string }) => ({
+  dot: (props: { statusRecord?: number | string; channelArn?: string; videoStatusDynamo?: string }) => ({
     width: 12,
     height: 12,
     background:
-      props.statusRecord === TAG_STATUS_RECORD.LIVE_STREAMING && props.channelArn !== EVENT_STATE_CHANNEL.STOPPED ? '#FF0000' : '#707070',
+      props.statusRecord === TAG_STATUS_RECORD.LIVE_STREAMING && props.channelArn !== EVENT_STATE_CHANNEL.STOPPED
+        ? '#FF0000'
+        : props.statusRecord === TAG_STATUS_RECORD.UPDATED_NOT_START && props.videoStatusDynamo == '3'
+        ? '#707070'
+        : '#707070',
     borderRadius: 6,
     marginRight: 6,
   }),
@@ -1108,15 +1115,17 @@ const useStyles = makeStyles((theme: Theme) => ({
   linkVideoIcon: {
     fontSize: 14,
   },
-  urlCopyTag: (props: { statusRecord?: number | string; channelArn?: string }) => ({
+  urlCopyTag: (props: { statusRecord?: number | string; channelArn?: string; videoStatusDynamo?: string | number }) => ({
     paddingLeft: 12,
     cursor:
-      props.statusRecord === (TAG_STATUS_RECORD.LIVE_STREAMING || props.statusRecord === TAG_STATUS_RECORD.UPDATED_NOT_START) &&
+      (props.statusRecord === TAG_STATUS_RECORD.LIVE_STREAMING ||
+        (props.statusRecord === TAG_STATUS_RECORD.UPDATED_NOT_START && props.videoStatusDynamo == 0)) &&
       props.channelArn !== EVENT_STATE_CHANNEL.STOPPED
         ? 'pointer'
         : 'not-allowed',
     color:
-      props.statusRecord === (TAG_STATUS_RECORD.LIVE_STREAMING || props.statusRecord === TAG_STATUS_RECORD.UPDATED_NOT_START) &&
+      (props.statusRecord === TAG_STATUS_RECORD.LIVE_STREAMING ||
+        (props.statusRecord === TAG_STATUS_RECORD.UPDATED_NOT_START && props.videoStatusDynamo == 0)) &&
       props.channelArn !== EVENT_STATE_CHANNEL.STOPPED
         ? '#FF4786'
         : '#B5B5B5',
