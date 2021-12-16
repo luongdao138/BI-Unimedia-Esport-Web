@@ -1,6 +1,6 @@
 import MainLayout from '@layouts/MainLayout'
 import { DetailContainer } from '@containers/Lobby'
-import TwitterHead from '@components/TwitterHead'
+import PageWithLayoutType from '@constants/page'
 import { AppDispatch, storeWrapper } from '@store/store'
 import i18n from '@locales/i18n'
 
@@ -21,19 +21,11 @@ export const getServerSideProps = storeWrapper.getServerSideProps(async ({ store
   }
 })
 
-interface Props {
-  image: string
-  title: string
-}
-
-const LobbyPage: React.FC<Props> = ({ image, title }) => {
+const LobbyPage: PageWithLayoutType = () => {
   return (
-    <>
-      <TwitterHead title={title} image={image} />
-      <MainLayout loginRequired={false}>
-        <DetailContainer />
-      </MainLayout>
-    </>
+    <MainLayout loginRequired={false}>
+      <DetailContainer />
+    </MainLayout>
   )
 }
 

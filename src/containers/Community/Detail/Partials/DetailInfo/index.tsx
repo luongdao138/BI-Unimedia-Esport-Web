@@ -310,9 +310,8 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, showTopicListAndSearch
             </Box>
             <ESTwitterShareButton
               title={detail.attributes.name}
-              url={`${window.location.toString()}/?utm_source=twitter&utm_medium=social&utm_campaign=community&utm_content=${
-                data.hash_key
-              }`}
+              utm={`utm_source=twitter&utm_medium=social&utm_campaign=community&utm_content=${data.hash_key}`}
+              url={window.location.toString()}
               hashtags={['eXeLAB', 'エグゼラボ', 'コミュニティ']}
             />
           </Box>
