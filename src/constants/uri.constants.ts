@@ -175,4 +175,8 @@ export const URI = {
   VIDEOS: '/v2/videos/',
   FOLLOW_CHANNEL: '/v2/channels/follow',
   LOBBY_RECOMMENDED: '/v2/recruitments/recommendations',
+
+  // Report Live Stream
+  FINANCIAL_STATEMENT_YEAR: '/v2/report/money-year',
+  FINANCIAL_STATEMENT_DETAIL: '/v2/report/money-month-detail',
 }

@@ -3,6 +3,12 @@ import { Dialog } from '@store/common/actions/types'
 import { ConfirmOptions } from '@components/Confirm/types'
 
 export const debounceTime = 700
+export const LIMIT_FINANCIAL_STATEMENT = 25
+export const FINANCIAL_STATUS_TITLE = {
+  CONFIRM: i18n.t('common:payment_information_screen.confirm_status_title'),
+  SCHEDULE: i18n.t('common:payment_information_screen.schedule_status_title'),
+}
+
 export const searchTypes = {
   USER: 1,
   COMMUNITY: 2,
