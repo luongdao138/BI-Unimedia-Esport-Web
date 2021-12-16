@@ -259,7 +259,7 @@ const useStyles = makeStyles((theme) => ({
   summarImageWrapper: {
     position: 'relative',
     borderRadius: 8,
-    paddingTop: '28%',
+    paddingTop: '56.25%',
     overflow: 'hidden',
     zIndex: 2,
     backgroundColor: Colors.black,

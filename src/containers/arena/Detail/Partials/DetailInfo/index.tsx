@@ -91,8 +91,9 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
               </Box>
               <ESTwitterShareButton
                 title={detail.attributes.title}
-                url={`${window.location.toString()}/?utm_source=twitter&utm_medium=social&utm_campaign=arena&utm_content=${data.hash_key}`}
-                hashtags={['eXeLAB', 'エグゼラボ', '大会']}
+                utm={`utm_source=twitter&utm_medium=social&utm_campaign=arena&utm_content=${detail.id}`}
+                url={window.location.toString()}
+                games={data.game_title}
               />
             </Box>
           )}
