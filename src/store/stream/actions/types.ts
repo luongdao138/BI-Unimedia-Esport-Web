@@ -6,4 +6,5 @@ export const ACTION_STREAM_TYPES = {
   GET_CATEGORY: 'streaming/category',
   GET_CHANNEL: 'streaming/channel',
   SET_CHANNEL: 'streaming/setChannel',
+  GET_LIVE_STREAM_REPORT: 'streaming/getLiveStreamReport',
 }

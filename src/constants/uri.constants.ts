@@ -154,6 +154,7 @@ export const URI = {
   GET_CATEGORY: '/v2/categories',
   GET_CHANNEL: '/v2/channels',
   SET_CHANNEL: '/v2/channels',
+  GET_LIVE_STREAM_REPORT: '/v2/report/livestream-report',
   //video top
   GET_LIST_VIDEO_TOP: '/v2/videos/top',
   GET_CATEGORY_POPULAR_VIDEO: '/v2/categories/hot',
