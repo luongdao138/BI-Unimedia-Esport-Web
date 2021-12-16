@@ -174,4 +174,8 @@ export const URI = {
   VIDEOS: '/v2/videos/',
   FOLLOW_CHANNEL: '/v2/channels/follow',
   LOBBY_RECOMMENDED: '/v2/recruitments/recommendations',
+  //streamer_archive_video
+  GET_STREAMER_LIST_ARCHIVE: '/v2/report/archived',
+  GET_STREAMER_ARCHIVE_DETAIL: '/v2/report/archived-detail',
+  UPDATE_ARCHIVE_VIDEO: '/v2/report/archived-save-detail',
 }

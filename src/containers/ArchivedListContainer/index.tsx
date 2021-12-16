@@ -9,6 +9,14 @@ import { Colors } from '@theme/colors'
 import { ESRoutes } from '@constants/route.constants'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import useArchivedList from '@containers/ArchivedListContainer/useArchivedList'
+import React, { useEffect, useState } from 'react'
+import useCommonData from '@containers/Lobby/UpsertForm/useCommonData'
+import { getTimeZone } from '@utils/helpers/CommonHelper'
+import moment from 'moment'
+import { FORMAT_DATE_TIME_JP } from '@constants/common.constants'
+
+const ITEM_PER_PAGE = 10
 
 const ArchivedListContainer: React.FC = () => {
   const router = useRouter()
@@ -20,168 +28,215 @@ const ArchivedListContainer: React.FC = () => {
 
   const colFirstWidth = 160
   const isSmallScreen = useMediaQuery(theme.breakpoints.down(475))
-  const archivedList = Array(5).fill('')
-
-  const redirectArchivedDetail = () => {
-    router.push(ESRoutes.ARCHIVE_DETAIL)
+  // const archivedList = Array(5).fill('')
+  const redirectArchivedDetail = (uuid, scheduledFlag) => () => {
+    router.push({
+      pathname: ESRoutes.ARCHIVE_DETAIL,
+      query: { uuid, scheduledFlag },
+    })
   }
+
+  const { videoArchivedList, getVideoArchivedList } = useArchivedList()
+  const { user } = useCommonData()
+  const [page, setPage] = useState(1)
+  const getArchiveList = () => {
+    if (!videoArchivedList) {
+      return []
+    }
+    const { videos } = videoArchivedList
+    return videos.slice(ITEM_PER_PAGE * (page - 1), ITEM_PER_PAGE * page)
+  }
+
+  const fetchArchiveListRequestParams = () => {
+    return {
+      user_id: user?.id,
+      timezone: getTimeZone(),
+    }
+  }
+
+  useEffect(() => {
+    getVideoArchivedList(fetchArchiveListRequestParams())
+  }, [])
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const renderRow = (rowData) => {
+    const {
+      live_stream_start_time: startTime,
+      publish_flag: publishFlag,
+      title,
+      num_counted_user: countedUser = '0',
+      total_chat: totalChat = '0',
+      total_point_chat: totalPoint = '0',
+      thumbnail,
+      uuid,
+      scheduled_flag: scheduledFlag,
+    } = rowData
+
+    return (
+      <Box className={classes.wrapItem} key={rowData?.uuid} onClick={isMobile ? redirectArchivedDetail(uuid, scheduledFlag) : null}>
+        <table className={classes.outerTable}>
+          <colgroup>
+            <col style={{ width: colFirstWidth }} />
+            <col style={{ width: 'auto' }} />
+          </colgroup>
+          <tbody>
+            <tr>
+              {!isMobile && <td>{t('archived_list_screen.delivery_date_time')}</td>}
+              <td colSpan={isMobile ? 2 : 1}>
+                <Box display="flex" justifyContent="space-between">
+                  <Box className={classes.empty}>{moment(startTime).format(FORMAT_DATE_TIME_JP)}</Box>
+                  <Link href={{ pathname: ESRoutes.ARCHIVE_DETAIL, query: { uuid, scheduledFlag } }}>
+                    <Box className={classes.release}>
+                      <Typography component="span" style={{ cursor: 'pointer' }}>
+                        {publishFlag === 1 ? t('archived_list_screen.release') : t('archived_list_screen.not_release')}
+                      </Typography>{' '}
+                    </Box>
+                  </Link>
+                </Box>
+              </td>
+            </tr>
+
+            <tr>
+              {!isMobile && <td>{t('archived_list_screen.titleVideo')}</td>}
+              <td colSpan={isMobile ? 2 : 1}>
+                <Box className={`${classes.titleVideo} ${classes.textEllipsis}`}>
+                  {isMobile && (
+                    <Typography component="span">
+                      <div>{title}</div>
+                    </Typography>
+                  )}
+                  {!isMobile && (
+                    <ESTooltip title="Title" arrow placement="top-start">
+                      <div>{title}</div>
+                    </ESTooltip>
+                  )}
+                </Box>
+              </td>
+            </tr>
+            <tr>
+              <td style={{ verticalAlign: 'bottom', paddingRight: 10 }} className={classes.wrapImage}>
+                <img src={thumbnail ?? IMG_PLACEHOLDER} className={classes.image} />
+              </td>
+              <td>
+                <table className={classes.innerTable}>
+                  {!isMobile && (
+                    <colgroup>
+                      <col style={{ width: 'auto' }} />
+                      <col style={{ width: 127 }} />
+                      <col style={{ width: 200 }} />
+                    </colgroup>
+                  )}
+                  <tbody>
+                    <tr>
+                      {!isMobile && (
+                        <>
+                          <td rowSpan={3} className={classes.cellIcons}>
+                            <Box mr={1} component="span">
+                              <img src={'/images/icons/download.svg'} className={classes.imageReload} />
+                            </Box>
+                            <img src={'/images/icons/trash.svg'} className={classes.imageReload} />
+                          </td>
+                          <td>
+                            <Box>{t('archived_list_screen.viewNumber')}</Box>
+                          </td>
+                        </>
+                      )}
+                      <td colSpan={isMobile ? 3 : 1}>
+                        <Box pl={0.5}>
+                          <Typography component="span" className={classes.wordBreak}>
+                            {FormatHelper.currencyFormat(countedUser ?? '0')} {t('archived_list_screen.times')}
+                          </Typography>
+                        </Box>
+                      </td>
+                    </tr>
+                    <tr>
+                      {!isMobile && (
+                        <td>
+                          <Box>{t('archived_list_screen.commentNumber')}</Box>
+                        </td>
+                      )}
+                      <td colSpan={isMobile ? 3 : 1}>
+                        <Box pl={0.5}>
+                          <Typography component="span" className={classes.wordBreak}>
+                            {FormatHelper.currencyFormat(totalChat ?? '0')} {t('live_stream_screen.comment')}
+                          </Typography>
+                        </Box>
+                      </td>
+                    </tr>
+                    <tr>
+                      {!isMobile && (
+                        <td>
+                          <Box>{t('archived_list_screen.receivedPointNumber')}</Box>
+                        </td>
+                      )}
+                      <td colSpan={isMobile ? 3 : 1}>
+                        <Box pl={0.5}>
+                          <Typography component="span" className={classes.wordBreak}>
+                            {FormatHelper.currencyFormat(totalPoint ?? '0')} {t('common.eXe_points')}
+                          </Typography>
+                        </Box>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </Box>
+    )
+  }
+
+  const getTotalPage = () => Math.ceil(videoArchivedList.videos.length / ITEM_PER_PAGE)
+
+  const onChangePage = (_, value: number): void => {
+    setPage(value)
+  }
+
   return (
     <div>
       <HeaderWithButton title={t('archived_list_screen.title')} />
       <Box className={classes.wrapper}>
-        {archivedList.length > 0 && (
+        {getArchiveList().length > 0 && (
           <Box className={classes.paginationContainerTop}>
             <Pagination
               showFirstButton
               showLastButton
               defaultPage={1}
-              page={1}
-              count={2}
+              page={page}
+              count={getTotalPage()}
               variant="outlined"
               shape="rounded"
               className={classes.paginationStyle}
               siblingCount={1}
               size={isSmallScreen ? 'small' : 'medium'}
+              onChange={onChangePage}
             />
           </Box>
         )}
 
         <Box className={classes.container}>
-          {archivedList.length > 0 &&
-            archivedList.map((k) => {
-              return (
-                <Box className={classes.wrapItem} key={k} onClick={isMobile ? redirectArchivedDetail : null}>
-                  <table className={classes.outerTable}>
-                    <colgroup>
-                      <col style={{ width: colFirstWidth }} />
-                      <col style={{ width: 'auto' }} />
-                    </colgroup>
-                    <tbody>
-                      <tr>
-                        {!isMobile && <td>{t('archived_list_screen.delivery_date_time')}</td>}
-                        <td colSpan={isMobile ? 2 : 1}>
-                          <Box display="flex" justifyContent="space-between">
-                            <Box className={classes.empty}>2021年7月1日 15:40</Box>
-                            <Link href={{ pathname: ESRoutes.ARCHIVE_DETAIL }}>
-                              <Box className={classes.release}>
-                                <Typography component="span" style={{ cursor: 'pointer' }}>
-                                  {t('archived_list_screen.release')}
-                                </Typography>{' '}
-                              </Box>
-                            </Link>
-                          </Box>
-                        </td>
-                      </tr>
-
-                      <tr>
-                        {!isMobile && <td>{t('archived_list_screen.titleVideo')}</td>}
-                        <td colSpan={isMobile ? 2 : 1}>
-                          <Box className={`${classes.titleVideo} ${classes.textEllipsis}`}>
-                            {isMobile && (
-                              <Typography component="span">
-                                <div>Title</div>
-                              </Typography>
-                            )}
-                            {!isMobile && (
-                              <ESTooltip title="Title" arrow placement="top-start">
-                                <div>Title</div>
-                              </ESTooltip>
-                            )}
-                          </Box>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td style={{ verticalAlign: 'bottom', paddingRight: 10 }} className={classes.wrapImage}>
-                          <img src={IMG_PLACEHOLDER} className={classes.image} />
-                        </td>
-                        <td>
-                          <table className={classes.innerTable}>
-                            {!isMobile && (
-                              <colgroup>
-                                <col style={{ width: 'auto' }} />
-                                <col style={{ width: 127 }} />
-                                <col style={{ width: 200 }} />
-                              </colgroup>
-                            )}
-                            <tbody>
-                              <tr>
-                                {!isMobile && (
-                                  <>
-                                    <td rowSpan={3} className={classes.cellIcons}>
-                                      <Box mr={1} component="span">
-                                        <img src={'/images/icons/download.svg'} className={classes.imageReload} />
-                                      </Box>
-                                      <img src={'/images/icons/trash.svg'} className={classes.imageReload} />
-                                    </td>
-                                    <td>
-                                      <Box>{t('archived_list_screen.viewNumber')}</Box>
-                                    </td>
-                                  </>
-                                )}
-                                <td colSpan={isMobile ? 3 : 1}>
-                                  <Box pl={0.5}>
-                                    <Typography component="span" className={classes.wordBreak}>
-                                      {FormatHelper.currencyFormat('123456789123')} {t('archived_list_screen.times')}
-                                    </Typography>
-                                  </Box>
-                                </td>
-                              </tr>
-                              <tr>
-                                {!isMobile && (
-                                  <td>
-                                    <Box>{t('archived_list_screen.commentNumber')}</Box>
-                                  </td>
-                                )}
-                                <td colSpan={isMobile ? 3 : 1}>
-                                  <Box pl={0.5}>
-                                    <Typography component="span" className={classes.wordBreak}>
-                                      {FormatHelper.currencyFormat('123456789123')} {t('live_stream_screen.comment')}
-                                    </Typography>
-                                  </Box>
-                                </td>
-                              </tr>
-                              <tr>
-                                {!isMobile && (
-                                  <td>
-                                    <Box>{t('archived_list_screen.receivedPointNumber')}</Box>
-                                  </td>
-                                )}
-                                <td colSpan={isMobile ? 3 : 1}>
-                                  <Box pl={0.5}>
-                                    <Typography component="span" className={classes.wordBreak}>
-                                      {FormatHelper.currencyFormat('123456789123')} {t('common.eXe_points')}
-                                    </Typography>
-                                  </Box>
-                                </td>
-                              </tr>
-                            </tbody>
-                          </table>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </Box>
-              )
-            })}
-          {archivedList.length === 0 && (
+          {getArchiveList().length > 0 && getArchiveList().map((k) => renderRow(k))}
+          {getArchiveList().length === 0 && (
             <Box>
               <Typography>{t('archived_list_screen.no_archive')}</Typography>
             </Box>
           )}
         </Box>
-        {archivedList.length > 0 && (
+        {getArchiveList().length > 0 && (
           <Box className={classes.paginationContainerBottom}>
             <Pagination
               showFirstButton
               showLastButton
               defaultPage={1}
-              page={1}
-              count={2}
+              page={page}
+              count={getTotalPage()}
               variant="outlined"
               shape="rounded"
               className={classes.paginationStyle}
               siblingCount={1}
               size={isSmallScreen ? 'small' : 'medium'}
+              onChange={onChangePage}
             />
           </Box>
         )}
@@ -218,7 +273,7 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     borderRadius: '5px',
     border: '1px solid rgb(255 255 255 / 30%)',
-    background: '#000',
+    background: '#000000',
     padding: '16px',
   },
   wrapItem: {
@@ -290,7 +345,7 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
   },
   release: {
-    color: '#ff4786',
+    color: '#FF4786',
     marginRight: 8,
   },
   cellIcons: {
@@ -316,7 +371,7 @@ const useStyles = makeStyles((theme) => ({
       margin: '24px 30px 24px 30px',
     },
     wrapItem: {
-      background: '#000',
+      background: '#000000',
       padding: '8px 12px 5px 12px',
       '& table': {
         '& tr': {

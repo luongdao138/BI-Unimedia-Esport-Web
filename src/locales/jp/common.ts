@@ -1477,6 +1477,7 @@ export default {
     title: 'アーカイブ一覧',
     delivery_date_time: '配信日時',
     release: '公開',
+    not_release: '非公開',
     titleVideo: 'タイトル',
     viewNumber: '視聴数',
     commentNumber: 'コメント数',
