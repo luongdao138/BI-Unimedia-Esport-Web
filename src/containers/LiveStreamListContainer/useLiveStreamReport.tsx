@@ -21,14 +21,14 @@ const useLiveStreamReport = () => {
   const liveStreamReport = useAppSelector(selectors.getLiveStreamReportSelector)
   const meta = useAppSelector(getLiveStreamReportMeta)
   const itemLiveStreamReport = liveStreamReport?.data?.item ? liveStreamReport?.data?.item : {}
-  const dateByVideos = liveStreamReport?.data?.date_by_videos
-  const sortOptionsDateByVideos = [t('point_management_tab.choosing'), ...checkNotNull(dateByVideos)]
+  const listDates = liveStreamReport?.data?.list_dates
+  const sortOptionsListDates = [t('point_management_tab.choosing'), ...checkNotNull(listDates)]
 
   const fetchLiveStreamReportData = (param: LiveStreamReportParams) => {
     dispatch(actions.getLiveStreamReport(param))
   }
 
-  return { fetchLiveStreamReportData, sortOptionsDateByVideos, itemLiveStreamReport, meta }
+  return { fetchLiveStreamReportData, sortOptionsListDates, itemLiveStreamReport, meta }
 }
 
 export default useLiveStreamReport

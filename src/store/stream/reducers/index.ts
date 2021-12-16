@@ -32,7 +32,7 @@ const initialState: StateType = {
   },
   liveStreamReport: {
     data: {
-      date_by_videos: [] || null,
+      list_dates: [] || null,
       item: null,
     },
   },

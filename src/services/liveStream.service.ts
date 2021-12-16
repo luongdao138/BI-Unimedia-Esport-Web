@@ -222,7 +222,7 @@ export type LiveStreamReportResponse = {
   code?: number
   message?: string
   data?: {
-    date_by_videos: Array<string>
+    list_dates: Array<string>
     item: {
       total_time_video: number
       total_time_user_watch: number

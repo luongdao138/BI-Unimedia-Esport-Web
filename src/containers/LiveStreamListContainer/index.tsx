@@ -17,7 +17,7 @@ const LiveStreamListContainer: React.FC = () => {
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down(576))
   const { width: itemWidthMobile } = useWindowDimensions(48)
-  const { fetchLiveStreamReportData, itemLiveStreamReport, meta, sortOptionsDateByVideos } = useLiveStreamReport()
+  const { fetchLiveStreamReportData, itemLiveStreamReport, meta, sortOptionsListDates } = useLiveStreamReport()
   const [enteredSort, setEnteredSort] = useState<string>('')
 
   useEffect(() => {
@@ -72,8 +72,8 @@ const LiveStreamListContainer: React.FC = () => {
             value={enteredSort}
             onChange={onChangeSort}
           >
-            {sortOptionsDateByVideos &&
-              sortOptionsDateByVideos.map((date, index) => (
+            {sortOptionsListDates &&
+              sortOptionsListDates.map((date, index) => (
                 <option key={index} value={date}>
                   {date === t('point_management_tab.choosing') ? date : CommonHelper.formatDateYearMonth(date)}
                 </option>
