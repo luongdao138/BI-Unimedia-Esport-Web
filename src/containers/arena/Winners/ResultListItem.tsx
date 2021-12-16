@@ -4,6 +4,7 @@ import { Colors } from '@theme/colors'
 import { TournamentHelper } from '@utils/helpers/TournamentHelper'
 import { useArenaResult } from './ResultList'
 import { memo } from 'react'
+import { useTranslation } from 'react-i18next'
 
 interface ResultListItemProps {
   position: number
@@ -18,11 +19,12 @@ interface ResultListItemProps {
 const ResultListItem: React.FC<ResultListItemProps> = ({ position, avatar, onClickAvatar, name, nameSecondary, score, undefeated }) => {
   const classes = useStyles()
   const rule = useArenaResult()
+  const { t } = useTranslation()
 
   const renderScore = () => {
     if (rule === 'score_attack' || rule === 'time_attack') {
       if (undefeated) {
-        return '—'
+        return t('common:arena.undefeated')
       }
       if (score !== null) {
         return TournamentHelper.formatArenaScore(score, rule)
