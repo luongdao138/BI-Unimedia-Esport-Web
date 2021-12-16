@@ -15,10 +15,10 @@ import { useAppSelector } from '@store/hooks'
 import userProfileStore from '@store/userProfile'
 import { UserProfile } from '@services/user.service'
 import API, { GraphQLResult, graphqlOperation } from '@aws-amplify/api'
-import { getUsersByUuid, getMessagesByVideoId } from 'src/graphql/queries'
-import { createMessage, createUser, updateMessage, updateUser } from 'src/graphql/mutations'
 // import { createMessage, deleteMessage } from "src/graphql/mutations";
-import { onCreateMessage, onUpdateMessage } from 'src/graphql/subscriptions'
+const { getUsersByUuid, getMessagesByVideoId } = require(`src/graphql.${process.env.NEXT_PUBLIC_AWS_ENV}/queries`)
+const { onCreateMessage, onUpdateMessage } = require(`src/graphql.${process.env.NEXT_PUBLIC_AWS_ENV}/subscriptions`)
+const { createMessage, createUser, updateMessage, updateUser } = require(`src/graphql.${process.env.NEXT_PUBLIC_AWS_ENV}/mutations`)
 import * as APIt from 'src/types/graphqlAPI'
 import useDetailVideo from '../useDetailVideo'
 import usePurchaseTicketSuperChat from '../usePurchaseTicket'

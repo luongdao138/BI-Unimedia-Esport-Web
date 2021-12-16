@@ -29,9 +29,8 @@ import { STATUS_VIDEO } from '@services/videoTop.services'
 import { useAppSelector } from '@store/hooks'
 import { getIsAuthenticated } from '@store/auth/selectors'
 import { ESRoutes } from '@constants/route.constants'
-import { getVideoByUuid } from 'src/graphql/queries'
-import { onUpdateVideo } from 'src/graphql/subscriptions'
-// import { createVideo } from 'src/graphql/mutations'
+const { getVideoByUuid } = require(`src/graphql.${process.env.NEXT_PUBLIC_AWS_ENV}/queries`)
+const { onUpdateVideo, onUpdateChannel } = require(`src/graphql.${process.env.NEXT_PUBLIC_AWS_ENV}/subscriptions`)
 import * as APIt from 'src/types/graphqlAPI'
 import API, { GraphQLResult, graphqlOperation } from '@aws-amplify/api'
 import { EVENT_LIVE_STATUS, LIVE_VIDEO_TYPE } from '@constants/common.constants'
@@ -39,7 +38,6 @@ import DialogLoginContainer from '@containers/DialogLogin'
 import _ from 'lodash'
 import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
 import LiveStreamContent from './LiveStreamContent'
-import { onUpdateChannel } from 'src/graphql/subscriptions'
 import { PurchaseTicketParams } from '@services/points.service'
 
 enum TABS {

@@ -3,7 +3,6 @@ import { Box, makeStyles, Typography, CircularProgress, Icon } from '@material-u
 import ESMenuItem from '@components/Menu/MenuItem'
 import { useTranslation } from 'react-i18next'
 import ESMenu from '@components/Menu'
-// import * as APIt from 'src/types/graphqlAPI'
 import _ from 'lodash'
 import { STATUS_SEND_MESS } from '@constants/common.constants'
 import { STATUS_VIDEO } from '@services/videoTop.services'
