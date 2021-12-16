@@ -15,20 +15,22 @@ const ESTwitterShareButton: React.FC<TwitterShareButtonProps> = (props) => {
   const { query } = router
   const shareURL = query?.utm_source === 'twitter' ? url : `${url}/?${utm}`
 
+  const trimAllSpace = (str) => str.replaceAll(/\s/g, '')
+
   const getHashTags = (() => {
-    const hashtags = ['eXeLAB', 'エグゼラボ']
+    let hashtags = '#eXeLAB #エグゼラボ'
     if (_.isArray(games) && games.length) {
       games.forEach((game) => {
-        hashtags.push(game?.display_name.replaceAll(/\s/g, ''))
+        hashtags += ` #${trimAllSpace(game?.display_name)}`
       })
-      return hashtags
+    } else if (games.data) {
+      hashtags += ` #${trimAllSpace(games?.data?.attributes?.display_name)}`
     }
-    if (games.data) return [...hashtags, _.trim(games?.data?.attributes?.display_name.replaceAll(/\s/g, ''))]
     return hashtags
   })()
 
   return (
-    <TwitterShareButton title={_.defaultTo(title, '')} url={_.defaultTo(shareURL, '')} hashtags={getHashTags} windowHeight={600}>
+    <TwitterShareButton title={_.defaultTo(`${title} ${getHashTags}`, '')} url={_.defaultTo(shareURL, '')} windowHeight={600}>
       <TwitterIcon round size={23} style={{ marginLeft: 12 }} />
     </TwitterShareButton>
   )
