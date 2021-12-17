@@ -17,11 +17,14 @@ import API, { GraphQLResult, graphqlOperation } from '@aws-amplify/api'
 import { onUpdateChannel } from 'src/graphql/subscriptions'
 import * as APIt from 'src/types/graphqlAPI'
 import { getChannelByArn } from 'src/graphql/queries'
+
 interface Props {
   formik?: FormikProps<FormLiveType>
+  validateField?: string
+  handleUpdateValidateField?: (value: string) => void
 }
 
-const LiveStreamContainer: React.FC<Props> = ({ formik }) => {
+const LiveStreamContainer: React.FC<Props> = ({ formik, validateField, handleUpdateValidateField }) => {
   const [step, setStep] = useState(1)
   const router = useRouter()
   const { categoryData } = useLiveSetting()
@@ -144,6 +147,8 @@ const LiveStreamContainer: React.FC<Props> = ({ formik }) => {
         stateChannelArn={stateChannelMedia}
         visibleLoading={step === 3 && stateChannelMedia && stateChannelMedia !== EVENT_STATE_CHANNEL.RUNNING}
         disableLoader={modal && (stateChannelMedia === EVENT_STATE_CHANNEL.RUNNING || !stateChannelMedia)}
+        validateField={validateField}
+        handleUpdateValidateField={handleUpdateValidateField}
       />
       <ESModal open={modal && showResultDialog} handleClose={handleClose}>
         <BlankLayout>
