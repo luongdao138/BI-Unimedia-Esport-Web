@@ -39,6 +39,7 @@ const DialogLoginContainer: React.FC<DialogLoginProps> = ({ showDialogLogin, onC
   const [isAgreementChecked, setAgreementChecked] = useState(false)
 
   const { loginByEmail, meta, resetMeta, handleClick } = useLoginByEmail()
+
   const _router = useRouter()
 
   const resetMetas = () => {
@@ -65,10 +66,10 @@ const DialogLoginContainer: React.FC<DialogLoginProps> = ({ showDialogLogin, onC
   }
 
   useEffect(() => {
-    if (meta.loaded) {
+    if (meta.loaded || social.meta.loaded) {
       onCloseDialogLogin()
     }
-  }, [meta.loaded])
+  }, [meta.loaded, social])
 
   return (
     <ESModal open={showDialogLogin} handleClose={onCloseDialogLogin}>
