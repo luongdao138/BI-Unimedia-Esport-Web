@@ -26,6 +26,7 @@ import purchasePoint from '@store/purchasePoint'
 import pointsManage from '@store/pointsManage'
 import liveStreamDetail from '@store/liveStreamDetail'
 import financial from '@store/financial'
+import streamerArchiveList from '@store/archivedlist'
 
 const reducer = combineReducers({
   liveSocket,
@@ -56,6 +57,7 @@ const reducer = combineReducers({
   pointsManage: pointsManage.reducers,
   liveStreamDetail: liveStreamDetail.reducers,
   financial: financial.reducers,
+  streamerArchiveList: streamerArchiveList.reducers,
 })
 export default reducer
 

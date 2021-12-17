@@ -179,4 +179,8 @@ export const URI = {
   // Report Live Stream
   FINANCIAL_STATEMENT_YEAR: '/v2/report/money-year',
   FINANCIAL_STATEMENT_DETAIL: '/v2/report/money-month-detail',
+  //streamer_archive_video
+  GET_STREAMER_LIST_ARCHIVE: '/v2/report/archived',
+  GET_STREAMER_ARCHIVE_DETAIL: '/v2/report/archived-detail',
+  UPDATE_ARCHIVE_VIDEO: '/v2/report/archived-save-detail',
 }

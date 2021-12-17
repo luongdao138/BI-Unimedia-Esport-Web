@@ -1,64 +1,35 @@
 import React, { useEffect, useState } from 'react'
-import HeaderWithButton from '@components/HeaderWithButton'
-import { Box, makeStyles } from '@material-ui/core'
-import { useTranslation } from 'react-i18next'
-// import { useMediaQuery, useTheme } from '@material-ui/core'
-// import ESTooltip from '@components/ESTooltip'
-// import { FormatHelper } from '@utils/helpers/FormatHelper'
-// import { Pagination } from '@material-ui/lab'
-// import { Colors } from '@theme/colors'
-import Steps from './Steps'
-import useLiveSetting from '@containers/StreamingSettingContainer/useLiveSetting'
-import { ArchiveDetailFormType, getInitialArchiveDetailValues, validationArchiveDetailScheme } from './ArchiveDetailFormData'
-import { useFormik } from 'formik'
+import { useRouter } from 'next/router'
+import useArchivedList from '@containers/ArchivedListContainer/useArchivedList'
+import useCommonData from '@containers/Lobby/UpsertForm/useCommonData'
+import { getTimeZone } from '@utils/helpers/CommonHelper'
+import ViewFromLive from '@containers/ArchiveDetailContainer/FromLive'
+import ViewFromSchedule from '@containers/ArchiveDetailContainer/FromSchedule'
 
-const ArchiveDetailContainer: React.FC = () => {
-  const [step, setStep] = useState(1)
-  const { t } = useTranslation('common')
-  const classes = useStyles()
-  // const theme = useTheme()
-  // const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
-  // const isSmallScreen = useMediaQuery(theme.breakpoints.down(475))
-
-  const { categoryData, getCategory } = useLiveSetting()
-
-  const initialValues = getInitialArchiveDetailValues()
-  const formikArchiveDetail = useFormik<ArchiveDetailFormType>({
-    initialValues: initialValues,
-    validationSchema: validationArchiveDetailScheme(),
-    enableReinitialize: true,
-    validateOnBlur: false,
-    onSubmit: () => {
-      //TODO: smt
-    },
-  })
-
-  const onChangeStep = (step: number): void => {
-    // console.log('click next step', step, stateChannelMedia)
-    setStep(step)
-    // setShare(isShare)
-    // setPost(post)
-    // if (step === 3) {
-    //   setModal(true)
-    // }
-  }
+const DetailContainer: React.FC = () => {
+  const router = useRouter()
+  const { getVideoArchivedDetail } = useArchivedList()
+  const { user } = useCommonData()
+  const scheduledFlag = router.query['scheduledFlag'] || router.asPath.match(new RegExp(`[&?]${'scheduledFlag'}=(.*)(&|$)`))
+  const uuid = router.query['uuid'] || router.asPath.match(new RegExp(`[&?]${'uuid'}=(.*)(&|$)`))
+  const [isFromSchedule, setFromSchedule] = useState(scheduledFlag === '1')
 
   useEffect(() => {
-    getCategory()
+    const params = {
+      user_id: user?.id,
+      timezone: getTimeZone(),
+      video_id: uuid,
+    }
+    getVideoArchivedDetail(params, (canEdit, isSchedule) => {
+      if (!canEdit) {
+        // router.push(ESRoutes.NOT_FOUND)
+      } else if (isSchedule !== isFromSchedule) {
+        setFromSchedule(isSchedule)
+      }
+    })
   }, [])
 
-  return (
-    <div>
-      <HeaderWithButton title={t('archive_detail_screen.title')} />
-      <Box className={classes.wrapper}>
-        <Steps step={step} onNext={onChangeStep} category={categoryData} formik={formikArchiveDetail}></Steps>
-      </Box>
-    </div>
-  )
+  return isFromSchedule ? <ViewFromSchedule /> : <ViewFromLive />
 }
 
-const useStyles = makeStyles(() => ({
-  wrapper: {},
-}))
-
-export default ArchiveDetailContainer
+export default DetailContainer

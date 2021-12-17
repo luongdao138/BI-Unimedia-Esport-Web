@@ -1,6 +1,9 @@
 // import { URI } from '@constants/uri.constants'
 // import api from './api'
 
+import api from '@services/api'
+import { URI } from '@constants/uri.constants'
+
 export type ArchiveDetailDataType = {
   id: number
   uuid: string
@@ -27,4 +30,67 @@ export type ArchiveDetailDataType = {
   status?: number
   channel_id?: number
   arn?: string
+  scheduled_flag: number
+}
+
+export type TYPE_VIDEO_ARCHIVE = {
+  title: string
+  thumbnail: string
+  uuid: string
+  archived_url: string
+  publish_flag: number
+  scheduled_flag: number
+  live_stream_start_time: string
+  total_point_chat: string
+  total_chat: string
+  num_counted_user: number
+}
+
+export type ArchiveListResponse = {
+  code?: number
+  message?: number
+  data?: { videos: Array<TYPE_VIDEO_ARCHIVE>; total: number }
+}
+
+export type ArchiveListRequestParams = {
+  user_id: number
+  timezone?: string
+}
+
+export const getLiveSetting = async (params: ArchiveListRequestParams): Promise<ArchiveListResponse> => {
+  const { data } = await api.get<ArchiveListResponse>(URI.GET_STREAMER_LIST_ARCHIVE, { params })
+  return data
+}
+
+export type ArchiveDetailResponse = {
+  code?: number
+  message?: string
+  data?: ArchiveDetailDataType
+}
+
+export type ArchiveDetailRequestParams = {
+  user_id?: number
+  video_id?: string
+  timezone?: string
+}
+
+export const getArchiveDetail = async (params: ArchiveDetailRequestParams): Promise<ArchiveDetailResponse> => {
+  const { data } = await api.get<ArchiveDetailResponse>(URI.GET_STREAMER_ARCHIVE_DETAIL, { params })
+  return data
+}
+
+export type UpdateArchiveDetailRequestParams = {
+  user_id?: number
+  uuid?: string
+  thumbnail?: string
+  title?: string
+  description?: string
+  category?: number
+  video_publish_end_time?: string
+  timezone?: string
+}
+
+export const updateArchiveDetail = async (params: UpdateArchiveDetailRequestParams): Promise<ArchiveDetailResponse> => {
+  const { data } = await api.post<ArchiveDetailResponse>(URI.UPDATE_ARCHIVE_VIDEO, { params })
+  return data
 }

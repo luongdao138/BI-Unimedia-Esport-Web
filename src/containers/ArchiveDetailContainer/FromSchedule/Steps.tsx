@@ -1,6 +1,6 @@
 import { Box, Grid, Icon, makeStyles, Theme, Typography } from '@material-ui/core'
 import React, { useCallback, useEffect, useState } from 'react'
-// import _ from 'lodash'
+import _ from 'lodash'
 import { FormikProps } from 'formik'
 import ESInput from '@components/Input'
 import i18n from '@locales/i18n'
@@ -75,6 +75,7 @@ const Steps: React.FC<StepsProps> = ({
   const dispatch = useAppDispatch()
   const { t } = useTranslation(['common'])
   const [categoryName, setCategoryName] = useState('')
+
   //   const { liveSettingInformation, setLiveStreamConfirm, getStreamUrlAndKey, isPending, isPendingSetting } = useLiveSetting()
   // const { userProfile } = useGetProfile()
   // const { checkNgWordFields, checkNgWordByField } = useCheckNgWord()
@@ -138,50 +139,42 @@ const Steps: React.FC<StepsProps> = ({
   }
 
   const onValidateForm = () => {
-    // formik.validateForm().then((err) => {
-    //   if (_.isEmpty(err)) {
-    //     onClickNext()
-    //   }
-    // })
+    formik.validateForm().then((err) => {
+      if (_.isEmpty(err)) {
+        onClickNext()
+      }
+    })
   }
 
-  //   const onClickNext = () => {
-  //     const { stepSettingOne } = formik.values
-
-  //     const fieldIdentifier = checkNgWordFields({
-  //       title: title,
-  //       description: description,
-  //       ticket_price: ticket_price,
-  //     })
-
-  //     const ngFields = checkNgWordByField({
-  //       [FIELD_TITLES.title]: title,
-  //       [FIELD_TITLES.description]: description,
-  //       [FIELD_TITLES.ticket_price]: ticket_price,
-  //     })
-
-  //     if (fieldIdentifier) {
-  //       dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: ngFields.join(', ') }))
-  //     } else {
-  //       // setShowStreamKey(false)
-  //       // setShowStreamURL(false)
-  //       if (checkPublicTime(video_publish_end_time)) {
-  //         onNext(step + 1, share_sns_flag, {
-  //           title: title,
-  //           content: `${baseViewingURL}${linkUrl}`,
-  //         })
-  //         formik.setFieldValue('step_setting', step + 1)
-  //       }
-  //     }
-  //   }
-  //   const onClickPrev = () => {
-  //     setClickShowText(false)
-  //     onNext(step - 1, formik.values.share_sns_flag, {
-  //       title: formik.values.title,
-  //       content: `${baseViewingURL}${formik.values.linkUrl}`,
-  //     })
-  //     formik.setFieldValue('step_setting', step - 1)
-  //   }
+  const onClickNext = () => {
+    // const { stepSettingOne } = formik.values
+    //
+    // const fieldIdentifier = checkNgWordFields({
+    //   title: title,
+    //   description: description,
+    //   ticket_price: ticket_price,
+    // })
+    //
+    // const ngFields = checkNgWordByField({
+    //   [FIELD_TITLES.title]: title,
+    //   [FIELD_TITLES.description]: description,
+    //   [FIELD_TITLES.ticket_price]: ticket_price,
+    // })
+    //
+    // if (fieldIdentifier) {
+    //   dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: ngFields.join(', ') }))
+    // } else {
+    //   // setShowStreamKey(false)
+    //   // setShowStreamURL(false)
+    //   if (checkPublicTime(video_publish_end_time)) {
+    //     onNext(step + 1, share_sns_flag, {
+    //       title: title,
+    //       content: `${baseViewingURL}${linkUrl}`,
+    //     })
+    //     formik.setFieldValue('step_setting', step + 1)
+    //   }
+    // }
+  }
   const isFirstStep = () => {
     return step === 1 ? true : false
   }
