@@ -11,6 +11,7 @@ import ESModal from '@components/Modal'
 import { PARTICIPANT_TYPE } from '@constants/tournament.constants'
 import { Meta } from '@store/metadata/actions/types'
 import ESStickyFooter from '@components/StickyFooter'
+import { useArenaEnterScoreInfoDialog } from '@containers/arena/UpsertForm/Partials/useArenaEnterScoreInfoDialog'
 
 interface ScoreEditProps {
   meta: Meta
@@ -28,10 +29,17 @@ const ScoreEdit: React.FC<ScoreEditProps> = ({ meta, tournament, selectedMatch, 
   const [match, setMatch] = useState(selectedMatch)
   const _theme = useTheme()
   const isMobile = useMediaQuery(_theme.breakpoints.down('sm'))
+  const arenaEnterScoreInfo = useArenaEnterScoreInfoDialog()
 
   useEffect(() => {
     setMatch(selectedMatch)
   }, [selectedMatch])
+
+  const handleArenaEnterScoreInfo = () => {
+    arenaEnterScoreInfo().then(() => {
+      return
+    })
+  }
 
   const handleOnChange = (type: string, e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault()
@@ -101,8 +109,12 @@ const ScoreEdit: React.FC<ScoreEditProps> = ({ meta, tournament, selectedMatch, 
                 </Box>
               </Box>
               <Divider />
-              <Box pb={5} pt={5} textAlign="center">
+              <Box pb={5} pt={5} className={classes.titleSelectWinner}>
                 <Typography variant="body1">{t('common:arena.please_select_winner')}</Typography>
+                <Typography className={classes.enterScoreInfo} variant="body2" onClick={handleArenaEnterScoreInfo}>
+                  <Icon className={`fa fa-info-circle ${classes.iconMargin}`} fontSize="small" />
+                  {t('common:arena.enter_score_info_title_dialog')}
+                </Typography>
               </Box>
               <Box display="flex" justifyContent="space-between" padding={1}>
                 {participantItem(match.home_user, match.home_avatar, PARTICIPANT_TYPE.HOME)}
@@ -201,6 +213,25 @@ const useStyles = makeStyles((theme: Theme) => ({
     customRadio: {
       width: 133,
     },
+  },
+  iconMargin: {
+    marginRight: theme.spacing(1 / 2),
+    alignSelf: 'center',
+  },
+  enterScoreInfo: {
+    display: 'flex',
+    alignItems: 'center',
+    textAlign: 'center',
+    alignContent: 'center',
+    position: 'relative',
+    color: Colors.secondary,
+    cursor: 'pointer',
+    marginLeft: theme.spacing(2),
+  },
+  titleSelectWinner: {
+    textAlign: 'center',
+    display: 'flex',
+    justifyContent: 'center',
   },
 }))
 
