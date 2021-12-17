@@ -89,7 +89,12 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
                 <Icon className={`fa fa-link ${classes.link}`} fontSize="small" />
                 <Typography>{t('common:tournament.copy_shared_url')}</Typography>
               </Box>
-              <ESTwitterShareButton title={detail.attributes.title} url={window.location.toString()} />
+              <ESTwitterShareButton
+                title={detail.attributes.title}
+                utm={`utm_source=twitter&utm_medium=social&utm_campaign=arena&utm_content=${detail.id}`}
+                url={window.location.toString()}
+                games={data.game_title}
+              />
             </Box>
           )}
         </Box>

@@ -84,6 +84,23 @@ const ArenaBattles: React.FC = () => {
     )
   }
 
+  const setUndefeated = (value: boolean, id: number) => {
+    setSelecteds(
+      selecteds.map((v) => {
+        if (v.id == id) {
+          return {
+            ...v,
+            attributes: {
+              ...v.attributes,
+              undefeated: value,
+            },
+          }
+        }
+        return v
+      })
+    )
+  }
+
   const handleSubmitScore = () => {
     if (isModerator) {
       setBattleRoyaleScores({ hash_key: tournament.attributes.hash_key, participants: selecteds })
@@ -181,6 +198,7 @@ const ArenaBattles: React.FC = () => {
       <BRList className={classes.listContainer} rule={tournament?.attributes.rule}>
         {selecteds.map((v) => {
           const value = _.isNumber(v.attributes.attack_score) ? v.attributes.attack_score : ''
+          const undefeated = v.attributes?.undefeated ?? false
           return (
             <BRListItem
               key={v.id}
@@ -194,11 +212,15 @@ const ArenaBattles: React.FC = () => {
               text={v.attributes.user?.user_code ? v.attributes.name : v.attributes.team?.data.attributes.name}
               textSecondary={v.attributes.user?.user_code || ''}
               highlight={v.highlight}
+              undefeated={undefeated}
+              isModerator={isModerator}
+              setUndefeated={() => setUndefeated(!undefeated, v.id)}
             >
               <BRScore
                 value={value}
                 participantCount={participants.length}
                 onChange={({ target: { value } }) => setScores(value === '' ? '' : Number(value), v.id)}
+                undefeated={undefeated}
                 onAttackError={(val) => handleError(val, v.id)}
                 type={tournament?.attributes.rule}
                 disabled={((v.attributes.is_fixed_score || !v.highlight) && !isModerator) || !isFreezed}

@@ -1,6 +1,6 @@
 import MainLayout from '@layouts/MainLayout'
-import PageWithLayoutType from '@constants/page'
 import { DetailContainer } from '@containers/Lobby'
+import PageWithLayoutType from '@constants/page'
 import { AppDispatch, storeWrapper } from '@store/store'
 import i18n from '@locales/i18n'
 
@@ -12,9 +12,11 @@ export const getServerSideProps = storeWrapper.getServerSideProps(async ({ store
   await dispatch(actions.getLobbyDetail(String(params.hash_key)))
   const lobby = selectors.getLobbyDetail(store.getState())
   const title = `${i18n.t('common:page_head.lobby_detail_title')}｜${lobby?.attributes?.title || ''}`
+  const image = lobby?.attributes?.cover_image_url
   return {
     props: {
       title,
+      image,
     },
   }
 })
