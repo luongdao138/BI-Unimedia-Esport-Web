@@ -19,6 +19,8 @@ import { CONFIRM_SETTING_DELAY, EVENT_LIVE_STATUS, EVENT_STATE_CHANNEL } from '@
 import ESLoader from '@components/FullScreenLoaderNote'
 import { Box } from '@material-ui/core'
 import { STATUS_VIDEO } from '@services/videoTop.services'
+import { useAppDispatch } from '@store/hooks'
+import * as commonActions from '@store/common/actions'
 
 interface Props {
   formik?: FormikProps<FormLiveType>
@@ -34,6 +36,7 @@ const StreamingReservationContainer: React.FC<Props> = ({ formik, flagUpdateFiel
 
   const [modal, setModal] = useState(false)
   const { t } = useTranslation(['common'])
+  const dispatch = useAppDispatch()
   const [isShare, setShare] = useState(false)
   const [post, setPost] = useState({
     title: '',
@@ -137,8 +140,18 @@ const StreamingReservationContainer: React.FC<Props> = ({ formik, flagUpdateFiel
   useEffect(() => {
     let unSub
     if (step === 3 && stateChannelMedia && stateChannelMedia !== EVENT_STATE_CHANNEL.RUNNING) {
-      setLoading(true)
-      setShowResultDialog(false)
+      if (
+        obsStatusDynamo === 0 &&
+        videoStatusDynamo == STATUS_VIDEO.OVER_LOAD &&
+        (stateChannelMedia === EVENT_STATE_CHANNEL.STOPPED || stateChannelMedia === EVENT_STATE_CHANNEL.STOPPING)
+      ) {
+        //force stopped
+        setLoading(false)
+        setShowResultDialog(false)
+      } else {
+        setLoading(true)
+        setShowResultDialog(false)
+      }
     } else {
       if (!loading) {
         setLoading(false)
@@ -278,7 +291,15 @@ const StreamingReservationContainer: React.FC<Props> = ({ formik, flagUpdateFiel
       }
     }
   })
-
+  useEffect(() => {
+    if (obsStatusDynamo === 0 && videoStatusDynamo == STATUS_VIDEO.OVER_LOAD) {
+      if (step === 3) {
+        dispatch(commonActions.addToast(t('common:common.deactivate_key_setting_error')))
+      }
+      setLoading(false)
+      setShowResultDialog(false)
+    }
+  }, [obsStatusDynamo, videoStatusDynamo])
   return (
     <>
       <Steps
