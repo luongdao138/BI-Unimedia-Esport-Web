@@ -1,4 +1,9 @@
-import { FollowChannelParams, ListArchivedVideoStreamParams, ReactionUserParams } from '@services/liveStreamDetail.service'
+import {
+  FollowChannelParams,
+  ListArchivedVideoStreamParams,
+  ReactionUserParams,
+  TimeReportParams,
+} from '@services/liveStreamDetail.service'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
 import { createMetaSelector } from '@store/metadata/selectors'
 import liveStreamDetail from '@store/liveStreamDetail'
@@ -50,6 +55,8 @@ const useLiveStreamDetail = () => {
   // }
   const followChannelData = useAppSelector(selectors.followChannelData)
 
+  const videoWatchTimeReportRequest = (params: TimeReportParams) => dispatch(actions.videoWatchTimeReportRequest(params))
+
   return {
     meta_archived_video_stream,
     archivedVideoStreamData,
@@ -68,6 +75,7 @@ const useLiveStreamDetail = () => {
     meta_follow_channel,
     userFollowChannel,
     followChannelData,
+    videoWatchTimeReportRequest,
   }
 }
 

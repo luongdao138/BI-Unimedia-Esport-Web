@@ -161,6 +161,7 @@ export const URI = {
   GET_VIDEO_FAVORITE: '/v2/videos/follow',
   SEARCH_VIDEO: '/v2/videos/search',
   VIDEO_DETAIL: '/v2/video_info',
+  TIME_REPORT: '/v2/live/time-report',
   //purchase points
   GET_LIST_CARDS: 'v2/gmo/list_card',
   DELETE_CARD: '/v2/gmo/delete_card',
