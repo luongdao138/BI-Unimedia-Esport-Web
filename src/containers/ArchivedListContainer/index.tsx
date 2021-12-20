@@ -14,7 +14,8 @@ import React, { useEffect, useState } from 'react'
 import useCommonData from '@containers/Lobby/UpsertForm/useCommonData'
 import { getTimeZone } from '@utils/helpers/CommonHelper'
 import moment from 'moment'
-import { FORMAT_DATE_TIME_JP } from '@constants/common.constants'
+import { FORMAT_DATE_TIME_JP, LIVE_VIDEO_TYPE } from '@constants/common.constants'
+import { STATUS_VIDEO } from '@services/videoTop.services'
 
 const ITEM_PER_PAGE = 10
 
@@ -72,6 +73,23 @@ const ArchivedListContainer: React.FC = () => {
       scheduled_flag: scheduledFlag,
     } = rowData
 
+    const onNavigateLive = (data) => () => {
+      let vid = data?.uuid
+      if (data.status === STATUS_VIDEO.LIVE_STREAM && data.scheduled_flag === LIVE_VIDEO_TYPE.LIVE) {
+        vid = data?.user_id
+      }
+      router.push(
+        {
+          pathname: ESRoutes.TOP,
+          query: { vid: vid },
+        },
+        undefined,
+        {
+          shallow: true,
+        }
+      )
+    }
+
     return (
       <Box className={classes.wrapItem} key={rowData?.uuid} onClick={isMobile ? redirectArchivedDetail(uuid, scheduledFlag) : null}>
         <table className={classes.outerTable}>
@@ -115,7 +133,7 @@ const ArchivedListContainer: React.FC = () => {
             </tr>
             <tr>
               <td style={{ verticalAlign: 'bottom', paddingRight: 10 }} className={classes.wrapImage}>
-                <img src={thumbnail ?? IMG_PLACEHOLDER} className={classes.image} />
+                <img onClick={onNavigateLive(rowData)} src={thumbnail ?? IMG_PLACEHOLDER} className={classes.image} />
               </td>
               <td>
                 <table className={classes.innerTable}>
@@ -247,6 +265,7 @@ const ArchivedListContainer: React.FC = () => {
 
 const useStyles = makeStyles((theme) => ({
   paginationStyle: {
+    marginRight: '-24px',
     '& .MuiPaginationItem-root': {
       color: Colors.white,
       borderColor: Colors.primary,
@@ -343,6 +362,7 @@ const useStyles = makeStyles((theme) => ({
   },
   image: {
     width: '100%',
+    cursor: 'pointer',
   },
   release: {
     color: '#FF4786',
@@ -354,7 +374,9 @@ const useStyles = makeStyles((theme) => ({
   paginationContainerTop: {
     marginBottom: 32,
     display: 'flex',
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
+    flexDirection: 'row',
+    width: '100%',
   },
   paginationContainerBottom: {
     marginTop: 32,
@@ -362,6 +384,9 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'center',
   },
   [theme.breakpoints.down(415)]: {
+    paginationContainerTop: {
+      justifyContent: 'center',
+    },
     container: {
       padding: '0',
       border: 'none',
@@ -404,6 +429,11 @@ const useStyles = makeStyles((theme) => ({
           },
         },
       },
+    },
+  },
+  [theme.breakpoints.down(961)]: {
+    paginationStyle: {
+      marginRight: '0px',
     },
   },
   [theme.breakpoints.down(375)]: {
