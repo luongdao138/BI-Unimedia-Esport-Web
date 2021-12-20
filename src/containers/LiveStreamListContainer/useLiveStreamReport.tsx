@@ -7,13 +7,6 @@ import { useTranslation } from 'react-i18next'
 const { selectors, actions } = streamStore
 const getLiveStreamReportMeta = createMetaSelector(actions.getLiveStreamReport)
 
-function checkNotNull(value) {
-  if (value === null) {
-    return []
-  }
-  return value
-}
-
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const useLiveStreamReport = () => {
   const { t } = useTranslation('common')
@@ -21,8 +14,10 @@ const useLiveStreamReport = () => {
   const liveStreamReport = useAppSelector(selectors.getLiveStreamReportSelector)
   const meta = useAppSelector(getLiveStreamReportMeta)
   const itemLiveStreamReport = liveStreamReport?.data?.item ? liveStreamReport?.data?.item : {}
-  const listDates = liveStreamReport?.data?.list_dates
-  const sortOptionsListDates = [t('point_management_tab.choosing'), ...checkNotNull(listDates)]
+  const listDates = Array.isArray(liveStreamReport?.data?.list_dates)
+    ? liveStreamReport?.data?.list_dates
+    : [t('point_management_tab.choosing')]
+  const sortOptionsListDates = [...listDates]
 
   const fetchLiveStreamReportData = (param: LiveStreamReportParams) => {
     dispatch(actions.getLiveStreamReport(param))
