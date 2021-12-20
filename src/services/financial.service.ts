@@ -2,7 +2,8 @@ import { URI } from '@constants/uri.constants'
 import api from './api'
 
 export type FinancialStatementItem = {
-  date_report?: string
+  cash_date?: number | string
+  date?: string
   point?: string | number
 }
 export type FinancialStatementData = {
@@ -29,10 +30,13 @@ export type FinancialStatementDetailParams = {
   timezone?: string
 }
 export type FinancialStatementDetailItem = {
-  point?: string | number
-  video_id?: string
+  cash_date?: number | string
   created_at?: string
+  id?: number | string
+  point?: string | number
   title?: string
+  type?: string
+  video_id?: string
 }
 export type FinancialStatementDetailData = {
   total?: number
