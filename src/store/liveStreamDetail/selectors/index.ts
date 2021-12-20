@@ -7,3 +7,4 @@ export const archivedVideoStream = createSelector(getRoot, (state) => state.vide
 export const relatedVideoStream = createSelector(getRoot, (state) => state.videoRelated)
 export const reactionVideoData = createSelector(getRoot, (state) => state.reactionData)
 export const followChannelData = createSelector(getRoot, (state) => state.followData)
+export const videoWatchTimeReportData = createSelector(getRoot, (state) => state.videoWatchTimeReport)
