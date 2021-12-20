@@ -8,10 +8,9 @@ import { Pagination } from '@material-ui/lab'
 import { Colors } from '@theme/colors'
 import ESTooltip from '@components/ESTooltip'
 import useFinancialStatementDetail from './useFinancialStatementDetail'
-import { FINANCIAL_STATUS_TITLE, FORMAT_YEAR_MONTH_FILTER, LIMIT_FINANCIAL_STATEMENT } from '@constants/common.constants'
+import { LIMIT_FINANCIAL_STATEMENT } from '@constants/common.constants'
 import { DateHelper } from '@utils/helpers/DateHelper'
 import ESLoader from '@components/FullScreenLoader'
-import moment from 'moment'
 
 const PaymentInfoDetailContainer: React.FC = () => {
   const { t } = useTranslation('common')
@@ -61,26 +60,23 @@ const PaymentInfoDetailContainer: React.FC = () => {
       <Box className={classes.tableContentContainer}>
         {data?.map((item, index) => {
           const backgroundColor = index % 2 === 0 ? '#323232' : '#606060'
-          const displayDate = DateHelper.formatDateTimeJP(item?.created_at)
-          const displayStatus =
-            DateHelper.formatMonth(item?.created_at) === DateHelper.formatMonth(moment().format(FORMAT_YEAR_MONTH_FILTER))
-              ? FINANCIAL_STATUS_TITLE.SCHEDULE
-              : FINANCIAL_STATUS_TITLE.CONFIRM
-          const displayAmount = `${FormatHelper.currencyFormat(item?.point.toString())} ${t('common.money')}`
-          const displayTitle = item?.title
           return (
-            <Box key={item?.video_id} style={{ backgroundColor }} className={classes.row}>
+            <Box key={item?.id.toString()} style={{ backgroundColor }} className={classes.row}>
               <Box className={classes.rowUpper}>
-                <Typography className={`${classes.rowText} ${classes.yearMonthRow}`}>{displayDate}</Typography>
+                <Typography className={`${classes.rowText} ${classes.yearMonthRow}`}>
+                  {DateHelper.formatFullDateTime(item?.created_at)}
+                </Typography>
                 {!isMobile && (
-                  <ESTooltip title={displayTitle}>
-                    <Typography className={`${classes.rowText} ${classes.streamTitleRow}`}>{displayTitle}</Typography>
+                  <ESTooltip title={item?.title}>
+                    <Typography className={`${classes.rowText} ${classes.streamTitleRow}`}>{item?.title}</Typography>
                   </ESTooltip>
                 )}
-                <Typography className={`${classes.rowText} ${classes.statusRow}`}>{displayStatus}</Typography>
-                <Typography className={`${classes.rowText} ${classes.amountOfMoneyRow}`}>{displayAmount}</Typography>
+                <Typography className={`${classes.rowText} ${classes.statusRow}`}>{item?.type}</Typography>
+                <Typography className={`${classes.rowText} ${classes.amountOfMoneyRow}`}>
+                  {`${FormatHelper.currencyFormat(item?.point.toString())} ${t('common.money')}`}
+                </Typography>
               </Box>
-              {isMobile && <Typography className={`${classes.rowText} ${classes.yearMonthRow}`}>{displayTitle}</Typography>}
+              {isMobile && <Typography className={`${classes.rowText} ${classes.yearMonthRow}`}>{item?.title}</Typography>}
             </Box>
           )
         })}

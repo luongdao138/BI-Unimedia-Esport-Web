@@ -210,6 +210,7 @@ export const defaultConfirmationOptions: ConfirmOptions = {
 
 export const AVATAR_PATH = '/images/avatar_o.png'
 export const FORMAT_DATE_TIME_JP = 'YYYY年MM月DD日 HH:mm'
+export const FORMAT_FULL_DATE_TIME = 'YYYY/MM/DD HH:mm:ss'
 export const FORMAT_SCHEDULE_TIME = 'YYYY年MM月DD日HH時mm分'
 export const FORMAT_DATE_SIMPLE = 'YYYY年MM月DD日'
 export const FORMAT_DATE_ARCHIVED = 'YYYY/MM/DD'

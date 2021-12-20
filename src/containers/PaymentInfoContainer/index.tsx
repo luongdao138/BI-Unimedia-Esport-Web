@@ -70,19 +70,14 @@ const PaymentInfoContainer: React.FC = () => {
         {data?.length > 0 &&
           data?.map((item, index) => {
             const backgroundColor = index % 2 === 0 ? '#323232' : '#606060'
-            const displayDate = DateHelper.formatMonthFilter(item?.date_report)
+            const displayDate = DateHelper.formatMonthFilter(item?.date)
             const displayStatus =
-              item?.date_report === DateHelper.formatMonth(moment().format(FORMAT_YEAR_MONTH_FILTER))
+              item?.date === DateHelper.formatMonth(moment().format(FORMAT_YEAR_MONTH_FILTER))
                 ? FINANCIAL_STATUS_TITLE.SCHEDULE
                 : FINANCIAL_STATUS_TITLE.CONFIRM
             const displayAmount = `${FormatHelper.currencyFormat(item?.point.toString())} ${t('common.money')}`
             return (
-              <Box
-                key={item?.date_report}
-                onClick={navigateToDetail(item?.date_report)}
-                style={{ backgroundColor }}
-                className={classes.row}
-              >
+              <Box key={item?.date} onClick={navigateToDetail(item?.date)} style={{ backgroundColor }} className={classes.row}>
                 <Typography className={`${classes.yearMonthRow}`}>{displayDate}</Typography>
                 <Typography className={`${classes.statusRow}`}>{displayStatus}</Typography>
                 <Typography className={`${classes.amountOfMoney}`}>{displayAmount}</Typography>
