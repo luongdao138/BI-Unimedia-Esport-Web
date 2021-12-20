@@ -19,6 +19,9 @@ import * as APIt from 'src/types/graphqlAPI'
 import { getChannelByArn, getVideoByUuid } from 'src/graphql/queries'
 import { STATUS_VIDEO } from '@services/videoTop.services'
 import { onCreateVideo } from 'src/graphql/subscriptions'
+import { useAppDispatch } from '@store/hooks'
+import { useTranslation } from 'react-i18next'
+import * as commonActions from '@store/common/actions'
 
 interface Props {
   formik?: FormikProps<FormLiveType>
@@ -27,6 +30,8 @@ interface Props {
 const LiveStreamContainer: React.FC<Props> = ({ formik }) => {
   const [step, setStep] = useState(1)
   const router = useRouter()
+  const dispatch = useAppDispatch()
+  const { t } = useTranslation(['common'])
   const { categoryData } = useLiveSetting()
   const [modal, setModal] = useState(false)
   const [isShare, setShare] = useState(false)
@@ -111,8 +116,18 @@ const LiveStreamContainer: React.FC<Props> = ({ formik }) => {
   useEffect(() => {
     let unSub
     if (step === 3 && stateChannelMedia && stateChannelMedia !== EVENT_STATE_CHANNEL.RUNNING) {
-      setLoading(true)
-      setShowResultDialog(false)
+      if (
+        obsStatusDynamo === 0 &&
+        videoStatusDynamo == STATUS_VIDEO.OVER_LOAD &&
+        (stateChannelMedia === EVENT_STATE_CHANNEL.STOPPED || stateChannelMedia === EVENT_STATE_CHANNEL.STOPPING)
+      ) {
+        //force stopped
+        setLoading(false)
+        setShowResultDialog(false)
+      } else {
+        setLoading(true)
+        setShowResultDialog(false)
+      }
     } else {
       if (!loading) {
         setLoading(false)
@@ -252,6 +267,16 @@ const LiveStreamContainer: React.FC<Props> = ({ formik }) => {
       }
     }
   })
+
+  useEffect(() => {
+    if (obsStatusDynamo === 0 && videoStatusDynamo == STATUS_VIDEO.OVER_LOAD) {
+      if (step === 3) {
+        dispatch(commonActions.addToast(t('common:common.deactivate_key_setting_error')))
+      }
+      setLoading(false)
+      setShowResultDialog(false)
+    }
+  }, [obsStatusDynamo, videoStatusDynamo])
 
   return (
     <>
