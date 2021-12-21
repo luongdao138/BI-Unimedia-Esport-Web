@@ -308,7 +308,12 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, showTopicListAndSearch
               <Icon className={`fa fa-link ${classes.link}`} fontSize="small" />
               <Typography>{t('common:community.copy_shared_url')}</Typography>
             </Box>
-            <ESTwitterShareButton title={detail.attributes.name} url={window.location.toString()} />
+            <ESTwitterShareButton
+              title={detail.attributes.name}
+              utm={`utm_source=twitter&utm_medium=social&utm_campaign=community&utm_content=${detail.id}`}
+              url={window.location.toString()}
+              games={data.game_titles}
+            />
           </Box>
         </Box>
 

@@ -1,5 +1,6 @@
 import { cloneElement, memo } from 'react'
 import { Typography } from '@material-ui/core'
+import ButtonPrimary from '@components/ButtonPrimary'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
 
@@ -10,7 +11,10 @@ interface BRListItemProps {
   text?: string
   textSecondary?: string
   onChange?: (score: string) => void
+  undefeated?: boolean
+  setUndefeated?: () => void
   onClick?: () => void
+  isModerator?: boolean
   clickable?: boolean
   children?: JSX.Element
   highlight?: boolean
@@ -36,6 +40,13 @@ const BRListItem: React.FC<BRListItemProps> = (props: BRListItemProps) => {
             </Typography>
           )}
         </div>
+        {props.isModerator && (
+          <div className={classes.undefeatedButton} onClick={props.setUndefeated}>
+            <ButtonPrimary round size="small" disabled={!props.undefeated}>
+              {t('common:arena.undefeated')}
+            </ButtonPrimary>
+          </div>
+        )}
         {props.children ? <div className={classes.rightContent}>{props.children}</div> : <></>}
       </div>
     </div>
@@ -44,6 +55,7 @@ const BRListItem: React.FC<BRListItemProps> = (props: BRListItemProps) => {
 
 BRListItem.defaultProps = {
   highlight: false,
+  isModerator: false,
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -102,6 +114,10 @@ const useStyles = makeStyles((theme) => ({
   },
   pointer: {
     cursor: 'pointer',
+  },
+  undefeatedButton: {
+    marginRight: theme.spacing(1.5),
+    zIndex: 0,
   },
   [theme.breakpoints.down('xs')]: {
     contentWrapper: {

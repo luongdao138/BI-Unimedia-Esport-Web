@@ -19,7 +19,14 @@ const ESHead: React.FC<HeadProps> = ({ title, desc, keywords, image }) => {
       <meta name="keywords" content={keywords || t('common:page_head.default_keywords')} />
       <meta property="og:title" content={title} />
       <meta property="og:description" content={desc} />
+      <meta property="og:type" content="article" />
+      <meta property="og:site_name" content="eXeLAB" />
+      <meta property="og:locale" content="ja_JP" />
       {image && <meta property="og:image" content={image} />}
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:site" content="@eXeLAB_official" />
+      <meta property="og:url" content={typeof window !== 'undefined' && window.location.toString()} />
+      {image && <meta property="twitter:image" content={image} />}
     </Head>
   )
 }

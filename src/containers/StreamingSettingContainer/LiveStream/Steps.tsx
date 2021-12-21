@@ -1,5 +1,5 @@
 import { Box, Grid, Icon, IconButton, InputAdornment, makeStyles, Theme, Typography } from '@material-ui/core'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import _ from 'lodash'
 import { FormikProps } from 'formik'
 import ESInput from '@components/Input'
@@ -38,6 +38,7 @@ import ESInputDatePicker from '@components/InputDatePicker'
 import moment from 'moment'
 import Linkify from 'react-linkify'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
+import { LiveStreamSettingHelper } from '@utils/helpers/LiveStreamSettingHelper'
 
 interface StepsProps {
   step: number
@@ -50,7 +51,10 @@ interface StepsProps {
   stateChannelArn?: string
   visibleLoading?: boolean
   disableLoader?: boolean
+  validateField?: string
+  handleUpdateValidateField?: (value: string) => void
 }
+
 const KEY_TYPE = {
   URL: 1,
   KEY: 2,
@@ -68,12 +72,15 @@ const Steps: React.FC<StepsProps> = ({
   stateChannelArn,
   visibleLoading,
   disableLoader,
+  validateField,
+  handleUpdateValidateField,
 }) => {
   const classes = useStyles()
   const dispatch = useAppDispatch()
   const { t } = useTranslation(['common'])
   const [categoryName, setCategoryName] = useState('')
   const { liveSettingInformation, setLiveStreamConfirm, getStreamUrlAndKey, isPending, isPendingSetting } = useLiveSetting()
+  const { checkLiveDisplayErrorOnSubmit, getLiveDisplayErrorField } = LiveStreamSettingHelper
   const { userProfile } = useGetProfile()
   const [showStreamURL, setShowStreamURL] = useState(false)
   const [showStreamKey, setShowStreamKey] = useState(false)
@@ -85,6 +92,14 @@ const Steps: React.FC<StepsProps> = ({
   const [isLoading, setLoading] = useState(false)
   const [clickShowText, setClickShowText] = useState(false)
   const [renewData, setRenewData] = useState(null)
+
+  const formRef = {
+    title: useRef(null),
+    description: useRef(null),
+    category: useRef(null),
+    ticket_price: useRef(null),
+    video_publish_end_time: useRef(null),
+  }
 
   useEffect(() => {
     // getLiveSetting()
@@ -152,11 +167,20 @@ const Steps: React.FC<StepsProps> = ({
   }
 
   const onValidateForm = () => {
-    formik.validateForm().then((err) => {
-      if (_.isEmpty(err)) {
-        onClickNext()
-      }
-    })
+    handleUpdateValidateField('all')
+    setTimeout(() => {
+      formik.validateForm().then((err) => {
+        if (_.isEmpty(err)) {
+          onClickNext()
+          handleUpdateValidateField('')
+        } else {
+          const errorField = getLiveDisplayErrorField(err)
+          if (formRef[errorField]) {
+            window.scrollTo({ behavior: 'smooth', top: formRef[errorField].current.offsetTop - 200 })
+          }
+        }
+      })
+    }, 300)
   }
 
   const onClickNext = () => {
@@ -204,8 +228,7 @@ const Steps: React.FC<StepsProps> = ({
     if (step === 2) {
       return ' ' + addClass
     } else {
-      // return otherClass ? ' ' + otherClass : ' ' + addClass
-      return otherClass ? ' ' + otherClass : ''
+      return otherClass ? ' ' + otherClass : ' ' + addClass
     }
   }
 
@@ -402,7 +425,7 @@ const Steps: React.FC<StepsProps> = ({
             </Box>
           </Box>
           <Box pb={2} className={classes.wrap_input}>
-            <Box className={classes.firstItem}>
+            <div ref={formRef['title']} className={classes.firstItem}>
               <ESInput
                 id="title"
                 name="stepSettingOne.title"
@@ -411,17 +434,32 @@ const Steps: React.FC<StepsProps> = ({
                 labelPrimary={i18n.t('common:streaming_setting_screen.label_input_title')}
                 fullWidth
                 value={isFirstStep() ? formik?.values?.stepSettingOne?.title : formik?.values?.stepSettingOne?.title.trim()}
-                onChange={formik.handleChange}
-                helperText={formik?.touched?.stepSettingOne?.title && formik?.errors.stepSettingOne?.title}
-                error={formik?.touched?.stepSettingOne?.title && !!formik?.errors.stepSettingOne?.title}
+                onChange={(e) => {
+                  formik.handleChange(e)
+                  handleUpdateValidateField('title')
+                }}
+                helperText={
+                  validateField !== 'all'
+                    ? validateField === 'title'
+                      ? formik?.errors?.stepSettingOne?.title
+                      : ''
+                    : checkLiveDisplayErrorOnSubmit(formik, 'title').helperText
+                }
+                error={
+                  validateField !== 'all'
+                    ? validateField === 'title'
+                      ? !!formik?.errors?.stepSettingOne?.title
+                      : false
+                    : checkLiveDisplayErrorOnSubmit(formik, 'title').error
+                }
                 size="big"
                 disabled={!isFirstStep()}
                 className={getAddClassByStep(classes.input_text)}
               />
-            </Box>
+            </div>
           </Box>
           <Box pb={2} className={classes.wrap_input}>
-            <Box className={classes.firstItem}>
+            <div ref={formRef['description']} className={classes.firstItem}>
               {isFirstStep() ? (
                 <ESFastInput
                   id="description"
@@ -433,9 +471,24 @@ const Steps: React.FC<StepsProps> = ({
                   labelPrimary={i18n.t('common:streaming_setting_screen.label_input_description')}
                   fullWidth
                   value={formik?.values?.stepSettingOne?.description}
-                  onChange={formik.handleChange}
-                  helperText={formik?.touched?.stepSettingOne?.description && formik?.errors?.stepSettingOne?.description}
-                  error={formik?.touched?.stepSettingOne?.description && !!formik?.errors?.stepSettingOne?.description}
+                  onChange={(e) => {
+                    formik.handleChange(e)
+                    handleUpdateValidateField('description')
+                  }}
+                  helperText={
+                    validateField !== 'all'
+                      ? validateField === 'description'
+                        ? formik?.errors?.stepSettingOne?.description
+                        : ''
+                      : checkLiveDisplayErrorOnSubmit(formik, 'description').helperText
+                  }
+                  error={
+                    validateField !== 'all'
+                      ? validateField === 'description'
+                        ? !!formik?.errors?.stepSettingOne?.description
+                        : false
+                      : checkLiveDisplayErrorOnSubmit(formik, 'description').error
+                  }
                   size="big"
                   disabled={!isFirstStep()}
                   className={getAddClassByStep(classes.input_text)}
@@ -455,22 +508,37 @@ const Steps: React.FC<StepsProps> = ({
                   </Linkify>
                 </>
               )}
-            </Box>
+            </div>
           </Box>
           <Box pb={2} className={classes.wrap_input}>
-            <Box className={classes.firstItem}>
+            <div ref={formRef['category']} className={classes.firstItem}>
               {isFirstStep() ? (
                 <ESSelect
                   fullWidth
                   id="category"
                   name="stepSettingOne.category"
                   value={formik?.values?.stepSettingOne?.category}
-                  onChange={formik.handleChange}
+                  onChange={(e) => {
+                    formik.handleChange(e)
+                    handleUpdateValidateField('category')
+                  }}
                   label={i18n.t('common:streaming_setting_screen.category')}
                   required={true}
                   size="big"
-                  helperText={formik?.touched?.stepSettingOne?.category && formik?.errors?.stepSettingOne?.category}
-                  error={formik?.touched?.stepSettingOne?.category && !!formik?.errors?.stepSettingOne?.category}
+                  helperText={
+                    validateField !== 'all'
+                      ? validateField === 'category'
+                        ? formik?.errors?.stepSettingOne?.category
+                        : ''
+                      : checkLiveDisplayErrorOnSubmit(formik, 'category').helperText
+                  }
+                  error={
+                    validateField !== 'all'
+                      ? validateField === 'category'
+                        ? !!formik?.errors?.stepSettingOne?.category
+                        : false
+                      : checkLiveDisplayErrorOnSubmit(formik, 'category').error
+                  }
                 >
                   <option disabled value={-1}>
                     {i18n.t('common:please_select')}
@@ -494,11 +562,11 @@ const Steps: React.FC<StepsProps> = ({
                   size="big"
                 />
               )}
-            </Box>
+            </div>
           </Box>
           {/* public time video archive */}
           <Box pb={2} className={classes.wrap_input} flexDirection="row" display="flex" alignItems="flex-end">
-            <Box className={classes.firstItem}>
+            <div ref={formRef['ticket_price']} className={classes.firstItem}>
               <ESLabel label={i18n.t('common:streaming_setting_screen.public_time_title')} required={false} />
               {isFirstStep() ? (
                 <ESInputDatePicker
@@ -506,15 +574,24 @@ const Steps: React.FC<StepsProps> = ({
                   placeholder={i18n.t('common:streaming_setting_screen.archived_end_time_pl')}
                   fullWidth
                   value={formik?.values?.stepSettingOne?.video_publish_end_time}
-                  onChange={(date) => {
-                    const temp = moment(date).add(5, 's')
+                  onChange={(e) => {
+                    const temp = moment(e).add(5, 's')
                     formik.setFieldValue('stepSettingOne.video_publish_end_time', temp)
+                    handleUpdateValidateField('video_publish_end_time')
                   }}
                   helperText={
-                    formik?.touched?.stepSettingOne?.video_publish_end_time && formik?.errors?.stepSettingOne?.video_publish_end_time
+                    validateField !== 'all'
+                      ? validateField === 'video_publish_end_time'
+                        ? formik?.errors?.stepSettingOne?.video_publish_end_time
+                        : ''
+                      : checkLiveDisplayErrorOnSubmit(formik, 'video_publish_end_time').helperText
                   }
                   error={
-                    formik?.touched?.stepSettingOne?.video_publish_end_time && !!formik?.errors?.stepSettingOne?.video_publish_end_time
+                    validateField !== 'all'
+                      ? validateField === 'video_publish_end_time'
+                        ? !!formik?.errors?.stepSettingOne?.video_publish_end_time
+                        : false
+                      : checkLiveDisplayErrorOnSubmit(formik, 'video_publish_end_time').error
                   }
                   minutesStep={1}
                 />
@@ -528,7 +605,7 @@ const Steps: React.FC<StepsProps> = ({
                   {/* {errPublicTime && <FormHelperText error>{errPublicTime}</FormHelperText>} */}
                 </Box>
               )}
-            </Box>
+            </div>
             {isFirstStep() && (
               <Box
                 flexDirection="row"
@@ -579,7 +656,7 @@ const Steps: React.FC<StepsProps> = ({
               {/* TODO: Apply component enter point eXeポイント */}
               {isFirstStep() ? (
                 <Box pb={2} className={classes.box}>
-                  <Box className={classes.firstItem}>
+                  <div ref={formRef['video_publish_end_time']} className={classes.firstItem}>
                     <ESNumberInputStream
                       id="ticket_price"
                       name="stepSettingOne.ticket_price"
@@ -593,9 +670,24 @@ const Steps: React.FC<StepsProps> = ({
                           ? ''
                           : formik?.values?.stepSettingOne?.ticket_price
                       }
-                      onChange={formik.handleChange}
-                      helperText={formik?.touched?.stepSettingOne?.ticket_price && formik?.errors?.stepSettingOne?.ticket_price}
-                      error={formik?.touched?.stepSettingOne?.ticket_price && !!formik?.errors?.stepSettingOne?.ticket_price}
+                      onChange={(e) => {
+                        formik.handleChange(e)
+                        handleUpdateValidateField('ticket_price')
+                      }}
+                      helperText={
+                        validateField !== 'all'
+                          ? validateField === 'ticket_price'
+                            ? formik?.errors?.stepSettingOne?.ticket_price
+                            : ''
+                          : checkLiveDisplayErrorOnSubmit(formik, 'ticket_price').helperText
+                      }
+                      error={
+                        validateField !== 'all'
+                          ? validateField === 'ticket_price'
+                            ? !!formik?.errors?.stepSettingOne?.ticket_price
+                            : false
+                          : checkLiveDisplayErrorOnSubmit(formik, 'ticket_price').error
+                      }
                       size="big"
                       isNumber={true}
                       formik={formik}
@@ -614,7 +706,7 @@ const Steps: React.FC<StepsProps> = ({
                       }
                       classes={{ root: classes.root }}
                     />
-                  </Box>
+                  </div>
                 </Box>
               ) : (
                 <Box pb={2}>
@@ -957,7 +1049,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   detectLink: {
     whiteSpace: 'pre-line',
-    paddingTop: '12px',
     // color: '#ffffffb3',
     display: 'inline-block',
     fontSize: '14px',
