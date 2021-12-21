@@ -179,6 +179,29 @@ export const listChannels = /* GraphQL */ `
     }
   }
 `
+export const getCowellRealtimeStatusConnections = /* GraphQL */ `
+  query GetCowellRealtimeStatusConnections($id: ID!) {
+    getCowellRealtimeStatusConnections(id: $id) {
+      id
+      connectionId
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const listCowellRealtimeStatusConnectionss = /* GraphQL */ `
+  query ListCowellRealtimeStatusConnectionss($filter: ModelCowellRealtimeStatusConnectionsFilterInput, $limit: Int, $nextToken: String) {
+    listCowellRealtimeStatusConnectionss(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        connectionId
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`
 export const getUsersByUuid = /* GraphQL */ `
   query GetUsersByUuid($uuid: String, $sortDirection: ModelSortDirection, $filter: ModelUserFilterInput, $limit: Int, $nextToken: String) {
     getUsersByUuid(uuid: $uuid, sortDirection: $sortDirection, filter: $filter, limit: $limit, nextToken: $nextToken) {
@@ -207,6 +230,54 @@ export const getMessagesByVideoId = /* GraphQL */ `
     getMessagesByVideoId(
       video_id: $video_id
       created_time: $created_time
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        owner
+        text
+        uuid
+        video_id
+        delete_flag
+        video_time
+        display_avatar_time
+        point
+        use_point_id
+        is_premium
+        userId
+        local_id
+        created_time
+        parent {
+          id
+          uuid
+          avatar
+          user_name
+          delete_flag
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`
+export const getMessagesByVideoIdWithSort = /* GraphQL */ `
+  query GetMessagesByVideoIdWithSort(
+    $video_id: String
+    $video_time: ModelIntKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelMessageFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    getMessagesByVideoIdWithSort(
+      video_id: $video_id
+      video_time: $video_time
       sortDirection: $sortDirection
       filter: $filter
       limit: $limit
