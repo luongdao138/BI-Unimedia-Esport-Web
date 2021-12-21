@@ -292,7 +292,7 @@ const useStyles = makeStyles((theme) => ({
   listText: {
     fontSize: 16,
     color: theme.palette.text.primary,
-    maxWidth: '82px',
+    maxWidth: '93px',
   },
   listTextWide: {
     maxWidth: 'none',

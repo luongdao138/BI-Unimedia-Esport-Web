@@ -12,9 +12,11 @@ export const getServerSideProps = storeWrapper.getServerSideProps(async ({ store
   await dispatch(actions.getTournamentDetail(String(params.hash_key)))
   const arena = selectors.getTournamentDetail(store.getState())
   const title = `${i18n.t('common:page_head.arena_detail_title')}｜${arena?.attributes?.title || ''}`
+  const image = arena?.attributes?.cover_image
   return {
     props: {
       title,
+      image,
     },
   }
 })

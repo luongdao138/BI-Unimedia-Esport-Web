@@ -252,6 +252,7 @@ export default {
     copyright_symbol: '© ',
     copyright_text: ' NTTe-Sports',
     download_app_version: 'アプリ版ダウンロードはこちら',
+    app_info: 'info.eXelab.jp',
     app_version: 'アプリ版eXeLAB',
     app_desc: '以下のボタンから「アプリ版eXeLAB」をインストールすることができます。',
     top_video: 'お気に入りチャンネル',
@@ -259,7 +260,7 @@ export default {
     viewing_history: '視聴履歴',
     delivery_management: '配信管理',
     video_distribution_application: '動画配信申請',
-    eXeLAB_link: 'eXeLABへ',
+    eXeLAB_link: 'eXeLAB TOPへ',
     stream_menu_video_top: '動画TOPへ',
   },
   community: {
@@ -607,6 +608,7 @@ export default {
     },
     result_incomplete: '結果の入力がまだ行われていません',
     not_entered: '未入力',
+    undefeated: '不戦敗',
     match_not_yet: 'まだ作成されていません',
     third_place: '（3位決定戦あり）',
     no_third_place: '（3位決定戦なし）',
@@ -642,6 +644,13 @@ export default {
         additionalText: '確定以降の参加枠の変更はできません。',
         confirmationText: '確定する',
         cancellationText: 'キャンセル',
+      },
+      enter_score_information_dialog: {
+        title: 'スコア入力方法',
+        row1col1: '勝者の決定',
+        row1col2: '対戦の勝者アイコンを選択してください。',
+        row2col1: 'スコア入力',
+        row2col2: 'スコアを2桁で入力してください。尚、スコアは勝者の選択には影響ありません。',
       },
     },
     dialog: {
@@ -698,6 +707,7 @@ export default {
     update_with_content: 'この内容で更新する',
     see_app: 'バトルロイヤル形式の大会はアプリでご覧ください。',
     install_app: 'お手持ちのスマートフォンより、アプリをインストールしてください。',
+    enter_score_info_title_dialog: 'スコア入力について',
   },
   recruitment: {
     recommended_recruitment_list: 'おすすめの募集一覧',

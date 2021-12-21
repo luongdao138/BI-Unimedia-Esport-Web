@@ -25,9 +25,11 @@ import * as commonActions from '@store/common/actions'
 
 interface Props {
   formik?: FormikProps<FormLiveType>
+  validateField?: string
+  handleUpdateValidateField?: (value: string) => void
 }
 
-const LiveStreamContainer: React.FC<Props> = ({ formik }) => {
+const LiveStreamContainer: React.FC<Props> = ({ formik, validateField, handleUpdateValidateField }) => {
   const [step, setStep] = useState(1)
   const router = useRouter()
   const dispatch = useAppDispatch()
@@ -293,6 +295,8 @@ const LiveStreamContainer: React.FC<Props> = ({ formik }) => {
         disableLoader={modal && (stateChannelMedia === EVENT_STATE_CHANNEL.RUNNING || !stateChannelMedia)}
         obsStatusDynamo={obsStatusDynamo}
         videoStatusDynamo={videoStatusDynamo}
+        validateField={validateField}
+        handleUpdateValidateField={handleUpdateValidateField}
       />
       <ESModal open={modal && showResultDialog} handleClose={handleClose}>
         <BlankLayout>

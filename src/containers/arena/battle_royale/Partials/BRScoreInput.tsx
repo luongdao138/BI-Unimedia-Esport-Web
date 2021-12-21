@@ -33,10 +33,17 @@ const BRScoreInput: React.FC<
     value: number | ''
     onAttackError: (error: ErrorType) => void
     onChange: ({ target: { value: string } }) => void
+    undefeated: boolean
   }
-> = ({ value, onChange, onAttackError, ...props }) => {
+> = ({ value, onChange, onAttackError, undefeated, ...props }) => {
   const [score, setScore] = useState<ScoreProps>({ value })
   const [error, setError] = useState<ErrorType>({})
+
+  useEffect(() => {
+    if (value === '') {
+      setScore({ value })
+    }
+  }, [value])
 
   useEffect(() => {
     setError(validateError(score))
@@ -56,6 +63,7 @@ const BRScoreInput: React.FC<
 
   const hasError = Object.keys(error).length
 
+  if (undefeated) return <div>—</div>
   return (
     <BRInput
       value={score.value}

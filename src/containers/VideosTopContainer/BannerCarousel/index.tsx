@@ -155,15 +155,18 @@ const BannerCarousel: React.FC<BannerCarouselProps> = ({ data, ...props }) => {
         carouselRef={ref}
         render={(parentWidth, carouselRef) => {
           let currentVisibleSlide = checkCurrentVisible() //1|3|5
-          if (parentWidth <= 992) currentVisibleSlide = 3
+          if (parentWidth <= 992) currentVisibleSlide = checkCurrentVisible() === 1 ? 1 : 3
           if (parentWidth <= 768) currentVisibleSlide = 1
           const { bannerHeight, bannerMaxVisibleSlide, bannerCurrentVisibleSlide, bannerCustomScales } = props
 
-          let width = 700
-          let height = isMobile ? 203 : 340
+          // let width = isMobile ? (203 * 16) / 9 : 700
+          let width = isMobile ? window.innerWidth - 48 : 700
+          // let height = isMobile ? 203 : 340
+          let height = isMobile ? ((window.innerWidth - 48) * 9) / 16 : (700 * 9) / 16
           if (parentWidth <= 414) {
             width = parentWidth
-            height = parentWidth * (17 / 35)
+            // height = parentWidth * (17 / 35)
+            height = parentWidth * (9 / 16)
           }
           return (
             <StackedCarousel
@@ -220,14 +223,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
-    height: 340,
+    // height: 340,
+    height: (700 * 9) / 16,
     userSelect: 'none',
     alignContent: 'center',
   },
   sliderStyle: {
     height: '100%',
     width: '100%',
-    objectFit: 'cover',
+    objectFit: 'contain',
   },
   buttonLeftContainer: (props: { buttonLeftContainer?: any; buttonRightContainer?: any }) => ({
     position: 'absolute',
@@ -272,7 +276,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   [theme.breakpoints.down(750)]: {
     sliderContainer: {
-      height: ((window.innerWidth - 48) * 17) / 35,
+      display: 'flex',
+      justifyContent: 'center',
+      alignContent: 'center',
+      alignItems: 'center',
+      // width: window.innerWidth - 48,
+      // height: ((window.innerWidth - 48) * 9) / 16,
+      width: 'calc(100vw - 48px)',
+      height: 'calc((100vw - 48px) * 9 / 16)',
     },
     buttonLeftContainer: () => ({
       left: 0,
