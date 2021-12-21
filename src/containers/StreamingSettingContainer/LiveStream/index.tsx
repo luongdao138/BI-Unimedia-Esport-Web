@@ -14,9 +14,9 @@ import { FormikProps } from 'formik'
 import ESLoader from '@components/FullScreenLoaderNote'
 import { CONFIRM_SETTING_DELAY, EVENT_STATE_CHANNEL } from '@constants/common.constants'
 import API, { GraphQLResult, graphqlOperation } from '@aws-amplify/api'
-import { onUpdateChannel } from 'src/graphql/subscriptions'
+const { getChannelByArn } = require(`src/graphql.${process.env.NEXT_PUBLIC_AWS_ENV}/queries`)
+const { onUpdateChannel } = require(`src/graphql.${process.env.NEXT_PUBLIC_AWS_ENV}/subscriptions`)
 import * as APIt from 'src/types/graphqlAPI'
-import { getChannelByArn } from 'src/graphql/queries'
 
 interface Props {
   formik?: FormikProps<FormLiveType>
