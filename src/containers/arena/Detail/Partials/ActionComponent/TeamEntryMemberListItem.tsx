@@ -118,6 +118,7 @@ const TeamEntryMemberListItem: React.FC<TeamEntryMemberListProps> = ({
                 focusEvent.onBlur()
               }}
               onFocus={focusEvent.onFocus}
+              endAdornment={<CharacterLimited value={nickname} limit={40} />}
             />
           ) : (
             <Typography className={classes.nameDisabled}>ユーザーを指定するとエントリーネームが入力できます</Typography>
