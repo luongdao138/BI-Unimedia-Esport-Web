@@ -26,4 +26,29 @@ export default createReducer(initialState, (builder) => {
     .addCase(actions.getArchiveDetail.fulfilled, (state, action) => {
       state.archiveDetail = action.payload.data
     })
+    .addCase(actions.overrideArchiveVideo, (state, action) => {
+      const { description, title, publish_flag, thumbnail, uuid } = action.payload
+      const { videos } = state.archiveList
+      const _videos = videos.map((video) => {
+        if (video.uuid !== uuid) return video
+        return {
+          ...video,
+          thumbnail,
+          publish_flag,
+          title,
+          description,
+        }
+      })
+      state.archiveList.videos = _videos
+    })
+    .addCase(actions.overrideDeleteVideo, (state, action) => {
+      const { uuid } = action.payload
+      const { videos, total } = state.archiveList
+      const _videos = videos.filter((video) => video.uuid !== uuid)
+      const _total = total - 1
+      state.archiveList = {
+        videos: _videos,
+        total: _total,
+      }
+    })
 })

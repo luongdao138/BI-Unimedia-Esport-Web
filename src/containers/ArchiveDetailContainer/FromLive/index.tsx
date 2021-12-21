@@ -13,7 +13,11 @@ import { ArchiveDetailFormType, getInitialArchiveDetailValues, validationScheme 
 import { useFormik } from 'formik'
 import useArchivedList from '@containers/ArchivedListContainer/useArchivedList'
 
-const ArchiveDetailFromLiveContainer: React.FC = () => {
+interface Props {
+  isFromSchedule: boolean
+}
+
+const ArchiveDetailFromLiveContainer: React.FC<Props> = ({ isFromSchedule }) => {
   const [step, setStep] = useState(1)
   const { t } = useTranslation('common')
   const classes = useStyles()
@@ -52,7 +56,7 @@ const ArchiveDetailFromLiveContainer: React.FC = () => {
     <div>
       <HeaderWithButton title={t('archive_detail_screen.title')} />
       <Box className={classes.wrapper}>
-        <Steps step={step} onNext={onChangeStep} category={categoryData} formik={formikArchiveDetail} />
+        <Steps step={step} onNext={onChangeStep} category={categoryData} formik={formikArchiveDetail} isFromSchedule={isFromSchedule} />
       </Box>
     </div>
   )

@@ -1,6 +1,6 @@
 import { Box, Grid, Icon, makeStyles, Theme, Typography } from '@material-ui/core'
 import _ from 'lodash'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { FormikProps } from 'formik'
 import ESInput from '@components/Input'
 import i18n from '@locales/i18n'
@@ -30,12 +30,17 @@ import { FIELD_TITLES } from '@containers/StreamingSettingContainer/field_titles
 import { showDialog } from '@store/common/actions'
 import useArchivedList from '@containers/ArchivedListContainer/useArchivedList'
 import useCommonData from '@containers/Lobby/UpsertForm/useCommonData'
+import { useRouter } from 'next/router'
+import { LiveStreamSettingHelper } from '@utils/helpers/LiveStreamSettingHelper'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
+import VideoDeleteConfirmModal from '@containers/ArchiveDetailContainer/DeleteVideoConfirmModal/VideoDeleteConfirmModal'
 
 interface StepsProps {
   step: number
   onNext: (step: number, isShare?: boolean, post?: { title: string; content: string }) => void
   category: GetCategoryResponse
   formik?: FormikProps<ArchiveDetailFormType>
+  isFromSchedule?: boolean
 }
 
 const KEY_TYPE = {
@@ -49,14 +54,28 @@ const Steps: React.FC<StepsProps> = ({
   // onNext,
   category,
   formik,
+  isFromSchedule,
 }) => {
   const classes = useStyles()
   const dispatch = useAppDispatch()
+  const router = useRouter()
+
   const { t } = useTranslation(['common'])
   const [categoryName, setCategoryName] = useState('')
+  const [deleteModalVisible, setDeleteModalVisible] = useState(false)
+  const [validateMode, setValidateMode] = useState('-')
+  const [deleteLoading, setDeleteLoading] = useState(false)
+  const [deleteErrorMsg, setDeleteMsg] = useState('')
+
   const { checkNgWordFields, checkNgWordByField } = useCheckNgWord()
-  const { videoArchivedDetail, updateVideoDetail } = useArchivedList()
+  const { getDisplayErrorFieldArchiveEdit } = LiveStreamSettingHelper
+  const { videoArchivedDetail, updateVideoDetail, overrideVideoArchive, deleteVideoDetail, overrideDeleteVideo } = useArchivedList()
   const { user } = useCommonData()
+
+  const formRef = {
+    title: useRef(null),
+    description: useRef(null),
+  }
 
   useEffect(() => {
     category?.data.forEach((h) => {
@@ -87,9 +106,8 @@ const Steps: React.FC<StepsProps> = ({
   }
 
   const onSubmit = () => {
-    const { title, description, thumbnail, category } = formik.values
+    const { title, description, thumbnail, category, publish_flag, video_publish_end_time } = formik.values
     const { uuid } = videoArchivedDetail
-
     const requestParams = {
       title,
       description,
@@ -97,12 +115,40 @@ const Steps: React.FC<StepsProps> = ({
       category,
       uuid,
       user_id: user?.id,
+      publish_flag: publish_flag ? 1 : 0,
+      video_publish_end_time: video_publish_end_time ? CommonHelper.formatDateTimeJP(video_publish_end_time) : '',
     }
 
-    updateVideoDetail(requestParams)
-    // const requestParams = {
-    //   title: va
-    // }
+    updateVideoDetail(requestParams, (isSuccess, message, data) => {
+      // Show toast
+      dispatch(commonActions.addToast(isSuccess ? t('common:archive_detail_screen.update_archive_video_success') : message))
+      // Update list
+      overrideVideoArchive(data)
+      // Back to prev screen
+      if (isSuccess) {
+        router.back()
+      }
+    })
+  }
+
+  const onDelete = () => {
+    const { uuid } = videoArchivedDetail
+    const requestParams = {
+      user_id: user?.id,
+      video_id: uuid,
+    }
+    setDeleteLoading(true)
+    deleteVideoDetail(requestParams, (isSuccess, message) => {
+      setDeleteLoading(false)
+      // Update list
+      overrideDeleteVideo(uuid)
+      // Back to prev screen
+      if (isSuccess) {
+        router.back()
+      } else {
+        setDeleteMsg(message)
+      }
+    })
   }
 
   const onClickNext = () => {
@@ -123,10 +169,16 @@ const Steps: React.FC<StepsProps> = ({
   }
 
   const onValidateForm = () => {
+    setValidateMode('all')
     // TODO:
     formik.validateForm().then((err) => {
       if (_.isEmpty(err)) {
         onClickNext()
+      } else {
+        const errorField = getDisplayErrorFieldArchiveEdit(formik.errors)
+        if (formRef[errorField]) {
+          window.scrollTo({ behavior: 'smooth', top: formRef[errorField].current.offsetTop - 200 })
+        }
       }
     })
   }
@@ -150,6 +202,15 @@ const Steps: React.FC<StepsProps> = ({
       document.body.style.width = '100%'
       document.body.style.height = '100%'
     }
+  }
+
+  const handleCloseDeleteModal = () => {
+    setDeleteModalVisible(false)
+  }
+
+  const handleOpenDeleteModal = () => {
+    setDeleteModalVisible(true)
+    setDeleteMsg('')
   }
 
   return (
@@ -219,7 +280,7 @@ const Steps: React.FC<StepsProps> = ({
 
           {/* title */}
           <Box pb={2} className={classes.wrap_input}>
-            <Box className={classes.firstItem}>
+            <div ref={formRef['title']} className={classes.firstItem}>
               <ESInput
                 id="title"
                 name="title"
@@ -228,19 +289,30 @@ const Steps: React.FC<StepsProps> = ({
                 labelPrimary={i18n.t('common:streaming_setting_screen.label_input_title')}
                 fullWidth
                 value={isFirstStep() ? formik?.values?.title : formik?.values?.title.trim()}
-                onChange={formik.handleChange}
-                helperText={formik?.touched?.title && formik?.errors.title}
-                error={formik?.touched?.title && !!formik?.errors.title}
+                onChange={(e) => {
+                  formik.handleChange(e)
+                  setValidateMode('title')
+                }}
+                helperText={
+                  validateMode === 'all'
+                    ? getDisplayErrorFieldArchiveEdit(formik.errors) === 'title' && formik?.errors?.title
+                    : validateMode === 'title' && formik?.errors?.title
+                }
+                error={
+                  validateMode === 'all'
+                    ? getDisplayErrorFieldArchiveEdit(formik.errors) === 'title'
+                    : validateMode === 'title' && !!formik?.errors?.title
+                }
                 size="big"
                 disabled={!isFirstStep()}
                 className={getAddClassByStep(classes.input_text)}
               />
-            </Box>
+            </div>
           </Box>
 
           {/* description */}
           <Box pb={2} className={classes.wrap_input}>
-            <Box className={classes.firstItem}>
+            <div ref={formRef['description']} className={classes.firstItem}>
               {isFirstStep() ? (
                 <ESFastInput
                   id="description"
@@ -252,9 +324,20 @@ const Steps: React.FC<StepsProps> = ({
                   labelPrimary={i18n.t('common:streaming_setting_screen.label_input_description')}
                   fullWidth
                   value={formik?.values?.description}
-                  onChange={formik.handleChange}
-                  helperText={formik?.touched?.description && formik?.errors?.description}
-                  error={formik?.touched?.description && !!formik?.errors?.description}
+                  onChange={(e) => {
+                    formik.handleChange(e)
+                    setValidateMode('description')
+                  }}
+                  helperText={
+                    validateMode === 'all'
+                      ? getDisplayErrorFieldArchiveEdit(formik.errors) === 'description' && formik?.errors?.title
+                      : validateMode === 'description' && formik?.errors?.description
+                  }
+                  error={
+                    validateMode === 'all'
+                      ? getDisplayErrorFieldArchiveEdit(formik.errors) === 'description'
+                      : validateMode === 'description' && !!formik?.errors?.description
+                  }
                   size="big"
                   disabled={!isFirstStep()}
                   className={getAddClassByStep(classes.input_text)}
@@ -274,7 +357,7 @@ const Steps: React.FC<StepsProps> = ({
                   </Linkify>
                 </>
               )}
-            </Box>
+            </div>
           </Box>
 
           {/* category */}
@@ -286,7 +369,10 @@ const Steps: React.FC<StepsProps> = ({
                   id="category"
                   name="category"
                   value={formik?.values?.category}
-                  onChange={formik.handleChange}
+                  onChange={(e) => {
+                    formik.handleChange(e)
+                    setValidateMode('category')
+                  }}
                   label={i18n.t('common:streaming_setting_screen.category')}
                   required={true}
                   size="big"
@@ -317,6 +403,40 @@ const Steps: React.FC<StepsProps> = ({
               )}
             </Box>
           </Box>
+
+          {isFromSchedule && (
+            <Box pb={2}>
+              <Box className={classes.label}>{i18n.t('common:archive_detail_screen.notify_date_time')}</Box>
+              <Box className={classes.dateTime} pt={1} pl={1}>
+                {CommonHelper.formatDateTimeJP(videoArchivedDetail?.stream_notify_time)}
+              </Box>
+            </Box>
+          )}
+
+          {isFromSchedule && (
+            <Box pb={2}>
+              <Box className={classes.label}>{i18n.t('common:archive_detail_screen.delivery_date_time')}</Box>
+              <Box className={classes.dateTime} pt={1} pl={1}>
+                {CommonHelper.formatDateTimeJP(videoArchivedDetail?.stream_schedule_start_time)}
+              </Box>
+            </Box>
+          )}
+
+          <Box pb={2}>
+            <Box className={classes.label}>{i18n.t('common:archive_detail_screen.ticket_amount')}</Box>
+            <Box className={classes.dateTime} pt={1} pl={1}>
+              {`${FormatHelper.currencyFormat(videoArchivedDetail?.ticket_price.toString())} ${i18n.t('common:common.money')}`}
+            </Box>
+          </Box>
+
+          {isFromSchedule && (
+            <Box pb={2}>
+              <Box className={classes.label}>{i18n.t('common:archive_detail_screen.ticket_sale_date_time')}</Box>
+              <Box className={classes.dateTime} pt={1} pl={1}>
+                {CommonHelper.formatDateTimeJP(videoArchivedDetail?.sell_ticket_start_time)}
+              </Box>
+            </Box>
+          )}
 
           {/* Archive delivery end date and time */}
           <Box pb={2} className={classes.wrap_input} flexDirection="row" display="flex" alignItems="flex-end">
@@ -372,20 +492,6 @@ const Steps: React.FC<StepsProps> = ({
             )}
           </Box>
 
-          <Box pb={2}>
-            <Box className={classes.label}>{i18n.t('common:archive_detail_screen.ticket_amount')}</Box>
-            <Box className={classes.dateTime} pt={1} pl={1}>
-              {`${FormatHelper.currencyFormat('1500')} ${i18n.t('common:common.money')}`}
-            </Box>
-          </Box>
-
-          <Box pb={2}>
-            <Box className={classes.label}>{i18n.t('common:archive_detail_screen.ticket_sale_date_time')}</Box>
-            <Box className={classes.dateTime} pt={1} pl={1}>
-              2021年6月20日 10:00
-            </Box>
-          </Box>
-
           {/* public delivery */}
           {isFirstStep() ? (
             <Box pb={3 / 8}>
@@ -415,20 +521,24 @@ const Steps: React.FC<StepsProps> = ({
           <Typography className={classes.captionNote}>{i18n.t('common:archive_detail_screen.note_for_publish_delivery_pb')}</Typography>
           <Box paddingBottom={3} />
 
-          <Box display="flex" alignItems="flex-end" pb={2}>
-            <Box className={classes.wrapIcon}>
-              <img src={'/images/icons/download.svg'} className={classes.imageIcon} />
-            </Box>
-            <Box className={classes.textIcon} pl={1}>
-              {i18n.t('common:archive_detail_screen.download_data')}
+          <Box flexDirection="row" display="flex">
+            <Box display="flex" alignItems="flex-end" pb={2}>
+              <Box className={classes.wrapIcon}>
+                <img src={'/images/icons/download.svg'} className={classes.imageIcon} />
+              </Box>
+              <Box className={classes.textIcon} pl={1}>
+                {i18n.t('common:archive_detail_screen.download_data')}
+              </Box>
             </Box>
           </Box>
-          <Box display="flex" alignItems="flex-end" pb={6}>
-            <Box className={classes.wrapIcon}>
-              <img src={'/images/icons/trash.svg'} className={classes.imageIcon} />
-            </Box>
-            <Box className={classes.textIcon} pl={1}>
-              {i18n.t('common:archive_detail_screen.delete_data')}
+          <Box flexDirection="row" display="flex">
+            <Box display="flex" alignItems="flex-end" pb={6} onClick={handleOpenDeleteModal}>
+              <Box className={classes.wrapIcon}>
+                <img src={'/images/icons/trash.svg'} className={classes.imageIcon} />
+              </Box>
+              <Box className={classes.textIcon} pl={1}>
+                {i18n.t('common:archive_detail_screen.delete_data')}
+              </Box>
             </Box>
           </Box>
 
@@ -461,6 +571,14 @@ const Steps: React.FC<StepsProps> = ({
             </Grid>
           )}
         </form>
+        <VideoDeleteConfirmModal
+          open={deleteModalVisible}
+          video={videoArchivedDetail}
+          handleClose={handleCloseDeleteModal}
+          handleDeleteVideo={onDelete}
+          isLoading={deleteLoading}
+          deleteError={deleteErrorMsg}
+        />
       </Box>
     </Box>
   )
@@ -483,6 +601,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: '12px',
     textDecoration: 'underline',
     color: 'rgb(255 255 255 / 70%)',
+    cursor: 'pointer',
   },
   label: {
     fontSize: '16px',

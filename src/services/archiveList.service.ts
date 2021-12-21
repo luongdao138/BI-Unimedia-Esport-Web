@@ -90,7 +90,17 @@ export type UpdateArchiveDetailRequestParams = {
   timezone?: string
 }
 
+export type DeleteArchiveVideoRequestParams = {
+  user_id?: number
+  video_id?: string
+}
+
 export const updateArchiveDetail = async (params: UpdateArchiveDetailRequestParams): Promise<ArchiveDetailResponse> => {
-  const { data } = await api.post<ArchiveDetailResponse>(URI.UPDATE_ARCHIVE_VIDEO, { params })
+  const { data } = await api.post<ArchiveDetailResponse>(URI.UPDATE_ARCHIVE_VIDEO, { ...params })
+  return data
+}
+
+export const deleteArchiveVideo = async (params: DeleteArchiveVideoRequestParams): Promise<ArchiveDetailResponse> => {
+  const { data } = await api.post<ArchiveDetailResponse>(URI.DELETE_ARCHIVE_VIDEO, { ...params })
   return data
 }

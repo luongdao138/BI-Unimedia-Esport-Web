@@ -1,4 +1,4 @@
-import { createAsyncThunk } from '@reduxjs/toolkit'
+import { createAction, createAsyncThunk } from '@reduxjs/toolkit'
 // import * as services from '@services/liveStream.service'
 import * as services from '@services/archiveList.service'
 import { ACTION_ARCHIVE_VIDEO_TYPES } from './types'
@@ -45,130 +45,27 @@ export const updateArchiveVideoDetail = createAsyncThunk<services.ArchiveDetailR
     }
   }
 )
-// export const getLiveSettingInfo = createAsyncThunk<services.LiveStreamSettingResponse, services.LiveStreamSettingParams>(
-//   ACTION_STREAM_TYPES.GET_INFORMATION_LIVE_SETTING,
-//   async (liveSettingParams, { rejectWithValue }) => {
-//     try {
-//       const res = await services.getLiveSetting({ ...liveSettingParams, timezone: getTimeZone() })
-//       return res
-//     } catch (error) {
-//       if (!error.response) {
-//         throw error
-//       }
-//       return rejectWithValue(error.response.data)
-//     }
-//   }
-// )
-//
-// export const getScheduleSettingInfo = createAsyncThunk<services.LiveStreamSettingResponse, services.LiveStreamSettingParams>(
-//   ACTION_STREAM_TYPES.GET_INFORMATION_SCHEDULE,
-//   async (liveSettingParams, { rejectWithValue }) => {
-//     try {
-//       const res = await services.getScheduleSetting({ ...liveSettingParams, timezone: getTimeZone() })
-//       return res
-//     } catch (error) {
-//       if (!error.response) {
-//         throw error
-//       }
-//       return rejectWithValue(error.response.data)
-//     }
-//   }
-// )
-//
-// export const setLiveStream = createAsyncThunk<services.SetLiveStreamResponse, services.SetLiveStreamParams>(
-//   ACTION_STREAM_TYPES.SET_INFORMATION_LIVE_SETTING,
-//   async (setLiveStreamParams, { rejectWithValue }) => {
-//     try {
-//       const res = await services.setLiveSetting({ ...setLiveStreamParams, timezone: getTimeZone() })
-//       if (res?.code === 200) {
-//         return res
-//       } else {
-//         // throw res.message
-//         return rejectWithValue(JSON.stringify(res.message))
-//       }
-//     } catch (error) {
-//       if (!error.response) {
-//         throw error
-//       }
-//       return rejectWithValue(error.response.data)
-//     }
-//   }
-// )
-//
-// export const getStreamUrlAndKeyInfo = createAsyncThunk<services.GetStreamUrlAndKeyResponse, services.StreamUrlAndKeyParams>(
-//   ACTION_STREAM_TYPES.GET_STREAM_URL_AND_KEY,
-//   async (secretKeyParams, { rejectWithValue }) => {
-//     try {
-//       const res = await services.getStreamUrlAndKey({ ...secretKeyParams, is_medialive: true })
-//       if (res?.code === 200) {
-//         // console.log("====getStreamUrlAndKey====",res)
-//         return res
-//       } else {
-//         // throw res.message
-//         return rejectWithValue(res)
-//       }
-//     } catch (error) {
-//       if (!error.response) {
-//         throw error
-//       }
-//       return rejectWithValue(error.response.data)
-//     }
-//   }
-// )
-//
-// export const getCategory = createAsyncThunk<services.GetCategoryResponse>(
-//   ACTION_STREAM_TYPES.GET_CATEGORY,
-//   async (_, { rejectWithValue }) => {
-//     try {
-//       const res = await services.getCategory()
-//       if (res?.code === 200) {
-//         return res
-//       } else {
-//         // throw res.message
-//         return rejectWithValue(JSON.stringify(res.message))
-//       }
-//     } catch (error) {
-//       if (!error.response) {
-//         throw error
-//       }
-//       return rejectWithValue(error.response.data)
-//     }
-//   }
-// )
-//
-// export const getChannel = createAsyncThunk<services.GetChannelResponse>(ACTION_STREAM_TYPES.GET_CHANNEL, async (_, { rejectWithValue }) => {
-//   try {
-//     const res = await services.getChannel()
-//     if (res?.code === 200) {
-//       return res
-//     } else {
-//       // throw res.message
-//       return rejectWithValue(JSON.stringify(res.message))
-//     }
-//   } catch (error) {
-//     if (!error.response) {
-//       throw error
-//     }
-//     return rejectWithValue(error.response.data)
-//   }
-// })
-//
-// export const setChannel = createAsyncThunk<services.SetChannelResponse, services.SetChannelParams>(
-//   ACTION_STREAM_TYPES.SET_CHANNEL,
-//   async (setChannelParams, { rejectWithValue }) => {
-//     try {
-//       const res = await services.setChannel(setChannelParams)
-//       if (res?.code === 200) {
-//         return res
-//       } else {
-//         // throw res.message
-//         return rejectWithValue(JSON.stringify(res.message))
-//       }
-//     } catch (error) {
-//       if (!error.response) {
-//         throw error
-//       }
-//       return rejectWithValue(error.response.data)
-//     }
-//   }
-// )
+
+export const overrideArchiveVideo = createAction<{
+  uuid: string
+  thumbnail?: string
+  title?: string
+  publish_flag?: number
+  description?: string
+}>(ACTION_ARCHIVE_VIDEO_TYPES.OVERRIDE_ARCHIVE_VIDEO_DETAIL)
+
+export const deleteArchiveVideo = createAsyncThunk<services.ArchiveDetailResponse, services.DeleteArchiveVideoRequestParams>(
+  ACTION_ARCHIVE_VIDEO_TYPES.DELETE_ARCHIVE_VIDEO,
+  async ({ ...params }, { rejectWithValue }) => {
+    try {
+      return await services.deleteArchiveVideo({ ...params })
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
+export const overrideDeleteVideo = createAction<{ uuid: string }>(ACTION_ARCHIVE_VIDEO_TYPES.OVERRIDE_DELETE_VIDEO)
