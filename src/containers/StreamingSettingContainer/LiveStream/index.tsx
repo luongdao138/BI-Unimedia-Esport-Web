@@ -14,14 +14,13 @@ import { FormikProps } from 'formik'
 import ESLoader from '@components/FullScreenLoaderNote'
 import { CONFIRM_SETTING_DELAY, EVENT_LIVE_STATUS, EVENT_STATE_CHANNEL } from '@constants/common.constants'
 import API, { GraphQLResult, graphqlOperation } from '@aws-amplify/api'
-import { onUpdateChannel, onUpdateVideo } from 'src/graphql/subscriptions'
 import * as APIt from 'src/types/graphqlAPI'
-import { getChannelByArn, getVideoByUuid } from 'src/graphql/queries'
 import { STATUS_VIDEO } from '@services/videoTop.services'
-import { onCreateVideo } from 'src/graphql/subscriptions'
 import { useAppDispatch } from '@store/hooks'
 import { useTranslation } from 'react-i18next'
 import * as commonActions from '@store/common/actions'
+const { getChannelByArn, getVideoByUuid } = require(`src/graphql.${process.env.NEXT_PUBLIC_AWS_ENV}/queries`)
+const { onCreateVideo, onUpdateChannel, onUpdateVideo } = require(`src/graphql.${process.env.NEXT_PUBLIC_AWS_ENV}/subscriptions`)
 
 interface Props {
   formik?: FormikProps<FormLiveType>

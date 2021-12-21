@@ -1,7 +1,6 @@
 import { Box, makeStyles, Typography, CircularProgress, Icon } from '@material-ui/core'
 import React, { ReactNode } from 'react'
 import { purchasePoints } from './index'
-// import * as APIt from 'src/types/graphqlAPI'
 import { FormatHelper } from '@utils/helpers/FormatHelper'
 import { useTranslation } from 'react-i18next'
 import { hexToRgba } from '@utils/helpers/CommonHelper'
