@@ -144,12 +144,15 @@ const ProgramInfo: React.FC<ProgramInfoProps> = ({ video_id }) => {
               return text
             }
             return (
-              <div
+              <a
+                href={text}
+                // eslint-disable-next-line react/jsx-no-target-blank
+                target={'_blank'}
                 key={text}
-                dangerouslySetInnerHTML={{
-                  __html: CommonHelper.linkifyString(text),
-                }}
-              ></div>
+                className={classes.linkInnerDescription}
+              >
+                {text}
+              </a>
             )
           })}
         </div>
@@ -340,6 +343,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     paddingTop: theme.spacing(3),
     textAlign: 'center',
+  },
+  linkInnerDescription: {
+    fontSize: 14,
+    color: '#FFFFFF',
+    opacity: 1,
   },
 }))
 export default ProgramInfo

@@ -81,6 +81,7 @@ const ScoreModal: React.FC<ScoreModalProps> = ({ meta, targetIds, tournament, se
     setTargetMatch(match)
     setEditingMatch(undefined)
     setRefresh(true)
+    handleClose(false)
   }
 
   const participantItem = (user, avatar, type) => {

@@ -214,12 +214,15 @@ const DistributorInfo: React.FC<DistributorInfoProps> = ({ video_id }) => {
               return text
             }
             return (
-              <div
+              <a
+                href={text}
+                // eslint-disable-next-line react/jsx-no-target-blank
+                target={'_blank'}
                 key={text}
-                dangerouslySetInnerHTML={{
-                  __html: CommonHelper.linkifyString(text),
-                }}
-              />
+                className={classes.linkInnerDescription}
+              >
+                {text}
+              </a>
             )
           })}
         </div>
@@ -242,6 +245,7 @@ const DistributorInfo: React.FC<DistributorInfoProps> = ({ video_id }) => {
       </>
     )
   }
+
   return (
     <Box className={classes.container}>
       <Box className={classes.titleContainer}>
@@ -251,7 +255,7 @@ const DistributorInfo: React.FC<DistributorInfoProps> = ({ video_id }) => {
               <ESAvatar className={classes.avatar} alt={detailVideoResult?.user_nickname} src={detailVideoResult?.user_avatar} />
               <Box className={classes.textContainer}>
                 {/* <Typography className={classes.title}>{'配信者の名前がはいります'}</Typography> */}
-                {detailVideoResult?.channel_name && <Typography className={classes.title}>{detailVideoResult?.channel_name}</Typography>}
+                {detailVideoResult?.user_nickname && <Typography className={classes.title}>{detailVideoResult?.user_nickname}</Typography>}
                 {channelDescription()}
               </Box>
             </Box>
@@ -449,6 +453,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexWrap: 'wrap',
     overflow: 'hidden',
+  },
+  linkInnerDescription: {
+    fontSize: 14,
+    color: '#FFFFFF',
+    opacity: 1,
   },
   [theme.breakpoints.up(1167)]: {
     itemContainer: {

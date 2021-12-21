@@ -11,7 +11,7 @@ import useSummary from './useSummary'
 import ESLoader from '@components/FullScreenLoader'
 import Yup from '@utils/Yup'
 import { useFormik } from 'formik'
-import CoverUploader from '@containers/arena/UpsertForm/Partials/CoverUploader'
+import CoverUploaderWinner from '@containers/arena/UpsertForm/Partials/CoverUploaderWinner'
 import useUploadImage from '@utils/hooks/useUploadImage'
 import useCheckNgWord from '@utils/hooks/useCheckNgWord'
 import { useAppDispatch } from '@store/hooks'
@@ -115,8 +115,8 @@ const SummaryModal: React.FC<SummaryModalProps> = ({ tournament, open, handleClo
               <Typography className={classes.summaryTitle}>{data.title}</Typography>
             </Box>
             <Box width="100%" pb={4} pt={4}>
-              <CoverUploader
-                ratio={25 / 7}
+              <CoverUploaderWinner
+                ratio={16 / 9}
                 src={values.summary_image}
                 onChange={handleImageUpload}
                 isUploading={isUploading}
