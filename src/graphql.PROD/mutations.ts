@@ -278,3 +278,42 @@ export const deleteChannel = /* GraphQL */ `
     }
   }
 `
+export const createCowellRealtimeStatusConnections = /* GraphQL */ `
+  mutation CreateCowellRealtimeStatusConnections(
+    $input: CreateCowellRealtimeStatusConnectionsInput!
+    $condition: ModelCowellRealtimeStatusConnectionsConditionInput
+  ) {
+    createCowellRealtimeStatusConnections(input: $input, condition: $condition) {
+      id
+      connectionId
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const updateCowellRealtimeStatusConnections = /* GraphQL */ `
+  mutation UpdateCowellRealtimeStatusConnections(
+    $input: UpdateCowellRealtimeStatusConnectionsInput!
+    $condition: ModelCowellRealtimeStatusConnectionsConditionInput
+  ) {
+    updateCowellRealtimeStatusConnections(input: $input, condition: $condition) {
+      id
+      connectionId
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const deleteCowellRealtimeStatusConnections = /* GraphQL */ `
+  mutation DeleteCowellRealtimeStatusConnections(
+    $input: DeleteCowellRealtimeStatusConnectionsInput!
+    $condition: ModelCowellRealtimeStatusConnectionsConditionInput
+  ) {
+    deleteCowellRealtimeStatusConnections(input: $input, condition: $condition) {
+      id
+      connectionId
+      createdAt
+      updatedAt
+    }
+  }
+`
