@@ -1,4 +1,4 @@
-import { FORMAT_DATE_TIME_JP, FORMAT_SCHEDULE_TIME, TAX, REGEX_DETECT_BRANCH } from '@constants/common.constants'
+import { FORMAT_DATE_TIME_JP, FORMAT_SCHEDULE_TIME, TAX, REGEX_DETECT_BRANCH, FORMAT_YEAR_MONTH } from '@constants/common.constants'
 import { StoreType } from '@store/store'
 import moment from 'moment'
 import * as mTimeZone from 'moment-timezone'
@@ -252,6 +252,10 @@ const formatDateTimeJP = (date: string): string => {
   const dateResult = moment(date).format(FORMAT_DATE_TIME_JP)
   return dateResult
 }
+const formatDateYearMonth = (date: string): string => {
+  const dateResult = moment(date).format(FORMAT_YEAR_MONTH)
+  return dateResult
+}
 
 const formatTimeVideo = (date: string): string => {
   const dateTime = moment(date).format(FORMAT_SCHEDULE_TIME)
@@ -333,6 +337,10 @@ const splitToLinkifyComponent = (text = '') => {
   return results
 }
 
+const randomIntegerInRange = (min: number, max: number): number => {
+  return Math.floor(Math.random() * (max - min + 1)) + min
+}
+
 export const CommonHelper = {
   validateEmail,
   genRanHex,
@@ -357,4 +365,6 @@ export const CommonHelper = {
   validateImageUrl,
   linkifyString,
   splitToLinkifyComponent,
+  randomIntegerInRange,
+  formatDateYearMonth,
 }

@@ -310,6 +310,9 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   const handleUpdateVideoDuration = useRef(null)
   const onUpdateVideoduration = (duration) => {
     if (!state.playing) {
+      if (Math.floor(duration) !== liveStreamInfo.played_second) {
+        changeVideoTime(Math.floor(duration), Math.floor(duration))
+      }
       setDurationPlayer(duration)
     }
   }
