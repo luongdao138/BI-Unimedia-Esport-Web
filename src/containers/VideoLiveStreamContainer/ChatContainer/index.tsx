@@ -285,21 +285,20 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       cache.clearAll()
     }, [contentRect?.width])
 
+    const debouncedHandleLoadMore = debounce(() => {
+      fetchPrevMess && fetchPrevMess()
+    }, 300)
+
     const handleLoadMore = () => {
-      // console.log('🚀 ~ handleLoadMore ~ handleLoadMore---000', isTokenBroken)
-      // console.log('🚀 ~ handleLoadMore ~ handleLoadMore', isStreaming && prevToken)
       // only scroll to load more mess if rewinded or is live stream and has prevToken (has mess in prev page)
       if (!isGettingPrevRewindMess && !isGettingRewindMess && (isTokenBroken || (isStreaming && prevToken))) {
-        fetchPrevMess && fetchPrevMess()
+        debouncedHandleLoadMore()
       }
     }
 
-    const debouncedHandleLoadMore = debounce(() => handleLoadMore(), 300)
-
     useEffect(() => {
       if (scrolling > 1) {
-        // console.log('🚀 ~ useEffect ~ scrolling', scrolling)
-        debouncedHandleLoadMore()
+        handleLoadMore()
       }
     }, [scrolling])
 
@@ -734,7 +733,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         // @ts-ignore
         if (event.wheelDeltaY > 0 && messContainer.offsetHeight === messContainer.scrollHeight) {
           // console.log('🚀 ~ test--1111', messContainer)
-          debouncedHandleLoadMore()
+          handleLoadMore()
         }
       }
     }
