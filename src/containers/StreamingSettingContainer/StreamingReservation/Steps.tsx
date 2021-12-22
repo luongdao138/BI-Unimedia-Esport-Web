@@ -404,7 +404,9 @@ const Steps: React.FC<StepsProps> = ({
       (status === 1 || (notifyTime && notifyTime <= current) || obsStatusDynamo == TAG_STATUS_RECORD.LIVE_STREAMING) &&
       stateChannelArn !== EVENT_STATE_CHANNEL.STOPPED
     ) {
-      window.open(`${baseViewingURL}${formik?.values?.stepSettingTwo?.uuid}`, '_blank')
+      if (!(obsStatusDynamo == TAG_STATUS_RECORD.UPDATED_NOT_START && videoStatusDynamo == STATUS_VIDEO.OVER_LOAD)) {
+        window.open(`${baseViewingURL}${formik?.values?.stepSettingTwo?.uuid}`, '_blank')
+      }
     }
   }
 

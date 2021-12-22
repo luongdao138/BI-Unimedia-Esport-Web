@@ -41,6 +41,7 @@ import Linkify from 'react-linkify'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
 import SmallLoader from '@components/Loader/SmallLoader'
 import { LiveStreamSettingHelper } from '@utils/helpers/LiveStreamSettingHelper'
+import { STATUS_VIDEO } from '@services/videoTop.services'
 
 interface StepsProps {
   step: number
@@ -372,7 +373,9 @@ const Steps: React.FC<StepsProps> = ({
       (obsStatusDynamo == TAG_STATUS_RECORD.UPDATED_NOT_START || obsStatusDynamo == TAG_STATUS_RECORD.LIVE_STREAMING) &&
       stateChannelArn !== EVENT_STATE_CHANNEL.STOPPED
     ) {
-      window.open(`${baseViewingURL}${formik?.values?.stepSettingOne?.linkUrl}`, '_blank')
+      if (!(obsStatusDynamo == TAG_STATUS_RECORD.UPDATED_NOT_START && videoStatusDynamo == STATUS_VIDEO.OVER_LOAD)) {
+        window.open(`${baseViewingURL}${formik?.values?.stepSettingOne?.linkUrl}`, '_blank')
+      }
     }
   }
 
