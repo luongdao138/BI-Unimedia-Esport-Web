@@ -49,7 +49,7 @@ export const getInitialArchiveDetailValues = (data?: ArchiveDetailDataType): Arc
   use_ticket: data && data.use_ticket ? (data.use_ticket == 1 ? true : false) : false,
   share_sns_flag: data && data.share_sns_flag ? (data.share_sns_flag == 1 ? true : false) : false,
   publish_flag: data && data.publish_flag?.toString() ? (data.publish_flag?.toString() == '1' ? true : false) : true,
-  video_publish_end_time: data && data.video_publish_end_time ? null : null,
+  video_publish_end_time: data && data.video_publish_end_time ? data.video_publish_end_time : null,
   status: data?.status,
   channel_id: data && data.channel_id ? data.channel_id : -1,
   //check step

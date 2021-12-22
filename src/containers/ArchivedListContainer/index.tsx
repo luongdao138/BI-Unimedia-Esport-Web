@@ -16,6 +16,8 @@ import { getTimeZone } from '@utils/helpers/CommonHelper'
 import moment from 'moment'
 import { FORMAT_DATE_TIME_JP, LIVE_VIDEO_TYPE } from '@constants/common.constants'
 import { STATUS_VIDEO } from '@services/videoTop.services'
+import VideoDeleteConfirmModal from '@containers/ArchiveDetailContainer/DeleteVideoConfirmModal/VideoDeleteConfirmModal'
+import ESLoader from '@components/FullScreenLoader'
 
 const ITEM_PER_PAGE = 10
 
@@ -29,7 +31,45 @@ const ArchivedListContainer: React.FC = () => {
 
   const colFirstWidth = 160
   const isSmallScreen = useMediaQuery(theme.breakpoints.down(475))
-  // const archivedList = Array(5).fill('')
+
+  const { videoArchivedList, getVideoArchivedList, deleteVideoDetail, overrideDeleteVideo, meta_archive_list } = useArchivedList()
+  const { user } = useCommonData()
+  const [page, setPage] = useState(1)
+  const [deleteModalVisible, setDeleteModalVisible] = useState(false)
+  const [selectedDeleteVideo, setSelectedDeleteVideo] = useState(null)
+  const [deleteLoading, setDeleteLoading] = useState(false)
+  const [deleteErrorMsg, setDeleteMsg] = useState('')
+
+  const isLoading = !!meta_archive_list.pending
+  const handleCloseDeleteModal = () => {
+    setDeleteModalVisible(false)
+  }
+
+  const handleOpenDeleteModal = () => {
+    setDeleteModalVisible(true)
+    setDeleteMsg('')
+  }
+
+  const onDelete = () => {
+    const { uuid } = selectedDeleteVideo
+    const requestParams = {
+      user_id: user?.id,
+      video_id: uuid,
+    }
+    setDeleteLoading(true)
+    deleteVideoDetail(requestParams, (isSuccess, message) => {
+      setDeleteLoading(false)
+      // Update list
+      overrideDeleteVideo(uuid)
+      // Back to prev screen
+      if (isSuccess) {
+        handleCloseDeleteModal()
+      } else {
+        setDeleteMsg(message)
+      }
+    })
+  }
+
   const redirectArchivedDetail = (uuid, scheduledFlag) => () => {
     router.push({
       pathname: ESRoutes.ARCHIVE_DETAIL,
@@ -37,9 +77,6 @@ const ArchivedListContainer: React.FC = () => {
     })
   }
 
-  const { videoArchivedList, getVideoArchivedList } = useArchivedList()
-  const { user } = useCommonData()
-  const [page, setPage] = useState(1)
   const getArchiveList = () => {
     if (!videoArchivedList) {
       return []
@@ -73,23 +110,18 @@ const ArchivedListContainer: React.FC = () => {
       scheduled_flag: scheduledFlag,
     } = rowData
 
-    const onNavigateLive = (data) => () => {
-      let vid = data?.uuid
-      if (data.status === STATUS_VIDEO.LIVE_STREAM && data.scheduled_flag === LIVE_VIDEO_TYPE.LIVE) {
-        vid = data?.user_id
+    const getVidID = () => {
+      let vid = rowData?.uuid
+      if (rowData.status === STATUS_VIDEO.LIVE_STREAM && rowData.scheduled_flag === LIVE_VIDEO_TYPE.LIVE) {
+        vid = rowData?.user_id
       }
-      router.push(
-        {
-          pathname: ESRoutes.TOP,
-          query: { vid: vid },
-        },
-        undefined,
-        {
-          shallow: true,
-        }
-      )
+      return vid
     }
 
+    const handleDeleteVideoClick = (rowData) => () => {
+      setSelectedDeleteVideo(rowData)
+      handleOpenDeleteModal()
+    }
     return (
       <Box className={classes.wrapItem} key={rowData?.uuid} onClick={isMobile ? redirectArchivedDetail(uuid, scheduledFlag) : null}>
         <table className={classes.outerTable}>
@@ -124,16 +156,20 @@ const ArchivedListContainer: React.FC = () => {
                     </Typography>
                   )}
                   {!isMobile && (
-                    <ESTooltip title="Title" arrow placement="top-start">
-                      <div>{title}</div>
-                    </ESTooltip>
+                    <Box flexDirection="row" display="flex">
+                      <ESTooltip title={rowData?.title} arrow placement="top-start">
+                        <div>{rowData?.title}</div>
+                      </ESTooltip>
+                    </Box>
                   )}
                 </Box>
               </td>
             </tr>
             <tr>
               <td style={{ verticalAlign: 'bottom', paddingRight: 10 }} className={classes.wrapImage}>
-                <img onClick={onNavigateLive(rowData)} src={thumbnail ?? IMG_PLACEHOLDER} className={classes.image} />
+                <a target="_blank" rel="noopener noreferrer" href={`${ESRoutes.TOP}?vid=${getVidID()}`}>
+                  <img src={thumbnail ?? IMG_PLACEHOLDER} className={classes.image} />
+                </a>
               </td>
               <td>
                 <table className={classes.innerTable}>
@@ -152,7 +188,10 @@ const ArchivedListContainer: React.FC = () => {
                             <Box mr={1} component="span">
                               <img src={'/images/icons/download.svg'} className={classes.imageReload} />
                             </Box>
-                            <img src={'/images/icons/trash.svg'} className={classes.imageReload} />
+
+                            <Box mr={1} component="span" onClick={handleDeleteVideoClick(rowData)}>
+                              <img src={'/images/icons/trash.svg'} className={classes.imageReload} />
+                            </Box>
                           </td>
                           <td>
                             <Box>{t('archived_list_screen.viewNumber')}</Box>
@@ -201,6 +240,7 @@ const ArchivedListContainer: React.FC = () => {
             </tr>
           </tbody>
         </table>
+        {isLoading && <ESLoader open={isLoading} />}
       </Box>
     )
   }
@@ -258,12 +298,23 @@ const ArchivedListContainer: React.FC = () => {
             />
           </Box>
         )}
+        <VideoDeleteConfirmModal
+          open={deleteModalVisible}
+          video={selectedDeleteVideo}
+          handleClose={handleCloseDeleteModal}
+          handleDeleteVideo={onDelete}
+          isLoading={deleteLoading}
+          deleteError={deleteErrorMsg}
+        />
       </Box>
     </div>
   )
 }
 
 const useStyles = makeStyles((theme) => ({
+  imageReload: {
+    cursor: 'pointer',
+  },
   paginationStyle: {
     marginRight: '-24px',
     '& .MuiPaginationItem-root': {
