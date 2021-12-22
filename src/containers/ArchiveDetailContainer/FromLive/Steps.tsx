@@ -521,15 +521,21 @@ const Steps: React.FC<StepsProps> = ({
           <Typography className={classes.captionNote}>{i18n.t('common:archive_detail_screen.note_for_publish_delivery_pb')}</Typography>
           <Box paddingBottom={3} />
 
-          <Box flexDirection="row" display="flex">
-            <Box display="flex" alignItems="flex-end" pb={2}>
+          <Box flexDirection="row" display="flex" marginBottom={1}>
+            <a
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ display: 'flex', alignItems: 'flex-end' }}
+              download
+              href={videoArchivedDetail?.url_download}
+            >
               <Box className={classes.wrapIcon}>
                 <img src={'/images/icons/download.svg'} className={classes.imageIcon} />
               </Box>
               <Box className={classes.textIcon} pl={1}>
                 {i18n.t('common:archive_detail_screen.download_data')}
               </Box>
-            </Box>
+            </a>
           </Box>
           <Box flexDirection="row" display="flex">
             <Box display="flex" alignItems="flex-end" pb={6} onClick={handleOpenDeleteModal}>
