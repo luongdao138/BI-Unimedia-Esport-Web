@@ -36,6 +36,8 @@ import 'src/containers/VideoPlayer/customPlugins/plugin.scss'
 import 'src/theme/globalcss/layout.scss'
 import Script from 'react-load-script'
 import Amplify from 'aws-amplify'
+import { noop } from 'lodash'
+
 // [CW] Configure Amplify for chat realtime in live stream video
 const AWS_PROJECT_REGION = process.env.NEXT_PUBLIC_AWS_PROJECT_REGION
 const AWS_APPSYNC_GRAPHQLENDPOINT = process.env.NEXT_PUBLIC_AWS_APPSYNC_GRAPHQLENDPOINT
@@ -82,6 +84,15 @@ const App = ({ Component, pageProps }: Props) => {
   }, [accessToken])
 
   useEffect(() => {
+    if (process.env.NEXT_PUBLIC_AWS_ENV !== 'DEV') {
+      // eslint-disable-next-line no-console
+      console.log = noop
+      // eslint-disable-next-line no-console
+      console.warn = noop
+      // eslint-disable-next-line no-console
+      console.error = noop
+    }
+
     // Remove the server-side injected CSS.
     const jssStyles = document.querySelector('#jss-server-side')
 
