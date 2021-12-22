@@ -31,6 +31,7 @@ export type ArchiveDetailDataType = {
   channel_id?: number
   arn?: string
   scheduled_flag: number
+  url_download: string
 }
 
 export type TYPE_VIDEO_ARCHIVE = {
