@@ -35,7 +35,6 @@ const LiveStreamListContainer: React.FC = () => {
   const onChangeSort = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setEnteredSort(event.target.value)
   }
-
   const totalTimeVideo = itemLiveStreamReport['total_time_video'] || 0
   const totalTimeUserWatch = itemLiveStreamReport['total_time_user_watch'] || 0
   const totalUserWatch = itemLiveStreamReport['total_user_watch'] || 0

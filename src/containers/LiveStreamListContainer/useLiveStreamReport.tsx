@@ -15,7 +15,9 @@ const useLiveStreamReport = () => {
   const meta = useAppSelector(getLiveStreamReportMeta)
   const itemLiveStreamReport = liveStreamReport?.data?.item ? liveStreamReport?.data?.item : {}
   const listDates = Array.isArray(liveStreamReport?.data?.list_dates)
-    ? liveStreamReport?.data?.list_dates
+    ? liveStreamReport?.data?.list_dates.length > 0
+      ? liveStreamReport?.data?.list_dates
+      : [t('point_management_tab.choosing')]
     : [t('point_management_tab.choosing')]
   const sortOptionsListDates = [...listDates]
 
