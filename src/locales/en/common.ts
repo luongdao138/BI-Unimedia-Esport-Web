@@ -1497,6 +1497,7 @@ export default {
     time: '年月',
     status: 'ステータス',
     moneyAmount: '金額',
+    payment_detail_status: '種別',
     date_and_time: '日時',
     stream_title: '配信タイトル',
     no_deposit_information: '入金情報がありません',

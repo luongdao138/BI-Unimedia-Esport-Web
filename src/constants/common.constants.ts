@@ -217,6 +217,7 @@ export const FORMAT_DATE_ARCHIVED = 'YYYY/MM/DD'
 export const FORMAT_YEAR_MONTH = 'YYYY年MM月'
 export const FORMAT_YEAR_MONTH_FILTER = 'YYYY/MM'
 export const FORMAT_TIME_SIMPLE = 'HH時mm分'
+export const FORMAT_TIME_SAFARI = 'YYYY-MM'
 
 export const POINTS = [100, 300, 500, 1000, 2000, 3000, 5000, 10000]
 export const TAX = 0.1

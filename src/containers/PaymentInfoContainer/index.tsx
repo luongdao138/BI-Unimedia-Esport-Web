@@ -8,7 +8,7 @@ import { ESRoutes } from '@constants/route.constants'
 import { Pagination } from '@material-ui/lab'
 import { Colors } from '@theme/colors'
 import useFinancialStatement from './useFinancialStatement'
-import { FINANCIAL_STATUS_TITLE, FORMAT_YEAR_MONTH_FILTER, LIMIT_FINANCIAL_STATEMENT } from '@constants/common.constants'
+import { FINANCIAL_STATUS_TITLE, FORMAT_TIME_SAFARI, FORMAT_YEAR_MONTH, FORMAT_YEAR_MONTH_FILTER } from '@constants/common.constants'
 import ESLoader from '@components/FullScreenLoader'
 import { DateHelper } from '@utils/helpers/DateHelper'
 import moment from 'moment'
@@ -21,7 +21,7 @@ const PaymentInfoContainer: React.FC = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down(576))
   const { financialStatementData, meta_financial_statement, fetchFinancialStatement } = useFinancialStatement()
   const [page, setPage] = useState<number>(1)
-  const totalPages = Math.ceil(financialStatementData?.total / LIMIT_FINANCIAL_STATEMENT)
+  const totalPages = Math.ceil(financialStatementData?.total / 1)
   const data = financialStatementData?.points
 
   const onChangePage = (_event: React.ChangeEvent<unknown>, value: number): void => {
@@ -29,11 +29,16 @@ const PaymentInfoContainer: React.FC = () => {
   }
 
   useEffect(() => {
-    fetchFinancialStatement({ page: page, limit: LIMIT_FINANCIAL_STATEMENT })
+    fetchFinancialStatement({ page: page, limit: 1 })
   }, [page])
 
   const navigateToDetail = (id) => () => {
-    router.push(ESRoutes.PAYMENT_INFO_DETAIL.replace(/:id/gi, DateHelper.formatMonthFinancial(id)))
+    router.push(
+      ESRoutes.PAYMENT_INFO_DETAIL.replace(
+        /:id/gi,
+        DateHelper.formatMonthFinancial(moment(id, FORMAT_TIME_SAFARI).format(FORMAT_TIME_SAFARI))
+      )
+    )
   }
 
   const tableHeader = useCallback(() => {
@@ -62,7 +67,7 @@ const PaymentInfoContainer: React.FC = () => {
         />
       </Box>
     )
-  }, [])
+  }, [page, totalPages])
 
   const tableRow = useCallback(() => {
     return (
@@ -70,9 +75,9 @@ const PaymentInfoContainer: React.FC = () => {
         {data?.length > 0 &&
           data?.map((item, index) => {
             const backgroundColor = index % 2 === 0 ? '#323232' : '#606060'
-            const displayDate = DateHelper.formatMonthFilter(item?.date)
+            const displayDate = moment(item?.date, FORMAT_TIME_SAFARI).format(FORMAT_YEAR_MONTH)
             const displayStatus =
-              item?.date === DateHelper.formatMonth(moment().format(FORMAT_YEAR_MONTH_FILTER))
+              item?.date === DateHelper.formatMonth(moment(new Date()).format(FORMAT_YEAR_MONTH_FILTER))
                 ? FINANCIAL_STATUS_TITLE.SCHEDULE
                 : FINANCIAL_STATUS_TITLE.CONFIRM
             const displayAmount = `${FormatHelper.currencyFormat(item?.point.toString())} ${t('common.money')}`
@@ -95,10 +100,10 @@ const PaymentInfoContainer: React.FC = () => {
   return (
     <div style={{ height: '100%' }}>
       <HeaderWithButton title={t('payment_information_screen.title')} />
-      {totalPages > 1 && paging()}
+      {totalPages > 0 && paging()}
       {tableHeader()}
       {tableRow()}
-      {totalPages > 1 && paging()}
+      {totalPages > 0 && paging()}
       <ESLoader open={meta_financial_statement.pending} />
     </div>
   )
