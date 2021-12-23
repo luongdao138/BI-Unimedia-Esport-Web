@@ -43,7 +43,9 @@ const PaymentInfoDetailContainer: React.FC = () => {
               {t('payment_information_screen.stream_title')}
             </Typography>
           )}
-          <Typography className={`${classes.rowText} ${classes.statusRow}`}>{t('payment_information_screen.status')}</Typography>
+          <Typography className={`${classes.rowText} ${classes.statusRow}`}>
+            {t('payment_information_screen.payment_detail_status')}
+          </Typography>
           <Typography className={`${classes.rowText} ${classes.amountOfMoneyRow}`}>
             {t('payment_information_screen.moneyAmount')}
           </Typography>
@@ -100,15 +102,15 @@ const PaymentInfoDetailContainer: React.FC = () => {
         />
       </Box>
     )
-  }, [])
+  }, [page, totalPages])
 
   return (
     <div>
       <HeaderWithButton title={titleHeader} />
-      {totalPages > 1 && paging()}
+      {totalPages > 0 && paging()}
       {tableHeader()}
       {tableRow()}
-      {totalPages > 1 && paging()}
+      {totalPages > 0 && paging()}
       <ESLoader open={meta_financial_statement_detail.pending} />
     </div>
   )
