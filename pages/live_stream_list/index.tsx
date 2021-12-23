@@ -1,12 +1,12 @@
 import PageWithLayoutType from '@constants/page'
-import StreamLayout from '@layouts/StreamLayout'
 import LiveStreamListContainer from '@containers/LiveStreamListContainer'
+import StreamerRequireLayout from '@layouts/StreamerRequireLayout'
 
 const LiveStreamListPage: PageWithLayoutType = () => {
   return (
-    <StreamLayout loginRequired>
+    <StreamerRequireLayout>
       <LiveStreamListContainer />
-    </StreamLayout>
+    </StreamerRequireLayout>
   )
 }
 
