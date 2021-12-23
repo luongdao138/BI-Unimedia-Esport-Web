@@ -297,7 +297,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
 
     const handleLoadMore = () => {
       // only scroll to load more mess if rewinded or is live stream and has prevToken (has mess in prev page)
-      if (!isGettingPrevRewindMess && !isGettingRewindMess && (isTokenBroken || (isStreaming && prevToken))) {
+      if (!isGettingMess && !isGettingPrevRewindMess && !isGettingRewindMess && (isTokenBroken || (isStreaming && prevToken))) {
         debouncedHandleLoadMore()
       }
     }
@@ -339,7 +339,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
           setIsGettingPrevRewindMess(false)
         })
       } catch (error) {
-        setIsGettingMess(false)
+        setIsGettingPrevRewindMess(false)
         console.error(error)
       }
     }
