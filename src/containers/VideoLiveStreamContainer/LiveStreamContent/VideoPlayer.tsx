@@ -441,6 +441,10 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     handlePauseAndSeekVideo()
     if (videoEl.current.paused || videoEl.current.ended) {
       videoEl.current.play()
+      //new version
+      if (videoType === STATUS_VIDEO.LIVE_STREAM) {
+        videoEl.current.currentTime = durationPlayer
+      }
       setState({ ...state, playing: true })
       setVisible({ ...visible, loading: false, videoLoaded: false })
     } else {
@@ -452,6 +456,10 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   }
   const handlePlayPause = () => {
     handlePauseAndSeekVideo()
+    //new version
+    if (videoType === STATUS_VIDEO.LIVE_STREAM) {
+      videoEl.current.currentTime = durationPlayer
+    }
     if (videoEl.current.paused || videoEl.current.ended) {
       videoEl.current.play()
       setState({ ...state, playing: true })
