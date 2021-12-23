@@ -1,12 +1,12 @@
 import PageWithLayoutType from '@constants/page'
-import StreamLayout from '@layouts/StreamLayout'
 import ArchivedListContainer from '@containers/ArchivedListContainer'
+import StreamerRequireLayout from '@layouts/StreamerRequireLayout'
 
 const ArchivedListPage: PageWithLayoutType = () => {
   return (
-    <StreamLayout loginRequired>
+    <StreamerRequireLayout>
       <ArchivedListContainer />
-    </StreamLayout>
+    </StreamerRequireLayout>
   )
 }
 

@@ -1,12 +1,12 @@
 import PageWithLayoutType from '@constants/page'
-import StreamLayout from '@layouts/StreamLayout'
 import PaymentInfoDetailContainer from '@containers/PaymentInfoDetailContainer'
+import StreamerRequireLayout from '@layouts/StreamerRequireLayout'
 
 const PaymentInfoDetailPage: PageWithLayoutType = () => {
   return (
-    <StreamLayout loginRequired>
+    <StreamerRequireLayout>
       <PaymentInfoDetailContainer />
-    </StreamLayout>
+    </StreamerRequireLayout>
   )
 }
 
