@@ -10,7 +10,7 @@ import i18n from '@locales/i18n'
 import useStyles from './styles'
 import useCheckNgWord from '@utils/hooks/useCheckNgWord'
 import _, { debounce } from 'lodash'
-import { useAppSelector } from '@store/hooks'
+import { useAppDispatch, useAppSelector } from '@store/hooks'
 // import { useAppDispatch, useAppSelector } from '@store/hooks'
 import userProfileStore from '@store/userProfile'
 import { UserProfile } from '@services/user.service'
@@ -178,6 +178,8 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     },
     ref
   ) => {
+    const dispatch = useAppDispatch()
+
     const [errorMess, setErrorMess] = useState<string>('')
     const [isResetMess, setIsResetMess] = useState<boolean>(false)
     // console.log('🚀 ~ isResetMess', isResetMess)
@@ -255,7 +257,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
 
     const { width: pageWidth } = useWindowDimensions(0)
     const isDesktopDown1280 = pageWidth > 768 && pageWidth <= 1280
-    const { userResult, streamingSecond, playedSecond, liveStreamInfo } = useDetailVideo()
+    const { userResult, streamingSecond, playedSecond, liveStreamInfo, resetState } = useDetailVideo()
     // const { streamingSecond, playedSecond, isViewingStream, liveStreamInfo } = useDetailVideo()
     // const userResult = {streamer: 1}
     const { dataPurchaseTicketSuperChat } = usePurchaseTicketSuperChat()
@@ -1045,6 +1047,13 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         checkUserExist()
       }
     }, [userProfile])
+
+    useEffect(
+      () => () => {
+        dispatch(resetState())
+      },
+      ['componentWillUnMount']
+    )
 
     const resetMessages = () => {
       // setAllMess([])

@@ -35,6 +35,7 @@ const useDetailVideo = () => {
   const resetVideoDetailError = () => dispatch(actions.resetVideoDetailError())
   const changeIsPausingLive = (is_pausing_live) => dispatch(actions.changeIsPausingLive({ is_pausing_live }))
   const changeIsStreamingEnd = (is_streaming_end) => dispatch(actions.changeIsStreamingEnd({ is_streaming_end }))
+  const resetState = () => dispatch(actions.resetState())
 
   return {
     meta,
@@ -56,6 +57,7 @@ const useDetailVideo = () => {
     resetVideoDetailError,
     changeIsPausingLive,
     changeIsStreamingEnd,
+    resetState,
   }
 }
 
