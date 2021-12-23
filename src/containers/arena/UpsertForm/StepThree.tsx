@@ -8,6 +8,7 @@ import ESInputDatePicker from '@components/InputDatePicker'
 import ESFastInput from '@components/FastInput'
 import ESSelect from '@components/Select'
 import i18n from '@locales/i18n'
+import CharacterLimited from '@components/CharacterLimited'
 
 type Props = {
   formik: FormikProps<FormType>
@@ -136,6 +137,7 @@ const StepThree: React.FC<Props> = ({ formik, prefectures, editables }) => {
           size="small"
           required
           disabled={!editables.address}
+          endAdornment={<CharacterLimited value={formik.values.stepThree.address} limit={5000} multiLines />}
         />
       </Box>
     </Box>

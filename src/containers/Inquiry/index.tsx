@@ -20,6 +20,7 @@ import useCheckNgWord from '@utils/hooks/useCheckNgWord'
 import { showDialog } from '@store/common/actions'
 import { NG_WORD_AREA, NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
 import { useAppDispatch } from '@store/hooks'
+import CharacterLimited from '@components/CharacterLimited'
 
 const ESInquiry: React.FC = () => {
   const { t } = useTranslation('common')
@@ -143,6 +144,7 @@ const ESInquiry: React.FC = () => {
                   disabled={showPreview}
                   rows={8}
                   size="small"
+                  endAdornment={<CharacterLimited value={values.title} limit={100} />}
                 />
               </Box>
               <Box mt={1}>
@@ -162,6 +164,7 @@ const ESInquiry: React.FC = () => {
                   disabled={showPreview}
                   rows={8}
                   size="small"
+                  endAdornment={<CharacterLimited value={values.content} limit={5000} multiLines />}
                 />
               </Box>
               <Box mt={1}></Box>
@@ -180,6 +183,7 @@ const ESInquiry: React.FC = () => {
                 disabled={!!hasEmail || showPreview}
                 readOnly={!!hasEmail}
                 size="small"
+                endAdornment={!hasEmail && <CharacterLimited value={values.email} limit={100} />}
               />
             </Box>
 

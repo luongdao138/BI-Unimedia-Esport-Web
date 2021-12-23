@@ -7,6 +7,7 @@ import { EditableTypes } from './useTournamentCreate'
 import CoOrganizersDialog from './Partials/CoOrganizersDialog'
 import ESFastInput from '@components/FastInput'
 import i18n from '@locales/i18n'
+import CharacterLimited from '@components/CharacterLimited'
 
 type Props = {
   formik: FormikProps<FormType>
@@ -44,6 +45,7 @@ const StepFour: React.FC<Props> = ({ formik, user, editables }) => {
           error={formik.touched?.stepFour?.organizer_name && !!formik.errors?.stepFour?.organizer_name}
           size="small"
           disabled={!editables.organizer_name}
+          endAdornment={<CharacterLimited value={formik.values.stepFour.organizer_name} limit={190} />}
         />
       </Box>
     </Box>
