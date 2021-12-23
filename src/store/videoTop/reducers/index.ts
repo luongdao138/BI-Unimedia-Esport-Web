@@ -33,6 +33,7 @@ type StateType = {
   is_pausing_live?: boolean
   is_streaming_end?: boolean
 }
+
 const initialState: StateType = {
   listVideoAll: {
     live: [],
@@ -65,8 +66,9 @@ const initialState: StateType = {
     buy_ticket: 0,
     streamer: 0,
   },
-  streaming_second: -1,
-  played_second: -1,
+  // state for live stream info
+  streaming_second: 0,
+  played_second: 0,
   is_end_live: false,
   seek_count: 0,
   seeked_second: 0,
@@ -153,6 +155,8 @@ export default createReducer(initialState, (builder) => {
   builder.addCase(actions.resetVideoDetailError, (state) => {
     state.videoDetailError = null
   })
+
+  // action for live stream info
   builder.addCase(actions.changeStreamingSecond, (state, action) => {
     state.streaming_second = action.payload.streaming_second
   })
@@ -178,5 +182,8 @@ export default createReducer(initialState, (builder) => {
   })
   builder.addCase(actions.changeIsStreamingEnd, (state, action) => {
     state.is_streaming_end = action.payload.is_streaming_end
+  })
+  builder.addCase(actions.resetState, () => {
+    return { ...initialState }
   })
 })
