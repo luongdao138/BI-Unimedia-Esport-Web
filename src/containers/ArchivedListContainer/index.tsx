@@ -240,7 +240,6 @@ const ArchivedListContainer: React.FC = () => {
             </tr>
           </tbody>
         </table>
-        {isLoading && <ESLoader open={isLoading} />}
       </Box>
     )
   }
@@ -307,6 +306,7 @@ const ArchivedListContainer: React.FC = () => {
           deleteError={deleteErrorMsg}
         />
       </Box>
+      <ESLoader open={isLoading} />
     </div>
   )
 }

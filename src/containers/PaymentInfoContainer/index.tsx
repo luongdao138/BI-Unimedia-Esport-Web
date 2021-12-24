@@ -100,10 +100,10 @@ const PaymentInfoContainer: React.FC = () => {
   return (
     <div style={{ height: '100%' }}>
       <HeaderWithButton title={t('payment_information_screen.title')} />
-      {totalPages > 0 && paging()}
+      {totalPages > 1 && paging()}
       {tableHeader()}
       {tableRow()}
-      {totalPages > 0 && paging()}
+      {totalPages > 1 && paging()}
       <ESLoader open={meta_financial_statement.pending} />
     </div>
   )

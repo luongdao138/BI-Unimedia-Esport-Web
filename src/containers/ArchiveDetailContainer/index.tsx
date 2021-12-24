@@ -25,7 +25,7 @@ const DetailContainer: React.FC = () => {
         setFromSchedule(isSchedule)
       }
     })
-  }, [])
+  }, [router.query])
 
   return <ViewFromLive isFromSchedule={isFromSchedule} />
 }
