@@ -92,7 +92,7 @@ export type Message = {
   uuid?: string | null
   video_id?: string
   delete_flag?: boolean | null
-  video_time?: string
+  video_time?: number
   display_avatar_time?: string | null
   point?: string | null
   use_point_id?: string | null
@@ -124,7 +124,7 @@ export type CreateMessageInput = {
   uuid?: string | null
   video_id: string
   delete_flag?: boolean | null
-  video_time: string
+  video_time: number
   display_avatar_time?: string | null
   point?: string | null
   use_point_id?: string | null
@@ -132,6 +132,8 @@ export type CreateMessageInput = {
   userId: string
   local_id?: string | null
   created_time?: string | null
+  createdAt?: string | null
+  updatedAt?: string | null
 }
 
 export type ModelMessageConditionInput = {
@@ -140,7 +142,7 @@ export type ModelMessageConditionInput = {
   uuid?: ModelStringInput | null
   video_id?: ModelStringInput | null
   delete_flag?: ModelBooleanInput | null
-  video_time?: ModelStringInput | null
+  video_time?: ModelIntInput | null
   display_avatar_time?: ModelStringInput | null
   point?: ModelStringInput | null
   use_point_id?: ModelStringInput | null
@@ -148,9 +150,23 @@ export type ModelMessageConditionInput = {
   userId?: ModelIDInput | null
   local_id?: ModelStringInput | null
   created_time?: ModelStringInput | null
+  createdAt?: ModelStringInput | null
+  updatedAt?: ModelStringInput | null
   and?: Array<ModelMessageConditionInput | null> | null
   or?: Array<ModelMessageConditionInput | null> | null
   not?: ModelMessageConditionInput | null
+}
+
+export type ModelIntInput = {
+  ne?: number | null
+  eq?: number | null
+  le?: number | null
+  lt?: number | null
+  ge?: number | null
+  gt?: number | null
+  between?: Array<number | null> | null
+  attributeExists?: boolean | null
+  attributeType?: ModelAttributeTypes | null
 }
 
 export type ModelIDInput = {
@@ -176,7 +192,7 @@ export type UpdateMessageInput = {
   uuid?: string | null
   video_id?: string | null
   delete_flag?: boolean | null
-  video_time?: string | null
+  video_time?: number | null
   display_avatar_time?: string | null
   point?: string | null
   use_point_id?: string | null
@@ -184,6 +200,8 @@ export type UpdateMessageInput = {
   userId?: string | null
   local_id?: string | null
   created_time?: string | null
+  createdAt?: string | null
+  updatedAt?: string | null
 }
 
 export type DeleteMessageInput = {
@@ -272,6 +290,35 @@ export type DeleteChannelInput = {
   id: string
 }
 
+export type CreateCowellRealtimeStatusConnectionsInput = {
+  id?: string | null
+  connectionId: string
+}
+
+export type ModelCowellRealtimeStatusConnectionsConditionInput = {
+  connectionId?: ModelStringInput | null
+  and?: Array<ModelCowellRealtimeStatusConnectionsConditionInput | null> | null
+  or?: Array<ModelCowellRealtimeStatusConnectionsConditionInput | null> | null
+  not?: ModelCowellRealtimeStatusConnectionsConditionInput | null
+}
+
+export type CowellRealtimeStatusConnections = {
+  __typename: 'CowellRealtimeStatusConnections'
+  id?: string
+  connectionId?: string
+  createdAt?: string
+  updatedAt?: string
+}
+
+export type UpdateCowellRealtimeStatusConnectionsInput = {
+  id: string
+  connectionId?: string | null
+}
+
+export type DeleteCowellRealtimeStatusConnectionsInput = {
+  id: string
+}
+
 export type ModelUserFilterInput = {
   id?: ModelIDInput | null
   uuid?: ModelStringInput | null
@@ -296,7 +343,7 @@ export type ModelMessageFilterInput = {
   uuid?: ModelStringInput | null
   video_id?: ModelStringInput | null
   delete_flag?: ModelBooleanInput | null
-  video_time?: ModelStringInput | null
+  video_time?: ModelIntInput | null
   display_avatar_time?: ModelStringInput | null
   point?: ModelStringInput | null
   use_point_id?: ModelStringInput | null
@@ -304,6 +351,8 @@ export type ModelMessageFilterInput = {
   userId?: ModelIDInput | null
   local_id?: ModelStringInput | null
   created_time?: ModelStringInput | null
+  createdAt?: ModelStringInput | null
+  updatedAt?: ModelStringInput | null
   and?: Array<ModelMessageFilterInput | null> | null
   or?: Array<ModelMessageFilterInput | null> | null
   not?: ModelMessageFilterInput | null
@@ -343,9 +392,42 @@ export type ModelChannelConnection = {
   nextToken?: string | null
 }
 
+export type ModelCowellRealtimeStatusConnectionsFilterInput = {
+  id?: ModelIDInput | null
+  connectionId?: ModelStringInput | null
+  and?: Array<ModelCowellRealtimeStatusConnectionsFilterInput | null> | null
+  or?: Array<ModelCowellRealtimeStatusConnectionsFilterInput | null> | null
+  not?: ModelCowellRealtimeStatusConnectionsFilterInput | null
+}
+
+export type ModelCowellRealtimeStatusConnectionsConnection = {
+  __typename: 'ModelCowellRealtimeStatusConnectionsConnection'
+  items?: Array<CowellRealtimeStatusConnections | null> | null
+  nextToken?: string | null
+}
+
 export enum ModelSortDirection {
   ASC = 'ASC',
   DESC = 'DESC',
+}
+
+export type ModelStringKeyConditionInput = {
+  eq?: string | null
+  le?: string | null
+  lt?: string | null
+  ge?: string | null
+  gt?: string | null
+  between?: Array<string | null> | null
+  beginsWith?: string | null
+}
+
+export type ModelIntKeyConditionInput = {
+  eq?: number | null
+  le?: number | null
+  lt?: number | null
+  ge?: number | null
+  gt?: number | null
+  between?: Array<number | null> | null
 }
 
 export type CreateUserMutationVariables = {
@@ -428,7 +510,7 @@ export type CreateMessageMutation = {
     uuid?: string | null
     video_id: string
     delete_flag?: boolean | null
-    video_time: string
+    video_time: number
     display_avatar_time?: string | null
     point?: string | null
     use_point_id?: string | null
@@ -465,7 +547,7 @@ export type UpdateMessageMutation = {
     uuid?: string | null
     video_id: string
     delete_flag?: boolean | null
-    video_time: string
+    video_time: number
     display_avatar_time?: string | null
     point?: string | null
     use_point_id?: string | null
@@ -502,7 +584,7 @@ export type DeleteMessageMutation = {
     uuid?: string | null
     video_id: string
     delete_flag?: boolean | null
-    video_time: string
+    video_time: number
     display_avatar_time?: string | null
     point?: string | null
     use_point_id?: string | null
@@ -633,6 +715,51 @@ export type DeleteChannelMutation = {
   } | null
 }
 
+export type CreateCowellRealtimeStatusConnectionsMutationVariables = {
+  input?: CreateCowellRealtimeStatusConnectionsInput
+  condition?: ModelCowellRealtimeStatusConnectionsConditionInput | null
+}
+
+export type CreateCowellRealtimeStatusConnectionsMutation = {
+  createCowellRealtimeStatusConnections?: {
+    __typename: 'CowellRealtimeStatusConnections'
+    id: string
+    connectionId: string
+    createdAt: string
+    updatedAt: string
+  } | null
+}
+
+export type UpdateCowellRealtimeStatusConnectionsMutationVariables = {
+  input?: UpdateCowellRealtimeStatusConnectionsInput
+  condition?: ModelCowellRealtimeStatusConnectionsConditionInput | null
+}
+
+export type UpdateCowellRealtimeStatusConnectionsMutation = {
+  updateCowellRealtimeStatusConnections?: {
+    __typename: 'CowellRealtimeStatusConnections'
+    id: string
+    connectionId: string
+    createdAt: string
+    updatedAt: string
+  } | null
+}
+
+export type DeleteCowellRealtimeStatusConnectionsMutationVariables = {
+  input?: DeleteCowellRealtimeStatusConnectionsInput
+  condition?: ModelCowellRealtimeStatusConnectionsConditionInput | null
+}
+
+export type DeleteCowellRealtimeStatusConnectionsMutation = {
+  deleteCowellRealtimeStatusConnections?: {
+    __typename: 'CowellRealtimeStatusConnections'
+    id: string
+    connectionId: string
+    createdAt: string
+    updatedAt: string
+  } | null
+}
+
 export type GetUserQueryVariables = {
   id?: string
 }
@@ -690,7 +817,7 @@ export type GetMessageQuery = {
     uuid?: string | null
     video_id: string
     delete_flag?: boolean | null
-    video_time: string
+    video_time: number
     display_avatar_time?: string | null
     point?: string | null
     use_point_id?: string | null
@@ -730,7 +857,7 @@ export type ListMessagesQuery = {
       uuid?: string | null
       video_id: string
       delete_flag?: boolean | null
-      video_time: string
+      video_time: number
       display_avatar_time?: string | null
       point?: string | null
       use_point_id?: string | null
@@ -825,6 +952,40 @@ export type ListChannelsQuery = {
   } | null
 }
 
+export type GetCowellRealtimeStatusConnectionsQueryVariables = {
+  id?: string
+}
+
+export type GetCowellRealtimeStatusConnectionsQuery = {
+  getCowellRealtimeStatusConnections?: {
+    __typename: 'CowellRealtimeStatusConnections'
+    id: string
+    connectionId: string
+    createdAt: string
+    updatedAt: string
+  } | null
+}
+
+export type ListCowellRealtimeStatusConnectionssQueryVariables = {
+  filter?: ModelCowellRealtimeStatusConnectionsFilterInput | null
+  limit?: number | null
+  nextToken?: string | null
+}
+
+export type ListCowellRealtimeStatusConnectionssQuery = {
+  listCowellRealtimeStatusConnectionss?: {
+    __typename: 'ModelCowellRealtimeStatusConnectionsConnection'
+    items?: Array<{
+      __typename: 'CowellRealtimeStatusConnections'
+      id: string
+      connectionId: string
+      createdAt: string
+      updatedAt: string
+    } | null> | null
+    nextToken?: string | null
+  } | null
+}
+
 export type GetUsersByUuidQueryVariables = {
   uuid?: string | null
   sortDirection?: ModelSortDirection | null
@@ -852,6 +1013,7 @@ export type GetUsersByUuidQuery = {
 
 export type GetMessagesByVideoIdQueryVariables = {
   video_id?: string | null
+  created_time?: ModelStringKeyConditionInput | null
   sortDirection?: ModelSortDirection | null
   filter?: ModelMessageFilterInput | null
   limit?: number | null
@@ -869,7 +1031,42 @@ export type GetMessagesByVideoIdQuery = {
       uuid?: string | null
       video_id: string
       delete_flag?: boolean | null
-      video_time: string
+      video_time: number
+      display_avatar_time?: string | null
+      point?: string | null
+      use_point_id?: string | null
+      is_premium?: boolean | null
+      userId: string
+      local_id?: string | null
+      created_time?: string | null
+      createdAt: string
+      updatedAt: string
+    } | null> | null
+    nextToken?: string | null
+  } | null
+}
+
+export type GetMessagesByVideoIdWithSortQueryVariables = {
+  video_id?: string | null
+  video_time?: ModelIntKeyConditionInput | null
+  sortDirection?: ModelSortDirection | null
+  filter?: ModelMessageFilterInput | null
+  limit?: number | null
+  nextToken?: string | null
+}
+
+export type GetMessagesByVideoIdWithSortQuery = {
+  getMessagesByVideoIdWithSort?: {
+    __typename: 'ModelMessageConnection'
+    items?: Array<{
+      __typename: 'Message'
+      id: string
+      owner: string
+      text: string
+      uuid?: string | null
+      video_id: string
+      delete_flag?: boolean | null
+      video_time: number
       display_avatar_time?: string | null
       point?: string | null
       use_point_id?: string | null
@@ -1020,7 +1217,7 @@ export type OnCreateMessageSubscription = {
     uuid?: string | null
     video_id: string
     delete_flag?: boolean | null
-    video_time: string
+    video_time: number
     display_avatar_time?: string | null
     point?: string | null
     use_point_id?: string | null
@@ -1052,7 +1249,7 @@ export type OnUpdateMessageSubscription = {
     uuid?: string | null
     video_id: string
     delete_flag?: boolean | null
-    video_time: string
+    video_time: number
     display_avatar_time?: string | null
     point?: string | null
     use_point_id?: string | null
@@ -1084,7 +1281,7 @@ export type OnDeleteMessageSubscription = {
     uuid?: string | null
     video_id: string
     delete_flag?: boolean | null
-    video_time: string
+    video_time: number
     display_avatar_time?: string | null
     point?: string | null
     use_point_id?: string | null
@@ -1180,6 +1377,36 @@ export type OnDeleteChannelSubscription = {
     arn: string
     state?: string | null
     alarm_state?: string | null
+    createdAt: string
+    updatedAt: string
+  } | null
+}
+
+export type OnCreateCowellRealtimeStatusConnectionsSubscription = {
+  onCreateCowellRealtimeStatusConnections?: {
+    __typename: 'CowellRealtimeStatusConnections'
+    id: string
+    connectionId: string
+    createdAt: string
+    updatedAt: string
+  } | null
+}
+
+export type OnUpdateCowellRealtimeStatusConnectionsSubscription = {
+  onUpdateCowellRealtimeStatusConnections?: {
+    __typename: 'CowellRealtimeStatusConnections'
+    id: string
+    connectionId: string
+    createdAt: string
+    updatedAt: string
+  } | null
+}
+
+export type OnDeleteCowellRealtimeStatusConnectionsSubscription = {
+  onDeleteCowellRealtimeStatusConnections?: {
+    __typename: 'CowellRealtimeStatusConnections'
+    id: string
+    connectionId: string
     createdAt: string
     updatedAt: string
   } | null

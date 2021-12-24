@@ -55,6 +55,14 @@ const BasicInfo: React.FC<BasicInfoProps> = ({ profile, prefectures, onDataChang
 
   const [date, setDate] = useState({ selectedDate: initialDate })
 
+  const { handleChange, values } = useFormik<BasicInfoParams>({
+    initialValues: {
+      selectedPrefecture: area_id ? area_id : '',
+      selectedGender: sex ? sex : '',
+    },
+    onSubmit: (_) => null,
+  })
+
   const memoizedPrefectures = useMemo(() => {
     if (prefectures && prefectures.data) {
       return prefectures.data.map((prefecture) => ({
@@ -63,14 +71,6 @@ const BasicInfo: React.FC<BasicInfoProps> = ({ profile, prefectures, onDataChang
       }))
     }
   }, [prefectures])
-
-  const { handleChange, values } = useFormik<BasicInfoParams>({
-    initialValues: {
-      selectedPrefecture: area_id ? area_id : '',
-      selectedGender: sex ? sex : '',
-    },
-    onSubmit: (_) => null,
-  })
 
   const [checkboxStates, setCheckboxStates] = useState({
     isShowPrefecture: show_area,
@@ -101,7 +101,7 @@ const BasicInfo: React.FC<BasicInfoProps> = ({ profile, prefectures, onDataChang
       <Grid container spacing={2}>
         <Grid item xs={8}>
           <ESSelect id="selectedPrefecture" value={values.selectedPrefecture} onChange={handleChange} fullWidth>
-            <option value={-1} disabled>
+            <option value={-1} disabled={values.selectedPrefecture ? true : false}>
               {t('common:profile.prefectures')}
             </option>
             {memoizedPrefectures &&
