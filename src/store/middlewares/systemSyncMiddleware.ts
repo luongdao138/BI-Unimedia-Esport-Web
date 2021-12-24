@@ -5,11 +5,13 @@ import { StoreType, AppDispatch } from '@store/store'
 import { logout } from '@store/auth/actions'
 import { getTournamentDetail } from '@store/arena/actions'
 import { getLobbyDetail } from '@store/lobby/actions'
-import { getCommentsList } from '@store/community/actions'
+import { getCommentsList, getTopicDetail } from '@store/community/actions'
 
 let socket: any = null
 
 const onOpen = (store: StoreType) => (_event: Event) => {
+  // eslint-disable-next-line no-console
+  console.log('system sync connected')
   const userId = store.getState().auth.user?.id
   if (userId) {
     store.dispatch({ type: `${SYSTEMSYNC_PREFIX}:CONNECTED` })
@@ -39,10 +41,14 @@ const onMessage = (store: StoreType) => (event: MessageEvent) => {
         }
         break
       }
-      case SYSTEMSYNC_ACTION_TYPE.CREATE_TOPIC_COMMENT: {
-        const { topicDetail } = store.getState().community
-        if (topicDetail?.id && +message.id === +topicDetail.id) {
-          store.dispatch(getCommentsList({ hash_key: topicDetail.attributes.hash_key, page: 1 }))
+      case SYSTEMSYNC_ACTION_TYPE.CREATE_TOPIC_COMMENT:
+      case SYSTEMSYNC_ACTION_TYPE.DELETE_TOPIC_COMMENT: {
+        const { topicDetail, communityDetail } = store.getState().community
+        if (communityDetail?.id && topicDetail?.id && +message.id === +topicDetail.id) {
+          const topicHashkey = topicDetail.attributes.hash_key
+          const communityHashkey = communityDetail.attributes.hash_key
+          store.dispatch(getCommentsList({ hash_key: topicHashkey, page: 1 }))
+          store.dispatch(getTopicDetail({ topic_hash: topicHashkey, community_hash: communityHashkey }))
         }
         break
       }
