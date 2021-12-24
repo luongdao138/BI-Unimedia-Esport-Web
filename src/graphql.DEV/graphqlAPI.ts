@@ -92,7 +92,7 @@ export type Message = {
   uuid?: string | null
   video_id?: string
   delete_flag?: boolean | null
-  video_time?: number
+  video_time?: string
   display_avatar_time?: string | null
   point?: string | null
   use_point_id?: string | null
@@ -124,7 +124,7 @@ export type CreateMessageInput = {
   uuid?: string | null
   video_id: string
   delete_flag?: boolean | null
-  video_time: number
+  video_time: string
   display_avatar_time?: string | null
   point?: string | null
   use_point_id?: string | null
@@ -132,8 +132,6 @@ export type CreateMessageInput = {
   userId: string
   local_id?: string | null
   created_time?: string | null
-  createdAt?: string | null
-  updatedAt?: string | null
 }
 
 export type ModelMessageConditionInput = {
@@ -142,7 +140,7 @@ export type ModelMessageConditionInput = {
   uuid?: ModelStringInput | null
   video_id?: ModelStringInput | null
   delete_flag?: ModelBooleanInput | null
-  video_time?: ModelIntInput | null
+  video_time?: ModelStringInput | null
   display_avatar_time?: ModelStringInput | null
   point?: ModelStringInput | null
   use_point_id?: ModelStringInput | null
@@ -150,23 +148,9 @@ export type ModelMessageConditionInput = {
   userId?: ModelIDInput | null
   local_id?: ModelStringInput | null
   created_time?: ModelStringInput | null
-  createdAt?: ModelStringInput | null
-  updatedAt?: ModelStringInput | null
   and?: Array<ModelMessageConditionInput | null> | null
   or?: Array<ModelMessageConditionInput | null> | null
   not?: ModelMessageConditionInput | null
-}
-
-export type ModelIntInput = {
-  ne?: number | null
-  eq?: number | null
-  le?: number | null
-  lt?: number | null
-  ge?: number | null
-  gt?: number | null
-  between?: Array<number | null> | null
-  attributeExists?: boolean | null
-  attributeType?: ModelAttributeTypes | null
 }
 
 export type ModelIDInput = {
@@ -192,7 +176,7 @@ export type UpdateMessageInput = {
   uuid?: string | null
   video_id?: string | null
   delete_flag?: boolean | null
-  video_time?: number | null
+  video_time?: string | null
   display_avatar_time?: string | null
   point?: string | null
   use_point_id?: string | null
@@ -200,8 +184,6 @@ export type UpdateMessageInput = {
   userId?: string | null
   local_id?: string | null
   created_time?: string | null
-  createdAt?: string | null
-  updatedAt?: string | null
 }
 
 export type DeleteMessageInput = {
@@ -314,7 +296,7 @@ export type ModelMessageFilterInput = {
   uuid?: ModelStringInput | null
   video_id?: ModelStringInput | null
   delete_flag?: ModelBooleanInput | null
-  video_time?: ModelIntInput | null
+  video_time?: ModelStringInput | null
   display_avatar_time?: ModelStringInput | null
   point?: ModelStringInput | null
   use_point_id?: ModelStringInput | null
@@ -322,8 +304,6 @@ export type ModelMessageFilterInput = {
   userId?: ModelIDInput | null
   local_id?: ModelStringInput | null
   created_time?: ModelStringInput | null
-  createdAt?: ModelStringInput | null
-  updatedAt?: ModelStringInput | null
   and?: Array<ModelMessageFilterInput | null> | null
   or?: Array<ModelMessageFilterInput | null> | null
   not?: ModelMessageFilterInput | null
@@ -366,25 +346,6 @@ export type ModelChannelConnection = {
 export enum ModelSortDirection {
   ASC = 'ASC',
   DESC = 'DESC',
-}
-
-export type ModelStringKeyConditionInput = {
-  eq?: string | null
-  le?: string | null
-  lt?: string | null
-  ge?: string | null
-  gt?: string | null
-  between?: Array<string | null> | null
-  beginsWith?: string | null
-}
-
-export type ModelIntKeyConditionInput = {
-  eq?: number | null
-  le?: number | null
-  lt?: number | null
-  ge?: number | null
-  gt?: number | null
-  between?: Array<number | null> | null
 }
 
 export type CreateUserMutationVariables = {
@@ -467,7 +428,7 @@ export type CreateMessageMutation = {
     uuid?: string | null
     video_id: string
     delete_flag?: boolean | null
-    video_time: number
+    video_time: string
     display_avatar_time?: string | null
     point?: string | null
     use_point_id?: string | null
@@ -504,7 +465,7 @@ export type UpdateMessageMutation = {
     uuid?: string | null
     video_id: string
     delete_flag?: boolean | null
-    video_time: number
+    video_time: string
     display_avatar_time?: string | null
     point?: string | null
     use_point_id?: string | null
@@ -541,7 +502,7 @@ export type DeleteMessageMutation = {
     uuid?: string | null
     video_id: string
     delete_flag?: boolean | null
-    video_time: number
+    video_time: string
     display_avatar_time?: string | null
     point?: string | null
     use_point_id?: string | null
@@ -729,7 +690,7 @@ export type GetMessageQuery = {
     uuid?: string | null
     video_id: string
     delete_flag?: boolean | null
-    video_time: number
+    video_time: string
     display_avatar_time?: string | null
     point?: string | null
     use_point_id?: string | null
@@ -769,7 +730,7 @@ export type ListMessagesQuery = {
       uuid?: string | null
       video_id: string
       delete_flag?: boolean | null
-      video_time: number
+      video_time: string
       display_avatar_time?: string | null
       point?: string | null
       use_point_id?: string | null
@@ -891,7 +852,6 @@ export type GetUsersByUuidQuery = {
 
 export type GetMessagesByVideoIdQueryVariables = {
   video_id?: string | null
-  created_time?: ModelStringKeyConditionInput | null
   sortDirection?: ModelSortDirection | null
   filter?: ModelMessageFilterInput | null
   limit?: number | null
@@ -909,42 +869,7 @@ export type GetMessagesByVideoIdQuery = {
       uuid?: string | null
       video_id: string
       delete_flag?: boolean | null
-      video_time: number
-      display_avatar_time?: string | null
-      point?: string | null
-      use_point_id?: string | null
-      is_premium?: boolean | null
-      userId: string
-      local_id?: string | null
-      created_time?: string | null
-      createdAt: string
-      updatedAt: string
-    } | null> | null
-    nextToken?: string | null
-  } | null
-}
-
-export type GetMessagesByVideoIdWithSortQueryVariables = {
-  video_id?: string | null
-  video_time?: ModelIntKeyConditionInput | null
-  sortDirection?: ModelSortDirection | null
-  filter?: ModelMessageFilterInput | null
-  limit?: number | null
-  nextToken?: string | null
-}
-
-export type GetMessagesByVideoIdWithSortQuery = {
-  getMessagesByVideoIdWithSort?: {
-    __typename: 'ModelMessageConnection'
-    items?: Array<{
-      __typename: 'Message'
-      id: string
-      owner: string
-      text: string
-      uuid?: string | null
-      video_id: string
-      delete_flag?: boolean | null
-      video_time: number
+      video_time: string
       display_avatar_time?: string | null
       point?: string | null
       use_point_id?: string | null
@@ -1095,7 +1020,7 @@ export type OnCreateMessageSubscription = {
     uuid?: string | null
     video_id: string
     delete_flag?: boolean | null
-    video_time: number
+    video_time: string
     display_avatar_time?: string | null
     point?: string | null
     use_point_id?: string | null
@@ -1127,7 +1052,7 @@ export type OnUpdateMessageSubscription = {
     uuid?: string | null
     video_id: string
     delete_flag?: boolean | null
-    video_time: number
+    video_time: string
     display_avatar_time?: string | null
     point?: string | null
     use_point_id?: string | null
@@ -1159,7 +1084,7 @@ export type OnDeleteMessageSubscription = {
     uuid?: string | null
     video_id: string
     delete_flag?: boolean | null
-    video_time: number
+    video_time: string
     display_avatar_time?: string | null
     point?: string | null
     use_point_id?: string | null

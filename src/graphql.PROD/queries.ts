@@ -243,6 +243,54 @@ export const getMessagesByVideoId = /* GraphQL */ `
     }
   }
 `
+export const getMessagesByVideoIdWithSort = /* GraphQL */ `
+  query GetMessagesByVideoIdWithSort(
+    $video_id: String
+    $video_time: ModelIntKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelMessageFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    getMessagesByVideoIdWithSort(
+      video_id: $video_id
+      video_time: $video_time
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        owner
+        text
+        uuid
+        video_id
+        delete_flag
+        video_time
+        display_avatar_time
+        point
+        use_point_id
+        is_premium
+        userId
+        local_id
+        created_time
+        parent {
+          id
+          uuid
+          avatar
+          user_name
+          delete_flag
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`
 export const getVideosByUuid = /* GraphQL */ `
   query GetVideosByUuid(
     $uuid: String
