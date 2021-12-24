@@ -6,6 +6,7 @@ import { createMetaSelector } from '@store/metadata/selectors'
 
 const { selectors, actions } = archivedListStore
 const _getArchiveList = createMetaSelector(actions.getArchiveList)
+const _getArchiveDetail = createMetaSelector(actions.getArchiveDetail)
 
 const useArchivedList = () => {
   const dispatch = useAppDispatch()
@@ -23,6 +24,7 @@ const useArchivedList = () => {
       onSuccess(canEdit, isSchedule)
     }
   }
+  const meta_archive_detail = useAppSelector(_getArchiveDetail)
   const videoArchivedDetail = useAppSelector(selectors.getArchiveVideoDetail)
   const updateVideoDetail = async (params, callback: (isSuccess, message, data) => void) => {
     const result = await dispatch(actions.updateArchiveVideoDetail(params))
@@ -54,6 +56,7 @@ const useArchivedList = () => {
     deleteVideoDetail,
     overrideDeleteVideo,
     meta_archive_list,
+    meta_archive_detail,
   }
 }
 

@@ -34,6 +34,7 @@ import { useRouter } from 'next/router'
 import { LiveStreamSettingHelper } from '@utils/helpers/LiveStreamSettingHelper'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
 import VideoDeleteConfirmModal from '@containers/ArchiveDetailContainer/DeleteVideoConfirmModal/VideoDeleteConfirmModal'
+import ESLoader from '@components/FullScreenLoader'
 
 interface StepsProps {
   step: number
@@ -69,7 +70,14 @@ const Steps: React.FC<StepsProps> = ({
 
   const { checkNgWordFields, checkNgWordByField } = useCheckNgWord()
   const { getDisplayErrorFieldArchiveEdit } = LiveStreamSettingHelper
-  const { videoArchivedDetail, updateVideoDetail, overrideVideoArchive, deleteVideoDetail, overrideDeleteVideo } = useArchivedList()
+  const {
+    videoArchivedDetail,
+    updateVideoDetail,
+    overrideVideoArchive,
+    deleteVideoDetail,
+    overrideDeleteVideo,
+    meta_archive_detail,
+  } = useArchivedList()
   const { user } = useCommonData()
 
   const formRef = {
@@ -586,6 +594,7 @@ const Steps: React.FC<StepsProps> = ({
           deleteError={deleteErrorMsg}
         />
       </Box>
+      <ESLoader open={!meta_archive_detail.loaded && meta_archive_detail.pending} />
     </Box>
   )
 }

@@ -107,10 +107,10 @@ const PaymentInfoDetailContainer: React.FC = () => {
   return (
     <div>
       <HeaderWithButton title={titleHeader} />
-      {totalPages > 0 && paging()}
+      {totalPages > 1 && paging()}
       {tableHeader()}
       {tableRow()}
-      {totalPages > 0 && paging()}
+      {totalPages > 1 && paging()}
       <ESLoader open={meta_financial_statement_detail.pending} />
     </div>
   )
