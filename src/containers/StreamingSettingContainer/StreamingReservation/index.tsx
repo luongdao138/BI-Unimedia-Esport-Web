@@ -49,6 +49,7 @@ const StreamingReservationContainer: React.FC<Props> = ({ formik, flagUpdateFiel
   const [showResultDialog, setShowResultDialog] = useState(false)
   const [obsStatusDynamo, setObsStatusDynamo] = useState(null)
   const [videoStatusDynamo, setVideoStatusDynamo] = useState(null)
+  const [processStatusDynamo, setProcessStatusDynamo] = useState(null)
 
   const onChangeStep = (step: number, isShare?: boolean, post?: { title: string; content: string }, channel_progress?: string): void => {
     console.log('SCHEDULE: click next step', step, stateChannelMedia, channel_progress)
@@ -180,6 +181,7 @@ const StreamingReservationContainer: React.FC<Props> = ({ formik, flagUpdateFiel
       console.log('SCHEDULE::queryVideoByUUID===>', videoData, videoRs)
       if (videoData) {
         setVideoStatusDynamo(videoData?.video_status)
+        setProcessStatusDynamo(videoData?.process_status)
         if (videoData?.process_status === EVENT_LIVE_STATUS.STREAM_OFF) {
           //Updated
           setObsStatusDynamo(0)
@@ -215,6 +217,7 @@ const StreamingReservationContainer: React.FC<Props> = ({ formik, flagUpdateFiel
         if (updateVideoData) {
           if (updateVideoData?.uuid === formik.values?.stepSettingTwo?.uuid) {
             setVideoStatusDynamo(updateVideoData?.video_status)
+            setProcessStatusDynamo(updateVideoData?.process_status)
             if (updateVideoData?.process_status === EVENT_LIVE_STATUS.STREAM_START) {
               //live
               setObsStatusDynamo(1)
@@ -254,6 +257,7 @@ const StreamingReservationContainer: React.FC<Props> = ({ formik, flagUpdateFiel
         if (createdVideo) {
           if (createdVideo?.uuid === formik.values?.stepSettingTwo?.uuid) {
             setVideoStatusDynamo(createdVideo?.video_status)
+            setProcessStatusDynamo(createdVideo?.process_status)
             if (createdVideo?.process_status === EVENT_LIVE_STATUS.STREAM_START) {
               //live
               setObsStatusDynamo(1)
@@ -317,6 +321,7 @@ const StreamingReservationContainer: React.FC<Props> = ({ formik, flagUpdateFiel
         disableLoader={stateChannelMedia === EVENT_STATE_CHANNEL.RUNNING || !stateChannelMedia}
         obsStatusDynamo={obsStatusDynamo}
         videoStatusDynamo={videoStatusDynamo}
+        processStatusDynamo={processStatusDynamo}
       />
       <ESModal open={modal && (showResultDialog || channelProgress)} handleClose={handleClose}>
         <BlankLayout>
