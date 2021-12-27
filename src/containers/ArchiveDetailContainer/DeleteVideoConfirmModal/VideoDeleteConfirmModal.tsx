@@ -21,7 +21,7 @@ const VideoDeleteConfirmModal: React.FC<ModalProps> = ({ open, handleClose, vide
 
   return (
     <Box>
-      <ConfirmModal open={open}>
+      <ConfirmModal open={open} containerStyle={{ backgroundColor: '#000000BB' }}>
         {isLoading && <ESLoader open={isLoading} />}
         <Box className={classes.container}>
           <Typography className={classes.dialogTitle}>{t('archive_detail_screen.delete_dialog_title')}</Typography>
