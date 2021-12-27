@@ -10,17 +10,18 @@ const BRScore: React.FC<
     type: TournamentRule
     onAttackError: (error: ErrorType) => void
     onChange: ({ target: { value: string } }) => void
+    undefeated: boolean
     value: number | ''
     participantCount?: number | null
     participants: ParticipantsResponse[]
   }
-> = ({ type, participantCount, onAttackError, participants, ...props }) => {
+> = ({ type, participantCount, onAttackError, participants, undefeated, ...props }) => {
   if (type === 'battle_royale') {
-    return <BRPlacementInput onAttackError={onAttackError} participantCount={participantCount} {...props} />
+    return <BRPlacementInput onAttackError={onAttackError} undefeated={undefeated} participantCount={participantCount} {...props} />
   } else if (type === 'time_attack') {
-    return <BRTimeInput onAttackError={onAttackError} participants={participants} {...props} />
+    return <BRTimeInput onAttackError={onAttackError} undefeated={undefeated} participants={participants} {...props} />
   } else if (type === 'score_attack') {
-    return <BRScoreInput onAttackError={onAttackError} {...props} />
+    return <BRScoreInput onAttackError={onAttackError} undefeated={undefeated} {...props} />
   } else {
     return null
   }

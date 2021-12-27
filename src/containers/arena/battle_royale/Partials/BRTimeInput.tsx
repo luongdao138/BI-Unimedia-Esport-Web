@@ -73,13 +73,20 @@ const BRTimeInput: React.FC<
   OutlinedInputProps & {
     value: number | ''
     onAttackError?: (error: ErrorType) => void
+    undefeated: boolean
     onChange: ({ target: { value: string } }) => void
     participants: ParticipantsResponse[]
   }
-> = ({ value, onChange, onAttackError, participants, ...props }) => {
+> = ({ value, onChange, onAttackError, participants, undefeated, ...props }) => {
   const classes = useStyles()
   const [time, setTime] = useState<TimeProps>(() => TournamentHelper.millisToTime(value))
   const [error, setError] = useState<TimeInputError>(errorDefault)
+
+  useEffect(() => {
+    if (value === '') {
+      setTime(() => TournamentHelper.millisToTime(value))
+    }
+  }, [value])
 
   useEffect(() => {
     setError(validateError(time))
@@ -129,6 +136,7 @@ const BRTimeInput: React.FC<
     millis: !_.isEmpty(error.millis),
   }
 
+  if (undefeated) return <div>—</div>
   return (
     <>
       <BRInput
