@@ -330,6 +330,8 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     const fetchPrevMessWhenRewind = (video_time, sortOrder = APIt.ModelSortDirection.DESC) => {
       try {
         setIsGettingPrevRewindMess(true)
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         let listQV: APIt.GetMessagesByVideoIdWithSortQueryVariables = {
           video_id: key_video_id,
           video_time: { le: video_time - 1 },
@@ -442,6 +444,8 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         // console.log('🚀 ~ fetchPrevMess ~ video_time---000', video_time)
         // occur this case when is streaming and fetch mess initial
         let nextToken = null
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         let listQV: APIt.GetMessagesByVideoIdQueryVariables = {
           video_id: key_video_id,
           sortDirection: sortOrder,
@@ -476,7 +480,8 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         // console.log('🚀 ~ fetchPrevMess ~ isTokenBroken--000', isTokenBroken)
         if (isTokenBroken) {
           let nextToken = prevToken
-          // console.log('🚀 ~ fetchPrevMess ~ nextToken', nextToken)
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
           let listQV: APIt.GetMessagesByVideoIdWithSortQueryVariables = {
             video_id: key_video_id,
             video_time: { le: prevTime },
@@ -493,6 +498,8 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
           })
         } else {
           let nextToken = prevToken
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
           let listQV: APIt.GetMessagesByVideoIdQueryVariables = {
             video_id: key_video_id,
             sortDirection: sortOrder,
@@ -614,6 +621,8 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         const nextTime = +video_time + INTERVAL_AUTO_GET_MESS - 1
         // console.log('🚀 ~ fetchPrevMess ~ video_time', video_time)
         // console.log('🚀 ~ nextTime---999', nextTime)
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         let listQV: APIt.GetMessagesByVideoIdWithSortQueryVariables = {
           video_id: key_video_id,
           video_time: {
