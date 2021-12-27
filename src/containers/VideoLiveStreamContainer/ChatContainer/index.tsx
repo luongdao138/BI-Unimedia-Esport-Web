@@ -9,7 +9,6 @@ import sanitizeHtml from 'sanitize-html'
 import i18n from '@locales/i18n'
 import useStyles from './styles'
 import useCheckNgWord from '@utils/hooks/useCheckNgWord'
-import _ from 'lodash'
 import { useAppSelector } from '@store/hooks'
 // import { useAppDispatch, useAppSelector } from '@store/hooks'
 import userProfileStore from '@store/userProfile'
@@ -19,7 +18,7 @@ import API, { GraphQLResult, graphqlOperation } from '@aws-amplify/api'
 const { getUsersByUuid, getMessagesByVideoId } = require(`src/graphql.${process.env.NEXT_PUBLIC_AWS_ENV}/queries`)
 const { onCreateMessage, onUpdateMessage } = require(`src/graphql.${process.env.NEXT_PUBLIC_AWS_ENV}/subscriptions`)
 const { createMessage, createUser, updateMessage, updateUser } = require(`src/graphql.${process.env.NEXT_PUBLIC_AWS_ENV}/mutations`)
-import * as APIt from 'src/types/graphqlAPI'
+// import * as APIt from 'src/types/graphqlAPI'
 import useDetailVideo from '../useDetailVideo'
 import usePurchaseTicketSuperChat from '../usePurchaseTicket'
 import ChatTextMessage from '@containers/VideoLiveStreamContainer/ChatContainer/ChatTextMessage'
@@ -35,6 +34,10 @@ import moment from 'moment'
 import { STATUS_SEND_MESS } from '@constants/common.constants'
 import { v4 as uuidv4 } from 'uuid'
 import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
+import useGraphqlAPI from 'src/types/useGraphqlAPI'
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+const APIt: any = useGraphqlAPI()
 // import { DELAY_SECONDS } from '@constants/common.constants'
 
 export type ChatContainerProps = {
@@ -163,23 +166,24 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     const [scrollBehavior, setScrollBehavior] = useState('smooth')
     const isVideoFreeToWatch = freeToWatch === 0 ? true : false
 
-    const getChatData = () =>
-      Array(30)
-        .fill('')
-        .map((_, i) => ({
-          id: i,
-          user: 'Account Name',
-          content: 'チャットのコメントははここに表示されます。チャットのコメントははここに表示されます。',
-        }))
+    // const getChatData = () =>
+    //   Array(30)
+    //     .fill('')
+    //     .map((_, i) => ({
+    //       id: i,
+    //       user: 'Account Name',
+    //       content: 'チャットのコメントははここに表示されます。チャットのコメントははここに表示されます。',
+    //     }))
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     //@ts-ignore
-    const [chartDataFake, setChartDataFake] = useState(getChatData())
+    // const [chartDataFake, setChartDataFake] = useState(getChatData())
 
     const { selectors } = userProfileStore
 
     const userProfile = useAppSelector<UserProfile>(selectors.getUserProfile)
-
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     const initialFruits: APIt.Message[] = []
     const [stateMessages, setStateMessages] = useState(initialFruits)
     const [chatUser, setChatUser] = useState<any>({})
@@ -335,6 +339,8 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     const subscribeCreateMessAction = () => {
       let createMessSubscription = API.graphql(graphqlOperation(onCreateMessage))
       createMessSubscription = createMessSubscription.subscribe({
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         next: (sub: GraphQLResult<APIt.OnCreateMessageSubscription>) => {
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           //@ts-ignore
@@ -350,6 +356,8 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     const subscribeUpdateMessAction = () => {
       let updateMessSubscription = API.graphql(graphqlOperation(onUpdateMessage))
       updateMessSubscription = updateMessSubscription.subscribe({
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         next: (sub: GraphQLResult<APIt.OnUpdateMessageSubscription>) => {
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           //@ts-ignore
@@ -487,6 +495,8 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
 
     const getMessages = async (nextToken = null) => {
       try {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         const listQV: APIt.GetMessagesByVideoIdQueryVariables = {
           video_id: key_video_id,
           limit: 2000,
@@ -525,6 +535,8 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     const checkUserExist = async () => {
       try {
         const { uuid } = userProfile.attributes
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         const listQV: APIt.GetUsersByUuidQueryVariables = {
           uuid,
           limit: 2000,

@@ -14,9 +14,16 @@ import { FormikProps } from 'formik'
 import ESLoader from '@components/FullScreenLoaderNote'
 import { CONFIRM_SETTING_DELAY, EVENT_STATE_CHANNEL } from '@constants/common.constants'
 import API, { GraphQLResult, graphqlOperation } from '@aws-amplify/api'
+
 const { getChannelByArn } = require(`src/graphql.${process.env.NEXT_PUBLIC_AWS_ENV}/queries`)
 const { onUpdateChannel } = require(`src/graphql.${process.env.NEXT_PUBLIC_AWS_ENV}/subscriptions`)
-import * as APIt from 'src/types/graphqlAPI'
+// import * as APIt from 'src/types/graphqlAPI'
+import useGraphqlAPI from 'src/types/useGraphqlAPI'
+/* eslint-disable @typescript-eslint/no-unused-vars */
+// @ts-ignore
+const APIt: any = useGraphqlAPI()
+
+// import abc from '@containers/VideoLiveStreamContainer/ChatContainer/abc'
 
 interface Props {
   formik?: FormikProps<FormLiveType>
@@ -64,6 +71,8 @@ const LiveStreamContainer: React.FC<Props> = ({ formik, validateField, handleUpd
   const subscribeUpdateChannelAction = () => {
     let updateChannelSubscription = API.graphql(graphqlOperation(onUpdateChannel))
     updateChannelSubscription = updateChannelSubscription.subscribe({
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       next: (sub: GraphQLResult<APIt.OnUpdateChannelSubscription>) => {
         //@ts-ignore
         console.log('====>>SUB<<===', sub?.value?.data?.onUpdateChannel, formik?.values?.stepSettingOne?.arn)
@@ -90,6 +99,8 @@ const LiveStreamContainer: React.FC<Props> = ({ formik, validateField, handleUpd
   const checkChannelState = async () => {
     try {
       const channelArn = formik?.values?.stepSettingOne?.arn
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       const listQC: APIt.GetChannelByArnQueryVariables = {
         arn: channelArn,
         limit: 2000,
