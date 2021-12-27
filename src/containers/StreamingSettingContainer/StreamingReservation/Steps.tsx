@@ -29,7 +29,7 @@ import {
 } from '@services/liveStream.service'
 import useCheckNgWord from '@utils/hooks/useCheckNgWord'
 import { FIELD_TITLES } from '../field_titles.constants'
-import { EVENT_STATE_CHANNEL, FORMAT_DATE_TIME_JP, NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
+import { EVENT_LIVE_STATUS, EVENT_STATE_CHANNEL, FORMAT_DATE_TIME_JP, NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
 import { showDialog } from '@store/common/actions'
 import useReturnHref from '@utils/hooks/useReturnHref'
 import moment from 'moment'
@@ -58,6 +58,7 @@ interface StepsProps {
   disableLoader?: boolean
   obsStatusDynamo?: string | number
   videoStatusDynamo?: string | number
+  processStatusDynamo?: string
 }
 
 const KEY_TYPE = {
@@ -82,6 +83,7 @@ const Steps: React.FC<StepsProps> = ({
   disableLoader,
   obsStatusDynamo,
   videoStatusDynamo,
+  processStatusDynamo,
 }) => {
   const dispatch = useAppDispatch()
   const { t } = useTranslation(['common'])
@@ -113,7 +115,8 @@ const Steps: React.FC<StepsProps> = ({
     if (
       status === 1 ||
       (notifyTime && notifyTime <= current) ||
-      (obsStatusDynamo == TAG_STATUS_RECORD.LIVE_STREAMING && stateChannelArn !== EVENT_STATE_CHANNEL.STOPPED)
+      obsStatusDynamo == TAG_STATUS_RECORD.LIVE_STREAMING
+      // && stateChannelArn !== EVENT_STATE_CHANNEL.STOPPED
     ) {
       if (obsStatusDynamo == TAG_STATUS_RECORD.UPDATED_NOT_START && videoStatusDynamo == STATUS_VIDEO.OVER_LOAD) return false
       return true
@@ -401,10 +404,15 @@ const Steps: React.FC<StepsProps> = ({
 
   const handleNavigateToDetailLink = () => {
     if (
-      (status === 1 || (notifyTime && notifyTime <= current) || obsStatusDynamo == TAG_STATUS_RECORD.LIVE_STREAMING) &&
-      stateChannelArn !== EVENT_STATE_CHANNEL.STOPPED
+      status === 1 ||
+      (notifyTime && notifyTime <= current) ||
+      obsStatusDynamo == TAG_STATUS_RECORD.LIVE_STREAMING
+      //  && stateChannelArn !== EVENT_STATE_CHANNEL.STOPPED
     ) {
-      if (!(obsStatusDynamo == TAG_STATUS_RECORD.UPDATED_NOT_START && videoStatusDynamo == STATUS_VIDEO.OVER_LOAD)) {
+      if (
+        !(obsStatusDynamo == TAG_STATUS_RECORD.UPDATED_NOT_START && videoStatusDynamo == STATUS_VIDEO.OVER_LOAD) ||
+        !(processStatusDynamo === EVENT_LIVE_STATUS.STREAM_END && videoStatusDynamo == STATUS_VIDEO.ARCHIVE)
+      ) {
         window.open(`${baseViewingURL}${formik?.values?.stepSettingTwo?.uuid}`, '_blank')
       }
     }
