@@ -360,37 +360,6 @@ const Steps: React.FC<StepsProps> = ({
 
   return (
     <Box py={4} className={classes.container}>
-      <div
-        onClick={() => {
-          window.open(
-            'https://www.facebook.com/login.php?skip_api_login=1&api_key=285212396003698&kid_directed_site=0&app_id=285212396003698&signed_next=1&next=https%3A%2F%2Fwww.facebook.com%2Fv3.1%2Fdialog%2Foauth%3Fapp_id%3D285212396003698%26auth_type%26cbt%3D1640225135452%26channel_url%3Dhttps%253A%252F%252Fstaticxx.facebook.com%252Fx%252Fconnect%252Fxd_arbiter%252F%253Fversion%253D46%2523cb%253Dfcbb42eda714cc%2526domain%253Dexelab.jp%2526is_canvas%253Dfalse%2526origin%253Dhttps%25253A%25252F%25252Fexelab.jp%25252Ff26636060b2837c%2526relation%253Dopener%26client_id%3D285212396003698%26display%3Dpopup%26domain%3Dexelab.jp%26e2e%3D%257B%257D%26fallback_redirect_uri%3Dhttps%253A%252F%252Fexelab.jp%252Flogin%26locale%3Den_US%26logger_id%3Df1d57a9e9dae4c%26origin%3D1%26redirect_uri%3Dhttps%253A%252F%252Fstaticxx.facebook.com%252Fx%252Fconnect%252Fxd_arbiter%252F%253Fversion%253D46%2523cb%253Df789affb3c714%2526domain%253Dexelab.jp%2526is_canvas%253Dfalse%2526origin%253Dhttps%25253A%25252F%25252Fexelab.jp%25252Ff26636060b2837c%2526relation%253Dopener%2526frame%253Dfb4c00179ac08%26response_type%3Dtoken%252Csigned_request%252Cgraph_domain%26return_scopes%3Dfalse%26scope%3Dpublic_profile%252Cemail%26sdk%3Djoey%26version%3Dv3.1%26ret%3Dlogin%26fbapp_pres%3D0%26tp%3Dunspecified&cancel_url=https%3A%2F%2Fstaticxx.facebook.com%2Fx%2Fconnect%2Fxd_arbiter%2F%3Fversion%3D46%23cb%3Df789affb3c714%26domain%3Dexelab.jp%26is_canvas%3Dfalse%26origin%3Dhttps%253A%252F%252Fexelab.jp%252Ff26636060b2837c%26relation%3Dopener%26frame%3Dfb4c00179ac08%26error%3Daccess_denied%26error_code%3D200%26error_description%3DPermissions%2Berror%26error_reason%3Duser_denied&display=popup&locale=vi_VN&pl_dbl=0',
-            '_blank'
-          )
-        }}
-      >
-        FACEBOOK
-      </div>
-      <div
-        onClick={() => {
-          window.open('https://exelab.jp/', '_blank')
-        }}
-      >
-        OTHER TAB
-      </div>
-      <div
-        onClick={() => {
-          window.open('https://www.facebook.com', '_blank')
-        }}
-      >
-        OTHER FB
-      </div>
-      <div
-        onClick={() => {
-          window.open('https://www.facebook.com')
-        }}
-      >
-        ONE TAB
-      </div>
       <Box className={classes.formContainer}>
         <form onSubmit={formik.handleSubmit}>
           <Box className={classes.wrap_input} display="flex" flexDirection="row" alignItems="flex-end">
