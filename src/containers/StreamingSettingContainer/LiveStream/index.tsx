@@ -160,6 +160,8 @@ const LiveStreamContainer: React.FC<Props> = ({ formik, validateField, handleUpd
   const checkVideoStatus = async () => {
     try {
       const videoId = formik.values?.stepSettingOne?.uuid_clone
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      //@ts-ignore
       const listQV: APIt.GetVideoByUuidQueryVariables = {
         uuid: videoId,
         limit: 2000,
@@ -193,6 +195,8 @@ const LiveStreamContainer: React.FC<Props> = ({ formik, validateField, handleUpd
   const subscribeUpdateVideoAction = () => {
     let updateVideoSubscription = API.graphql(graphqlOperation(onUpdateVideo))
     updateVideoSubscription = updateVideoSubscription.subscribe({
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      //@ts-ignore
       next: (sub: GraphQLResult<APIt.OnUpdateVideoSubscription>) => {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         //@ts-ignore
@@ -234,6 +238,8 @@ const LiveStreamContainer: React.FC<Props> = ({ formik, validateField, handleUpd
   const subscribeCreateVideoAction = () => {
     let createVideoSubscription = API.graphql(graphqlOperation(onCreateVideo))
     createVideoSubscription = createVideoSubscription.subscribe({
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      //@ts-ignore
       next: (sub: GraphQLResult<APIt.OnCreateVideoSubscription>) => {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         //@ts-ignore
