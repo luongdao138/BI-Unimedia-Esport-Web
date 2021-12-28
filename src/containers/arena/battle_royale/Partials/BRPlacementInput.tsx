@@ -29,12 +29,19 @@ const BRPlacementInput: React.FC<
     value: number | ''
     onAttackError?: (error: ErrorType) => void
     onChange: ({ target: { value: string } }) => void
+    undefeated: boolean
     participantCount?: number | null
   }
-> = ({ value, participantCount, onAttackError, onChange, ...props }) => {
+> = ({ value, participantCount, onAttackError, onChange, undefeated, ...props }) => {
   const [placement, setPlacement] = useState<PlacementProps>({ value })
   const [error, setError] = useState<ErrorType>({})
   const classes = useStyles()
+
+  useEffect(() => {
+    if (value === '') {
+      setPlacement({ value })
+    }
+  }, [value])
 
   useEffect(() => {
     setError(validateError(placement, participantCount))
@@ -53,6 +60,7 @@ const BRPlacementInput: React.FC<
   }
   const hasError = Object.keys(error).length
 
+  if (undefeated) return <div>—</div>
   return (
     <div className={classes.placementInputWrap}>
       <BRInput
