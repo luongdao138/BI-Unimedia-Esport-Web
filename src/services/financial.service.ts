@@ -5,6 +5,7 @@ export type FinancialStatementItem = {
   cash_date?: number | string
   date?: string
   point?: string | number
+  status?: string
 }
 export type FinancialStatementData = {
   total?: number

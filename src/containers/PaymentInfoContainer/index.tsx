@@ -8,7 +8,7 @@ import { ESRoutes } from '@constants/route.constants'
 import { Pagination } from '@material-ui/lab'
 import { Colors } from '@theme/colors'
 import useFinancialStatement from './useFinancialStatement'
-import { FINANCIAL_STATUS_TITLE, FORMAT_TIME_SAFARI, FORMAT_YEAR_MONTH, FORMAT_YEAR_MONTH_FILTER } from '@constants/common.constants'
+import { FORMAT_TIME_SAFARI, FORMAT_YEAR_MONTH } from '@constants/common.constants'
 import ESLoader from '@components/FullScreenLoader'
 import { DateHelper } from '@utils/helpers/DateHelper'
 import moment from 'moment'
@@ -23,7 +23,6 @@ const PaymentInfoContainer: React.FC = () => {
   const [page, setPage] = useState<number>(1)
   const totalPages = Math.ceil(financialStatementData?.total / 1)
   const data = financialStatementData?.points
-
   const onChangePage = (_event: React.ChangeEvent<unknown>, value: number): void => {
     setPage(value)
   }
@@ -76,15 +75,16 @@ const PaymentInfoContainer: React.FC = () => {
           data?.map((item, index) => {
             const backgroundColor = index % 2 === 0 ? '#323232' : '#606060'
             const displayDate = moment(item?.date, FORMAT_TIME_SAFARI).format(FORMAT_YEAR_MONTH)
-            const displayStatus =
-              item?.date === DateHelper.formatMonth(moment(new Date()).format(FORMAT_YEAR_MONTH_FILTER))
-                ? FINANCIAL_STATUS_TITLE.SCHEDULE
-                : FINANCIAL_STATUS_TITLE.CONFIRM
+            // const displayStatus =
+            //   item?.date === DateHelper.formatMonth(moment().toDate().toLocaleDateString())
+            //     ? FINANCIAL_STATUS_TITLE.SCHEDULE
+            //     : FINANCIAL_STATUS_TITLE.CONFIRM
+
             const displayAmount = `${FormatHelper.currencyFormat(item?.point.toString())} ${t('common.money')}`
             return (
               <Box key={item?.date} onClick={navigateToDetail(item?.date)} style={{ backgroundColor }} className={classes.row}>
                 <Typography className={`${classes.yearMonthRow}`}>{displayDate}</Typography>
-                <Typography className={`${classes.statusRow}`}>{displayStatus}</Typography>
+                <Typography className={`${classes.statusRow}`}>{item?.status}</Typography>
                 <Typography className={`${classes.amountOfMoney}`}>{displayAmount}</Typography>
               </Box>
             )
