@@ -1,7 +1,7 @@
 import { Tooltip, TooltipProps } from '@material-ui/core'
 import { withStyles } from '@material-ui/core/styles'
 
-const ESTooltip: React.FC<TooltipProps> = ({ children, ...rest }) => {
+const ESTooltip: React.FC<TooltipProps> = ({ children, style = {}, ...rest }) => {
   const CustomTooltip = withStyles({
     tooltip: {
       fontSize: '14px',
@@ -10,6 +10,7 @@ const ESTooltip: React.FC<TooltipProps> = ({ children, ...rest }) => {
       marginBottom: '12px',
       backgroundColor: '#fff',
       padding: '8px 12px',
+      ...style,
     },
     arrow: {
       color: '#fff',
