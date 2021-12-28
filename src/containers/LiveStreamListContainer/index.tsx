@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { Colors } from '@theme/colors'
 
 import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
-// import ESLoader from '@components/Loader'
+import ESLoader from '@components/FullScreenLoader'
 import useLiveStreamReport from './useLiveStreamReport'
 import { CommonHelper, getTimeZone } from '@utils/helpers/CommonHelper'
 import StreamDataItem from './StreamDataItem'
@@ -22,7 +22,7 @@ const LiveStreamListContainer: React.FC = () => {
 
   useEffect(() => {
     if (enteredSort) {
-      if (enteredSort === t('point_management_tab.choosing')) {
+      if (enteredSort === t('live_stream_list_screen.current_month')) {
         fetchLiveStreamReportData({ period: '', timezone: getTimeZone() })
       } else {
         fetchLiveStreamReportData({ period: enteredSort, timezone: getTimeZone() })
@@ -48,13 +48,6 @@ const LiveStreamListContainer: React.FC = () => {
       </Box>
     )
   }
-  // if (!meta.loaded && meta.pending) {
-  //   return (
-  //     <Box display="flex" justifyContent="center" alignItems="center" marginTop="20px">
-  //       <ESLoader />
-  //     </Box>
-  //   )
-  // }
   return (
     <Box>
       <HeaderWithButton title={t('live_stream_list_screen.title')} />
@@ -62,7 +55,7 @@ const LiveStreamListContainer: React.FC = () => {
         <Grid item xs={12} md={7}>
           <ESSelect
             fullWidth
-            placeholder={t('point_management_tab.choosing')}
+            placeholder={t('live_stream_list_screen.current_month')}
             displayEmpty
             size="big"
             name={'query'}
@@ -74,7 +67,7 @@ const LiveStreamListContainer: React.FC = () => {
             {sortOptionsListDates &&
               sortOptionsListDates.map((date, index) => (
                 <option key={index} value={date}>
-                  {date === t('point_management_tab.choosing') ? date : CommonHelper.formatDateYearMonth(date)}
+                  {date === t('live_stream_list_screen.current_month') ? date : CommonHelper.formatDateYearMonth(date)}
                 </option>
               ))}
           </ESSelect>
@@ -149,6 +142,7 @@ const LiveStreamListContainer: React.FC = () => {
           )}
         </Grid>
       </Box>
+      {!meta.loaded && meta.pending && <ESLoader open={meta.pending} />}
     </Box>
   )
 }

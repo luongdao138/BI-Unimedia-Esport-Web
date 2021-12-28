@@ -1472,6 +1472,13 @@ export default {
   },
   live_stream_list_screen: {
     title: '配信データ管理',
+    total_time_video: '総配信時間（ｈ）',
+    total_time_user_watch: '総視聴時間（ｈ）',
+    total_user_watch: '合計視聴者数',
+    total_user_chat: 'チャット人数',
+    total_user_chat_premium: 'プレミアムチャット人数',
+    total_point: 'eXeポイント受領総数',
+    current_month: '当月',
   },
   archived_list_screen: {
     title: 'アーカイブ一覧',

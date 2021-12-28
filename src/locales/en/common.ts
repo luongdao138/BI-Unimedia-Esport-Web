@@ -1478,6 +1478,7 @@ export default {
     total_user_chat: 'チャット人数',
     total_user_chat_premium: 'プレミアムチャット人数',
     total_point: 'eXeポイント受領総数',
+    current_month: '当月',
   },
   archived_list_screen: {
     title: 'アーカイブ一覧',

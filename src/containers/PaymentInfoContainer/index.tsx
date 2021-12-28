@@ -28,7 +28,7 @@ const PaymentInfoContainer: React.FC = () => {
   }
 
   useEffect(() => {
-    fetchFinancialStatement({ page: page, limit: 1 })
+    fetchFinancialStatement({ page: page, limit: 25 })
   }, [page])
 
   const navigateToDetail = (id) => () => {
