@@ -14,13 +14,20 @@ import { FormikProps } from 'formik'
 import ESLoader from '@components/FullScreenLoaderNote'
 import { CONFIRM_SETTING_DELAY, EVENT_LIVE_STATUS, EVENT_STATE_CHANNEL } from '@constants/common.constants'
 import API, { GraphQLResult, graphqlOperation } from '@aws-amplify/api'
-import * as APIt from 'src/types/graphqlAPI'
 import { STATUS_VIDEO } from '@services/videoTop.services'
 import { useAppDispatch } from '@store/hooks'
 import { useTranslation } from 'react-i18next'
 import * as commonActions from '@store/common/actions'
+
 const { getChannelByArn, getVideoByUuid } = require(`src/graphql.${process.env.NEXT_PUBLIC_AWS_ENV}/queries`)
 const { onCreateVideo, onUpdateChannel, onUpdateVideo } = require(`src/graphql.${process.env.NEXT_PUBLIC_AWS_ENV}/subscriptions`)
+// import * as APIt from 'src/types/graphqlAPI'
+import useGraphqlAPI from 'src/types/useGraphqlAPI'
+/* eslint-disable @typescript-eslint/no-unused-vars */
+// @ts-ignore
+const APIt: any = useGraphqlAPI()
+
+// import abc from '@containers/VideoLiveStreamContainer/ChatContainer/abc'
 
 interface Props {
   formik?: FormikProps<FormLiveType>
@@ -72,6 +79,8 @@ const LiveStreamContainer: React.FC<Props> = ({ formik, validateField, handleUpd
   const subscribeUpdateChannelAction = () => {
     let updateChannelSubscription = API.graphql(graphqlOperation(onUpdateChannel))
     updateChannelSubscription = updateChannelSubscription.subscribe({
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       next: (sub: GraphQLResult<APIt.OnUpdateChannelSubscription>) => {
         //@ts-ignore
         console.log('====>>SUB<<===', sub?.value?.data?.onUpdateChannel, formik?.values?.stepSettingOne?.arn)
@@ -91,6 +100,8 @@ const LiveStreamContainer: React.FC<Props> = ({ formik, validateField, handleUpd
   const checkChannelState = async () => {
     try {
       const channelArn = formik?.values?.stepSettingOne?.arn
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       const listQC: APIt.GetChannelByArnQueryVariables = {
         arn: channelArn,
         limit: 2000,

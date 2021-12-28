@@ -23,7 +23,7 @@ const {
 } = require(`src/graphql.${process.env.NEXT_PUBLIC_AWS_ENV}/queries`)
 const { onCreateMessage, onUpdateMessage } = require(`src/graphql.${process.env.NEXT_PUBLIC_AWS_ENV}/subscriptions`)
 const { createMessage, createUser, updateMessage, updateUser } = require(`src/graphql.${process.env.NEXT_PUBLIC_AWS_ENV}/mutations`)
-import * as APIt from 'src/types/graphqlAPI'
+// import * as APIt from 'src/types/graphqlAPI'
 import useDetailVideo from '../useDetailVideo'
 import usePurchaseTicketSuperChat from '../usePurchaseTicket'
 import ChatTextMessage from '@containers/VideoLiveStreamContainer/ChatContainer/ChatTextMessage'
@@ -47,6 +47,10 @@ import {
 } from '@constants/common.constants'
 import { v4 as uuidv4 } from 'uuid'
 import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
+import useGraphqlAPI from 'src/types/useGraphqlAPI'
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+const APIt: any = useGraphqlAPI()
 // import { DELAY_SECONDS } from '@constants/common.constants'
 // import InfiniteScroll from 'react-infinite-scroll-component'
 // import { WindowScroller, List, AutoSizer } from 'react-virtualized'
@@ -228,18 +232,18 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     const [videoTimeIsRewinding, setVideoTimeIsRewinding] = useState(0)
     // console.log('🚀 ~ videoTimeIsRewinding', videoTimeIsRewinding)
 
-    const getChatData = () =>
-      Array(30)
-        .fill('')
-        .map((_, i) => ({
-          id: i,
-          user: 'Account Name',
-          content: 'チャットのコメントははここに表示されます。チャットのコメントははここに表示されます。',
-        }))
+    // const getChatData = () =>
+    //   Array(30)
+    //     .fill('')
+    //     .map((_, i) => ({
+    //       id: i,
+    //       user: 'Account Name',
+    //       content: 'チャットのコメントははここに表示されます。チャットのコメントははここに表示されます。',
+    //     }))
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     //@ts-ignore
-    const [chartDataFake, setChartDataFake] = useState(getChatData())
+    // const [chartDataFake, setChartDataFake] = useState(getChatData())
 
     const { selectors } = userProfileStore
 
@@ -326,6 +330,8 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     const fetchPrevMessWhenRewind = (video_time, sortOrder = APIt.ModelSortDirection.DESC) => {
       try {
         setIsGettingPrevRewindMess(true)
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         let listQV: APIt.GetMessagesByVideoIdWithSortQueryVariables = {
           video_id: key_video_id,
           video_time: { le: video_time - 1 },
@@ -438,6 +444,8 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         // console.log('🚀 ~ fetchPrevMess ~ video_time---000', video_time)
         // occur this case when is streaming and fetch mess initial
         let nextToken = null
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         let listQV: APIt.GetMessagesByVideoIdQueryVariables = {
           video_id: key_video_id,
           sortDirection: sortOrder,
@@ -472,7 +480,8 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         // console.log('🚀 ~ fetchPrevMess ~ isTokenBroken--000', isTokenBroken)
         if (isTokenBroken) {
           let nextToken = prevToken
-          // console.log('🚀 ~ fetchPrevMess ~ nextToken', nextToken)
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
           let listQV: APIt.GetMessagesByVideoIdWithSortQueryVariables = {
             video_id: key_video_id,
             video_time: { le: prevTime },
@@ -489,6 +498,8 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
           })
         } else {
           let nextToken = prevToken
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
           let listQV: APIt.GetMessagesByVideoIdQueryVariables = {
             video_id: key_video_id,
             sortDirection: sortOrder,
@@ -610,6 +621,8 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         const nextTime = +video_time + INTERVAL_AUTO_GET_MESS - 1
         // console.log('🚀 ~ fetchPrevMess ~ video_time', video_time)
         // console.log('🚀 ~ nextTime---999', nextTime)
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         let listQV: APIt.GetMessagesByVideoIdWithSortQueryVariables = {
           video_id: key_video_id,
           video_time: {
@@ -855,6 +868,8 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     const subscribeCreateMessAction = () => {
       let createMessSubscription = API.graphql(graphqlOperation(onCreateMessage))
       createMessSubscription = createMessSubscription.subscribe({
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         next: (sub: GraphQLResult<APIt.OnCreateMessageSubscription>) => {
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           //@ts-ignore
@@ -870,6 +885,8 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     const subscribeUpdateMessAction = () => {
       let updateMessSubscription = API.graphql(graphqlOperation(onUpdateMessage))
       updateMessSubscription = updateMessSubscription.subscribe({
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         next: (sub: GraphQLResult<APIt.OnUpdateMessageSubscription>) => {
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           //@ts-ignore
@@ -1020,6 +1037,8 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     const checkUserExist = async () => {
       try {
         const { uuid } = userProfile.attributes
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         const listQV: APIt.GetUsersByUuidQueryVariables = {
           uuid,
           limit: 2000,

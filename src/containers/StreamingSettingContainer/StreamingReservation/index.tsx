@@ -12,7 +12,12 @@ import { useTranslation } from 'react-i18next'
 import { FormikProps } from 'formik'
 import { FormLiveType } from '@containers/arena/UpsertForm/FormLiveSettingsModel/FormLiveSettingsType'
 import API, { GraphQLResult, graphqlOperation } from '@aws-amplify/api'
-import * as APIt from 'src/types/graphqlAPI'
+// import * as APIt from 'src/types/graphqlAPI'
+import useGraphqlAPI from 'src/types/useGraphqlAPI'
+/* eslint-disable @typescript-eslint/no-unused-vars */
+// @ts-ignore
+const APIt: any = useGraphqlAPI()
+
 const { getChannelByArn, getVideoByUuid } = require(`src/graphql.${process.env.NEXT_PUBLIC_AWS_ENV}/queries`)
 const { onCreateVideo, onUpdateChannel, onUpdateVideo } = require(`src/graphql.${process.env.NEXT_PUBLIC_AWS_ENV}/subscriptions`)
 import { CONFIRM_SETTING_DELAY, EVENT_LIVE_STATUS, EVENT_STATE_CHANNEL } from '@constants/common.constants'
@@ -83,6 +88,8 @@ const StreamingReservationContainer: React.FC<Props> = ({ formik, flagUpdateFiel
   const subscribeUpdateChannelAction = () => {
     let updateChannelSubscription = API.graphql(graphqlOperation(onUpdateChannel))
     updateChannelSubscription = updateChannelSubscription.subscribe({
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       next: (sub: GraphQLResult<APIt.OnUpdateChannelSubscription>) => {
         //@ts-ignore
         console.log('====>>SUB SCHEDULE<<===', sub?.value?.data?.onUpdateChannel, formik?.values?.stepSettingTwo?.arn)
@@ -109,6 +116,8 @@ const StreamingReservationContainer: React.FC<Props> = ({ formik, flagUpdateFiel
   const checkChannelState = async () => {
     try {
       const channelArn = formik?.values?.stepSettingTwo?.arn
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       const listQC: APIt.GetChannelByArnQueryVariables = {
         arn: channelArn,
         limit: 2000,

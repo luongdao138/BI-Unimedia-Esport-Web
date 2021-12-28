@@ -1,4 +1,5 @@
 /* eslint-disable no-console */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import ESTab from '@components/Tab'
 import ESTabs from '@components/Tabs'
 import i18n from '@locales/i18n'
@@ -31,7 +32,7 @@ import { getIsAuthenticated } from '@store/auth/selectors'
 import { ESRoutes } from '@constants/route.constants'
 const { getVideoByUuid } = require(`src/graphql.${process.env.NEXT_PUBLIC_AWS_ENV}/queries`)
 const { onUpdateVideo, onUpdateChannel } = require(`src/graphql.${process.env.NEXT_PUBLIC_AWS_ENV}/subscriptions`)
-import * as APIt from 'src/types/graphqlAPI'
+// import * as APIt from 'src/types/graphqlAPI'
 import API, { GraphQLResult, graphqlOperation } from '@aws-amplify/api'
 import { EVENT_LIVE_STATUS, LIVE_VIDEO_TYPE } from '@constants/common.constants'
 import DialogLoginContainer from '@containers/DialogLogin'
@@ -39,6 +40,10 @@ import _ from 'lodash'
 import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
 import LiveStreamContent from './LiveStreamContent'
 import { PurchaseTicketParams } from '@services/points.service'
+import useGraphqlAPI from 'src/types/useGraphqlAPI'
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+const APIt: any = useGraphqlAPI()
 
 enum TABS {
   PROGRAM_INFO = 1,
@@ -125,6 +130,8 @@ const VideoDetail: React.FC = () => {
   const checkVideoStatus = async () => {
     try {
       const videoId = detailVideoResult.uuid
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       const listQV: APIt.GetVideoByUuidQueryVariables = {
         uuid: videoId,
         limit: 2000,
@@ -222,6 +229,8 @@ const VideoDetail: React.FC = () => {
   const subscribeUpdateVideoAction = () => {
     let updateVideoSubscription = API.graphql(graphqlOperation(onUpdateVideo))
     updateVideoSubscription = updateVideoSubscription.subscribe({
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       next: (sub: GraphQLResult<APIt.OnUpdateVideoSubscription>) => {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         //@ts-ignore
@@ -264,6 +273,8 @@ const VideoDetail: React.FC = () => {
   const subscribeUpdateChannelAction = () => {
     let updateChannelSubscription = API.graphql(graphqlOperation(onUpdateChannel))
     updateChannelSubscription = updateChannelSubscription.subscribe({
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       next: (sub: GraphQLResult<APIt.OnUpdateChannelSubscription>) => {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         //@ts-ignore
