@@ -149,16 +149,16 @@ const ArchivedListContainer: React.FC = () => {
             <tr>
               {!isMobile && <td>{t('archived_list_screen.titleVideo')}</td>}
               <td colSpan={isMobile ? 2 : 1}>
-                <Box className={`${classes.titleVideo} ${classes.textEllipsis}`}>
+                <Box className={classes.titleVideo}>
                   {isMobile && (
                     <Typography component="span">
-                      <div>{title}</div>
+                      <div className={classes.textEllipsis}>{title}</div>
                     </Typography>
                   )}
                   {!isMobile && (
                     <Box flexDirection="row" display="flex">
-                      <ESTooltip title={rowData?.title} arrow placement="top-start">
-                        <div>{rowData?.title}</div>
+                      <ESTooltip title={rowData?.title} arrow placement="top-start" style={{ maxWidth: '500px' }}>
+                        <div className={classes.textEllipsis}>{rowData?.title}</div>
                       </ESTooltip>
                     </Box>
                   )}
