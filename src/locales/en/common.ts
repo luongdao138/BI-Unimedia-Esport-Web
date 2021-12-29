@@ -1782,5 +1782,6 @@ export default {
     delete_dialog_sub_title: '削除したいアーカイブのタイトル',
     cancel: 'キャンセル',
     delete_confirm: '削除する',
+    update: '確認',
   },
 }

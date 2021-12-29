@@ -22,6 +22,7 @@ export const URI = {
   UNBLOCK: '/v2/blocks/unblock',
   BLOCKED_USERS: 'v2/blocks/users',
   NG_WORDS: '/v2/ng_words',
+  VIDEO_NG_WORDS: 'v2/videos_ng_words',
   GET_PREFECTURES: '/v2/areas',
   USER_SETTINGS: '/v2/users/settings',
   USER_FEATURES: '/v2/user_features',

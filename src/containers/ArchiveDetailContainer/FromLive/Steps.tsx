@@ -68,7 +68,7 @@ const Steps: React.FC<StepsProps> = ({
   const [deleteLoading, setDeleteLoading] = useState(false)
   const [deleteErrorMsg, setDeleteMsg] = useState('')
 
-  const { checkNgWordFields, checkNgWordByField } = useCheckNgWord()
+  const { checkVideoNgWordFields, checkVideoNgWordByField } = useCheckNgWord()
   const { getDisplayErrorFieldArchiveEdit } = LiveStreamSettingHelper
   const {
     videoArchivedDetail,
@@ -161,11 +161,11 @@ const Steps: React.FC<StepsProps> = ({
 
   const onClickNext = () => {
     const { values } = formik
-    const fieldIdentifier = checkNgWordFields({
+    const fieldIdentifier = checkVideoNgWordFields({
       title: values.title,
       description: values.description,
     })
-    const ngFields = checkNgWordByField({
+    const ngFields = checkVideoNgWordByField({
       [FIELD_TITLES.stepSettingTwo.title]: values.title,
       [FIELD_TITLES.stepSettingTwo.description]: values.description,
     })
@@ -561,7 +561,7 @@ const Steps: React.FC<StepsProps> = ({
               <Grid item xs={12}>
                 <Box maxWidth={280} className={classes.buttonContainer}>
                   <ButtonPrimary type="submit" round fullWidth onClick={onValidateForm}>
-                    {i18n.t('common:streaming_setting_screen.check_submit')}
+                    {i18n.t('common:archive_detail_screen.update')}
                   </ButtonPrimary>
                 </Box>
               </Grid>
