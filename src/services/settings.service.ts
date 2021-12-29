@@ -278,4 +278,6 @@ export const cancelPurchase = async (id: string): Promise<PurchaseHistoryDetailR
 export type ArchiveListType = {
   user_id: number
   timezone: string
+  page?: number
+  limit?: number
 }

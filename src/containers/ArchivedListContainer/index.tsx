@@ -19,7 +19,7 @@ import { STATUS_VIDEO } from '@services/videoTop.services'
 import VideoDeleteConfirmModal from '@containers/ArchiveDetailContainer/DeleteVideoConfirmModal/VideoDeleteConfirmModal'
 import ESLoader from '@components/FullScreenLoader'
 
-const ITEM_PER_PAGE = 10
+const ITEM_PER_PAGE = 25
 
 const ArchivedListContainer: React.FC = () => {
   const router = useRouter()
@@ -41,6 +41,17 @@ const ArchivedListContainer: React.FC = () => {
   const [deleteErrorMsg, setDeleteMsg] = useState('')
 
   const isLoading = !!meta_archive_list.pending
+
+  const getArchiveList = () => {
+    if (!videoArchivedList) {
+      return []
+    }
+    const { videos } = videoArchivedList
+    return videos
+  }
+
+  const totalPage = (videoArchivedList?.total ?? 0) / ITEM_PER_PAGE + 1
+
   const handleCloseDeleteModal = () => {
     setDeleteModalVisible(false)
   }
@@ -77,24 +88,18 @@ const ArchivedListContainer: React.FC = () => {
     })
   }
 
-  const getArchiveList = () => {
-    if (!videoArchivedList) {
-      return []
-    }
-    const { videos } = videoArchivedList
-    return videos.slice(ITEM_PER_PAGE * (page - 1), ITEM_PER_PAGE * page)
-  }
-
   const fetchArchiveListRequestParams = () => {
     return {
       user_id: user?.id,
       timezone: getTimeZone(),
+      page,
+      limit: ITEM_PER_PAGE,
     }
   }
 
   useEffect(() => {
     getVideoArchivedList(fetchArchiveListRequestParams())
-  }, [])
+  }, [page])
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const renderRow = (rowData) => {
@@ -244,34 +249,37 @@ const ArchivedListContainer: React.FC = () => {
     )
   }
 
-  const getTotalPage = () => Math.ceil(videoArchivedList.videos.length / ITEM_PER_PAGE)
+  const getTotalPage = () => Math.ceil(videoArchivedList.total / ITEM_PER_PAGE)
 
   const onChangePage = (_, value: number): void => {
     setPage(value)
+  }
+
+  const pagination = (isTopPagination = false) => {
+    return (
+      <Box className={isTopPagination ? classes.paginationContainerTop : classes.paginationContainerBottom}>
+        <Pagination
+          showFirstButton
+          showLastButton
+          defaultPage={1}
+          page={page}
+          count={getTotalPage()}
+          variant="outlined"
+          shape="rounded"
+          className={classes.paginationStyle}
+          siblingCount={1}
+          size={isSmallScreen ? 'small' : 'medium'}
+          onChange={onChangePage}
+        />
+      </Box>
+    )
   }
 
   return (
     <div>
       <HeaderWithButton title={t('archived_list_screen.title')} />
       <Box className={classes.wrapper}>
-        {getArchiveList().length > 0 && (
-          <Box className={classes.paginationContainerTop}>
-            <Pagination
-              showFirstButton
-              showLastButton
-              defaultPage={1}
-              page={page}
-              count={getTotalPage()}
-              variant="outlined"
-              shape="rounded"
-              className={classes.paginationStyle}
-              siblingCount={1}
-              size={isSmallScreen ? 'small' : 'medium'}
-              onChange={onChangePage}
-            />
-          </Box>
-        )}
-
+        {totalPage > 1 && pagination(true)}
         <Box className={classes.container}>
           {getArchiveList().length > 0 && getArchiveList().map((k) => renderRow(k))}
           {getArchiveList().length === 0 && (
@@ -280,23 +288,7 @@ const ArchivedListContainer: React.FC = () => {
             </Box>
           )}
         </Box>
-        {getArchiveList().length > 0 && (
-          <Box className={classes.paginationContainerBottom}>
-            <Pagination
-              showFirstButton
-              showLastButton
-              defaultPage={1}
-              page={page}
-              count={getTotalPage()}
-              variant="outlined"
-              shape="rounded"
-              className={classes.paginationStyle}
-              siblingCount={1}
-              size={isSmallScreen ? 'small' : 'medium'}
-              onChange={onChangePage}
-            />
-          </Box>
-        )}
+        {totalPage > 1 && pagination()}
         <VideoDeleteConfirmModal
           open={deleteModalVisible}
           video={selectedDeleteVideo}
