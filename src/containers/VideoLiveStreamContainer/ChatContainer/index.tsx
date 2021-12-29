@@ -4,7 +4,7 @@
 import { Box, Typography, Icon, IconButton, useTheme, useMediaQuery, ButtonBase, ClickAwayListener } from '@material-ui/core'
 // import { useTranslation } from 'react-i18next'
 // import i18n from '@locales/i18n'
-import React, { useState, useEffect, useRef, forwardRef, useImperativeHandle } from 'react'
+import React, { useState, useEffect, useRef, forwardRef, useImperativeHandle, useCallback } from 'react'
 import sanitizeHtml from 'sanitize-html'
 import i18n from '@locales/i18n'
 import useStyles from './styles'
@@ -297,9 +297,12 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       cache.clearAll()
     }, [contentRect?.width])
 
-    const debouncedHandleLoadMore = debounce(() => {
-      fetchPrevMess && fetchPrevMess()
-    }, 300)
+    const debouncedHandleLoadMore = useCallback(
+      debounce(() => {
+        fetchPrevMess && fetchPrevMess()
+      }, 300),
+      [isTokenBroken]
+    )
 
     const handleLoadMore = () => {
       // only scroll to load more mess if rewinded or is live stream and has prevToken (has mess in prev page)
@@ -483,7 +486,6 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     const fetchPrevMess = (sortOrder = APIt.ModelSortDirection.DESC) => {
       try {
         setIsGettingMess(true)
-        // console.log('🚀 ~ fetchPrevMess ~ isTokenBroken--000', isTokenBroken)
         if (isTokenBroken) {
           let nextToken = prevToken
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
