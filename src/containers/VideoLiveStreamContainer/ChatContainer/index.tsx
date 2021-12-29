@@ -171,6 +171,8 @@ const cache = new CellMeasurerCache({
   defaultHeight: 25,
 })
 
+const contentRef = React.createRef<HTMLDivElement>()
+
 const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
   (
     {
@@ -260,7 +262,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     // const [savedDonateMess, setSavedDonateMess] = useState([])
     const [isChatInBottom, setIsChatInBottom] = useState(false)
     const [isSeeking, setIsSeeking] = useState(false)
-    const contentRef = React.createRef<HTMLDivElement>()
+
     const contentRect = useRect(contentRef)
 
     const { width: pageWidth } = useWindowDimensions(0)
@@ -301,7 +303,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
 
     const handleLoadMore = () => {
       // only scroll to load more mess if rewinded or is live stream and has prevToken (has mess in prev page)
-      if (!isGettingMess && !isGettingPrevRewindMess && !isGettingRewindMess && (isTokenBroken || (isStreaming && prevToken))) {
+      if (!isGettingMess && !isGettingPrevRewindMess && !isGettingRewindMess && prevToken && (isTokenBroken || isStreaming)) {
         debouncedHandleLoadMore()
       }
     }
@@ -403,6 +405,8 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       setSuccessGetListDonateMess(true)
     }
     refFetchMessInitialArchive.current = handleFetchMessInitialArchive
+    // console.log('🚀 ~ setTimeout ~ cache----222', cache)
+    // console.log('🚀 ~ setTimeout ~ cache----3333', cache.columnWidth)
 
     const refFetchPrevMess = useRef(null)
     const handleFetchPrevMess = (messagesInfo) => {
@@ -417,7 +421,9 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         if (isBottom) {
           setBottom(true)
         }
+        // cache.clearAll()
       }, 10)
+      // cache.clearAll()
       setCacheMess((messages) => [...transformMessAsc, ...messages])
 
       const transformDonateMessAsc = transformMessAsc.filter(
@@ -1655,8 +1661,14 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       }
     }
 
+    // const testAbc = () => {
+    //   console.log('🚀 ~ testAbc ~ testAbc', 123)
+
+    //   cache.clearAll()
+    // }
+
     useEffect(() => {
-      // console.log('🚀 ~ setTimeout ~ isBottom--2222', isBottom)
+      // console.log('🚀 ~ setTimeout ~ isBottom--2222', cache)
       // console.log('🚀 ~ setTimeout ~ isGettingMess--1111', isGettingMess)
 
       setTimeout(() => {
@@ -1700,6 +1712,12 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
           className={`${classes.btn_show_more} ${displaySeeMore ? classes.displaySeeMore : ''}`}
         >
           {i18n.t('common:live_stream_screen.show_more_mess')}
+        </ButtonBase> */}
+        {/* <ButtonBase
+          onClick={() => testAbc()}
+          // className={`${classes.btn_show_more} ${displaySeeMore ? classes.displaySeeMore : ''}`}
+        >
+          dgsds
         </ButtonBase> */}
         <IconButton
           disableRipple
