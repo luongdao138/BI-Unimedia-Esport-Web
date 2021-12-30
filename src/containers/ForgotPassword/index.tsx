@@ -109,7 +109,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   instructionContainer: {
     marginTop: theme.spacing(2),
     paddingLeft: theme.spacing(3),
-    width: 700,
   },
   instructionInfo: {
     color: Colors.yellow,
