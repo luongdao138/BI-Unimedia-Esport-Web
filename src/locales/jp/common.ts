@@ -1478,8 +1478,9 @@ export default {
     title: '配信管理',
     delivery_settings: '配信設定',
     distribution_data_management: '配信データ管理',
-    archive_list: 'アーカイブ一覧',
+    archive_list: 'アーカイブ管理',
     payment_information: '入金情報',
+    gift_management: '個別ギフト対象者申請',
   },
   streaming_setting_screen: {
     title: '配信設定',
@@ -1741,5 +1742,17 @@ export default {
     title_points_left_after_purchase: '交換後の残ポイント',
     purchase_ticket_success: 'チケット交換が完了しました。',
     error_message_purchase_point: 'ポイントの購入できませんでした' + '\n' + 'しばらくお時間を空けて、再度ご購入手続きをお願いいたします',
+  },
+  streaming_gift_management: {
+    title: '個別ギフト対象者申請',
+    apply: 'この内容で申請する',
+    cancel: 'キャンセル',
+    empty_message: '個別ギフト対象の追加をご希望の場合、下記より追加申請のご対応をお願いします。',
+    add: '追加',
+    edit: '編集',
+    delete: '削除',
+    team_or_individual: 'チームもしくは個人',
+    target_name: '対象者名',
+    sns_url: 'SNS URL',
   },
 }
