@@ -1769,7 +1769,7 @@ export default {
     notify_date_time: '告知配信日時',
     delivery_date_time: '配信日時',
     ticket_amount: 'チケット金額',
-    ticket_sale_date_time: 'チケット販売日時',
+    ticket_sale_date_time: 'チケット販売開始日時',
     download_data: '配信データをダウンロードする',
     delete_data: '配信データを削除する',
     btn_check: '確認する',
@@ -1781,5 +1781,7 @@ export default {
     cancel: 'キャンセル',
     delete_confirm: '削除する',
     update: '確認',
+    delete_warning:
+      '動画のダウンロードを実施中の場合、削除を実施するとファイルが正常に取得できない場合がございます。動画の削除はファイルのダウンロードが完了した後に実施いただけますようお願いいたします',
   },
 }

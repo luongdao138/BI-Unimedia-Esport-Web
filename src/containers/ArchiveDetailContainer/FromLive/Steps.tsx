@@ -437,14 +437,14 @@ const Steps: React.FC<StepsProps> = ({
             </Box>
           </Box>
 
-          {isFromSchedule && (
-            <Box pb={2}>
-              <Box className={classes.label}>{i18n.t('common:archive_detail_screen.ticket_sale_date_time')}</Box>
-              <Box className={classes.dateTime} pt={1} pl={1}>
-                {CommonHelper.formatDateTimeJP(videoArchivedDetail?.sell_ticket_start_time)}
-              </Box>
+          <Box pb={2}>
+            <Box className={classes.label}>{i18n.t('common:archive_detail_screen.ticket_sale_date_time')}</Box>
+            <Box className={classes.dateTime} pt={1} pl={1} height="28px">
+              {videoArchivedDetail && videoArchivedDetail?.sell_ticket_start_time
+                ? CommonHelper.formatDateTimeJP(videoArchivedDetail?.sell_ticket_start_time)
+                : ''}
             </Box>
-          )}
+          </Box>
 
           {/* Archive delivery end date and time */}
           <Box pb={2} className={classes.wrap_input} flexDirection="row" display="flex" alignItems="flex-end">
@@ -533,7 +533,11 @@ const Steps: React.FC<StepsProps> = ({
             <a
               target="_blank"
               rel="noopener noreferrer"
-              style={{ display: 'flex', alignItems: 'flex-end' }}
+              className={classes.downloadWrap}
+              style={{
+                opacity: videoArchivedDetail?.convert_status === 'PROCESSING' ? 0.3 : 1,
+                cursor: videoArchivedDetail?.convert_status === 'PROCESSING' ? 'unset' : 'pointer',
+              }}
               download
               href={videoArchivedDetail?.url_download}
             >
@@ -616,6 +620,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: '12px',
     textDecoration: 'underline',
     color: 'rgb(255 255 255 / 70%)',
+  },
+  downloadWrap: {
+    display: 'flex',
+    alignItems: 'flex-end',
     cursor: 'pointer',
   },
   label: {

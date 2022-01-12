@@ -2,11 +2,6 @@ import React, { useEffect, useState } from 'react'
 import HeaderWithButton from '@components/HeaderWithButton'
 import { Box, makeStyles } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
-// import { useMediaQuery, useTheme } from '@material-ui/core'
-// import ESTooltip from '@components/ESTooltip'
-// import { FormatHelper } from '@utils/helpers/FormatHelper'
-// import { Pagination } from '@material-ui/lab'
-// import { Colors } from '@theme/colors'
 import Steps from './Steps'
 import useLiveSetting from '@containers/StreamingSettingContainer/useLiveSetting'
 import { ArchiveDetailFormType, getInitialArchiveDetailValues, validationScheme } from './ArchiveDetailFromLiveFormData'
@@ -21,9 +16,6 @@ const ArchiveDetailFromLiveContainer: React.FC<Props> = ({ isFromSchedule }) => 
   const [step, setStep] = useState(1)
   const { t } = useTranslation('common')
   const classes = useStyles()
-  // const theme = useTheme()
-  // const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
-  // const isSmallScreen = useMediaQuery(theme.breakpoints.down(475))
 
   const { categoryData, getCategory } = useLiveSetting()
   const { videoArchivedDetail } = useArchivedList()
@@ -39,13 +31,7 @@ const ArchiveDetailFromLiveContainer: React.FC<Props> = ({ isFromSchedule }) => 
   })
 
   const onChangeStep = (step: number): void => {
-    // console.log('click next step', step, stateChannelMedia)
     setStep(step)
-    // setShare(isShare)
-    // setPost(post)
-    // if (step === 3) {
-    //   setModal(true)
-    // }
   }
 
   useEffect(() => {
