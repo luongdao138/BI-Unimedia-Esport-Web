@@ -78,7 +78,7 @@ const DonateMessage: React.FC<DonateMessageProps> = ({
           ) : ''} */}
         </Box>
         {videoType === STATUS_VIDEO.LIVE_STREAM && is_streamer && message.id ? (
-          <ESMenu className={classes.menu_del_mess} iconClass={classes.iconClass}>
+          <ESMenu className={classes.menu_del_mess} iconClass={classes.iconClass} disableRipple>
             {message.delete_flag ? (
               <ESMenuItem disabled className={classes.menu_item_disabled}>
                 {t('live_stream_screen.deleted_message')}
@@ -117,13 +117,13 @@ const useStyles = makeStyles(() => ({
     // marginBottom: "4px",
     display: 'none',
     position: 'absolute',
-    right: '16px',
-    top: '16px',
+    right: '18px',
+    top: '11px',
   },
   menu_del_mess: {
     position: 'absolute',
-    right: '5px',
-    top: '13px',
+    right: '0px',
+    top: '9px',
   },
   menu_item_disabled: {
     '&.MuiListItem-root.Mui-disabled': {
@@ -132,9 +132,14 @@ const useStyles = makeStyles(() => ({
   },
   iconClass: {
     display: 'none',
-    padding: 4,
+    padding: '2px 0 0 0',
     '& .MuiIcon-fontSizeSmall': {
       fontSize: '0.82rem',
+    },
+    '&.MuiIconButton-root': {
+      '&:hover': {
+        background: 'none',
+      },
     },
   },
   accountInfo: {

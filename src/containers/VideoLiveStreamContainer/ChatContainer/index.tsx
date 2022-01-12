@@ -1773,7 +1773,12 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
             }
           }
         >
-          <AutoSizer style={{ flex: 1 }}>
+          <AutoSizer
+            style={{ flex: 1 }}
+            onResize={() => {
+              cache.clearAll()
+            }}
+          >
             {({ height, width }) => {
               // console.log('🚀 ~ MessageList ~ height', height)
               return (
