@@ -34,32 +34,33 @@ const ChatTextMessage = React.memo<ChatContainerProps>(
             <span className={`${message.delete_flag ? '' : classes.chatMessageUser} ${getClassDeletedMess()}`}>{`${message.owner}: `}</span>
             {/* <span className={getClassDeletedMess()}>{getMessageWithoutNgWords(message.text) + ' ' + message.video_time + 's'}</span> */}
             <span className={`${getClassDeletedMess()} ${classes.normalMessage}`}>{getMessageWithoutNgWords(message.text)}</span>
+            <Box component="span" className={classes.mess_status}>
+              {message.mess_status === STATUS_SEND_MESS.PENDING ? <CircularProgress size={12} /> : ''}
+              {message.mess_status === STATUS_SEND_MESS.ERROR_SEND || message.mess_status === STATUS_SEND_MESS.ERROR_DELETE ? (
+                <Icon
+                  color="primary"
+                  className={`fa fa-exclamation-triangle ${classes.resendIcon}`}
+                  fontSize="small"
+                  onClick={() => {
+                    if (message.mess_status === STATUS_SEND_MESS.ERROR_SEND) {
+                      resendMess(message)
+                    } else {
+                      reDeleteMess(message)
+                    }
+                  }}
+                />
+              ) : (
+                ''
+              )}
+            </Box>
           </Typography>
-          <Box className={classes.mess_status}>
-            {message.mess_status === STATUS_SEND_MESS.PENDING ? <CircularProgress size={12} /> : ''}
-            {message.mess_status === STATUS_SEND_MESS.ERROR_SEND || message.mess_status === STATUS_SEND_MESS.ERROR_DELETE ? (
-              <Icon
-                color="primary"
-                className={`fa fa-exclamation-triangle ${classes.resendIcon}`}
-                fontSize="small"
-                onClick={() => {
-                  if (message.mess_status === STATUS_SEND_MESS.ERROR_SEND) {
-                    resendMess(message)
-                  } else {
-                    reDeleteMess(message)
-                  }
-                }}
-              />
-            ) : (
-              ''
-            )}
-            {/* {(!message.mess_status || message.mess_status === STATUS_SEND_MESS.LOADED) ? ( */}
-            {/* {(!message.mess_status || message.mess_status === STATUS_SEND_MESS.LOADED) ? (
+          {/* {(!message.mess_status || message.mess_status === STATUS_SEND_MESS.LOADED) ? ( */}
+          {/* {(!message.mess_status || message.mess_status === STATUS_SEND_MESS.LOADED) ? (
               <Icon color="primary" className={`fa fa-check-circle ${classes.icon}`} fontSize="small" />
             ) : ''} */}
-          </Box>
+
           {videoType === STATUS_VIDEO.LIVE_STREAM && is_streamer && message.id ? (
-            <ESMenu className={classes.menu_del_mess} iconClass={classes.iconClass}>
+            <ESMenu className={classes.menu_del_mess} iconClass={classes.iconClass} disableRipple>
               {message.delete_flag ? (
                 <ESMenuItem disabled className={classes.menu_item_disabled}>
                   {t('live_stream_screen.deleted_message')}
@@ -91,7 +92,7 @@ const useStyles = makeStyles(() => ({
   mess_status: {
     paddingLeft: 4,
     alignItems: 'center',
-    // display: "flex",
+    // display: 'inline-flex',
     marginBottom: '4px',
     display: 'none',
   },
@@ -103,9 +104,16 @@ const useStyles = makeStyles(() => ({
   },
   iconClass: {
     display: 'none',
-    padding: 4,
+    position: 'absolute',
+    right: '4px',
+    padding: '2px 0 0 0',
     '& .MuiIcon-fontSizeSmall': {
       fontSize: '0.82rem',
+    },
+    '&.MuiIconButton-root': {
+      '&:hover': {
+        background: 'none',
+      },
     },
   },
   chatMessageContainer: {
