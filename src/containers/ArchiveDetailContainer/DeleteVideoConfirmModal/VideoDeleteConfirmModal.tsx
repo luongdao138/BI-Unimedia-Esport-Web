@@ -29,6 +29,7 @@ const VideoDeleteConfirmModal: React.FC<ModalProps> = ({ open, handleClose, vide
             <Typography className={classes.message}>{t('archive_detail_screen.delete_dialog_sub_title')}</Typography>
             <Box pb={4}></Box>
             <Typography className={classes.message}>{video?.title}</Typography>
+            <Typography className={classes.deleteWarning}>{t('archive_detail_screen.delete_warning')}</Typography>
             <Box pb={4}></Box>
             {!!deleteError && <Typography className={classes.mess_delete_card_error}>{deleteError}</Typography>}
           </Box>
@@ -49,6 +50,12 @@ const VideoDeleteConfirmModal: React.FC<ModalProps> = ({ open, handleClose, vide
 export default VideoDeleteConfirmModal
 
 const useStyles = makeStyles((theme) => ({
+  deleteWarning: {
+    fontSize: '12px',
+    color: Colors.primary,
+    padding: '10px 0px',
+    textAlign: 'center',
+  },
   container: {
     width: '100%',
     display: 'block',

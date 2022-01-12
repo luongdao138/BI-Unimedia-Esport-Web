@@ -32,6 +32,7 @@ export type ArchiveDetailDataType = {
   arn?: string
   scheduled_flag: number
   url_download: string
+  convert_status: string
 }
 
 export type TYPE_VIDEO_ARCHIVE = {
@@ -45,6 +46,7 @@ export type TYPE_VIDEO_ARCHIVE = {
   total_point_chat: string
   total_chat: string
   num_counted_user: number
+  convert_status: string
 }
 
 export type ArchiveListResponse = {

@@ -113,6 +113,7 @@ const ArchivedListContainer: React.FC = () => {
       thumbnail,
       uuid,
       scheduled_flag: scheduledFlag,
+      convert_status,
     } = rowData
 
     const getVidID = () => {
@@ -191,7 +192,10 @@ const ArchivedListContainer: React.FC = () => {
                         <>
                           <td rowSpan={3} className={classes.cellIcons}>
                             <Box mr={1} component="span">
-                              <img src={'/images/icons/download.svg'} className={classes.imageReload} />
+                              <img
+                                src={'/images/icons/download.svg'}
+                                className={convert_status === 'PROCESSING' ? classes.imageReloadProcessing : classes.imageReload}
+                              />
                             </Box>
 
                             <Box mr={1} component="span" onClick={handleDeleteVideoClick(rowData)}>
@@ -306,6 +310,9 @@ const ArchivedListContainer: React.FC = () => {
 const useStyles = makeStyles((theme) => ({
   imageReload: {
     cursor: 'pointer',
+  },
+  imageReloadProcessing: {
+    opacity: 0.3,
   },
   paginationStyle: {
     marginRight: '-24px',
