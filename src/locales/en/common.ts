@@ -1770,7 +1770,7 @@ export default {
     please_select: '選択済み',
     notify_date_time: '告知配信日時',
     delivery_date_time: '配信日時',
-    ticket_amount: 'チケット金額',
+    ticket_amount: 'チケット利用',
     ticket_sale_date_time: 'チケット販売開始日時',
     download_data: '配信データをダウンロードする',
     delete_data: '配信データを削除する',
