@@ -21,7 +21,7 @@ const PaymentInfoContainer: React.FC = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down(576))
   const { financialStatementData, meta_financial_statement, fetchFinancialStatement } = useFinancialStatement()
   const [page, setPage] = useState<number>(1)
-  const totalPages = Math.ceil(financialStatementData?.total / 1)
+  const totalPages = Math.ceil(financialStatementData?.total / 25)
   const data = financialStatementData?.points
   const onChangePage = (_event: React.ChangeEvent<unknown>, value: number): void => {
     setPage(value)
