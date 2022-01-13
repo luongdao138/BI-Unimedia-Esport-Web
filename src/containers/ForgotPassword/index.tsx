@@ -67,9 +67,13 @@ const ForgotPasswordContainer: React.FC = () => {
             <Box className={classes.instructionContainer}>
               <Typography className={classes.text}>{t('common:forgot_password.instruction.title')}</Typography>
               <Box className={classes.instructionInfo}>
-                <Typography className={classes.text}>{t('common:forgot_password.instruction.info')}</Typography>
+                <Typography component="span" className={classes.text}>
+                  {t('common:forgot_password.instruction.info')}
+                  (<Icon className={`fas fa-exclamation-triangle ${classes.icon}`} fontSize="small" />)
+                  {t('common:forgot_password.instruction.info2')}
+                </Typography>
                 <Box display="flex" flexDirection="row">
-                  <Icon className={`fa fa-info-circle ${classes.icon}`} fontSize="small" />
+                  <Icon className={`fas fa-exclamation-triangle ${classes.icon}`} fontSize="small" />
                   <Typography className={classes.text}>{t('common:forgot_password.instruction.warning')}</Typography>
                 </Box>
               </Box>
