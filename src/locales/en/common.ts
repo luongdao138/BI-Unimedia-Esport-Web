@@ -1737,4 +1737,10 @@ export default {
     purchase_ticket_success: 'チケット交換が完了しました。',
     error_message_purchase_point: 'ポイントの購入できませんでした' + '\n' + 'しばらくお時間を空けて、再度ご購入手続きをお願いいたします',
   },
+  streaming_gift_report_screen: {
+    delivery_report: '配信レポート',
+    gift_report: 'チップレポート',
+    ticket_report: 'チケットレポート',
+    detail_report: '詳細レポート',
+  },
 }
