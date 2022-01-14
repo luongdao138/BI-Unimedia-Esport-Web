@@ -1483,6 +1483,7 @@ export default {
     gift_management: '個別ギフト対象者申請',
   },
   streaming_setting_screen: {
+    gift_members_list_title: 'チップ対象リスト',
     title: '配信設定',
     live_stream: 'ライブ配信',
     streaming_reservation: '配信予約',
