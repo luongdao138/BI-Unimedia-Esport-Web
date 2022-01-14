@@ -6,9 +6,10 @@ import { ReactNode } from 'react'
 type Props = {
   label?: ReactNode
   size?: 'big' | 'small'
+  classNameLabel?: string
 }
 
-const ESCheckboxBig: React.FC<CheckboxProps & Props> = ({ label, size = 'big', ...rest }) => {
+const ESCheckboxBig: React.FC<CheckboxProps & Props> = ({ label, size = 'big', classNameLabel, ...rest }) => {
   const classes = useStyles({ isBig: size === 'big' })
 
   return (
@@ -25,7 +26,7 @@ const ESCheckboxBig: React.FC<CheckboxProps & Props> = ({ label, size = 'big', .
         />
       }
       label={
-        <label htmlFor={rest.id} className={classes.label}>
+        <label htmlFor={rest.id} className={`${classes.label} ${classNameLabel}`}>
           {label}
         </label>
       }

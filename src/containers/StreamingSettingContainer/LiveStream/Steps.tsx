@@ -42,6 +42,8 @@ import { CommonHelper } from '@utils/helpers/CommonHelper'
 import SmallLoader from '@components/Loader/SmallLoader'
 import { LiveStreamSettingHelper } from '@utils/helpers/LiveStreamSettingHelper'
 import { STATUS_VIDEO } from '@services/videoTop.services'
+import ESLabelWithSwitch from '@components/LabelWithSwitch'
+import ESBoxftDashColumn from '@components/ESBoxftDashColumn'
 
 interface StepsProps {
   step: number
@@ -377,6 +379,11 @@ const Steps: React.FC<StepsProps> = ({
         window.open(`${baseViewingURL}${formik?.values?.stepSettingOne?.linkUrl}`, '_blank')
       }
     }
+  }
+
+  const changeFieldAndResetSelectedGift = (): void => {
+    // formik.handleChange(e)
+    formik.setFieldValue('stepSettingOne.selected_gift', !formik?.values?.stepSettingOne?.selected_gift)
   }
 
   return (
@@ -810,6 +817,46 @@ const Steps: React.FC<StepsProps> = ({
               />
             </Box>
           )}
+          {/* gift */}
+          <Box pb={2} pt={2} className={classes.wrap_input_box_switch}>
+            <div className={classes.firstItem}>
+              <ESLabelWithSwitch
+                fullWidth
+                labelPrimary={i18n.t('common:streaming_setting_screen.title_gift')}
+                valueSwitch={formik?.values?.stepSettingOne?.selected_gift}
+                handleChangeSwitch={changeFieldAndResetSelectedGift}
+              />
+            </div>
+          </Box>
+          <ESBoxftDashColumn isSelectedGift={formik?.values?.stepSettingOne?.selected_gift}>
+            <Box className={classes.boxAboutGift}>
+              <Box className={classes.select_show_about_gift} pt={1}>
+                <label className={classes.labelNavigate}>{i18n.t('common:streaming_setting_screen.chooses_list_person_gift')}</label>
+                <label className={classes.labelNameObject}>
+                  {`${i18n.t('common:streaming_setting_screen.list_gift_selected')} ${i18n.t(
+                    'common:streaming_setting_screen.unselected'
+                  )}`}
+                </label>
+                <Typography className={classes.giftInfoList} variant="body2">
+                  <Icon className={`fa fa-info-circle ${classes.iconMargin}`} fontSize="small" />{' '}
+                  {i18n.t('common:streaming_setting_screen.about_the_gift_list')}
+                </Typography>
+              </Box>
+              <Box className={classes.select_show_about_gift} pt={1.8} pb={1}>
+                <ESCheckboxBig
+                  checked={formik?.values?.stepSettingOne?.publish_flag}
+                  onChange={() => formik.setFieldValue('stepSettingOne.publish_flag', !formik?.values?.stepSettingOne?.publish_flag)}
+                  label={t('common:streaming_setting_screen.individual_gift_ranking_display')}
+                  name="stepSettingOne.publish_flag"
+                  classNameLabel={classes.esCheckBox}
+                />
+                <Typography className={classes.giftInfoList} variant="body2">
+                  <Icon className={`fa fa-info-circle ${classes.iconMargin}`} fontSize="small" />{' '}
+                  {i18n.t('common:streaming_setting_screen.about_individual_gift_ranking')}
+                </Typography>
+              </Box>
+            </Box>
+          </ESBoxftDashColumn>
           {/* stream URL */}
           <Box pt={2} className={classes.wrap_input} flexDirection="row" display="flex" alignItems="flex-end">
             <Box className={classes.firstItem}>
@@ -1118,6 +1165,11 @@ const useStyles = makeStyles((theme: Theme) => ({
       color: '#FF4786',
     },
   },
+  select_show_about_gift: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   [theme.breakpoints.down('sm')]: {
     actionButtonContainer: {
       flexDirection: 'column-reverse',
@@ -1133,8 +1185,44 @@ const useStyles = makeStyles((theme: Theme) => ({
   firstItem: {
     width: '494px',
   },
+  firstItemBoxSwitch: {
+    // width: '494px',
+  },
   wrap_input: {
     paddingLeft: 0,
+  },
+  wrap_input_box_switch: {
+    paddingLeft: 0,
+    paddingBottom: 0,
+  },
+  labelNavigate: {
+    fontWeight: 'bold',
+    fontSize: theme.typography.h3.fontSize,
+    textDecoration: 'underline',
+    textUnderlineOffset: '2px',
+    color: '#ffffff70',
+  },
+  labelNameObject: {
+    fontWeight: 'normal',
+    fontSize: 14,
+    color: '#ffffff50',
+    marginLeft: 16,
+  },
+  giftInfoList: {
+    position: 'relative',
+    color: Colors.secondary,
+    cursor: 'pointer',
+    marginLeft: theme.spacing(2),
+    fontSize: 10,
+  },
+  iconMargin: {
+    marginRight: theme.spacing(1 / 2),
+  },
+  boxAboutGift: {
+    paddingLeft: 24,
+  },
+  esCheckBox: {
+    color: '#ffffff70',
   },
   [theme.breakpoints.down(768)]: {
     container: {
@@ -1146,7 +1234,16 @@ const useStyles = makeStyles((theme: Theme) => ({
       flexWrap: 'wrap-reverse',
       justifyContent: 'flex-end',
     },
+    wrap_input_box_switch: {
+      position: 'relative',
+      width: '100%',
+      flexWrap: 'wrap-reverse',
+      justifyContent: 'flex-end',
+    },
     firstItem: {
+      width: '100%',
+    },
+    firstItemBoxSwitch: {
       width: '100%',
     },
     lastItem: {
@@ -1158,6 +1255,21 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     sp_wrap_input_tag: {
       paddingBottom: 13,
+    },
+    select_show_about_gift: {
+      flexDirection: 'column',
+      alignItems: 'start',
+    },
+    boxAboutGift: {
+      paddingLeft: 16,
+    },
+    labelNameObject: {
+      marginLeft: 0,
+      paddingTop: 8,
+    },
+    giftInfoList: {
+      marginLeft: 0,
+      paddingTop: 8,
     },
   },
   addPaddingNote: {

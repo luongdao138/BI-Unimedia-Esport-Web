@@ -50,6 +50,7 @@ export type LiveStreamSetting = {
   channel_id?: number
   arn?: string
   uuid_clone?: string
+  selected_gift?: boolean
 }
 
 export type DistributorStepSetting = {

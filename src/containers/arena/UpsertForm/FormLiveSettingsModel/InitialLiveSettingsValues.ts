@@ -26,6 +26,7 @@ export const getInitialLiveSettingValues = (data?: LiveStreamSetting): FormLiveT
     step_setting: 1,
     arn: data && data.arn ? data.arn : '',
     uuid_clone: data && data.uuid_clone ? data.uuid_clone : '',
+    selected_gift: true,
   },
 })
 

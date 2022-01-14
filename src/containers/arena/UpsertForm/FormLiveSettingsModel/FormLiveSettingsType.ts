@@ -18,6 +18,7 @@ export type FormLiveType = {
     step_setting?: number
     arn?: string
     uuid_clone?: string
+    selected_gift?: boolean
   }
   stepSettingTwo?: {
     uuid: string
