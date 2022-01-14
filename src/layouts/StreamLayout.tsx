@@ -21,9 +21,17 @@ interface StreamLayoutProps {
   footer?: boolean
   loginRequired?: boolean
   minimizeLayout?: boolean
+  paddedBottom?: boolean
 }
 
-const StreamLayout: React.FC<StreamLayoutProps> = ({ children, patternBg, footer, loginRequired, minimizeLayout }) => {
+const StreamLayout: React.FC<StreamLayoutProps> = ({
+  children,
+  patternBg,
+  footer,
+  loginRequired,
+  minimizeLayout,
+  paddedBottom = false,
+}) => {
   const [open, setOpen] = useState<boolean>(false)
   const isAuthenticated = useAppSelector(getIsAuthenticated)
   const dispatch = useAppDispatch()
@@ -69,7 +77,12 @@ const StreamLayout: React.FC<StreamLayoutProps> = ({ children, patternBg, footer
       {!minimizeLayout ? (
         <>
           <aside className="no_minimize_aside_left no_minimize_fixed_menu">
-            <StreamSideMenu minimizeLayout={minimizeLayout} isStreamer={isStreamer} toggleDrawer={toggleDrawer} />
+            <StreamSideMenu
+              minimizeLayout={minimizeLayout}
+              isStreamer={isStreamer}
+              toggleDrawer={toggleDrawer}
+              paddedBottom={paddedBottom}
+            />
           </aside>
           <main role="no_minimize_main" className={patternBg ? 'no_minimize_main' : 'no_minimize_main no-pattern'}>
             <div className="no_minimize_content_wrapper">
@@ -84,7 +97,12 @@ const StreamLayout: React.FC<StreamLayoutProps> = ({ children, patternBg, footer
           <aside className="minimize_aside_left">
             <Box onMouseOver={() => toggleDrawer(true)}>
               <Box style={{ visibility: open ? 'hidden' : 'visible' }}>
-                <StreamSideMenu minimizeLayout={minimizeLayout} isStreamer={isStreamer} toggleDrawer={toggleDrawer} />
+                <StreamSideMenu
+                  minimizeLayout={minimizeLayout}
+                  isStreamer={isStreamer}
+                  toggleDrawer={toggleDrawer}
+                  paddedBottom={paddedBottom}
+                />
               </Box>
             </Box>
           </aside>

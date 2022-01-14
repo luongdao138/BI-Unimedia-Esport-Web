@@ -31,9 +31,16 @@ interface StreamSideMenuProps {
   isStreamer: boolean
   isExpandEffect?: boolean
   toggleDrawer?: (open: boolean) => void
+  paddedBottom?: boolean
 }
 
-const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStreamer, isExpandEffect, toggleDrawer }) => {
+const StreamSideMenu: React.FC<StreamSideMenuProps> = ({
+  minimizeLayout,
+  isStreamer,
+  isExpandEffect,
+  toggleDrawer,
+  paddedBottom = false,
+}) => {
   const [modal, setModal] = useState(false)
   const [appModal, setAppModal] = useState(false)
   const [content, setContent] = useState('')
@@ -91,6 +98,7 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
   return (
     <>
       <Box
+        style={{ paddingBottom: paddedBottom ? '162px' : 0 }}
         className={
           classes.menu + (isExpandEffect ? ' ' + classes.expandEffectMenu : '') + getAddClass(classes.noMinimizeMenu, classes.minimizeMenu)
         }
@@ -373,6 +381,7 @@ const useStyles = makeStyles((theme) => ({
   expandEffectMenu: {
     background: 'none',
   },
+  paddedBottom: {},
   minimizeMenu: {
     background: Colors.black_card,
     flexDirection: 'column',

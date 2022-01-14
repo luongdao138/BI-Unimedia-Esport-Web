@@ -256,3 +256,9 @@ export const setChannel = async (params: SetChannelParams): Promise<SetChannelRe
   const { data } = await api.post<SetChannelResponse>(URI.SET_CHANNEL, params)
   return data
 }
+
+export type GiftIndividual = {
+  index?: number
+  name?: string
+  number_of_registration: number
+}
