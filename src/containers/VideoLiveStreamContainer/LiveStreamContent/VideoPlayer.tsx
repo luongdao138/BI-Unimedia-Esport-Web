@@ -15,7 +15,6 @@ import Hls from 'hls.js'
 import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
 import { DELAY_SECONDS } from '@constants/common.constants'
 import { STATUS_VIDEO } from '@services/videoTop.services'
-
 interface PlayerProps {
   src?: string
   thumbnail?: string
@@ -41,8 +40,8 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   // type,
   videoType,
 }) => {
-  const checkStatusVideo = 1
-  const classes = useStyles({ checkStatusVideo })
+  // const checkStatusVideo = 1
+  const classes = useStyles({ checkStatusVideo: videoType })
   const videoEl = useRef(null)
 
   const [durationPlayer, setDurationPlayer] = useState(0)
@@ -93,6 +92,9 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   }
 
   const [isPortrait, setIsPortrait] = useState<boolean>(!!isMobile)
+
+  // const [flagPaused, setFlagPaused] = useState(null)
+
   useEffect(() => {
     // if (!isPortrait) {
     // screenfull.request(playerContainerRef.current)
@@ -413,7 +415,6 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     })
 
     return () => {
-      // videoEl.current.removeEventListener('timeupdate',onStateChange)
       //@ts-ignore
       window.onscroll = () => {
         //TODO: remove event onscroll window
@@ -490,24 +491,6 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     setIsStreaming(true)
   }
 
-  // const onObserve = () => {
-  //   if (!!window.IntersectionObserver) {
-  //     let video = document.querySelector('video');
-  //     let observer = new IntersectionObserver((entries, observer) => {
-  //       console.log('=-===onObserve====', playing, entries, observer)
-  //       entries.forEach(entry => {
-  //         // if(entry.intersectionRatio!=1  && !video.paused){
-  //         //   video.pause();
-  //         // }
-  //         // else
-  //         if (playing) { video.play(); }
-
-  //       });
-  //     }, { threshold: 1 });
-  //     observer.observe(video);
-  //   }
-  // }
-
   window.onscroll = () => {
     if (playing) {
       videoEl.current.play()
@@ -517,6 +500,33 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   const handleOnRestart = () => {
     setIsStreaming(false)
   }
+
+  //new version
+  // useEffect(() => {
+  //   let interval
+  //   if (videoType === STATUS_VIDEO.LIVE_STREAM ) {
+  //     if(videoEl.current.paused ){
+  //       interval = setTimeout(() => {
+  //         console.log('playedSeconds:::', playedSeconds)
+  //         setPlayedSeconds(playedSeconds+1)
+  //       }, 1000)
+  //     }else{
+  //       if(interval){
+  //         clearTimeout(interval)
+  //       }
+
+  //     }
+  //   }else{
+  //     if(interval){
+  //       clearTimeout(interval)
+  //     }
+  //   }
+  //   return () => {
+  //     if(interval){
+  //       clearTimeout(interval)
+  //     }
+  //   }
+  // }, [playing, playedSeconds])
 
   return (
     <div className={classes.videoPlayer}>
@@ -576,14 +586,16 @@ const VideoPlayer: React.FC<PlayerProps> = ({
             )}
           </div>
           <div className={classes.processControl}>
-            <SeekBar
-              videoRef={videoEl}
-              durationsPlayer={durationPlayer}
-              currentTime={playedSeconds}
-              changeStatusStreaming={(status) => {
-                setIsStreaming(status)
-              }}
-            />
+            {videoType !== STATUS_VIDEO.LIVE_STREAM && (
+              <SeekBar
+                videoRef={videoEl}
+                durationsPlayer={durationPlayer}
+                currentTime={playedSeconds}
+                changeStatusStreaming={(status) => {
+                  setIsStreaming(status)
+                }}
+              />
+            )}
             <div className={classes.controlOut}>
               <ControlBarPlayer
                 videoRef={videoEl}
@@ -631,37 +643,6 @@ const VideoPlayer: React.FC<PlayerProps> = ({
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-  videoPlayerContainer: {},
-  // process: (props: { checkStatusVideo: number }) => {
-  //   return {
-  //     zIndex: 1,
-  //     opacity: props.checkStatusVideo === 1 ? 1 : 0, //always show controlBar by status video
-  //     '& .video-react-slider-bar': {},
-  //     '& .video-react-play-progress': {
-  //       backgroundColor: '#FF4786',
-  //       height: 7,
-  //     },
-  //     '& .video-react-progress-holder': {
-  //       backgroundColor: '#4D4D4D',
-  //       position: 'absolute',
-  //       bottom: 40,
-  //       width: '100%',
-  //       height: 7,
-  //     },
-  //     '& .video-react-control-text': {
-  //       display: 'none',
-  //     },
-  //     '& .video-react-load-progress': {},
-  //   }
-  // },
-  // bigPlayButton: {
-  //   display: 'none',
-  //   '& .video-react-big-play-button': {},
-  //   '& .video-react-big-play-button-left': {},
-  //   '& .video-react-control-text': {
-  //     display: 'none',
-  //   },
-  // },
   playOverView: {
     backgroundColor: 'rgba(0,0,0,0.3)',
     // backgroundColor: 'rgba(174,3,250,0.3)',
@@ -688,68 +669,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     zIndex: 99,
   },
-  //video-react-video
-  // videoPlayerCustom: {
-  //   '& .video-react-video': {
-  //     display: 'flex',
-  //     width: '100%',
-  //     height: '100%',
-  //   },
-  //   '&:hover $controlBar': {
-  //     transition: 'opacity 0.3s ease-in',
-  //     opacity: 1,
-  //   },
-  //   '&:hover $process': {
-  //     opacity: 1,
-  //     transition: 'opacity 0.3s ease-in',
-  //   },
-  // },
-  controlBar: (props: { checkStatusVideo: number }) => {
-    return {
-      width: '100%',
-      position: 'absolute',
-      bottom: 0,
-      left: 0,
-      backgroundColor: 'rgba(0,0,0,0.3)',
-      height: 40,
-      display: 'flex',
-      alignItems: 'center',
-      paddingLeft: 26,
-      justifyContent: 'space-between',
-      zIndex: 9,
-      transition: 'opacity 0.3s ease-in',
-      opacity: props.checkStatusVideo === 1 ? 1 : 0, //always show controlBar by status video
-    }
-  },
   fontSizeLarge: {
     fontSize: 100,
     color: Colors.white,
     zIndex: 2,
-  },
-  blurBackground: {
-    backgroundColor: 'rgba(4,4,4,0.71)',
-    height: '100%',
-    width: '100%',
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 100,
-  },
-  sliderSeek: {
-    width: '100%',
-    display: 'block',
-    transition: 'width 0.4s ease-in',
-    alignItems: 'flex-end',
-    justifyContent: 'flex-end',
-    backgroundColor: 'white',
-  },
-  seekSlider: {
-    position: 'relative',
-    bottom: 60,
-    left: 0,
   },
   videoPlayer: {
     height: '100%',
@@ -761,37 +684,40 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 40,
   },
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  processControl: {
-    width: '100%',
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    // visibility:'hidden',
-    // opacity: 1,
-    // height: 40,
-    // display: 'flex',
-    // alignItems: 'center',
-    // paddingLeft: 26,
-    // justifyContent: 'space-between',
-    zIndex: 99,
-    transition: 'opacity 0.1s ease-in',
-    opacity: 0, //always show controlBar by status video
-    background: 'linear-gradient(rgb(128 128 128 / 0%) 20%, rgb(39 39 39) 100%)',
-  },
-  playerContainer: {
-    height: '100%',
-    '&:hover $processControl': {
-      opacity: 1,
-      background: 'linear-gradient(rgb(128 128 128 / 0%) 20%, rgb(39 39 39) 100%)',
+  processControl: (props: { checkStatusVideo: number }) => {
+    return {
+      width: '100%',
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
+      // visibility:'hidden',
+      // opacity: 1,
+      // height: 40,
+      // display: 'flex',
+      // alignItems: 'center',
+      // paddingLeft: 26,
+      // justifyContent: 'space-between',
+      zIndex: 99,
       transition: 'opacity 0.1s ease-in',
-    },
+      opacity: 0, //always show controlBar by status video
+      background:
+        props.checkStatusVideo !== STATUS_VIDEO.LIVE_STREAM
+          ? 'linear-gradient(rgb(128 128 128 / 0%) 20%, rgb(39 39 39) 100%)'
+          : 'linear-gradient(rgb(128 128 128 / 0%) 0%, rgb(39 39 39) 100%)',
+    }
   },
-  reactPlayer: {
-    '&:hover $.processControl': {
-      transition: 'opacity 0.3s ease-in',
-      opacity: 1,
-      backgroundColor: 'yellow',
-    },
+  playerContainer: (props: { checkStatusVideo: number }) => {
+    return {
+      height: '100%',
+      '&:hover $processControl': {
+        opacity: 1,
+        background:
+          props.checkStatusVideo !== STATUS_VIDEO.LIVE_STREAM
+            ? 'linear-gradient(rgb(128 128 128 / 0%) 20%, rgb(39 39 39) 100%)'
+            : 'linear-gradient(rgb(128 128 128 / 0%) 0%, rgb(39 39 39) 100%)',
+        transition: 'opacity 0.1s ease-in',
+      },
+    }
   },
   [theme.breakpoints.down('xs')]: {
     fontSizeLarge: {

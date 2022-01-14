@@ -220,33 +220,3 @@ export const onDeleteChannel = /* GraphQL */ `
     }
   }
 `
-export const onCreateCowellRealtimeStatusConnections = /* GraphQL */ `
-  subscription OnCreateCowellRealtimeStatusConnections {
-    onCreateCowellRealtimeStatusConnections {
-      id
-      connectionId
-      createdAt
-      updatedAt
-    }
-  }
-`
-export const onUpdateCowellRealtimeStatusConnections = /* GraphQL */ `
-  subscription OnUpdateCowellRealtimeStatusConnections {
-    onUpdateCowellRealtimeStatusConnections {
-      id
-      connectionId
-      createdAt
-      updatedAt
-    }
-  }
-`
-export const onDeleteCowellRealtimeStatusConnections = /* GraphQL */ `
-  subscription OnDeleteCowellRealtimeStatusConnections {
-    onDeleteCowellRealtimeStatusConnections {
-      id
-      connectionId
-      createdAt
-      updatedAt
-    }
-  }
-`

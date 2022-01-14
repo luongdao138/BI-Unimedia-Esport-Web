@@ -5,6 +5,7 @@ import React, { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import PlayerTooltip from './PlayerTooltip'
 import useDetailVideo from '../../useDetailVideo'
+import { STATUS_VIDEO } from '@services/videoTop.services'
 interface Props {
   videoRef?: any
   typeButton: 'reload' | 'previous' | 'next'
@@ -12,9 +13,10 @@ interface Props {
   durationsPlayer?: number
   isLive?: boolean
   onPressCallback?: () => void
+  videoStatus?: number
 }
 
-const ReloadButton: React.FC<Props> = ({ videoRef, typeButton, currentTime, isLive, onPressCallback }) => {
+const ReloadButton: React.FC<Props> = ({ videoRef, typeButton, currentTime, isLive, onPressCallback, videoStatus, durationsPlayer }) => {
   const classes = useStyles({ isLive })
   const { t } = useTranslation('common')
   const { changeSeekCount } = useDetailVideo()
@@ -24,7 +26,7 @@ const ReloadButton: React.FC<Props> = ({ videoRef, typeButton, currentTime, isLi
     // if (!isLive) {
     switch (typeButton) {
       case 'reload':
-        videoRef.current.currentTime = 0
+        videoRef.current.currentTime = videoStatus === STATUS_VIDEO.LIVE_STREAM ? durationsPlayer : 0
         break
       case 'previous':
         videoRef.current.currentTime = currentTime - 10
