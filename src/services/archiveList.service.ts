@@ -98,6 +98,24 @@ export type DeleteArchiveVideoRequestParams = {
   video_id?: string
 }
 
+export type GetCookieRequestParams = {
+  // user_id?: number
+  video_id?: string
+}
+
+export type CookieData = {
+  'CloudFront-Expires': any
+  'CloudFront-Signature': string
+  'CloudFront-Key-Pair-Id': string
+  url: string
+}
+
+export type GetCookieResponse = {
+  code?: number
+  message?: number
+  data?: CookieData
+}
+
 export const updateArchiveDetail = async (params: UpdateArchiveDetailRequestParams): Promise<ArchiveDetailResponse> => {
   const { data } = await api.post<ArchiveDetailResponse>(URI.UPDATE_ARCHIVE_VIDEO, { ...params })
   return data
@@ -105,5 +123,9 @@ export const updateArchiveDetail = async (params: UpdateArchiveDetailRequestPara
 
 export const deleteArchiveVideo = async (params: DeleteArchiveVideoRequestParams): Promise<ArchiveDetailResponse> => {
   const { data } = await api.post<ArchiveDetailResponse>(URI.DELETE_ARCHIVE_VIDEO, { ...params })
+  return data
+}
+export const getCookieToDownload = async (params: GetCookieRequestParams): Promise<GetCookieResponse> => {
+  const { data } = await api.post<GetCookieResponse>(URI.GET_COOKIE_TO_DOWNLOAD, { ...params })
   return data
 }

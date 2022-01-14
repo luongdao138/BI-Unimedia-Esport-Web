@@ -69,3 +69,17 @@ export const deleteArchiveVideo = createAsyncThunk<services.ArchiveDetailRespons
 )
 
 export const overrideDeleteVideo = createAction<{ uuid: string }>(ACTION_ARCHIVE_VIDEO_TYPES.OVERRIDE_DELETE_VIDEO)
+
+export const getCookieDownloadVideo = createAsyncThunk<services.GetCookieResponse, services.GetCookieRequestParams>(
+  ACTION_ARCHIVE_VIDEO_TYPES.GET_COOKIE_DOWNLOAD,
+  async ({ ...params }, { rejectWithValue }) => {
+    try {
+      return await services.getCookieToDownload({ ...params })
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
