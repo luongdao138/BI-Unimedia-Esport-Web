@@ -185,4 +185,5 @@ export const URI = {
   GET_STREAMER_ARCHIVE_DETAIL: '/v2/report/archived-detail',
   UPDATE_ARCHIVE_VIDEO: '/v2/report/archived-save-detail',
   DELETE_ARCHIVE_VIDEO: '/v2/report/archived-delete',
+  GET_COOKIE_TO_DOWNLOAD: '/v2/report/get-url-download',
 }

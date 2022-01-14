@@ -18,6 +18,8 @@ import { FORMAT_DATE_TIME_JP, LIVE_VIDEO_TYPE } from '@constants/common.constant
 import { STATUS_VIDEO } from '@services/videoTop.services'
 import VideoDeleteConfirmModal from '@containers/ArchiveDetailContainer/DeleteVideoConfirmModal/VideoDeleteConfirmModal'
 import ESLoader from '@components/FullScreenLoader'
+import { CookieData } from '@services/archiveList.service'
+import axios from 'axios'
 
 const ITEM_PER_PAGE = 25
 
@@ -32,7 +34,14 @@ const ArchivedListContainer: React.FC = () => {
   const colFirstWidth = 160
   const isSmallScreen = useMediaQuery(theme.breakpoints.down(475))
 
-  const { videoArchivedList, getVideoArchivedList, deleteVideoDetail, overrideDeleteVideo, meta_archive_list } = useArchivedList()
+  const {
+    videoArchivedList,
+    getVideoArchivedList,
+    deleteVideoDetail,
+    overrideDeleteVideo,
+    meta_archive_list,
+    getCookieVideoDownload,
+  } = useArchivedList()
   const { user } = useCommonData()
   const [page, setPage] = useState(1)
   const [deleteModalVisible, setDeleteModalVisible] = useState(false)
@@ -128,6 +137,20 @@ const ArchivedListContainer: React.FC = () => {
       setSelectedDeleteVideo(rowData)
       handleOpenDeleteModal()
     }
+
+    const handleDownloadVideo = () => {
+      getCookieVideoDownload({ video_id: rowData?.uuid }, async (dataCookie: CookieData) => {
+        const { data } = await axios.get(dataCookie.url, {
+          headers: {
+            // Authorization: `Bearer ${user?.accessToken}`,
+            Cookies: `CloudFront-Expires=${dataCookie?.['CloudFront-Expires']};CloudFront-Signature=${dataCookie?.['CloudFront-Signature']};CloudFront-Key-Pair-Id=${dataCookie?.['CloudFront-Key-Pair-Id']};`,
+          },
+        })
+        // eslint-disable-next-line no-console
+        console.log('set cookie data====', data)
+      })
+    }
+
     return (
       <Box className={classes.wrapItem} key={rowData?.uuid} onClick={isMobile ? redirectArchivedDetail(uuid, scheduledFlag) : null}>
         <table className={classes.outerTable}>
@@ -191,7 +214,7 @@ const ArchivedListContainer: React.FC = () => {
                       {!isMobile && (
                         <>
                           <td rowSpan={3} className={classes.cellIcons}>
-                            <Box mr={1} component="span">
+                            <Box mr={1} component="span" onClick={handleDownloadVideo}>
                               <img
                                 src={'/images/icons/download.svg'}
                                 className={convert_status === 'PROCESSING' ? classes.imageReloadProcessing : classes.imageReload}

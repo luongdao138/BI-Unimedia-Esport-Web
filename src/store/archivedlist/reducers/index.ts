@@ -1,5 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit'
-import { TYPE_VIDEO_ARCHIVE, ArchiveDetailDataType } from '@services/archiveList.service'
+import { TYPE_VIDEO_ARCHIVE, ArchiveDetailDataType, CookieData } from '@services/archiveList.service'
 import * as actions from '../actions'
 
 export type StateType = {
@@ -8,6 +8,7 @@ export type StateType = {
     videos: Array<TYPE_VIDEO_ARCHIVE>
   }
   archiveDetail?: ArchiveDetailDataType
+  dataCookie?: CookieData
 }
 
 const initialState: StateType = {
@@ -16,6 +17,7 @@ const initialState: StateType = {
     videos: [],
   },
   archiveDetail: null,
+  dataCookie: null,
 }
 
 export default createReducer(initialState, (builder) => {
@@ -50,5 +52,8 @@ export default createReducer(initialState, (builder) => {
         videos: _videos,
         total: _total,
       }
+    })
+    .addCase(actions.getCookieDownloadVideo.fulfilled, (state, action) => {
+      state.dataCookie = action.payload.data
     })
 })

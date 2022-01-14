@@ -5,4 +5,5 @@ export const ACTION_ARCHIVE_VIDEO_TYPES = {
   OVERRIDE_ARCHIVE_VIDEO_DETAIL: 'streamer/overrideArchiveVideoDetail',
   DELETE_ARCHIVE_VIDEO: 'streamer/deleteArchiveVideo',
   OVERRIDE_DELETE_VIDEO: 'streamer/overrideDeleteVideo',
+  GET_COOKIE_DOWNLOAD: 'streamer/getCookieDownload',
 }

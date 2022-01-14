@@ -1,12 +1,13 @@
 import { useAppDispatch, useAppSelector } from '@store/hooks'
 import { ArchiveListType } from '@services/settings.service'
 import archivedListStore from '@store/archivedlist'
-import { TYPE_VIDEO_ARCHIVE } from '@services/archiveList.service'
+import { GetCookieRequestParams, TYPE_VIDEO_ARCHIVE } from '@services/archiveList.service'
 import { createMetaSelector } from '@store/metadata/selectors'
 
 const { selectors, actions } = archivedListStore
 const _getArchiveList = createMetaSelector(actions.getArchiveList)
 const _getArchiveDetail = createMetaSelector(actions.getArchiveDetail)
+const _getCookie = createMetaSelector(actions.getCookieDownloadVideo)
 
 const useArchivedList = () => {
   const dispatch = useAppDispatch()
@@ -46,6 +47,14 @@ const useArchivedList = () => {
   const overrideDeleteVideo = (uuid: string) => {
     dispatch(actions.overrideDeleteVideo({ uuid }))
   }
+  const meta_cookie_video = useAppSelector(_getCookie)
+  const getCookieVideoDownload = async (params: GetCookieRequestParams, onSuccess: (data) => void) => {
+    const result = await dispatch(actions.getCookieDownloadVideo(params))
+    if (actions.getCookieDownloadVideo.fulfilled.match(result)) {
+      const { data } = result?.payload
+      onSuccess(data)
+    }
+  }
   return {
     videoArchivedList,
     getVideoArchivedList,
@@ -57,6 +66,8 @@ const useArchivedList = () => {
     overrideDeleteVideo,
     meta_archive_list,
     meta_archive_detail,
+    getCookieVideoDownload,
+    meta_cookie_video,
   }
 }
 
