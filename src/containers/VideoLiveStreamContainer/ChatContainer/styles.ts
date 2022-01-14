@@ -3,6 +3,39 @@ import { purchasePoints } from './index'
 import { Colors } from '@theme/colors'
 
 const useStyles = makeStyles((theme) => ({
+  iconAngleDown: {
+    color: Colors.grey[200],
+  },
+  bottomArrow: {
+    transform: "translateX(50%)",
+    position: 'absolute',
+    right: '50%',
+    bottom: 30,
+    zIndex: 1000,
+    background: Colors.white,
+    '&:hover': {
+      background: Colors.white,
+    },
+  },
+  loaderBox: {
+    flexGrow: 0,
+    width: 20,
+    height: 20,
+    // position: 'absolute',
+    zIndex: 1000,
+    left: 0,
+    right: 0,
+    top: '0px',
+    margin: '0 auto',
+    '& svg': {
+      width: '100%',
+      color: 'red',
+    },
+  },
+  chatFooter: {
+    height: 40,
+    width: '100%',
+  },
   container: {
     display: 'flex',
     flexDirection: 'column',
@@ -11,7 +44,8 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: '16px',
     marginRight: '16px',
     border: `1px solid #FFFFFF4D`,
-    paddingBottom: '16px',
+    height: '100%',
+    flex: 1,
   },
   chatMessageContainer: {
     display: 'flex',
@@ -77,10 +111,10 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
   },
   chatBoard: {
+    scrollBehavior: 'smooth',
     position: 'relative',
-    overflow: 'auto',
-    // height: 565,
-    // height: 300,
+    overflow: 'hidden',
+    height: '100%',
     display: 'flex',
     flexDirection: 'column',
     // marginTop: 16,
@@ -104,9 +138,35 @@ const useStyles = makeStyles((theme) => ({
       cursor: 'pointer',
     },
   },
+  listContainer: {
+    scrollbarColor: '#222 transparent',
+    '&::-webkit-scrollbar': {
+      width: '20px',
+      opacity: 1,
+      padding: 2,
+      cursor: 'pointer',
+    },
+    '&::-webkit-scrollbar-track': {
+      background: '#4D4D4D',
+      border: 'solid 3px transparent',
+    },
+    '&::-webkit-scrollbar-thumb': {
+      backgroundColor: '#212121',
+      backgroundClip: 'padding-box',
+      border: '4px solid rgba(0, 0, 0, 0)',
+      width: '14px',
+      cursor: 'pointer',
+    },
+  },
   chatBoardContainer: {
     position: 'relative',
     paddingLeft: '16px',
+    flex: 1,
+    overflow: 'hidden',
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    // height: 'calc(100% - 12px)'
   },
   chatMessageUser: {
     fontSize: 14,
@@ -129,6 +189,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'flex-start',
     width: '100%',
     backgroundColor: 'black',
+    flexShrink: 0,
   },
   headerIcon: {
     marginLeft: 17,
@@ -145,16 +206,22 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     paddingRight: 0,
     width: '100%',
+    // height: "calc(100% - 35px)",
+    position: 'relative',
+    flex: 1,
+    background: 'blue',
   },
   chatInputContainer: {
     backgroundColor: '#0A0A0A',
     padding: 16,
     borderRadius: 4,
+    position: 'relative',
   },
   chatInputMobileContainer: {
-    position: 'absolute',
-    left: 0,
+    // position: 'absolute',
+    // left: 0,
     width: '100%',
+    // bottom: 0
   },
   // chatInputStreamingStyle: {
   //   position: 'relative',
@@ -222,14 +289,17 @@ const useStyles = makeStyles((theme) => ({
   userWatchingList: {
     marginTop: '16px',
     marginBottom: '0px',
-    marginLeft: '16px',
-    marginRight: '16px',
+    // marginLeft: '16px',
+    // marginRight: '16px',
     display: 'flex',
     flexDirection: 'row',
-    // width: '100%',
+    width: '100%',
     overflow: 'auto',
     scrollbarColor: '#222 transparent',
     scrollbarWidth: 'thin',
+    flexShrink: 0,
+    // height: 40,
+    padding: '0 0 0 16px',
     '&::-webkit-scrollbar': {
       height: 10,
       opacity: 1,
@@ -246,16 +316,13 @@ const useStyles = makeStyles((theme) => ({
   },
   userWatchingItem: {
     display: 'flex',
-    // width: 40,
-    // height: 40,
+    width: 40,
+    height: 40,
     backgroundColor: '#476AFF',
     borderRadius: 4,
     marginRight: 4,
     padding: 4,
     cursor: 'pointer',
-    '&:last-child': {
-      marginRight: 0,
-    },
   },
   ...purchasePoints,
   purchaseCommentRoot: {
@@ -282,7 +349,7 @@ const useStyles = makeStyles((theme) => ({
     opacity: 0,
     visibility: 'hidden',
     transition: 'all 0.5s',
-    top: 8,
+    top: 0,
   },
   dialogMessShow: {
     opacity: 1,
@@ -334,20 +401,7 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     display: 'flex',
     width: '100%',
-  },
-  [theme.breakpoints.between(769, 1281)]: {
-    chatInputContainer: {
-      padding: '6px 16px 8px 16px',
-    },
-    input: () => ({
-      height: 36,
-    }),
-    iconButtonBg: {
-      height: 36,
-    },
-    iconPurchase: {
-      marginBottom: 5,
-    },
+    height: 50,
   },
   [theme.breakpoints.down(1100)]: {
     container: {
@@ -360,6 +414,14 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   [theme.breakpoints.down(769)]: {
+    btn_scroll_mess: {
+      position: 'relative',
+      left: 'auto',
+      bottom: 'auto',
+    },
+    chatContent: {
+      height: 'auto',
+    },
     userWatchingList: {
       marginLeft: '16px',
       marginRight: '16px',
@@ -371,6 +433,7 @@ const useStyles = makeStyles((theme) => ({
       paddingBottom: 'unset',
       marginRight: 'unset',
       marginLeft: 'unset',
+      height: 'auto',
     },
     chatBoard: {
       height: 253,

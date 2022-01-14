@@ -290,35 +290,6 @@ export type DeleteChannelInput = {
   id: string
 }
 
-export type CreateCowellRealtimeStatusConnectionsInput = {
-  id?: string | null
-  connectionId: string
-}
-
-export type ModelCowellRealtimeStatusConnectionsConditionInput = {
-  connectionId?: ModelStringInput | null
-  and?: Array<ModelCowellRealtimeStatusConnectionsConditionInput | null> | null
-  or?: Array<ModelCowellRealtimeStatusConnectionsConditionInput | null> | null
-  not?: ModelCowellRealtimeStatusConnectionsConditionInput | null
-}
-
-export type CowellRealtimeStatusConnections = {
-  __typename: 'CowellRealtimeStatusConnections'
-  id?: string
-  connectionId?: string
-  createdAt?: string
-  updatedAt?: string
-}
-
-export type UpdateCowellRealtimeStatusConnectionsInput = {
-  id: string
-  connectionId?: string | null
-}
-
-export type DeleteCowellRealtimeStatusConnectionsInput = {
-  id: string
-}
-
 export type ModelUserFilterInput = {
   id?: ModelIDInput | null
   uuid?: ModelStringInput | null
@@ -389,20 +360,6 @@ export type ModelChannelFilterInput = {
 export type ModelChannelConnection = {
   __typename: 'ModelChannelConnection'
   items?: Array<Channel | null> | null
-  nextToken?: string | null
-}
-
-export type ModelCowellRealtimeStatusConnectionsFilterInput = {
-  id?: ModelIDInput | null
-  connectionId?: ModelStringInput | null
-  and?: Array<ModelCowellRealtimeStatusConnectionsFilterInput | null> | null
-  or?: Array<ModelCowellRealtimeStatusConnectionsFilterInput | null> | null
-  not?: ModelCowellRealtimeStatusConnectionsFilterInput | null
-}
-
-export type ModelCowellRealtimeStatusConnectionsConnection = {
-  __typename: 'ModelCowellRealtimeStatusConnectionsConnection'
-  items?: Array<CowellRealtimeStatusConnections | null> | null
   nextToken?: string | null
 }
 
@@ -715,51 +672,6 @@ export type DeleteChannelMutation = {
   } | null
 }
 
-export type CreateCowellRealtimeStatusConnectionsMutationVariables = {
-  input?: CreateCowellRealtimeStatusConnectionsInput
-  condition?: ModelCowellRealtimeStatusConnectionsConditionInput | null
-}
-
-export type CreateCowellRealtimeStatusConnectionsMutation = {
-  createCowellRealtimeStatusConnections?: {
-    __typename: 'CowellRealtimeStatusConnections'
-    id: string
-    connectionId: string
-    createdAt: string
-    updatedAt: string
-  } | null
-}
-
-export type UpdateCowellRealtimeStatusConnectionsMutationVariables = {
-  input?: UpdateCowellRealtimeStatusConnectionsInput
-  condition?: ModelCowellRealtimeStatusConnectionsConditionInput | null
-}
-
-export type UpdateCowellRealtimeStatusConnectionsMutation = {
-  updateCowellRealtimeStatusConnections?: {
-    __typename: 'CowellRealtimeStatusConnections'
-    id: string
-    connectionId: string
-    createdAt: string
-    updatedAt: string
-  } | null
-}
-
-export type DeleteCowellRealtimeStatusConnectionsMutationVariables = {
-  input?: DeleteCowellRealtimeStatusConnectionsInput
-  condition?: ModelCowellRealtimeStatusConnectionsConditionInput | null
-}
-
-export type DeleteCowellRealtimeStatusConnectionsMutation = {
-  deleteCowellRealtimeStatusConnections?: {
-    __typename: 'CowellRealtimeStatusConnections'
-    id: string
-    connectionId: string
-    createdAt: string
-    updatedAt: string
-  } | null
-}
-
 export type GetUserQueryVariables = {
   id?: string
 }
@@ -945,40 +857,6 @@ export type ListChannelsQuery = {
       arn: string
       state?: string | null
       alarm_state?: string | null
-      createdAt: string
-      updatedAt: string
-    } | null> | null
-    nextToken?: string | null
-  } | null
-}
-
-export type GetCowellRealtimeStatusConnectionsQueryVariables = {
-  id?: string
-}
-
-export type GetCowellRealtimeStatusConnectionsQuery = {
-  getCowellRealtimeStatusConnections?: {
-    __typename: 'CowellRealtimeStatusConnections'
-    id: string
-    connectionId: string
-    createdAt: string
-    updatedAt: string
-  } | null
-}
-
-export type ListCowellRealtimeStatusConnectionssQueryVariables = {
-  filter?: ModelCowellRealtimeStatusConnectionsFilterInput | null
-  limit?: number | null
-  nextToken?: string | null
-}
-
-export type ListCowellRealtimeStatusConnectionssQuery = {
-  listCowellRealtimeStatusConnectionss?: {
-    __typename: 'ModelCowellRealtimeStatusConnectionsConnection'
-    items?: Array<{
-      __typename: 'CowellRealtimeStatusConnections'
-      id: string
-      connectionId: string
       createdAt: string
       updatedAt: string
     } | null> | null
@@ -1377,36 +1255,6 @@ export type OnDeleteChannelSubscription = {
     arn: string
     state?: string | null
     alarm_state?: string | null
-    createdAt: string
-    updatedAt: string
-  } | null
-}
-
-export type OnCreateCowellRealtimeStatusConnectionsSubscription = {
-  onCreateCowellRealtimeStatusConnections?: {
-    __typename: 'CowellRealtimeStatusConnections'
-    id: string
-    connectionId: string
-    createdAt: string
-    updatedAt: string
-  } | null
-}
-
-export type OnUpdateCowellRealtimeStatusConnectionsSubscription = {
-  onUpdateCowellRealtimeStatusConnections?: {
-    __typename: 'CowellRealtimeStatusConnections'
-    id: string
-    connectionId: string
-    createdAt: string
-    updatedAt: string
-  } | null
-}
-
-export type OnDeleteCowellRealtimeStatusConnectionsSubscription = {
-  onDeleteCowellRealtimeStatusConnections?: {
-    __typename: 'CowellRealtimeStatusConnections'
-    id: string
-    connectionId: string
     createdAt: string
     updatedAt: string
   } | null

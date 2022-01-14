@@ -310,6 +310,9 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   const handleUpdateVideoDuration = useRef(null)
   const onUpdateVideoduration = (duration) => {
     if (!state.playing) {
+      if (Math.floor(duration) !== liveStreamInfo.played_second) {
+        changeVideoTime(Math.floor(duration), Math.floor(duration))
+      }
       setDurationPlayer(duration)
     }
   }
@@ -438,6 +441,10 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     handlePauseAndSeekVideo()
     if (videoEl.current.paused || videoEl.current.ended) {
       videoEl.current.play()
+      //new version
+      if (videoType === STATUS_VIDEO.LIVE_STREAM) {
+        videoEl.current.currentTime = durationPlayer
+      }
       setState({ ...state, playing: true })
       setVisible({ ...visible, loading: false, videoLoaded: false })
     } else {
@@ -449,6 +456,10 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   }
   const handlePlayPause = () => {
     handlePauseAndSeekVideo()
+    //new version
+    if (videoType === STATUS_VIDEO.LIVE_STREAM) {
+      videoEl.current.currentTime = durationPlayer
+    }
     if (videoEl.current.paused || videoEl.current.ended) {
       videoEl.current.play()
       setState({ ...state, playing: true })
