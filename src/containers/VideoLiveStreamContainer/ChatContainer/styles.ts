@@ -7,8 +7,9 @@ const useStyles = makeStyles((theme) => ({
     color: Colors.grey[200],
   },
   bottomArrow: {
+    transform: "translateX(50%)",
     position: 'absolute',
-    right: 30,
+    right: '50%',
     bottom: 30,
     zIndex: 1000,
     background: Colors.white,

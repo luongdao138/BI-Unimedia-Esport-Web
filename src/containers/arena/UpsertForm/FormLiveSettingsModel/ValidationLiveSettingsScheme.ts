@@ -40,7 +40,7 @@ export const validationLiveSettingsScheme = (): any => {
 export const validationScheduleScheme = (flag: boolean, isLive?: boolean, isUpdate?: boolean): any => {
   const minStartDate = moment().set('second', 0)
   const minEndDate = moment().set('second', 0)
-  const maxSchedule = 3 * 3600000 //1h=3600000ms
+  const maxSchedule = 12 * 3600000 //1h=3600000ms. update 3h->12h
   const approximateMinDate = moment().set('second', 0).subtract(30, 'seconds')
   return Yup.object({
     stepSettingTwo: Yup.object({

@@ -9738,6 +9738,11 @@ react-facebook-login-typed@^5.0.3:
   resolved "https://registry.yarnpkg.com/react-facebook-login-typed/-/react-facebook-login-typed-5.0.3.tgz#c71454bd81b6889fe031b2518162e41e03fec6e4"
   integrity sha512-B29WezW7XAwsA7vZr6mgCXXspvPSAJO4B7p2ej6k+IdoaVYiUoD6kk8mS9lcluXajZYRmcaqf8pQtWVoUp/3FQ==
 
+react-facebook-login@^4.1.1:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/react-facebook-login/-/react-facebook-login-4.1.1.tgz#005121236a6ac0dee02099976fb1a3265f9d633e"
+  integrity sha512-COnHEHlYGTKipz4963safFAK9PaNTcCiXfPXMS/yxo8El+/AJL5ye8kMJf23lKSSGGPgqFQuInskIHVqGqTvSw==
+
 react-fast-compare@^2.0.1:
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/react-fast-compare/-/react-fast-compare-2.0.4.tgz#e84b4d455b0fec113e0402c329352715196f81f9"
