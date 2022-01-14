@@ -27,7 +27,7 @@ const StreamingManagePage: PageWithLayoutType = () => {
   }, [userProfile])
 
   return (
-    <StreamLayout loginRequired footer={isMobile}>
+    <StreamLayout loginRequired footer={isMobile} paddedBottom>
       {isStreamer && <StreamingGiftManagement />}
     </StreamLayout>
   )

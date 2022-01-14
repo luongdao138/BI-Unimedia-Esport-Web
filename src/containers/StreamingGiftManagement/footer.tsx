@@ -38,6 +38,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: '#000000',
     width: '100%',
     paddingTop: '24px',
+    zIndex: 10,
   },
   actionBtnConfirm: {
     width: '100%',

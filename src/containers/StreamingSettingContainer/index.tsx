@@ -25,11 +25,13 @@ import LiveStreamContainer from './LiveStream'
 import StreamingReservationContainer from './StreamingReservation'
 import useLiveSetting from './useLiveSetting'
 import { useFormik } from 'formik'
+import IndividualGiftListContainer from '@containers/StreamingSettingContainer/IndividualGiftList'
 
 enum TABS {
   LIVE_STREAM = 0,
   STREAMING_RESERVATION = 1,
   DISTRIBUTOR = 2,
+  INDIVIDUAL_GIFT_LIST = 3,
 }
 
 const StreamingSettingContainer: React.FC<{ default_tab: any }> = ({ default_tab }) => {
@@ -154,10 +156,11 @@ const StreamingSettingContainer: React.FC<{ default_tab: any }> = ({ default_tab
   const getTabs = () => {
     return (
       <Grid item xs={12} className={classes.tabsContainer}>
-        <ESTabs value={tab} onChange={(_, v) => setTab(v)} className={classes.tabs}>
-          <ESTab label={t('streaming_setting_screen.live_stream')} value={0} disabled={disable} className={classes.singleTab} />
-          <ESTab label={t('streaming_setting_screen.streaming_reservation')} value={1} disabled={disable} className={classes.singleTab} />
-          <ESTab label={t('streaming_setting_screen.distributor_information')} value={2} className={classes.singleTab} />
+        <ESTabs value={tab} onChange={(_, v) => setTab(v)} className={classes.tabs} scrollButtons="off" variant="scrollable">
+          <ESTab label={t('streaming_setting_screen.live_stream')} value={0} disabled={disable} />
+          <ESTab label={t('streaming_setting_screen.streaming_reservation')} value={1} disabled={disable} />
+          <ESTab label={t('streaming_setting_screen.distributor_information')} value={2} />
+          <ESTab label={t('streaming_setting_screen.individual_gift_list')} value={3} />
         </ESTabs>
       </Grid>
     )
@@ -183,6 +186,8 @@ const StreamingSettingContainer: React.FC<{ default_tab: any }> = ({ default_tab
         )
       case TABS.DISTRIBUTOR:
         return <DistributorInformationContainer formik={formikDistributor} />
+      case TABS.INDIVIDUAL_GIFT_LIST:
+        return <IndividualGiftListContainer />
       default:
         break
     }

@@ -1,12 +1,18 @@
-import { Box, makeStyles, Typography } from '@material-ui/core'
+import { Box, makeStyles, Typography, useMediaQuery, useTheme } from '@material-ui/core'
 import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Colors } from '@theme/colors'
 import ESButton from '@components/Button'
 
-const GiftItem: React.FC = () => {
+interface Props {
+  index: number
+}
+const GiftItem: React.FC<Props> = ({ index }) => {
   const classes = useStyles()
   const { t } = useTranslation('common')
+  const theme = useTheme()
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
+
   const handleOnDeleteClick = () => {
     // TODO:
   }
@@ -22,11 +28,18 @@ const GiftItem: React.FC = () => {
           <Typography className={classes.rowValue}>{value}</Typography>
         </Box>
       )
-    }, [value])
+    }, [value, isMobile])
+
+  const tableLabel = {
+    team_or_individual: isMobile ? t(`streaming_gift_management.team_or_individual_sm`) : t(`streaming_gift_management.team_or_individual`),
+    target: isMobile ? t(`streaming_gift_management.target_name_sm`) : t(`streaming_gift_management.target_name`),
+    sns_url: isMobile ? t(`streaming_gift_management.sns_url_sm`) : t(`streaming_gift_management.sns_url`),
+  }
+
   return (
     <Box className={classes.container}>
       <Box className={classes.header}>
-        <Typography className={classes.label}>{'対象者1'}</Typography>
+        <Typography className={classes.label}>{`対象者${index}`}</Typography>
         <Box display="flex" flexDirection="row">
           <ESButton className={classes.editButton} onClick={handleOnEditClick}>
             {t('streaming_gift_management.edit')}
@@ -36,17 +49,13 @@ const GiftItem: React.FC = () => {
           </ESButton>
         </Box>
       </Box>
-      {tableRow(t('streaming_gift_management.team_or_individual'), '個人', '8px')()}
-      {tableRow(
-        t('streaming_gift_management.target_name'),
-        'かやをかやをかやをかやをかやをかやをかやをかやをかやをかやをかやをかやをかやをかやを',
-        '8px'
-      )()}
-      {tableRow(t('streaming_gift_management.sns_url'), 'http://twitter/uni_kayawo', '16px')()}
+      {tableRow(tableLabel.team_or_individual, '個人', '8px')()}
+      {tableRow(tableLabel.target, 'かやをかやをかやをかやをか', '8px')()}
+      {tableRow(tableLabel.sns_url, 'http://twitter/uni_kayawo', '16px')()}
     </Box>
   )
 }
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   header: {
     display: 'flex',
     flexDirection: 'row',
@@ -63,17 +72,22 @@ const useStyles = makeStyles(() => ({
     border: `1px solid ${Colors.white_opacity['30']}`,
     borderRadius: '5px',
     backgroundColor: 'black',
-    marginTop: '32px',
+    marginBottom: '16px',
     display: 'flex',
     flexDirection: 'column',
+    '&:first-child': {
+      marginTop: '32px',
+    },
   },
   editButton: {
-    padding: '4.5px 22px',
+    height: '25px',
+    padding: '0px 22px',
     borderRadius: '5px !important',
     border: '1px solid #707070',
   },
   deleteButton: {
-    padding: '4.5px 22px',
+    height: '25px',
+    padding: '0px 22px',
     borderRadius: '5px !important',
     marginLeft: '10px',
     backgroundColor: `#707070`,
@@ -85,15 +99,33 @@ const useStyles = makeStyles(() => ({
     marginRight: '40px',
   },
   rowLabel: {
-    width: '172px',
+    width: '162px',
     color: Colors.white_opacity['70'],
     fontSize: '14px',
+    marginRight: '10px',
   },
   deleteText: {
     color: 'white',
   },
   rowValue: {
     flex: 1,
+    display: '-webkit-box',
+    WebkitBoxOrient: 'vertical',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    wordBreak: 'break-all',
+  },
+  [theme.breakpoints.down('md')]: {
+    rowLabel: {
+      width: '127px',
+    },
+    row: {
+      marginLeft: '16px',
+      marginRight: '16px',
+    },
+    header: {
+      margin: '15px 16px',
+    },
   },
 }))
 export default GiftItem
