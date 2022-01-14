@@ -46,7 +46,7 @@ import {
   STATUS_SEND_MESS,
 } from '@constants/common.constants'
 import { v4 as uuidv4 } from 'uuid'
-import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
+// import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
 import useGraphqlAPI from 'src/types/useGraphqlAPI'
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -60,6 +60,22 @@ import Loader from '@components/Loader'
 import { useRect } from '@utils/hooks/useRect'
 import ChatInput from './ChatInput'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
+import ESTabs from '@components/Tabs'
+import ESTab from '@components/Tab'
+import TabsGroup from '@components/TabsGroup'
+// import ChatTab from './Tabs/ChatTab'
+import RankingTab from './Tabs/RankingTab'
+import { Colors } from '@theme/colors'
+
+export enum CHAT_TABS {
+  CHAT = 0,
+  RANKING = 1,
+}
+
+export enum MESSAGE_TABS {
+  ALL = 0,
+  TIP = 1,
+}
 
 export type ChatContainerProps = {
   onPressDonate?: (donatedPoint: number, purchaseComment: string) => void
@@ -88,8 +104,10 @@ export const purchasePoints = {
   p_100: {
     id: 'p_100',
     value: 100,
-    backgroundColor: '#2680EB',
-    borderColor: '#2680EB',
+    receiverHeaderBgColor: Colors.white_opacity[20],
+    headerBgColor: '#A3C6FF',
+    backgroundColor: '#476AFF',
+    borderColor: '#476AFF',
     flex: 65.5,
     maxLengthInput: 50,
     displayTime: 0,
@@ -97,8 +115,10 @@ export const purchasePoints = {
   p_300: {
     id: 'p_300',
     value: 300,
-    backgroundColor: '#01B7FB',
-    borderColor: '#01B7FB',
+    receiverHeaderBgColor: Colors.white_opacity[15],
+    headerBgColor: '#7F97FF',
+    backgroundColor: '#478EFF',
+    borderColor: '#478EFF',
     flex: 86,
     maxLengthInput: 50,
     displayTime: 0,
@@ -106,8 +126,10 @@ export const purchasePoints = {
   p_500: {
     id: 'p_500',
     value: 500,
-    backgroundColor: '#0FB732',
-    borderColor: '#0FB732',
+    receiverHeaderBgColor: Colors.white_opacity[20],
+    headerBgColor: '#8BEECF',
+    backgroundColor: '#17DD9F',
+    borderColor: '#17DD9F',
     flex: 94,
     maxLengthInput: 150,
     displayTime: 120,
@@ -115,8 +137,10 @@ export const purchasePoints = {
   p_1000: {
     id: 'p_1000',
     value: 1000,
-    backgroundColor: '#EBD600',
-    borderColor: '#EBD600',
+    receiverHeaderBgColor: Colors.white_opacity[20],
+    headerBgColor: '#E5EC91',
+    backgroundColor: '#CBD923',
+    borderColor: '#CBD923',
     flex: 94,
     maxLengthInput: 200,
     displayTime: 300,
@@ -124,6 +148,8 @@ export const purchasePoints = {
   p_3000: {
     id: 'p_3000',
     value: 3000,
+    receiverHeaderBgColor: Colors.white_opacity[15],
+    headerBgColor: '#FF9661',
     backgroundColor: '#FF6A1C',
     borderColor: '#FF6A1C',
     flex: 98,
@@ -133,15 +159,17 @@ export const purchasePoints = {
   // p_2500: {
   //   id: 'p_2500',
   //   value: 5000,
-  //   backgroundColor: '#9147F9',
-  //   borderColor: '#9147F9',
+  //   backgroundColor: '#F86B80',
+  //   borderColor: '#F86B80',
   //   width: 90,
   // },
   p_5000: {
     id: 'p_5000',
     value: 5000,
-    backgroundColor: '#9147F9',
-    borderColor: '#9147F9',
+    receiverHeaderBgColor: Colors.white_opacity[30],
+    headerBgColor: '#FDD3D9',
+    backgroundColor: '#F86B80',
+    borderColor: '#F86B80',
     flex: 112,
     maxLengthInput: 250,
     displayTime: 1800,
@@ -149,8 +177,10 @@ export const purchasePoints = {
   p_10000: {
     id: 'p_10000',
     value: 10000,
-    backgroundColor: '#C91315',
-    borderColor: '#C91315',
+    receiverHeaderBgColor: Colors.white_opacity[25],
+    headerBgColor: '#F64D67',
+    backgroundColor: '#F20025',
+    borderColor: '#F20025',
     flex: 151,
     maxLengthInput: 270,
     displayTime: 3600,
@@ -190,6 +220,8 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
   ) => {
     const dispatch = useAppDispatch()
 
+    const [tab, setTab] = useState(CHAT_TABS.CHAT)
+    const [messageTab, setMessageTab] = useState(MESSAGE_TABS.ALL)
     const [errorMess, setErrorMess] = useState<string>('')
     const [isResetMess, setIsResetMess] = useState<boolean>(false)
     // console.log('🚀 ~ isResetMess', isResetMess)
@@ -203,7 +235,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     const [successGetListDonateMess, setSuccessGetListDonateMess] = useState(false)
     const [successFlagGetAddUSer, setSuccessFlagGetAddUSer] = useState(false)
     const [messagesDonate, setMessagesDonate] = useState([])
-    // console.log('🚀 ~ messagesDonate', messagesDonate)
+    console.log('🚀 ~ messagesDonate', messagesDonate)
     // const [displaySeeMore, setDisplaySeeMore] = useState(false)
     // console.log('🚀 ~ displaySeeMore', displaySeeMore)
     const [displayDialogMess, setDisplayDialogMess] = useState(false)
@@ -218,7 +250,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     const [isGettingPrevRewindMess, setIsGettingPrevRewindMess] = useState(false)
     const [isGettingRewindMess, setIsGettingRewindMess] = useState(false)
     const [cacheMess, setCacheMess] = useState([])
-    // console.log('🚀 ~ cacheMess', cacheMess)
+    console.log('🚀 ~ cacheMess', cacheMess)
     const [rewindMess, setRewindMess] = useState<any>({})
     // console.log('🚀 ~ rewindMess---000', rewindMess)
     const [autoGetMess, setAutoGetMess] = useState<any>([])
@@ -252,7 +284,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     const userProfile = useAppSelector<UserProfile>(selectors.getUserProfile)
 
     const [stateMessages, setStateMessages] = useState([])
-    // console.log('🚀 ~ stateMessages---000', stateMessages)
+    console.log('🚀 ~ stateMessages---000', stateMessages)
 
     const [chatUser, setChatUser] = useState<any>({})
     const theme = useTheme()
@@ -265,8 +297,8 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
 
     const contentRect = useRect(contentRef)
 
-    const { width: pageWidth } = useWindowDimensions(0)
-    const isDesktopDown1280 = pageWidth > 768 && pageWidth <= 1280
+    // const { width: pageWidth } = useWindowDimensions(0)
+    // const isDesktopDown1280 = pageWidth > 768 && pageWidth <= 1280
     const { userResult, streamingSecond, playedSecond, liveStreamInfo, resetState } = useDetailVideo()
     // const { streamingSecond, playedSecond, isViewingStream, liveStreamInfo } = useDetailVideo()
     // const userResult = {streamer: 1}
@@ -359,9 +391,10 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     const handleTransformListMess = (messagesInfo) => {
       const transformMess = [...messagesInfo.items]
       const transformMessAsc = sortMessages(transformMess)
-      if (streamingSecond === Infinity && videoType === STATUS_VIDEO.LIVE_STREAM) {
-        setStateMessages([...transformMessAsc])
-      }
+      // TODO
+      // if (streamingSecond === Infinity && videoType === STATUS_VIDEO.LIVE_STREAM) {
+      setStateMessages([...transformMessAsc])
+      // }
       // save mess for use in local
       setCacheMess([...transformMessAsc])
       setSuccessGetListMess(true)
@@ -375,6 +408,8 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       // setMessagesDonate([...transformDonateMessAsc])
       // save mess for use in local
       setCacheDonateMess([...transformDonateMessAsc])
+      // TODO (remove this line)
+      setMessagesDonate([...transformDonateMessAsc])
       setPrevToken(messagesInfo.nextToken)
       // console.log('🚀 ~ handleFetchPrevMess ~ messagesInfo.nextToken--111', messagesInfo.nextToken)
 
@@ -717,17 +752,17 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     const isStreaming = (() => {
       // console.log('🚀 ~ isStreaming ~ videoType', videoType, playedSecond, streamingSecond)
       // console.log('🚀 ~ isStreaming ~ playedSecond >= streamingSecond', playedSecond >= streamingSecond)
-      // return true
-      if (videoType === STATUS_VIDEO.LIVE_STREAM) {
-        return true
-        // if (streamingSecond === Infinity) {
-        //   return true
-        // }
-        // if (playedSecond >= streamingSecond) {
-        //   return true
-        // }
-      }
-      return false
+      return true
+      // if (videoType === STATUS_VIDEO.LIVE_STREAM) {
+      //   return true
+      //   // if (streamingSecond === Infinity) {
+      //   //   return true
+      //   // }
+      //   // if (playedSecond >= streamingSecond) {
+      //   //   return true
+      //   // }
+      // }
+      // return false
     })()
 
     const renderLoader = () => {
@@ -1114,13 +1149,20 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     }, [key_video_id])
 
     useEffect(() => {
+      // TODO
+      // fetchMessInitialStreaming()
+    }, [])
+
+    useEffect(() => {
       // console.log('🚀 ~ useEffect ~ isStreaming--000', isStreaming, videoType)
-      if (isStreaming) {
-        // console.log('🚀 ~ useEffect ~ isStreaming', isStreaming)
-        fetchMessInitialStreaming()
-      } else if (!isStreaming && videoType === STATUS_VIDEO.ARCHIVE) {
-        fetchNextMess(GET_MESS_TYPE.FETCH_ARCHIVE_INITIAL, 0)
-      }
+      // TODO
+      // if (isStreaming) {
+      //   // console.log('🚀 ~ useEffect ~ isStreaming', isStreaming)
+      //   fetchMessInitialStreaming()
+      // } else if (!isStreaming && videoType === STATUS_VIDEO.ARCHIVE) {
+      //   fetchNextMess(GET_MESS_TYPE.FETCH_ARCHIVE_INITIAL, 0)
+      // }
+      fetchMessInitialStreaming()
     }, [videoType])
 
     useEffect(() => {
@@ -1464,7 +1506,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
               {purchaseDialogVisible && !isMobile && purchaseInfoDialog()}
               <LoginRequired>
                 <IconButton onClick={purchaseIconClick} id="btnOpenPremiumChatDialog" className={classes.iconPurchase}>
-                  <img id="btnOpenPremiumChatDialogImage" src="/images/ic_purchase.svg" />
+                  <img id="btnOpenPremiumChatDialogImage" src="/images/tip_icon.svg" />
                 </IconButton>
               </LoginRequired>
               <ChatInput
@@ -1506,9 +1548,11 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         // only margin top when has donate message
         // render margin top higher with donate message is first item
         if (transformedMess.length !== 0 && transformedMess[0].is_premium) {
-          marginTop = 16
+          // marginTop = 16
+          marginTop = 8
         } else {
-          marginTop = 12
+          // marginTop = 12
+          marginTop = 8
         }
       }
       if (componentType === 'userIcon') {
@@ -1519,9 +1563,9 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         }
         // render margin top higher with donate message is first item
         if (transformedMess.length !== 0 && transformedMess[0].is_premium) {
-          marginTop = 16
+          marginTop = 8
         } else {
-          marginTop = 12
+          marginTop = 8
         }
       }
       return marginTop
@@ -1947,7 +1991,8 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
                     }
                   }}
                 >
-                  <ESAvatar src={item?.parent?.avatar} size={isDesktopDown1280 ? 26 : 32} alt={item.parent.user_name} />
+                  <ESAvatar src={item?.parent?.avatar} size={33} alt={item.parent.user_name} />
+                  <Box className={classes.textPoint}>{item.point}</Box>
                 </Box>
               ) : (
                 ''
@@ -1970,7 +2015,9 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     )
 
     const displayChatContent = () => {
-      return videoType !== STATUS_VIDEO.SCHEDULE && (isVideoFreeToWatch || userHasViewingTicket)
+      // TODO
+      // return videoType !== STATUS_VIDEO.SCHEDULE && (isVideoFreeToWatch || userHasViewingTicket)
+      return true
     }
 
     const chatBoxPaddingBottom = () => {
@@ -1998,6 +2045,39 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     //   return Math.round((newChatHeight + Number.EPSILON) * 100) / 100
     // })()
 
+    const renderMessageTab = () => {
+      return (
+        <Box>
+          <TabsGroup
+            data={[
+              {
+                value: MESSAGE_TABS.ALL,
+                label: i18n.t('common:live_stream_screen.all_mess_tab_title'),
+              },
+              {
+                value: MESSAGE_TABS.TIP,
+                label: i18n.t('common:live_stream_screen.tip_mess_tab_title'),
+              },
+            ]}
+            value={messageTab}
+            onClick={(value) => setMessageTab(value)}
+          ></TabsGroup>
+          {/* <ChatTab activeTab={messageTab} /> */}
+        </Box>
+      )
+    }
+
+    const getTabsContent = () => {
+      switch (tab) {
+        case CHAT_TABS.CHAT:
+          return renderMessageTab()
+        case CHAT_TABS.RANKING:
+          return <RankingTab />
+        default:
+          return <></>
+      }
+    }
+
     return (
       <Box
         className={classes.container}
@@ -2009,11 +2089,18 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
             : {}
         }
       >
-        {!isMobile && (
+        <Box className={classes.tabsContainer}>
+          <ESTabs value={tab} onChange={(_, v) => setTab(v)} className={classes.tabs} scrollButtons="off" variant="scrollable">
+            <ESTab className={classes.singleTab} label={i18n.t('common:live_stream_screen.chat_header')} value={CHAT_TABS.CHAT} />
+            <ESTab className={classes.singleTab} label={i18n.t('common:live_stream_screen.ranking_tab_title')} value={CHAT_TABS.RANKING} />
+          </ESTabs>
+        </Box>
+        <Box className={classes.tabsContent}>{getTabsContent()}</Box>
+        {/* {!isMobile && (
           <Box className={classes.chatHeader}>
             <Typography className={classes.headerTitle}>{i18n.t('common:live_stream_screen.chat_header')}</Typography>
           </Box>
-        )}
+        )} */}
         {displayChatContent() ? chatContent() : userDoesNotHaveViewingTicketView()}
       </Box>
     )

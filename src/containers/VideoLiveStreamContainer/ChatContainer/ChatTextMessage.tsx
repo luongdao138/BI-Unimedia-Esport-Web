@@ -6,6 +6,7 @@ import ESMenu from '@components/Menu'
 import _ from 'lodash'
 import { STATUS_SEND_MESS } from '@constants/common.constants'
 import { STATUS_VIDEO } from '@services/videoTop.services'
+import { Colors } from '@theme/colors'
 
 type ChatContainerProps = {
   message?: any
@@ -105,7 +106,7 @@ const useStyles = makeStyles(() => ({
   iconClass: {
     display: 'none',
     position: 'absolute',
-    right: '4px',
+    right: '-1px',
     padding: '2px 0 0 0',
     '& .MuiIcon-fontSizeSmall': {
       fontSize: '0.82rem',
@@ -130,15 +131,15 @@ const useStyles = makeStyles(() => ({
   container: {
     display: 'flex',
     flexDirection: 'row',
-    marginRight: 16,
+    marginRight: 8,
   },
   chatMessage: {
     fontSize: 14,
-    marginBottom: 4,
-    color: '#FFFFFF',
+    marginBottom: 8,
+    color: Colors.white_opacity[30],
   },
   chatMessageUser: {
-    color: '#FF4786',
+    color: '#fff',
   },
 }))
 

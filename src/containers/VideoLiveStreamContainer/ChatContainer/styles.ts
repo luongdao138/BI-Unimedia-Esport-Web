@@ -3,6 +3,44 @@ import { purchasePoints } from './index'
 import { Colors } from '@theme/colors'
 
 const useStyles = makeStyles((theme) => ({
+  singleMessTab: {},
+  messageTabs: {},
+  tabsContent: {
+    width: '100%',
+    // height: '100%',
+    padding: '16px 0 0 16px',
+  },
+  singleTab: {},
+  tabsContainer: {
+    display: 'flex',
+    width: '100%',
+    borderBottom: `1px solid ${Colors.white_opacity[30]}`,
+  },
+  tabs: {
+    display: 'flex',
+    overflowY: 'hidden',
+    width: '100%',
+    '& .MuiButtonBase-root': {
+      flex: 1,
+      minHeight: '53px',
+      padding: '16px 12px',
+      minWidth: '100px',
+      '& .MuiTab-wrapper': {
+        fontSize: '14px',
+        fontWeight: 'bold',
+        lineHeight: '17px',
+      },
+      '&.Mui-selected': {
+        '& .MuiTab-wrapper': {
+          color: Colors.white,
+        },
+      },
+    },
+    '& .MuiTabs-indicator': {
+      backgroundColor: Colors.white,
+      height: 1,
+    },
+  },
   iconAngleDown: {
     color: Colors.grey[200],
   },
@@ -40,10 +78,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    // width: 482,
-    marginLeft: '16px',
     marginRight: '16px',
-    border: `1px solid #FFFFFF4D`,
     height: '100%',
     flex: 1,
   },
@@ -120,28 +155,28 @@ const useStyles = makeStyles((theme) => ({
     // marginTop: 16,
     // marginTop: 8,
     scrollbarColor: '#222 transparent',
-    '&::-webkit-scrollbar': {
-      width: '20px',
-      opacity: 1,
-      padding: 2,
-      cursor: 'pointer',
-    },
-    '&::-webkit-scrollbar-track': {
-      background: '#4D4D4D',
-      border: 'solid 3px transparent',
-    },
-    '&::-webkit-scrollbar-thumb': {
-      backgroundColor: '#212121',
-      backgroundClip: 'padding-box',
-      border: '4px solid rgba(0, 0, 0, 0)',
-      width: '14px',
-      cursor: 'pointer',
-    },
+    // '&::-webkit-scrollbar': {
+    //   width: '20px',
+    //   opacity: 1,
+    //   padding: 2,
+    //   cursor: 'pointer',
+    // },
+    // '&::-webkit-scrollbar-track': {
+    //   background: '#4D4D4D',
+    //   border: 'solid 3px transparent',
+    // },
+    // '&::-webkit-scrollbar-thumb': {
+    //   backgroundColor: '#212121',
+    //   backgroundClip: 'padding-box',
+    //   border: '4px solid rgba(0, 0, 0, 0)',
+    //   width: '14px',
+    //   cursor: 'pointer',
+    // },
   },
   listContainer: {
     scrollbarColor: '#222 transparent',
     '&::-webkit-scrollbar': {
-      width: '20px',
+      width: 16,
       opacity: 1,
       padding: 2,
       cursor: 'pointer',
@@ -213,9 +248,10 @@ const useStyles = makeStyles((theme) => ({
   },
   chatInputContainer: {
     backgroundColor: '#0A0A0A',
-    padding: 16,
     borderRadius: 4,
     position: 'relative',
+    marginTop: '14px',
+    padding: '4px 8px 16px 8px',
   },
   chatInputMobileContainer: {
     // position: 'absolute',
@@ -227,14 +263,6 @@ const useStyles = makeStyles((theme) => ({
   //   position: 'relative',
   //   bottom: 0,
   // },
-  chatBox: {
-    display: 'flex',
-    flexDirection: 'row',
-    width: '100%',
-    '& .MuiFormControl-root': {
-      flex: 1,
-    },
-  },
   input: () => ({
     height: 42,
     borderBottomRightRadius: 'unset',
@@ -272,19 +300,9 @@ const useStyles = makeStyles((theme) => ({
   sendIcon: {
     width: 30,
   },
-  chatTextInput: {
-    fontSize: 14,
-    color: 'white',
-    '&::placeholder': {
-      color: '#FFFFFF',
-      opacity: 1,
-    },
-  },
   iconPurchase: {
-    width: 20,
-    height: 20,
-    marginBottom: 12.5,
-    marginRight: 8,
+    padding: '0px',
+    margin: '0 0 3px 0',
   },
   userWatchingList: {
     marginTop: '16px',
@@ -314,15 +332,26 @@ const useStyles = makeStyles((theme) => ({
       borderRadius: 6,
     },
   },
+  textPoint: {
+    position: 'absolute',
+    bottom: '4px',
+    color: '#fff',
+    fontSize: '14px',
+    fontWeight: 400,
+    lineHeight: '14px',
+    height: '14px',
+  },
   userWatchingItem: {
     display: 'flex',
-    width: 40,
-    height: 40,
+    width: 52,
+    height: 52,
     backgroundColor: '#476AFF',
     borderRadius: 4,
     marginRight: 4,
-    padding: 4,
+    padding: '5px 9px 0px 9px',
     cursor: 'pointer',
+    justifyContent: 'center',
+    position: 'relative',
   },
   ...purchasePoints,
   purchaseCommentRoot: {
