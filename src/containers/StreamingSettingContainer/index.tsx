@@ -25,13 +25,16 @@ import LiveStreamContainer from './LiveStream'
 import StreamingReservationContainer from './StreamingReservation'
 import useLiveSetting from './useLiveSetting'
 import { useFormik } from 'formik'
-import IndividualGiftListContainer from '@containers/StreamingSettingContainer/IndividualGiftList'
+// import IndividualGiftListContainer from '@containers/StreamingSettingContainer/IndividualGiftList'
+import GiftMemberListContainer from './GiftMemberListContainer'
+import MemberList from './GiftMemberListContainer/MemberList'
 
 enum TABS {
   LIVE_STREAM = 0,
   STREAMING_RESERVATION = 1,
   DISTRIBUTOR = 2,
-  INDIVIDUAL_GIFT_LIST = 3,
+  // INDIVIDUAL_GIFT_LIST = 3,
+  GIFT_MEMBERS_LIST = 3,
 }
 
 const StreamingSettingContainer: React.FC<{ default_tab: any }> = ({ default_tab }) => {
@@ -156,11 +159,11 @@ const StreamingSettingContainer: React.FC<{ default_tab: any }> = ({ default_tab
   const getTabs = () => {
     return (
       <Grid item xs={12} className={classes.tabsContainer}>
-        <ESTabs value={tab} onChange={(_, v) => setTab(v)} className={classes.tabs} scrollButtons="off" variant="scrollable">
-          <ESTab label={t('streaming_setting_screen.live_stream')} value={0} disabled={disable} />
-          <ESTab label={t('streaming_setting_screen.streaming_reservation')} value={1} disabled={disable} />
-          <ESTab label={t('streaming_setting_screen.distributor_information')} value={2} />
-          <ESTab label={t('streaming_setting_screen.individual_gift_list')} value={3} />
+        <ESTabs value={tab} onChange={(_, v) => setTab(v)} className={classes.tabs}>
+          <ESTab label={t('streaming_setting_screen.live_stream')} value={0} disabled={disable} className={classes.singleTab} />
+          <ESTab label={t('streaming_setting_screen.streaming_reservation')} value={1} disabled={disable} className={classes.singleTab} />
+          <ESTab label={t('streaming_setting_screen.distributor_information')} value={2} className={classes.singleTab} />
+          <ESTab label={t('streaming_setting_screen.gift_members_list_title')} value={3} className={classes.singleTab} />
         </ESTabs>
       </Grid>
     )
@@ -186,8 +189,10 @@ const StreamingSettingContainer: React.FC<{ default_tab: any }> = ({ default_tab
         )
       case TABS.DISTRIBUTOR:
         return <DistributorInformationContainer formik={formikDistributor} />
-      case TABS.INDIVIDUAL_GIFT_LIST:
-        return <IndividualGiftListContainer />
+      // case TABS.INDIVIDUAL_GIFT_LIST:
+      //   return <IndividualGiftListContainer />
+      case TABS.GIFT_MEMBERS_LIST:
+        return <GiftMemberListContainer />
       default:
         break
     }
@@ -199,13 +204,26 @@ const StreamingSettingContainer: React.FC<{ default_tab: any }> = ({ default_tab
   }
   return (
     <>
-      <HeaderWithButtonStream
-        title={t('streaming_setting_screen.title')}
-        onClickBack={() => router.push(ESRoutes.VIDEO_STREAMING_MANAGEMENT)}
-      />
-      <Grid container direction="column">
-        {getTabs()}
-        {getContent()}
+      <Box className="header_streaming_setting">
+        <HeaderWithButtonStream
+          title={t('streaming_setting_screen.title')}
+          onClickBack={() => router.push(ESRoutes.VIDEO_STREAMING_MANAGEMENT)}
+        />
+      </Box>
+
+      <Grid container direction="row" spacing={tab === TABS.GIFT_MEMBERS_LIST ? 2 : 0}>
+        <Grid item xs={12} md={tab === TABS.GIFT_MEMBERS_LIST ? 8 : 12}>
+          <Grid container>
+            {getTabs()}
+            <Box className={tab === TABS.GIFT_MEMBERS_LIST ? classes.wrapMemberListContent : classes.wrapTabContent}>{getContent()}</Box>
+          </Grid>
+        </Grid>
+
+        {tab === TABS.GIFT_MEMBERS_LIST && (
+          <Grid item xs={12} md={4}>
+            <MemberList />
+          </Grid>
+        )}
       </Grid>
     </>
   )
@@ -213,18 +231,28 @@ const StreamingSettingContainer: React.FC<{ default_tab: any }> = ({ default_tab
 export default StreamingSettingContainer
 
 const useStyles = makeStyles((theme) => ({
+  wrapMemberListContent: {},
+  wrapTabContent: {
+    maxWidth: '622px',
+    marginLeft: '120px',
+  },
   tabsContainer: {
     display: 'flex',
     width: '100%',
     borderBottomColor: Colors.text[300],
     borderBottomWidth: 1,
     borderBottomStyle: 'solid',
+    maxWidth: '622px',
+    marginLeft: '48px',
   },
   tabs: {
     display: 'flex',
     width: '100%',
     overflow: 'hidden',
     paddingLeft: 24,
+    '& .MuiTab-root': {
+      minWidth: 'unset',
+    },
   },
   forbiddenMessageContainer: {
     width: '100%',
@@ -232,6 +260,19 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'center',
     marginTop: 30,
     marginBottom: 50,
+  },
+  [theme.breakpoints.down(1201)]: {
+    wrapTabContent: {
+      marginLeft: 48,
+    },
+  },
+  [theme.breakpoints.down(769)]: {
+    tabsContainer: {
+      marginLeft: 0,
+    },
+    wrapTabContent: {
+      marginLeft: 0,
+    },
   },
   [theme.breakpoints.down(419)]: {
     tabs: {

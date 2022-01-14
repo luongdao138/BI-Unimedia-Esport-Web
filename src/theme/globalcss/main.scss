@@ -763,7 +763,7 @@ body.has-sticky-div .sticky-div {
 .no_minimize_content_wrapper {
   // max-width: 802px;
   //max-width: 850px;
-  max-width: 840px;
+  // max-width: 840px;
   padding-top: 60px;
   position: relative;
   width: 100%;
@@ -829,6 +829,10 @@ body.has-sticky-div .sticky-div {
   color: #c1c1c1;
 }
 
+.header_streaming_setting {
+  max-width: 802px;
+}
+
 @media (max-width: 1200px) {
   .no_minimize_aside_left {
     width: 200px;
@@ -842,7 +846,7 @@ body.has-sticky-div .sticky-div {
 
 @media (max-width: 1166px) {
   .no_minimize_content_wrapper {
-    max-width: 660px;
+    // max-width: 660px;
   }
 }
 
