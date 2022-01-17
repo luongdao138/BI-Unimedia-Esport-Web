@@ -44,6 +44,7 @@ import { LiveStreamSettingHelper } from '@utils/helpers/LiveStreamSettingHelper'
 import { STATUS_VIDEO } from '@services/videoTop.services'
 import ESLabelWithSwitch from '@components/LabelWithSwitch'
 import ESBoxftDashColumn from '@components/ESBoxftDashColumn'
+import { useListGiftInfoDialog } from '../useListGiftInfoDialog'
 
 interface StepsProps {
   step: number
@@ -102,7 +103,7 @@ const Steps: React.FC<StepsProps> = ({
   const [renewData, setRenewData] = useState(null)
   // const [statusTag, setStatusTag] = useState<number>(0)
   const classes = useStyles({ statusRecord: obsStatusDynamo, channelArn: stateChannelArn, videoStatusDynamo })
-
+  const listGiftInfo = useListGiftInfoDialog()
   const formRef = {
     title: useRef(null),
     description: useRef(null),
@@ -384,6 +385,12 @@ const Steps: React.FC<StepsProps> = ({
   const changeFieldAndResetSelectedGift = (): void => {
     // formik.handleChange(e)
     formik.setFieldValue('stepSettingOne.selected_gift', !formik?.values?.stepSettingOne?.selected_gift)
+  }
+
+  const handleListGiftInfo = () => {
+    listGiftInfo().then(() => {
+      return
+    })
   }
 
   return (
@@ -818,45 +825,49 @@ const Steps: React.FC<StepsProps> = ({
             </Box>
           )}
           {/* gift */}
-          <Box pb={2} pt={2} className={classes.wrap_input_box_switch}>
-            <div className={classes.firstItem}>
-              <ESLabelWithSwitch
-                fullWidth
-                labelPrimary={i18n.t('common:streaming_setting_screen.title_gift')}
-                valueSwitch={formik?.values?.stepSettingOne?.selected_gift}
-                handleChangeSwitch={changeFieldAndResetSelectedGift}
-              />
-            </div>
-          </Box>
-          <ESBoxftDashColumn isSelectedGift={formik?.values?.stepSettingOne?.selected_gift}>
-            <Box className={classes.boxAboutGift}>
-              <Box className={classes.select_show_about_gift} pt={1}>
-                <label className={classes.labelNavigate}>{i18n.t('common:streaming_setting_screen.chooses_list_person_gift')}</label>
-                <label className={classes.labelNameObject}>
-                  {`${i18n.t('common:streaming_setting_screen.list_gift_selected')} ${i18n.t(
-                    'common:streaming_setting_screen.unselected'
-                  )}`}
-                </label>
-                <Typography className={classes.giftInfoList} variant="body2">
-                  <Icon className={`fa fa-info-circle ${classes.iconMargin}`} fontSize="small" />{' '}
-                  {i18n.t('common:streaming_setting_screen.about_the_gift_list')}
-                </Typography>
-              </Box>
-              <Box className={classes.select_show_about_gift} pt={1.8} pb={1}>
-                <ESCheckboxBig
-                  checked={formik?.values?.stepSettingOne?.publish_flag}
-                  onChange={() => formik.setFieldValue('stepSettingOne.publish_flag', !formik?.values?.stepSettingOne?.publish_flag)}
-                  label={t('common:streaming_setting_screen.individual_gift_ranking_display')}
-                  name="stepSettingOne.publish_flag"
-                  classNameLabel={classes.esCheckBox}
+          {isFirstStep() && (
+            <Box pb={2} pt={2} className={classes.wrap_input_box_switch}>
+              <div className={classes.firstItem}>
+                <ESLabelWithSwitch
+                  fullWidth
+                  labelPrimary={i18n.t('common:streaming_setting_screen.title_gift')}
+                  valueSwitch={formik?.values?.stepSettingOne?.selected_gift}
+                  handleChangeSwitch={changeFieldAndResetSelectedGift}
                 />
-                <Typography className={classes.giftInfoList} variant="body2">
-                  <Icon className={`fa fa-info-circle ${classes.iconMargin}`} fontSize="small" />{' '}
-                  {i18n.t('common:streaming_setting_screen.about_individual_gift_ranking')}
-                </Typography>
-              </Box>
+              </div>
             </Box>
-          </ESBoxftDashColumn>
+          )}
+          {isFirstStep() && (
+            <ESBoxftDashColumn isSelectedGift={formik?.values?.stepSettingOne?.selected_gift}>
+              <Box className={classes.boxAboutGift}>
+                <Box className={classes.select_show_about_gift} pt={1}>
+                  <label className={classes.labelNavigate}>{i18n.t('common:streaming_setting_screen.chooses_list_person_gift')}</label>
+                  <label className={classes.labelNameObject}>
+                    {`${i18n.t('common:streaming_setting_screen.list_gift_selected')} ${i18n.t(
+                      'common:streaming_setting_screen.unselected'
+                    )}`}
+                  </label>
+                  <Typography className={classes.giftInfoList} variant="body2" onClick={handleListGiftInfo}>
+                    <Icon className={`fa fa-info-circle ${classes.iconMargin}`} fontSize="small" />{' '}
+                    {i18n.t('common:streaming_setting_screen.about_the_gift_list')}
+                  </Typography>
+                </Box>
+                <Box className={classes.select_show_about_gift} pt={1.8} pb={1}>
+                  <ESCheckboxBig
+                    checked={formik?.values?.stepSettingOne?.publish_flag}
+                    onChange={() => formik.setFieldValue('stepSettingOne.publish_flag', !formik?.values?.stepSettingOne?.publish_flag)}
+                    label={t('common:streaming_setting_screen.individual_gift_ranking_display')}
+                    name="stepSettingOne.publish_flag"
+                    classNameLabel={classes.esCheckBox}
+                  />
+                  <Typography className={classes.giftInfoList} variant="body2" onClick={handleListGiftInfo}>
+                    <Icon className={`fa fa-info-circle ${classes.iconMargin}`} fontSize="small" />{' '}
+                    {i18n.t('common:streaming_setting_screen.about_individual_gift_ranking')}
+                  </Typography>
+                </Box>
+              </Box>
+            </ESBoxftDashColumn>
+          )}
           {/* stream URL */}
           <Box pt={2} className={classes.wrap_input} flexDirection="row" display="flex" alignItems="flex-end">
             <Box className={classes.firstItem}>

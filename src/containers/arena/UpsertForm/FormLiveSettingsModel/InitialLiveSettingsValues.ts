@@ -67,6 +67,7 @@ export const getInitialScheduleValues = (data?: LiveStreamSetting): FormLiveType
     //check step
     step_setting: 1,
     arn: data && data.arn ? data.arn : '',
+    selected_gift: true,
   },
 })
 

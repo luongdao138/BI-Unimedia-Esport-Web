@@ -51,6 +51,7 @@ export type FormLiveType = {
     //check step
     step_setting?: number
     arn?: string
+    selected_gift?: boolean
   }
   stepSettingThree?: {
     name?: string

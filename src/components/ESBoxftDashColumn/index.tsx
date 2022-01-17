@@ -11,7 +11,7 @@ const ESBoxftDashColumn: React.FC<BoxDashProps> = ({ children, isSelectedGift })
   return (
     <Box pb={2} className={classes.wrap_input_box_switch}>
       <div className={classes.firstItemBoxSwitch} style={{ display: 'flex', flexDirection: 'row' }}>
-        <div style={{ width: 2, height: 'auto', background: Colors.primary }} />
+        <div className={classes.dashLine} />
         {children}
       </div>
     </Box>
@@ -29,6 +29,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   firstItemBoxSwitch: {
     // width: '494px',
   },
+  dashLine: {
+    width: 2,
+    height: 'auto',
+    background: Colors.primary,
+    marginLeft: 18,
+  },
   [theme.breakpoints.down(768)]: {
     firstItemBoxSwitch: {
       width: '100%',
@@ -38,6 +44,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       width: '100%',
       flexWrap: 'wrap-reverse',
       justifyContent: 'flex-end',
+    },
+    dashLine: {
+      marginLeft: 8,
     },
   },
 }))
