@@ -231,7 +231,13 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
       <>
         {showOverlayOnMediaPlayer() ? (
           <img
-            src={detailVideoResult?.thumbnail ? detailVideoResult?.thumbnail : '/images/live_stream/thumbnail_default.png'}
+            src={
+              detailVideoResult?.thumbnail
+                ? detailVideoResult?.thumbnail
+                : !detailVideoResult?.thumbnail && detailVideoResult?.video_thumbnail
+                ? detailVideoResult?.video_thumbnail
+                : '/images/live_stream/thumbnail_default.png'
+            }
             className={classes.thumb}
           />
         ) : (
@@ -240,7 +246,13 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
             key={keyVideoPlayer}
             videoType={videoType}
             src={detailVideoResult?.archived_url}
-            thumbnail={detailVideoResult?.thumbnail}
+            thumbnail={
+              detailVideoResult?.thumbnail
+                ? detailVideoResult?.thumbnail
+                : !detailVideoResult?.thumbnail && detailVideoResult?.video_thumbnail
+                ? detailVideoResult?.video_thumbnail
+                : '/images/live_stream/thumbnail_default.png'
+            }
             statusVideo={showOverlayOnMediaPlayer() ? true : null}
             mediaOverlayIsShown={showOverlayOnMediaPlayer()}
             onVideoEnd={onVideoEnd}
