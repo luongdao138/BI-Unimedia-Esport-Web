@@ -393,6 +393,10 @@ const Steps: React.FC<StepsProps> = ({
     })
   }
 
+  const changeFieldUseTicket = (): void => {
+    formik.setFieldValue('stepSettingOne.use_ticket', !formik?.values?.stepSettingOne?.use_ticket)
+  }
+
   return (
     <Box py={4} className={classes.container}>
       <Box className={classes.formContainer}>
@@ -471,6 +475,37 @@ const Steps: React.FC<StepsProps> = ({
             )}
           </Box>
           <Box paddingBottom={2} />
+          {/* TODO: V3.0 SNS */}
+          {isFirstStep() ? (
+            <Box pb={2}>
+              <ESCheckboxBig
+                checked={formik?.values?.stepSettingOne?.share_sns_flag}
+                onChange={() => {
+                  formik.setFieldValue('stepSettingOne.share_sns_flag', !formik?.values?.stepSettingOne?.share_sns_flag)
+                }}
+                label={t('common:streaming_setting_screen.share_SNS')}
+                name="share_sns_flag"
+                disabled={isLive}
+              />
+            </Box>
+          ) : (
+            <Box>
+              <ESInput
+                id="title"
+                name="title"
+                value={
+                  formik?.values?.stepSettingOne?.share_sns_flag
+                    ? t('common:streaming_setting_screen.shared_it')
+                    : t('common:streaming_setting_screen.dont_share')
+                }
+                fullWidth
+                labelPrimary={t('common:streaming_setting_screen.share_SNS')}
+                disabled={true}
+                size="big"
+                className={getAddClassByStep(classes.input_text)}
+              />
+            </Box>
+          )}
           <Box pb={2} className={classes.wrap_input}>
             <Box className={classes.firstItem}>
               <ESLabel label={i18n.t('common:streaming_setting_screen.thumbnail')} />
@@ -711,8 +746,8 @@ const Steps: React.FC<StepsProps> = ({
               </Box>
             )}
           </Box>
-          {paid_delivery_flag && (
-            <>
+          {/* {paid_delivery_flag && ( */}
+          {/* <>
               {isFirstStep() ? (
                 <Box pb={1}>
                   <ESCheckboxBig
@@ -727,9 +762,9 @@ const Steps: React.FC<StepsProps> = ({
                 </Box>
               ) : (
                 <ESLabel label={i18n.t('common:streaming_setting_screen.ticket_use')} />
-              )}
-              {/* TODO: Apply component enter point eXeポイント */}
-              {isFirstStep() ? (
+              )} */}
+          {/* TODO: Apply component enter point eXeポイント */}
+          {/* {isFirstStep() ? (
                 <Box pb={2} className={classes.box}>
                   <div ref={formRef['video_publish_end_time']} className={classes.firstItem}>
                     <ESNumberInputStream
@@ -793,8 +828,9 @@ const Steps: React.FC<StepsProps> = ({
                 </Box>
               )}
             </>
-          )}
-          {isFirstStep() ? (
+          )} */}
+          {/* TODO: V3.0 SNS OLD */}
+          {/* {isFirstStep() ? (
             <Box>
               <ESCheckboxBig
                 checked={formik?.values?.stepSettingOne?.share_sns_flag}
@@ -823,6 +859,95 @@ const Steps: React.FC<StepsProps> = ({
                 className={getAddClassByStep(classes.input_text)}
               />
             </Box>
+          )} */}
+          {/*TODO: V3.0 form ticket new v3.0 */}
+          {paid_delivery_flag && (
+            <>
+              {isFirstStep() ? (
+                <Box pb={2} className={classes.wrap_input_box_switch}>
+                  <div className={classes.firstItem}>
+                    <ESLabelWithSwitch
+                      fullWidth
+                      labelPrimary={t('common:streaming_setting_screen.ticket_use')}
+                      valueSwitch={formik?.values?.stepSettingOne?.use_ticket}
+                      handleChangeSwitch={changeFieldUseTicket}
+                      disabled={isLive}
+                    />
+                  </div>
+                </Box>
+              ) : (
+                <ESLabel label={i18n.t('common:streaming_setting_screen.ticket_use')} />
+              )}
+              {isFirstStep() ? (
+                <ESBoxftDashColumn isSelectedGift={formik?.values?.stepSettingOne?.selected_gift}>
+                  {/* TODO: Apply component enter point eXeポイント */}
+                  <div className={classes.boxRightTicket}>
+                    <Box pb={1} className={classes.box}>
+                      <div ref={formRef['video_publish_end_time']} className={classes.firstItemShort}>
+                        <ESNumberInputStream
+                          id="ticket_price"
+                          name="stepSettingOne.ticket_price"
+                          type="tel"
+                          fullWidth
+                          nameValue={'stepSettingOne.ticket_price'}
+                          // className={classes.input}
+                          placeholder={'0'}
+                          value={
+                            isFirstStep() &&
+                            (formik?.values?.stepSettingOne?.ticket_price === 0 || !formik?.values?.stepSettingOne?.use_ticket)
+                              ? ''
+                              : formik?.values?.stepSettingOne?.ticket_price
+                          }
+                          onChange={(e) => {
+                            formik.handleChange(e)
+                            handleUpdateValidateField('ticket_price')
+                          }}
+                          helperText={
+                            validateField !== 'all'
+                              ? validateField === 'ticket_price'
+                                ? formik?.errors?.stepSettingOne?.ticket_price
+                                : ''
+                              : checkLiveDisplayErrorOnSubmit(formik, 'ticket_price').helperText
+                          }
+                          error={
+                            validateField !== 'all'
+                              ? validateField === 'ticket_price'
+                                ? !!formik?.errors?.stepSettingOne?.ticket_price
+                                : false
+                              : checkLiveDisplayErrorOnSubmit(formik, 'ticket_price').error
+                          }
+                          size="big"
+                          isNumber={true}
+                          formik={formik}
+                          disabled={isLive}
+                          className={getAddClassByStep(classes.input_text)}
+                          readOnly={!formik?.values?.stepSettingOne?.use_ticket}
+                          nowrapHelperText
+                          endAdornment={
+                            isFirstStep() ? (
+                              <InputAdornment position="end" className={classes.inputContainer}>
+                                <Box className={classes.inputAdornment}>{t('common:common.eXe_points')}</Box>
+                              </InputAdornment>
+                            ) : (
+                              <></>
+                            )
+                          }
+                          classes={{ root: classes.root }}
+                        />
+                      </div>
+                    </Box>
+                  </div>
+                </ESBoxftDashColumn>
+              ) : (
+                <Box pb={2}>
+                  <Typography className={classes.date}>
+                    {formik?.values?.stepSettingOne?.use_ticket
+                      ? `利用する（${formik?.values?.stepSettingOne?.ticket_price} ${t('common:common.eXe_points')}）`
+                      : '利用しない'}
+                  </Typography>
+                </Box>
+              )}
+            </>
           )}
           {/* gift */}
           {isFirstStep() && (
@@ -869,7 +994,7 @@ const Steps: React.FC<StepsProps> = ({
             </ESBoxftDashColumn>
           )}
           {/* stream URL */}
-          <Box pt={2} className={classes.wrap_input} flexDirection="row" display="flex" alignItems="flex-end">
+          <Box pt={isFirstStep() ? 2 : 0} className={classes.wrap_input} flexDirection="row" display="flex" alignItems="flex-end">
             <Box className={classes.firstItem}>
               <ESInput
                 id="stream_url"
@@ -1235,6 +1360,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   esCheckBox: {
     color: '#ffffff70',
   },
+  boxRightTicket: {
+    marginLeft: 24,
+    marginTop: 10,
+  },
+  firstItemShort: {
+    width: '450px',
+  },
   [theme.breakpoints.down(768)]: {
     container: {
       padding: '34px 24px 32px 24px',
@@ -1281,6 +1413,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     giftInfoList: {
       marginLeft: 0,
       paddingTop: 8,
+    },
+    boxRightTicket: {
+      marginLeft: 16,
+      width: '100%',
+      marginTop: 8,
+    },
+    firstItemShort: {
+      width: '100%',
     },
   },
   addPaddingNote: {
