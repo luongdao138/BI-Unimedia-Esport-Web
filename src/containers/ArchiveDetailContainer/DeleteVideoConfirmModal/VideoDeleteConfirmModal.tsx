@@ -51,8 +51,9 @@ export default VideoDeleteConfirmModal
 
 const useStyles = makeStyles((theme) => ({
   deleteWarning: {
-    fontSize: '12px',
-    color: Colors.primary,
+    marginTop: 32,
+    fontSize: '16px',
+    color: '#F7F735',
     padding: '10px 0px',
     textAlign: 'center',
   },
