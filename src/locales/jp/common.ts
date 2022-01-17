@@ -1716,6 +1716,9 @@ export default {
     refresh_new_live: '最新を再生',
     warning_confirm_purchase_ticket: '決済中はボタンを複数回押さないでください',
     tag_live_control: 'ライブ',
+    ranking_tab_title: 'ランキング',
+    all_mess_tab_title: 'すべて',
+    tip_mess_tab_title: 'チップ',
   },
   video_search: {
     video_results: '動画「:key」 の検索結果',

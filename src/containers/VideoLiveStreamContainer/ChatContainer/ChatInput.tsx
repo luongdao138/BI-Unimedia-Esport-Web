@@ -6,6 +6,7 @@ import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import ESInput from '@components/Input'
 import LoginRequired from '@containers/LoginRequired'
+import { Colors } from '@theme/colors'
 
 type MessageValidationType = {
   message: string
@@ -108,6 +109,9 @@ const useStyles = makeStyles(() => ({
     '& .MuiFormControl-root': {
       flex: 1,
     },
+    '& .MuiInputBase-root': {
+      background: '#0A0A0A',
+    },
   },
   input: () => ({
     height: 42,
@@ -129,9 +133,10 @@ const useStyles = makeStyles(() => ({
   }),
   chatTextInput: {
     fontSize: 14,
-    color: 'white',
+    color: Colors.white_opacity[87],
+    background: '#0A0A0A',
     '&::placeholder': {
-      color: '#FFFFFF',
+      color: Colors.white_opacity[30],
       opacity: 1,
     },
   },
