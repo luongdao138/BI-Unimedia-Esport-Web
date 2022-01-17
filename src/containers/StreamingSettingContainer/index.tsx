@@ -28,6 +28,10 @@ import { useFormik } from 'formik'
 // import IndividualGiftListContainer from '@containers/StreamingSettingContainer/IndividualGiftList'
 import GiftMemberListContainer from './GiftMemberListContainer'
 import MemberList from './GiftMemberListContainer/MemberList'
+import ESModal from '@components/Modal'
+import ListGroupGift from './ListGroupGift'
+// import ESButton from '@components/Button'
+// import useListGroupGift from './ListGroupGift/useListGroupGift'
 
 enum TABS {
   LIVE_STREAM = 0,
@@ -43,6 +47,7 @@ const StreamingSettingContainer: React.FC<{ default_tab: any }> = ({ default_tab
   const router = useRouter()
   const [tab, setTab] = useState(default_tab)
   const [disable, setDisable] = useState(false)
+  // const { toListGroupGift } = useListGroupGift()
   //TODO: check call api
   const {
     liveSettingInformation,
@@ -202,6 +207,17 @@ const StreamingSettingContainer: React.FC<{ default_tab: any }> = ({ default_tab
       </Box>
     )
   }
+
+  const getListGroupGift = () => {
+    return (
+      <ESModal open={router.query.modalName === 'list_group_gift'}>
+        <ListGroupGift />
+      </ESModal>
+    )
+  }
+  // const handleClickSelectGift = () => {
+  //   toListGroupGift()
+  // }
   return (
     <>
       <Box className="header_streaming_setting">
@@ -213,9 +229,12 @@ const StreamingSettingContainer: React.FC<{ default_tab: any }> = ({ default_tab
 
       <Grid container direction="row" spacing={tab === TABS.GIFT_MEMBERS_LIST ? 2 : 0}>
         <Grid item xs={12} md={tab === TABS.GIFT_MEMBERS_LIST ? 8 : 12}>
-          <Grid container>
+          <Grid container direction="column">
             {getTabs()}
-            <Box className={tab === TABS.GIFT_MEMBERS_LIST ? classes.wrapMemberListContent : classes.wrapTabContent}>{getContent()}</Box>
+            <Box className={tab === TABS.GIFT_MEMBERS_LIST ? classes.wrapMemberListContent : classes.wrapTabContent}>
+              {getListGroupGift()}
+              {getContent()}
+            </Box>
           </Grid>
         </Grid>
 
