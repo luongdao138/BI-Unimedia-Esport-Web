@@ -211,6 +211,7 @@ export type SetChannelResponse = {
 export const CODE_ERROR_RENEW_SPECIAL = {
   CHA099: 'CHA099',
   SERVICE_BUSY: 503,
+  STK01: 'STK01',
 }
 
 export const getLiveSetting = async (params: LiveStreamSettingParams): Promise<LiveStreamSettingResponse> => {

@@ -42,7 +42,7 @@ export const setLiveStream = createAsyncThunk<services.SetLiveStreamResponse, se
         return res
       } else {
         // throw res.message
-        return rejectWithValue(JSON.stringify(res.message))
+        return rejectWithValue(res)
       }
     } catch (error) {
       if (!error.response) {
