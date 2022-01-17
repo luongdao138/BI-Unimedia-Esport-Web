@@ -1,10 +1,11 @@
 import ESButton from '@components/Button'
 import ESTable from '@components/Table'
-import { Grid, makeStyles, TableCell, TableRow, useMediaQuery, useTheme } from '@material-ui/core'
-import { Pagination } from '@material-ui/lab'
+import Pagination from '@containers/Community/Partials/Pagination'
+import { Box, Grid, makeStyles, TableCell, TableRow, Typography, useMediaQuery, useTheme } from '@material-ui/core'
+
 import { Colors } from '@theme/colors'
-import React from 'react'
-// import { useTranslation } from 'react-i18next'
+import React, { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 const rows = [1, 2, 3, 4, 5]
 
@@ -13,15 +14,19 @@ const DetailReport: React.FC = () => {
   const theme = useTheme()
   const matches = useMediaQuery(theme.breakpoints.down('sm'))
   const classes = useStyles()
+  const { t } = useTranslation('common')
+
+  const [page, setPage] = useState(10)
+  const [count] = useState(10)
 
   const renderBtnCSV = () =>
     matches ? (
       <ESButton variant={'contained'} className={classes.btnCSV}>
-        CSV
+        {t('streaming_gift_report_screen.csv')}
       </ESButton>
     ) : (
       <ESButton variant={'contained'} className={classes.btnCSV}>
-        CSVダウンロード
+        {t('streaming_gift_report_screen.csv_download')}
       </ESButton>
     )
 
@@ -29,15 +34,9 @@ const DetailReport: React.FC = () => {
     <>
       <Grid container spacing={2}>
         <Grid item xs={9}>
-          <Pagination
-            defaultPage={1}
-            className={classes.paginationStyle}
-            count={10}
-            variant="outlined"
-            shape="rounded"
-            siblingCount={1}
-            size="medium"
-          />
+          <Box mb={3} display="flex" justifyContent="center">
+            <Pagination page={page} pageNumber={count} setPage={setPage} />
+          </Box>
         </Grid>
         <Grid item xs={3} className={classes.wrapBtn}>
           {renderBtnCSV()}
@@ -47,22 +46,22 @@ const DetailReport: React.FC = () => {
         tableHeader={
           <TableRow>
             <TableCell style={{ width: '10%' }} align="center">
-              No.
+              <Typography>{t('streaming_gift_report_screen.no')}</Typography>
             </TableCell>
             <TableCell style={{ width: '20%' }} align="center">
-              購入日時
+              <Typography> {t('point_management_tab.purchase_date')}</Typography>
             </TableCell>
             <TableCell style={{ width: '20%' }} align="center">
-              eXeLAB ID
+              <Typography> {t('streaming_gift_report_screen.eXeLAB_ID')}</Typography>
             </TableCell>
             <TableCell style={{ width: '15%' }} align="center">
-              eXeポイント
+              <Typography> {t('common.eXe_points')}</Typography>
             </TableCell>
             <TableCell style={{ width: '15%' }} align="center">
-              種別
+              <Typography> {t('streaming_gift_report_screen.kinds')}</Typography>
             </TableCell>
             <TableCell style={{ width: '20%' }} align="center">
-              チップ対象
+              <Typography> {t('streaming_gift_report_screen.tip_target')}</Typography>
             </TableCell>
           </TableRow>
         }

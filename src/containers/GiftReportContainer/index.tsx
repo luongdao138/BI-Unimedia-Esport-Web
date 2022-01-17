@@ -18,7 +18,7 @@ enum TABS {
   TICKET_REPORT = 1,
   DETAIL_REPORT = 2,
 }
-const rows = [1, 2, 3, 4, 5]
+const rows = [1, 2, 3, 4, 5, 6]
 const GiftReportContainer: React.FC<{ default_tab: any }> = ({ default_tab }) => {
   const { t } = useTranslation('common')
   const classes = useStyles()
@@ -40,7 +40,7 @@ const GiftReportContainer: React.FC<{ default_tab: any }> = ({ default_tab }) =>
     return (
       <Box display="flex" height={'100%'} justifyContent="center" flexDirection="column" alignItems="center" mt={3} mb={3}>
         <Typography align={'center'} paragraph variant="subtitle2" className={classes.description} component="p">
-          は受け取ったチップの総額です。
+          {t('streaming_gift_report_screen.is_total_amount_of_chips_received')}
         </Typography>
         <Typography align={'center'} paragraph variant="subtitle2" className={classes.description} component="p">
           配信者オーナー様に支払われる報酬額は規定の手数料を差し引いた金額になりますので
@@ -59,13 +59,13 @@ const GiftReportContainer: React.FC<{ default_tab: any }> = ({ default_tab }) =>
               tableHeader={
                 <TableRow>
                   <TableCell style={{ width: '33%' }} align="center">
-                    チップ対象者
+                    {t('streaming_gift_report_screen.tip_target_person')}
                   </TableCell>
                   <TableCell style={{ width: '33%' }} align="center">
-                    チップ回数
+                    {t('streaming_gift_report_screen.number_of_chips')}
                   </TableCell>
                   <TableCell style={{ width: '33%' }} align="center">
-                    合計チップ
+                    {t('streaming_gift_report_screen.total_chips')}
                   </TableCell>
                 </TableRow>
               }
@@ -83,13 +83,13 @@ const GiftReportContainer: React.FC<{ default_tab: any }> = ({ default_tab }) =>
               tableHeader={
                 <TableRow>
                   <TableCell style={{ width: '33%' }} align="center">
-                    購入者
+                    {t('streaming_gift_report_screen.buyer')}
                   </TableCell>
                   <TableCell style={{ width: '33%' }} align="center">
-                    購入日時
+                    {t('point_management_tab.purchase_date')}
                   </TableCell>
                   <TableCell style={{ width: '33%' }} align="center">
-                    支払いポイント
+                    {t('streaming_gift_report_screen.payment_points')}
                   </TableCell>
                 </TableRow>
               }

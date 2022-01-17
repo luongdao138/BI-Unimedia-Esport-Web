@@ -27,7 +27,6 @@ const TournamentDetail: React.FC = () => {
   useArenaClearResults(tournament)
   const { toEdit, isBattleRoyale } = useArenaHelper(tournament)
   const router = useRouter()
-
   const actionComponent: Record<TournamentStatus, ReactNode> = {
     in_progress: <InProgress tournament={tournament} userProfile={userProfile} />, //headset
     cancelled: <Cancelled tournament={tournament} userProfile={userProfile} />,
