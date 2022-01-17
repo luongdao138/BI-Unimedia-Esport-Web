@@ -36,7 +36,7 @@ const StreamingSettingPage: PageWithLayoutType = () => {
     //     </StreamLayout>
     //   )}
     // </>
-    <StreamLayout loginRequired footer={isMobile}>
+    <StreamLayout isFullLayout loginRequired footer={isMobile}>
       {isStreamer && <StreamingSettingContainer default_tab={Number(default_tab)} />}
     </StreamLayout>
   )

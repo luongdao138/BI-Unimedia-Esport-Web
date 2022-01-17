@@ -22,6 +22,7 @@ interface StreamLayoutProps {
   loginRequired?: boolean
   minimizeLayout?: boolean
   paddedBottom?: boolean
+  isFullLayout?: boolean
 }
 
 const StreamLayout: React.FC<StreamLayoutProps> = ({
@@ -31,6 +32,7 @@ const StreamLayout: React.FC<StreamLayoutProps> = ({
   loginRequired,
   minimizeLayout,
   paddedBottom = false,
+  isFullLayout,
 }) => {
   const [open, setOpen] = useState<boolean>(false)
   const isAuthenticated = useAppSelector(getIsAuthenticated)
@@ -72,7 +74,7 @@ const StreamLayout: React.FC<StreamLayoutProps> = ({
   }
 
   return (
-    <div className={`main_wrapper ${minimizeLayout ? 'minimize_main_wrapper' : ''}`}>
+    <div className={`main_wrapper ${minimizeLayout ? 'minimize_main_wrapper' : ''} ${isFullLayout ? 'full_layout_wrapper' : ''}`}>
       <Header open={open} toggleDrawer={toggleDrawer} />
       {!minimizeLayout ? (
         <>
@@ -125,6 +127,7 @@ StreamLayout.defaultProps = {
   footer: true,
   loginRequired: true,
   minimizeLayout: false,
+  isFullLayout: false,
 }
 
 export default StreamLayout

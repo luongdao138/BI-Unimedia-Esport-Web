@@ -734,7 +734,7 @@ body.has-sticky-div .sticky-div {
   will-change: transform;
   // max-width: calc((100% - 802px) / 2);
   //max-width: calc((100% - 850px) / 2);
-  max-width: calc((100% - 840px) / 2);
+  max-width: calc((100% - 802px) / 2);
   width: 100%;
 }
 
@@ -745,7 +745,7 @@ body.has-sticky-div .sticky-div {
   min-height: 100vh;
   // padding-left: calc((100% - 802px) / 2);
   //padding-left: calc((100% - 850px) / 2);
-  padding-left: calc((100% - 840px) / 2);
+  padding-left: calc((100% - 802px) / 2);
   background: url('/images/pattern.png') center 60px repeat-x #212121 fixed;
 }
 
@@ -763,7 +763,7 @@ body.has-sticky-div .sticky-div {
 .no_minimize_content_wrapper {
   // max-width: 802px;
   //max-width: 850px;
-  // max-width: 840px;
+  max-width: 802px;
   padding-top: 60px;
   position: relative;
   width: 100%;
@@ -833,6 +833,12 @@ body.has-sticky-div .sticky-div {
   max-width: 802px;
 }
 
+.full_layout_wrapper {
+  .no_minimize_content_wrapper {
+    max-width: none;
+  }
+}
+
 @media (max-width: 1200px) {
   .no_minimize_aside_left {
     width: 200px;
@@ -846,7 +852,12 @@ body.has-sticky-div .sticky-div {
 
 @media (max-width: 1166px) {
   .no_minimize_content_wrapper {
-    // max-width: 660px;
+    max-width: 660px;
+  }
+  .full_layout_wrapper {
+    .no_minimize_content_wrapper {
+      max-width: none;
+    }
   }
 }
 
