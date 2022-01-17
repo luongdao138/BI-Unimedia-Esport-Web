@@ -1768,5 +1768,20 @@ export default {
     sns_url: 'SNS URL',
     sns_url_sm: 'URL',
     target_no: '対象者',
+    target_person_name: '対象者名',
+    placeholder_target_person_name: '対象のチーム名または個人名を入力してください',
+    add_information_message: '追加するチップ対象者の情報を入力してください。',
+    add_information_message_md: '追加するチップ対象者の情報を \n入力してください。',
+    txt_save_button: '保存する',
+    sns_placeholder: 'SNSアカウントがない場合は公式サイトのURLを入力してください',
+    team_title: 'チーム',
+    individual_title: '個人',
+
+    validation: {
+      require: '必須項目です。',
+      input_incorrect: '入力内容が適切ではありません。',
+      input_maximum: '文字数は50文字までです。',
+      url_incorrect: '正しいURLを入力してください。',
+    },
   },
 }
