@@ -35,6 +35,7 @@ import { LiveStreamSettingHelper } from '@utils/helpers/LiveStreamSettingHelper'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
 import VideoDeleteConfirmModal from '@containers/ArchiveDetailContainer/DeleteVideoConfirmModal/VideoDeleteConfirmModal'
 import ESLoader from '@components/FullScreenLoader'
+import { CookieData } from '@services/archiveList.service'
 
 interface StepsProps {
   step: number
@@ -77,6 +78,7 @@ const Steps: React.FC<StepsProps> = ({
     deleteVideoDetail,
     overrideDeleteVideo,
     meta_archive_detail,
+    getCookieVideoDownload,
   } = useArchivedList()
   const { user } = useCommonData()
 
@@ -84,6 +86,8 @@ const Steps: React.FC<StepsProps> = ({
     title: useRef(null),
     description: useRef(null),
   }
+
+  const [linkDownload, setLinkDownload] = useState('')
 
   useEffect(() => {
     category?.data.forEach((h) => {
@@ -219,6 +223,16 @@ const Steps: React.FC<StepsProps> = ({
   const handleOpenDeleteModal = () => {
     setDeleteModalVisible(true)
     setDeleteMsg('')
+  }
+
+  const handleDownloadVideo = () => {
+    const { uuid } = videoArchivedDetail
+    if (videoArchivedDetail?.convert_status === 'COMPLETE') {
+      getCookieVideoDownload({ video_id: uuid }, async (dataCookie: CookieData) => {
+        // window.open(dataCookie?.url, '_blank')?.focus()
+        setLinkDownload(dataCookie?.url)
+      })
+    }
   }
 
   return (
@@ -531,7 +545,7 @@ const Steps: React.FC<StepsProps> = ({
           <Typography className={classes.captionNote}>{i18n.t('common:archive_detail_screen.note_for_publish_delivery_pb')}</Typography>
           <Box paddingBottom={3} />
 
-          <Box flexDirection="row" display="flex" marginBottom={1}>
+          <Box flexDirection="row" display="flex" marginBottom={1} onClick={handleDownloadVideo}>
             <a
               target="_blank"
               rel="noopener noreferrer"
@@ -540,8 +554,8 @@ const Steps: React.FC<StepsProps> = ({
                 opacity: videoArchivedDetail?.convert_status === 'PROCESSING' ? 0.3 : 1,
                 cursor: videoArchivedDetail?.convert_status === 'PROCESSING' ? 'unset' : 'pointer',
               }}
-              download
-              href={videoArchivedDetail?.url_download}
+              download={`${moment(videoArchivedDetail?.live_stream_start_time).format(FORMAT_DATE_TIME_JP)}.mp4`}
+              href={videoArchivedDetail?.convert_status === 'COMPLETE' && linkDownload}
             >
               <Box className={classes.wrapIcon}>
                 <img src={'/images/icons/download.svg'} className={classes.imageIcon} />
