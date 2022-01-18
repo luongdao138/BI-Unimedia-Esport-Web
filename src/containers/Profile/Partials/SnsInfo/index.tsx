@@ -9,6 +9,7 @@ import ESButtonInstagramCircle from '@components/Button/InstagramCircle'
 import ESButtonDiscordCircle from '@components/Button/DiscordCircle'
 import i18n from '@locales/i18n'
 import ESInput from '@components/Input'
+import CharacterLimited from '@components/CharacterLimited'
 
 export type SnsInfoParams = {
   instagram_link: string
@@ -82,6 +83,7 @@ const SnsInfo: React.FC<SnsInfoProps> = ({ profile, onDataChange, handleError })
                     <Typography>https://www.facebook.com/</Typography>
                   </InputAdornment>
                 }
+                endAdornment={<CharacterLimited value={values.facebook_link} limit={250} />}
               />
             </Box>
           </Grid>
@@ -101,6 +103,7 @@ const SnsInfo: React.FC<SnsInfoProps> = ({ profile, onDataChange, handleError })
                     <Typography>https://twitter.com/</Typography>
                   </InputAdornment>
                 }
+                endAdornment={<CharacterLimited value={values.twitter_link} limit={250} />}
               />
             </Box>
           </Grid>
@@ -120,6 +123,7 @@ const SnsInfo: React.FC<SnsInfoProps> = ({ profile, onDataChange, handleError })
                     <Typography>https://www.twitch.tv/</Typography>
                   </InputAdornment>
                 }
+                endAdornment={<CharacterLimited value={values.twitch_link} limit={250} />}
               />
             </Box>
           </Grid>
@@ -139,6 +143,7 @@ const SnsInfo: React.FC<SnsInfoProps> = ({ profile, onDataChange, handleError })
                     <Typography>https://www.instagram.com/</Typography>
                   </InputAdornment>
                 }
+                endAdornment={<CharacterLimited value={values.instagram_link} limit={250} />}
               />
             </Box>
           </Grid>
@@ -153,6 +158,7 @@ const SnsInfo: React.FC<SnsInfoProps> = ({ profile, onDataChange, handleError })
                 helperText={errors.discord_link}
                 placeholder={i18n.t('common:profile.discord_placeholder')}
                 error={!!errors.discord_link}
+                endAdornment={<CharacterLimited value={values.discord_link} limit={250} />}
               />
             </Box>
           </Grid>

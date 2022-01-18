@@ -184,6 +184,7 @@ const ESInquiry: React.FC = () => {
                   disabled={showPreview}
                   rows={8}
                   size="small"
+                  endAdornment={<CharacterLimited value={values.content} limit={5000} multiLines />}
                 />
               </Box>
               <Box mt={1}></Box>
@@ -202,6 +203,7 @@ const ESInquiry: React.FC = () => {
                 disabled={!!hasEmail || showPreview}
                 readOnly={!!hasEmail}
                 size="small"
+                endAdornment={!hasEmail && <CharacterLimited value={values.email} limit={100} />}
               />
             </Box>
 

@@ -6,6 +6,7 @@ import useUploadImage from '@utils/hooks/useUploadImage'
 import CoverUploader from '../UpsertForm/Partials/CoverUploader'
 import ESFastInput from '@components/FastInput'
 import i18n from '@locales/i18n'
+import CharacterLimited from '@components/CharacterLimited'
 
 type Props = {
   formik: FormikProps<FormType>
@@ -40,6 +41,7 @@ const StepOne: React.FC<Props> = ({ formik }) => {
           size="small"
           disabled={false}
           required
+          endAdornment={<CharacterLimited value={formik.values.stepOne.title} limit={60} />}
         />
       </Box>
       <Box pb={4}>
@@ -59,6 +61,7 @@ const StepOne: React.FC<Props> = ({ formik }) => {
           size="small"
           disabled={false}
           required
+          endAdornment={<CharacterLimited value={formik.values.stepOne.content} limit={5000} />}
         />
       </Box>
 

@@ -12,7 +12,6 @@ const onOpen = (store: StoreType) => (_event: Event) => {
   const userId = store.getState().auth.user?.id
   if (userId) {
     // eslint-disable-next-line no-console
-    console.log('sync connected')
   }
 }
 

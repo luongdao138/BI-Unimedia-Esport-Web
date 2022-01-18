@@ -313,6 +313,7 @@ export const EVENT_LIVE_STATUS = {
   RECORDING_END_FAILURE: 'RECORDING_END_FAILURE',
   RECORDING_ARCHIVED: 'RECORDING_ARCHIVED',
   STREAM_START: 'STREAM_START',
+  STREAM_OFF: 'STREAM_OFF',
 }
 
 export const STATUS_SEND_MESS = {
@@ -341,6 +342,7 @@ export const EVENT_STATE_CHANNEL = {
   DELETING: 'DELETING',
   DELETED: 'DELETED',
   UPDATED: 'UPDATED',
+  SET: 'SET',
 }
 
 export const CONFIRM_SETTING_DELAY = 20 * 1000
@@ -353,3 +355,10 @@ export const INQUIRY_REQUEST_LABELS = [
   'inquiry.label_about_deletion',
   'inquiry.label_others',
 ]
+export const LIMIT_MESS = 100
+export const LIMIT_FETCH_NEXT = 500
+export const LIMIT_MIN_MESS_PREV_REWIND = 5
+export const LIMIT_MAX_MESS_PREV_REWIND = 10
+// number of seconds repeat auto get mess
+export const INTERVAL_AUTO_GET_MESS = 60
+export const SECOND_AUTO_GET_MESS_BEFORE = 10

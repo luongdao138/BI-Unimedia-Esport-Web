@@ -121,7 +121,6 @@ const BannerCarousel: React.FC<BannerCarouselProps> = ({ data, ...props }) => {
   useEffect(() => {
     const interval = setInterval(() => {
       // eslint-disable-next-line no-console
-      console.log('This will run every 5 second!')
       playSlider()
     }, 5000)
     return () => clearInterval(interval)

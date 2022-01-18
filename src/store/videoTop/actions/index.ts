@@ -174,6 +174,7 @@ export const changeSeekCount = createAction<{ seeked_second: number }>(ACTION_VI
 export const resetVideoDetailError = createAction(ACTION_VIDEO_TOP.RESET_VIDEO_DETAIL_ERROR)
 export const changeIsPausingLive = createAction<{ is_pausing_live: boolean }>(ACTION_VIDEO_TOP.CHANGE_IS_PAUSING_LIVE)
 export const changeIsStreamingEnd = createAction<{ is_streaming_end: boolean }>(ACTION_VIDEO_TOP.CHANGE_IS_STREAMING_END)
+export const resetState = createAction(ACTION_VIDEO_TOP.RESET_STATE)
 
 export const videoDetail = createAsyncThunk<services.VideoDetailResponse, services.VideoDetailParams>(
   ACTION_VIDEO_TOP.VIDEO_DETAIL,
