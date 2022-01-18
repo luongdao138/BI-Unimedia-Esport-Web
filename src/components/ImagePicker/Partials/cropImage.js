@@ -15,7 +15,7 @@ export default async function getCroppedImg(imageSrc, pixelCrop, fileType) {
   const maxSize = Math.max(image.width, image.height)
   let safeArea = 2 * ((maxSize / 2) * Math.sqrt(2))
 
-  const canvasLimitation = 4096
+  const canvasLimitation = maxSize
 
   if (safeArea > canvasLimitation) {
     safeArea *= canvasLimitation / safeArea

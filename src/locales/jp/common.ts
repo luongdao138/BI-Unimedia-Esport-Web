@@ -1296,6 +1296,12 @@ export default {
     error: {
       email: '入力内容が適切ではありません。',
     },
+    label_about_arena: 'アリーナ（大会機能）について',
+    label_about_lobby: 'ロビー（募集機能）について',
+    label_about_community: 'コミュニティ（掲示板機能）について',
+    label_about_watching_video: '動画視聴について',
+    label_about_deletion: 'アカウント削除依頼',
+    label_others: 'その他',
   },
   settings: {
     title: '設定',
@@ -1739,6 +1745,7 @@ export default {
     live_streaming: '配信設定',
     refresh_new_live: '最新を再生',
     warning_confirm_purchase_ticket: '決済中はボタンを複数回押さないでください',
+    tag_live_control: 'ライブ',
   },
   video_search: {
     video_results: '動画「:key」 の検索結果',

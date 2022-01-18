@@ -354,3 +354,19 @@ export const EVENT_STATE_CHANNEL = {
 }
 
 export const CONFIRM_SETTING_DELAY = 20 * 1000
+
+export const INQUIRY_REQUEST_LABELS = [
+  'inquiry.label_about_arena',
+  'inquiry.label_about_lobby',
+  'inquiry.label_about_community',
+  'inquiry.label_about_watching_video',
+  'inquiry.label_about_deletion',
+  'inquiry.label_others',
+]
+export const LIMIT_MESS = 100
+export const LIMIT_FETCH_NEXT = 500
+export const LIMIT_MIN_MESS_PREV_REWIND = 5
+export const LIMIT_MAX_MESS_PREV_REWIND = 10
+// number of seconds repeat auto get mess
+export const INTERVAL_AUTO_GET_MESS = 60
+export const SECOND_AUTO_GET_MESS_BEFORE = 10

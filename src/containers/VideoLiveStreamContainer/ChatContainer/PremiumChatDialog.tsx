@@ -1,4 +1,4 @@
-import { Box, Button, makeStyles, Typography, InputAdornment, useTheme } from '@material-ui/core'
+import { Box, Button, makeStyles, Typography, InputAdornment, useTheme, useMediaQuery } from '@material-ui/core'
 import i18n from '@locales/i18n'
 import React, { useEffect, useRef, useState } from 'react'
 import { purchasePoints, sanitizeMess } from './index'
@@ -16,6 +16,7 @@ type PremiumChatBoxProps = {
   onPressDonate?: (donatedPoint: number, purchaseComment: string) => void
   myPoint: number
   isEnabledChat: boolean
+  normalMessHasError?: boolean
   createMess: (message: string, point?: number) => Promise<void>
   openPurchasePointModal?: (point: any) => void
 }
@@ -33,6 +34,7 @@ const PremiumChatBox: React.FC<PremiumChatBoxProps> = ({
   createMess,
   openPurchasePointModal,
   isEnabledChat,
+  normalMessHasError,
 }) => {
   const getPurchasePointList = () => Object.values(purchasePoints)
   const [purchaseValueSelected, setPurchaseValueSelected] = useState<string>('p_100')
@@ -40,6 +42,7 @@ const PremiumChatBox: React.FC<PremiumChatBoxProps> = ({
   const { dataPurchaseTicketSuperChat } = usePurchaseTicketSuperChat()
   const theme = useTheme()
   const isDownMd = theme.breakpoints.down('md')
+  const isMobile = useMediaQuery(theme.breakpoints.down(769))
 
   const ref = useRef<any>()
   const premiumMessageRef = useRef<any>()
@@ -139,80 +142,87 @@ const PremiumChatBox: React.FC<PremiumChatBoxProps> = ({
   }
 
   return (
-    <div className={classes.purchaseDialogContainer} ref={ref}>
-      <Box className={classes.purchaseDialogContent}>
-        <Typography className={classes.dialogTitle}>{i18n.t('common:live_stream_screen.premium_comment')}</Typography>
-        <Box className={classes.purchaseCommentInputContainer}>
-          <ESInput
-            ref={premiumMessageRef}
-            id="premium_message"
-            name="message"
-            multiline
-            rows={5}
-            placeholder={i18n.t('common:live_stream_screen.please_enter_a_comment')}
-            fullWidth
-            value={values.message}
-            onChange={handleChange}
-            classes={{
-              root: classes.purchaseCommentRoot,
-              input: classes.purchaseCommentInput,
-              adornedEnd: classes.end,
-            }}
-            onFocus={handleChatInputOnFocus}
-            onBlur={handleChatInputOnBlur}
-            error={touched.message && !!errors?.message}
-            size="big"
-            endAdornment={
-              <InputAdornment position="end">
-                <Typography className={classes.purchaseCommentTextLimit}>
-                  {`${values.message.length} / ${purchasePoints[purchaseValueSelected].maxLengthInput}`}
-                </Typography>
-              </InputAdornment>
-            }
-          />
-        </Box>
-        <Box className={classes.pointList}>
-          <Box className={classes.pointListRow}>
-            {getPurchasePointList()
-              .slice(0, 4)
-              .map((item, index) => (
-                <DonatedPointItem key={item.id} item={item} isLast={index === 3} />
-              ))}
+    <div className={classes.purchaseDialogContainer} ref={ref} style={{ bottom: isMobile ? 0 : normalMessHasError ? 116 : 94.5 }}>
+      <Box className={classes.wrapperDialogContent}>
+        <Box className={classes.purchaseDialogContent}>
+          <Typography className={classes.dialogTitle}>{i18n.t('common:live_stream_screen.premium_comment')}</Typography>
+          <Box className={classes.purchaseCommentInputContainer}>
+            <ESInput
+              ref={premiumMessageRef}
+              id="premium_message"
+              name="message"
+              multiline
+              rows={5}
+              placeholder={i18n.t('common:live_stream_screen.please_enter_a_comment')}
+              fullWidth
+              value={values.message}
+              onChange={handleChange}
+              classes={{
+                root: classes.purchaseCommentRoot,
+                input: classes.purchaseCommentInput,
+                adornedEnd: classes.end,
+              }}
+              onFocus={handleChatInputOnFocus}
+              onBlur={handleChatInputOnBlur}
+              error={touched.message && !!errors?.message}
+              size="big"
+              endAdornment={
+                <InputAdornment position="end">
+                  <Typography className={classes.purchaseCommentTextLimit}>
+                    {`${values.message.length} / ${purchasePoints[purchaseValueSelected].maxLengthInput}`}
+                  </Typography>
+                </InputAdornment>
+              }
+            />
           </Box>
-          <Box className={classes.pointListRow}>
-            {getPurchasePointList()
-              .slice(4, 7)
-              .map((item, index) => (
-                <DonatedPointItem key={item.id} item={item} isLast={index === 2} />
-              ))}
+          <Box className={classes.pointList}>
+            <Box className={classes.pointListRow}>
+              {getPurchasePointList()
+                .slice(0, 4)
+                .map((item, index) => (
+                  <DonatedPointItem key={item.id} item={item} isLast={index === 3} />
+                ))}
+            </Box>
+            <Box className={classes.pointListRow}>
+              {getPurchasePointList()
+                .slice(4, 7)
+                .map((item, index) => (
+                  <DonatedPointItem key={item.id} item={item} isLast={index === 2} />
+                ))}
+            </Box>
+          </Box>
+          <Button onClick={handlePremiumChatClick} className={classes.purchaseButton} disabled={!isEnabledChat}>
+            <Typography className={classes.purchaseButtonText}>{i18n.t('common:live_stream_screen.send')}</Typography>
+          </Button>
+          {(premiumChatValidationError || errors.message) && (
+            <Typography className={classes.premiumChatError}>{premiumChatValidationError ?? errors.message}</Typography>
+          )}
+          <Box className={classes.dialogFooter}>
+            <Typography className={classes.totalPointText}>
+              {`${i18n.t('common:live_stream_screen.owned_points')}: ${FormatHelper.currencyFormat(myPoint.toString())} ${i18n.t(
+                'common:common.eXe_points'
+              )}`}
+            </Typography>
+            <Typography
+              className={classes.purchasePointText}
+              onClick={() => openPurchasePointModal(purchasePoints[purchaseValueSelected].value)}
+            >
+              {i18n.t('common:live_stream_screen.purchase_points')}
+            </Typography>
           </Box>
         </Box>
-        <Button onClick={handlePremiumChatClick} className={classes.purchaseButton} disabled={!isEnabledChat}>
-          <Typography className={classes.purchaseButtonText}>{i18n.t('common:live_stream_screen.send')}</Typography>
-        </Button>
-        {(premiumChatValidationError || errors.message) && (
-          <Typography className={classes.premiumChatError}>{premiumChatValidationError ?? errors.message}</Typography>
-        )}
-        <Box className={classes.dialogFooter}>
-          <Typography className={classes.totalPointText}>
-            {`${i18n.t('common:live_stream_screen.owned_points')}: ${FormatHelper.currencyFormat(myPoint.toString())} ${i18n.t(
-              'common:common.eXe_points'
-            )}`}
-          </Typography>
-          <Typography
-            className={classes.purchasePointText}
-            onClick={() => openPurchasePointModal(purchasePoints[purchaseValueSelected].value)}
-          >
-            {i18n.t('common:live_stream_screen.purchase_points')}
-          </Typography>
-        </Box>
+        {!isDownMd && <img src="/images/ic_down_triangle.svg" className={classes.downTriangle} />}
       </Box>
-      {!isDownMd && <img src="/images/ic_down_triangle.svg" className={classes.downTriangle} />}
     </div>
   )
 }
 
 const useStyles = makeStyles((theme) => ({
+  wrapperDialogContent: {
+    background: '#0A0A0A',
+    padding: '16px 16px 0 16px',
+    borderRadius: '4px',
+  },
   end: {},
   purchaseCommentInput: {
     fontSize: '12px',
@@ -330,6 +340,10 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     marginBottom: '10px',
+    position: 'absolute',
+    left: '0',
+    right: '0',
+    zIndex: 3,
   },
   purchaseCommentTextLimit: {
     fontSize: '12px',
@@ -372,6 +386,9 @@ const useStyles = makeStyles((theme) => ({
       left: 0,
       zIndex: 5,
       marginBottom: 0,
+    },
+    wrapperDialogContent: {
+      paddingBottom: 16,
     },
   },
 }))

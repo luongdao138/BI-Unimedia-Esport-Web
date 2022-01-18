@@ -1,4 +1,5 @@
-import FacebookLogin, { ReactFacebookLoginInfo } from 'react-facebook-login-typed'
+// import FacebookLogin, { ReactFacebookLoginInfo } from 'react-facebook-login-typed'
+import FacebookLogin, { ReactFacebookLoginInfo } from 'react-facebook-login/dist/facebook-login-render-props'
 import { Button, ButtonProps, SvgIcon } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
 import { Colors } from '@theme/colors'
@@ -92,6 +93,8 @@ const FacebookButton: React.FC<FacebookButtonProps> = ({ onSuccess, ...rest }) =
       isMobile={isMobile}
       disableMobileRedirect={isMobile}
       callback={handleResponse}
+      authType={'reauthenticate'}
+      autoLoad={false}
       render={(renderProps) => <ESButtonFacebook {...rest} onClick={renderProps.onClick} />}
     />
   )

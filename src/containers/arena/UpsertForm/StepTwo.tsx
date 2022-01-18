@@ -14,6 +14,7 @@ import Icon from '@material-ui/core/Icon'
 import { Colors } from '@theme/colors'
 import { UseSortInfoDialog } from '@containers/arena/UpsertForm/Partials/useSortInfoDialog'
 import { useArenaTypeInfoDialog } from '@containers/arena/UpsertForm/Partials/useArenaTypeInfoDialog'
+import CharacterLimited from '@components/CharacterLimited'
 
 type Props = {
   formik: FormikProps<FormType>
@@ -156,6 +157,7 @@ const StepTwo: React.FC<Props> = ({ formik, editables }) => {
           error={formik.touched?.stepTwo?.terms_of_participation && !!formik.errors?.stepTwo?.terms_of_participation}
           size="small"
           disabled={!editables.terms_of_participation}
+          endAdornment={<CharacterLimited value={formik.values.stepTwo.terms_of_participation} limit={5000} multiLines />}
         />
       </Box>
       <Box pb={4}>
@@ -190,6 +192,7 @@ const StepTwo: React.FC<Props> = ({ formik, editables }) => {
           error={formik.touched?.stepTwo?.notes && !!formik.errors?.stepTwo?.notes}
           size="small"
           disabled={!editables.notes}
+          endAdornment={<CharacterLimited value={formik.values.stepTwo.notes} limit={5000} multiLines />}
         />
       </Box>
       <ESCheckbox

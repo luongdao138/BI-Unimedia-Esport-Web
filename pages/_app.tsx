@@ -15,7 +15,7 @@ import CssBaseline from '@material-ui/core/CssBaseline'
 import userProfile from '@store/userProfile'
 import theme from '@theme/index'
 import PageWithLayoutType from '@constants/page'
-import { WEBSOCKET_PREFIX } from '@constants/socket.constants'
+import { WEBSOCKET_PREFIX, SYSTEMSYNC_PREFIX } from '@constants/socket.constants'
 import { WEBSYNC_PREFIX } from '@constants/sync.constants'
 import 'src/locales/i18n'
 import 'swiper/swiper.min.css'
@@ -37,6 +37,8 @@ import 'src/theme/globalcss/layout.scss'
 import Script from 'react-load-script'
 import Amplify from 'aws-amplify'
 import useVideoNgWords from '@utils/hooks/useVideoNgWords'
+import { noop } from 'lodash'
+
 // [CW] Configure Amplify for chat realtime in live stream video
 const AWS_PROJECT_REGION = process.env.NEXT_PUBLIC_AWS_PROJECT_REGION
 const AWS_APPSYNC_GRAPHQLENDPOINT = process.env.NEXT_PUBLIC_AWS_APPSYNC_GRAPHQLENDPOINT
@@ -81,9 +83,21 @@ const App = ({ Component, pageProps }: Props) => {
     store.dispatch({
       type: `${WEBSYNC_PREFIX}:CONNECT`,
     })
+    store.dispatch({
+      type: `${SYSTEMSYNC_PREFIX}:CONNECT`,
+    })
   }, [accessToken])
 
   useEffect(() => {
+    if (process.env.NEXT_PUBLIC_AWS_ENV !== 'DEV') {
+      // eslint-disable-next-line no-console
+      console.log = noop
+      // eslint-disable-next-line no-console
+      console.warn = noop
+      // eslint-disable-next-line no-console
+      console.error = noop
+    }
+
     // Remove the server-side injected CSS.
     const jssStyles = document.querySelector('#jss-server-side')
 

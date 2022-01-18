@@ -17,6 +17,7 @@ import ESFastInput from '@components/FastInput'
 import { useFocusState } from '@utils/hooks/input-focus-context'
 import useToast from '@utils/hooks/useToast'
 import useScrollClass from './useScrollClass'
+import CharacterLimited from '../CharacterLimited'
 
 interface Props {
   genres: GameGenre[]
@@ -129,6 +130,7 @@ const AddGame: React.FC<Props> = ({ genres, handleAdd, height }) => {
             document.body.classList.add('has-sticky-div')
             focusEvent.onFocus()
           }}
+          endAdornment={<CharacterLimited value={formik.values.display_name} limit={60} />}
         />
         <Box pb={4} />
         <Box textAlign="center">

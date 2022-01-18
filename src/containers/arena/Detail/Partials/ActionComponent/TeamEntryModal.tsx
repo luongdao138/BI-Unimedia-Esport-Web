@@ -28,6 +28,7 @@ import useDocTitle from '@utils/hooks/useDocTitle'
 import ServerError from './ServerError'
 import { FocusContext, FocusContextProvider } from '@utils/hooks/input-focus-context'
 import i18n from '@locales/i18n'
+import CharacterLimited from '@components/CharacterLimited'
 
 interface TeamEntryModalProps {
   tournament: TournamentDetail
@@ -262,6 +263,7 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
                       }}
                       onChange={handleChange}
                       helperText={touched.team_name && errors.team_name}
+                      endAdornment={<CharacterLimited value={values.team_name} limit={40} />}
                     />
 
                     <Box mt={4} />

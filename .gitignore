@@ -53,7 +53,6 @@ build/
 dist/
 node_modules/
 API.js
-API.ts
 aws-exports.ts
 aws-exports.js
 awsconfiguration.json
