@@ -431,7 +431,13 @@ const Steps: React.FC<StepsProps> = ({
             <SmallLoader />
           </div>
         ) : (
-          <Box className={`${classes.wrap_input} ${classes.sp_wrap_input_tag}`} display="flex" flexDirection="row" alignItems="center">
+          <Box
+            pb={2}
+            className={`${classes.wrap_input} ${classes.sp_wrap_input_tag}`}
+            display="flex"
+            flexDirection="row"
+            alignItems="center"
+          >
             <Box className={classes.firstItem} display="flex" flexDirection="row" alignItems="center">
               <div className={classes.dot} />
               <Typography className={classes.textTagStatus}>
@@ -446,7 +452,7 @@ const Steps: React.FC<StepsProps> = ({
               </Typography>
             </Box>
             <Box
-              py={1}
+              // py={1}
               display="flex"
               justifyContent="center"
               alignItems={'center'}
