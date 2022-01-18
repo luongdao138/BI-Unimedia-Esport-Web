@@ -24,11 +24,12 @@ import {
   GetCategoryResponse,
   SetLiveStreamParams,
   StreamUrlAndKeyParams,
+  TAG_STATUS_RECORD,
   TYPE_SECRET_KEY,
 } from '@services/liveStream.service'
 import useCheckNgWord from '@utils/hooks/useCheckNgWord'
 import { FIELD_TITLES } from '../field_titles.constants'
-import { EVENT_STATE_CHANNEL, FORMAT_DATE_TIME_JP, NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
+import { EVENT_LIVE_STATUS, EVENT_STATE_CHANNEL, FORMAT_DATE_TIME_JP, NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
 import { showDialog } from '@store/common/actions'
 import useReturnHref from '@utils/hooks/useReturnHref'
 import moment from 'moment'
@@ -38,6 +39,8 @@ import useUploadImage from '@utils/hooks/useUploadImage'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
 import ESNumberInputStream from '@components/NumberInput/stream'
 import Linkify from 'react-linkify'
+import SmallLoader from '@components/Loader/SmallLoader'
+import { STATUS_VIDEO } from '@services/videoTop.services'
 import CharacterLimited from '@components/CharacterLimited'
 
 interface StepsProps {
@@ -54,6 +57,9 @@ interface StepsProps {
   stateChannelArn?: string
   visibleLoading?: boolean
   disableLoader?: boolean
+  obsStatusDynamo?: string | number
+  videoStatusDynamo?: string | number
+  processStatusDynamo?: string
 }
 
 const KEY_TYPE = {
@@ -76,10 +82,16 @@ const Steps: React.FC<StepsProps> = ({
   stateChannelArn,
   visibleLoading,
   disableLoader,
+  obsStatusDynamo,
+  videoStatusDynamo,
+  processStatusDynamo,
 }) => {
-  const classes = useStyles()
   const dispatch = useAppDispatch()
   const { t } = useTranslation(['common'])
+
+  const current = moment().set('second', 0).unix()
+  const notifyTime =
+    formik?.values?.stepSettingTwo?.stream_notify_time && moment(formik?.values?.stepSettingTwo?.stream_notify_time).set('second', 0).unix()
 
   const [showStreamURL, setShowStreamURL] = useState(false)
   const [showStreamKey, setShowStreamKey] = useState(false)
@@ -100,6 +112,21 @@ const Steps: React.FC<StepsProps> = ({
   const [isLoading, setLoading] = useState(false)
   const [dataRenew, setDataRenew] = useState(null)
   const [flagArn, setFlagArn] = useState(false)
+  const handleEnableLink = () => {
+    if (
+      status === 1 ||
+      (notifyTime && notifyTime <= current) ||
+      obsStatusDynamo == TAG_STATUS_RECORD.LIVE_STREAMING
+      // && stateChannelArn !== EVENT_STATE_CHANNEL.STOPPED
+    ) {
+      if (obsStatusDynamo == TAG_STATUS_RECORD.UPDATED_NOT_START && videoStatusDynamo == STATUS_VIDEO.OVER_LOAD) return false
+      return true
+    }
+
+    return false
+  }
+
+  const classes = useStyles({ statusRecord: obsStatusDynamo, isEnable: handleEnableLink(), channelArn: stateChannelArn, videoStatusDynamo })
 
   const formRef = {
     title: useRef(null),
@@ -376,9 +403,65 @@ const Steps: React.FC<StepsProps> = ({
     return `https://twitter.com/intent/tweet?text=${titlePost}%0a${contentPost}`
   }
 
+  const handleNavigateToDetailLink = () => {
+    if (
+      status === 1 ||
+      (notifyTime && notifyTime <= current) ||
+      obsStatusDynamo == TAG_STATUS_RECORD.LIVE_STREAMING
+      //  && stateChannelArn !== EVENT_STATE_CHANNEL.STOPPED
+    ) {
+      if (
+        !(obsStatusDynamo == TAG_STATUS_RECORD.UPDATED_NOT_START && videoStatusDynamo == STATUS_VIDEO.OVER_LOAD) ||
+        !(processStatusDynamo === EVENT_LIVE_STATUS.STREAM_END && videoStatusDynamo == STATUS_VIDEO.ARCHIVE)
+      ) {
+        window.open(`${baseViewingURL}${formik?.values?.stepSettingTwo?.uuid}`, '_blank')
+      }
+    }
+  }
+
   return (
     <Box py={4} className={classes.container}>
       <Box className={classes.formContainer}>
+        {obsStatusDynamo === null ? (
+          <div
+            style={{
+              margin: '10px 0 0 10px',
+              height: '21px',
+            }}
+          >
+            <SmallLoader />
+          </div>
+        ) : (
+          <Box className={`${classes.wrap_input} ${classes.sp_wrap_input_tag}`} display="flex" flexDirection="row" alignItems="center">
+            <Box className={classes.firstItem} display="flex" flexDirection="row" alignItems="center">
+              <div className={classes.dot} />
+              <Typography className={classes.textTagStatus}>
+                {obsStatusDynamo == TAG_STATUS_RECORD.CREATED_n ||
+                obsStatusDynamo == TAG_STATUS_RECORD.CREATED_in ||
+                (obsStatusDynamo == TAG_STATUS_RECORD.LIVE_STREAMING && stateChannelArn === EVENT_STATE_CHANNEL.STOPPED) ||
+                (obsStatusDynamo == TAG_STATUS_RECORD.UPDATED_NOT_START && videoStatusDynamo == '3')
+                  ? i18n.t('common:streaming_setting_screen.status_tag_created')
+                  : obsStatusDynamo == TAG_STATUS_RECORD.UPDATED_NOT_START && videoStatusDynamo == '0'
+                  ? i18n.t('common:streaming_setting_screen.status_tag_updated')
+                  : i18n.t('common:streaming_setting_screen.status_tag_live_streaming')}
+              </Typography>
+            </Box>
+            <Box
+              py={1}
+              display="flex"
+              justifyContent="center"
+              alignItems={'center'}
+              className={`${classes.urlCopyTag} ${classes.lastItem}`}
+              onClick={handleNavigateToDetailLink}
+            >
+              {/* <img src={'/images/ic_play_box.png'} style={{ width: 16, height: 14, marginRight: 5, }} /> */}
+              <Icon className={`fab fa-youtube ${classes.linkVideoIcon}`} fontSize="small" />
+              <Typography className={`${classes.textLink} ${classes.textNavigateDetail}`}>
+                {t('common:streaming_setting_screen.navigate_to_detail')}
+              </Typography>
+            </Box>
+          </Box>
+        )}
         <form onSubmit={formik.handleSubmit}>
           <Box className={classes.wrap_input} pb={2} display="flex" flexDirection="row" alignItems="flex-end">
             <Box className={classes.firstItem}>
@@ -1391,6 +1474,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     coverImg: {
       height: 'calc((100vw - 48px) * 9/16)',
     },
+    sp_wrap_input_tag: {
+      paddingBottom: 13,
+    },
   },
   addPaddingNote: {
     paddingTop: 8,
@@ -1419,4 +1505,57 @@ const useStyles = makeStyles((theme: Theme) => ({
   iconEye: {
     filter: 'opacity(0.5)',
   },
+  statusTag: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingBottom: 13,
+  },
+  tagLeft: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '494px',
+  },
+  dot: (props: { statusRecord?: number | string; isEnable?: boolean; channelArn?: string; videoStatusDynamo?: string }) => ({
+    width: 12,
+    height: 12,
+    background:
+      props.statusRecord === TAG_STATUS_RECORD.LIVE_STREAMING && props.channelArn !== EVENT_STATE_CHANNEL.STOPPED
+        ? '#FF0000'
+        : props.statusRecord === TAG_STATUS_RECORD.UPDATED_NOT_START && props.videoStatusDynamo == '3'
+        ? '#707070'
+        : 'rgba(255,255,255,0.7)',
+    borderRadius: 6,
+    marginRight: 6,
+  }),
+  textTagStatus: {
+    fontSize: 14,
+    color: '#FFFFFF',
+  },
+  textNavigateDetail: {
+    marginLeft: 6,
+  },
+  linkVideoIcon: {
+    fontSize: 14,
+  },
+  urlCopyTag: (props: {
+    statusRecord?: number | string
+    isEnable?: boolean
+    channelArn?: string
+    videoStatusDynamo?: string | number
+  }) => ({
+    paddingLeft: 12,
+    cursor: props.isEnable
+      ? 'pointer'
+      : props.statusRecord === TAG_STATUS_RECORD.UPDATED_NOT_START && props.videoStatusDynamo == STATUS_VIDEO.OVER_LOAD
+      ? 'not-allowed'
+      : 'not-allowed',
+    color: props.isEnable
+      ? '#FF4786'
+      : props.statusRecord === TAG_STATUS_RECORD.UPDATED_NOT_START && props.videoStatusDynamo == STATUS_VIDEO.OVER_LOAD
+      ? 'rgba(255,255,255,0.7)'
+      : 'rgba(255,255,255,0.7)',
+  }),
 }))

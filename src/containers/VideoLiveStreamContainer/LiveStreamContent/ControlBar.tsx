@@ -39,7 +39,7 @@ const ControlBarPlayer: React.FC<ControlProps> = ({
   volume,
   isLive = null,
   videoStatus,
-  onReloadTime,
+  // onReloadTime,
   handleOnRestart,
 }) => {
   const classes = useStyles({ liveStreaming: durationsPlayer === currentTime ? true : false })
@@ -74,7 +74,13 @@ const ControlBarPlayer: React.FC<ControlProps> = ({
     <>
       <div className={classes.controlLeft}>
         <Play onPlayPause={onPlayPause} playing={playing} />
-        <Reload videoRef={videoRef} typeButton={'reload'} onPressCallback={handleOnRestart} />
+        <Reload
+          videoRef={videoRef}
+          typeButton={'reload'}
+          onPressCallback={handleOnRestart}
+          videoStatus={videoStatus}
+          durationsPlayer={durationsPlayer}
+        />
         <Box className={classes.buttonVolume}>
           <Box className={classes.boxIconVolume} onClick={onMute} data-tip data-for="mute">
             {!muted ? (
@@ -116,11 +122,14 @@ const ControlBarPlayer: React.FC<ControlProps> = ({
         {isLive && isLive !== null && (
           <>
             <div className={classes.liveStreaming}>
-              <div className={classes.dot} />
-              {/* <Typography className={classes.textStatus}>{t('live_stream_screen.live_streaming')}</Typography> */}
+              {/* <div className={classes.dot} /> */}
+              <div className={classes.dotAlwaysHighLight} />
             </div>
-            <div className={classes.btnRefreshTime} onClick={onReloadTime}>
+            {/* <div className={classes.btnRefreshTime} onClick={onReloadTime}>
               <Typography className={classes.textRefresh}>{t('live_stream_screen.refresh_new_live')}</Typography>
+            </div> */}
+            <div className={classes.btnRefreshTimeLive}>
+              <Typography className={classes.textRefreshLive}>{t('live_stream_screen.tag_live_control')}</Typography>
             </div>
           </>
         )}
@@ -284,6 +293,26 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     padding: '2px 3px 1px 3px',
     // background: '#FF4786'
+  },
+  dotAlwaysHighLight: {
+    background: 'red',
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+  },
+  btnRefreshTimeLive: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    display: 'flex',
+    cursor: 'pointer',
+    marginLeft: 8,
+  },
+  textRefreshLive: {
+    fontSize: 12,
+    color: '#fff',
+    justifyContent: 'center',
+    alignItems: 'center',
+    display: 'flex',
   },
 }))
 
