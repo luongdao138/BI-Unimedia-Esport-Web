@@ -21,6 +21,7 @@ const useStyles = makeStyles((theme) => ({
     overflowY: 'hidden',
     width: '100%',
     '& .MuiButtonBase-root': {
+      background: '#212121',
       flex: 1,
       minHeight: '53px',
       padding: '16px 12px',
@@ -49,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
     position: 'absolute',
     right: '50%',
     bottom: 30,
-    zIndex: 1000,
+    zIndex: 3,
     background: Colors.white,
     '&:hover': {
       background: Colors.white,
@@ -201,6 +202,7 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     display: 'flex',
     flexDirection: 'column',
+    paddingBottom: 14,
     // height: 'calc(100% - 12px)'
   },
   chatMessageUser: {
@@ -250,14 +252,25 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: '#0A0A0A',
     borderRadius: 4,
     position: 'relative',
-    marginTop: '14px',
     padding: '4px 8px 16px 8px',
   },
   chatInputMobileContainer: {
+    backgroundColor: '#212121',
     // position: 'absolute',
     // left: 0,
     width: '100%',
     // bottom: 0
+    position: 'relative',
+  },
+  blurInputChat: {
+    background: 'rgb(0 0 0 / 80%)',
+    backdropFilter: 'blur(8px)',
+    height: '100%',
+    width: '100%',
+    position: 'absolute',
+    bottom: '0',
+    left: '0',
+    zIndex: 20,
   },
   // chatInputStreamingStyle: {
   //   position: 'relative',
@@ -465,15 +478,19 @@ const useStyles = makeStyles((theme) => ({
       height: 'auto',
     },
     chatBoard: {
-      height: 253,
+      height: 389,
     },
     purchaseDialogContainer: {
       width: 318,
     },
     chatInputMobileContainer: {
+      position: 'absolute',
+      bottom: 112,
+      zIndex: 10,
+    },
+    blurInputChat: {
       position: 'fixed',
-      bottom: 0,
-      zIndex: 2,
+      height: 110,
     },
   },
 }))
