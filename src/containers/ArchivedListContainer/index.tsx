@@ -49,6 +49,7 @@ const ArchivedListContainer: React.FC = () => {
   const [deleteErrorMsg, setDeleteMsg] = useState('')
 
   const isLoading = !!meta_archive_list.pending
+  const [linkDownload, setLinkDownload] = useState('')
 
   const getArchiveList = () => {
     if (!videoArchivedList) {
@@ -138,9 +139,12 @@ const ArchivedListContainer: React.FC = () => {
     }
 
     const handleDownloadVideo = () => {
-      getCookieVideoDownload({ video_id: rowData?.uuid }, async (dataCookie: CookieData) => {
-        window.open(dataCookie?.url, '_blank')?.focus()
-      })
+      if (convert_status === 'COMPLETE') {
+        getCookieVideoDownload({ video_id: rowData?.uuid }, async (dataCookie: CookieData) => {
+          // window.open(dataCookie?.url, '_blank')?.focus()
+          setLinkDownload(dataCookie?.url)
+        })
+      }
     }
 
     return (
@@ -207,10 +211,17 @@ const ArchivedListContainer: React.FC = () => {
                         <>
                           <td rowSpan={3} className={classes.cellIcons}>
                             <Box mr={1} component="span" onClick={handleDownloadVideo}>
-                              <img
-                                src={'/images/icons/download.svg'}
-                                className={convert_status === 'PROCESSING' ? classes.imageReloadProcessing : classes.imageReload}
-                              />
+                              <a
+                                target="_self"
+                                rel="noopener noreferrer"
+                                download={`${moment(startTime).format(FORMAT_DATE_TIME_JP)}.mp4`}
+                                href={convert_status === 'COMPLETE' && linkDownload}
+                              >
+                                <img
+                                  src={'/images/icons/download.svg'}
+                                  className={convert_status === 'PROCESSING' ? classes.imageReloadProcessing : classes.imageReload}
+                                />
+                              </a>
                             </Box>
 
                             <Box mr={1} component="span" onClick={handleDeleteVideoClick(rowData)}>

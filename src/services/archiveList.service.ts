@@ -33,6 +33,7 @@ export type ArchiveDetailDataType = {
   scheduled_flag: number
   url_download: string
   convert_status: string
+  live_stream_start_time?: string
 }
 
 export type TYPE_VIDEO_ARCHIVE = {
