@@ -3,6 +3,12 @@ import { Dialog } from '@store/common/actions/types'
 import { ConfirmOptions } from '@components/Confirm/types'
 
 export const debounceTime = 700
+export const LIMIT_FINANCIAL_STATEMENT = 25
+export const FINANCIAL_STATUS_TITLE = {
+  CONFIRM: i18n.t('common:payment_information_screen.confirm_status_title'),
+  SCHEDULE: i18n.t('common:payment_information_screen.schedule_status_title'),
+}
+
 export const searchTypes = {
   USER: 1,
   COMMUNITY: 2,
@@ -204,12 +210,14 @@ export const defaultConfirmationOptions: ConfirmOptions = {
 
 export const AVATAR_PATH = '/images/avatar_o.png'
 export const FORMAT_DATE_TIME_JP = 'YYYY年MM月DD日 HH:mm'
+export const FORMAT_FULL_DATE_TIME = 'YYYY/MM/DD HH:mm:ss'
 export const FORMAT_SCHEDULE_TIME = 'YYYY年MM月DD日HH時mm分'
 export const FORMAT_DATE_SIMPLE = 'YYYY年MM月DD日'
 export const FORMAT_DATE_ARCHIVED = 'YYYY/MM/DD'
 export const FORMAT_YEAR_MONTH = 'YYYY年MM月'
 export const FORMAT_YEAR_MONTH_FILTER = 'YYYY/MM'
 export const FORMAT_TIME_SIMPLE = 'HH時mm分'
+export const FORMAT_TIME_SAFARI = 'YYYY-MM'
 
 export const POINTS = [100, 300, 500, 1000, 2000, 3000, 5000, 10000]
 export const TAX = 0.1

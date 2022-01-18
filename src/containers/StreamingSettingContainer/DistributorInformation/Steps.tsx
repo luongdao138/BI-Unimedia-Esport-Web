@@ -34,8 +34,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, channel, hasChannel, formik
   const [social, setSocial] = useState(null)
   const [hasError, setError] = useState(true)
   const { setChannelConfirm, isPending } = useLiveSetting()
-  const { checkNgWordFields, checkNgWordByField } = useCheckNgWord()
-  // const [status, setStatus] = useState<boolean>(false)
+  const { checkVideoNgWordFields, checkVideoNgWordByField } = useCheckNgWord()
 
   useEffect(() => {
     setSocial(channel?.data)
@@ -69,11 +68,11 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, channel, hasChannel, formik
   const onClickNext = () => {
     const { stepSettingThree } = formik.values
 
-    const fieldIdentifier = checkNgWordFields({
+    const fieldIdentifier = checkVideoNgWordFields({
       name: stepSettingThree.name,
       description: stepSettingThree.description,
     })
-    const ngFields = checkNgWordByField({
+    const ngFields = checkVideoNgWordByField({
       [FIELD_TITLES.stepSettingThree.name]: stepSettingThree.name,
       [FIELD_TITLES.stepSettingTwo.description]: stepSettingThree.description,
     })

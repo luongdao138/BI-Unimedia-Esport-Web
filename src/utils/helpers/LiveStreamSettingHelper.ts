@@ -358,6 +358,11 @@ const checkDisplayError = (formik: FormikProps<FormLiveType>, field: string, typ
   }
 }
 
+const archiveEditFields = ['title', 'description']
+const getDisplayErrorFieldArchiveEdit = (values) => {
+  return archiveEditFields.find((field) => values[field])
+}
+
 export const LiveStreamSettingHelper = {
   checkRequiredFields,
   checkDisplayError,
@@ -366,4 +371,5 @@ export const LiveStreamSettingHelper = {
   getDisplayErrorField,
   getLiveDisplayErrorField,
   checkLiveDisplayErrorOnSubmit,
+  getDisplayErrorFieldArchiveEdit,
 }
