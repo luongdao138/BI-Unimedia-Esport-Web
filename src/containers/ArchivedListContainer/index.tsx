@@ -49,7 +49,6 @@ const ArchivedListContainer: React.FC = () => {
   const [deleteErrorMsg, setDeleteMsg] = useState('')
 
   const isLoading = !!meta_archive_list.pending
-  const [linkDownload, setLinkDownload] = useState('')
 
   const getArchiveList = () => {
     if (!videoArchivedList) {
@@ -123,6 +122,7 @@ const ArchivedListContainer: React.FC = () => {
       uuid,
       scheduled_flag: scheduledFlag,
       convert_status,
+      video_thumbnail,
     } = rowData
 
     const getVidID = () => {
@@ -141,8 +141,7 @@ const ArchivedListContainer: React.FC = () => {
     const handleDownloadVideo = () => {
       if (convert_status === 'COMPLETE') {
         getCookieVideoDownload({ video_id: rowData?.uuid }, async (dataCookie: CookieData) => {
-          // window.open(dataCookie?.url, '_blank')?.focus()
-          setLinkDownload(dataCookie?.url)
+          window.open(dataCookie?.url, '_blank')
         })
       }
     }
@@ -193,7 +192,10 @@ const ArchivedListContainer: React.FC = () => {
             <tr>
               <td style={{ verticalAlign: 'bottom', paddingRight: 10 }} className={classes.wrapImage}>
                 <a target="_blank" rel="noopener noreferrer" href={`${ESRoutes.TOP}?vid=${getVidID()}`}>
-                  <img src={thumbnail ?? IMG_PLACEHOLDER} className={classes.image} />
+                  <img
+                    src={thumbnail ? thumbnail : !thumbnail && video_thumbnail ? video_thumbnail : IMG_PLACEHOLDER}
+                    className={classes.image}
+                  />
                 </a>
               </td>
               <td>
@@ -211,17 +213,10 @@ const ArchivedListContainer: React.FC = () => {
                         <>
                           <td rowSpan={3} className={classes.cellIcons}>
                             <Box mr={1} component="span" onClick={handleDownloadVideo}>
-                              <a
-                                target="_self"
-                                rel="noopener noreferrer"
-                                download={`${moment(startTime).format(FORMAT_DATE_TIME_JP)}.mp4`}
-                                href={convert_status === 'COMPLETE' && linkDownload}
-                              >
-                                <img
-                                  src={'/images/icons/download.svg'}
-                                  className={convert_status === 'PROCESSING' ? classes.imageReloadProcessing : classes.imageReload}
-                                />
-                              </a>
+                              <img
+                                src={'/images/icons/download.svg'}
+                                className={convert_status === 'PROCESSING' ? classes.imageReloadProcessing : classes.imageReload}
+                              />
                             </Box>
 
                             <Box mr={1} component="span" onClick={handleDeleteVideoClick(rowData)}>
