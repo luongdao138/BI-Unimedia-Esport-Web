@@ -566,7 +566,7 @@ const Steps: React.FC<StepsProps> = ({
             </a>
           </Box>
           <Box flexDirection="row" display="flex">
-            <Box display="flex" alignItems="flex-end" pb={6} onClick={handleOpenDeleteModal}>
+            <Box display="flex" alignItems="flex-end" pb={6} onClick={handleOpenDeleteModal} className={classes.deleteWrap}>
               <Box className={classes.wrapIcon}>
                 <img src={'/images/icons/trash.svg'} className={classes.imageIcon} />
               </Box>
@@ -640,6 +640,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   downloadWrap: {
     display: 'flex',
     alignItems: 'flex-end',
+    cursor: 'pointer',
+  },
+  deleteWrap: {
     cursor: 'pointer',
   },
   label: {
