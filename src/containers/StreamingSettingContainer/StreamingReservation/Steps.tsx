@@ -1526,9 +1526,12 @@ const useStyles = makeStyles((theme: Theme) => ({
         ? '#FF0000'
         : props.statusRecord === TAG_STATUS_RECORD.UPDATED_NOT_START && props.videoStatusDynamo == '3'
         ? '#707070'
-        : 'rgba(255,255,255,0.7)',
+        : props.statusRecord === TAG_STATUS_RECORD.UPDATED_NOT_START && props.videoStatusDynamo == '0'
+        ? 'none'
+        : '#707070',
     borderRadius: 6,
     marginRight: 6,
+    border: props.statusRecord === TAG_STATUS_RECORD.UPDATED_NOT_START && props.videoStatusDynamo == '0' ? '2px solid #FF0000' : 'none',
   }),
   textTagStatus: {
     fontSize: 14,
