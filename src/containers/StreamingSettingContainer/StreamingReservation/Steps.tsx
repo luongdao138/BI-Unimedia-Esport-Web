@@ -41,6 +41,7 @@ import ESNumberInputStream from '@components/NumberInput/stream'
 import Linkify from 'react-linkify'
 import SmallLoader from '@components/Loader/SmallLoader'
 import { STATUS_VIDEO } from '@services/videoTop.services'
+import CharacterLimited from '@components/CharacterLimited'
 
 interface StepsProps {
   step: number
@@ -558,6 +559,7 @@ const Steps: React.FC<StepsProps> = ({
                 size="big"
                 disabled={!isFirstStep()}
                 className={getAddClassByStep(classes.input_text)}
+                endAdornment={isFirstStep() && <CharacterLimited value={formik.values.stepSettingTwo.title} limit={100} />}
               />
             </div>
           </Box>
@@ -597,6 +599,9 @@ const Steps: React.FC<StepsProps> = ({
                   required
                   disabled={!isFirstStep()}
                   className={getAddClassByStep(classes.input_text)}
+                  endAdornment={
+                    isFirstStep() && <CharacterLimited value={formik.values.stepSettingTwo.description} limit={5000} multiLines />
+                  }
                 />
               ) : (
                 <>
