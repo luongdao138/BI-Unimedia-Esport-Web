@@ -34,6 +34,7 @@ export type ArchiveDetailDataType = {
   url_download: string
   convert_status: string
   live_stream_start_time?: string
+  video_thumbnail?: string
 }
 
 export type TYPE_VIDEO_ARCHIVE = {
@@ -48,6 +49,7 @@ export type TYPE_VIDEO_ARCHIVE = {
   total_chat: string
   num_counted_user: number
   convert_status: string
+  video_thumbnail?: string
 }
 
 export type ArchiveListResponse = {
