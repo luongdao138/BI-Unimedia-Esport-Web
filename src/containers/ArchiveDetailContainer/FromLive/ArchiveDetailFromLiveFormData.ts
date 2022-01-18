@@ -35,6 +35,7 @@ export type ArchiveDetailFormType = {
   //check step
   step_setting?: number
   arn?: string
+  video_thumbnail?: string
 }
 
 export const getInitialArchiveDetailValues = (data?: ArchiveDetailDataType): ArchiveDetailFormType => ({
@@ -55,4 +56,5 @@ export const getInitialArchiveDetailValues = (data?: ArchiveDetailDataType): Arc
   //check step
   step_setting: 1,
   arn: data && data.arn ? data.arn : '',
+  video_thumbnail: data && data.video_thumbnail ? data.video_thumbnail : '',
 })

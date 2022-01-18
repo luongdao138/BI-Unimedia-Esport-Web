@@ -97,7 +97,7 @@ const Steps: React.FC<StepsProps> = ({
   const [showStreamKey, setShowStreamKey] = useState(false)
 
   const { getStreamUrlAndKey, isPending, setLiveStreamConfirm, scheduleInformation, isPendingSetting } = useLiveSetting()
-  const { checkNgWordFields, checkNgWordByField } = useCheckNgWord()
+  const { checkVideoNgWordFields, checkVideoNgWordByField } = useCheckNgWord()
   const { checkDisplayErrorOnChange, checkDisplayErrorOnSubmit, getDisplayErrorField } = LiveStreamSettingHelper
   const { userProfile } = useGetProfile()
   const paid_delivery_flag = userProfile?.attributes?.paid_delivery_flag
@@ -229,12 +229,12 @@ const Steps: React.FC<StepsProps> = ({
   const onClickNext = () => {
     const { stepSettingTwo } = formik.values
 
-    const fieldIdentifier = checkNgWordFields({
+    const fieldIdentifier = checkVideoNgWordFields({
       title: stepSettingTwo.title,
       description: stepSettingTwo.description,
       ticket_price: stepSettingTwo.ticket_price,
     })
-    const ngFields = checkNgWordByField({
+    const ngFields = checkVideoNgWordByField({
       [FIELD_TITLES.stepSettingTwo.title]: stepSettingTwo.title,
       [FIELD_TITLES.stepSettingTwo.description]: stepSettingTwo.description,
       [FIELD_TITLES.stepSettingTwo.ticket_price]: stepSettingTwo.ticket_price,

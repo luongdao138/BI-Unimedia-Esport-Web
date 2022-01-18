@@ -260,7 +260,7 @@ export default {
     viewing_history: '視聴履歴',
     delivery_management: '配信管理',
     video_distribution_application: '動画配信申請',
-    eXeLAB_link: 'eXeLAB TOPへ',
+    eXeLAB_link: 'eXeLABへ',
     stream_menu_video_top: '動画TOPへ',
   },
   community: {
@@ -1491,6 +1491,8 @@ export default {
     delivery_settings: '配信設定',
     distribution_data_management: '配信データ管理',
     archive_list: 'アーカイブ一覧',
+    live_stream_list: '配信データ管理',
+    archived_list: 'アーカイブ一覧',
     payment_information: '入金情報',
   },
   live_stream_list_screen: {

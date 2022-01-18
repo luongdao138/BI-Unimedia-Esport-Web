@@ -87,8 +87,6 @@ const Steps: React.FC<StepsProps> = ({
     description: useRef(null),
   }
 
-  const [linkDownload, setLinkDownload] = useState('')
-
   useEffect(() => {
     category?.data.forEach((h) => {
       if (Number(h.id) === Number(formik?.values?.category)) {
@@ -229,8 +227,7 @@ const Steps: React.FC<StepsProps> = ({
     const { uuid } = videoArchivedDetail
     if (videoArchivedDetail?.convert_status === 'COMPLETE') {
       getCookieVideoDownload({ video_id: uuid }, async (dataCookie: CookieData) => {
-        // window.open(dataCookie?.url, '_blank')?.focus()
-        setLinkDownload(dataCookie?.url)
+        window.open(dataCookie?.url, '_blank')
       })
     }
   }
@@ -277,7 +274,13 @@ const Steps: React.FC<StepsProps> = ({
               <Box pt={1} className={classes.box}>
                 {isFirstStep() ? (
                   <CoverUploaderStream
-                    src={formik?.values?.thumbnail}
+                    src={
+                      formik?.values?.thumbnail
+                        ? formik?.values?.thumbnail
+                        : !formik?.values?.thumbnail && formik?.values?.video_thumbnail
+                        ? formik?.values?.video_thumbnail
+                        : '/images/default_card.png'
+                    }
                     onChange={handleUpload}
                     isUploading={isUploading}
                     disabled={false}
@@ -554,8 +557,8 @@ const Steps: React.FC<StepsProps> = ({
                 opacity: videoArchivedDetail?.convert_status === 'PROCESSING' ? 0.3 : 1,
                 cursor: videoArchivedDetail?.convert_status === 'PROCESSING' ? 'unset' : 'pointer',
               }}
-              download={`${moment(videoArchivedDetail?.live_stream_start_time).format(FORMAT_DATE_TIME_JP)}.mp4`}
-              href={videoArchivedDetail?.convert_status === 'COMPLETE' && linkDownload}
+              // download
+              // href={videoArchivedDetail?.convert_status === 'COMPLETE' && linkDownload}
             >
               <Box className={classes.wrapIcon}>
                 <img src={'/images/icons/download.svg'} className={classes.imageIcon} />
@@ -566,7 +569,7 @@ const Steps: React.FC<StepsProps> = ({
             </a>
           </Box>
           <Box flexDirection="row" display="flex">
-            <Box display="flex" alignItems="flex-end" pb={6} onClick={handleOpenDeleteModal}>
+            <Box display="flex" alignItems="flex-end" pb={6} onClick={handleOpenDeleteModal} className={classes.deleteWrap}>
               <Box className={classes.wrapIcon}>
                 <img src={'/images/icons/trash.svg'} className={classes.imageIcon} />
               </Box>
@@ -640,6 +643,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   downloadWrap: {
     display: 'flex',
     alignItems: 'flex-end',
+    cursor: 'pointer',
+  },
+  deleteWrap: {
     cursor: 'pointer',
   },
   label: {
