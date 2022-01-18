@@ -19,7 +19,6 @@ import { STATUS_VIDEO } from '@services/videoTop.services'
 import VideoDeleteConfirmModal from '@containers/ArchiveDetailContainer/DeleteVideoConfirmModal/VideoDeleteConfirmModal'
 import ESLoader from '@components/FullScreenLoader'
 import { CookieData } from '@services/archiveList.service'
-import axios from 'axios'
 
 const ITEM_PER_PAGE = 25
 
@@ -140,14 +139,7 @@ const ArchivedListContainer: React.FC = () => {
 
     const handleDownloadVideo = () => {
       getCookieVideoDownload({ video_id: rowData?.uuid }, async (dataCookie: CookieData) => {
-        const { data } = await axios.get(dataCookie.url, {
-          headers: {
-            // Authorization: `Bearer ${user?.accessToken}`,
-            Cookies: `CloudFront-Expires=${dataCookie?.['CloudFront-Expires']};CloudFront-Signature=${dataCookie?.['CloudFront-Signature']};CloudFront-Key-Pair-Id=${dataCookie?.['CloudFront-Key-Pair-Id']};`,
-          },
-        })
-        // eslint-disable-next-line no-console
-        console.log('set cookie data====', data)
+        window.open(dataCookie?.url, '_blank')?.focus()
       })
     }
 
