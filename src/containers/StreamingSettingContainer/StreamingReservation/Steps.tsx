@@ -41,6 +41,7 @@ import ESNumberInputStream from '@components/NumberInput/stream'
 import Linkify from 'react-linkify'
 import SmallLoader from '@components/Loader/SmallLoader'
 import { STATUS_VIDEO } from '@services/videoTop.services'
+import CharacterLimited from '@components/CharacterLimited'
 
 interface StepsProps {
   step: number
@@ -96,7 +97,7 @@ const Steps: React.FC<StepsProps> = ({
   const [showStreamKey, setShowStreamKey] = useState(false)
 
   const { getStreamUrlAndKey, isPending, setLiveStreamConfirm, scheduleInformation, isPendingSetting } = useLiveSetting()
-  const { checkNgWordFields, checkNgWordByField } = useCheckNgWord()
+  const { checkVideoNgWordFields, checkVideoNgWordByField } = useCheckNgWord()
   const { checkDisplayErrorOnChange, checkDisplayErrorOnSubmit, getDisplayErrorField } = LiveStreamSettingHelper
   const { userProfile } = useGetProfile()
   const paid_delivery_flag = userProfile?.attributes?.paid_delivery_flag
@@ -228,12 +229,12 @@ const Steps: React.FC<StepsProps> = ({
   const onClickNext = () => {
     const { stepSettingTwo } = formik.values
 
-    const fieldIdentifier = checkNgWordFields({
+    const fieldIdentifier = checkVideoNgWordFields({
       title: stepSettingTwo.title,
       description: stepSettingTwo.description,
       ticket_price: stepSettingTwo.ticket_price,
     })
-    const ngFields = checkNgWordByField({
+    const ngFields = checkVideoNgWordByField({
       [FIELD_TITLES.stepSettingTwo.title]: stepSettingTwo.title,
       [FIELD_TITLES.stepSettingTwo.description]: stepSettingTwo.description,
       [FIELD_TITLES.stepSettingTwo.ticket_price]: stepSettingTwo.ticket_price,
@@ -558,6 +559,7 @@ const Steps: React.FC<StepsProps> = ({
                 size="big"
                 disabled={!isFirstStep()}
                 className={getAddClassByStep(classes.input_text)}
+                endAdornment={isFirstStep() && <CharacterLimited value={formik.values.stepSettingTwo.title} limit={100} />}
               />
             </div>
           </Box>
@@ -597,6 +599,9 @@ const Steps: React.FC<StepsProps> = ({
                   required
                   disabled={!isFirstStep()}
                   className={getAddClassByStep(classes.input_text)}
+                  endAdornment={
+                    isFirstStep() && <CharacterLimited value={formik.values.stepSettingTwo.description} limit={5000} multiLines />
+                  }
                 />
               ) : (
                 <>
@@ -1521,9 +1526,12 @@ const useStyles = makeStyles((theme: Theme) => ({
         ? '#FF0000'
         : props.statusRecord === TAG_STATUS_RECORD.UPDATED_NOT_START && props.videoStatusDynamo == '3'
         ? '#707070'
-        : 'rgba(255,255,255,0.7)',
+        : props.statusRecord === TAG_STATUS_RECORD.UPDATED_NOT_START && props.videoStatusDynamo == '0'
+        ? 'none'
+        : '#707070',
     borderRadius: 6,
     marginRight: 6,
+    border: props.statusRecord === TAG_STATUS_RECORD.UPDATED_NOT_START && props.videoStatusDynamo == '0' ? '2px solid #FF0000' : 'none',
   }),
   textTagStatus: {
     fontSize: 14,

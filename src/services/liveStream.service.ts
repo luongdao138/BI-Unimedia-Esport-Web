@@ -213,6 +213,7 @@ export type SetChannelResponse = {
 export const CODE_ERROR_RENEW_SPECIAL = {
   CHA099: 'CHA099',
   SERVICE_BUSY: 503,
+  STK01: 'STK01',
 }
 
 export const TAG_STATUS_RECORD = {
@@ -220,6 +221,27 @@ export const TAG_STATUS_RECORD = {
   CREATED_in: -1,
   UPDATED_NOT_START: 0,
   LIVE_STREAMING: 1, //STARTED OBS
+}
+
+export type LiveStreamReportParams = {
+  period?: string
+  timezone?: string
+}
+
+export type LiveStreamReportResponse = {
+  code?: number
+  message?: string
+  data?: {
+    list_dates: Array<string>
+    item: {
+      total_time_video: number
+      total_time_user_watch: number
+      total_user_watch: number
+      total_user_chat: number
+      total_user_chat_premium: number
+      total_point: number
+    }
+  }
 }
 
 export const getLiveSetting = async (params: LiveStreamSettingParams): Promise<LiveStreamSettingResponse> => {
@@ -254,5 +276,9 @@ export const getChannel = async (): Promise<GetChannelResponse> => {
 
 export const setChannel = async (params: SetChannelParams): Promise<SetChannelResponse> => {
   const { data } = await api.post<SetChannelResponse>(URI.SET_CHANNEL, params)
+  return data
+}
+export const liveStreamReport = async (params: LiveStreamReportParams): Promise<LiveStreamReportResponse> => {
+  const { data } = await api.get<LiveStreamReportResponse>(URI.GET_LIVE_STREAM_REPORT, { params })
   return data
 }

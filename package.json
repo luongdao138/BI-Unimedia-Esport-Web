@@ -12,7 +12,8 @@
     "test": "jest -u",
     "test-all": "yarn lint && yarn type-check && yarn test",
     "prepare": "husky install",
-    "postinstall": "patch-package"
+    "postinstall": "patch-package",
+    "lint-format": "yarn lint && yarn run type-check && yarn format"
   },
   "husky": {
     "hooks": {

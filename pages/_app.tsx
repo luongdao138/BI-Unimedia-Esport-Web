@@ -15,7 +15,7 @@ import CssBaseline from '@material-ui/core/CssBaseline'
 import userProfile from '@store/userProfile'
 import theme from '@theme/index'
 import PageWithLayoutType from '@constants/page'
-import { WEBSOCKET_PREFIX } from '@constants/socket.constants'
+import { WEBSOCKET_PREFIX, SYSTEMSYNC_PREFIX } from '@constants/socket.constants'
 import { WEBSYNC_PREFIX } from '@constants/sync.constants'
 import 'src/locales/i18n'
 import 'swiper/swiper.min.css'
@@ -36,6 +36,7 @@ import 'src/containers/VideoPlayer/customPlugins/plugin.scss'
 import 'src/theme/globalcss/layout.scss'
 import Script from 'react-load-script'
 import Amplify from 'aws-amplify'
+import useVideoNgWords from '@utils/hooks/useVideoNgWords'
 import { noop } from 'lodash'
 
 // [CW] Configure Amplify for chat realtime in live stream video
@@ -74,12 +75,16 @@ const App = ({ Component, pageProps }: Props) => {
   const accessToken = store.getState().auth.user?.accessToken
   authorizationProvider(store)
   useNgWords(store)
+  useVideoNgWords(store)
   useEffect(() => {
     store.dispatch({
       type: `${WEBSOCKET_PREFIX}:CONNECT`,
     })
     store.dispatch({
       type: `${WEBSYNC_PREFIX}:CONNECT`,
+    })
+    store.dispatch({
+      type: `${SYSTEMSYNC_PREFIX}:CONNECT`,
     })
   }, [accessToken])
 

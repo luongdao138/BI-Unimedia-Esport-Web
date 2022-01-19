@@ -257,7 +257,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     const [chatUser, setChatUser] = useState<any>({})
     const theme = useTheme()
     const isMobile = useMediaQuery(theme.breakpoints.down(769))
-    const { checkNgWord } = useCheckNgWord()
+    const { checkVideoNgWord } = useCheckNgWord()
     // const [savedMess, setSavedMess] = useState([])
     // const [savedDonateMess, setSavedDonateMess] = useState([])
     const [isChatInBottom, setIsChatInBottom] = useState(false)
@@ -1222,7 +1222,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     }
 
     const getMessageWithoutNgWords = (chatMessContent) => {
-      const ngWords = checkNgWord(chatMessContent)
+      const ngWords = checkVideoNgWord(chatMessContent)
       if (ngWords.length !== 0) {
         ngWords.map((item) => {
           if (chatMessContent.includes(item)) {

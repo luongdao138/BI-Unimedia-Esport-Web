@@ -22,6 +22,7 @@ export const URI = {
   UNBLOCK: '/v2/blocks/unblock',
   BLOCKED_USERS: 'v2/blocks/users',
   NG_WORDS: '/v2/ng_words',
+  VIDEO_NG_WORDS: 'v2/videos_ng_words',
   GET_PREFECTURES: '/v2/areas',
   USER_SETTINGS: '/v2/users/settings',
   USER_FEATURES: '/v2/user_features',
@@ -154,6 +155,7 @@ export const URI = {
   GET_CATEGORY: '/v2/categories',
   GET_CHANNEL: '/v2/channels',
   SET_CHANNEL: '/v2/channels',
+  GET_LIVE_STREAM_REPORT: '/v2/report/livestream-report',
   //video top
   GET_LIST_VIDEO_TOP: '/v2/videos/top',
   GET_CATEGORY_POPULAR_VIDEO: '/v2/categories/hot',
@@ -174,4 +176,14 @@ export const URI = {
   VIDEOS: '/v2/videos/',
   FOLLOW_CHANNEL: '/v2/channels/follow',
   LOBBY_RECOMMENDED: '/v2/recruitments/recommendations',
+
+  // Report Live Stream
+  FINANCIAL_STATEMENT_YEAR: '/v2/report/money-year',
+  FINANCIAL_STATEMENT_DETAIL: '/v2/report/money-month-detail',
+  //streamer_archive_video
+  GET_STREAMER_LIST_ARCHIVE: '/v2/report/archived',
+  GET_STREAMER_ARCHIVE_DETAIL: '/v2/report/archived-detail',
+  UPDATE_ARCHIVE_VIDEO: '/v2/report/archived-save-detail',
+  DELETE_ARCHIVE_VIDEO: '/v2/report/archived-delete',
+  GET_COOKIE_TO_DOWNLOAD: '/v2/report/get-url-download',
 }

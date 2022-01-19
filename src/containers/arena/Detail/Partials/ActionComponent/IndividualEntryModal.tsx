@@ -20,6 +20,7 @@ import useDocTitle from '@utils/hooks/useDocTitle'
 import ServerError from './ServerError'
 import { FocusContext, FocusContextProvider } from '@utils/hooks/input-focus-context'
 import i18n from '@locales/i18n'
+import CharacterLimited from '@components/CharacterLimited'
 
 interface IndividualEntryModalProps {
   tournament: TournamentDetail
@@ -112,6 +113,7 @@ const IndividualEntryModal: React.FC<IndividualEntryModalProps> = ({ tournament,
                       helperText={errors.nickname}
                       error={!!errors.nickname}
                       {...focusEvent}
+                      endAdornment={<CharacterLimited value={values.nickname} limit={40} />}
                     />
                   </Box>
                 </Box>
