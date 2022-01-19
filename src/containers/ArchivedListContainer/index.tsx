@@ -215,7 +215,7 @@ const ArchivedListContainer: React.FC = () => {
                             <Box mr={1} component="span" onClick={handleDownloadVideo}>
                               <img
                                 src={'/images/icons/download.svg'}
-                                className={convert_status === 'PROCESSING' ? classes.imageReloadProcessing : classes.imageReload}
+                                className={convert_status === 'COMPLETE' ? classes.imageReload : classes.imageReloadProcessing}
                               />
                             </Box>
 
