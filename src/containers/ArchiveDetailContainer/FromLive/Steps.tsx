@@ -554,8 +554,8 @@ const Steps: React.FC<StepsProps> = ({
               rel="noopener noreferrer"
               className={classes.downloadWrap}
               style={{
-                opacity: videoArchivedDetail?.convert_status === 'PROCESSING' ? 0.3 : 1,
-                cursor: videoArchivedDetail?.convert_status === 'PROCESSING' ? 'unset' : 'pointer',
+                opacity: videoArchivedDetail?.convert_status === 'COMPLETE' ? 1 : 0.3,
+                cursor: videoArchivedDetail?.convert_status === 'COMPLETE' ? 'pointer' : 'unset',
               }}
               // download
               // href={videoArchivedDetail?.convert_status === 'COMPLETE' && linkDownload}
