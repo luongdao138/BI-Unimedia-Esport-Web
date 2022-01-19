@@ -40,6 +40,7 @@ export type TypeVideoArchived = {
   user_avatar?: string
   category_name?: string
   type?: string
+  video_thumbnail?: string
 }
 
 export type ListArchivedVideoStreamResponse = {
