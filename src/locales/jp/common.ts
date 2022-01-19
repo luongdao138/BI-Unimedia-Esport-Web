@@ -1566,6 +1566,13 @@ export default {
       edit: '編集',
       remove: '削除',
     },
+    title_gift: 'チップ機能',
+    chooses_list_person_gift: '個別チップリスト選択',
+    unselected: '未選択',
+    list_gift_selected: '選択中の個別チップリスト：',
+    about_the_gift_list: 'チップリストについて',
+    about_individual_gift_ranking: '個別チップランキングについて',
+    individual_gift_ranking_display: '個別チップランキング表示',
   },
   delivery_reservation_tab: {
     category: 'カテゴリー',

@@ -41,6 +41,9 @@ import ESNumberInputStream from '@components/NumberInput/stream'
 import Linkify from 'react-linkify'
 import SmallLoader from '@components/Loader/SmallLoader'
 import { STATUS_VIDEO } from '@services/videoTop.services'
+import ESBoxftDashColumn from '@components/ESBoxftDashColumn'
+import ESLabelWithSwitch from '@components/LabelWithSwitch'
+import { useListGiftInfoDialog } from '../useListGiftInfoDialog'
 
 interface StepsProps {
   step: number
@@ -126,6 +129,7 @@ const Steps: React.FC<StepsProps> = ({
   }
 
   const classes = useStyles({ statusRecord: obsStatusDynamo, isEnable: handleEnableLink(), channelArn: stateChannelArn, videoStatusDynamo })
+  const listGiftInfo = useListGiftInfoDialog()
 
   const formRef = {
     title: useRef(null),
@@ -418,6 +422,17 @@ const Steps: React.FC<StepsProps> = ({
     }
   }
 
+  const changeFieldAndResetSelectedGift = (): void => {
+    // formik.handleChange(e)
+    formik.setFieldValue('stepSettingTwo.selected_gift', !formik?.values?.stepSettingTwo?.selected_gift)
+  }
+
+  const handleListGiftInfo = () => {
+    listGiftInfo().then(() => {
+      return
+    })
+  }
+
   return (
     <Box py={4} className={classes.container}>
       <Box className={classes.formContainer}>
@@ -497,7 +512,34 @@ const Steps: React.FC<StepsProps> = ({
               </Box>
             )}
           </Box>
-          <Box pb={2} className={classes.wrap_input}>
+          {/* TODO: V3.0 SNS */}
+          {isFirstStep() ? (
+            <Box pb={isFirstStep() ? 2 : 0}>
+              <ESCheckboxBig
+                checked={formik?.values?.stepSettingTwo?.share_sns_flag}
+                onChange={() => formik.setFieldValue('stepSettingTwo.share_sns_flag', !formik?.values?.stepSettingTwo?.share_sns_flag)}
+                label={t('common:streaming_setting_screen.share_SNS')}
+                name="isShareSNS"
+                disabled={isLive}
+              />
+            </Box>
+          ) : (
+            <ESInput
+              id="title"
+              name="title"
+              value={
+                formik?.values?.stepSettingTwo?.share_sns_flag
+                  ? t('common:streaming_setting_screen.shared_it')
+                  : t('common:streaming_setting_screen.dont_share')
+              }
+              fullWidth
+              labelPrimary={t('common:streaming_setting_screen.share_SNS')}
+              disabled={true}
+              size="big"
+              className={getAddClassByStep(classes.input_text)}
+            />
+          )}
+          <Box pb={2} pt={isFirstStep() ? 0 : 2} className={classes.wrap_input}>
             <Box className={classes.firstItem}>
               <ESLabel label={i18n.t('common:streaming_setting_screen.thumbnail')} />
               <Box pt={1} className={classes.box}>
@@ -887,8 +929,8 @@ const Steps: React.FC<StepsProps> = ({
               </Box>
             )}
           </Box>
-          {paid_delivery_flag && (
-            <>
+          {/* {paid_delivery_flag && ( */}
+          {/* <>
               {isFirstStep() ? (
                 <Box pb={3 / 8}>
                   <ESCheckboxBig
@@ -903,9 +945,9 @@ const Steps: React.FC<StepsProps> = ({
                 </Box>
               ) : (
                 <ESLabel label={i18n.t('common:streaming_setting_screen.ticket_use')} />
-              )}
-              {/* TODO: Apply component enter point eXeポイント */}
-              {isFirstStep() ? (
+              )} */}
+          {/* TODO: Apply component enter point eXeポイント */}
+          {/* {isFirstStep() ? (
                 <Box pb={2} className={classes.wrap_input}>
                   <Box className={classes.firstItem}>
                     <ESNumberInputStream
@@ -1022,8 +1064,9 @@ const Steps: React.FC<StepsProps> = ({
                 </div>
               </Box>
             </>
-          )}
-          {isFirstStep() ? (
+          )} */}
+          {/* TODO: V3.0 SNS old */}
+          {/* {isFirstStep() ? (
             <Box>
               <ESCheckboxBig
                 checked={formik?.values?.stepSettingTwo?.share_sns_flag}
@@ -1048,9 +1091,205 @@ const Steps: React.FC<StepsProps> = ({
               size="big"
               className={getAddClassByStep(classes.input_text)}
             />
+          )} */}
+          {/* TODO: V3.0 form ticket new v3.0 */}
+          {paid_delivery_flag && (
+            <>
+              {isFirstStep() ? (
+                <Box pb={2} pt={2} className={classes.wrap_input_box_switch}>
+                  <div className={classes.firstItem}>
+                    <ESLabelWithSwitch
+                      fullWidth
+                      labelPrimary={t('common:streaming_setting_screen.ticket_use')}
+                      valueSwitch={formik?.values?.stepSettingTwo?.use_ticket}
+                      handleChangeSwitch={checkUseTicket}
+                      disabled={disable}
+                    />
+                  </div>
+                </Box>
+              ) : (
+                <ESLabel label={i18n.t('common:streaming_setting_screen.ticket_use')} />
+              )}
+              {isFirstStep() ? (
+                <ESBoxftDashColumn isSelectedGift={formik?.values?.stepSettingTwo?.selected_gift}>
+                  {/* TODO: Apply component enter point eXeポイント */}
+                  <div className={classes.boxRightTicket}>
+                    {isFirstStep() ? (
+                      <Box pb={2} className={classes.wrap_input_ticket}>
+                        <Box className={classes.firstItemShort}>
+                          <ESNumberInputStream
+                            id="ticket_price"
+                            name="stepSettingTwo.ticket_price"
+                            type="tel"
+                            fullWidth
+                            nameValue={'stepSettingTwo.ticket_price'}
+                            // className={classes.input}
+                            placeholder={'0'}
+                            value={
+                              isFirstStep() &&
+                              (formik?.values?.stepSettingTwo?.ticket_price === 0 || !formik?.values?.stepSettingTwo?.use_ticket)
+                                ? ''
+                                : formik?.values?.stepSettingTwo?.ticket_price
+                            }
+                            onChange={(e) => {
+                              setValidateField('ticket_price')
+                              handleUpdateValidateField('ticket_price')
+                              formik.handleChange(e)
+                              if (onChangeFlag) {
+                                setOnChangeFlag(true)
+                                flagUpdateFieldDate(true)
+                              }
+                            }}
+                            helperText={
+                              validateField !== 'all'
+                                ? checkDisplayErrorOnChange(formik, 'ticket_price', validateField).helperText
+                                : checkDisplayErrorOnSubmit(formik, 'ticket_price').helperText
+                            }
+                            error={
+                              validateField !== 'all'
+                                ? checkDisplayErrorOnChange(formik, 'ticket_price', validateField).error
+                                : checkDisplayErrorOnSubmit(formik, 'ticket_price').error
+                            }
+                            size="big"
+                            isNumber={true}
+                            formik={formik}
+                            disabled={isLive}
+                            // className={getAddClassByStep(classes.input_text_number)}
+                            className={classes.input_text_number}
+                            readOnly={!formik?.values?.stepSettingTwo?.use_ticket}
+                            nowrapHelperText
+                            endAdornment={
+                              isFirstStep() ? (
+                                <InputAdornment position="end" className={classes.inputContainer}>
+                                  <Box className={classes.inputAdornment}>{t('common:common.eXe_points')}</Box>
+                                </InputAdornment>
+                              ) : (
+                                <></>
+                              )
+                            }
+                          />
+                        </Box>
+                      </Box>
+                    ) : (
+                      <Box pb={2}>
+                        <Typography className={classes.date}>
+                          {formik.values.stepSettingTwo.use_ticket
+                            ? `利用する（${formik?.values?.stepSettingTwo?.ticket_price} ${t('common:common.eXe_points')}）`
+                            : '利用しない'}
+                        </Typography>
+                      </Box>
+                    )}
+
+                    <Box pb={2} className={classes.wrap_input}>
+                      <div ref={formRef['sell_ticket_start_time']} className={classes.firstItemShort}>
+                        <ESLabel
+                          label={i18n.t('common:delivery_reservation_tab.ticket_sales_start_datetime')}
+                          required={formik?.values?.stepSettingTwo?.use_ticket}
+                        />
+                        {isFirstStep() ? (
+                          <ESInputDatePicker
+                            name="stepSettingTwo.sell_ticket_start_time"
+                            placeholder={i18n.t('common:delivery_reservation_tab.ticket_sales_start_datetime')}
+                            fullWidth
+                            value={formik?.values?.stepSettingTwo?.sell_ticket_start_time}
+                            onChange={(date) => {
+                              const temp = moment(date).add(5, 's')
+                              formik.setFieldValue('stepSettingTwo.sell_ticket_start_time', temp)
+                              setValidateField('sell_ticket_start_time')
+                              handleUpdateValidateField('sell_ticket_start_time')
+                              setOnChangeFlag(true)
+                              flagUpdateFieldDate(true)
+                            }}
+                            helperText={
+                              validateField !== 'all'
+                                ? checkDisplayErrorOnChange(formik, 'sell_ticket_start_time', validateField).helperText
+                                : checkDisplayErrorOnSubmit(formik, 'sell_ticket_start_time').helperText
+                            }
+                            error={
+                              validateField !== 'all'
+                                ? checkDisplayErrorOnChange(formik, 'sell_ticket_start_time', validateField).error
+                                : checkDisplayErrorOnSubmit(formik, 'sell_ticket_start_time').error
+                            }
+                            readOnly={!formik?.values?.stepSettingTwo?.use_ticket}
+                            minDateMessage={''}
+                            disabled={isLive}
+                            InputProps={{
+                              classes: { root: classes.root },
+                            }}
+                            onBlur={formik.handleBlur}
+                            minutesStep={1}
+                            disablePast={!(!!status || status === 0)}
+                          />
+                        ) : (
+                          <Box pt={1}>
+                            <Typography className={classes.date}>
+                              {formik?.values?.stepSettingTwo?.sell_ticket_start_time !== null
+                                ? moment(formik?.values?.stepSettingTwo?.sell_ticket_start_time).format('YYYY年MM月DD日 HH:mm')
+                                : i18n.t('common:delivery_reservation_tab.ticket_sales_start_datetime')}
+                            </Typography>
+                          </Box>
+                        )}
+                      </div>
+                    </Box>
+                  </div>
+                </ESBoxftDashColumn>
+              ) : (
+                <Box pb={2}>
+                  <Typography className={classes.date}>
+                    {formik.values.stepSettingTwo.use_ticket
+                      ? `利用する（${formik?.values?.stepSettingTwo?.ticket_price} ${t('common:common.eXe_points')}）`
+                      : '利用しない'}
+                  </Typography>
+                </Box>
+              )}
+            </>
+          )}
+          {/* gift */}
+          {isFirstStep() && (
+            <Box pb={2} pt={2} className={classes.wrap_input_box_switch}>
+              <div className={classes.firstItem}>
+                <ESLabelWithSwitch
+                  fullWidth
+                  labelPrimary={i18n.t('common:streaming_setting_screen.title_gift')}
+                  valueSwitch={formik?.values?.stepSettingTwo?.selected_gift}
+                  handleChangeSwitch={changeFieldAndResetSelectedGift}
+                />
+              </div>
+            </Box>
+          )}
+          {isFirstStep() && (
+            <ESBoxftDashColumn isSelectedGift={formik?.values?.stepSettingTwo?.selected_gift}>
+              <Box className={classes.boxAboutGift}>
+                <Box className={classes.select_show_about_gift} pt={1}>
+                  <label className={classes.labelNavigate}>{i18n.t('common:streaming_setting_screen.chooses_list_person_gift')}</label>
+                  <label className={classes.labelNameObject}>
+                    {`${i18n.t('common:streaming_setting_screen.list_gift_selected')} ${i18n.t(
+                      'common:streaming_setting_screen.unselected'
+                    )}`}
+                  </label>
+                  <Typography className={classes.giftInfoList} variant="body2" onClick={handleListGiftInfo}>
+                    <Icon className={`fa fa-info-circle ${classes.iconMargin}`} fontSize="small" />{' '}
+                    {i18n.t('common:streaming_setting_screen.about_the_gift_list')}
+                  </Typography>
+                </Box>
+                <Box className={classes.select_show_about_gift} pt={1.8} pb={1}>
+                  <ESCheckboxBig
+                    checked={formik?.values?.stepSettingTwo?.publish_flag}
+                    onChange={() => formik.setFieldValue('stepSettingTwo.publish_flag', !formik?.values?.stepSettingTwo?.publish_flag)}
+                    label={t('common:streaming_setting_screen.individual_gift_ranking_display')}
+                    name="stepSettingTwo.publish_flag"
+                    classNameLabel={classes.esCheckBox}
+                  />
+                  <Typography className={classes.giftInfoList} variant="body2" onClick={handleListGiftInfo}>
+                    <Icon className={`fa fa-info-circle ${classes.iconMargin}`} fontSize="small" />{' '}
+                    {i18n.t('common:streaming_setting_screen.about_individual_gift_ranking')}
+                  </Typography>
+                </Box>
+              </Box>
+            </ESBoxftDashColumn>
           )}
           {/* stream URL */}
-          <Box pt={2} className={classes.wrap_input} flexDirection="row" display="flex" alignItems="flex-end">
+          <Box pt={isFirstStep() ? 2 : 0} className={classes.wrap_input} flexDirection="row" display="flex" alignItems="flex-end">
             <Box className={classes.firstItem}>
               <ESInput
                 id="stream_url"
@@ -1446,8 +1685,59 @@ const useStyles = makeStyles((theme: Theme) => ({
   firstItem: {
     width: '494px',
   },
+  firstItemShort: {
+    width: '450px',
+  },
   wrap_input: {
     paddingLeft: 0,
+  },
+  wrap_input_ticket: {
+    paddingLeft: 0,
+  },
+  wrap_input_box_switch: {
+    paddingLeft: 0,
+    paddingBottom: 0,
+  },
+  labelNavigate: {
+    fontWeight: 'bold',
+    fontSize: theme.typography.h3.fontSize,
+    textDecoration: 'underline',
+    textUnderlineOffset: '2px',
+    color: '#ffffff70',
+  },
+  labelNameObject: {
+    fontWeight: 'normal',
+    fontSize: 14,
+    color: '#ffffff50',
+    marginLeft: 16,
+  },
+  giftInfoList: {
+    position: 'relative',
+    color: Colors.secondary,
+    cursor: 'pointer',
+    marginLeft: theme.spacing(2),
+    fontSize: 10,
+  },
+  iconMargin: {
+    marginRight: theme.spacing(1 / 2),
+  },
+  boxAboutGift: {
+    paddingLeft: 24,
+  },
+  esCheckBox: {
+    color: '#ffffff70',
+  },
+  firstItemBoxSwitch: {
+    // width: '494px',
+  },
+  select_show_about_gift: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  boxRightTicket: {
+    marginLeft: 24,
+    marginTop: 10,
   },
   [theme.breakpoints.down(768)]: {
     container: {
@@ -1459,7 +1749,23 @@ const useStyles = makeStyles((theme: Theme) => ({
       flexWrap: 'wrap-reverse',
       justifyContent: 'flex-end',
     },
+    wrap_input_ticket: {
+      position: 'relative',
+      width: '100%',
+      flexWrap: 'wrap-reverse',
+      justifyContent: 'flex-end',
+      paddingBottom: 8,
+    },
+    wrap_input_box_switch: {
+      position: 'relative',
+      width: '100%',
+      flexWrap: 'wrap-reverse',
+      justifyContent: 'flex-end',
+    },
     firstItem: {
+      width: '100%',
+    },
+    firstItemShort: {
       width: '100%',
     },
     lastItem: {
@@ -1471,6 +1777,26 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     sp_wrap_input_tag: {
       paddingBottom: 13,
+    },
+    select_show_about_gift: {
+      flexDirection: 'column',
+      alignItems: 'start',
+    },
+    boxAboutGift: {
+      paddingLeft: 16,
+    },
+    labelNameObject: {
+      marginLeft: 0,
+      paddingTop: 8,
+    },
+    giftInfoList: {
+      marginLeft: 0,
+      paddingTop: 8,
+    },
+    boxRightTicket: {
+      marginLeft: 16,
+      width: '100%',
+      marginTop: 8,
     },
   },
   addPaddingNote: {
