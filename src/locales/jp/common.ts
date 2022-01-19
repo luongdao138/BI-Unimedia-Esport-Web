@@ -1804,7 +1804,7 @@ export default {
     delete_dialog_sub_title: '削除したいアーカイブのタイトル',
     cancel: 'キャンセル',
     delete_confirm: '削除する',
-    update: '確認',
+    update: '更新',
     delete_warning:
       '動画のダウンロードを実施中の場合、削除を実施するとファイルが正常に取得できない場合がございます。動画の削除はファイルのダウンロードが完了した後に実施いただけますようお願いいたします',
   },
