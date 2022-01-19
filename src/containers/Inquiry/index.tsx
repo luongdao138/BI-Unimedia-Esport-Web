@@ -22,6 +22,7 @@ import { INQUIRY_REQUEST_LABELS, NG_WORD_AREA, NG_WORD_DIALOG_CONFIG } from '@co
 import { useAppDispatch } from '@store/hooks'
 import i18n from '@locales/i18n'
 import ESSelect from '@components/Select'
+import CharacterLimited from '@components/CharacterLimited'
 
 const ESInquiry: React.FC = () => {
   const { t } = useTranslation('common')
@@ -184,6 +185,7 @@ const ESInquiry: React.FC = () => {
                   disabled={showPreview}
                   rows={8}
                   size="small"
+                  endAdornment={<CharacterLimited value={values.content} limit={5000} multiLines />}
                 />
               </Box>
               <Box mt={1}></Box>
@@ -202,6 +204,7 @@ const ESInquiry: React.FC = () => {
                 disabled={!!hasEmail || showPreview}
                 readOnly={!!hasEmail}
                 size="small"
+                endAdornment={!hasEmail && <CharacterLimited value={values.email} limit={100} />}
               />
             </Box>
 
