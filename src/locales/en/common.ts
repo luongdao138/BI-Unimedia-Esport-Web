@@ -1728,6 +1728,10 @@ export default {
     all_mess_tab_title: 'すべて',
     tip_mess_tab_title: 'チップ',
   },
+  live_stream_screen_chat: {
+    receipt: '受取',
+    send: '送信',
+  },
   video_search: {
     video_results: '動画「:key」 の検索結果',
     video_results_all: '動画「:key」 の検索結果',
