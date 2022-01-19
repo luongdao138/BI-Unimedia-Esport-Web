@@ -7,6 +7,7 @@ type ChatTabProps = {
 }
 
 const ChatTab: React.FC<ChatTabProps> = ({ activeTab }) => {
+  // eslint-disable-next-line no-console
   console.log('🚀 ~ activeTab', activeTab)
   const isDisplayedAllMess = activeTab === MESSAGE_TABS.ALL
 
