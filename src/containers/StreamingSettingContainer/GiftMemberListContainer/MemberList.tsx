@@ -69,10 +69,11 @@ const MemberList: React.FC = () => {
   )
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   filterButton: {
     backgroundColor: '#FFFFFF',
     marginRight: '16px',
+    height: '30px',
   },
   filterButtonNonSelected: {
     backgroundColor: '#747474',
@@ -81,12 +82,12 @@ const useStyles = makeStyles(() => ({
     color: '#212121',
   },
   filterButtonGroupContainer: {
-    marginTop: '16px',
     display: 'flex',
     flexDirection: 'row',
+    alignItems: 'center',
   },
   filterInputField: {
-    marginTop: '32px',
+    marginTop: '16px',
   },
   container: {
     marginRight: '6px',
@@ -116,13 +117,14 @@ const useStyles = makeStyles(() => ({
     padding: '8px 12px',
     borderRadius: '20px',
     border: '1px solid #FFFFFF',
+    height: '35px',
   },
   listContainer: {
     border: `1px solid ${Colors.white_opacity['30']}`,
     borderBottomRightRadius: '5px',
     borderBottomLeftRadius: '5px',
     backgroundColor: '#161616',
-    height: '560px',
+    height: 'calc(100vh - 464px)',
     overflow: 'scroll',
     scrollbarColor: '#222 transparent',
     scrollbarWidth: 'thin',
@@ -140,6 +142,14 @@ const useStyles = makeStyles(() => ({
       borderRadius: 6,
     },
     overflowX: 'hidden',
+  },
+  [theme.breakpoints.down('sm')]: {
+    container: {
+      padding: '24px',
+    },
+    addNewButton: {
+      display: 'none',
+    },
   },
 }))
 export default MemberList

@@ -164,7 +164,7 @@ const StreamingSettingContainer: React.FC<{ default_tab: any }> = ({ default_tab
   const getTabs = () => {
     return (
       <Grid item xs={12} className={classes.tabsContainer}>
-        <ESTabs value={tab} onChange={(_, v) => setTab(v)} className={classes.tabs}>
+        <ESTabs value={tab} onChange={(_, v) => setTab(v)} className={classes.tabs} scrollButtons="off" variant="scrollable">
           <ESTab label={t('streaming_setting_screen.live_stream')} value={0} disabled={disable} className={classes.singleTab} />
           <ESTab label={t('streaming_setting_screen.streaming_reservation')} value={1} disabled={disable} className={classes.singleTab} />
           <ESTab label={t('streaming_setting_screen.distributor_information')} value={2} className={classes.singleTab} />

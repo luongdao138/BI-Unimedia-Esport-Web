@@ -1585,6 +1585,13 @@ export default {
       tag_block: '停止',
       selected: '選択済',
       select: '選択',
+      name_list: 'リスト名',
+      require: '必須',
+      name_entered_place_holder: '60文字まで入力することができます。',
+      empty_view_message: 'まだ誰もメンバーが追加されていません\n' + '個別ギフト対象一覧より対象者を登録してリストを作成してください',
+      confirm_message: '件を選択しています',
+      cancel: 'キャンセル',
+      confirm: 'この内容で作成する',
     },
   },
   delivery_reservation_tab: {
