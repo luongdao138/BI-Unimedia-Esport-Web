@@ -20,6 +20,7 @@ import { useAppDispatch } from '@store/hooks'
 import ESLoader from '@components/FullScreenLoader'
 import Linkify from 'react-linkify'
 import ESLabel from '@components/Label'
+import CharacterLimited from '@components/CharacterLimited'
 interface StepsProps {
   step: number
   onNext: (step: number) => void
@@ -139,6 +140,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, channel, hasChannel, formik
                 size="big"
                 disabled={!isFirstStep()}
                 className={getAddClassByStep(classes.input_text)}
+                endAdornment={isFirstStep() && <CharacterLimited value={formik.values.stepSettingThree.name} limit={100} />}
               />
             </Box>
           </Box>
@@ -161,6 +163,9 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, channel, hasChannel, formik
                   size="big"
                   disabled={!isFirstStep()}
                   className={getAddClassByStep(classes.input_text)}
+                  endAdornment={
+                    isFirstStep() && <CharacterLimited value={formik.values.stepSettingThree.description} limit={5000} multiLines />
+                  }
                 />
               ) : (
                 <>

@@ -45,6 +45,7 @@ import { STATUS_VIDEO } from '@services/videoTop.services'
 import ESLabelWithSwitch from '@components/LabelWithSwitch'
 import ESBoxftDashColumn from '@components/ESBoxftDashColumn'
 import { useListGiftInfoDialog } from '../useListGiftInfoDialog'
+import CharacterLimited from '@components/CharacterLimited'
 
 interface StepsProps {
   step: number
@@ -410,7 +411,13 @@ const Steps: React.FC<StepsProps> = ({
             <SmallLoader />
           </div>
         ) : (
-          <Box className={`${classes.wrap_input} ${classes.sp_wrap_input_tag}`} display="flex" flexDirection="row" alignItems="center">
+          <Box
+            pb={2}
+            className={`${classes.wrap_input} ${classes.sp_wrap_input_tag}`}
+            display="flex"
+            flexDirection="row"
+            alignItems="center"
+          >
             <Box className={classes.firstItem} display="flex" flexDirection="row" alignItems="center">
               <div className={classes.dot} />
               <Typography className={classes.textTagStatus}>
@@ -425,7 +432,7 @@ const Steps: React.FC<StepsProps> = ({
               </Typography>
             </Box>
             <Box
-              py={1}
+              // py={1}
               display="flex"
               justifyContent="center"
               alignItems={'center'}
@@ -565,6 +572,7 @@ const Steps: React.FC<StepsProps> = ({
                 size="big"
                 disabled={!isFirstStep()}
                 className={getAddClassByStep(classes.input_text)}
+                endAdornment={isFirstStep() && <CharacterLimited value={formik.values.stepSettingOne.title} limit={100} />}
               />
             </div>
           </Box>
@@ -602,6 +610,9 @@ const Steps: React.FC<StepsProps> = ({
                   size="big"
                   disabled={!isFirstStep()}
                   className={getAddClassByStep(classes.input_text)}
+                  endAdornment={
+                    isFirstStep() && <CharacterLimited value={formik.values.stepSettingOne.description} limit={5000} multiLines />
+                  }
                 />
               ) : (
                 <>
@@ -1459,10 +1470,13 @@ const useStyles = makeStyles((theme: Theme) => ({
       props.statusRecord === TAG_STATUS_RECORD.LIVE_STREAMING && props.channelArn !== EVENT_STATE_CHANNEL.STOPPED
         ? '#FF0000'
         : props.statusRecord === TAG_STATUS_RECORD.UPDATED_NOT_START && props.videoStatusDynamo == '3'
-        ? '#707070'
+        ? 'none'
+        : props.statusRecord === TAG_STATUS_RECORD.UPDATED_NOT_START && props.videoStatusDynamo == '0'
+        ? 'none'
         : '#707070',
     borderRadius: 6,
     marginRight: 6,
+    border: props.statusRecord === TAG_STATUS_RECORD.UPDATED_NOT_START && props.videoStatusDynamo == '0' ? '2px solid #FF0000' : 'none',
   }),
   textTagStatus: {
     fontSize: 14,

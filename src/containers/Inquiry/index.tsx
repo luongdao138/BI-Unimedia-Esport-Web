@@ -11,15 +11,18 @@ import ButtonPrimary from '@components/ButtonPrimary'
 import { InquiryParams } from '@services/settings.service'
 import useInquiry from './useInquiry'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { Colors } from '@theme/colors'
 import { ESRoutes } from '@constants/route.constants'
 import _ from 'lodash'
 import useCheckNgWord from '@utils/hooks/useCheckNgWord'
 import { showDialog } from '@store/common/actions'
-import { NG_WORD_AREA, NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
+import { INQUIRY_REQUEST_LABELS, NG_WORD_AREA, NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
 import { useAppDispatch } from '@store/hooks'
+import i18n from '@locales/i18n'
+import ESSelect from '@components/Select'
+import CharacterLimited from '@components/CharacterLimited'
 
 const ESInquiry: React.FC = () => {
   const { t } = useTranslation('common')
@@ -128,22 +131,42 @@ const ESInquiry: React.FC = () => {
           <form onSubmit={handleSubmit}>
             <Box mt={2} bgcolor={showPreview ? Colors.black : null} borderRadius={4} padding={3} margin={3}>
               <Box mt={1}>
-                <ESInput
-                  id="title"
-                  name="title"
-                  value={values.title}
-                  fullWidth
-                  onChange={handleChange}
-                  labelPrimary={t('inquiry.subject')}
-                  placeholder=""
-                  onBlur={handleBlur}
-                  required
-                  helperText={touched.title && errors.title}
-                  error={touched.title && !!errors.title}
-                  disabled={showPreview}
-                  rows={8}
-                  size="small"
-                />
+                {showPreview ? (
+                  <Box>
+                    <Box display="flex" flexDirection="row" alignItems="center">
+                      <Typography>{i18n.t('common:inquiry.subject')}</Typography>
+                      <Typography component="span" className={classes.required}>
+                        {t('common.required')}
+                      </Typography>
+                    </Box>
+                    <Typography className={classes.titlePreview}>{values.title}</Typography>
+                  </Box>
+                ) : (
+                  <ESSelect
+                    id="title"
+                    name="title"
+                    fullWidth
+                    value={values.title}
+                    onChange={handleChange}
+                    label={i18n.t('common:inquiry.subject')}
+                    required
+                    size="big"
+                    disabled={false}
+                    helperText={touched.title && errors.title}
+                    error={touched.title && !!errors.title}
+                    // helperText={formik?.touched?.stepSettingTwo?.category && formik?.errors?.stepSettingTwo?.category}
+                    // error={formik?.touched?.stepSettingTwo?.category && !!formik?.errors?.stepSettingTwo?.category}
+                  >
+                    <option disabled value={''}>
+                      {''}
+                    </option>
+                    {INQUIRY_REQUEST_LABELS.map((item, index) => (
+                      <option key={index} value={i18n.t(`common:${item}`).toString()}>
+                        {i18n.t(`common:${item}`)}
+                      </option>
+                    ))}
+                  </ESSelect>
+                )}
               </Box>
               <Box mt={1}>
                 <ESInput
@@ -162,6 +185,7 @@ const ESInquiry: React.FC = () => {
                   disabled={showPreview}
                   rows={8}
                   size="small"
+                  endAdornment={<CharacterLimited value={values.content} limit={5000} multiLines />}
                 />
               </Box>
               <Box mt={1}></Box>
@@ -180,6 +204,7 @@ const ESInquiry: React.FC = () => {
                 disabled={!!hasEmail || showPreview}
                 readOnly={!!hasEmail}
                 size="small"
+                endAdornment={!hasEmail && <CharacterLimited value={values.email} limit={100} />}
               />
             </Box>
 
@@ -271,6 +296,20 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: 18,
     color: Colors.white,
     display: 'inline-block',
+  },
+  required: {
+    backgroundColor: Colors.primary,
+    borderRadius: 2,
+    paddingLeft: theme.spacing(1 / 2),
+    paddingRight: theme.spacing(1 / 2),
+    height: 16,
+    fontSize: 10,
+    marginLeft: theme.spacing(1),
+    color: Colors.white,
+  },
+  titlePreview: {
+    color: Colors.white_opacity['30'],
+    marginTop: '8px',
   },
 }))
 

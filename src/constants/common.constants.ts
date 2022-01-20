@@ -347,6 +347,14 @@ export const EVENT_STATE_CHANNEL = {
 
 export const CONFIRM_SETTING_DELAY = 20 * 1000
 
+export const INQUIRY_REQUEST_LABELS = [
+  'inquiry.label_about_arena',
+  'inquiry.label_about_lobby',
+  'inquiry.label_about_community',
+  'inquiry.label_about_watching_video',
+  'inquiry.label_about_deletion',
+  'inquiry.label_others',
+]
 export const LIMIT_MESS = 100
 export const LIMIT_FETCH_NEXT = 500
 export const LIMIT_MIN_MESS_PREV_REWIND = 5
