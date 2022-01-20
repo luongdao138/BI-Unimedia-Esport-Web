@@ -15,6 +15,8 @@ import Hls from 'hls.js'
 import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
 import { DELAY_SECONDS } from '@constants/common.constants'
 import { STATUS_VIDEO } from '@services/videoTop.services'
+import useLiveStreamDetail from '../useLiveStreamDetail'
+
 interface PlayerProps {
   src?: string
   thumbnail?: string
@@ -66,7 +68,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     videoError: false,
   })
 
-  const { changeVideoTime, liveStreamInfo, changeSeekCount } = useDetailVideo()
+  const { changeVideoTime, liveStreamInfo, changeSeekCount, detailVideoResult } = useDetailVideo()
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'), { noSsr: true })
   const isDownMd = useMediaQuery(theme.breakpoints.down(769), { noSsr: true })
@@ -76,6 +78,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   const androidPl = /Android/i.test(window.navigator.userAgent)
   const iPhonePl = /iPhone/i.test(window.navigator.userAgent)
 
+  const { videoWatchTimeReportRequest } = useLiveStreamDetail()
   const isStreamingEnd = useRef(liveStreamInfo.is_streaming_end)
   const handlePauseAndSeekVideo = () => {
     // // seek to current live stream second if is pausing live and is not playing
@@ -111,7 +114,23 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       setState({ ...state, playing: false })
       setAutoPlay(false)
     }
-  }, [isArchived])
+  }, [!isArchived])
+
+  // video watch time report request
+  const videoTimeReport = () => {
+    // call api time report if video is streaming and not archived
+    if (detailVideoResult?.status === STATUS_VIDEO.LIVE_STREAM && !isArchived) {
+      console.count('==================== report video time ===================')
+      videoWatchTimeReportRequest({ video_id: detailVideoResult?.uuid })
+    }
+  }
+  // call api time report every 60s
+  useEffect(() => {
+    const intervalTimer = setInterval(() => {
+      videoTimeReport()
+    }, 60000)
+    return () => clearInterval(intervalTimer)
+  }, [])
 
   const handleOrientationChange = (event) => {
     console.log('event::', event)

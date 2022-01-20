@@ -85,3 +85,23 @@ export const followChannelAction = createAsyncThunk<services.FollowChannelRespon
     }
   }
 )
+
+export const videoWatchTimeReportRequest = createAsyncThunk<services.TimeReportResponse, services.TimeReportParams>(
+  ACTION_VIDEO_DETAIL_STREAM.VIDEO_WATCH_TIME_REPORT,
+  async (timeReportParams, { rejectWithValue }) => {
+    try {
+      const res = await services.VideoWatchTimeReport(timeReportParams)
+      if (res?.code === 200) {
+        return res
+      } else {
+        // throw res.message
+        return rejectWithValue(JSON.stringify(res.message))
+      }
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
