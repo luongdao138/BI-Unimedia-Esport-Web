@@ -6,7 +6,11 @@ import { Colors } from '@theme/colors'
 import SelectMemberItem from '@containers/StreamingSettingContainer/GiftMemberListContainer/SelectMemberItem'
 import Footer from '@containers/StreamingSettingContainer/GiftMemberListContainer/footer'
 
-const GiftMemberListContainer: React.FC = () => {
+type Props = {
+  handleBackToListState?: () => void
+}
+
+const GiftMemberListContainer: React.FC<Props> = ({ handleBackToListState }) => {
   const { t } = useTranslation('common')
   const classes = useStyles()
   const getData = () => Array.from(Array(20).keys())
@@ -55,7 +59,7 @@ const GiftMemberListContainer: React.FC = () => {
     <Box className={classes.container}>
       {header()}
       {memberList()}
-      <Footer />
+      <Footer onCancel={handleBackToListState} />
     </Box>
   )
 }

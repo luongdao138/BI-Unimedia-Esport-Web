@@ -146,6 +146,9 @@ const ArchivedListContainer: React.FC = () => {
       }
     }
 
+    const handleReportClick = () => {
+      router.push({ pathname: ESRoutes.STREAMING_GIFT_REPORT, query: { video_id: rowData?.uuid } })
+    }
     return (
       <Box className={classes.wrapItem} key={rowData?.uuid} onClick={isMobile ? redirectArchivedDetail(uuid, scheduledFlag) : null}>
         <table className={classes.outerTable}>
@@ -212,6 +215,10 @@ const ArchivedListContainer: React.FC = () => {
                       {!isMobile && (
                         <>
                           <td rowSpan={3} className={classes.cellIcons}>
+                            <Box mr={1} component="span" onClick={handleReportClick}>
+                              <img src={'/images/icons/report.svg'} className={classes.imageReload} />
+                            </Box>
+
                             <Box mr={1} component="span" onClick={handleDownloadVideo}>
                               <img
                                 src={'/images/icons/download.svg'}

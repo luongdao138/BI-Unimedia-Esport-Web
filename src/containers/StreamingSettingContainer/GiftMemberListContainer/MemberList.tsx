@@ -5,8 +5,11 @@ import { useTranslation } from 'react-i18next'
 import ESInput from '@components/Input'
 import { Colors } from '@theme/colors'
 import MemberItem from '@containers/StreamingSettingContainer/GiftMemberListContainer/MemberItem'
+import { useRouter } from 'next/router'
+import { ESRoutes } from '@constants/route.constants'
 
 const MemberList: React.FC = () => {
+  const router = useRouter()
   const { t } = useTranslation('common')
   const classes = useStyles()
 
@@ -20,9 +23,13 @@ const MemberList: React.FC = () => {
     )
   }
 
+  const handleNewButtonClick = () => {
+    router.push(ESRoutes.GIFT_MANAGEMENT)
+  }
+
   const AddNewButton = () => {
     return (
-      <ESButton className={classes.addNewButton}>
+      <ESButton className={classes.addNewButton} onClick={handleNewButtonClick}>
         <Icon className={`fa fa-plus ${classes.iconPlus}`} fontSize="small" />
         <Typography className={classes.addNewButtonText}>{t('streaming_setting_screen.member_list.add_new')}</Typography>
       </ESButton>

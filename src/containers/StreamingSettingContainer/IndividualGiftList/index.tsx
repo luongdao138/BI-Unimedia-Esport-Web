@@ -5,7 +5,11 @@ import { useTranslation } from 'react-i18next'
 import GiftTable from '@containers/StreamingSettingContainer/IndividualGiftList/GiftTable'
 import GiftListPagination from '@containers/StreamingSettingContainer/IndividualGiftList/Pagination'
 
-const IndividualGiftListContainer: React.FC = () => {
+type Props = {
+  handleGoToCreateNewListState?: () => void
+}
+
+const IndividualGiftListContainer: React.FC<Props> = ({ handleGoToCreateNewListState }) => {
   const classes = useStyles()
   const { t } = useTranslation('common')
   const mockData = Array.from(Array(20).keys()).map((index) => ({
@@ -18,7 +22,7 @@ const IndividualGiftListContainer: React.FC = () => {
 
   const createNewButton = useCallback(() => {
     return (
-      <ESButton className={classes.createButton}>
+      <ESButton className={classes.createButton} onClick={handleGoToCreateNewListState}>
         <Icon className={`fa fa-plus ${classes.iconPlus}`} fontSize="small" />
         <Typography>{t('streaming_setting_screen.individual_gift_tab.create_new')}</Typography>
       </ESButton>

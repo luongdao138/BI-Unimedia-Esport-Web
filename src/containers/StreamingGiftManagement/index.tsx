@@ -7,9 +7,11 @@ import React, { useState } from 'react'
 import { Colors } from '@theme/colors'
 import GiftItem from '@containers/StreamingGiftManagement/giftitem'
 import AddPersonTarget from './AddPersonTarget'
+import { useRouter } from 'next/router'
 
 const StreamingGiftManagement: React.FC = () => {
   const classes = useStyles()
+  const router = useRouter()
   const { t } = useTranslation('common')
   const [step, setStep] = useState(1)
   const handleNext = () => {
@@ -29,11 +31,15 @@ const StreamingGiftManagement: React.FC = () => {
         return <AddPersonTarget handleAdd={handleNext} />
     }
   }
+
+  const handleOnFooterCancelClick = () => {
+    router.back()
+  }
   return (
     <>
       <HeaderWithButton title={t('streaming_gift_management.title')} />
       {renderContent()}
-      <Footer />
+      <Footer onCancel={handleOnFooterCancelClick} />
     </>
   )
 }

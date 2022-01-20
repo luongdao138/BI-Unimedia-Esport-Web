@@ -3,7 +3,7 @@ import React from 'react'
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
 import { GiftIndividual } from '@services/liveStream.service'
-import ESButton from '@components/Button'
+import GiftTableRow from '@containers/StreamingSettingContainer/IndividualGiftList/GiftTableRow'
 
 interface Props {
   data: Array<GiftIndividual>
@@ -37,45 +37,11 @@ const GiftTable: React.FC<Props> = ({ data }) => {
     )
   }
 
-  const handleOnRemoveClick = () => {
-    // TODO
-  }
-
-  const handleOnEditClick = () => {
-    // TODO
-  }
-
-  const tableRow = (item) => {
-    const { index, name, number_of_registration: numberOfRegistration } = item
-    return (
-      <Box className={classes.tableRow}>
-        <Box className={classes.indexColumn}>
-          <Typography className={classes.tableText}>{index}</Typography>
-        </Box>
-        <Box className={classes.nameColumn}>
-          <Typography className={classes.tableText}>{name}</Typography>
-        </Box>
-        {!isMobile && (
-          <Box className={classes.numberOfRegColumn}>
-            <Typography className={classes.tableText}>{numberOfRegistration.toString()}</Typography>
-          </Box>
-        )}
-        <Box className={classes.actionButtonColumn}>
-          <ESButton onClick={handleOnRemoveClick} className={classes.removeButton}>
-            <Typography className={classes.remove}>{t('streaming_setting_screen.individual_gift_tab.remove')}</Typography>
-          </ESButton>
-          <ESButton onClick={handleOnEditClick} className={classes.editButton}>
-            <Typography className={classes.edit}>{t('streaming_setting_screen.individual_gift_tab.edit')}</Typography>
-          </ESButton>
-        </Box>
-      </Box>
-    )
-  }
   const tableContent = () => {
     return (
       <Box className={classes.tableContent}>
-        {data.map((item) => {
-          return tableRow(item)
+        {data.map((item, index) => {
+          return <GiftTableRow item={item} key={`GiftTableRow-${index}`} />
         })}
       </Box>
     )
