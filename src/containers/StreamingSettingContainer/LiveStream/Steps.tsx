@@ -496,7 +496,7 @@ const Steps: React.FC<StepsProps> = ({
               />
             </Box>
           ) : (
-            <Box>
+            <Box pb={2}>
               <ESInput
                 id="title"
                 name="title"
@@ -757,120 +757,6 @@ const Steps: React.FC<StepsProps> = ({
               </Box>
             )}
           </Box>
-          {/* {paid_delivery_flag && ( */}
-          {/* <>
-              {isFirstStep() ? (
-                <Box pb={1}>
-                  <ESCheckboxBig
-                    checked={formik?.values?.stepSettingOne?.use_ticket}
-                    onChange={() => {
-                      formik.setFieldValue('stepSettingOne.use_ticket', !formik?.values?.stepSettingOne?.use_ticket)
-                    }}
-                    label={t('common:streaming_setting_screen.ticket_use')}
-                    name="stepSettingOne.use_ticket"
-                    disabled={isLive}
-                  />
-                </Box>
-              ) : (
-                <ESLabel label={i18n.t('common:streaming_setting_screen.ticket_use')} />
-              )} */}
-          {/* TODO: Apply component enter point eXeポイント */}
-          {/* {isFirstStep() ? (
-                <Box pb={2} className={classes.box}>
-                  <div ref={formRef['video_publish_end_time']} className={classes.firstItem}>
-                    <ESNumberInputStream
-                      id="ticket_price"
-                      name="stepSettingOne.ticket_price"
-                      type="tel"
-                      fullWidth
-                      nameValue={'stepSettingOne.ticket_price'}
-                      // className={classes.input}
-                      placeholder={'0'}
-                      value={
-                        isFirstStep() && (formik?.values?.stepSettingOne?.ticket_price === 0 || !formik?.values?.stepSettingOne?.use_ticket)
-                          ? ''
-                          : formik?.values?.stepSettingOne?.ticket_price
-                      }
-                      onChange={(e) => {
-                        formik.handleChange(e)
-                        handleUpdateValidateField('ticket_price')
-                      }}
-                      helperText={
-                        validateField !== 'all'
-                          ? validateField === 'ticket_price'
-                            ? formik?.errors?.stepSettingOne?.ticket_price
-                            : ''
-                          : checkLiveDisplayErrorOnSubmit(formik, 'ticket_price').helperText
-                      }
-                      error={
-                        validateField !== 'all'
-                          ? validateField === 'ticket_price'
-                            ? !!formik?.errors?.stepSettingOne?.ticket_price
-                            : false
-                          : checkLiveDisplayErrorOnSubmit(formik, 'ticket_price').error
-                      }
-                      size="big"
-                      isNumber={true}
-                      formik={formik}
-                      disabled={isLive}
-                      className={getAddClassByStep(classes.input_text)}
-                      readOnly={!formik?.values?.stepSettingOne?.use_ticket}
-                      nowrapHelperText
-                      endAdornment={
-                        isFirstStep() ? (
-                          <InputAdornment position="end" className={classes.inputContainer}>
-                            <Box className={classes.inputAdornment}>{t('common:common.eXe_points')}</Box>
-                          </InputAdornment>
-                        ) : (
-                          <></>
-                        )
-                      }
-                      classes={{ root: classes.root }}
-                    />
-                  </div>
-                </Box>
-              ) : (
-                <Box pb={2}>
-                  <Typography className={classes.date}>
-                    {formik?.values?.stepSettingOne?.use_ticket
-                      ? `利用する（${formik?.values?.stepSettingOne?.ticket_price} ${t('common:common.eXe_points')}）`
-                      : '利用しない'}
-                  </Typography>
-                </Box>
-              )}
-            </>
-          )} */}
-          {/* TODO: V3.0 SNS OLD */}
-          {/* {isFirstStep() ? (
-            <Box>
-              <ESCheckboxBig
-                checked={formik?.values?.stepSettingOne?.share_sns_flag}
-                onChange={() => {
-                  formik.setFieldValue('stepSettingOne.share_sns_flag', !formik?.values?.stepSettingOne?.share_sns_flag)
-                }}
-                label={t('common:streaming_setting_screen.share_SNS')}
-                name="share_sns_flag"
-                disabled={isLive}
-              />
-            </Box>
-          ) : (
-            <Box>
-              <ESInput
-                id="title"
-                name="title"
-                value={
-                  formik?.values?.stepSettingOne?.share_sns_flag
-                    ? t('common:streaming_setting_screen.shared_it')
-                    : t('common:streaming_setting_screen.dont_share')
-                }
-                fullWidth
-                labelPrimary={t('common:streaming_setting_screen.share_SNS')}
-                disabled={true}
-                size="big"
-                className={getAddClassByStep(classes.input_text)}
-              />
-            </Box>
-          )} */}
           {/*TODO: V3.0 form ticket new v3.0 */}
           {paid_delivery_flag && (
             <>
@@ -950,18 +836,20 @@ const Steps: React.FC<StepsProps> = ({
                   </div>
                 </ESBoxftDashColumn>
               ) : (
-                <Box pb={2}>
-                  <Typography className={classes.date}>
-                    {formik?.values?.stepSettingOne?.use_ticket
-                      ? `利用する（${formik?.values?.stepSettingOne?.ticket_price} ${t('common:common.eXe_points')}）`
-                      : '利用しない'}
-                  </Typography>
+                <Box pb={2} pt={2}>
+                  <ESBoxftDashColumn colorLine="#767676" isSelectedGift={true}>
+                    <Typography className={`${classes.date} ${classes.newTextftDash}`}>
+                      {formik?.values?.stepSettingOne?.use_ticket
+                        ? `利用する（${formik?.values?.stepSettingOne?.ticket_price} ${t('common:common.eXe_points')}）`
+                        : '利用しない'}
+                    </Typography>
+                  </ESBoxftDashColumn>
                 </Box>
               )}
             </>
           )}
           {/* gift */}
-          {isFirstStep() && (
+          {isFirstStep() ? (
             <Box pb={2} pt={2} className={classes.wrap_input_box_switch}>
               <div className={classes.firstItem}>
                 <ESLabelWithSwitch
@@ -972,20 +860,24 @@ const Steps: React.FC<StepsProps> = ({
                 />
               </div>
             </Box>
+          ) : (
+            <ESLabel label={i18n.t('common:streaming_setting_screen.title_gift')} />
           )}
-          {isFirstStep() && (
+          {isFirstStep() ? (
             <ESBoxftDashColumn isSelectedGift={formik?.values?.stepSettingOne?.selected_gift}>
               <Box className={classes.boxAboutGift}>
                 <Box className={classes.select_show_about_gift} pt={1}>
                   <label className={classes.labelNavigate}>{i18n.t('common:streaming_setting_screen.chooses_list_person_gift')}</label>
-                  <label className={classes.labelNameObject}>
-                    {`${i18n.t('common:streaming_setting_screen.list_gift_selected')} ${i18n.t(
-                      'common:streaming_setting_screen.unselected'
-                    )}`}
-                  </label>
                   <Typography className={classes.giftInfoList} variant="body2" onClick={handleListGiftInfo}>
                     <Icon className={`fa fa-info-circle ${classes.iconMargin}`} fontSize="small" />{' '}
                     {i18n.t('common:streaming_setting_screen.about_the_gift_list')}
+                  </Typography>
+                </Box>
+                <Box pt={1} className={classes.nameList}>
+                  <Typography className={classes.labelNameObject}>
+                    {`${i18n.t('common:streaming_setting_screen.list_gift_selected')} ${i18n.t(
+                      'common:streaming_setting_screen.unselected'
+                    )}`}
                   </Typography>
                 </Box>
                 <Box className={classes.select_show_about_gift} pt={1.8} pb={1}>
@@ -1003,6 +895,27 @@ const Steps: React.FC<StepsProps> = ({
                 </Box>
               </Box>
             </ESBoxftDashColumn>
+          ) : (
+            <Box pb={2} pt={2}>
+              <ESBoxftDashColumn colorLine="#767676" isSelectedGift={true}>
+                <Box className={classes.newTextftDash}>
+                  <Box pt={1} className={classes.nameList}>
+                    <Typography className={`${classes.labelNameObject} ${classes.labelRank}`}>
+                      {`${i18n.t('common:streaming_setting_screen.list_gift_selected')} ${i18n.t(
+                        'common:streaming_setting_screen.unselected'
+                      )}`}
+                    </Typography>
+                  </Box>
+                  <Box className={`${classes.nameList} ${classes.nameListRanking}`}>
+                    <Typography className={`${classes.labelNameObject} ${classes.labelRank}`}>
+                      {`${i18n.t('common:streaming_setting_screen.individual_gift_ranking_display')}： ${i18n.t(
+                        'common:streaming_setting_screen.unselected'
+                      )}`}
+                    </Typography>
+                  </Box>
+                </Box>
+              </ESBoxftDashColumn>
+            </Box>
           )}
           {/* stream URL */}
           <Box pt={isFirstStep() ? 2 : 0} className={classes.wrap_input} flexDirection="row" display="flex" alignItems="flex-end">
@@ -1353,7 +1266,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontWeight: 'normal',
     fontSize: 14,
     color: '#ffffff50',
-    marginLeft: 16,
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
   },
   giftInfoList: {
     position: 'relative',
@@ -1378,6 +1293,20 @@ const useStyles = makeStyles((theme: Theme) => ({
   firstItemShort: {
     width: '450px',
   },
+  nameList: {
+    width: 450,
+  },
+  newTextftDash: {
+    paddingLeft: 22,
+  },
+  nameListRanking: {
+    paddingTop: 8,
+  },
+  labelRank: {
+    paddingBottom: 8,
+    color: Colors.white_opacity[70],
+  },
+
   [theme.breakpoints.down(768)]: {
     container: {
       padding: '34px 24px 32px 24px',
@@ -1432,6 +1361,20 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     firstItemShort: {
       width: '100%',
+    },
+    nameList: {
+      width: window.innerWidth - 74,
+    },
+    newTextftDash: {
+      paddingLeft: 13,
+    },
+    nameListRanking: {
+      // paddingLeft: 13,
+      paddingTop: 8,
+    },
+    labelRank: {
+      paddingTop: 0,
+      paddingBottom: 8,
     },
   },
   addPaddingNote: {
