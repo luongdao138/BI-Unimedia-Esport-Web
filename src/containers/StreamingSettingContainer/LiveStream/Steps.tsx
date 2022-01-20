@@ -554,9 +554,18 @@ const Steps: React.FC<StepsProps> = ({
                   }
                   size="big"
                   disabled={!isFirstStep()}
-                  className={getAddClassByStep(classes.input_text)}
+                  className={`${getAddClassByStep(classes.input_text)} ${
+                    CommonHelper.hasScrollBar('description') ? 'hide-scroll-indicator' : null
+                  }`}
                   endAdornment={
-                    isFirstStep() && <CharacterLimited value={formik.values.stepSettingOne.description} limit={5000} multiLines />
+                    isFirstStep() && (
+                      <CharacterLimited
+                        value={formik.values.stepSettingOne.description}
+                        limit={5000}
+                        multiLines
+                        isScroll={CommonHelper.hasScrollBar('description')}
+                      />
+                    )
                   }
                 />
               ) : (
