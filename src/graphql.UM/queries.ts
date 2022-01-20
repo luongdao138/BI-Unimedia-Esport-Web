@@ -179,6 +179,29 @@ export const listChannels = /* GraphQL */ `
     }
   }
 `
+export const getCowellRealtimeStatusConnections = /* GraphQL */ `
+  query GetCowellRealtimeStatusConnections($id: ID!) {
+    getCowellRealtimeStatusConnections(id: $id) {
+      id
+      connectionId
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const listCowellRealtimeStatusConnectionss = /* GraphQL */ `
+  query ListCowellRealtimeStatusConnectionss($filter: ModelCowellRealtimeStatusConnectionsFilterInput, $limit: Int, $nextToken: String) {
+    listCowellRealtimeStatusConnectionss(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        connectionId
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`
 export const getUsersByUuid = /* GraphQL */ `
   query GetUsersByUuid($uuid: String, $sortDirection: ModelSortDirection, $filter: ModelUserFilterInput, $limit: Int, $nextToken: String) {
     getUsersByUuid(uuid: $uuid, sortDirection: $sortDirection, filter: $filter, limit: $limit, nextToken: $nextToken) {

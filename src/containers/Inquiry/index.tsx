@@ -185,7 +185,10 @@ const ESInquiry: React.FC = () => {
                   disabled={showPreview}
                   rows={8}
                   size="small"
-                  endAdornment={<CharacterLimited value={values.content} limit={5000} multiLines />}
+                  endAdornment={
+                    <CharacterLimited value={values.content} limit={5000} multiLines isScroll={CommonHelper.hasScrollBar('content')} />
+                  }
+                  className={`${CommonHelper.hasScrollBar('content') ? 'hide-scroll-indicator' : null}`}
                 />
               </Box>
               <Box mt={1}></Box>

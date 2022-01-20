@@ -13,6 +13,7 @@ import ESFastInput from '@components/FastInput'
 import ESSwitchIOS from '@components/Switch'
 import i18n from '@locales/i18n'
 import CharacterLimited from '@components/CharacterLimited'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
 
 type Props = {
   formik: FormikProps<FormType>
@@ -86,7 +87,15 @@ const StepOne: React.FC<Props> = ({ formik, hardwares, editables }) => {
           error={formik.touched?.stepOne?.message && !!formik.errors?.stepOne?.message}
           size="small"
           disabled={!editables.message}
-          endAdornment={<CharacterLimited value={formik.values.stepOne.message} limit={5000} multiLines />}
+          endAdornment={
+            <CharacterLimited
+              value={formik.values.stepOne.message}
+              limit={5000}
+              multiLines
+              isScroll={CommonHelper.hasScrollBar('stepOne.message')}
+            />
+          }
+          className={`${CommonHelper.hasScrollBar('stepOne.message') ? 'hide-scroll-indicator' : null}`}
         />
       </Box>
       <Box pb={3}>

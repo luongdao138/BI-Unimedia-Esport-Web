@@ -432,7 +432,13 @@ const Steps: React.FC<StepsProps> = ({
             <SmallLoader />
           </div>
         ) : (
-          <Box className={`${classes.wrap_input} ${classes.sp_wrap_input_tag}`} display="flex" flexDirection="row" alignItems="center">
+          <Box
+            pb={2}
+            className={`${classes.wrap_input} ${classes.sp_wrap_input_tag}`}
+            display="flex"
+            flexDirection="row"
+            alignItems="center"
+          >
             <Box className={classes.firstItem} display="flex" flexDirection="row" alignItems="center">
               <div className={classes.dot} />
               <Typography className={classes.textTagStatus}>
@@ -447,7 +453,7 @@ const Steps: React.FC<StepsProps> = ({
               </Typography>
             </Box>
             <Box
-              py={1}
+              // py={1}
               display="flex"
               justifyContent="center"
               alignItems={'center'}
@@ -598,9 +604,18 @@ const Steps: React.FC<StepsProps> = ({
                   size="big"
                   required
                   disabled={!isFirstStep()}
-                  className={getAddClassByStep(classes.input_text)}
+                  className={`${getAddClassByStep(classes.input_text)} ${
+                    CommonHelper.hasScrollBar('description') ? 'hide-scroll-indicator' : null
+                  }`}
                   endAdornment={
-                    isFirstStep() && <CharacterLimited value={formik.values.stepSettingTwo.description} limit={5000} multiLines />
+                    isFirstStep() && (
+                      <CharacterLimited
+                        value={formik.values.stepSettingTwo.description}
+                        limit={5000}
+                        multiLines
+                        isScroll={CommonHelper.hasScrollBar('description')}
+                      />
+                    )
                   }
                 />
               ) : (

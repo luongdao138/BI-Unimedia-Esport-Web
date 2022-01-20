@@ -153,6 +153,7 @@ export const onCreateVideo = /* GraphQL */ `
       video_status
       live_start_time
       createdAt
+      updatedAt
     }
   }
 `
@@ -215,6 +216,36 @@ export const onDeleteChannel = /* GraphQL */ `
       arn
       state
       alarm_state
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const onCreateCowellRealtimeStatusConnections = /* GraphQL */ `
+  subscription OnCreateCowellRealtimeStatusConnections {
+    onCreateCowellRealtimeStatusConnections {
+      id
+      connectionId
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const onUpdateCowellRealtimeStatusConnections = /* GraphQL */ `
+  subscription OnUpdateCowellRealtimeStatusConnections {
+    onUpdateCowellRealtimeStatusConnections {
+      id
+      connectionId
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const onDeleteCowellRealtimeStatusConnections = /* GraphQL */ `
+  subscription OnDeleteCowellRealtimeStatusConnections {
+    onDeleteCowellRealtimeStatusConnections {
+      id
+      connectionId
       createdAt
       updatedAt
     }

@@ -9,6 +9,7 @@ import i18n from '@locales/i18n'
 import { FormType } from './FormModel/FormType'
 import { EditableTypes } from './useLobbyCreate'
 import CharacterLimited from '@components/CharacterLimited'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
 
 type Props = {
   formik: FormikProps<FormType>
@@ -112,6 +113,7 @@ const StepTwo: React.FC<Props> = ({ formik, prefectures, editables }) => {
           multiline
           rows={5}
           name="stepTwo.address"
+          id="stepTwo.address"
           fullWidth
           placeholder={i18n.t('common:lobby.create.area_name_placeholder')}
           value={formik.values.stepTwo.address}
@@ -122,7 +124,15 @@ const StepTwo: React.FC<Props> = ({ formik, prefectures, editables }) => {
           size="small"
           required
           disabled={!editables.address}
-          endAdornment={<CharacterLimited value={formik.values.stepTwo.address} limit={5000} multiLines />}
+          endAdornment={
+            <CharacterLimited
+              value={formik.values.stepTwo.address}
+              limit={5000}
+              multiLines
+              isScroll={CommonHelper.hasScrollBar('stepTwo.address')}
+            />
+          }
+          className={`${CommonHelper.hasScrollBar('stepTwo.address') ? 'hide-scroll-indicator' : null}`}
         />
       </Box>
     </Box>
