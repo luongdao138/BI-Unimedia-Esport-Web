@@ -9,6 +9,7 @@ import ESFastInput from '@components/FastInput'
 import ESSelect from '@components/Select'
 import i18n from '@locales/i18n'
 import CharacterLimited from '@components/CharacterLimited'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
 
 type Props = {
   formik: FormikProps<FormType>
@@ -127,6 +128,7 @@ const StepThree: React.FC<Props> = ({ formik, prefectures, editables }) => {
           multiline
           rows={5}
           name="stepThree.address"
+          id="stepThree.address"
           fullWidth
           placeholder={i18n.t('common:tournament_create.area_name_placeholder')}
           value={formik.values.stepThree.address}
@@ -137,7 +139,15 @@ const StepThree: React.FC<Props> = ({ formik, prefectures, editables }) => {
           size="small"
           required
           disabled={!editables.address}
-          endAdornment={<CharacterLimited value={formik.values.stepThree.address} limit={5000} multiLines />}
+          endAdornment={
+            <CharacterLimited
+              value={formik.values.stepThree.address}
+              limit={5000}
+              multiLines
+              isScroll={CommonHelper.hasScrollBar('stepThree.address')}
+            />
+          }
+          className={`${CommonHelper.hasScrollBar('stepThree.address') ? 'hide-scroll-indicator' : null}`}
         />
       </Box>
     </Box>
