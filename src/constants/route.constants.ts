@@ -86,4 +86,9 @@ export const ESRoutes = {
   STREAMING_GIFT_REPORT: 'video/streaming_setting/streaming_report',
   // w01-06
   GIFT_MANAGEMENT: '/video/streaming_list_register_gift',
+  LIVE_STREAM_LIST: '/live_stream_list',
+  ARCHIVED_LIST: '/archived_list',
+  PAYMENT_INFO: '/payment_info',
+  PAYMENT_INFO_DETAIL: '/payment_info/:id',
+  ARCHIVE_DETAIL: '/archive_detail',
 }

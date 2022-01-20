@@ -94,7 +94,7 @@ const Steps: React.FC<StepsProps> = ({
   const { userProfile } = useGetProfile()
   const [showStreamURL, setShowStreamURL] = useState(false)
   const [showStreamKey, setShowStreamKey] = useState(false)
-  const { checkNgWordFields, checkNgWordByField } = useCheckNgWord()
+  const { checkVideoNgWordFields, checkVideoNgWordByField } = useCheckNgWord()
   const paid_delivery_flag = userProfile?.attributes?.paid_delivery_flag
   const [obsNotEnable, setObsNotEnable] = useState<boolean>(false)
   // const [errPublicTime, setErrPublicTime] = useState(false)
@@ -198,13 +198,13 @@ const Steps: React.FC<StepsProps> = ({
   const onClickNext = () => {
     const { stepSettingOne } = formik.values
 
-    const fieldIdentifier = checkNgWordFields({
+    const fieldIdentifier = checkVideoNgWordFields({
       title: stepSettingOne.title,
       description: stepSettingOne.description,
       ticket_price: stepSettingOne.ticket_price,
     })
 
-    const ngFields = checkNgWordByField({
+    const ngFields = checkVideoNgWordByField({
       [FIELD_TITLES.stepSettingOne.title]: stepSettingOne.title,
       [FIELD_TITLES.stepSettingOne.description]: stepSettingOne.description,
       [FIELD_TITLES.stepSettingOne.ticket_price]: stepSettingOne.ticket_price,

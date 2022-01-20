@@ -39,7 +39,14 @@ const VideoPreviewItem: React.FC<VideoPreviewItemProps> = ({ data, containerStyl
   return (
     <Box className={classes.container} key={data?.id} onClick={() => onNavigateLive(data)} style={containerStyle}>
       <Box className={classes.videoContainer}>
-        <Box className={classes.video} style={{ backgroundImage: `url(${data?.thumbnail ? data.thumbnail : IMG_PLACEHOLDER})` }} />
+        <Box
+          className={classes.video}
+          style={{
+            backgroundImage: `url(${
+              data?.thumbnail ? data.thumbnail : !data?.thumbnail && data?.video_thumbnail ? data?.video_thumbnail : IMG_PLACEHOLDER
+            })`,
+          }}
+        />
         <Box className={classes.tagContainer}>
           {data?.use_ticket === 1 && (
             <Box className={classes.premiumTagContainer}>

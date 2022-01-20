@@ -42,7 +42,7 @@ export const setLiveStream = createAsyncThunk<services.SetLiveStreamResponse, se
         return res
       } else {
         // throw res.message
-        return rejectWithValue(JSON.stringify(res.message))
+        return rejectWithValue(res)
       }
     } catch (error) {
       if (!error.response) {
@@ -122,6 +122,21 @@ export const setChannel = createAsyncThunk<services.SetChannelResponse, services
         // throw res.message
         return rejectWithValue(JSON.stringify(res.message))
       }
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
+export const getLiveStreamReport = createAsyncThunk<services.LiveStreamReportResponse, services.LiveStreamReportParams>(
+  ACTION_STREAM_TYPES.GET_LIVE_STREAM_REPORT,
+  async (param, { rejectWithValue }) => {
+    try {
+      const res = await services.liveStreamReport(param)
+      return res
     } catch (error) {
       if (!error.response) {
         throw error

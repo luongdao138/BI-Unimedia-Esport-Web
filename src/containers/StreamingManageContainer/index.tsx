@@ -32,14 +32,23 @@ const StreamingManageContainer: React.FC = () => {
             onClick={() => {
               // router.push(ESRoutes.VIDEO_STREAMING_SETTING)
               // TODO
+              router.push(ESRoutes.LIVE_STREAM_LIST)
             }}
           >
-            <SettingsRowItem key="archive_list" title={t('streaming_manage_screen.archive_list')} showSwitch={false} />
+            <SettingsRowItem key="live_stream_list" title={t('streaming_manage_screen.live_stream_list')} showSwitch={false} />
+          </div>
+          <div
+            onClick={() => {
+              router.push(ESRoutes.ARCHIVED_LIST)
+            }}
+          >
+            <SettingsRowItem key="archived_list" title={t('streaming_manage_screen.archived_list')} showSwitch={false} />
           </div>
           <div
             onClick={() => {
               // router.push(ESRoutes.VIDEO_STREAMING_SETTING)
               // TODO
+              router.push(ESRoutes.PAYMENT_INFO)
             }}
           >
             <SettingsRowItem key="payment_information" title={t('streaming_manage_screen.payment_information')} showSwitch={false} />

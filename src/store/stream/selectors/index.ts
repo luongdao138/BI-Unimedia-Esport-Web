@@ -9,3 +9,4 @@ export const getScheduleSetting = createSelector(getRoot, (state) => state.sched
 export const getStreamUrlAndKey = createSelector(getRoot, (state) => state.getStreamUrlAndKeyInfo)
 export const getCategorySelector = createSelector(getRoot, (state) => state.getCategory)
 export const getChannelSelector = createSelector(getRoot, (state) => state.getChannel)
+export const getLiveStreamReportSelector = createSelector(getRoot, (state) => state.liveStreamReport)

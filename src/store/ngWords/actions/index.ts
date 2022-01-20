@@ -13,3 +13,18 @@ export const getNgWords = createAsyncThunk<services.NgWordsResponse>(NG_WORDS_AC
     return rejectWithValue(error.response.data)
   }
 })
+
+export const getVideoNgWords = createAsyncThunk<services.NgWordsResponse>(
+  NG_WORDS_ACTION_TYPE.GET_VIDEO_WORDS,
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await services.getVideoNgWords()
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
