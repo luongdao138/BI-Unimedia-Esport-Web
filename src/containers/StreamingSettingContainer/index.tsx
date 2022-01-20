@@ -26,10 +26,10 @@ import StreamingReservationContainer from './StreamingReservation'
 import useLiveSetting from './useLiveSetting'
 import { useFormik } from 'formik'
 // import IndividualGiftListContainer from '@containers/StreamingSettingContainer/IndividualGiftList'
-import GiftMemberListContainer from './GiftMemberListContainer'
 import MemberList from './GiftMemberListContainer/MemberList'
 import ESModal from '@components/Modal'
 import ListGroupGift from './ListGroupGift'
+import GiftManageTab, { TabState } from '@containers/StreamingSettingContainer/GiftManageTab'
 // import ESButton from '@components/Button'
 // import useListGroupGift from './ListGroupGift/useListGroupGift'
 
@@ -47,6 +47,7 @@ const StreamingSettingContainer: React.FC<{ default_tab: any }> = ({ default_tab
   const router = useRouter()
   const [tab, setTab] = useState(default_tab)
   const [disable, setDisable] = useState(false)
+  const [giftManageTabState, setGiftManageTabState] = useState(TabState.LIST)
   // const { toListGroupGift } = useListGroupGift()
   //TODO: check call api
   const {
@@ -173,6 +174,10 @@ const StreamingSettingContainer: React.FC<{ default_tab: any }> = ({ default_tab
       </Grid>
     )
   }
+  const giftManageChangeTab = (tab: TabState) => {
+    setGiftManageTabState(tab)
+  }
+
   const getContent = () => {
     switch (tab) {
       case TABS.LIVE_STREAM:
@@ -194,10 +199,8 @@ const StreamingSettingContainer: React.FC<{ default_tab: any }> = ({ default_tab
         )
       case TABS.DISTRIBUTOR:
         return <DistributorInformationContainer formik={formikDistributor} />
-      // case TABS.INDIVIDUAL_GIFT_LIST:
-      //   return <IndividualGiftListContainer />
       case TABS.GIFT_MEMBERS_LIST:
-        return <GiftMemberListContainer />
+        return <GiftManageTab onChangeTab={giftManageChangeTab} />
       default:
         break
     }
@@ -238,7 +241,7 @@ const StreamingSettingContainer: React.FC<{ default_tab: any }> = ({ default_tab
           </Grid>
         </Grid>
 
-        {tab === TABS.GIFT_MEMBERS_LIST && (
+        {tab === TABS.GIFT_MEMBERS_LIST && giftManageTabState === TabState.CREATE_NEW && (
           <Grid item xs={12} md={4}>
             <MemberList />
           </Grid>
