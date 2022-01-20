@@ -1,20 +1,25 @@
 import { Box, makeStyles, Typography, useMediaQuery, useTheme } from '@material-ui/core'
-import React, { useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Colors } from '@theme/colors'
 import ESButton from '@components/Button'
+import DeleteConfirmModal from '@containers/StreamingGiftManagement/deletemodal'
 
 interface Props {
   index: number
 }
+
 const GiftItem: React.FC<Props> = ({ index }) => {
   const classes = useStyles()
   const { t } = useTranslation('common')
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
 
+  const [openDialog, setOpenDialog] = useState(false)
+
   const handleOnDeleteClick = () => {
     // TODO:
+    setOpenDialog(true)
   }
   const handleOnEditClick = () => {
     // TODO
@@ -36,6 +41,25 @@ const GiftItem: React.FC<Props> = ({ index }) => {
     sns_url: isMobile ? t(`streaming_gift_management.sns_url_sm`) : t(`streaming_gift_management.sns_url`),
   }
 
+  const handleCloseConfirmModal = () => {
+    setOpenDialog(false)
+  }
+
+  const handleConfirmDelete = () => {
+    // TODO
+  }
+
+  const deleteModal = () => {
+    return (
+      <DeleteConfirmModal
+        name={'かやをかやをかやをかやをか'}
+        open={openDialog}
+        handleClose={handleCloseConfirmModal}
+        handleDelete={handleConfirmDelete}
+      />
+    )
+  }
+
   return (
     <Box className={classes.container}>
       <Box className={classes.header}>
@@ -52,6 +76,7 @@ const GiftItem: React.FC<Props> = ({ index }) => {
       {tableRow(tableLabel.team_or_individual, '個人', '8px')()}
       {tableRow(tableLabel.target, 'かやをかやをかやをかやをか', '8px')()}
       {tableRow(tableLabel.sns_url, 'http://twitter/uni_kayawo', '16px')()}
+      {deleteModal()}
     </Box>
   )
 }
