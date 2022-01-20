@@ -21,6 +21,7 @@ import ESLoader from '@components/FullScreenLoader'
 import Linkify from 'react-linkify'
 import ESLabel from '@components/Label'
 import CharacterLimited from '@components/CharacterLimited'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
 interface StepsProps {
   step: number
   onNext: (step: number) => void
@@ -162,9 +163,18 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, channel, hasChannel, formik
                   error={formik?.touched?.stepSettingThree?.description && !!formik?.errors?.stepSettingThree?.description}
                   size="big"
                   disabled={!isFirstStep()}
-                  className={getAddClassByStep(classes.input_text)}
+                  className={`${getAddClassByStep(classes.input_text)} ${
+                    CommonHelper.hasScrollBar('overview') ? 'hide-scroll-indicator' : null
+                  }`}
                   endAdornment={
-                    isFirstStep() && <CharacterLimited value={formik.values.stepSettingThree.description} limit={5000} multiLines />
+                    isFirstStep() && (
+                      <CharacterLimited
+                        value={formik.values.stepSettingThree.description}
+                        limit={5000}
+                        multiLines
+                        isScroll={CommonHelper.hasScrollBar('overview')}
+                      />
+                    )
                   }
                 />
               ) : (

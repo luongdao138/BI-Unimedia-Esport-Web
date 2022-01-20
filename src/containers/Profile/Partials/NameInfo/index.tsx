@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next'
 // import ESSelect from '@components/Select'
 import ESInput from '@components/Input'
 import CharacterLimited from '@components/CharacterLimited'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
 
 export type NameInfoParams = {
   nickname: string
@@ -105,7 +106,8 @@ const NameInfo: React.FC<NameInfoProps> = ({ profile, onDataChange, handleError 
             onChange={handleChange}
             helperText={errors.bio}
             error={!!errors.bio}
-            endAdornment={<CharacterLimited value={values.bio} limit={5000} multiLines />}
+            endAdornment={<CharacterLimited value={values.bio} limit={5000} multiLines isScroll={CommonHelper.hasScrollBar('bio')} />}
+            className={`${CommonHelper.hasScrollBar('bio') ? 'hide-scroll-indicator' : null}`}
           />
         </Grid>
       </Grid>
