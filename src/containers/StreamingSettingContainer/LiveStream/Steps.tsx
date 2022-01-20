@@ -62,6 +62,7 @@ interface StepsProps {
   videoStatusDynamo?: string | number
   validateField?: string
   handleUpdateValidateField?: (value: string) => void
+  setTabNavigate?: (tab: number) => void
 }
 
 const KEY_TYPE = {
@@ -85,6 +86,7 @@ const Steps: React.FC<StepsProps> = ({
   videoStatusDynamo,
   validateField,
   handleUpdateValidateField,
+  setTabNavigate,
 }) => {
   const dispatch = useAppDispatch()
   const { t } = useTranslation(['common'])
@@ -867,7 +869,14 @@ const Steps: React.FC<StepsProps> = ({
             <ESBoxftDashColumn isSelectedGift={formik?.values?.stepSettingOne?.selected_gift}>
               <Box className={classes.boxAboutGift}>
                 <Box className={classes.select_show_about_gift} pt={1}>
-                  <label className={classes.labelNavigate}>{i18n.t('common:streaming_setting_screen.chooses_list_person_gift')}</label>
+                  <label
+                    className={classes.labelNavigate}
+                    onClick={() => {
+                      setTabNavigate(2)
+                    }}
+                  >
+                    {i18n.t('common:streaming_setting_screen.chooses_list_person_gift')}
+                  </label>
                   <Typography className={classes.giftInfoList} variant="body2" onClick={handleListGiftInfo}>
                     <Icon className={`fa fa-info-circle ${classes.iconMargin}`} fontSize="small" />{' '}
                     {i18n.t('common:streaming_setting_screen.about_the_gift_list')}
@@ -1261,6 +1270,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     textDecoration: 'underline',
     textUnderlineOffset: '2px',
     color: '#ffffff70',
+    cursor: 'pointer',
   },
   labelNameObject: {
     fontWeight: 'normal',

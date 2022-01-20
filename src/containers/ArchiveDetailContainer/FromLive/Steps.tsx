@@ -36,6 +36,8 @@ import { CommonHelper } from '@utils/helpers/CommonHelper'
 import VideoDeleteConfirmModal from '@containers/ArchiveDetailContainer/DeleteVideoConfirmModal/VideoDeleteConfirmModal'
 import ESLoader from '@components/FullScreenLoader'
 import { CookieData } from '@services/archiveList.service'
+import ESBoxftDashColumn from '@components/ESBoxftDashColumn'
+import { ESRoutes } from '@constants/route.constants'
 
 interface StepsProps {
   step: number
@@ -230,6 +232,10 @@ const Steps: React.FC<StepsProps> = ({
         window.open(dataCookie?.url, '_blank')
       })
     }
+  }
+
+  const handleReportData = () => {
+    router.push(ESRoutes.STREAMING_GIFT_REPORT)
   }
 
   return (
@@ -438,24 +444,69 @@ const Steps: React.FC<StepsProps> = ({
             </Box>
           )}
 
-          {isFromSchedule && (
+          {/* {isFromSchedule && (
             <Box pb={2}>
               <Box className={classes.label}>{i18n.t('common:archive_detail_screen.delivery_date_time')}</Box>
               <Box className={classes.dateTime} pt={1} pl={1}>
                 {CommonHelper.formatDateTimeJP(videoArchivedDetail?.stream_schedule_start_time)}
               </Box>
             </Box>
-          )}
+          )} */}
 
-          <Box pb={2}>
+          {/* <Box pb={2}>
             <Box className={classes.label}>{i18n.t('common:archive_detail_screen.ticket_amount')}</Box>
             <Box className={classes.dateTime} pt={1} pl={1} height="28px">
               {videoArchivedDetail && videoArchivedDetail?.ticket_price
                 ? `${FormatHelper.currencyFormat(videoArchivedDetail?.ticket_price.toString())} ${i18n.t('common:common.money')}`
                 : ''}
             </Box>
+          </Box> */}
+
+          {/* V3: ticket */}
+          <Box className={classes.label}>{i18n.t('common:streaming_setting_screen.ticket_use')}</Box>
+          <Box pb={2} pt={2}>
+            <ESBoxftDashColumn colorLine="#767676" isSelectedGift={!!(videoArchivedDetail && videoArchivedDetail?.ticket_price)}>
+              <Box className={classes.newTextftDash}>
+                <Box className={classes.dateTime} pt={1} pb={3 / 4} height="34px">
+                  {videoArchivedDetail && videoArchivedDetail?.ticket_price
+                    ? `${FormatHelper.currencyFormat(videoArchivedDetail?.ticket_price.toString())} ${i18n.t('common:common.money')}`
+                    : ''}
+                </Box>
+                {isFromSchedule && (
+                  <Box className={` ${classes.pdLabelDate}`}>
+                    <Box className={classes.label}>{i18n.t('common:archive_detail_screen.delivery_date_time')}</Box>
+                    <Box className={classes.dateTime} pt={1}>
+                      {CommonHelper.formatDateTimeJP(videoArchivedDetail?.stream_schedule_start_time)}
+                    </Box>
+                  </Box>
+                )}
+              </Box>
+            </ESBoxftDashColumn>
           </Box>
 
+          {/* V3: gift */}
+          <ESLabel label={i18n.t('common:streaming_setting_screen.title_gift')} />
+          <Box pb={2} pt={2}>
+            <ESBoxftDashColumn colorLine="#767676" isSelectedGift={true}>
+              <Box className={classes.newTextftDash}>
+                <Box pt={1} className={classes.nameList}>
+                  <Typography className={`${classes.labelNameObject} ${classes.labelRank}`}>
+                    {`${i18n.t('common:streaming_setting_screen.list_gift_selected')} ${i18n.t(
+                      'common:streaming_setting_screen.unselected'
+                    )}`}
+                  </Typography>
+                </Box>
+                <Box className={`${classes.nameList} ${classes.nameListRanking}`}>
+                  <Typography className={`${classes.labelNameObject} ${classes.labelRank}`}>
+                    {`${i18n.t('common:streaming_setting_screen.individual_gift_ranking_display')}： ${i18n.t(
+                      'common:streaming_setting_screen.unselected'
+                    )}`}
+                  </Typography>
+                </Box>
+              </Box>
+            </ESBoxftDashColumn>
+          </Box>
+          {/* sale date time */}
           <Box pb={2}>
             <Box className={classes.label}>{i18n.t('common:archive_detail_screen.ticket_sale_date_time')}</Box>
             <Box className={classes.dateTime} pt={1} pl={1} height="28px">
@@ -547,6 +598,17 @@ const Steps: React.FC<StepsProps> = ({
           <Typography className={classes.captionNote}>{i18n.t('common:archive_detail_screen.note_for_publish_delivery_pt')}</Typography>
           <Typography className={classes.captionNote}>{i18n.t('common:archive_detail_screen.note_for_publish_delivery_pb')}</Typography>
           <Box paddingBottom={3} />
+
+          <Box onClick={handleReportData} className={classes.boxFeature}>
+            <Box flexDirection="row" display="flex" marginBottom={1}>
+              <Box className={classes.wrapIcon}>
+                <img src={'/images/icons/report.svg'} className={classes.imageIcon} />
+              </Box>
+              <Box className={classes.textIcon} pl={1}>
+                {i18n.t('common:archive_detail_screen.report_data')}
+              </Box>
+            </Box>
+          </Box>
 
           <Box flexDirection="row" display="flex" marginBottom={1} onClick={handleDownloadVideo}>
             <a
@@ -757,6 +819,31 @@ const useStyles = makeStyles((theme: Theme) => ({
   wrap_input: {
     paddingLeft: 0,
   },
+  nameList: {
+    width: 450,
+  },
+  newTextftDash: {
+    paddingLeft: 22,
+  },
+  nameListRanking: {
+    paddingTop: 8,
+  },
+  labelRank: {
+    paddingBottom: 8,
+    color: Colors.white_opacity[70],
+  },
+  pdLabelDate: {
+    paddingTop: 10,
+    paddingBottom: 11,
+  },
+  labelNameObject: {
+    fontWeight: 'normal',
+    fontSize: 14,
+    color: '#ffffff50',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+  },
   [theme.breakpoints.down(768)]: {
     container: {
       padding: '34px 24px 32px 24px',
@@ -780,6 +867,28 @@ const useStyles = makeStyles((theme: Theme) => ({
     coverImg: {
       height: 'calc((100vw - 48px) * 9/16)',
     },
+    nameList: {
+      width: window.innerWidth - 74,
+    },
+    newTextftDash: {
+      paddingLeft: 13,
+    },
+    nameListRanking: {
+      // paddingLeft: 13,
+      paddingTop: 8,
+    },
+    labelRank: {
+      paddingTop: 0,
+      paddingBottom: 8,
+    },
+    pdLabelDate: {
+      paddingTop: 16,
+      paddingBottom: 8,
+    },
+    labelNameObject: {
+      marginLeft: 0,
+      paddingTop: 8,
+    },
   },
   addPaddingNote: {
     paddingTop: 8,
@@ -796,5 +905,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& :-webkit-autofill': {
       WebkitBoxShadow: '0 0 0 100px #000000 inset',
     },
+  },
+  boxFeature: {
+    flexDirection: 'row',
+    display: 'flex',
+    cursor: 'pointer',
   },
 }))

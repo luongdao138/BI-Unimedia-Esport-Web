@@ -186,6 +186,9 @@ const StreamingSettingContainer: React.FC<{ default_tab: any }> = ({ default_tab
             formik={formikLive}
             validateField={liveValidateField}
             handleUpdateValidateField={handleUpdateLiveValidateField}
+            setTabNavigate={(tab) => {
+              setTab(tab)
+            }}
           />
         )
       case TABS.STREAMING_RESERVATION:
@@ -195,6 +198,9 @@ const StreamingSettingContainer: React.FC<{ default_tab: any }> = ({ default_tab
             flagUpdateFieldDate={onUpdateFlagChangeFieldDate}
             handleUpdateValidateField={handleUpdateValidateField}
             validateFieldProps={validateField}
+            setTabNavigate={(tab) => {
+              setTab(tab)
+            }}
           />
         )
       case TABS.DISTRIBUTOR:
