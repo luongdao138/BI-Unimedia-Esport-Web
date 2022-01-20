@@ -6,9 +6,10 @@ export type LimitedProps = {
   value?: string
   limit?: string | number
   multiLines?: boolean
+  isScroll?: boolean
 }
 
-const ESCharacterLimited: React.FC<LimitedProps> = ({ value, limit, multiLines }) => {
+const ESCharacterLimited: React.FC<LimitedProps> = ({ value, limit, multiLines, isScroll }) => {
   const classes = useStyles()
   const styleTextNormal = {
     alignSelf: 'center',
@@ -16,7 +17,7 @@ const ESCharacterLimited: React.FC<LimitedProps> = ({ value, limit, multiLines }
   const styleTextMultiline = {
     alignSelf: 'flex-end',
     position: 'absolute',
-    right: isMobile ? 8 : value?.length > 0 ? 32 : 8,
+    right: isMobile ? 8 : isScroll ? 32 : 8,
     bottom: 16,
   }
 

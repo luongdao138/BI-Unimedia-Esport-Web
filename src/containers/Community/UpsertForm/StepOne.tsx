@@ -15,6 +15,7 @@ import i18n from '@locales/i18n'
 import { CommunityHelper } from '@utils/helpers/CommunityHelper'
 import { GetPrefecturesResponse } from '@services/common.service'
 import CharacterLimited from '@components/CharacterLimited'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
 
 type Props = {
   formik: FormikProps<FormType>
@@ -87,7 +88,15 @@ const StepOne: React.FC<Props> = ({ formik, prefectures, editables, setIsDuplica
           error={formik.touched?.stepOne?.description && !!formik.errors?.stepOne?.description}
           size="small"
           disabled={!editables.description}
-          endAdornment={<CharacterLimited value={formik.values.stepOne.description} limit={5000} multiLines />}
+          endAdornment={
+            <CharacterLimited
+              value={formik.values.stepOne.description}
+              limit={5000}
+              multiLines
+              isScroll={CommonHelper.hasScrollBar('stepOne.description')}
+            />
+          }
+          className={`${CommonHelper.hasScrollBar('stepOne.description') ? 'hide-scroll-indicator' : null}`}
         />
       </Box>
       <Box pb={3}>
@@ -114,6 +123,7 @@ const StepOne: React.FC<Props> = ({ formik, prefectures, editables, setIsDuplica
         <ESFastInput
           multiline
           rows={5}
+          id="stepOne.address"
           name="stepOne.address"
           fullWidth
           placeholder={i18n.t('common:community_create.area_name_placeholder')}
@@ -125,7 +135,15 @@ const StepOne: React.FC<Props> = ({ formik, prefectures, editables, setIsDuplica
           size="small"
           required
           disabled={!editables.address}
-          endAdornment={<CharacterLimited value={formik.values.stepOne.address} limit={5000} multiLines />}
+          endAdornment={
+            <CharacterLimited
+              value={formik.values.stepOne.address}
+              limit={5000}
+              multiLines
+              isScroll={CommonHelper.hasScrollBar('stepOne.address')}
+            />
+          }
+          className={`${CommonHelper.hasScrollBar('stepOne.address') ? 'hide-scroll-indicator' : null}`}
         />
       </Box>
       <Box pb={4}>
@@ -161,5 +179,4 @@ const StepOne: React.FC<Props> = ({ formik, prefectures, editables, setIsDuplica
     </Box>
   )
 }
-
 export default StepOne
