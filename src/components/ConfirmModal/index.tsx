@@ -7,13 +7,14 @@ interface ConfirmModalProps {
   children: React.ReactNode
   open: boolean
   containerStyle?: React.CSSProperties
+  className?: string
 }
 
 interface StyleProps {
   containerStyle: React.CSSProperties
 }
 
-const ConfirmModal: React.FC<ConfirmModalProps> = ({ children, open, containerStyle = {} }) => {
+const ConfirmModal: React.FC<ConfirmModalProps> = ({ children, open, containerStyle = {}, className }) => {
   const classes = useStyles({ containerStyle })
 
   useEffect(() => {
@@ -41,7 +42,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({ children, open, containerSt
   }))(MuiDialogContent)
 
   return (
-    <Box>
+    <Box className={className}>
       <Dialog
         disableBackdropClick
         fullWidth
@@ -58,7 +59,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({ children, open, containerSt
           document.body.style.width = 'unset'
           document.body.style.height = 'unset'
         }}
-        className={classes.dialog_container}
+        className={`${classes.dialog_container} ${className}`}
       >
         <DialogContent>{children}</DialogContent>
       </Dialog>
