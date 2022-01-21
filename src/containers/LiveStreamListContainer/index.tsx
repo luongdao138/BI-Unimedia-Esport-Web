@@ -40,7 +40,8 @@ const LiveStreamListContainer: React.FC = () => {
   const totalUserWatch = itemLiveStreamReport['total_user_watch'] || 0
   const totalUserChat = itemLiveStreamReport['total_user_chat'] || 0
   const totalUserChatPremium = itemLiveStreamReport['total_user_chat_premium'] || 0
-  const totalPoint = itemLiveStreamReport['total_point'] || 0
+  const totalPointBonuses = itemLiveStreamReport['total_point_bonuses'] || 0
+
   if (meta.error) {
     return (
       <Box>
@@ -113,7 +114,7 @@ const LiveStreamListContainer: React.FC = () => {
               <Box style={{ display: 'flex', width: '100%', paddingLeft: 22, paddingRight: 22, paddingBottom: 20 }}>
                 <StreamDataItem
                   title={t('live_stream_list_screen.total_point')}
-                  value={totalPoint}
+                  value={totalPointBonuses}
                   containerStyle={{ width: itemWidthMobile }}
                 />
               </Box>
@@ -136,7 +137,7 @@ const LiveStreamListContainer: React.FC = () => {
                 <StreamDataItem title={t('live_stream_list_screen.total_user_chat_premium')} value={totalUserChatPremium} />
               </Grid>
               <Grid item xs={6}>
-                <StreamDataItem title={t('live_stream_list_screen.total_point')} value={totalPoint} />
+                <StreamDataItem title={t('live_stream_list_screen.total_point')} value={totalPointBonuses} />
               </Grid>
             </>
           )}
