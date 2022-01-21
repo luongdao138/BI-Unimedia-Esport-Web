@@ -21,7 +21,7 @@ const VideoDeleteConfirmModal: React.FC<ModalProps> = ({ open, handleClose, vide
 
   return (
     <Box>
-      <ConfirmModal open={open} containerStyle={{ backgroundColor: '#000000BB' }}>
+      <ConfirmModal open={open} containerStyle={{ backgroundColor: '#000000BB' }} className={classes.confirm_delete_video}>
         {isLoading && <ESLoader open={isLoading} />}
         <Box className={classes.container}>
           <Typography className={classes.dialogTitle}>{t('archive_detail_screen.delete_dialog_title')}</Typography>
@@ -50,12 +50,18 @@ const VideoDeleteConfirmModal: React.FC<ModalProps> = ({ open, handleClose, vide
 export default VideoDeleteConfirmModal
 
 const useStyles = makeStyles((theme) => ({
+  confirm_delete_video: {
+    '& .MuiDialog-paperFullWidth': {
+      maxWidth: 815,
+    },
+  },
   deleteWarning: {
     marginTop: 32,
     fontSize: '16px',
     color: '#F7F735',
     padding: '10px 0px',
     textAlign: 'center',
+    whiteSpace: 'pre-line',
   },
   container: {
     width: '100%',
