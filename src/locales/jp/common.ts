@@ -1698,6 +1698,8 @@ export default {
     previous: '10 秒巻き戻し',
     next: '10 秒早送り',
     premium: 'プレミアム',
+    normal_mode: 'デフォルトビュー',
+    theatre_mode: 'シアターモード',
   },
   live_stream_screen: {
     program_info: '番組情報',
