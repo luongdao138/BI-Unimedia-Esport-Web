@@ -33,9 +33,10 @@ interface Props {
   formik?: FormikProps<FormLiveType>
   validateField?: string
   handleUpdateValidateField?: (value: string) => void
+  setTabNavigate?: (tab: number) => void
 }
 
-const LiveStreamContainer: React.FC<Props> = ({ formik, validateField, handleUpdateValidateField }) => {
+const LiveStreamContainer: React.FC<Props> = ({ formik, validateField, handleUpdateValidateField, setTabNavigate }) => {
   const [step, setStep] = useState(1)
   const router = useRouter()
   const dispatch = useAppDispatch()
@@ -313,6 +314,7 @@ const LiveStreamContainer: React.FC<Props> = ({ formik, validateField, handleUpd
         videoStatusDynamo={videoStatusDynamo}
         validateField={validateField}
         handleUpdateValidateField={handleUpdateValidateField}
+        setTabNavigate={setTabNavigate}
       />
       <ESModal open={modal && showResultDialog} handleClose={handleClose}>
         <BlankLayout>
