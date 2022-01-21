@@ -1,6 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit'
 import { BannerItem, CategoryPopularData, DetailUserData, SearchType, TypeVideo, VideoDetailData } from '@services/videoTop.services'
 import * as actions from '../actions'
+import { VIDEO_NORMAL_VIEW_MODE } from '@constants/common.constants'
 
 type StateType = {
   listVideoAll?: {
@@ -32,6 +33,8 @@ type StateType = {
   seeked_second?: number
   is_pausing_live?: boolean
   is_streaming_end?: boolean
+  video_view_mode?: string
+  is_normal_view_mode?: boolean
 }
 
 const initialState: StateType = {
@@ -74,6 +77,8 @@ const initialState: StateType = {
   seeked_second: 0,
   is_pausing_live: false,
   is_streaming_end: false,
+  video_view_mode: VIDEO_NORMAL_VIEW_MODE,
+  is_normal_view_mode: true,
 }
 
 export default createReducer(initialState, (builder) => {
@@ -185,5 +190,8 @@ export default createReducer(initialState, (builder) => {
   })
   builder.addCase(actions.resetState, () => {
     return { ...initialState }
+  })
+  builder.addCase(actions.changeVideoViewMode, (state, action) => {
+    state.is_normal_view_mode = action.payload.is_normal_view_mode
   })
 })

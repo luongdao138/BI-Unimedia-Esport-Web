@@ -63,7 +63,6 @@ import { CommonHelper } from '@utils/helpers/CommonHelper'
 
 export type ChatContainerProps = {
   onPressDonate?: (donatedPoint: number, purchaseComment: string) => void
-  onCloseChatPanel?: () => void
   userHasViewingTicket?: boolean | number
   key_video_id?: string
   myPoint?: any
