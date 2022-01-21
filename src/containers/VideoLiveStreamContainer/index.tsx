@@ -459,7 +459,7 @@ const VideoDetail: React.FC = () => {
 
   const componentsSize = (() => {
     const chatMaxWidth = 482
-    const chatMinWidth = 330
+    const chatMinWidth = 380
     const pageWidthWithoutMenu = pageWidth - sizeMenuWidth()
     // render chat component is 30% of page width without menu
     let chatWidth = Math.round(pageWidthWithoutMenu * 0.3)
@@ -700,6 +700,7 @@ const useStyles = makeStyles((theme) => ({
     top: '61px',
     bottom: '0px',
     height: 'calc(100vh - 61px)',
+    background: Colors.white_opacity[10],
   },
   [theme.breakpoints.down(769)]: {
     wrapChatContainer: {

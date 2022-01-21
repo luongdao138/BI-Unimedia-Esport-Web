@@ -1,12 +1,12 @@
-import { Box, Button, makeStyles, Icon } from '@material-ui/core'
-import i18n from '@locales/i18n'
-import React, { useEffect, memo } from 'react'
-import { sanitizeMess } from './index'
-import { useFormik } from 'formik'
-import * as Yup from 'yup'
 import ESInput from '@components/Input'
 import LoginRequired from '@containers/LoginRequired'
+import i18n from '@locales/i18n'
+import { Box, Button, makeStyles } from '@material-ui/core'
 import { Colors } from '@theme/colors'
+import { useFormik } from 'formik'
+import React, { memo, useEffect } from 'react'
+import * as Yup from 'yup'
+import { sanitizeMess } from './index'
 
 type MessageValidationType = {
   message: string
@@ -87,7 +87,8 @@ const ChatInput: React.FC<ChatInputProps> = ({
           }}
           className={classes.iconButtonBg}
         >
-          <Icon className={`fa fa-paper-plane ${classes.sendIcon}`} fontSize="small" />
+          <img src="/images/send_icon.svg" />
+          {/* <Icon className={`fa fa-paper-plane ${classes.sendIcon}`} fontSize="small" /> */}
         </Button>
       </LoginRequired>
     </Box>

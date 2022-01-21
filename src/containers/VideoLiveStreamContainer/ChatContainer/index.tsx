@@ -27,7 +27,7 @@ const { createMessage, createUser, updateMessage, updateUser } = require(`src/gr
 import useDetailVideo from '../useDetailVideo'
 import usePurchaseTicketSuperChat from '../usePurchaseTicket'
 import ChatTextMessage from '@containers/VideoLiveStreamContainer/ChatContainer/ChatTextMessage'
-import PremiumChatDialog from '@containers/VideoLiveStreamContainer/ChatContainer/PremiumChatDialog'
+// import PremiumChatDialog from '@containers/VideoLiveStreamContainer/ChatContainer/PremiumChatDialog'
 // import * as Yup from 'yup'
 // import { useFormik } from 'formik'
 import DonateMessage from './DonateMessage'
@@ -66,6 +66,7 @@ import TabsGroup from '@components/TabsGroup'
 // import ChatTab from './Tabs/ChatTab'
 import RankingTab from './Tabs/RankingTab'
 import { Colors } from '@theme/colors'
+import TipChatDialog from './TipChatDialog'
 
 export enum CHAT_TABS {
   CHAT = 0,
@@ -209,9 +210,9 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       onPressDonate,
       userHasViewingTicket,
       key_video_id,
-      myPoint,
       handleKeyboardVisibleState,
       donateConfirmModalIsShown,
+      // myPoint,
       openPurchasePointModal,
       videoType,
       freeToWatch,
@@ -752,17 +753,17 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     const isStreaming = (() => {
       // console.log('🚀 ~ isStreaming ~ videoType', videoType, playedSecond, streamingSecond)
       // console.log('🚀 ~ isStreaming ~ playedSecond >= streamingSecond', playedSecond >= streamingSecond)
-      return true
-      // if (videoType === STATUS_VIDEO.LIVE_STREAM) {
-      //   return true
-      //   // if (streamingSecond === Infinity) {
-      //   //   return true
-      //   // }
-      //   // if (playedSecond >= streamingSecond) {
-      //   //   return true
-      //   // }
-      // }
-      // return false
+      // return true
+      if (videoType === STATUS_VIDEO.LIVE_STREAM) {
+        return true
+        // if (streamingSecond === Infinity) {
+        //   return true
+        // }
+        // if (playedSecond >= streamingSecond) {
+        //   return true
+        // }
+      }
+      return false
     })()
 
     const renderLoader = () => {
@@ -1029,6 +1030,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       }
       // console.log('2-played->streaming->range', playedSecond, streamingSecond, streamingSecond - playedSecond)
       if (isStreaming) {
+        // todo
         filterByStreaming()
       } else {
         //  filter mess when user no seeking or pausing live video
@@ -1248,15 +1250,22 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     }
 
     const purchaseInfoDialog = () => (
-      <PremiumChatDialog
+      <TipChatDialog
         normalMessHasError={errorMess ? true : false}
         createMess={createMess}
         onClickOutside={donateConfirmModalIsShown() ? null : handlePremiumChatBoxClickOutside}
         onPressDonate={onPressDonate}
-        myPoint={myPoint}
         openPurchasePointModal={openPurchasePointModal}
-        isEnabledChat={isEnabledChat}
       />
+      // <PremiumChatDialog
+      //   normalMessHasError={errorMess ? true : false}
+      //   createMess={createMess}
+      //   onClickOutside={donateConfirmModalIsShown() ? null : handlePremiumChatBoxClickOutside}
+      //   onPressDonate={onPressDonate}
+      //   myPoint={myPoint}
+      //   openPurchasePointModal={openPurchasePointModal}
+      //   isEnabledChat={isEnabledChat}
+      // />
     )
 
     const purchaseIconClick = () => {
@@ -1496,7 +1505,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     const chatInputComponent = () => (
       <Box
         className={`${classes.chatInputMobileContainer}`}
-        style={{ bottom: isMobile ? '0px' : errorMess ? '-132.5px' : '-116.5px' }}
+        // style={{ bottom: isMobile ? '0px' : errorMess ? '-132.5px' : '-116.5px' }}
         // style={{ bottom: isMobile ? '0px' : errors?.message ? '-132.5px' : '-110.5px' }}
       >
         {purchaseDialogVisible && isMobile && purchaseInfoDialog()}
@@ -1520,6 +1529,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
           ) : (
             <></>
           ))}
+        {purchaseDialogVisible && renderBlurInput()}
       </Box>
     )
 
@@ -1938,8 +1948,19 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       </Box>
     )
 
+    const renderBlurInput = () => {
+      return <Box className={`${classes.blurInputChat}`}></Box>
+    }
+
     const chatComponentMobile = () => {
-      return purchaseDialogVisible ? purchaseInfoDialog() : chatInputComponent()
+      return purchaseDialogVisible ? (
+        <>
+          {purchaseInfoDialog()}
+          {renderBlurInput()}
+        </>
+      ) : (
+        chatInputComponent()
+      )
     }
 
     const chatNotAvailableMessage = () => {
@@ -2020,12 +2041,12 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       return true
     }
 
-    const chatBoxPaddingBottom = () => {
-      if (!isEnabledChat || !isStreaming) {
-        return '0px'
-      }
-      return errorMess ? '133px' : '110.5px'
-    }
+    // const chatBoxPaddingBottom = () => {
+    //   if (!isEnabledChat || !isStreaming) {
+    //     return '0px'
+    //   }
+    //   return errorMess ? '133px' : '110.5px'
+    // }
 
     // const chatHeight = (() => {
     //   // 35 is chat header,
@@ -2084,7 +2105,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         style={
           displayChatContent() && isMobile
             ? {
-                paddingBottom: chatBoxPaddingBottom(),
+                // paddingBottom: chatBoxPaddingBottom(),
               }
             : {}
         }

@@ -48,7 +48,7 @@ const DonateMessage: React.FC<DonateMessageProps> = ({
 
   return (
     <Box className={classes.accountInfo}>
-      <Box className={classes.accountInfoHeader} style={renderBgColor('headerBgColor')}>
+      <Box className={classes.accountInfoHeader} style={renderBgColor('headerBgColor', true)}>
         <ESAvatar src={message?.parent?.avatar} size={34} alt={message.parent.user_name} className={classes.userAvatar} />
         <Typography className={classes.accountName}>
           <span className={getClassDeletedMess()}>{message.owner}</span>
@@ -74,7 +74,7 @@ const DonateMessage: React.FC<DonateMessageProps> = ({
         )}
       </Box>
       <Box className={classes.accountInfoContent} style={renderBgColor('backgroundColor')}>
-        <Box className={classes.receiverContainer} style={renderBgColor('receiverHeaderBgColor')}>
+        <Box className={classes.receiverContainer} style={renderBgColor('receiverHeaderBgColor', true)}>
           <img className={classes.receiverSign} src="/images/receiverSign.svg" />
           <ESAvatar src={message?.parent?.avatar} size={34} alt={message.parent.user_name} className={classes.receiverAvatar} />
           <Typography className={classes.receiverName}>

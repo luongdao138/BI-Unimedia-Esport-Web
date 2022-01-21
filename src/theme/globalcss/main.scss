@@ -839,6 +839,33 @@ body.has-sticky-div .sticky-div {
   }
 }
 
+.scroll_common {
+  scrollbar-color: #222 transparent;
+  &::-webkit-scrollbar {
+    width: 16px;
+    opacity: 1;
+    padding: 2px;
+    cursor: 'pointer';
+  }
+  &::-webkit-scrollbar-track {
+    background: #4d4d4d;
+    border: solid 3px transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #212121;
+    background-clip: padding-box;
+    border: 4px solid rgba(0, 0, 0, 0);
+    width: 14px;
+    cursor: pointer;
+  }
+}
+
+.es_text_ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 @media (max-width: 1200px) {
   .no_minimize_aside_left {
     width: 200px;
