@@ -53,15 +53,15 @@ const GiftReportContainer: React.FC<{ default_tab: any }> = ({ default_tab }) =>
     switch (tab) {
       case TABS.GIFT_REPORT:
         return (
-          <>
+          <Box className={classes.wrapperDescTable}>
             {getDescription()}
             <ESTable
               tableHeader={
                 <TableRow>
-                  <TableCell style={{ width: '33%' }} align="center">
+                  <TableCell style={{ width: '40%' }} align="center">
                     {t('streaming_gift_report_screen.tip_target_person')}
                   </TableCell>
-                  <TableCell style={{ width: '33%' }} align="center">
+                  <TableCell style={{ width: '26%' }} align="center">
                     {t('streaming_gift_report_screen.number_of_chips')}
                   </TableCell>
                   <TableCell style={{ width: '33%' }} align="center">
@@ -74,7 +74,7 @@ const GiftReportContainer: React.FC<{ default_tab: any }> = ({ default_tab }) =>
                 <ItemGift key={row} />
               ))}
             </ESTable>
-          </>
+          </Box>
         )
       case TABS.TICKET_REPORT:
         return (
@@ -102,7 +102,7 @@ const GiftReportContainer: React.FC<{ default_tab: any }> = ({ default_tab }) =>
         )
       case TABS.DETAIL_REPORT:
         return (
-          <Box mt={4}>
+          <Box mt={4} className={classes.wrapperDetailReport}>
             <DetailReport />
           </Box>
         )
@@ -163,6 +163,39 @@ const useStyles = makeStyles((theme) => ({
     marginRight: 70,
   },
 
+  [theme.breakpoints.down('md')]: {
+    giftReportContainer: {
+      marginLeft: 16,
+      marginRight: 16,
+    },
+  },
+  [theme.breakpoints.down('sm')]: {
+    tabs: {
+      paddingLeft: 16,
+      paddingRight: 16,
+    },
+  },
+  [theme.breakpoints.down('xs')]: {
+    giftReportContainer: {
+      marginLeft: 0,
+      marginRight: 0,
+    },
+    tabs: {
+      paddingLeft: 16,
+      paddingRight: 16,
+      justifyContent: 'center',
+    },
+    wrapperDescTable: {
+      marginBottom: 20,
+      marginLeft: 16,
+      marginRight: 16,
+    },
+    wrapperDetailReport: {
+      marginLeft: 16,
+      marginRight: 16,
+    },
+  },
+
   [theme.breakpoints.down(419)]: {
     tabs: {
       display: 'flex',
@@ -174,6 +207,7 @@ const useStyles = makeStyles((theme) => ({
       minWidth: 'unset',
     },
   },
+
   [theme.breakpoints.down(321)]: {
     tabs: {
       display: 'flex',
