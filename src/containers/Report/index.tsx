@@ -43,6 +43,7 @@ import { LIGHTBOX_OPTIONS } from '@constants/common.constants'
 import { SRLWrapper } from 'simple-react-lightbox'
 import { TextMessage } from '@components/Chat/elements'
 import { ChatSuggestionList } from '@components/Chat/types/chat.types'
+import CharacterLimited from '@components/CharacterLimited'
 
 export interface ESReportProps {
   chat_id?: string
@@ -383,6 +384,15 @@ const ESReport: React.FC<ESReportProps> = ({
                       error={formik.touched?.description && !!formik.errors.description}
                       multiline
                       rows={6}
+                      endAdornment={
+                        <CharacterLimited
+                          value={formik.values.description}
+                          limit={5000}
+                          multiLines
+                          isScroll={CommonHelper.hasScrollBar('description')}
+                        />
+                      }
+                      className={`${CommonHelper.hasScrollBar('description') ? 'hide-scroll-indicator' : null}`}
                     />
                   </Box>
                   <Box mt={4} mb={1}>

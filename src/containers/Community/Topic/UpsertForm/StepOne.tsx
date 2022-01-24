@@ -1,4 +1,4 @@
-import { Box } from '@material-ui/core'
+import { Box, makeStyles } from '@material-ui/core'
 import { FormikProps } from 'formik'
 import { FormType } from './FormModel/FormType'
 import { useState } from 'react'
@@ -6,12 +6,15 @@ import useUploadImage from '@utils/hooks/useUploadImage'
 import CoverUploader from '../UpsertForm/Partials/CoverUploader'
 import ESFastInput from '@components/FastInput'
 import i18n from '@locales/i18n'
+import CharacterLimited from '@components/CharacterLimited'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
 
 type Props = {
   formik: FormikProps<FormType>
 }
 
 const StepOne: React.FC<Props> = ({ formik }) => {
+  const classes = useStyles()
   const { uploadArenaCoverImage } = useUploadImage()
   const [isUploading, setUploading] = useState(false)
 
@@ -40,6 +43,7 @@ const StepOne: React.FC<Props> = ({ formik }) => {
           size="small"
           disabled={false}
           required
+          endAdornment={<CharacterLimited value={formik.values.stepOne.title} limit={60} />}
         />
       </Box>
       <Box pb={4}>
@@ -59,6 +63,15 @@ const StepOne: React.FC<Props> = ({ formik }) => {
           size="small"
           disabled={false}
           required
+          endAdornment={
+            <CharacterLimited
+              value={formik.values.stepOne.content}
+              limit={5000}
+              multiLines
+              isScroll={CommonHelper.hasScrollBar('stepOne.content')}
+            />
+          }
+          className={`${classes.pointListRow} ${CommonHelper.hasScrollBar('stepOne.content') ? 'hide-scroll-indicator' : null}`}
         />
       </Box>
 
@@ -68,5 +81,17 @@ const StepOne: React.FC<Props> = ({ formik }) => {
     </Box>
   )
 }
-
+const useStyles = makeStyles(() => ({
+  pointListRow: {
+    '&::-webkit-scrollbar': {
+      display: 'none',
+    },
+    '&::-webkit-scrollbar-track': {
+      display: 'none',
+    },
+    '&::-webkit-scrollbar-thumb': {
+      display: 'none',
+    },
+  },
+}))
 export default StepOne

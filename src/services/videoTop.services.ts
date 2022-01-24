@@ -14,6 +14,7 @@ export const STATUS_VIDEO = {
   SCHEDULE: 0,
   LIVE_STREAM: 1,
   ARCHIVE: 2,
+  OVER_LOAD: 3,
 }
 
 export const LIMIT_ITEM = 15

@@ -13,6 +13,8 @@ import ESCheckbox from '@components/Checkbox'
 import ESFastInput from '@components/FastInput'
 import Icon from '@material-ui/core/Icon'
 import i18n from '@locales/i18n'
+import CharacterLimited from '@components/CharacterLimited'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
 
 type Props = {
   formik: FormikProps<FormType>
@@ -64,6 +66,7 @@ const StepOne: React.FC<Props> = ({ formik, hardwares, editables }) => {
           size="small"
           required
           disabled={!editables.title}
+          endAdornment={<CharacterLimited value={formik.values.stepOne.title} limit={60} />}
         />
       </Box>
       <Box pb={4}>
@@ -82,6 +85,15 @@ const StepOne: React.FC<Props> = ({ formik, hardwares, editables }) => {
           error={formik.touched?.stepOne?.overview && !!formik.errors?.stepOne?.overview}
           size="small"
           disabled={!editables.overview}
+          endAdornment={
+            <CharacterLimited
+              value={formik.values.stepOne.overview}
+              limit={5000}
+              multiLines
+              isScroll={CommonHelper.hasScrollBar('stepOne.overview')}
+            />
+          }
+          className={`${CommonHelper.hasScrollBar('stepOne.overview') ? 'hide-scroll-indicator' : null}`}
         />
       </Box>
       <Box pb={3 / 8}>
@@ -109,6 +121,7 @@ const StepOne: React.FC<Props> = ({ formik, hardwares, editables }) => {
             error={formik.values.stepOne.has_prize && formik.touched?.stepOne?.prize_amount && !!formik.errors?.stepOne?.prize_amount}
             size="small"
             disabled={!editables.prize}
+            endAdornment={<CharacterLimited value={formik.values.stepOne.prize_amount} limit={150} />}
           />
         )}
       </Box>

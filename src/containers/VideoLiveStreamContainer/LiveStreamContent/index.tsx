@@ -253,6 +253,10 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
     )
   }
 
+  const isShowedVideoOverlay = () => {
+    return videoType !== STATUS_VIDEO.SCHEDULE
+  }
+
   const getOverlayButtonText = () => {
     if (!isVideoFreeToWatch && !userHasViewingTicket && ticketAvailableForSale) {
       return t('live_stream_screen.buy_ticket')
@@ -291,7 +295,7 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
   }
   const mediaOverlayPurchaseTicketView = () => {
     return (
-      <Box className={classes.overlayPurchaseContainer}>
+      <Box className={`${classes.overlayPurchaseContainer} ${isShowedVideoOverlay() ? classes.isShowedVideoOverlay : ''}`}>
         <OverlayContent
           onClickButton={clickButtonPurchaseTicket}
           buttonText={getOverlayButtonText()}
@@ -486,14 +490,17 @@ const useStyles = makeStyles((theme) => ({
     left: 0,
     width: '100%',
     height: '100%',
-    background: 'rgba(4, 4, 4, 0.71)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'column',
     zIndex: 100,
-    backdropFilter: 'blur(5px)',
+    '&$isShowedVideoOverlay': {
+      background: 'rgba(4, 4, 4, 0.71)',
+      backdropFilter: 'blur(5px)',
+    },
   },
+  isShowedVideoOverlay: {},
   wrap_info: {
     padding: '16px 16px 16px 24px',
     width: '100%',

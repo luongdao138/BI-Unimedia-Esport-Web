@@ -19,6 +19,8 @@ import { showDialog } from '@store/common/actions'
 import { NG_WORD_DIALOG_CONFIG, NG_WORD_AREA } from '@constants/common.constants'
 import useDocTitle from '@utils/hooks/useDocTitle'
 import _ from 'lodash'
+import CharacterLimited from '@components/CharacterLimited'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
 
 interface SummaryModalProps {
   tournament: TournamentDetail
@@ -138,6 +140,10 @@ const SummaryModal: React.FC<SummaryModalProps> = ({ tournament, open, handleClo
                 size="small"
                 multiline
                 rows={7}
+                className={`${CommonHelper.hasScrollBar('summary') ? 'hide-scroll-indicator' : null}`}
+                endAdornment={
+                  <CharacterLimited value={values.summary} limit={5000} multiLines isScroll={CommonHelper.hasScrollBar('summary')} />
+                }
               />
             </Box>
             <Box className={classes.stickyFooter}>

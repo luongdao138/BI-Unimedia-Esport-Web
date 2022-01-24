@@ -1,4 +1,5 @@
 /* eslint-disable no-console */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import ESTab from '@components/Tab'
 import ESTabs from '@components/Tabs'
 import i18n from '@locales/i18n'
@@ -29,18 +30,20 @@ import { STATUS_VIDEO } from '@services/videoTop.services'
 import { useAppSelector } from '@store/hooks'
 import { getIsAuthenticated } from '@store/auth/selectors'
 import { ESRoutes } from '@constants/route.constants'
-import { getVideoByUuid } from 'src/graphql/queries'
-import { onUpdateVideo } from 'src/graphql/subscriptions'
-// import { createVideo } from 'src/graphql/mutations'
-import * as APIt from 'src/types/graphqlAPI'
+const { getVideoByUuid } = require(`src/graphql.${process.env.NEXT_PUBLIC_AWS_ENV}/queries`)
+const { onUpdateVideo, onUpdateChannel } = require(`src/graphql.${process.env.NEXT_PUBLIC_AWS_ENV}/subscriptions`)
+// import * as APIt from 'src/types/graphqlAPI'
 import API, { GraphQLResult, graphqlOperation } from '@aws-amplify/api'
 import { EVENT_LIVE_STATUS, LIVE_VIDEO_TYPE } from '@constants/common.constants'
 import DialogLoginContainer from '@containers/DialogLogin'
 import _ from 'lodash'
 import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
 import LiveStreamContent from './LiveStreamContent'
-import { onUpdateChannel } from 'src/graphql/subscriptions'
 import { PurchaseTicketParams } from '@services/points.service'
+import useGraphqlAPI from 'src/types/useGraphqlAPI'
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+const APIt: any = useGraphqlAPI()
 
 enum TABS {
   PROGRAM_INFO = 1,
@@ -127,6 +130,8 @@ const VideoDetail: React.FC = () => {
   const checkVideoStatus = async () => {
     try {
       const videoId = detailVideoResult.uuid
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       const listQV: APIt.GetVideoByUuidQueryVariables = {
         uuid: videoId,
         limit: 2000,
@@ -141,26 +146,28 @@ const VideoDetail: React.FC = () => {
     }
   }
 
+  const handleRedirectToArchiveUrl = () => {
+    if (refChatContainer && refChatContainer.current) {
+      refChatContainer.current.resetStates()
+    }
+    router.replace(
+      {
+        pathname: ESRoutes.TOP,
+        query: { vid: detailVideoResult.uuid },
+      },
+      `${ESRoutes.TOP}?vid=${detailVideoResult.uuid}`
+    )
+  }
+
   const refChatContainer = useRef<any>(null)
   const navigateToArchiveUrl = () => {
     // reload page if schedule video is living
     if (+videoStatus === STATUS_VIDEO.LIVE_STREAM && detailVideoResult.scheduled_flag === LIVE_VIDEO_TYPE.SCHEDULE) {
       window.location.reload()
     }
+    // redirect to archive url if live video is living
     if (video_id === detailVideoResult.user_id.toString() && detailVideoResult.scheduled_flag === LIVE_VIDEO_TYPE.LIVE) {
-      if (refChatContainer && refChatContainer.current) {
-        refChatContainer.current.resetStates()
-      }
-      router.replace(
-        {
-          pathname: ESRoutes.TOP,
-          query: { vid: detailVideoResult.uuid },
-        },
-        undefined,
-        {
-          shallow: true,
-        }
-      )
+      handleRedirectToArchiveUrl()
     }
   }
 
@@ -168,6 +175,10 @@ const VideoDetail: React.FC = () => {
     if (!detailVideoResult.key_video_id || videoStatus === STATUS_VIDEO.ARCHIVE) return
 
     const { video_status, process_status } = videoInfo
+    // redirect to archive url if admin de_active key
+    // if (+video_status === STATUS_VIDEO.STREAM_OFF && process_status === EVENT_LIVE_STATUS.STREAM_OFF) {
+    //   navigateToArchiveUrl()
+    // }
     const isNotStreamingVideo =
       (video_status === EVENT_LIVE_STATUS.RECORDING_ARCHIVED && process_status === EVENT_LIVE_STATUS.RECORDING_END) ||
       (+video_status === STATUS_VIDEO.ARCHIVE && process_status === EVENT_LIVE_STATUS.STREAM_END)
@@ -218,6 +229,8 @@ const VideoDetail: React.FC = () => {
   const subscribeUpdateVideoAction = () => {
     let updateVideoSubscription = API.graphql(graphqlOperation(onUpdateVideo))
     updateVideoSubscription = updateVideoSubscription.subscribe({
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       next: (sub: GraphQLResult<APIt.OnUpdateVideoSubscription>) => {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         //@ts-ignore
@@ -260,6 +273,8 @@ const VideoDetail: React.FC = () => {
   const subscribeUpdateChannelAction = () => {
     let updateChannelSubscription = API.graphql(graphqlOperation(onUpdateChannel))
     updateChannelSubscription = updateChannelSubscription.subscribe({
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       next: (sub: GraphQLResult<APIt.OnUpdateChannelSubscription>) => {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         //@ts-ignore
@@ -586,8 +601,8 @@ const VideoDetail: React.FC = () => {
             <Box
               style={{
                 display: 'flex',
-                marginLeft: 24,
-                marginRight: 24,
+                // marginLeft: 16,
+                // marginRight: 16,
                 backgroundColor: 'transparent',
                 height: '100%',
                 width: componentsSize.chatWidth,
@@ -680,11 +695,19 @@ const useStyles = makeStyles((theme) => ({
   wrapChatContainer: {
     display: 'flex',
     flexDirection: 'column',
-    position: 'relative',
+    position: 'fixed',
+    right: '0',
+    top: '61px',
+    bottom: '0px',
+    height: 'calc(100vh - 61px)',
   },
   [theme.breakpoints.down(769)]: {
     wrapChatContainer: {
       width: '100%',
+      position: 'relative',
+      top: 'auto',
+      height: 'auto',
+      bottom: 'auto',
     },
   },
   [theme.breakpoints.down(419)]: {
