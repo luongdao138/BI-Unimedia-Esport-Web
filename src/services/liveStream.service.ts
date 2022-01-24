@@ -241,6 +241,7 @@ export type LiveStreamReportResponse = {
       total_user_chat: number
       total_user_chat_premium: number
       total_point: number
+      total_point_bonuses: number
     }
   }
 }

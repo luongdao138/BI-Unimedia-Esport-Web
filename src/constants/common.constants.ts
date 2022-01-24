@@ -370,3 +370,5 @@ export const LIMIT_MAX_MESS_PREV_REWIND = 10
 // number of seconds repeat auto get mess
 export const INTERVAL_AUTO_GET_MESS = 60
 export const SECOND_AUTO_GET_MESS_BEFORE = 10
+export const VIDEO_NORMAL_VIEW_MODE = 'NORMAL'
+export const VIDEO_THEATRE_VIEW_MODE = 'THEATRE'

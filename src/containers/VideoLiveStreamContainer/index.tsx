@@ -5,12 +5,10 @@ import ESTabs from '@components/Tabs'
 import i18n from '@locales/i18n'
 import { Box, Grid, makeStyles, Typography } from '@material-ui/core'
 import { Colors } from '@theme/colors'
-import React, { useEffect, useState, useRef, useCallback } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import DistributorInfo from './DistributorInfo'
-import ProgramInfo from './ProgramInfo'
-import RelatedVideos from './RelatedVideos'
 import ChatContainer from './ChatContainer'
+import DistributorInfo from './DistributorInfo'
 // import LiveStreamContent from './LiveStreamContent'
 import DonatePoints from './DonatePoints'
 import DonatePointsConfirmModal from './DonatePointsConfirmModal/DonatePointsConfirmModal'
@@ -45,6 +43,9 @@ import TabSelectContainer from './TabSelectContainer'
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 const APIt: any = useGraphqlAPI()
+import ProgramInfo from './ProgramInfo'
+import RelatedVideos from './RelatedVideos'
+import VideoSubInfo from './VideoSubInfo'
 
 enum TABS {
   PROGRAM_INFO = 1,
@@ -108,7 +109,10 @@ const VideoDetail: React.FC = () => {
     resetVideoDetailError,
     resetVideoDetailData,
     changeIsStreamingEnd,
+    liveStreamInfo,
   } = useDetailVideo()
+
+  const { is_normal_view_mode } = liveStreamInfo
 
   const isPendingPurchaseTicket = meta_purchase_ticket_super_chat?.pending && purchaseType === PURCHASE_TYPE.PURCHASE_TICKET
 
@@ -424,6 +428,7 @@ const VideoDetail: React.FC = () => {
       </Grid>
     )
   }
+
   const getContent = () => {
     switch (tab) {
       case TABS.PROGRAM_INFO:
@@ -477,7 +482,12 @@ const VideoDetail: React.FC = () => {
 
   const sideChatContainer = () => {
     return (
-      <Box className={classes.wrapChatContainer} style={{ width: isMobile ? '100%' : componentsSize.chatWidth }}>
+      <Box
+        className={`${classes.wrapChatContainer} ${is_normal_view_mode ? '' : classes.wrapTheatreChatContainer}`}
+        style={{
+          width: isMobile ? '100%' : componentsSize.chatWidth,
+        }}
+      >
         <ChatContainer
           ref={refChatContainer}
           myPoint={myPoint}
@@ -531,13 +541,23 @@ const VideoDetail: React.FC = () => {
     }
   }
 
+  const isLoadingVideo = _.isEmpty(detailVideoResult) && isVideoFreeToWatch === -1
+
   return (
     <React.Fragment>
       <Box className={classes.root}>
         {isPendingPurchaseTicket && <ESLoader />}
         {isPendingPurchaseSuperChat && <FullESLoader open={isPendingPurchaseSuperChat} />}
-        <Box className={classes.container} style={{ width: isMobile ? '100%' : componentsSize.videoWidth }}>
-          {_.isEmpty(detailVideoResult) && isVideoFreeToWatch === -1 ? (
+
+        {/* <Box className={classes.container} style={{ width: isMobile ? '100%' : componentsSize.videoWidth }}> */}
+        <Box
+          className={classes.container}
+          style={{
+            width: !is_normal_view_mode || isMobile ? '100%' : componentsSize.videoWidth,
+            marginRight: !is_normal_view_mode && !isMobile ? '16px' : '0',
+          }}
+        >
+          {isLoadingVideo ? (
             <Box
               style={{
                 backgroundColor: '#6A6A6C',
@@ -583,30 +603,30 @@ const VideoDetail: React.FC = () => {
               </Grid>
             </>
           )}
-          {/* <PurchaseTicketSuperChat
-          myPoints={myPoint}
-          donatedPoints={detailVideoResult?.ticket_price}
-          showModal={showPurchaseTicketModal}
-          setShowModal={setShowPurchaseTicketModal}
-          handlePurchaseTicket={doConfirmPurchaseTicket}
-        />
-        <DialogLoginContainer showDialogLogin={showDialogLogin} onCloseDialogLogin={handleCloseDialogLogin} />
-        <DonatePointsConfirmModal
-          hasError={errorPurchase}
-          showConfirmModal={showConfirmModal}
-          handleClose={handleCloseConfirmModal}
-          myPoint={myPoint}
-          ticketPoint={detailVideoResult?.ticket_price}
-          msgContent={purchaseComment}
-          handleConfirm={handleConfirmPurchaseSuperChat}
-        />
-        <DonatePoints
-          myPoint={myPoint}
-          lackedPoint={lackedPoint}
-          showModalPurchasePoint={showModalPurchasePoint}
-          setShowModalPurchasePoint={(value) => setShowModalPurchasePoint(value)}
-        /> */}
         </Box>
+
+        {!isLoadingVideo && (
+          <Box className={classes.container} style={{ width: isMobile ? '100%' : componentsSize.videoWidth }}>
+            <VideoSubInfo
+              componentsSize={componentsSize}
+              isArchived={isArchived}
+              video_id={getVideoId()}
+              userHasViewingTicket={userHasViewingTicket()}
+              videoType={videoStatus}
+              freeToWatch={isVideoFreeToWatch}
+              ticketAvailableForSale={isTicketAvailableForSale()}
+              softKeyboardIsShown={softKeyboardIsShown}
+              ticketPrice={detailVideoResult?.ticket_price}
+              clickButtonPurchaseTicket={handlePurchaseTicket}
+              onVideoEnd={onVideoEnd}
+            />
+            <Grid container direction="row" className={classes.contentContainer}>
+              {getTabs()}
+              {getContent()}
+            </Grid>
+          </Box>
+        )}
+
         {!isMobile &&
           (_.isEmpty(detailVideoResult) ? (
             <Box
@@ -616,9 +636,11 @@ const VideoDetail: React.FC = () => {
                 // marginRight: 16,
                 backgroundColor: 'transparent',
                 height: '100%',
-                width: componentsSize.chatWidth,
                 flexDirection: 'column',
                 borderRadius: 8,
+                right: 0,
+                flex: 1,
+                position: is_normal_view_mode ? 'absolute' : 'relative',
               }}
             >
               <PreloadChatContainer />
@@ -661,6 +683,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     position: 'relative',
     width: '100%',
+    flexWrap: 'wrap',
   },
   container: {
     display: 'flex',
@@ -712,6 +735,10 @@ const useStyles = makeStyles((theme) => ({
     bottom: '0px',
     height: 'calc(100vh - 61px)',
     background: Colors.white_opacity[10],
+  },
+  wrapTheatreChatContainer: {
+    position: 'relative',
+    top: 0,
   },
   [theme.breakpoints.down(769)]: {
     wrapChatContainer: {

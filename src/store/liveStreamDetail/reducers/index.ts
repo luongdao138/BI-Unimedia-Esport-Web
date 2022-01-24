@@ -7,12 +7,14 @@ type StateType = {
   videoRelated?: Array<TypeVideoArchived>
   reactionData?: any
   followData?: any
+  videoWatchTimeReport?: any
 }
 const initialState: StateType = {
   videoArchived: [],
   videoRelated: [],
   reactionData: null,
   followData: null,
+  videoWatchTimeReport: null,
 }
 
 export default createReducer(initialState, (builder) => {
@@ -48,5 +50,9 @@ export default createReducer(initialState, (builder) => {
   builder.addCase(actions.followChannelAction.fulfilled, (state, action) => {
     const followData = action.payload
     state.followData = followData
+  })
+  // request video watch time report
+  builder.addCase(actions.videoWatchTimeReportRequest.fulfilled, (state, action) => {
+    state.videoWatchTimeReport = action.payload
   })
 })

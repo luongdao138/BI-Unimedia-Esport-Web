@@ -36,6 +36,7 @@ const useDetailVideo = () => {
   const changeIsPausingLive = (is_pausing_live) => dispatch(actions.changeIsPausingLive({ is_pausing_live }))
   const changeIsStreamingEnd = (is_streaming_end) => dispatch(actions.changeIsStreamingEnd({ is_streaming_end }))
   const resetState = () => dispatch(actions.resetState())
+  const changeVideoViewMode = (is_normal_view_mode) => dispatch(actions.changeVideoViewMode({ is_normal_view_mode }))
 
   return {
     meta,
@@ -58,6 +59,7 @@ const useDetailVideo = () => {
     changeIsPausingLive,
     changeIsStreamingEnd,
     resetState,
+    changeVideoViewMode,
   }
 }
 
