@@ -79,7 +79,6 @@ const RankingTab: React.FC<RankingTabProps> = () => {
             ))}
           </Rankings>
         )
-        break
     }
   }
 

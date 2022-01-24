@@ -46,4 +46,12 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: 2,
     paddingBottom: 2,
   },
+  [theme.breakpoints.down('md')]: {
+    team: {
+      fontSize: 8,
+    },
+    name: {
+      fontSize: 9,
+    },
+  },
 }))

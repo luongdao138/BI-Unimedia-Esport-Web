@@ -68,14 +68,21 @@ import RankingTab from './Tabs/RankingTab'
 import { Colors } from '@theme/colors'
 import TipChatDialog from './TipChatDialog'
 
-export enum CHAT_TABS {
+export enum VIDEO_TABS {
   CHAT = 0,
   RANKING = 1,
+  PROGRAM_INFO = 2,
 }
 
-export enum MESSAGE_TABS {
-  ALL = 0,
-  TIP = 1,
+export const SUB_TABS = {
+  MESS: {
+    ALL: 3,
+    TIP: 4,
+  },
+  RANKING: {
+    SEND: 5,
+    GET: 6,
+  },
 }
 
 export type ChatContainerProps = {
@@ -221,8 +228,8 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
   ) => {
     const dispatch = useAppDispatch()
 
-    const [tab, setTab] = useState(CHAT_TABS.CHAT)
-    const [messageTab, setMessageTab] = useState(MESSAGE_TABS.ALL)
+    const [tab, setTab] = useState(VIDEO_TABS.CHAT)
+    const [messageTab, setMessageTab] = useState(SUB_TABS.MESS.ALL)
     const [errorMess, setErrorMess] = useState<string>('')
     const [isResetMess, setIsResetMess] = useState<boolean>(false)
     // console.log('🚀 ~ isResetMess', isResetMess)
@@ -2072,11 +2079,11 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
           <TabsGroup
             data={[
               {
-                value: MESSAGE_TABS.ALL,
+                value: SUB_TABS.MESS.ALL,
                 label: i18n.t('common:live_stream_screen.all_mess_tab_title'),
               },
               {
-                value: MESSAGE_TABS.TIP,
+                value: SUB_TABS.MESS.TIP,
                 label: i18n.t('common:live_stream_screen.tip_mess_tab_title'),
               },
             ]}
@@ -2090,9 +2097,9 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
 
     const getTabsContent = () => {
       switch (tab) {
-        case CHAT_TABS.CHAT:
+        case VIDEO_TABS.CHAT:
           return renderMessageTab()
-        case CHAT_TABS.RANKING:
+        case VIDEO_TABS.RANKING:
           return <RankingTab />
         default:
           return <></>
@@ -2112,8 +2119,8 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       >
         <Box className={classes.tabsContainer}>
           <ESTabs value={tab} onChange={(_, v) => setTab(v)} className={classes.tabs} scrollButtons="off" variant="scrollable">
-            <ESTab className={classes.singleTab} label={i18n.t('common:live_stream_screen.chat_header')} value={CHAT_TABS.CHAT} />
-            <ESTab className={classes.singleTab} label={i18n.t('common:live_stream_screen.ranking_tab_title')} value={CHAT_TABS.RANKING} />
+            <ESTab className={classes.singleTab} label={i18n.t('common:live_stream_screen.chat_header')} value={VIDEO_TABS.CHAT} />
+            <ESTab className={classes.singleTab} label={i18n.t('common:live_stream_screen.ranking_tab_title')} value={VIDEO_TABS.RANKING} />
           </ESTabs>
         </Box>
         <Box className={classes.tabsContent}>{getTabsContent()}</Box>

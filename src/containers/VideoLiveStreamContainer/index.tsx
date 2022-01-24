@@ -41,6 +41,7 @@ import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
 import LiveStreamContent from './LiveStreamContent'
 import { PurchaseTicketParams } from '@services/points.service'
 import useGraphqlAPI from 'src/types/useGraphqlAPI'
+import TabSelectContainer from './TabSelectContainer'
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 const APIt: any = useGraphqlAPI()
@@ -567,8 +568,18 @@ const VideoDetail: React.FC = () => {
                 onVideoEnd={onVideoEnd}
               />
               <Grid container direction="row" className={classes.contentContainer}>
-                {getTabs()}
-                {getContent()}
+                {/* {getTabs()}
+                {getContent()} */}
+                {!isMobile ? (
+                  <>
+                    {getTabs()}
+                    {getContent()}
+                  </>
+                ) : (
+                  <>
+                    <TabSelectContainer />
+                  </>
+                )}
               </Grid>
             </>
           )}

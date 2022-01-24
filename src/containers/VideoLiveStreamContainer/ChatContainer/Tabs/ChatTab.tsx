@@ -1,15 +1,15 @@
 import { Box } from '@material-ui/core'
-import { MESSAGE_TABS } from '..'
+import { SUB_TABS } from '..'
 
 type ChatTabProps = {
   type?: string
-  activeTab: MESSAGE_TABS
+  activeTab: number
 }
 
 const ChatTab: React.FC<ChatTabProps> = ({ activeTab }) => {
   // eslint-disable-next-line no-console
   console.log('🚀 ~ activeTab', activeTab)
-  const isDisplayedAllMess = activeTab === MESSAGE_TABS.ALL
+  const isDisplayedAllMess = activeTab === SUB_TABS.MESS.ALL
 
   return <Box>{isDisplayedAllMess ? <Box>all mess</Box> : <Box>tip mess</Box>}</Box>
 }

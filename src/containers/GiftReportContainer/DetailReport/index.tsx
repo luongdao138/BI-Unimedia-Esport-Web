@@ -30,12 +30,15 @@ const DetailReport: React.FC = () => {
       </ESButton>
     )
 
+  const renderPagination = () =>
+    matches ? <Pagination page={page} pageNumber={2} setPage={setPage} /> : <Pagination page={page} pageNumber={count} setPage={setPage} />
+
   return (
-    <>
+    <Box mb={4}>
       <Grid container spacing={2}>
         <Grid item xs={9}>
           <Box mb={3} display="flex" justifyContent="center">
-            <Pagination page={page} pageNumber={count} setPage={setPage} />
+            {renderPagination()}
           </Box>
         </Grid>
         <Grid item xs={3} className={classes.wrapBtn}>
@@ -44,7 +47,7 @@ const DetailReport: React.FC = () => {
       </Grid>
       <ESTable
         tableHeader={
-          <TableRow>
+          <TableRow className={classes.rowHeader}>
             <TableCell style={{ width: '10%' }} align="center">
               <Typography>{t('streaming_gift_report_screen.no')}</Typography>
             </TableCell>
@@ -67,7 +70,7 @@ const DetailReport: React.FC = () => {
         }
       >
         {rows.map((row) => (
-          <TableRow key={row}>
+          <TableRow key={row} className={classes.text}>
             <TableCell align="center">1</TableCell>
             <TableCell align="center">2021/11/22_12:41</TableCell>
             <TableCell align="center">@aiueoあいうえお</TableCell>
@@ -77,7 +80,7 @@ const DetailReport: React.FC = () => {
           </TableRow>
         ))}
       </ESTable>
-    </>
+    </Box>
   )
 }
 export default DetailReport
@@ -165,6 +168,19 @@ const useStyles = makeStyles((theme) => ({
       flexDirection: 'column',
     },
   },
+  [theme.breakpoints.down('sm')]: {
+    rowHeader: {
+      '& td': {
+        fontSize: 10,
+      },
+    },
+    text: {
+      '& td': {
+        fontsize: 8,
+      },
+    },
+  },
+
   [theme.breakpoints.down(961)]: {
     paginationStyle: {
       marginRight: '0px',
