@@ -88,6 +88,7 @@ export default {
     error_message_content: 'データの取得に失敗しました',
     failed_to_renew: '時間を置いてから再度試してください',
     channel_busy_to_renew: 'チャンネル立ち上げ中です。しばらくしてから再度お試しください',
+    deactivate_key_setting_error: 'ストリームタイトルが無効です。管理者にお問い合わせください。',
   },
   confirm_member: {
     confirm: 'メンバーの確定',
@@ -1295,6 +1296,12 @@ export default {
     error: {
       email: '入力内容が適切ではありません。',
     },
+    label_about_arena: 'アリーナ（大会機能）について',
+    label_about_lobby: 'ロビー（募集機能）について',
+    label_about_community: 'コミュニティ（掲示板機能）について',
+    label_about_watching_video: '動画視聴について',
+    label_about_deletion: 'アカウント削除依頼',
+    label_others: 'その他',
   },
   settings: {
     title: '設定',
@@ -1551,6 +1558,10 @@ export default {
     clear: 'クリア',
     note_loading: 'チャンネル作成中です。こちらの作業には最大5分程度かかる場合があります。',
     archived_end_time_pl: 'アーカイブ配信終了日時',
+    status_tag_created: '未設定',
+    status_tag_updated: '設定済み',
+    status_tag_live_streaming: '配信中',
+    navigate_to_detail: '配信ページへ',
   },
   delivery_reservation_tab: {
     category: 'カテゴリー',
@@ -1700,6 +1711,7 @@ export default {
     live_streaming: '配信設定',
     refresh_new_live: '最新を再生',
     warning_confirm_purchase_ticket: '決済中はボタンを複数回押さないでください',
+    tag_live_control: 'ライブ',
   },
   video_search: {
     video_results: '動画「:key」 の検索結果',

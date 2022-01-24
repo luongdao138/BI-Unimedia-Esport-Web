@@ -32,10 +32,7 @@ const VideoPreviewItem: React.FC<VideoPreviewItemProps> = ({ data, containerStyl
         pathname: ESRoutes.TOP,
         query: { vid: vid },
       },
-      undefined,
-      {
-        shallow: true,
-      }
+      `${ESRoutes.TOP}?vid=${vid}`
     )
   }
 

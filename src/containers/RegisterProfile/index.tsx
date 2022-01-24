@@ -17,6 +17,7 @@ import useCheckNgWord from '@utils/hooks/useCheckNgWord'
 import { showDialog } from '@store/common/actions'
 import { useAppDispatch } from '@store/hooks'
 import { NG_WORD_DIALOG_CONFIG, NG_WORD_AREA } from '@constants/common.constants'
+import CharacterLimited from '@components/CharacterLimited'
 
 const RegisterProfileContainer: React.FC = () => {
   const { t } = useTranslation(['common'])
@@ -95,6 +96,7 @@ const RegisterProfileContainer: React.FC = () => {
                   onBlur={handleBlur}
                   helperText={touched.user_code && errors.user_code}
                   error={touched.user_code && !!errors.user_code}
+                  endAdornment={<CharacterLimited value={values.user_code} limit={50} />}
                 />
               </Box>
 
@@ -117,6 +119,7 @@ const RegisterProfileContainer: React.FC = () => {
                   onBlur={handleBlur}
                   helperText={touched.nickname && errors.nickname}
                   error={touched.nickname && !!errors.nickname}
+                  endAdornment={<CharacterLimited value={values.nickname} limit={50} />}
                 />
               </Box>
             </Box>

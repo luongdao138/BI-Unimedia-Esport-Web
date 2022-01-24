@@ -64,6 +64,17 @@ const ForgotPasswordContainer: React.FC = () => {
                 <Typography variant="h2">{t('common:forgot_password.title')}</Typography>
               </Box>
             </Box>
+            <Box className={classes.instructionContainer}>
+              <Typography className={classes.text}>{t('common:forgot_password.instruction.title')}</Typography>
+              <Box className={classes.instructionInfo}>
+                <Typography component="span" className={classes.text}>
+                  {t('common:forgot_password.instruction.info')}
+                </Typography>
+                <Box display="flex" flexDirection="row">
+                  <Typography className={classes.text}>{t('common:forgot_password.instruction.warning')}</Typography>
+                </Box>
+              </Box>
+            </Box>
 
             <Box width="100%" px={5} flexDirection="column" alignItems="center" pt={8} className={classes.container}>
               <Box>
@@ -95,6 +106,23 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&:focus': {
       backgroundColor: `${Colors.grey[200]}80`,
     },
+  },
+  instructionContainer: {
+    marginTop: theme.spacing(2),
+    paddingLeft: theme.spacing(3),
+  },
+  instructionInfo: {
+    color: Colors.yellow,
+    marginTop: theme.spacing(1.5),
+    whiteSpace: 'pre-line',
+  },
+  text: {
+    fontSize: 11,
+    fontWeight: 500,
+    color: Colors.yellow,
+  },
+  icon: {
+    marginRight: theme.spacing(0.5),
   },
   [theme.breakpoints.down('sm')]: {
     container: {

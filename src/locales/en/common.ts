@@ -88,6 +88,7 @@ export default {
     error_message_content: 'データの取得に失敗しました',
     failed_to_renew: '時間を置いてから再度試してください',
     channel_busy_to_renew: 'チャンネル立ち上げ中です。しばらくしてから再度お試しください',
+    deactivate_key_setting_error: 'ストリームタイトルが無効です。管理者にお問い合わせください。',
   },
   confirm_member: {
     confirm: 'メンバーの確定',
@@ -1157,9 +1158,15 @@ export default {
     send_again: '入力したメールアドレスに誤りがある可能性があります。前の画面に戻り、もう一度送信してください。',
   },
   forgot_password: {
-    title: 'パスワードの再発行',
-    email: '登録済みメールアドレス',
-    send: '認証コードを送信',
+    title: 'パスワードの再発行/ユーザー登録情報の確認',
+    instruction: {
+      title: 'ユーザー登録時に利用したメールアドレスを入力してください。メールアドレス宛にパスワード再発行用の認証コードを送付いたします。',
+      info:
+        'また、ユーザー登録時にSNSによる認証を利用していた場合、登録時に利用した認証方法を連携するメール(※)が送付されます。尚、認証サービス側でメールアドレスが登録されていない場合はユーザー登録情報が取得できない場合があります。',
+      warning: '※LINE、Appleによる認証は対象外となります',
+    },
+    email: 'メールアドレス',
+    send: '送信',
     reissue: '再発行する',
   },
   confirmation_review: '入力情報の確認',
@@ -1295,6 +1302,12 @@ export default {
     error: {
       email: '入力内容が適切ではありません。',
     },
+    label_about_arena: 'アリーナ（大会機能）について',
+    label_about_lobby: 'ロビー（募集機能）について',
+    label_about_community: 'コミュニティ（掲示板機能）について',
+    label_about_watching_video: '動画視聴について',
+    label_about_deletion: 'アカウント削除依頼',
+    label_others: 'その他',
   },
   settings: {
     title: '設定',
@@ -1552,6 +1565,10 @@ export default {
     clear: 'クリア',
     note_loading: 'チャンネル作成中です。こちらの作業には最大5分程度かかる場合があります。',
     archived_end_time_pl: 'アーカイブ配信終了日時',
+    status_tag_created: '未設定',
+    status_tag_updated: '設定済み',
+    status_tag_live_streaming: '配信中',
+    navigate_to_detail: '配信ページへ',
   },
   delivery_reservation_tab: {
     category: 'カテゴリー',
@@ -1701,6 +1718,7 @@ export default {
     live_streaming: '配信設定',
     refresh_new_live: '最新を再生',
     warning_confirm_purchase_ticket: '決済中はボタンを複数回押さないでください',
+    tag_live_control: 'ライブ',
   },
   video_search: {
     video_results: '動画「:key」 の検索結果',
