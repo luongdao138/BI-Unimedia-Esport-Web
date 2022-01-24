@@ -1,5 +1,5 @@
+import { SUB_TABS } from '@constants/common.constants'
 import { Box } from '@material-ui/core'
-import { SUB_TABS } from '..'
 
 type ChatTabProps = {
   type?: string

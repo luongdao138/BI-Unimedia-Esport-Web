@@ -1,15 +1,15 @@
 import ESAvatar from '@components/Avatar'
 import TabsGroup from '@components/TabsGroup'
+import { SUB_TABS } from '@constants/common.constants'
 import Rankings from '@containers/VideoLiveStreamContainer/Rankings'
 import RankingItem from '@containers/VideoLiveStreamContainer/Rankings/RankingItem'
 import RankingItemSelf from '@containers/VideoLiveStreamContainer/Rankings/RankingItemSelf'
+import useDetailVideo from '@containers/VideoLiveStreamContainer/useDetailVideo'
 import { Box, makeStyles, useMediaQuery, useTheme } from '@material-ui/core'
 
-import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { SUB_TABS } from '..'
 
-type RankingTabProps = { type?: string; activeSubTab?: number }
+type RankingTabProps = { type?: string }
 
 export enum RECEIPT_SEND_TABS {
   RECEIPT = 0,
@@ -24,25 +24,20 @@ const rows = [
   { key: 5, position: '-', name: 'もるチャン', tip: 10000, type: '個人' },
 ]
 
-const RankingTab: React.FC<RankingTabProps> = ({ activeSubTab }) => {
+const RankingTab: React.FC<RankingTabProps> = () => {
+  const { liveStreamInfo, setActiveSubTab } = useDetailVideo()
+  const { activeSubTab } = liveStreamInfo
+
   const { t } = useTranslation('common')
   const classes = useStyles()
-  const [receiptSendTab, setReceiptSendTab] = useState(SUB_TABS.RANKING.RECEIPT)
+  // const [activeSubTab, setActiveSubTab] = useState(SUB_TABS.RANKING.RECEIPT)
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down(768))
 
   const isSelf = 5
 
-  useEffect(() => {
-    if (activeSubTab === SUB_TABS.RANKING.RECEIPT) {
-      setReceiptSendTab(SUB_TABS.RANKING.RECEIPT)
-    } else {
-      setReceiptSendTab(SUB_TABS.RANKING.SEND)
-    }
-  }, [activeSubTab])
-
   const getContent = () => {
-    switch (receiptSendTab) {
+    switch (activeSubTab) {
       case SUB_TABS.RANKING.SEND:
         return (
           <Rankings>
@@ -107,8 +102,8 @@ const RankingTab: React.FC<RankingTabProps> = ({ activeSubTab }) => {
               label: t('live_stream_screen_chat.send'),
             },
           ]}
-          value={receiptSendTab}
-          onClick={(value) => setReceiptSendTab(value)}
+          value={activeSubTab}
+          onClick={(value) => setActiveSubTab(value)}
         />
       )}
 

@@ -360,7 +360,7 @@ const useStyles = makeStyles((theme) => ({
     height: 52,
     backgroundColor: '#476AFF',
     borderRadius: 4,
-    marginRight: 4,
+    marginRight: 8,
     padding: '5px 9px 0px 9px',
     cursor: 'pointer',
     justifyContent: 'center',
@@ -485,12 +485,24 @@ const useStyles = makeStyles((theme) => ({
     },
     chatInputMobileContainer: {
       position: 'absolute',
-      bottom: 112,
+      bottom: 120,
       zIndex: 10,
+      width: 'calc(100vw - 32px)',
+      borderRadius: '4px',
     },
     blurInputChat: {
       position: 'fixed',
       height: 110,
+    },
+    tabsContainer: {
+      display: 'none',
+    },
+    iconPurchase: {
+      margin: '0px !important',
+      padding: '0px !important',
+    },
+    chatInputContainer: {
+      padding: '0 6px 0 0',
     },
   },
 }))

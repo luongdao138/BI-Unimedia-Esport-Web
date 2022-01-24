@@ -372,3 +372,20 @@ export const INTERVAL_AUTO_GET_MESS = 60
 export const SECOND_AUTO_GET_MESS_BEFORE = 10
 export const VIDEO_NORMAL_VIEW_MODE = 'NORMAL'
 export const VIDEO_THEATRE_VIEW_MODE = 'THEATRE'
+
+export const VIDEO_TABS = {
+  CHAT: 0,
+  RANKING: 1,
+  PROGRAM_INFO: 2,
+}
+
+export const SUB_TABS = {
+  MESS: {
+    ALL: 3,
+    TIP: 4,
+  },
+  RANKING: {
+    SEND: 5,
+    RECEIPT: 6,
+  },
+}

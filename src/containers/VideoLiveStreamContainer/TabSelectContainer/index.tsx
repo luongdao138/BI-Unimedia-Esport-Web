@@ -3,9 +3,10 @@ import { Colors } from '@theme/colors'
 
 import { useState } from 'react'
 // import { useTranslation } from 'react-i18next'
-import { SUB_TABS, VIDEO_TABS } from '../ChatContainer'
-import RankingTab from '../ChatContainer/Tabs/RankingTab'
+import { SUB_TABS, VIDEO_TABS } from '@constants/common.constants'
+
 import i18n from '@locales/i18n'
+import useDetailVideo from '../useDetailVideo'
 const DEFAULT_SELECT_TAB = -1
 
 export const videoTabs = [
@@ -43,31 +44,39 @@ export const videoTabs = [
   },
 ]
 
-const TabSelectContainer: React.FC = () => {
+export type TabSelectProps = {
+  sideChatContainer: () => void
+}
+
+const TabSelectContainer: React.FC<TabSelectProps> = ({ sideChatContainer }) => {
+  const { liveStreamInfo, setActiveTab, setActiveSubTab } = useDetailVideo()
+
+  const { activeTab, activeSubTab } = liveStreamInfo
   // const { t } = useTranslation('common')
   const classes = useStyles()
-  const [activeTab, setActiveTab] = useState(VIDEO_TABS.CHAT)
+  // const [activeTab, setActiveTab] = useState(VIDEO_TABS.CHAT)
   const [activeSelectTab, setActiveSelectTab] = useState(DEFAULT_SELECT_TAB)
-  const [activeSubTab, setActiveSubTab] = useState(SUB_TABS.MESS.ALL)
+  // const [activeSubTab, setActiveSubTab] = useState(SUB_TABS.MESS.ALL)
   // const [isRankingTab, setRankingTab] = useState(false)
 
   const getContent = () => {
     switch (activeTab) {
-      case VIDEO_TABS.CHAT:
-        if (activeSubTab === SUB_TABS.MESS.TIP) {
-          return <h2>Tip Mess</h2>
-        } else {
-          return <h2>All Mess</h2>
-        }
-
-      case VIDEO_TABS.RANKING:
-        if (activeSubTab === SUB_TABS.RANKING.SEND) {
-          return <RankingTab activeSubTab={activeSubTab} />
-        } else {
-          return <RankingTab activeSubTab={activeSubTab} />
-        }
-      default:
+      case VIDEO_TABS.PROGRAM_INFO:
+        // if (activeSubTab === SUB_TABS.MESS.TIP) {
+        //   return <h2>Tip Mess</h2>
+        // } else {
+        //   return <h2>All Mess</h2>
+        // }
         return <h1>PROGRAM_INFO_TAB</h1>
+
+      // case VIDEO_TABS.RANKING:
+      //   if (activeSubTab === SUB_TABS.RANKING.SEND) {
+      //     return <RankingTab />
+      //   } else {
+      //     return <RankingTab />
+      //   }
+      default:
+        return sideChatContainer()
     }
   }
   return (

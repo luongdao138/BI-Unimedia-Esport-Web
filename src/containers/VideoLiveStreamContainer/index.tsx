@@ -587,20 +587,6 @@ const VideoDetail: React.FC = () => {
                 clickButtonPurchaseTicket={handlePurchaseTicket}
                 onVideoEnd={onVideoEnd}
               />
-              <Grid container direction="row" className={classes.contentContainer}>
-                {/* {getTabs()}
-                {getContent()} */}
-                {!isMobile ? (
-                  <>
-                    {getTabs()}
-                    {getContent()}
-                  </>
-                ) : (
-                  <>
-                    <TabSelectContainer />
-                  </>
-                )}
-              </Grid>
             </>
           )}
         </Box>
@@ -621,8 +607,18 @@ const VideoDetail: React.FC = () => {
               onVideoEnd={onVideoEnd}
             />
             <Grid container direction="row" className={classes.contentContainer}>
-              {getTabs()}
-              {getContent()}
+              {/* {getTabs()}
+              {getContent()} */}
+              {!isMobile ? (
+                <>
+                  {getTabs()}
+                  {getContent()}
+                </>
+              ) : (
+                <>
+                  <TabSelectContainer sideChatContainer={sideChatContainer}></TabSelectContainer>
+                </>
+              )}
             </Grid>
           </Box>
         )}
