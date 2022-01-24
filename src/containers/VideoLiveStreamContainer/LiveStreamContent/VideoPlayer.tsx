@@ -1,21 +1,20 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable no-console */
-import { Icon, makeStyles, Theme, useMediaQuery, useTheme } from '@material-ui/core'
-import { Colors } from '@theme/colors'
-import React, { memo, useEffect, useRef, useState } from 'react'
-import ControlBarPlayer from './ControlBar'
-import SeekBar from './ControlComponent/SeekBar'
 // import ReactPlayer from 'react-player'
 import ESLoader from '@components/Loader'
-// import screenfull from 'screenfull'
-
-import useDetailVideo from '../useDetailVideo'
-import Hls from 'hls.js'
-import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
 import { DELAY_SECONDS } from '@constants/common.constants'
+import { Icon, makeStyles, Theme, useMediaQuery, useTheme } from '@material-ui/core'
 import { STATUS_VIDEO } from '@services/videoTop.services'
 import useLiveStreamDetail from '../useLiveStreamDetail'
+import { Colors } from '@theme/colors'
+import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
+import Hls from 'hls.js'
+import React, { memo, useEffect, useRef, useState } from 'react'
+// import screenfull from 'screenfull'
+import useDetailVideo from '../useDetailVideo'
+import ControlBarPlayer from './ControlBar'
+import SeekBar from './ControlComponent/SeekBar'
 
 interface PlayerProps {
   src?: string
@@ -28,6 +27,11 @@ interface PlayerProps {
   endLive?: string
   type?: number
   isArchived?: boolean
+  componentsSize?: {
+    chatWidth: number
+    videoWidth: number
+    videoHeight: number
+  }
 }
 
 const VideoPlayer: React.FC<PlayerProps> = ({
@@ -41,6 +45,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   isArchived,
   // type,
   videoType,
+  componentsSize,
 }) => {
   // const checkStatusVideo = 1
   const classes = useStyles({ checkStatusVideo: videoType })
@@ -68,6 +73,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     videoError: false,
   })
 
+  const refControlBar = useRef<any>(null)
   const { changeVideoTime, liveStreamInfo, changeSeekCount, detailVideoResult } = useDetailVideo()
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'), { noSsr: true })
@@ -589,6 +595,10 @@ const VideoPlayer: React.FC<PlayerProps> = ({
                     style={{
                       backgroundImage: `url(${thumbnail ?? '/images/live_stream/thumbnail_default.png'})`,
                       backgroundSize: 'cover',
+                      width:
+                        liveStreamInfo.is_normal_view_mode || isMobile || refControlBar?.current?.isFull
+                          ? '100%'
+                          : componentsSize.videoWidth,
                     }}
                   >
                     <div className={classes.loadingThumbBlur} />
@@ -617,6 +627,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
             )}
             <div className={classes.controlOut}>
               <ControlBarPlayer
+                ref={refControlBar}
                 videoRef={videoEl}
                 onPlayPause={handlePlayPause}
                 playing={playing}
