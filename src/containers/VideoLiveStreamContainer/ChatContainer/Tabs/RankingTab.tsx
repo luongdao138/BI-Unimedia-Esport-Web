@@ -3,12 +3,13 @@ import TabsGroup from '@components/TabsGroup'
 import Rankings from '@containers/VideoLiveStreamContainer/Rankings'
 import RankingItem from '@containers/VideoLiveStreamContainer/Rankings/RankingItem'
 import RankingItemSelf from '@containers/VideoLiveStreamContainer/Rankings/RankingItemSelf'
-import { Box } from '@material-ui/core'
+import { Box, makeStyles, useMediaQuery, useTheme } from '@material-ui/core'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { SUB_TABS } from '..'
 
-type RankingTabProps = { type?: string }
+type RankingTabProps = { type?: string; activeSubTab?: number }
 
 export enum RECEIPT_SEND_TABS {
   RECEIPT = 0,
@@ -23,16 +24,26 @@ const rows = [
   { key: 5, position: '-', name: 'もるチャン', tip: 10000, type: '個人' },
 ]
 
-const RankingTab: React.FC<RankingTabProps> = () => {
+const RankingTab: React.FC<RankingTabProps> = ({ activeSubTab }) => {
   const { t } = useTranslation('common')
-  // const classes = useStyles()
-  const [receiptSendTab, setReceiptSendTab] = useState(RECEIPT_SEND_TABS.RECEIPT)
+  const classes = useStyles()
+  const [receiptSendTab, setReceiptSendTab] = useState(SUB_TABS.RANKING.RECEIPT)
+  const theme = useTheme()
+  const isMobile = useMediaQuery(theme.breakpoints.down(768))
 
   const isSelf = 5
 
+  useEffect(() => {
+    if (activeSubTab === SUB_TABS.RANKING.RECEIPT) {
+      setReceiptSendTab(SUB_TABS.RANKING.RECEIPT)
+    } else {
+      setReceiptSendTab(SUB_TABS.RANKING.SEND)
+    }
+  }, [activeSubTab])
+
   const getContent = () => {
     switch (receiptSendTab) {
-      case RECEIPT_SEND_TABS.SEND:
+      case SUB_TABS.RANKING.SEND:
         return (
           <Rankings>
             {rows.map((item, index) => {
@@ -42,7 +53,7 @@ const RankingTab: React.FC<RankingTabProps> = () => {
                     key={index}
                     position={item.position}
                     avatar={<ESAvatar src="" alt="avatar" size={40} />}
-                    tab={RECEIPT_SEND_TABS.SEND}
+                    tab={SUB_TABS.RANKING.SEND}
                     name={item.name}
                     tip={item.tip}
                     self={false}
@@ -54,7 +65,7 @@ const RankingTab: React.FC<RankingTabProps> = () => {
                   key={index}
                   position={item.position}
                   avatar={<ESAvatar src="" alt="avatar" size={40} />}
-                  tab={RECEIPT_SEND_TABS.SEND}
+                  tab={SUB_TABS.RANKING.SEND}
                   name={item.name}
                   tip={item.tip}
                   self={false}
@@ -72,7 +83,7 @@ const RankingTab: React.FC<RankingTabProps> = () => {
                 position={item.position}
                 avatar={<ESAvatar src="" alt="avatar" size={40} />}
                 type={item.type}
-                tab={RECEIPT_SEND_TABS.RECEIPT}
+                tab={SUB_TABS.RANKING.RECEIPT}
                 name={item.name}
                 tip={item.tip}
               />
@@ -83,27 +94,36 @@ const RankingTab: React.FC<RankingTabProps> = () => {
   }
 
   return (
-    <Box>
-      <TabsGroup
-        data={[
-          {
-            value: RECEIPT_SEND_TABS.RECEIPT,
-            label: t('live_stream_screen_chat.receipt'),
-          },
-          {
-            value: RECEIPT_SEND_TABS.SEND,
-            label: t('live_stream_screen_chat.send'),
-          },
-        ]}
-        value={receiptSendTab}
-        onClick={(value) => setReceiptSendTab(value)}
-      />
+    <Box className={classes.rankingContainer}>
+      {!isMobile && (
+        <TabsGroup
+          data={[
+            {
+              value: SUB_TABS.RANKING.RECEIPT,
+              label: t('live_stream_screen_chat.receipt'),
+            },
+            {
+              value: SUB_TABS.RANKING.SEND,
+              label: t('live_stream_screen_chat.send'),
+            },
+          ]}
+          value={receiptSendTab}
+          onClick={(value) => setReceiptSendTab(value)}
+        />
+      )}
+
       <Box>{getContent()}</Box>
     </Box>
   )
 }
 
-// const useStyles = makeStyles(() => ({
-// }))
+const useStyles = makeStyles((theme) => ({
+  [theme.breakpoints.down(769)]: {
+    rankingContainer: {
+      marginLeft: 10,
+      marginRight: 10,
+    },
+  },
+}))
 
 export default RankingTab
