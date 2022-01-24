@@ -341,6 +341,16 @@ const randomIntegerInRange = (min: number, max: number): number => {
   return Math.floor(Math.random() * (max - min + 1)) + min
 }
 
+// detect scroll indicator text area
+const hasScrollBar = (elem_id: string): boolean => {
+  const elem = document.getElementById(elem_id)
+  if (elem?.clientHeight < elem?.scrollHeight) {
+    return true
+  } else {
+    false
+  }
+}
+
 export const CommonHelper = {
   validateEmail,
   genRanHex,
@@ -367,4 +377,5 @@ export const CommonHelper = {
   splitToLinkifyComponent,
   randomIntegerInRange,
   formatDateYearMonth,
+  hasScrollBar,
 }

@@ -1,4 +1,19 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,400;1,500;1,700&display=swap');
+
+.hide-scroll-indicator {
+  textarea {
+    &::-webkit-scrollbar {
+      display: 'none';
+    }
+    &::-webkit-scrollbar-track {
+      display: 'none';
+    }
+    &::-webkit-scrollbar-thumb {
+      display: 'none';
+    }
+  }
+}
+
 .content-wrapper {
   max-width: 840px;
   background: url('/images/pattern.png') center 60px repeat-x #212121;
