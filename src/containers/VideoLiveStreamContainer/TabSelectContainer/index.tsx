@@ -127,7 +127,7 @@ const TabSelectContainer: React.FC<TabSelectProps> = ({ sideChatContainer }) => 
   )
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   container: {
     backgroundColor: Colors.black,
   },
@@ -212,6 +212,21 @@ const useStyles = makeStyles(() => ({
     },
   },
   active: {},
+  [theme.breakpoints.down('xs')]: {
+    textTabVideo: {
+      fontSize: 10,
+      padding: 5,
+    },
+    textTabVideoProgramInfo: {
+      fontSize: 10,
+      padding: 5,
+    },
+    selectSubTab: {
+      textAlign: 'center',
+      padding: 5,
+      fontSize: 10,
+    },
+  },
 }))
 
 export default TabSelectContainer

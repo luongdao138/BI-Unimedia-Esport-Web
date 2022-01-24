@@ -78,8 +78,9 @@ const GiftReportContainer: React.FC<{ default_tab: any }> = ({ default_tab }) =>
         )
       case TABS.TICKET_REPORT:
         return (
-          <Box mt={3}>
+          <Box mt={3} className={classes.wrapperTicketReport}>
             <ESTable
+              classTable={classes.ticketTable}
               tableHeader={
                 <TableRow>
                   <TableCell style={{ width: '33%' }} align="center">
@@ -122,7 +123,7 @@ const GiftReportContainer: React.FC<{ default_tab: any }> = ({ default_tab }) =>
         onClickBack={() => router.push(ESRoutes.VIDEO_STREAMING_MANAGEMENT)}
       />
       <Box className={classes.giftReportContainer}>
-        <Grid container direction="column">
+        <Grid container direction="column" className={classes.giftReportContent}>
           {getTabs()}
           {getContent()}
         </Grid>
@@ -194,8 +195,17 @@ const useStyles = makeStyles((theme) => ({
       marginLeft: 16,
       marginRight: 16,
     },
+    wrapperTicketReport: {
+      marginLeft: 16,
+      marginRight: 16,
+    },
+    ticketTable: {
+      width: '120%',
+    },
+    giftReportContent: {
+      flexWrap: 'inherit',
+    },
   },
-
   [theme.breakpoints.down(419)]: {
     tabs: {
       display: 'flex',

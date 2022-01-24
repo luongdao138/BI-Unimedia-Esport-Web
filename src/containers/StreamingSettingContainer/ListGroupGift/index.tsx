@@ -39,7 +39,7 @@ const ListGroupGift: React.FC = () => {
               <Typography variant="h2">{t('streaming_gift_report_screen.tip_target_list_selection')}</Typography>
             </Box>
           </Box>
-          <Box ml={4} mr={4}>
+          <Box className={classes.box}>
             <Box display="flex" justifyContent="flex-end" mt={4}>
               <Button
                 size="small"
@@ -125,6 +125,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderBottomStyle: 'solid',
     borderBottomWidth: 1,
   },
+  box: {
+    marginLeft: 32,
+    marginRight: 32,
+  },
   btnTip: {},
   tipTargetToSet: {
     fontSize: 14,
@@ -193,6 +197,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     list: {
       height: 'Calc(100vh - 131px)',
+    },
+  },
+  [theme.breakpoints.down('xs')]: {
+    box: {
+      marginLeft: 0,
+      marginRight: 0,
     },
   },
 }))
