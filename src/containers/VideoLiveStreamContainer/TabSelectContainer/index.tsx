@@ -5,40 +5,40 @@ import { useState } from 'react'
 // import { useTranslation } from 'react-i18next'
 import { SUB_TABS, VIDEO_TABS } from '../ChatContainer'
 import RankingTab from '../ChatContainer/Tabs/RankingTab'
-
+import i18n from '@locales/i18n'
 const DEFAULT_SELECT_TAB = -1
 
 export const videoTabs = [
   {
-    title: 'Chat',
+    title: i18n.t('common:live_stream_screen.chat_header'),
     value: VIDEO_TABS.CHAT,
     subTabs: [
       {
-        title: 'All mess',
+        title: i18n.t('common:live_stream_screen_chat.all'),
         value: SUB_TABS.MESS.ALL,
       },
       {
-        title: 'Tip mess',
+        title: i18n.t('common:live_stream_screen_chat.tip'),
         value: SUB_TABS.MESS.TIP,
       },
     ],
   },
   {
-    title: 'Ranking',
+    title: i18n.t('common:live_stream_screen.ranking_tab_title'),
     value: VIDEO_TABS.RANKING,
     subTabs: [
       {
-        title: 'All mess',
-        value: SUB_TABS.RANKING.SEND,
+        title: i18n.t('common:live_stream_screen_chat.receipt'),
+        value: SUB_TABS.RANKING.RECEIPT,
       },
       {
-        title: 'Tip mess',
-        value: SUB_TABS.RANKING.GET,
+        title: i18n.t('common:live_stream_screen_chat.send'),
+        value: SUB_TABS.RANKING.SEND,
       },
     ],
   },
   {
-    title: 'Program info',
+    title: i18n.t('common:live_stream_screen.program_info'),
     value: VIDEO_TABS.PROGRAM_INFO,
   },
 ]
@@ -61,20 +61,15 @@ const TabSelectContainer: React.FC = () => {
         }
 
       case VIDEO_TABS.RANKING:
-        // if (activeSubTab === SUB_TABS.RANKING.SEND) {
-        //   return <h2>RANKING SEND</h2>
-        // } else {
-        //   return <h2>RANKING GET</h2>
-        // }
-        return <RankingTab />
-
+        if (activeSubTab === SUB_TABS.RANKING.SEND) {
+          return <RankingTab activeSubTab={activeSubTab} />
+        } else {
+          return <RankingTab activeSubTab={activeSubTab} />
+        }
       default:
         return <h1>PROGRAM_INFO_TAB</h1>
     }
   }
-
-  // const classSubTab = `${classes.selectSubTab} ${tab === VIDEO_TABS.CHAT && messageTab === SUB_TABS.MESS.ALL && classes.active}`
-
   return (
     <>
       <Box display="flex" width="100%" className={classes.container}>
@@ -90,10 +85,11 @@ const TabSelectContainer: React.FC = () => {
                       setActiveTab(item.value)
                     }
                   }}
-                  className={`${classes.textTabVideo} ${activeTab === item.value && classes.active}`}
+                  className={`${item?.subTabs ? classes.textTabVideo : classes.textTabVideoProgramInfo} ${
+                    activeTab === item.value && classes.active
+                  }`}
                 >
                   {item.title}
-                  {/* {t('live_stream_screen.chat_header')} */}
                 </Typography>
                 {item?.subTabs && (
                   <Box className={`${classes.subTab} ${activeSelectTab === item.value && classes.active}`}>
@@ -116,55 +112,8 @@ const TabSelectContainer: React.FC = () => {
             </Box>
           )
         })}
-        {/* <Box className={classes.tab}>
-          <Box className={classes.boxTab}>
-            <Typography
-              onClick={() => onChangeTab(VIDEO_TABS.CHAT)}
-              className={`${classes.textTabVideo} ${tab === VIDEO_TABS.CHAT && classes.active}`}
-            >
-              {t('live_stream_screen.chat_header')}
-            </Typography>
-            {tab === VIDEO_TABS.CHAT && isChatTab && (
-              <Box className={classes.subTab}>
-                <Typography onClick={() => onChangeMessageTab(SUB_TABS.MESS.ALL)} className={classSubTab}>
-                  {t('live_stream_screen.all_mess_tab_title')}
-                </Typography>
-                <Typography onClick={() => onChangeMessageTab(SUB_TABS.MESS.TIP)} className={classSubTab}>
-                  {t('live_stream_screen.tip_mess_tab_title')}
-                </Typography>
-              </Box>
-            )}
-          </Box>
-        </Box>
-        <Box className={classes.tab}>
-          <Box className={classes.boxTab}>
-            <Typography
-              onClick={() => onChangeTab(VIDEO_TABS.RANKING)}
-              className={`${classes.textTabVideo} ${tab === VIDEO_TABS.RANKING && classes.active} `}
-            >
-              {t('live_stream_screen.ranking_tab_title')}
-            </Typography>
-            {tab === VIDEO_TABS.RANKING && (
-              <Box className={classes.subTab}>
-                <Typography className={classSubTab}>{t('live_stream_screen_chat.receipt')}</Typography>
-                <Typography className={classSubTab}>{t('live_stream_screen_chat.send')}</Typography>
-              </Box>
-            )}
-          </Box>
-        </Box>
-        <Box className={classes.tab}>
-          <Box className={classes.boxTab}>
-            <Typography
-              onClick={() => onChangeTab(VIDEO_TABS.PROGRAM_INFO)}
-              className={`${classes.textTab} ${tab === VIDEO_TABS.PROGRAM_INFO && classes.active}  `}
-            >
-              {t('live_stream_screen.program_info')}
-            </Typography>
-          </Box>
-        </Box> */}
       </Box>
       {getContent()}
-      {/* {getContentSubTab()} */}
     </>
   )
 }
@@ -203,9 +152,20 @@ const useStyles = makeStyles(() => ({
       display: 'block',
     },
   },
+  textTabVideoProgramInfo: {
+    borderBottom: '2px solid #4D4D4D',
+    padding: 10,
+    textAlign: 'left',
+    position: 'relative',
+    '&$active': {
+      color: Colors.white,
+      borderBottom: `2px solid ${Colors.white}`,
+    },
+  },
   textTabVideo: {
     borderBottom: '2px solid #4D4D4D',
     padding: 10,
+    paddingRight: 30,
     textAlign: 'left',
     position: 'relative',
     '&::before': {

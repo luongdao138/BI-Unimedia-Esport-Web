@@ -1,7 +1,7 @@
 // import { useTranslation } from 'react-i18next'
 import { Box, makeStyles, TableCell, TableRow, Typography } from '@material-ui/core'
 import { Colors } from '@theme/colors'
-import { RECEIPT_SEND_TABS } from '../ChatContainer/Tabs/RankingTab'
+import { SUB_TABS } from '../ChatContainer'
 
 interface Props {
   position: number | string
@@ -36,8 +36,8 @@ const RankingItem: React.FC<Props> = ({ position, avatar, type, tab, name, tip }
       <TableCell>
         <Box display="flex">
           <Box>{avatar}</Box>
-          <Box className={classes.nameWrapper} justifyContent={`${tab === RECEIPT_SEND_TABS.RECEIPT ? 'space-between' : 'center'}`}>
-            {tab === RECEIPT_SEND_TABS.RECEIPT && (
+          <Box className={classes.nameWrapper} justifyContent={`${tab === SUB_TABS.RANKING.RECEIPT ? 'space-between' : 'center'}`}>
+            {tab === SUB_TABS.RANKING.RECEIPT && (
               <Typography variant="h3" component="p" noWrap className={classes.type}>
                 {type}
               </Typography>

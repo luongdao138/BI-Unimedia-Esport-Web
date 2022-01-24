@@ -721,6 +721,9 @@ const useStyles = makeStyles((theme) => ({
       height: 'auto',
       bottom: 'auto',
     },
+    contentContainer: {
+      flexDirection: 'column',
+    },
   },
   [theme.breakpoints.down(419)]: {
     tabsContainer: {

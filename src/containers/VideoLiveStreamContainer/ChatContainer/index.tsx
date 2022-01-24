@@ -81,7 +81,7 @@ export const SUB_TABS = {
   },
   RANKING: {
     SEND: 5,
-    GET: 6,
+    RECEIPT: 6,
   },
 }
 
