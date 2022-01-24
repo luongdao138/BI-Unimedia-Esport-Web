@@ -1,7 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit'
 import { BannerItem, CategoryPopularData, DetailUserData, SearchType, TypeVideo, VideoDetailData } from '@services/videoTop.services'
 import * as actions from '../actions'
-import { VIDEO_NORMAL_VIEW_MODE } from '@constants/common.constants'
+import { VIDEO_NORMAL_VIEW_MODE, SUB_TABS, VIDEO_TABS } from '@constants/common.constants'
 
 type StateType = {
   listVideoAll?: {
@@ -35,6 +35,8 @@ type StateType = {
   is_streaming_end?: boolean
   video_view_mode?: string
   is_normal_view_mode?: boolean
+  activeTab?: number
+  activeSubTab?: number
 }
 
 const initialState: StateType = {
@@ -79,6 +81,8 @@ const initialState: StateType = {
   is_streaming_end: false,
   video_view_mode: VIDEO_NORMAL_VIEW_MODE,
   is_normal_view_mode: true,
+  activeTab: VIDEO_TABS.CHAT,
+  activeSubTab: SUB_TABS.MESS.ALL,
 }
 
 export default createReducer(initialState, (builder) => {
@@ -193,5 +197,12 @@ export default createReducer(initialState, (builder) => {
   })
   builder.addCase(actions.changeVideoViewMode, (state, action) => {
     state.is_normal_view_mode = action.payload.is_normal_view_mode
+  })
+
+  builder.addCase(actions.setActiveTab, (state, action) => {
+    state.activeTab = action.payload.activeTab
+  })
+  builder.addCase(actions.setActiveSubTab, (state, action) => {
+    state.activeSubTab = action.payload.activeSubTab
   })
 })

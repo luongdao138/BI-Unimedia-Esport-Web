@@ -1,7 +1,7 @@
 // import { useTranslation } from 'react-i18next'
+import { SUB_TABS } from '@constants/common.constants'
 import { Box, makeStyles, TableCell, TableRow, Typography } from '@material-ui/core'
 import { Colors } from '@theme/colors'
-import { SUB_TABS } from '../ChatContainer'
 
 interface Props {
   position: number | string

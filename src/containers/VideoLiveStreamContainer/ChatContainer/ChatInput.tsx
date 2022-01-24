@@ -1,10 +1,10 @@
 import ESInput from '@components/Input'
 import LoginRequired from '@containers/LoginRequired'
 import i18n from '@locales/i18n'
-import { Box, Button, makeStyles } from '@material-ui/core'
+import { Box, Button, InputAdornment, makeStyles } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import { useFormik } from 'formik'
-import React, { memo, useEffect } from 'react'
+import React, { memo, useEffect, useState } from 'react'
 import * as Yup from 'yup'
 import { sanitizeMess } from './index'
 
@@ -16,6 +16,7 @@ type ChatInputProps = {
   isResetMess: boolean
   handleChatInputOnFocus?: () => void
   handleChatInputOnBlur?: () => void
+  purchaseButton: any
   setErrorMess: (errorMess: string) => void
   sendNormalMess: (mess: string) => void
 }
@@ -33,7 +34,10 @@ const ChatInput: React.FC<ChatInputProps> = ({
   handleChatInputOnBlur,
   setErrorMess,
   sendNormalMess,
+  purchaseButton,
 }) => {
+  const [isFocusedInput, setIsFocusedInput] = useState(false)
+  console.log('🚀 ~ purchaseButton', purchaseButton)
   const { handleChange, values, handleSubmit, errors, resetForm } = useFormik<MessageValidationType>({
     initialValues: {
       message: '',
@@ -66,6 +70,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
   }
   return (
     <Box className={classes.chatBox}>
+      <Box className={classes.spPurchaseButton}>{purchaseButton()}</Box>
       <ESInput
         id={'message'}
         name="message"
@@ -74,11 +79,28 @@ const ChatInput: React.FC<ChatInputProps> = ({
         value={values.message}
         classes={{ root: classes.input, input: classes.chatTextInput }}
         margin="dense"
-        onFocus={handleChatInputOnFocus}
-        onBlur={handleChatInputOnBlur}
+        onFocus={() => {
+          handleChatInputOnFocus()
+          setIsFocusedInput(true)
+        }}
+        onBlur={() => {
+          handleChatInputOnBlur()
+          setIsFocusedInput(false)
+        }}
         helperText={errors?.message}
         error={!!errors?.message}
         onKeyPress={handlePressEnter}
+        endAdornment={
+          <InputAdornment
+            position="end"
+            className={classes.button_send_sp}
+            onClick={() => {
+              handleSubmit()
+            }}
+          >
+            {isFocusedInput ? <img src="/images/send_icon_pink_sp.svg" /> : <img src="/images/send_icon_white_sp.svg" />}
+          </InputAdornment>
+        }
       />
       <LoginRequired>
         <Button
@@ -102,7 +124,8 @@ export default memo(ChatInput, (prevProps, nextProps) => {
   return true
 })
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
+  spPurchaseButton: { display: 'none' },
   chatBox: {
     display: 'flex',
     flexDirection: 'row',
@@ -151,5 +174,27 @@ const useStyles = makeStyles(() => ({
   },
   sendIcon: {
     width: 30,
+  },
+  [theme.breakpoints.down(769)]: {
+    spPurchaseButton: {
+      display: 'block',
+    },
+    input: () => ({
+      borderRadius: 12,
+      height: 'auto',
+    }),
+    chatTextInput: {
+      padding: '3.5px 14px',
+      fontSize: '12px',
+      height: '17px',
+      lineHeight: '17px',
+    },
+    iconButtonBg: {
+      display: 'none',
+    },
+    chatBox: {
+      alignItems: 'center',
+    },
+    button_send_sp: {},
   },
 }))

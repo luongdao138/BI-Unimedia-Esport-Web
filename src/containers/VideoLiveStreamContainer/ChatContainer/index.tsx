@@ -44,6 +44,8 @@ import {
   LIMIT_MIN_MESS_PREV_REWIND,
   SECOND_AUTO_GET_MESS_BEFORE,
   STATUS_SEND_MESS,
+  SUB_TABS,
+  VIDEO_TABS,
 } from '@constants/common.constants'
 import { v4 as uuidv4 } from 'uuid'
 // import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
@@ -67,23 +69,6 @@ import TabsGroup from '@components/TabsGroup'
 import RankingTab from './Tabs/RankingTab'
 import { Colors } from '@theme/colors'
 import TipChatDialog from './TipChatDialog'
-
-export enum VIDEO_TABS {
-  CHAT = 0,
-  RANKING = 1,
-  PROGRAM_INFO = 2,
-}
-
-export const SUB_TABS = {
-  MESS: {
-    ALL: 3,
-    TIP: 4,
-  },
-  RANKING: {
-    SEND: 5,
-    RECEIPT: 6,
-  },
-}
 
 export type ChatContainerProps = {
   onPressDonate?: (donatedPoint: number, purchaseComment: string) => void
@@ -227,8 +212,8 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
   ) => {
     const dispatch = useAppDispatch()
 
-    const [tab, setTab] = useState(VIDEO_TABS.CHAT)
-    const [messageTab, setMessageTab] = useState(SUB_TABS.MESS.ALL)
+    // const [tab, setTab] = useState(VIDEO_TABS.CHAT)
+    // const [messageTab, setMessageTab] = useState(SUB_TABS.MESS.ALL)
     const [errorMess, setErrorMess] = useState<string>('')
     const [isResetMess, setIsResetMess] = useState<boolean>(false)
     // console.log('🚀 ~ isResetMess', isResetMess)
@@ -306,7 +291,10 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
 
     // const { width: pageWidth } = useWindowDimensions(0)
     // const isDesktopDown1280 = pageWidth > 768 && pageWidth <= 1280
-    const { userResult, streamingSecond, playedSecond, liveStreamInfo, resetState } = useDetailVideo()
+    const { userResult, streamingSecond, playedSecond, liveStreamInfo, resetState, setActiveTab, setActiveSubTab } = useDetailVideo()
+
+    const { activeTab, activeSubTab } = liveStreamInfo
+
     // const { streamingSecond, playedSecond, isViewingStream, liveStreamInfo } = useDetailVideo()
     // const userResult = {streamer: 1}
     const { dataPurchaseTicketSuperChat } = usePurchaseTicketSuperChat()
@@ -1508,6 +1496,16 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       // }
     }
 
+    const purchaseButton = () => {
+      return (
+        <LoginRequired>
+          <IconButton onClick={purchaseIconClick} id="btnOpenPremiumChatDialog" className={classes.iconPurchase}>
+            <img id="btnOpenPremiumChatDialogImage" src="/images/tip_icon.svg" />
+          </IconButton>
+        </LoginRequired>
+      )
+    }
+
     const chatInputComponent = () => (
       <Box
         className={`${classes.chatInputMobileContainer}`}
@@ -1519,12 +1517,9 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
           (isStreaming ? (
             <Box className={classes.chatInputContainer}>
               {purchaseDialogVisible && !isMobile && purchaseInfoDialog()}
-              <LoginRequired>
-                <IconButton onClick={purchaseIconClick} id="btnOpenPremiumChatDialog" className={classes.iconPurchase}>
-                  <img id="btnOpenPremiumChatDialogImage" src="/images/tip_icon.svg" />
-                </IconButton>
-              </LoginRequired>
+              {!isMobile && purchaseButton()}
               <ChatInput
+                purchaseButton={purchaseButton}
                 isResetMess={isResetMess}
                 handleChatInputOnFocus={handleChatInputOnFocus}
                 handleChatInputOnBlur={handleChatInputOnBlur}
@@ -1574,6 +1569,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       if (componentType === 'userIcon') {
         // return 16
         // margin top 16 when has donate message
+        if (isMobile) return 8
         if (transformedDonateMess.length !== 0) {
           return 16
         }
@@ -1783,7 +1779,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         </ButtonBase> */}
         <IconButton
           disableRipple
-          style={{ display: !isBottom ? 'flex' : 'none' }}
+          style={{ display: !isBottom ? 'flex' : 'none', bottom: isMobile && isStreaming ? 177 : 30 }}
           className={classes.bottomArrow}
           onClick={() => {
             setTimeout(() => {
@@ -2086,16 +2082,17 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
                 label: i18n.t('common:live_stream_screen.tip_mess_tab_title'),
               },
             ]}
-            value={messageTab}
-            onClick={(value) => setMessageTab(value)}
+            value={activeSubTab}
+            onClick={(value) => setActiveSubTab(value)}
           ></TabsGroup>
+          {/* {displayChatContent() ? chatContent() : userDoesNotHaveViewingTicketView()} */}
           {/* <ChatTab activeTab={messageTab} /> */}
         </Box>
       )
     }
 
     const getTabsContent = () => {
-      switch (tab) {
+      switch (activeTab) {
         case VIDEO_TABS.CHAT:
           return renderMessageTab()
         case VIDEO_TABS.RANKING:
@@ -2103,6 +2100,10 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         default:
           return <></>
       }
+    }
+
+    const renderContent = () => {
+      return displayChatContent() ? chatContent() : userDoesNotHaveViewingTicketView()
     }
 
     return (
@@ -2117,18 +2118,20 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         }
       >
         <Box className={classes.tabsContainer}>
-          <ESTabs value={tab} onChange={(_, v) => setTab(v)} className={classes.tabs} scrollButtons="off" variant="scrollable">
+          <ESTabs value={activeTab} onChange={(_, v) => setActiveTab(v)} className={classes.tabs} scrollButtons="off" variant="scrollable">
             <ESTab className={classes.singleTab} label={i18n.t('common:live_stream_screen.chat_header')} value={VIDEO_TABS.CHAT} />
             <ESTab className={classes.singleTab} label={i18n.t('common:live_stream_screen.ranking_tab_title')} value={VIDEO_TABS.RANKING} />
           </ESTabs>
         </Box>
-        <Box className={classes.tabsContent}>{getTabsContent()}</Box>
+        <Box className={classes.tabsContent} style={{ display: isMobile && activeTab === VIDEO_TABS.CHAT ? 'none' : 'block' }}>
+          {getTabsContent()}
+        </Box>
         {/* {!isMobile && (
           <Box className={classes.chatHeader}>
             <Typography className={classes.headerTitle}>{i18n.t('common:live_stream_screen.chat_header')}</Typography>
           </Box>
         )} */}
-        {displayChatContent() ? chatContent() : userDoesNotHaveViewingTicketView()}
+        {activeTab === VIDEO_TABS.CHAT ? renderContent() : ''}
       </Box>
     )
   }

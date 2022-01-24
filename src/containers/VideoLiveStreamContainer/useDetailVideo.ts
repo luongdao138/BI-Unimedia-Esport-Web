@@ -37,6 +37,8 @@ const useDetailVideo = () => {
   const changeIsStreamingEnd = (is_streaming_end) => dispatch(actions.changeIsStreamingEnd({ is_streaming_end }))
   const resetState = () => dispatch(actions.resetState())
   const changeVideoViewMode = (is_normal_view_mode) => dispatch(actions.changeVideoViewMode({ is_normal_view_mode }))
+  const setActiveTab = (activeTab) => dispatch(actions.setActiveTab({ activeTab }))
+  const setActiveSubTab = (activeSubTab) => dispatch(actions.setActiveSubTab({ activeSubTab }))
 
   return {
     meta,
@@ -60,6 +62,8 @@ const useDetailVideo = () => {
     changeIsStreamingEnd,
     resetState,
     changeVideoViewMode,
+    setActiveTab,
+    setActiveSubTab,
   }
 }
 

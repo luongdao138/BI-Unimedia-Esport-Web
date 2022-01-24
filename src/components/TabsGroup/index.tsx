@@ -36,7 +36,7 @@ const TabsGroup: React.FC<TabsGroupProps> = ({ data, value, onClick }) => {
 
 export default TabsGroup
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   container: {
     gap: '16px',
   },
@@ -48,5 +48,10 @@ const useStyles = makeStyles(() => ({
     fontSize: '12px',
     lineHeight: '21px',
     borderRadius: '5px',
+  },
+  [theme.breakpoints.down(769)]: {
+    container: {
+      display: 'none',
+    },
   },
 }))
