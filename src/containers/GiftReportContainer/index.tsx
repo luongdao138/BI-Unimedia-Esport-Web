@@ -78,7 +78,7 @@ const GiftReportContainer: React.FC<{ default_tab: any }> = ({ default_tab }) =>
         )
       case TABS.TICKET_REPORT:
         return (
-          <Box mt={3} className={classes.wrapperTicketReport}>
+          <Box mt={3} mb={3} className={classes.wrapperTicketReport}>
             <ESTable
               classTable={classes.ticketTable}
               tableHeader={

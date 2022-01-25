@@ -4,6 +4,8 @@ import Pagination from '@containers/Community/Partials/Pagination'
 import { Box, makeStyles, TableCell, TableRow, Typography, useMediaQuery, useTheme } from '@material-ui/core'
 
 import { Colors } from '@theme/colors'
+import { DateHelper } from '@utils/helpers/DateHelper'
+import { FormatHelper } from '@utils/helpers/FormatHelper'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -71,9 +73,9 @@ const DetailReport: React.FC = () => {
         {rows.map((row) => (
           <TableRow key={row} className={classes.text}>
             <TableCell align="center">1</TableCell>
-            <TableCell align="center">2021/11/22_12:41</TableCell>
+            <TableCell align="center">{DateHelper.formatDateTime('2013-02-04T10:35:24-08:00')}</TableCell>
             <TableCell align="center">@aiueoあいうえお</TableCell>
-            <TableCell align="center">100</TableCell>
+            <TableCell align="center">{FormatHelper.currencyFormat('1500')}</TableCell>
             <TableCell align="center">チケット</TableCell>
             <TableCell align="center">どりでん</TableCell>
           </TableRow>
