@@ -1,7 +1,7 @@
 import ESButton from '@components/Button'
 import ESTable from '@components/Table'
 import Pagination from '@containers/Community/Partials/Pagination'
-import { Box, Grid, makeStyles, TableCell, TableRow, Typography, useMediaQuery, useTheme } from '@material-ui/core'
+import { Box, makeStyles, TableCell, TableRow, Typography, useMediaQuery, useTheme } from '@material-ui/core'
 
 import { Colors } from '@theme/colors'
 import React, { useState } from 'react'
@@ -35,17 +35,16 @@ const DetailReport: React.FC = () => {
 
   return (
     <Box mb={4}>
-      <Grid container spacing={2}>
-        <Grid item xs={9}>
+      <Box display="flex" justifyContent="space-between" alignItems="baseline" mb={2}>
+        <Box alignItems="center" width="100%">
           <Box mb={3} display="flex" justifyContent="center">
             {renderPagination()}
           </Box>
-        </Grid>
-        <Grid item xs={3} className={classes.wrapBtn}>
-          {renderBtnCSV()}
-        </Grid>
-      </Grid>
+        </Box>
+        {renderBtnCSV()}
+      </Box>
       <ESTable
+        classTable={classes.table}
         tableHeader={
           <TableRow className={classes.rowHeader}>
             <TableCell style={{ width: '10%' }} align="center">
@@ -91,9 +90,6 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 10,
     borderStyle: 'solid',
     borderColor: Colors.white_opacity[30],
-    borderCollapse: 'inherit',
-  },
-  table: {
     borderCollapse: 'inherit',
   },
   headerTable: {
@@ -191,6 +187,11 @@ const useStyles = makeStyles((theme) => ({
       '& .MuiPaginationItem-root': {
         fontSize: '11px',
       },
+    },
+  },
+  [theme.breakpoints.down('xs')]: {
+    table: {
+      width: '150%',
     },
   },
 }))
