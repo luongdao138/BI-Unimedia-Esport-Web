@@ -37,7 +37,6 @@ const ChatInput: React.FC<ChatInputProps> = ({
   purchaseButton,
 }) => {
   const [isFocusedInput, setIsFocusedInput] = useState(false)
-  console.log('🚀 ~ purchaseButton', purchaseButton)
   const { handleChange, values, handleSubmit, errors, resetForm } = useFormik<MessageValidationType>({
     initialValues: {
       message: '',

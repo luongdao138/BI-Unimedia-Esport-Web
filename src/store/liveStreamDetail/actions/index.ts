@@ -5,6 +5,7 @@ import { ACTION_VIDEO_DETAIL_STREAM } from './types'
 
 export const resetArchivedVideoStream = createAction(ACTION_VIDEO_DETAIL_STREAM.RESET_ARCHIVED_STREAM)
 export const resetRelatedVideoStream = createAction(ACTION_VIDEO_DETAIL_STREAM.RESET_RELATED_STREAM)
+export const changeMiniVideoPlayerState = createAction<boolean>(ACTION_VIDEO_DETAIL_STREAM.CHANGE_MINI_PLAYER_STATE)
 
 export const getListArchivedVideoStream = createAsyncThunk<
   services.ListArchivedVideoStreamResponse,

@@ -9,6 +9,11 @@ import Play from './ControlComponent/Play'
 import PlayerTooltip from './ControlComponent/PlayerTooltip'
 import Reload from './ControlComponent/Reload'
 import TimeBar from './ControlComponent/TimeBar'
+import SettingPanel from '@containers/VideoLiveStreamContainer/LiveStreamContent/SettingPanel'
+import VideoResolutionPanel from '@containers/VideoLiveStreamContainer/LiveStreamContent/VideoResolutionPanel'
+import ReportPanel from '@containers/VideoLiveStreamContainer/LiveStreamContent/ReportPanel'
+import useLiveStreamDetail from '@containers/VideoLiveStreamContainer/useLiveStreamDetail'
+
 interface ControlProps {
   ref: any
   videoRef?: any
@@ -26,6 +31,14 @@ interface ControlProps {
   videoStatus?: number
   onReloadTime?: () => void
   handleOnRestart?: () => void
+}
+
+enum SettingPanelState {
+  NONE,
+  MAIN_DISPLAY,
+  VIDEO_RESOLUTION,
+  REPORT_PANEL,
+  PLAY_SPEED,
 }
 
 const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
@@ -54,6 +67,8 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
     const [isFull, setFull] = useState<boolean>(false)
     const { changeVideoViewMode, liveStreamInfo } = useDetailVideo()
     const { is_normal_view_mode } = liveStreamInfo
+    const [settingPanel, setSettingPanel] = useState(SettingPanelState.NONE)
+    const { changeMiniPlayerState, getMiniPlayerState } = useLiveStreamDetail()
 
     useImperativeHandle(ref, () => {
       return {
@@ -85,6 +100,38 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
         }
       })
     }, [])
+
+    const handleOnSettingButtonClick = () => {
+      setSettingPanel(settingPanel === SettingPanelState.MAIN_DISPLAY ? SettingPanelState.NONE : SettingPanelState.MAIN_DISPLAY)
+    }
+
+    const handleOnPlaySpeedButtonClick = () => {
+      setSettingPanel(settingPanel === SettingPanelState.PLAY_SPEED ? SettingPanelState.NONE : SettingPanelState.PLAY_SPEED)
+    }
+
+    const handleOnOpenResolutionPanel = () => {
+      setSettingPanel(SettingPanelState.VIDEO_RESOLUTION)
+    }
+
+    const handleOnResolutionPanelBackClick = () => {
+      setSettingPanel(SettingPanelState.MAIN_DISPLAY)
+    }
+
+    const handleOnOpenReportPanel = () => {
+      setSettingPanel(SettingPanelState.REPORT_PANEL)
+    }
+
+    const handleOnReportPanelBackClick = () => {
+      setSettingPanel(SettingPanelState.MAIN_DISPLAY)
+    }
+
+    const handleOnOpenPlaySpeedPanel = () => {
+      setSettingPanel(SettingPanelState.PLAY_SPEED)
+    }
+
+    const handleOnMiniPlayerClick = () => {
+      changeMiniPlayerState(!getMiniPlayerState)
+    }
 
     return (
       // <div className={classes.controlBar}>
@@ -176,6 +223,41 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
               />
             </div>
           )}
+          <Box className={classes.buttonNormal} onClick={handleOnMiniPlayerClick} data-tip data-for="toggleMiniPlayer" id={'miniPlayerRef'}>
+            <img src={'/images/ic_mini_player.svg'} />
+            <PlayerTooltip
+              id={'toggleMiniPlayer'}
+              title={'videos_top_tab.mini_player'}
+              offset={{
+                top: 0,
+                left: 0,
+              }}
+              place={'top'}
+            />
+          </Box>
+          {!isLive && (
+            <Box onClick={handleOnPlaySpeedButtonClick} className={classes.playSpeedButton}>
+              <Typography>{'2x'}</Typography>
+            </Box>
+          )}
+          <Box
+            className={classes.buttonNormal}
+            onClick={handleOnSettingButtonClick}
+            data-tip
+            data-for="toggleSettingPanel"
+            id={'settingRef'}
+          >
+            <img src={'/images/ic_settings.svg'} />
+            <PlayerTooltip
+              id={'toggleSettingPanel'}
+              title={'videos_top_tab.settings'}
+              offset={{
+                top: 0,
+                left: 0,
+              }}
+              place={'top'}
+            />
+          </Box>
           <Box className={classes.buttonNormal} onClick={toggleFullScreen} data-tip data-for="toggleFullScreen" id={'fullscreenRef'}>
             {!isFull ? (
               <img src={'/images/ic_full_screen.svg'} />
@@ -197,6 +279,29 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
             />
           </Box>
         </div>
+        {settingPanel === SettingPanelState.MAIN_DISPLAY && (
+          <SettingPanel
+            handleOnQualityChangeClick={handleOnOpenResolutionPanel}
+            handleOnReportClick={handleOnOpenReportPanel}
+            isLive={isLive}
+            handleOnPlaySpeedClick={handleOnOpenPlaySpeedPanel}
+          />
+        )}
+        {settingPanel === SettingPanelState.VIDEO_RESOLUTION && (
+          <VideoResolutionPanel
+            selectedResolution="1080p"
+            resolutionList={[t('videos_top_tab.auto'), '1080p', '720p', '480p', '360p']}
+            handleOnBackClick={handleOnResolutionPanelBackClick}
+          />
+        )}
+        {settingPanel === SettingPanelState.REPORT_PANEL && <ReportPanel handleOnBackClick={handleOnReportPanelBackClick} />}
+        {settingPanel === SettingPanelState.PLAY_SPEED && (
+          <VideoResolutionPanel
+            selectedResolution={t('videos_top_tab.standard')}
+            resolutionList={['0.5', t('videos_top_tab.standard'), '1.5', '2.0']}
+            handleOnBackClick={handleOnResolutionPanelBackClick}
+          />
+        )}
       </>
       // </div>
     )
@@ -327,7 +432,7 @@ const useStyles = makeStyles(() => ({
   },
   textStatus: {
     fontSize: 13,
-    color: '#fff',
+    color: '#FFFFFF',
     paddingLeft: 4,
   },
   btnRefreshTime: {
@@ -339,7 +444,7 @@ const useStyles = makeStyles(() => ({
   },
   textRefresh: {
     fontSize: 11,
-    color: '#fff',
+    color: '#FFFFFF',
     borderRadius: 15,
     border: '1px solid #FFFFFF4D',
     justifyContent: 'center',
@@ -363,10 +468,21 @@ const useStyles = makeStyles(() => ({
   },
   textRefreshLive: {
     fontSize: 12,
-    color: '#fff',
+    color: '#FFFFFF',
     justifyContent: 'center',
     alignItems: 'center',
     display: 'flex',
+  },
+  playSpeedButton: {
+    border: '1px solid #FFFFFF',
+    backgroundColor: Colors.white_opacity['30'],
+    borderRadius: '10px',
+    width: '32px',
+    height: '21px',
+    alignItems: 'center',
+    justifyContent: 'center',
+    display: 'flex',
+    cursor: 'pointer',
   },
 }))
 

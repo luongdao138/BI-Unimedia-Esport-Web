@@ -46,7 +46,7 @@ const ESSelect: React.FC<SelectProps & Props> = ({ size = 'big', helperText, lab
 const Input = withStyles(() =>
   createStyles({
     root: {
-      backgroundColor: Colors.black,
+      backgroundColor: Colors.green,
       '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
         borderWidth: 1,
         borderColor: Colors.white,

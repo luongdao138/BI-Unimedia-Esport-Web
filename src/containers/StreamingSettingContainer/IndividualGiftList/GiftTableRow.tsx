@@ -53,7 +53,9 @@ const GiftTableRow: React.FC<Props> = ({ item }) => {
           <Typography className={classes.edit}>{t('streaming_setting_screen.individual_gift_tab.edit')}</Typography>
         </ESButton>
       </Box>
-      <DeleteConfirmModal name={name} open={deleteModalVisible} handleClose={handleCloseModal} handleDelete={handleDeleteConfirmPress} />
+      {deleteModalVisible && (
+        <DeleteConfirmModal name={name} open={deleteModalVisible} handleClose={handleCloseModal} handleDelete={handleDeleteConfirmPress} />
+      )}
     </Box>
   )
 }

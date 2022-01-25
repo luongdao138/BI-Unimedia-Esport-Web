@@ -4,7 +4,7 @@
 // import ReactPlayer from 'react-player'
 import ESLoader from '@components/Loader'
 import { DELAY_SECONDS } from '@constants/common.constants'
-import { Icon, makeStyles, Theme, useMediaQuery, useTheme } from '@material-ui/core'
+import { Box, Icon, makeStyles, Theme, Typography, useMediaQuery, useTheme } from '@material-ui/core'
 import { STATUS_VIDEO } from '@services/videoTop.services'
 import useLiveStreamDetail from '../useLiveStreamDetail'
 import { Colors } from '@theme/colors'
@@ -15,6 +15,7 @@ import React, { memo, useEffect, useRef, useState } from 'react'
 import useDetailVideo from '../useDetailVideo'
 import ControlBarPlayer from './ControlBar'
 import SeekBar from './ControlComponent/SeekBar'
+import { useTranslation } from 'react-i18next'
 
 interface PlayerProps {
   src?: string
@@ -50,6 +51,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   // const checkStatusVideo = 1
   const classes = useStyles({ checkStatusVideo: videoType })
   const videoEl = useRef(null)
+  const { t } = useTranslation('common')
 
   const [durationPlayer, setDurationPlayer] = useState(0)
   const [playedSeconds, setPlayedSeconds] = useState(0)
@@ -84,7 +86,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   const androidPl = /Android/i.test(window.navigator.userAgent)
   const iPhonePl = /iPhone/i.test(window.navigator.userAgent)
 
-  const { videoWatchTimeReportRequest } = useLiveStreamDetail()
+  const { videoWatchTimeReportRequest, getMiniPlayerState, changeMiniPlayerState } = useLiveStreamDetail()
   const isStreamingEnd = useRef(liveStreamInfo.is_streaming_end)
   const handlePauseAndSeekVideo = () => {
     // // seek to current live stream second if is pausing live and is not playing
@@ -105,6 +107,21 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   // const [flagPaused, setFlagPaused] = useState(null)
 
   useEffect(() => {
+    if (getMiniPlayerState) {
+      console.log('videoEl::', videoEl)
+      if (videoEl.current !== null) {
+        videoEl.current.requestPictureInPicture()
+      }
+    } else {
+      // @ts-ignore
+      if (document.pictureInPictureElement) {
+        // @ts-ignore
+        document.exitPictureInPicture()
+      }
+    }
+  }, [getMiniPlayerState])
+
+  useEffect(() => {
     // if (!isPortrait) {
     // screenfull.request(playerContainerRef.current)
     // }
@@ -116,7 +133,9 @@ const VideoPlayer: React.FC<PlayerProps> = ({
 
   useEffect(() => {
     if (isArchived) {
-      videoEl.current.currentTime = 0
+      if (videoEl.current !== null) {
+        videoEl.current.currentTime = 0
+      }
       setState({ ...state, playing: false })
       setAutoPlay(false)
     }
@@ -174,16 +193,20 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   // }
 
   const handleMute = () => {
-    setState({ ...state, muted: !state.muted, volume: videoEl.current.volume })
+    setState({ ...state, muted: !state.muted, volume: videoEl.current?.volume })
   }
 
   const handleChangeVol = (_, val) => {
-    videoEl.current.volume = val
-    setState({ ...state, volume: val, muted: videoEl.current.volume === 0 ? true : false })
+    if (videoEl.current !== null) {
+      videoEl.current.volume = val
+    }
+    setState({ ...state, volume: val, muted: videoEl.current?.volume === 0 ? true : false })
   }
   const handleChangeVolDrag = (_, val) => {
-    videoEl.current.volume = val
-    setState({ ...state, volume: val, muted: videoEl.current.volume === 0 ? true : false })
+    if (videoEl.current !== null) {
+      videoEl.current.volume = val
+    }
+    setState({ ...state, volume: val, muted: videoEl.current?.volume === 0 ? true : false })
   }
 
   //video
@@ -347,7 +370,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
 
   //archived
   useEffect(() => {
-    videoEl.current.addEventListener('timeupdate', (event) => {
+    videoEl.current?.addEventListener('timeupdate', (event) => {
       const videoInfo = event.target
       // console.log(
       //   '->current->duration-> range',
@@ -367,30 +390,30 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       handleUpdateVideoDuration.current(event.target.duration)
     })
 
-    videoEl.current.addEventListener('volumechange', () => {
+    videoEl.current?.addEventListener('volumechange', () => {
       setState({
         ...state,
         muted: videoEl.current?.muted,
         volume: videoEl.current?.muted === true ? 0 : videoEl.current?.volume,
         playing: !videoEl.current?.paused,
       })
-      // setState({ ...state, muted: videoEl.current.volume!==0?false:true, volume:  videoEl.current.volume, playing: !videoEl.current.paused })
+      // setState({ ...state, muted: videoEl.current?.volume!==0?false:true, volume:  videoEl.current?.volume, playing: !videoEl.current?.paused })
     })
 
-    videoEl.current.addEventListener('ended', () => {
+    videoEl.current?.addEventListener('ended', () => {
       console.log('================END VIDEO HTML====================')
       setState({ ...state, playing: false })
       setVisible({ ...visible, loading: true, videoLoaded: true })
     })
 
     //check event video
-    videoEl.current.addEventListener('seeking', () => {
+    videoEl.current?.addEventListener('seeking', () => {
       console.log('=================SEEKING===================')
       if (!isStreamingEnd.current) {
         setVisible({ ...visible, loading: true, videoLoaded: false })
       }
     })
-    videoEl.current.addEventListener('seeked', () => {
+    videoEl.current?.addEventListener('seeked', () => {
       //rewind complete
       console.log('=================SEEKED===================')
       if (!isStreamingEnd.current) {
@@ -399,38 +422,38 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     })
 
     //load data
-    videoEl.current.addEventListener('loadedmetadata', (event) => {
+    videoEl.current?.addEventListener('loadedmetadata', (event) => {
       console.log('=================loadedmetadata===================')
       console.log(event)
       if (!isStreamingEnd.current) {
         setVisible({ ...visible, loading: true, videoLoaded: true })
       }
     })
-    videoEl.current.addEventListener('loadeddata', () => {
+    videoEl.current?.addEventListener('loadeddata', () => {
       console.log('=================loadeddata===================')
       // setVisible({ ...visible, loading: true, videoLoaded: true })
     })
-    videoEl.current.addEventListener('emptied', (event) => {
+    videoEl.current?.addEventListener('emptied', (event) => {
       console.log('=================emptied===================')
       console.log(event)
     })
-    videoEl.current.addEventListener('canplay', (event) => {
+    videoEl.current?.addEventListener('canplay', (event) => {
       console.log('=================canplay===================')
       console.log(event)
       if (!isStreamingEnd.current) {
         setVisible({ ...visible, loading: videoEl.current?.paused })
       }
     })
-    videoEl.current.addEventListener('error', (event) => {
+    videoEl.current?.addEventListener('error', (event) => {
       console.log('=================error===================')
       console.log(event)
     })
-    videoEl.current.addEventListener('play', (event) => {
+    videoEl.current?.addEventListener('play', (event) => {
       console.log('=================play===================')
       console.log(event)
       setVisible({ ...visible, loading: true, videoLoaded: true })
     })
-    videoEl.current.addEventListener('playing', (event) => {
+    videoEl.current?.addEventListener('playing', (event) => {
       console.log('=================playing===================', playing)
       console.log(event)
       if (!isStreamingEnd.current) {
@@ -438,6 +461,14 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       }
       // setState({...state, playing:true})
     })
+    videoEl.current?.addEventListener(
+      'leavepictureinpicture',
+      () => {
+        console.log('leavepictureinpicture')
+        changeMiniPlayerState(false)
+      },
+      false
+    )
 
     return () => {
       //@ts-ignore
@@ -465,16 +496,16 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   }
   const handlePlayPauseOut = () => {
     handlePauseAndSeekVideo()
-    if (videoEl.current.paused || videoEl.current.ended) {
-      videoEl.current.play()
+    if (videoEl.current?.paused || videoEl.current?.ended) {
+      videoEl.current?.play()
       //new version
-      if (videoType === STATUS_VIDEO.LIVE_STREAM) {
+      if (videoType === STATUS_VIDEO.LIVE_STREAM && videoEl.current !== null) {
         videoEl.current.currentTime = durationPlayer
       }
       setState({ ...state, playing: true })
       setVisible({ ...visible, loading: false, videoLoaded: false })
     } else {
-      videoEl.current.pause()
+      videoEl.current?.pause()
       setState({ ...state, playing: false })
       setVisible({ ...visible, loading: true, videoLoaded: false })
       setIsStreaming(false)
@@ -483,15 +514,15 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   const handlePlayPause = () => {
     handlePauseAndSeekVideo()
     //new version
-    if (videoType === STATUS_VIDEO.LIVE_STREAM) {
+    if (videoType === STATUS_VIDEO.LIVE_STREAM && videoEl.current !== null) {
       videoEl.current.currentTime = durationPlayer
     }
-    if (videoEl.current.paused || videoEl.current.ended) {
-      videoEl.current.play()
+    if (videoEl.current?.paused || videoEl.current?.ended) {
+      videoEl.current?.play()
       setState({ ...state, playing: true })
       setVisible({ ...visible, loading: false, videoLoaded: false })
     } else {
-      videoEl.current.pause()
+      videoEl.current?.pause()
       setState({ ...state, playing: false })
       setVisible({ ...visible, loading: true, videoLoaded: false })
       setIsStreaming(false)
@@ -508,7 +539,9 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   //rewind video to time newest
   const handleReloadTime = () => {
     // document.querySelector("video").load()
-    videoEl.current.currentTime = durationPlayer
+    if (videoEl.current !== null) {
+      videoEl.current.currentTime = durationPlayer
+    }
     setPlayedSeconds(durationPlayer)
     const newDurationPlayer = Math.floor(durationPlayer)
     changeVideoTime(newDurationPlayer, newDurationPlayer)
@@ -518,7 +551,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
 
   window.onscroll = () => {
     if (playing) {
-      videoEl.current.play()
+      videoEl.current?.play()
     }
   }
 
@@ -530,7 +563,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   // useEffect(() => {
   //   let interval
   //   if (videoType === STATUS_VIDEO.LIVE_STREAM ) {
-  //     if(videoEl.current.paused ){
+  //     if(videoEl.current?.paused ){
   //       interval = setTimeout(() => {
   //         console.log('playedSeconds:::', playedSeconds)
   //         setPlayedSeconds(playedSeconds+1)
@@ -573,6 +606,12 @@ const VideoPlayer: React.FC<PlayerProps> = ({
           >
             <source src={src} type={'video/MP4'} />
           </video>
+          {getMiniPlayerState && (
+            <Box className={classes.miniPlayerContainer}>
+              <img src="/images/ic_mini_player.svg" className={classes.miniPlayerIcon} />
+              <Typography className={classes.miniPlayerText}>{t('videos_top_tab.mini_player_message')}</Typography>
+            </Box>
+          )}
         </div>
       )}
       {!isMobile && !androidPl && !iPhonePl && (
@@ -586,7 +625,12 @@ const VideoPlayer: React.FC<PlayerProps> = ({
               autoPlay={autoPlay}
               // className={classes.video}
             />
-
+            {getMiniPlayerState && (
+              <Box className={classes.miniPlayerContainer}>
+                <img src="/images/ic_mini_player.svg" className={classes.miniPlayerIcon} />
+                <Typography className={classes.miniPlayerText}>{t('videos_top_tab.mini_player_message')}</Typography>
+              </Box>
+            )}
             {!androidPl && !iPhonePl && !mediaOverlayIsShown && loading && (
               <div className={classes.playOverView}>
                 {videoLoaded && (
@@ -673,6 +717,28 @@ const VideoPlayer: React.FC<PlayerProps> = ({
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
+  miniPlayerContainer: {
+    backgroundColor: '#191919',
+    display: 'flex',
+    width: '100%',
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'column',
+    zIndex: 3,
+    position: 'absolute',
+    top: 0,
+    left: 0,
+  },
+  miniPlayerIcon: {
+    width: '130px',
+    height: '130px',
+  },
+  miniPlayerText: {
+    marginTop: '34px',
+    color: Colors.white,
+    fontSize: '16px',
+  },
   playOverView: {
     backgroundColor: 'rgba(0,0,0,0.3)',
     // backgroundColor: 'rgba(174,3,250,0.3)',
