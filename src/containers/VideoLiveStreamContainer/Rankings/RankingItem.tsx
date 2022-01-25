@@ -2,6 +2,7 @@
 import { SUB_TABS } from '@constants/common.constants'
 import { Box, makeStyles, TableCell, TableRow, Typography } from '@material-ui/core'
 import { Colors } from '@theme/colors'
+import { FormatHelper } from '@utils/helpers/FormatHelper'
 
 interface Props {
   position: number | string
@@ -51,7 +52,7 @@ const RankingItem: React.FC<Props> = ({ position, avatar, type, tab, name, tip }
         </Box>
       </TableCell>
       <TableCell>
-        <Typography className={classes.tip}>{tip}</Typography>
+        <Typography className={classes.tip}>{FormatHelper.currencyFormat(tip.toString())}</Typography>
       </TableCell>
     </TableRow>
   )

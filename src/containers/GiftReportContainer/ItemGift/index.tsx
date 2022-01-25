@@ -1,6 +1,7 @@
 import ESAvatar from '@components/Avatar'
 import { Box, makeStyles, TableCell, TableRow, Typography } from '@material-ui/core'
 import { Colors } from '@theme/colors'
+import { FormatHelper } from '@utils/helpers/FormatHelper'
 import React from 'react'
 // import { useTranslation } from 'react-i18next'
 
@@ -24,7 +25,7 @@ const ItemGift: React.FC = () => {
         <Typography component="span">2</Typography>
       </TableCell>
       <TableCell align="center">
-        <Typography component="span">1,500</Typography>
+        <Typography component="span">{FormatHelper.currencyFormat('15000')}</Typography>
       </TableCell>
     </TableRow>
   )

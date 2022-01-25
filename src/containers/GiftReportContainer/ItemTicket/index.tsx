@@ -1,5 +1,7 @@
 import ESAvatar from '@components/Avatar'
 import { Box, makeStyles, TableCell, TableRow, Typography } from '@material-ui/core'
+import { DateHelper } from '@utils/helpers/DateHelper'
+import { FormatHelper } from '@utils/helpers/FormatHelper'
 import React from 'react'
 // import { useTranslation } from 'react-i18next'
 
@@ -17,10 +19,10 @@ const ItemTicket: React.FC = () => {
         </Box>
       </TableCell>
       <TableCell align="center">
-        <Typography component="span">2021/11/29_12:00</Typography>
+        <Typography component="span">{DateHelper.formatDateTime('2013-02-04T10:35:24-08:00')}</Typography>
       </TableCell>
       <TableCell align="center">
-        <Typography component="span">1,500</Typography>
+        <Typography component="span">{FormatHelper.currencyFormat('10000')}</Typography>
       </TableCell>
     </TableRow>
   )
