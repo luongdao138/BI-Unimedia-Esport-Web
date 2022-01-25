@@ -36,6 +36,7 @@ const useDetailVideo = () => {
   const changeIsPausingLive = (is_pausing_live) => dispatch(actions.changeIsPausingLive({ is_pausing_live }))
   const changeIsStreamingEnd = (is_streaming_end) => dispatch(actions.changeIsStreamingEnd({ is_streaming_end }))
   const resetState = () => dispatch(actions.resetState())
+  const resetChatState = () => dispatch(actions.resetChatState())
   const changeVideoViewMode = (is_normal_view_mode) => dispatch(actions.changeVideoViewMode({ is_normal_view_mode }))
   const setActiveTab = (activeTab) => dispatch(actions.setActiveTab({ activeTab }))
   const setActiveSubTab = (activeSubTab) => dispatch(actions.setActiveSubTab({ activeSubTab }))
@@ -64,6 +65,7 @@ const useDetailVideo = () => {
     changeVideoViewMode,
     setActiveTab,
     setActiveSubTab,
+    resetChatState,
   }
 }
 

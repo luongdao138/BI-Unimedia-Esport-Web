@@ -379,6 +379,12 @@ export const VIDEO_TABS = {
   PROGRAM_INFO: 2,
 }
 
+export const VIDEO_INFO_TABS = {
+  PROGRAM_INFO: 2,
+  DISTRIBUTOR_INFO: 3,
+  RELATED_VIDEOS: 4,
+}
+
 export const SUB_TABS = {
   MESS: {
     ALL: 3,

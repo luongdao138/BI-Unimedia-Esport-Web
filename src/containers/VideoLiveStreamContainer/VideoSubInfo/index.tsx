@@ -48,7 +48,7 @@ const VideoSubInfo: React.FC<VideoSubInfoProps> = (props) => {
   const { t } = useTranslation('common')
   const isAuthenticated = useAppSelector(getIsAuthenticated)
 
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
+  const isMobile = useMediaQuery(theme.breakpoints.down(769))
   // const downMd = useMediaQuery(theme.breakpoints.down(769))
   const { detailVideoResult, userResult } = useDetailVideo()
   const { userReactionVideoStream, userFollowChannel } = useLiveStreamDetail()
@@ -161,7 +161,7 @@ const VideoSubInfo: React.FC<VideoSubInfoProps> = (props) => {
 
   const registerChannelButton = () => (
     <ButtonBase onClick={isAuthenticated ? toggleSubscribeClick : goToLogin} className={classes.register_channel_btn}>
-      <Box>
+      <Box display={'flex'} alignItems={'center'}>
         <Icon className={`far fa-heart ${classes.heartIcon}`} fontSize="small" />
       </Box>
       <Box pl={1} className={classes.subscribeLabel}>
@@ -469,7 +469,9 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     display: 'flex',
   }),
-  [theme.breakpoints.down(768)]: {
+  [theme.breakpoints.down(769)]: {
+    wrap_info: { padding: '12px 8px 18px 8px' },
+    streamer_data: { maxWidth: '150px' },
     wrap_movie_info: {},
     wrapPreLoadReactionButton: {
       width: 'calc(100vw)',
@@ -482,6 +484,7 @@ const useStyles = makeStyles((theme) => ({
     movie_title: {
       fontSize: '16px',
       maxWidth: '200px',
+      whiteSpace: 'nowrap',
     },
     device_name: {
       fontSize: '14px',
@@ -534,7 +537,9 @@ const useStyles = makeStyles((theme) => ({
       paddingTop: '16px',
       paddingBottom: '5px',
       height: 'auto',
+      border: 'none',
     },
+    streamer_info: { paddingLeft: 8 },
     avatar: {
       width: '36px',
       height: '36px',
@@ -558,12 +563,13 @@ const useStyles = makeStyles((theme) => ({
       padding: '4px 10px',
     }),
   },
-  [theme.breakpoints.down(321)]: {
+  [theme.breakpoints.down(376)]: {
     subscribeLabel: {
-      fontSize: 10,
+      fontSize: 8,
+      paddingLeft: 4,
     },
     heartIcon: {
-      fontSize: 10,
+      fontSize: 8,
     },
     avatar: {
       marginRight: 8,
@@ -572,7 +578,8 @@ const useStyles = makeStyles((theme) => ({
       paddingRight: 13,
     },
     register_channel_btn: () => ({
-      padding: '2x 10px',
+      padding: '4px 8px',
+      marginRight: 8,
     }),
   },
   process: {

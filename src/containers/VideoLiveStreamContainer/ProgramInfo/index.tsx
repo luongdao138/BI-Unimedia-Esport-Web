@@ -34,7 +34,7 @@ const ProgramInfo: React.FC<ProgramInfoProps> = ({ video_id }) => {
 
   const [page, setPage] = useState<number>(1)
   const [hasMore, setHasMore] = useState(true)
-  const { width: itemWidthDownMdScreen } = useWindowDimensions(48)
+  const { width: itemWidthDownMdScreen } = useWindowDimensions(16)
 
   const handleLoadMore = async () => {
     if (archivedVideoStreamData.length > 0 && archivedVideoStreamData.length < LIMIT_ITEM * page) {
@@ -310,9 +310,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   [theme.breakpoints.down(769)]: {
+    container: { marginTop: 8 },
     wrapContentContainer: {
       width: 'calc(100vw)',
       overflow: 'auto',
+      padding: '0 8px 8px 8px',
     },
     contentContainer: {
       flexWrap: 'nowrap',
@@ -324,7 +326,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       width: 290,
     },
     xsItemContainer: {
-      paddingRight: '24px',
+      paddingRight: '0px',
       marginBottom: '24px',
       display: 'flex',
       justifyContent: 'center',

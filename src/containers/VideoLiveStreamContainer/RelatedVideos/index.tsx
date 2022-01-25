@@ -24,7 +24,7 @@ const RelatedVideos: React.FC<RelatedVideosProps> = ({ video_id }) => {
   const limit = LIMIT_ITEM
   const { meta_related_video_stream, relatedVideoStreamData, getRelatedVideoStream, resetRelatedVideoStream } = useLiveStreamDetail()
   const isLoading = meta_related_video_stream?.pending
-  const { width: itemWidthDownMdScreen } = useWindowDimensions(48)
+  const { width: itemWidthDownMdScreen } = useWindowDimensions(16)
 
   useEffect(() => {
     if (video_id) {
@@ -186,9 +186,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   [theme.breakpoints.down(769)]: {
+    container: { marginTop: 16 },
     wrapContentContainer: {
       width: 'calc(100vw)',
       overflow: 'auto',
+      padding: '0 8px 8px 8px',
     },
     wrapPreLoadContainer: {
       width: 290,
