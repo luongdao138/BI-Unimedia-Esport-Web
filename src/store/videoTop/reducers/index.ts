@@ -3,6 +3,11 @@ import { BannerItem, CategoryPopularData, DetailUserData, SearchType, TypeVideo,
 import * as actions from '../actions'
 import { VIDEO_NORMAL_VIEW_MODE, SUB_TABS, VIDEO_TABS } from '@constants/common.constants'
 
+const defaultChatState = {
+  seek_count: 0,
+  seeked_second: 0,
+}
+
 type StateType = {
   listVideoAll?: {
     live?: Array<TypeVideo>
@@ -75,8 +80,7 @@ const initialState: StateType = {
   streaming_second: 0,
   played_second: 0,
   is_end_live: false,
-  seek_count: 0,
-  seeked_second: 0,
+  ...defaultChatState,
   is_pausing_live: false,
   is_streaming_end: false,
   video_view_mode: VIDEO_NORMAL_VIEW_MODE,
@@ -194,6 +198,9 @@ export default createReducer(initialState, (builder) => {
   })
   builder.addCase(actions.resetState, () => {
     return { ...initialState }
+  })
+  builder.addCase(actions.resetChatState, (state) => {
+    return { ...state, ...defaultChatState }
   })
   builder.addCase(actions.changeVideoViewMode, (state, action) => {
     state.is_normal_view_mode = action.payload.is_normal_view_mode

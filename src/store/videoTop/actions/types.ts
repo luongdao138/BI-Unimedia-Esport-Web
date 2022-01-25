@@ -23,6 +23,7 @@ export const ACTION_VIDEO_TOP = {
   CHANGE_IS_PAUSING_LIVE: 'streaming/changeIsPausingLive',
   CHANGE_IS_STREAMING_END: 'streaming/changeIsStreamingEnd',
   RESET_STATE: 'streaming/resetState',
+  RESET_CHAT_STATE: 'streaming/resetChatState',
   CHANGE_VIDEO_VIEW_MODE: 'streaming/changeVideoViewMode',
   SET_ACTIVE_TAB: 'streaming/setActiveTab',
   SET_ACTIVE_SUB_TAB: 'streaming/setActiveSubTab',

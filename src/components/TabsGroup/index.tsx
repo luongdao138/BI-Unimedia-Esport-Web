@@ -11,13 +11,14 @@ export type TabsGroupProps = {
   }>
   value: number
   onClick: (value: number) => void
+  hiddenOnSP?: boolean
 }
 
-const TabsGroup: React.FC<TabsGroupProps> = ({ data, value, onClick }) => {
+const TabsGroup: React.FC<TabsGroupProps> = ({ data, value, onClick, hiddenOnSP = true }) => {
   const classes = useStyles()
 
   return (
-    <Box className={classes.container} display={'flex'}>
+    <Box className={`${classes.container} ${hiddenOnSP ? classes.hiddenOnSP : ''}`} display={'flex'}>
       {data.map((item, k) => {
         return (
           <Box
@@ -51,7 +52,9 @@ const useStyles = makeStyles((theme) => ({
   },
   [theme.breakpoints.down(769)]: {
     container: {
-      display: 'none',
+      '&$hiddenOnSP': {
+        display: 'none',
+      },
     },
   },
 }))

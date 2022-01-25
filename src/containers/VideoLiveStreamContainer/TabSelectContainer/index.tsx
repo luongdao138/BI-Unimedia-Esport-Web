@@ -3,10 +3,11 @@ import { Colors } from '@theme/colors'
 
 import { useState } from 'react'
 // import { useTranslation } from 'react-i18next'
-import { SUB_TABS, VIDEO_TABS } from '@constants/common.constants'
+import { SUB_TABS, VIDEO_INFO_TABS, VIDEO_TABS } from '@constants/common.constants'
 
 import i18n from '@locales/i18n'
 import useDetailVideo from '../useDetailVideo'
+import TabsGroup from '@components/TabsGroup'
 const DEFAULT_SELECT_TAB = -1
 
 export const videoTabs = [
@@ -46,9 +47,11 @@ export const videoTabs = [
 
 export type TabSelectProps = {
   sideChatContainer: () => void
+  renderVideoSubInfo: () => void
+  infoTabsContent: (currentTab: number) => void
 }
 
-const TabSelectContainer: React.FC<TabSelectProps> = ({ sideChatContainer }) => {
+const TabSelectContainer: React.FC<TabSelectProps> = ({ sideChatContainer, infoTabsContent, renderVideoSubInfo }) => {
   const { liveStreamInfo, setActiveTab, setActiveSubTab } = useDetailVideo()
 
   const { activeTab, activeSubTab } = liveStreamInfo
@@ -56,25 +59,37 @@ const TabSelectContainer: React.FC<TabSelectProps> = ({ sideChatContainer }) => 
   const classes = useStyles()
   // const [activeTab, setActiveTab] = useState(VIDEO_TABS.CHAT)
   const [activeSelectTab, setActiveSelectTab] = useState(DEFAULT_SELECT_TAB)
-  // const [activeSubTab, setActiveSubTab] = useState(SUB_TABS.MESS.ALL)
+  const [activeInfoTab, setActiveInfoTab] = useState(VIDEO_INFO_TABS.PROGRAM_INFO)
   // const [isRankingTab, setRankingTab] = useState(false)
 
   const getContent = () => {
     switch (activeTab) {
       case VIDEO_TABS.PROGRAM_INFO:
-        // if (activeSubTab === SUB_TABS.MESS.TIP) {
-        //   return <h2>Tip Mess</h2>
-        // } else {
-        //   return <h2>All Mess</h2>
-        // }
-        return <h1>PROGRAM_INFO_TAB</h1>
+        return (
+          <Box>
+            {renderVideoSubInfo()}
+            <Box style={{ padding: '8px 8px 0 8px' }}>
+              <TabsGroup
+                data={[
+                  {
+                    value: VIDEO_INFO_TABS.DISTRIBUTOR_INFO,
+                    label: i18n.t('common:live_stream_screen.distributor_info'),
+                  },
+                  {
+                    value: VIDEO_INFO_TABS.RELATED_VIDEOS,
+                    label: i18n.t('common:live_stream_screen.related_videos'),
+                  },
+                ]}
+                value={activeInfoTab}
+                onClick={(value) => setActiveInfoTab(value)}
+                hiddenOnSP={false}
+              ></TabsGroup>
+            </Box>
 
-      // case VIDEO_TABS.RANKING:
-      //   if (activeSubTab === SUB_TABS.RANKING.SEND) {
-      //     return <RankingTab />
-      //   } else {
-      //     return <RankingTab />
-      //   }
+            {infoTabsContent(activeInfoTab)}
+          </Box>
+        )
+
       default:
         return sideChatContainer()
     }
@@ -92,6 +107,9 @@ const TabSelectContainer: React.FC<TabSelectProps> = ({ sideChatContainer }) => 
                       setActiveSelectTab(item?.value)
                     } else {
                       setActiveTab(item.value)
+                    }
+                    if (item.value === VIDEO_TABS.PROGRAM_INFO) {
+                      setActiveInfoTab(VIDEO_INFO_TABS.PROGRAM_INFO)
                     }
                   }}
                   className={`${item?.subTabs ? classes.textTabVideo : classes.textTabVideoProgramInfo} ${
@@ -130,10 +148,12 @@ const TabSelectContainer: React.FC<TabSelectProps> = ({ sideChatContainer }) => 
 const useStyles = makeStyles((theme) => ({
   container: {
     backgroundColor: Colors.black,
+    gap: '16px',
+    padding: '6px 10px',
   },
   tab: {
     width: 'calc(100%/3)',
-    padding: 10,
+    // padding: 10,
   },
   messageTab: {},
   receiptSendTab: {},
@@ -154,7 +174,7 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     position: 'absolute',
     top: '100%',
-    backgroundColor: Colors.black_opacity['30'],
+    backgroundColor: Colors.black_opacity[90],
     zIndex: 99,
     display: 'none',
     '&$active': {
@@ -166,6 +186,8 @@ const useStyles = makeStyles((theme) => ({
     padding: 10,
     textAlign: 'left',
     position: 'relative',
+    fontSize: 12,
+    lineHeight: '17px',
     '&$active': {
       color: Colors.white,
       borderBottom: `2px solid ${Colors.white}`,
@@ -212,7 +234,14 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   active: {},
-  [theme.breakpoints.down('xs')]: {
+  [theme.breakpoints.down(769)]: {
+    textTabVideo: {
+      fontSize: 12,
+      lineHeight: '17px',
+      color: Colors.white_opacity[30],
+    },
+  },
+  [theme.breakpoints.down(376)]: {
     textTabVideo: {
       fontSize: 10,
       padding: 5,

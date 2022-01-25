@@ -32,7 +32,7 @@ const { getVideoByUuid } = require(`src/graphql.${process.env.NEXT_PUBLIC_AWS_EN
 const { onUpdateVideo, onUpdateChannel } = require(`src/graphql.${process.env.NEXT_PUBLIC_AWS_ENV}/subscriptions`)
 // import * as APIt from 'src/types/graphqlAPI'
 import API, { GraphQLResult, graphqlOperation } from '@aws-amplify/api'
-import { EVENT_LIVE_STATUS, LIVE_VIDEO_TYPE } from '@constants/common.constants'
+import { EVENT_LIVE_STATUS, LIVE_VIDEO_TYPE, VIDEO_INFO_TABS } from '@constants/common.constants'
 import DialogLoginContainer from '@containers/DialogLogin'
 import _ from 'lodash'
 import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
@@ -46,13 +46,6 @@ const APIt: any = useGraphqlAPI()
 import ProgramInfo from './ProgramInfo'
 import RelatedVideos from './RelatedVideos'
 import VideoSubInfo from './VideoSubInfo'
-
-enum TABS {
-  PROGRAM_INFO = 1,
-  DISTRIBUTOR_INFO = 2,
-  RELATED_VIDEOS = 3,
-  COMMENT = 0,
-}
 
 export enum VIDEO_TYPE {
   LIVE_STREAM = 0,
@@ -84,7 +77,7 @@ const VideoDetail: React.FC = () => {
   const { purchaseTicketSuperChat, meta_purchase_ticket_super_chat } = usePurchaseTicketSuperChat()
   const myPoint = myPointsData?.total_point ? Number(myPointsData.total_point) : 0
 
-  const [tab, setTab] = useState(TABS.PROGRAM_INFO)
+  const [tab, setTab] = useState(VIDEO_INFO_TABS.PROGRAM_INFO)
   const [showDialogLogin, setShowDialogLogin] = useState<boolean>(false)
 
   const [showConfirmModal, setShowConfirmModal] = useState(false)
@@ -324,7 +317,7 @@ const VideoDetail: React.FC = () => {
   }, [video_id, isAuthenticated])
 
   useEffect(() => {
-    setTab(isMobile ? TABS.COMMENT : TABS.PROGRAM_INFO)
+    // setTab(isMobile ? VIDEO_INFO_TABS.COMMENT : VIDEO_INFO_TABS.PROGRAM_INFO)
   }, [isMobile])
 
   useEffect(() => {
@@ -420,29 +413,29 @@ const VideoDetail: React.FC = () => {
     return (
       <Grid item xs={12} className={classes.tabsContainer}>
         <ESTabs value={tab} onChange={(_, v) => setTab(v)} className={classes.tabs} scrollButtons="off" variant="scrollable">
-          {isMobile && <ESTab label={t('live_stream_screen.comment')} value={TABS.COMMENT} className={classes.singleTab} />}
-          <ESTab label={t('live_stream_screen.program_info')} value={TABS.PROGRAM_INFO} className={classes.singleTab} />
-          <ESTab label={t('live_stream_screen.distributor_info')} value={TABS.DISTRIBUTOR_INFO} className={classes.singleTab} />
-          <ESTab label={t('live_stream_screen.related_videos')} value={TABS.RELATED_VIDEOS} className={classes.singleTab} />
+          {/* {isMobile && <ESTab label={t('live_stream_screen.comment')} value={VIDEO_INFO_TABS.COMMENT} className={classes.singleTab} />} */}
+          <ESTab label={t('live_stream_screen.program_info')} value={VIDEO_INFO_TABS.PROGRAM_INFO} className={classes.singleTab} />
+          <ESTab label={t('live_stream_screen.distributor_info')} value={VIDEO_INFO_TABS.DISTRIBUTOR_INFO} className={classes.singleTab} />
+          <ESTab label={t('live_stream_screen.related_videos')} value={VIDEO_INFO_TABS.RELATED_VIDEOS} className={classes.singleTab} />
         </ESTabs>
       </Grid>
     )
   }
 
-  const getContent = () => {
-    switch (tab) {
-      case TABS.PROGRAM_INFO:
+  const getContent = (currentTab) => {
+    switch (currentTab) {
+      case VIDEO_INFO_TABS.PROGRAM_INFO:
         return !isScheduleAndNotHaveTicket() ? (
           <ProgramInfo video_id={getVideoId()} />
         ) : (
           <ProgramInfoNoViewingTicket videoInfo={detailVideoResult} />
         )
-      case TABS.DISTRIBUTOR_INFO:
+      case VIDEO_INFO_TABS.DISTRIBUTOR_INFO:
         return <DistributorInfo video_id={getVideoId()} />
-      case TABS.RELATED_VIDEOS:
+      case VIDEO_INFO_TABS.RELATED_VIDEOS:
         return <RelatedVideos video_id={getVideoId()} />
-      case TABS.COMMENT:
-        return sideChatContainer()
+      // case VIDEO_INFO_TABS.COMMENT:
+      //   return sideChatContainer()
       default:
         break
     }
@@ -543,6 +536,23 @@ const VideoDetail: React.FC = () => {
 
   const isLoadingVideo = _.isEmpty(detailVideoResult) && isVideoFreeToWatch === -1
 
+  const renderVideoSubInfo = () => {
+    return (
+      <VideoSubInfo
+        componentsSize={componentsSize}
+        isArchived={isArchived}
+        video_id={getVideoId()}
+        userHasViewingTicket={userHasViewingTicket()}
+        videoType={videoStatus}
+        freeToWatch={isVideoFreeToWatch}
+        ticketAvailableForSale={isTicketAvailableForSale()}
+        softKeyboardIsShown={softKeyboardIsShown}
+        ticketPrice={detailVideoResult?.ticket_price}
+        clickButtonPurchaseTicket={handlePurchaseTicket}
+        onVideoEnd={onVideoEnd}
+      />
+    )
+  }
   return (
     <React.Fragment>
       <Box className={classes.root}>
@@ -593,30 +603,22 @@ const VideoDetail: React.FC = () => {
 
         {!isLoadingVideo && (
           <Box className={classes.container} style={{ width: isMobile ? '100%' : componentsSize.videoWidth }}>
-            <VideoSubInfo
-              componentsSize={componentsSize}
-              isArchived={isArchived}
-              video_id={getVideoId()}
-              userHasViewingTicket={userHasViewingTicket()}
-              videoType={videoStatus}
-              freeToWatch={isVideoFreeToWatch}
-              ticketAvailableForSale={isTicketAvailableForSale()}
-              softKeyboardIsShown={softKeyboardIsShown}
-              ticketPrice={detailVideoResult?.ticket_price}
-              clickButtonPurchaseTicket={handlePurchaseTicket}
-              onVideoEnd={onVideoEnd}
-            />
+            {!isMobile && renderVideoSubInfo()}
             <Grid container direction="row" className={classes.contentContainer}>
               {/* {getTabs()}
               {getContent()} */}
               {!isMobile ? (
                 <>
                   {getTabs()}
-                  {getContent()}
+                  {getContent(tab)}
                 </>
               ) : (
                 <>
-                  <TabSelectContainer sideChatContainer={sideChatContainer}></TabSelectContainer>
+                  <TabSelectContainer
+                    sideChatContainer={sideChatContainer}
+                    renderVideoSubInfo={renderVideoSubInfo}
+                    infoTabsContent={(currentTab) => getContent(currentTab)}
+                  ></TabSelectContainer>
                 </>
               )}
             </Grid>

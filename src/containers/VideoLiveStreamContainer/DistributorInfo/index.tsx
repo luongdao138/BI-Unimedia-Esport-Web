@@ -504,7 +504,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   [theme.breakpoints.down(769)]: {
     titleContainer: {
       position: 'relative',
-      marginTop: 16,
+      marginTop: 0,
       flexDirection: 'column',
     },
     socialMediaContainer: {
