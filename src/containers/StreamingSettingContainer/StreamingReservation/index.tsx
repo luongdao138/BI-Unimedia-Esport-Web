@@ -32,7 +32,7 @@ interface Props {
   flagUpdateFieldDate?: (flag: boolean) => void
   handleUpdateValidateField?: (value: string) => void
   validateFieldProps?: string
-  setTabNavigate?: (tab: number) => void
+  openPopupGroupList?: () => void
 }
 
 const StreamingReservationContainer: React.FC<Props> = ({
@@ -40,7 +40,7 @@ const StreamingReservationContainer: React.FC<Props> = ({
   flagUpdateFieldDate,
   handleUpdateValidateField,
   validateFieldProps,
-  setTabNavigate,
+  openPopupGroupList,
 }) => {
   const [step, setStep] = useState(1)
   const router = useRouter()
@@ -344,7 +344,7 @@ const StreamingReservationContainer: React.FC<Props> = ({
         obsStatusDynamo={obsStatusDynamo}
         videoStatusDynamo={videoStatusDynamo}
         processStatusDynamo={processStatusDynamo}
-        setTabNavigate={setTabNavigate}
+        openPopupGroupList={openPopupGroupList}
       />
       <ESModal open={modal && (showResultDialog || channelProgress)} handleClose={handleClose}>
         <BlankLayout>

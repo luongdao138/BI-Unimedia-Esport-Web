@@ -62,7 +62,7 @@ interface StepsProps {
   videoStatusDynamo?: string | number
   validateField?: string
   handleUpdateValidateField?: (value: string) => void
-  setTabNavigate?: (tab: number) => void
+  openPopupGroupList?: () => void
 }
 
 const KEY_TYPE = {
@@ -86,7 +86,7 @@ const Steps: React.FC<StepsProps> = ({
   videoStatusDynamo,
   validateField,
   handleUpdateValidateField,
-  setTabNavigate,
+  openPopupGroupList,
 }) => {
   const dispatch = useAppDispatch()
   const { t } = useTranslation(['common'])
@@ -878,12 +878,7 @@ const Steps: React.FC<StepsProps> = ({
             <ESBoxftDashColumn isSelectedGift={formik?.values?.stepSettingOne?.selected_gift}>
               <Box className={classes.boxAboutGift}>
                 <Box className={classes.select_show_about_gift} pt={1}>
-                  <label
-                    className={classes.labelNavigate}
-                    onClick={() => {
-                      setTabNavigate(2)
-                    }}
-                  >
+                  <label className={classes.labelNavigate} onClick={openPopupGroupList}>
                     {i18n.t('common:streaming_setting_screen.chooses_list_person_gift')}
                   </label>
                   <Typography className={classes.giftInfoList} variant="body2" onClick={handleListGiftInfo}>

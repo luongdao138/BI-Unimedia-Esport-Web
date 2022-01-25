@@ -30,6 +30,7 @@ import MemberList from './GiftMemberListContainer/MemberList'
 import ESModal from '@components/Modal'
 import ListGroupGift from './ListGroupGift'
 import GiftManageTab, { TabState } from '@containers/StreamingSettingContainer/GiftManageTab'
+import useListGroupGift from './ListGroupGift/useListGroupGift'
 // import ESButton from '@components/Button'
 // import useListGroupGift from './ListGroupGift/useListGroupGift'
 
@@ -48,7 +49,7 @@ const StreamingSettingContainer: React.FC<{ default_tab: any }> = ({ default_tab
   const [tab, setTab] = useState(default_tab)
   const [disable, setDisable] = useState(false)
   const [giftManageTabState, setGiftManageTabState] = useState(TabState.LIST)
-  // const { toListGroupGift } = useListGroupGift()
+  const { toListGroupGift } = useListGroupGift()
   //TODO: check call api
   const {
     liveSettingInformation,
@@ -186,9 +187,7 @@ const StreamingSettingContainer: React.FC<{ default_tab: any }> = ({ default_tab
             formik={formikLive}
             validateField={liveValidateField}
             handleUpdateValidateField={handleUpdateLiveValidateField}
-            setTabNavigate={(tab) => {
-              setTab(tab)
-            }}
+            openPopupGroupList={handleClickSelectGift}
           />
         )
       case TABS.STREAMING_RESERVATION:
@@ -198,9 +197,7 @@ const StreamingSettingContainer: React.FC<{ default_tab: any }> = ({ default_tab
             flagUpdateFieldDate={onUpdateFlagChangeFieldDate}
             handleUpdateValidateField={handleUpdateValidateField}
             validateFieldProps={validateField}
-            setTabNavigate={(tab) => {
-              setTab(tab)
-            }}
+            openPopupGroupList={handleClickSelectGift}
           />
         )
       case TABS.DISTRIBUTOR:
@@ -224,9 +221,9 @@ const StreamingSettingContainer: React.FC<{ default_tab: any }> = ({ default_tab
       </ESModal>
     )
   }
-  // const handleClickSelectGift = () => {
-  //   toListGroupGift()
-  // }
+  const handleClickSelectGift = () => {
+    toListGroupGift()
+  }
   return (
     <>
       <Box className="header_streaming_setting">
