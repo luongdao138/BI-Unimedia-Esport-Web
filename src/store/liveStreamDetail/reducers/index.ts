@@ -8,6 +8,7 @@ type StateType = {
   reactionData?: any
   followData?: any
   videoWatchTimeReport?: any
+  miniVideoVisible?: boolean
 }
 const initialState: StateType = {
   videoArchived: [],
@@ -15,9 +16,13 @@ const initialState: StateType = {
   reactionData: null,
   followData: null,
   videoWatchTimeReport: null,
+  miniVideoVisible: false,
 }
 
 export default createReducer(initialState, (builder) => {
+  builder.addCase(actions.changeMiniVideoPlayerState, (state, action) => {
+    state.miniVideoVisible = action.payload
+  })
   builder.addCase(actions.getListArchivedVideoStream.fulfilled, (state, action) => {
     let listVideoArchived = action.payload.data
     if (action.meta.arg.page > 1) {

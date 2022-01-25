@@ -7,6 +7,7 @@ import {
 import { useAppDispatch, useAppSelector } from '@store/hooks'
 import { createMetaSelector } from '@store/metadata/selectors'
 import liveStreamDetail from '@store/liveStreamDetail'
+import { useSelector } from 'react-redux'
 // import { VideoDetailParams } from '@services/videoTop.services'
 // import videoTop from '@store/videoTop'
 
@@ -30,7 +31,8 @@ const useLiveStreamDetail = () => {
   const getRelatedVideoStream = (params: ListArchivedVideoStreamParams) => dispatch(actions.getListRelatedVideoStream(params))
   const meta_related_video_stream = useAppSelector(_getRelatedVideoStreamMeta)
   const resetRelatedVideoStream = () => dispatch(actions.resetRelatedVideoStream())
-
+  const getMiniPlayerState = useSelector(selectors.getMiniVideoVisibleState)
+  const changeMiniPlayerState = (visible) => dispatch(actions.changeMiniVideoPlayerState(visible))
   // const getVideoDetail = (params: VideoDetailParams) => dispatch(actionsVideoTop.videoDetail(params))
 
   const reactionVideoStreamData = useAppSelector(selectors.reactionVideoData)
@@ -76,6 +78,9 @@ const useLiveStreamDetail = () => {
     userFollowChannel,
     followChannelData,
     videoWatchTimeReportRequest,
+
+    changeMiniPlayerState,
+    getMiniPlayerState,
   }
 }
 

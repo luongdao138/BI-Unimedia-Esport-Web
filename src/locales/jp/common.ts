@@ -1748,6 +1748,7 @@ export default {
     success_message: '送信が完了しました',
     standard: '標準',
     play_speed: '視聴速度',
+    mini_player_message: 'ホップアウト機能で動画を表示しています',
   },
   live_stream_screen: {
     program_info: '番組情報',

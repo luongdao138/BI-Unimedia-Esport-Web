@@ -12,6 +12,7 @@ import TimeBar from './ControlComponent/TimeBar'
 import SettingPanel from '@containers/VideoLiveStreamContainer/LiveStreamContent/SettingPanel'
 import VideoResolutionPanel from '@containers/VideoLiveStreamContainer/LiveStreamContent/VideoResolutionPanel'
 import ReportPanel from '@containers/VideoLiveStreamContainer/LiveStreamContent/ReportPanel'
+import useLiveStreamDetail from '@containers/VideoLiveStreamContainer/useLiveStreamDetail'
 
 interface ControlProps {
   ref: any
@@ -67,6 +68,7 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
     const { changeVideoViewMode, liveStreamInfo } = useDetailVideo()
     const { is_normal_view_mode } = liveStreamInfo
     const [settingPanel, setSettingPanel] = useState(SettingPanelState.NONE)
+    const { changeMiniPlayerState, getMiniPlayerState } = useLiveStreamDetail()
 
     useImperativeHandle(ref, () => {
       return {
@@ -125,6 +127,10 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
 
     const handleOnOpenPlaySpeedPanel = () => {
       setSettingPanel(SettingPanelState.PLAY_SPEED)
+    }
+
+    const handleOnMiniPlayerClick = () => {
+      changeMiniPlayerState(!getMiniPlayerState)
     }
 
     return (
@@ -217,7 +223,7 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
               />
             </div>
           )}
-          <Box className={classes.buttonNormal} onClick={toggleFullScreen} data-tip data-for="toggleMiniPlayer" id={'miniPlayerRef'}>
+          <Box className={classes.buttonNormal} onClick={handleOnMiniPlayerClick} data-tip data-for="toggleMiniPlayer" id={'miniPlayerRef'}>
             <img src={'/images/ic_mini_player.svg'} />
             <PlayerTooltip
               id={'toggleMiniPlayer'}
