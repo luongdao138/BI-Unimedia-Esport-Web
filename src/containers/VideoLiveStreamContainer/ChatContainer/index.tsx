@@ -1498,7 +1498,13 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     }
 
     const purchaseButton = () => {
-      return
+      return (
+        <LoginRequired>
+          <IconButton onClick={purchaseIconClick} id="btnOpenPremiumChatDialog" className={classes.iconPurchase}>
+            <img id="btnOpenPremiumChatDialogImage" src="/images/tip_icon.svg" />
+          </IconButton>
+        </LoginRequired>
+      )
     }
 
     const chatInputComponent = () => (
