@@ -1887,6 +1887,10 @@ export default {
     delete_dialog_warning_2: '削除してよろしいですか？',
     delete_confirm: '削除する',
     delete_cancel: 'キャンセル',
+    message_gift_success: `eXeLAB運営にて確認の上、申請結果を登録いただいたメールアドレスへ \nご連絡いたしますので、返信をお待ちください。`,
+    message_gift_success_sp: `eXeLAB運営にて確認の上、申請結果を登録いただいた \nメールアドレスへご連絡いたしますので、返信をお待ちく\nださい。`,
+    toast_message_success: 'チップ対象者申請が完了しました',
+    txt_footer_button_success: '配信管理メニューへ戻る',
   },
   archive_detail_screen: {
     title: 'アーカイブ詳細',

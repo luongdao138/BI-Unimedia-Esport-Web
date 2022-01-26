@@ -7,15 +7,18 @@ import ESInput from '@components/Input'
 import ESLabel from '@components/Label'
 import { useFormik } from 'formik'
 import { validationAddTargetPerson } from './ValidationAddPersonTarget'
+import useGiftManage from './useGiftTarget'
+import CharacterLimited from '@components/CharacterLimited'
 
 interface AddPersonTargetProps {
-  handleAdd: () => void
+  handleSuccess: () => void
 }
-const AddPersonTarget: FC<AddPersonTargetProps> = ({ handleAdd }): JSX.Element => {
+const AddPersonTarget: FC<AddPersonTargetProps> = ({ handleSuccess }): JSX.Element => {
   const classes = useStyles()
   const { t } = useTranslation('common')
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down(414))
+  const { addTargetPerson } = useGiftManage()
   const initialValues = {
     target_value: t('streaming_gift_management.team_title'),
     target_name: '',
@@ -26,10 +29,15 @@ const AddPersonTarget: FC<AddPersonTargetProps> = ({ handleAdd }): JSX.Element =
     validationSchema: validationAddTargetPerson,
     enableReinitialize: true,
     onSubmit: () => {
-      // onSubmit(values)
+      addTargetPerson(values)
     },
   })
-  const { values, errors, touched, handleBlur, setFieldValue, setErrors } = formik
+  const { values, errors, touched, handleBlur, setFieldValue, setErrors, handleSubmit } = formik
+
+  const handleAdd = () => {
+    handleSubmit()
+    handleSuccess()
+  }
 
   const handleChangeTargetValue = (event) => {
     setErrors({})
@@ -43,8 +51,9 @@ const AddPersonTarget: FC<AddPersonTargetProps> = ({ handleAdd }): JSX.Element =
     setErrors({})
     setFieldValue('sns_url', event.target.value)
   }
+
   return (
-    <form onSubmit={formik.handleSubmit} className={classes.container}>
+    <form onSubmit={handleSubmit} className={classes.container}>
       <span className={classes.label}>
         {isMobile ? t('streaming_gift_management.add_information_message_md') : t('streaming_gift_management.add_information_message')}
       </span>
@@ -86,11 +95,12 @@ const AddPersonTarget: FC<AddPersonTargetProps> = ({ handleAdd }): JSX.Element =
             placeholder={t('streaming_gift_management.placeholder_target_person_name')}
             labelPrimary={t('streaming_gift_management.target_person_name')}
             fullWidth
-            value={formik.values?.target_name}
+            value={values?.target_name}
             onChange={handleChangeTargetName}
             onBlur={handleBlur}
             helperText={touched.target_name && errors?.target_name}
             error={touched.target_name && !!errors?.target_name}
+            endAdornment={<CharacterLimited value={values.target_name} limit={50} />}
           />
           <Box mt={2} />
           <ESInput
@@ -101,7 +111,7 @@ const AddPersonTarget: FC<AddPersonTargetProps> = ({ handleAdd }): JSX.Element =
             placeholder={t('streaming_gift_management.sns_placeholder')}
             labelPrimary={t('streaming_gift_management.sns_url')}
             fullWidth
-            value={formik.values?.sns_url}
+            value={values?.sns_url}
             onChange={handleChangeSnsUrl}
             onBlur={handleBlur}
             helperText={touched.sns_url && errors?.sns_url}
@@ -109,7 +119,7 @@ const AddPersonTarget: FC<AddPersonTargetProps> = ({ handleAdd }): JSX.Element =
           />
         </Box>
       </Box>
-      <ButtonPrimary size="small" className={classes.buttonContainer} gradient={false} onClick={handleAdd}>
+      <ButtonPrimary size="small" className={classes.buttonContainer} gradient={false} onClick={handleAdd} disabled={!formik.isValid}>
         {t('streaming_gift_management.txt_save_button')}
       </ButtonPrimary>
     </form>

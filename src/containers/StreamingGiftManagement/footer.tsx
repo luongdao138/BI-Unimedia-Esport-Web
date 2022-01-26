@@ -10,20 +10,31 @@ interface Props {
   onConfirm?: () => void
   onCancel?: () => void
   confirmDisable?: boolean
+  success?: boolean
 }
 
-const Footer: React.FC<Props> = ({ onConfirm = () => null, onCancel = () => null }) => {
+const Footer: React.FC<Props> = ({ onConfirm, onCancel, success }) => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
   return (
-    <Box className={classes.container}>
-      <ButtonPrimary size="small" className={classes.actionBtnClose} gradient={false} onClick={onCancel}>
-        {t('common:streaming_gift_management.cancel')}
-      </ButtonPrimary>
-      <ButtonPrimary gradient size="small" className={classes.actionBtnClose} onClick={onConfirm}>
-        {t('common:streaming_gift_management.apply')}
-      </ButtonPrimary>
-    </Box>
+    <>
+      {!success ? (
+        <Box className={classes.container}>
+          <ButtonPrimary size="small" className={classes.actionBtnClose} gradient={false} onClick={onCancel}>
+            {t('common:streaming_gift_management.cancel')}
+          </ButtonPrimary>
+          <ButtonPrimary gradient size="small" className={classes.actionBtnClose} onClick={onConfirm}>
+            {t('common:streaming_gift_management.apply')}
+          </ButtonPrimary>
+        </Box>
+      ) : (
+        <Box className={classes.container}>
+          <ButtonPrimary gradient size="small" className={classes.buttonSuccess} onClick={onCancel}>
+            {t('common:streaming_gift_management.txt_footer_button_success')}
+          </ButtonPrimary>
+        </Box>
+      )}
+    </>
   )
 }
 const useStyles = makeStyles((theme: Theme) => ({
@@ -49,6 +60,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   actionBtnClose: {
+    width: '100%',
+    margin: '0 8px',
+    padding: '15px 38px',
+    [theme.breakpoints.down('sm')]: {
+      order: 1,
+    },
+  },
+  buttonSuccess: {
     width: '100%',
     margin: '0 8px',
     padding: '15px 38px',
