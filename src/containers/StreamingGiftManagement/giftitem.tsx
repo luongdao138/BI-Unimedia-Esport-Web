@@ -4,12 +4,14 @@ import { useTranslation } from 'react-i18next'
 import { Colors } from '@theme/colors'
 import ESButton from '@components/Button'
 import DeleteConfirmModal from '@containers/StreamingGiftManagement/deletemodal'
+import { TargetPersonType } from '@store/giftManage/actions'
 
 interface Props {
   index: number
+  item: TargetPersonType
 }
 
-const GiftItem: React.FC<Props> = ({ index }) => {
+const GiftItem: React.FC<Props> = ({ item, index }) => {
   const classes = useStyles()
   const { t } = useTranslation('common')
   const theme = useTheme()
@@ -25,15 +27,14 @@ const GiftItem: React.FC<Props> = ({ index }) => {
     // TODO
   }
 
-  const tableRow = (label, value, marginBottom) =>
-    useCallback(() => {
-      return (
-        <Box className={classes.row} marginBottom={marginBottom}>
-          <Typography className={classes.rowLabel}>{label}</Typography>
-          <Typography className={classes.rowValue}>{value}</Typography>
-        </Box>
-      )
-    }, [value, isMobile])
+  const tableRow = useCallback((label, value, marginBottom) => {
+    return (
+      <Box className={classes.row} marginBottom={marginBottom}>
+        <Typography className={classes.rowLabel}>{label}</Typography>
+        <Typography className={classes.rowValue}>{value}</Typography>
+      </Box>
+    )
+  }, [])
 
   const tableLabel = {
     team_or_individual: isMobile ? t(`streaming_gift_management.team_or_individual_sm`) : t(`streaming_gift_management.team_or_individual`),
@@ -73,9 +74,9 @@ const GiftItem: React.FC<Props> = ({ index }) => {
           </ESButton>
         </Box>
       </Box>
-      {tableRow(tableLabel.team_or_individual, '個人', '8px')()}
-      {tableRow(tableLabel.target, 'かやをかやをかやをかやをか', '8px')()}
-      {tableRow(tableLabel.sns_url, 'http://twitter/uni_kayawo', '16px')()}
+      {tableRow(tableLabel.team_or_individual, item.target_value, '8px')}
+      {tableRow(tableLabel.target, item.target_name, '8px')}
+      {tableRow(tableLabel.sns_url, item.sns_url, '16px')}
       {deleteModal()}
     </Box>
   )
