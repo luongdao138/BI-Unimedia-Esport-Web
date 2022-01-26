@@ -103,9 +103,10 @@ const VideoDetail: React.FC = () => {
     resetVideoDetailData,
     changeIsStreamingEnd,
     liveStreamInfo,
+    changeIsHoveredVideoStatus,
   } = useDetailVideo()
 
-  const { is_normal_view_mode } = liveStreamInfo
+  const { is_normal_view_mode, isHoveredVideo } = liveStreamInfo
 
   const isPendingPurchaseTicket = meta_purchase_ticket_super_chat?.pending && purchaseType === PURCHASE_TYPE.PURCHASE_TICKET
 
@@ -565,6 +566,10 @@ const VideoDetail: React.FC = () => {
           style={{
             width: !is_normal_view_mode || isMobile ? '100%' : componentsSize.videoWidth,
             marginRight: !is_normal_view_mode && !isMobile ? '16px' : '0',
+          }}
+          onClick={() => {
+            changeIsHoveredVideoStatus(!isHoveredVideo)
+            console.log('🚀 ~ isHoveredVideo', isHoveredVideo)
           }}
         >
           {isLoadingVideo ? (

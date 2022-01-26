@@ -10,7 +10,7 @@ const useStyles = makeStyles((theme) => ({
     // height: '100%',
     padding: '16px',
   },
-  singleTab: {},
+  singleTab: { maxWidth: 'none' },
   tabsContainer: {
     display: 'flex',
     width: '100%',
@@ -253,6 +253,9 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 4,
     position: 'relative',
     padding: '4px 8px 16px 8px',
+  },
+  hideIconGift: {
+    padding: '47px 8px 16px 8px',
   },
   chatInputMobileContainer: {
     backgroundColor: '#212121',
@@ -503,6 +506,9 @@ const useStyles = makeStyles((theme) => ({
     },
     chatInputContainer: {
       padding: '0 6px 0 0',
+    },
+    hideIconGift: {
+      padding: '6px',
     },
   },
 }))

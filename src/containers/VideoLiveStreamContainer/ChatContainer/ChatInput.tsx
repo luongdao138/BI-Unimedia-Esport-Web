@@ -124,6 +124,9 @@ export default memo(ChatInput, (prevProps, nextProps) => {
 })
 
 const useStyles = makeStyles((theme) => ({
+  button_send_sp: {
+    display: 'none',
+  },
   spPurchaseButton: { display: 'none' },
   chatBox: {
     display: 'flex',
@@ -194,6 +197,8 @@ const useStyles = makeStyles((theme) => ({
     chatBox: {
       alignItems: 'center',
     },
-    button_send_sp: {},
+    button_send_sp: {
+      display: 'inline-flex',
+    },
   },
 }))

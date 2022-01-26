@@ -42,6 +42,7 @@ type StateType = {
   is_normal_view_mode?: boolean
   activeTab?: number
   activeSubTab?: number
+  isHoveredVideo?: boolean
 }
 
 const initialState: StateType = {
@@ -87,6 +88,7 @@ const initialState: StateType = {
   is_normal_view_mode: true,
   activeTab: VIDEO_TABS.CHAT,
   activeSubTab: SUB_TABS.MESS.ALL,
+  isHoveredVideo: false,
 }
 
 export default createReducer(initialState, (builder) => {
@@ -211,5 +213,8 @@ export default createReducer(initialState, (builder) => {
   })
   builder.addCase(actions.setActiveSubTab, (state, action) => {
     state.activeSubTab = action.payload.activeSubTab
+  })
+  builder.addCase(actions.changeIsHoveredVideoStatus, (state, action) => {
+    state.isHoveredVideo = action.payload.isHoveredVideo
   })
 })
