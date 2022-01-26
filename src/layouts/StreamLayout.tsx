@@ -15,6 +15,7 @@ import { Box } from '@material-ui/core'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import { useTheme } from '@material-ui/core/styles'
 import useGetProfile from '@utils/hooks/useGetProfile'
+import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
 
 interface StreamLayoutProps {
   patternBg?: boolean
@@ -47,6 +48,12 @@ const StreamLayout: React.FC<StreamLayoutProps> = ({
   const { userProfile } = useGetProfile()
   const isStreamer = userProfile?.attributes?.delivery_flag || false
 
+  // config layout for video detail page
+  const queryKey = 'vid'
+  const video_id = router.query[queryKey] || router.asPath.match(new RegExp(`[&?]${queryKey}=(.*)(&|$)`))
+  const { width: pageWidth } = useWindowDimensions(0)
+  const isMobile = pageWidth <= 768
+
   const toggleDrawer = (open: boolean) => {
     setOpen(open)
   }
@@ -75,7 +82,7 @@ const StreamLayout: React.FC<StreamLayoutProps> = ({
 
   return (
     <div className={`main_wrapper ${minimizeLayout ? 'minimize_main_wrapper' : ''} ${isFullLayout ? 'full_layout_wrapper' : ''}`}>
-      <Header open={open} toggleDrawer={toggleDrawer} />
+      <Header open={open} toggleDrawer={toggleDrawer} video_id={video_id} />
       {!minimizeLayout ? (
         <>
           <aside className="no_minimize_aside_left no_minimize_fixed_menu">
@@ -109,7 +116,7 @@ const StreamLayout: React.FC<StreamLayoutProps> = ({
             </Box>
           </aside>
           <main role="minimize_main" className="minimize_main">
-            <div className="minimize_content_wrapper">
+            <div className="minimize_content_wrapper" style={{ paddingTop: isMobile && video_id ? '0px' : '60px' }}>
               <div className="minimize_content">{renderContent()}</div>
               {footer ? <Footer /> : ''}
             </div>

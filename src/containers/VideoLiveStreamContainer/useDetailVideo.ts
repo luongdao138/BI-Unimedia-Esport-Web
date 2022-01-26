@@ -40,6 +40,7 @@ const useDetailVideo = () => {
   const changeVideoViewMode = (is_normal_view_mode) => dispatch(actions.changeVideoViewMode({ is_normal_view_mode }))
   const setActiveTab = (activeTab) => dispatch(actions.setActiveTab({ activeTab }))
   const setActiveSubTab = (activeSubTab) => dispatch(actions.setActiveSubTab({ activeSubTab }))
+  const changeIsHoveredVideoStatus = (isHoveredVideo) => dispatch(actions.changeIsHoveredVideoStatus({ isHoveredVideo }))
 
   return {
     meta,
@@ -66,6 +67,7 @@ const useDetailVideo = () => {
     setActiveTab,
     setActiveSubTab,
     resetChatState,
+    changeIsHoveredVideoStatus,
   }
 }
 

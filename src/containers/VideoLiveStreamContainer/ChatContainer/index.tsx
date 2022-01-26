@@ -256,6 +256,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     // console.log('🚀 ~ nextTime', nextTime)
     const [isTokenBroken, setIsTokenBroken] = useState(false)
     const [videoTimeIsRewinding, setVideoTimeIsRewinding] = useState(0)
+    const isEnabledGift = false
     // console.log('🚀 ~ videoTimeIsRewinding', videoTimeIsRewinding)
 
     // const getChatData = () =>
@@ -1497,13 +1498,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     }
 
     const purchaseButton = () => {
-      return (
-        <LoginRequired>
-          <IconButton onClick={purchaseIconClick} id="btnOpenPremiumChatDialog" className={classes.iconPurchase}>
-            <img id="btnOpenPremiumChatDialogImage" src="/images/tip_icon.svg" />
-          </IconButton>
-        </LoginRequired>
-      )
+      return
     }
 
     const chatInputComponent = () => (
@@ -1515,7 +1510,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         {purchaseDialogVisible && isMobile && purchaseInfoDialog()}
         {isEnabledChat &&
           (isStreaming ? (
-            <Box className={classes.chatInputContainer}>
+            <Box className={`${classes.chatInputContainer} ${isEnabledGift ? '' : classes.hideIconGift}`}>
               {purchaseDialogVisible && !isMobile && purchaseInfoDialog()}
               {!isMobile && purchaseButton()}
               <ChatInput
@@ -2120,7 +2115,13 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         <Box className={classes.tabsContainer}>
           <ESTabs value={activeTab} onChange={(_, v) => setActiveTab(v)} className={classes.tabs} scrollButtons="off" variant="scrollable">
             <ESTab className={classes.singleTab} label={i18n.t('common:live_stream_screen.chat_header')} value={VIDEO_TABS.CHAT} />
-            <ESTab className={classes.singleTab} label={i18n.t('common:live_stream_screen.ranking_tab_title')} value={VIDEO_TABS.RANKING} />
+            {isEnabledGift && (
+              <ESTab
+                className={classes.singleTab}
+                label={i18n.t('common:live_stream_screen.ranking_tab_title')}
+                value={VIDEO_TABS.RANKING}
+              />
+            )}
           </ESTabs>
         </Box>
         <Box className={classes.tabsContent} style={{ display: isMobile && activeTab === VIDEO_TABS.CHAT ? 'none' : 'block' }}>

@@ -27,4 +27,5 @@ export const ACTION_VIDEO_TOP = {
   CHANGE_VIDEO_VIEW_MODE: 'streaming/changeVideoViewMode',
   SET_ACTIVE_TAB: 'streaming/setActiveTab',
   SET_ACTIVE_SUB_TAB: 'streaming/setActiveSubTab',
+  CHANGE__HOVERED_VIDEO_STATUS: 'streaming/changeIsHoveredVideoStatus',
 }

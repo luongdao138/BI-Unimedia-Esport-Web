@@ -179,6 +179,7 @@ export const resetChatState = createAction(ACTION_VIDEO_TOP.RESET_CHAT_STATE)
 export const changeVideoViewMode = createAction<{ is_normal_view_mode: boolean }>(ACTION_VIDEO_TOP.CHANGE_VIDEO_VIEW_MODE)
 export const setActiveTab = createAction<{ activeTab: number }>(ACTION_VIDEO_TOP.SET_ACTIVE_TAB)
 export const setActiveSubTab = createAction<{ activeSubTab: number }>(ACTION_VIDEO_TOP.SET_ACTIVE_SUB_TAB)
+export const changeIsHoveredVideoStatus = createAction<{ isHoveredVideo: boolean }>(ACTION_VIDEO_TOP.CHANGE__HOVERED_VIDEO_STATUS)
 
 export const videoDetail = createAsyncThunk<services.VideoDetailResponse, services.VideoDetailParams>(
   ACTION_VIDEO_TOP.VIDEO_DETAIL,

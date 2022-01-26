@@ -44,6 +44,9 @@ import { unseenCount } from '@store/socket/selectors'
 import CommunityCreateContainer from '@containers/Community/UpsertForm'
 import { searchTypes } from '@constants/common.constants'
 import _ from 'lodash'
+import useDetailVideo from '@containers/VideoLiveStreamContainer/useDetailVideo'
+import { Colors } from '@theme/colors'
+import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
 
 interface returnItem {
   value: string
@@ -53,9 +56,10 @@ interface returnItem {
 interface headerProps {
   toggleDrawer: (open: boolean) => void
   open: boolean
+  video_id?: any
 }
 
-export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
+export const Header: React.FC<headerProps> = ({ toggleDrawer, open, video_id = '' }) => {
   const router = useRouter()
   const classes = useStyles()
   const isAuthenticated = useAppSelector(getIsAuthenticated)
@@ -68,6 +72,10 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
   const { navigateScreen } = useReturnHref()
   const { makeContextualHref } = useContextualRouting()
   const chatCount = useAppSelector(unseenCount)
+
+  const {
+    liveStreamInfo: { isHoveredVideo },
+  } = useDetailVideo()
 
   const onSearch = (_data: returnItem) => {
     setSearch({ type: _data.type, keyword: _data.value })
@@ -131,9 +139,18 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
     }
   }, [isAuthenticated])
 
+  const { width: pageWidth } = useWindowDimensions(0)
+  const isMobile = pageWidth <= 768
+
   return (
     <div className={classes.grow}>
-      <AppBar className={classes.appBar} position="fixed">
+      {/* hide header in mobile in detail video page */}
+      <AppBar
+        className={`${classes.appBar} ${isMobile && video_id ? classes.videoPageHeader : ''} ${
+          isMobile && video_id && !isHoveredVideo ? classes.hideHeader : ''
+        }`}
+        position="fixed"
+      >
         <Container maxWidth="xl" className="header-container">
           <Toolbar className={classes.toolbar}>
             <div
@@ -264,6 +281,12 @@ const useStyles = makeStyles((theme) => ({
     padding: 10,
   },
   logo: {},
+  videoPageHeader: {
+    background: Colors.black_opacity[50],
+  },
+  hideHeader: {
+    display: 'none',
+  },
   [theme.breakpoints.down('md')]: {
     icon: {
       fontSize: 18,
