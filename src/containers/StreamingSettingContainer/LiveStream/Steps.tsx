@@ -270,6 +270,9 @@ const Steps: React.FC<StepsProps> = ({
       stream_key,
       video_publish_end_time,
       uuid_clone,
+      use_gift,
+      gift_group_id,
+      group_title,
     } = formik.values.stepSettingOne
     const data: SetLiveStreamParams = {
       // ...formik.values.stepSettingOne,
@@ -291,6 +294,9 @@ const Steps: React.FC<StepsProps> = ({
       stream_key: stream_key,
       video_publish_end_time: video_publish_end_time !== null ? CommonHelper.formatDateTimeJP(video_publish_end_time) : null,
       uuid_clone: uuid_clone,
+      use_gift: use_gift === false ? 0 : 1,
+      gift_group_id: gift_group_id,
+      group_title: group_title,
     }
     setClickShowText(true)
     setLiveStreamConfirm(data, () => {
@@ -387,7 +393,7 @@ const Steps: React.FC<StepsProps> = ({
 
   const changeFieldAndResetSelectedGift = (): void => {
     // formik.handleChange(e)
-    formik.setFieldValue('stepSettingOne.selected_gift', !formik?.values?.stepSettingOne?.selected_gift)
+    formik.setFieldValue('stepSettingOne.use_gift', !formik?.values?.stepSettingOne?.use_gift)
   }
 
   const handleListGiftInfo = () => {
@@ -866,7 +872,7 @@ const Steps: React.FC<StepsProps> = ({
                 <ESLabelWithSwitch
                   fullWidth
                   labelPrimary={i18n.t('common:streaming_setting_screen.title_gift')}
-                  valueSwitch={formik?.values?.stepSettingOne?.selected_gift}
+                  valueSwitch={formik?.values?.stepSettingOne?.use_gift}
                   handleChangeSwitch={changeFieldAndResetSelectedGift}
                 />
               </div>
@@ -875,7 +881,7 @@ const Steps: React.FC<StepsProps> = ({
             <ESLabel label={i18n.t('common:streaming_setting_screen.title_gift')} />
           )}
           {isFirstStep() ? (
-            <ESBoxftDashColumn isSelectedGift={formik?.values?.stepSettingOne?.selected_gift}>
+            <ESBoxftDashColumn isSelectedGift={formik?.values?.stepSettingOne?.use_gift}>
               <Box className={classes.boxAboutGift}>
                 <Box className={classes.select_show_about_gift} pt={1}>
                   <label className={classes.labelNavigate} onClick={openPopupGroupList}>
@@ -888,9 +894,11 @@ const Steps: React.FC<StepsProps> = ({
                 </Box>
                 <Box pt={1} className={classes.nameList}>
                   <Typography className={classes.labelNameObject}>
-                    {`${i18n.t('common:streaming_setting_screen.list_gift_selected')} ${i18n.t(
-                      'common:streaming_setting_screen.unselected'
-                    )}`}
+                    {`${i18n.t('common:streaming_setting_screen.list_gift_selected')} ${
+                      formik?.values?.stepSettingOne?.group_title
+                        ? formik?.values?.stepSettingOne?.group_title
+                        : i18n.t('common:streaming_setting_screen.unselected')
+                    }`}
                   </Typography>
                 </Box>
                 <Box className={classes.select_show_about_gift} pt={1.8} pb={1}>
@@ -914,9 +922,11 @@ const Steps: React.FC<StepsProps> = ({
                 <Box className={classes.newTextftDash}>
                   <Box pt={1} className={classes.nameList}>
                     <Typography className={`${classes.labelNameObject} ${classes.labelRank}`}>
-                      {`${i18n.t('common:streaming_setting_screen.list_gift_selected')} ${i18n.t(
-                        'common:streaming_setting_screen.unselected'
-                      )}`}
+                      {`${i18n.t('common:streaming_setting_screen.list_gift_selected')} ${
+                        formik?.values?.stepSettingOne?.group_title
+                          ? formik?.values?.stepSettingOne?.group_title
+                          : i18n.t('common:streaming_setting_screen.unselected')
+                      }`}
                     </Typography>
                   </Box>
                   <Box className={`${classes.nameList} ${classes.nameListRanking}`}>

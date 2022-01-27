@@ -51,6 +51,9 @@ export type LiveStreamSetting = {
   arn?: string
   uuid_clone?: string
   selected_gift?: boolean
+  use_gift?: number
+  gift_group_id?: number
+  group_title?: string
 }
 
 export type DistributorStepSetting = {
@@ -93,6 +96,9 @@ export type LiveStreamSettingResponse = {
     arn?: string
     live_stream_start_time?: string
     live_stream_end_time?: string
+    use_gift?: number
+    gift_group_id?: number
+    group_title?: string
   }
 }
 export type LiveStreamSettingParams = {
@@ -120,6 +126,9 @@ export type SetLiveStreamParams = {
   video_publish_end_time?: string
   timezone?: string
   uuid_clone?: string
+  use_gift?: number
+  gift_group_id?: number
+  group_title?: string
 }
 export type SetLiveStreamResponse = {
   code: number

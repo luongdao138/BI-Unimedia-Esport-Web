@@ -19,6 +19,9 @@ export type FormLiveType = {
     arn?: string
     uuid_clone?: string
     selected_gift?: boolean
+    use_gift?: boolean
+    gift_group_id?: number
+    group_title?: string
   }
   stepSettingTwo?: {
     uuid: string
@@ -52,6 +55,9 @@ export type FormLiveType = {
     step_setting?: number
     arn?: string
     selected_gift?: boolean
+    use_gift?: boolean
+    gift_group_id?: number
+    group_title?: string
   }
   stepSettingThree?: {
     name?: string
