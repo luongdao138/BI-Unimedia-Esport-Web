@@ -1,31 +1,34 @@
 import ESAvatar from '@components/Avatar'
 import { Box, makeStyles, TableCell, TableRow, Typography } from '@material-ui/core'
+import { GiftsResponse } from '@services/deliveryReport.service'
+
 import { Colors } from '@theme/colors'
 import { FormatHelper } from '@utils/helpers/FormatHelper'
 import React from 'react'
 // import { useTranslation } from 'react-i18next'
 
-const ItemGift: React.FC = () => {
+const ItemGift: React.FC<GiftsResponse> = (props) => {
   // const { t } = useTranslation('common')
+  const { image, name, point, point_user_giver } = props
   const classes = useStyles()
   return (
     <TableRow key={1}>
       <TableCell align="center">
         <Box display="flex" flexDirection="row">
-          <ESAvatar />
+          <ESAvatar src={image} alt={name} />
           <Box ml={1} display="flex" flexDirection="column" justifyContent="space-between" className={classes.teamAndName}>
             <Box className={classes.team}>
               <Typography variant="caption">個人</Typography>
             </Box>
-            <Typography className={classes.name}>もるチャン</Typography>
+            <Typography className={classes.name}>{name}</Typography>
           </Box>
         </Box>
       </TableCell>
       <TableCell align="center">
-        <Typography component="span">2</Typography>
+        <Typography component="span">{point_user_giver}</Typography>
       </TableCell>
       <TableCell align="center">
-        <Typography component="span">{FormatHelper.currencyFormat('15000')}</Typography>
+        <Typography component="span">{FormatHelper.currencyFormat(point.toString())}</Typography>
       </TableCell>
     </TableRow>
   )

@@ -187,4 +187,8 @@ export const URI = {
   UPDATE_ARCHIVE_VIDEO: '/v2/report/archived-save-detail',
   DELETE_ARCHIVE_VIDEO: '/v2/report/archived-delete',
   GET_COOKIE_TO_DOWNLOAD: '/v2/report/get-url-download',
+  //delivery report
+  TIP_REPORT: '/v2/gift/list-user-give-gift',
+  TICKET_REPORT: '/v2/report/list-user-sell-ticket',
+  DETAILED_REPORT: '/v2/gift/gift-report-detail',
 }

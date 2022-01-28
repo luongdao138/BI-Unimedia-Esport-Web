@@ -1,4 +1,5 @@
 import HeaderWithButtonStream from '@components/HeaderWithButtonStream'
+import ESLoader from '@components/Loader'
 import ESTab from '@components/Tab'
 import ESTable from '@components/Table'
 import ESTabs from '@components/Tabs'
@@ -7,23 +8,43 @@ import i18n from '@locales/i18n'
 import { Box, Grid, makeStyles, TableCell, TableRow, Typography } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import { useRouter } from 'next/router'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import DetailReport from './DetailReport'
 import ItemGift from './ItemGift'
 import ItemTicket from './ItemTicket'
+import useDeliveryReport from './useDeliveryReport'
 
 enum TABS {
   GIFT_REPORT = 0,
   TICKET_REPORT = 1,
   DETAIL_REPORT = 2,
 }
-const rows = [1, 2, 3, 4, 5, 6]
 const GiftReportContainer: React.FC<{ default_tab: any }> = ({ default_tab }) => {
   const { t } = useTranslation('common')
   const classes = useStyles()
   const router = useRouter()
+  const videoID = router.query.video_id
   const [tab, setTab] = useState(default_tab)
+  const { fetchTipReportList, fetchTicketReportList, tipReports, ticketReports, tipReportMeta, ticketReportMeta } = useDeliveryReport()
+
+  useEffect(() => {
+    const paramDeliveryReport = { uuid: videoID }
+    if (paramDeliveryReport.uuid) {
+      switch (tab) {
+        case TABS.GIFT_REPORT:
+          fetchTipReportList(paramDeliveryReport)
+
+          break
+        case TABS.TICKET_REPORT:
+          fetchTicketReportList(paramDeliveryReport)
+
+          break
+        default:
+          break
+      }
+    }
+  }, [tab])
 
   const getTabs = () => {
     return (
@@ -55,56 +76,87 @@ const GiftReportContainer: React.FC<{ default_tab: any }> = ({ default_tab }) =>
         return (
           <Box className={classes.wrapperDescTable}>
             {getDescription()}
-            <ESTable
-              tableHeader={
-                <TableRow>
-                  <TableCell style={{ width: '40%' }} align="center">
-                    {t('streaming_gift_report_screen.tip_target_person')}
-                  </TableCell>
-                  <TableCell style={{ width: '26%' }} align="center">
-                    {t('streaming_gift_report_screen.number_of_chips')}
-                  </TableCell>
-                  <TableCell style={{ width: '33%' }} align="center">
-                    {t('streaming_gift_report_screen.total_chips')}
-                  </TableCell>
-                </TableRow>
-              }
-            >
-              {rows.map((row) => (
-                <ItemGift key={row} />
-              ))}
-            </ESTable>
+            {tipReportMeta.pending ? (
+              <Box textAlign="center">
+                <ESLoader />
+              </Box>
+            ) : (
+              <>
+                {tipReports.gifts.length > 0 ? (
+                  <ESTable
+                    tableHeader={
+                      <TableRow>
+                        <TableCell style={{ width: '40%' }} align="center">
+                          {t('streaming_gift_report_screen.tip_target_person')}
+                        </TableCell>
+                        <TableCell style={{ width: '26%' }} align="center">
+                          {t('streaming_gift_report_screen.number_of_chips')}
+                        </TableCell>
+                        <TableCell style={{ width: '33%' }} align="center">
+                          {t('streaming_gift_report_screen.total_chips')}
+                        </TableCell>
+                      </TableRow>
+                    }
+                  >
+                    {tipReports.gifts.map((i, key) => (
+                      <ItemGift key={key} image={i.image} name={i.name} point_user_giver={i.point_user_giver} point={i.point} />
+                    ))}
+                  </ESTable>
+                ) : (
+                  <></>
+                )}
+              </>
+            )}
           </Box>
         )
       case TABS.TICKET_REPORT:
         return (
           <Box mt={3} mb={3} className={classes.wrapperTicketReport}>
-            <ESTable
-              classTable={classes.ticketTable}
-              tableHeader={
-                <TableRow>
-                  <TableCell style={{ width: '33%' }} align="center">
-                    {t('streaming_gift_report_screen.buyer')}
-                  </TableCell>
-                  <TableCell style={{ width: '33%' }} align="center">
-                    {t('point_management_tab.purchase_date')}
-                  </TableCell>
-                  <TableCell style={{ width: '33%' }} align="center">
-                    {t('streaming_gift_report_screen.payment_points')}
-                  </TableCell>
-                </TableRow>
-              }
-            >
-              {rows.map((row) => (
-                <ItemTicket key={row} />
-              ))}
-            </ESTable>
+            {ticketReportMeta.pending ? (
+              <Box textAlign="center">
+                <ESLoader />
+              </Box>
+            ) : (
+              <>
+                {ticketReports.tickets.length > 0 ? (
+                  <ESTable
+                    classTable={classes.ticketTable}
+                    tableHeader={
+                      <TableRow>
+                        <TableCell style={{ width: '33%' }} align="center">
+                          {t('streaming_gift_report_screen.buyer')}
+                        </TableCell>
+                        <TableCell style={{ width: '33%' }} align="center">
+                          {t('point_management_tab.purchase_date')}
+                        </TableCell>
+                        <TableCell style={{ width: '33%' }} align="center">
+                          {t('streaming_gift_report_screen.payment_points')}
+                        </TableCell>
+                      </TableRow>
+                    }
+                  >
+                    {ticketReports.tickets.map((i, index) => (
+                      <ItemTicket
+                        key={index}
+                        created_at={i.created_at}
+                        image_url={i.image_url}
+                        nickname={i.nickname}
+                        point={i.point}
+                        type={i.type}
+                      />
+                    ))}
+                  </ESTable>
+                ) : (
+                  <></>
+                )}
+              </>
+            )}
           </Box>
         )
       case TABS.DETAIL_REPORT:
         return (
           <Box mt={4} className={classes.wrapperDetailReport}>
-            <DetailReport />
+            <DetailReport videoId={videoID} />
           </Box>
         )
       default:
