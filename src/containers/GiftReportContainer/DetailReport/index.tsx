@@ -1,25 +1,43 @@
 import ESButton from '@components/Button'
+import ESLoader from '@components/Loader'
 import ESTable from '@components/Table'
 import Pagination from '@containers/Community/Partials/Pagination'
 import { Box, makeStyles, TableCell, TableRow, Typography, useMediaQuery, useTheme } from '@material-ui/core'
-
+import { DetailedResponse } from '@services/deliveryReport.service'
 import { Colors } from '@theme/colors'
 import { DateHelper } from '@utils/helpers/DateHelper'
 import { FormatHelper } from '@utils/helpers/FormatHelper'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import useDeliveryReport from '../useDeliveryReport'
 
-const rows = [1, 2, 3, 4, 5]
+interface DetailReportProps {
+  videoId: string | string[]
+}
 
-const DetailReport: React.FC = () => {
-  // const { t } = useTranslation('common')
+const ITEM_PER_PAGE = 5
+const getItemPerPage = (data: DetailedResponse[], itemPerPage: number, page: number) => {
+  return data.slice(itemPerPage * page - itemPerPage, itemPerPage * page)
+}
+
+const DetailReport: React.FC<DetailReportProps> = ({ videoId }) => {
   const theme = useTheme()
   const matches = useMediaQuery(theme.breakpoints.down('sm'))
   const classes = useStyles()
   const { t } = useTranslation('common')
-
-  const [page, setPage] = useState(10)
-  const [count] = useState(10)
+  const getTotalPage = () => Math.ceil(40 / ITEM_PER_PAGE)
+  const [page, setPage] = useState(1)
+  const [pageNumber] = useState(getTotalPage())
+  const { fetchDetailedReportList, detailedReports, detailedReportMeta } = useDeliveryReport()
+  // const { t } = useTranslation('common')
+  useEffect(() => {
+    const paramDeliveryReport = { uuid: videoId }
+    fetchDetailedReportList(paramDeliveryReport)
+    // console.log(
+    //   'rows.slice(page,ITEM_PER_PAGE)=>',
+    //   Array.from(Array(40).keys()).slice(ITEM_PER_PAGE * page - ITEM_PER_PAGE, ITEM_PER_PAGE * page)
+    // )
+  }, [page])
 
   const renderBtnCSV = () =>
     matches ? (
@@ -33,54 +51,70 @@ const DetailReport: React.FC = () => {
     )
 
   const renderPagination = () =>
-    matches ? <Pagination page={page} pageNumber={2} setPage={setPage} /> : <Pagination page={page} pageNumber={count} setPage={setPage} />
+    matches ? (
+      <Pagination page={page} pageNumber={pageNumber} setPage={setPage} />
+    ) : (
+      <Pagination page={page} pageNumber={pageNumber} setPage={setPage} />
+    )
 
   return (
     <Box mb={4}>
       <Box display="flex" justifyContent="space-between" alignItems="baseline" mb={2}>
         <Box alignItems="center" width="100%">
           <Box mb={3} display="flex" justifyContent="center">
-            {renderPagination()}
+            {detailedReports.points.length > 0 ? renderPagination() : <></>}
           </Box>
         </Box>
         {renderBtnCSV()}
       </Box>
-      <ESTable
-        classTable={classes.table}
-        tableHeader={
-          <TableRow className={classes.rowHeader}>
-            <TableCell style={{ width: '10%' }} align="center">
-              <Typography>{t('streaming_gift_report_screen.no')}</Typography>
-            </TableCell>
-            <TableCell style={{ width: '20%' }} align="center">
-              <Typography> {t('point_management_tab.purchase_date')}</Typography>
-            </TableCell>
-            <TableCell style={{ width: '20%' }} align="center">
-              <Typography> {t('streaming_gift_report_screen.eXeLAB_ID')}</Typography>
-            </TableCell>
-            <TableCell style={{ width: '15%' }} align="center">
-              <Typography> {t('common.eXe_points')}</Typography>
-            </TableCell>
-            <TableCell style={{ width: '15%' }} align="center">
-              <Typography> {t('streaming_gift_report_screen.kinds')}</Typography>
-            </TableCell>
-            <TableCell style={{ width: '20%' }} align="center">
-              <Typography> {t('streaming_gift_report_screen.tip_target')}</Typography>
-            </TableCell>
-          </TableRow>
-        }
-      >
-        {rows.map((row) => (
-          <TableRow key={row} className={classes.text}>
-            <TableCell align="center">1</TableCell>
-            <TableCell align="center">{DateHelper.formatDateTime('2013-02-04T10:35:24-08:00')}</TableCell>
-            <TableCell align="center">@aiueoあいうえお</TableCell>
-            <TableCell align="center">{FormatHelper.currencyFormat('1500')}</TableCell>
-            <TableCell align="center">チケット</TableCell>
-            <TableCell align="center">どりでん</TableCell>
-          </TableRow>
-        ))}
-      </ESTable>
+      {detailedReportMeta.pending ? (
+        <>
+          <ESLoader />
+        </>
+      ) : (
+        <>
+          {detailedReports.points.length > 0 ? (
+            <ESTable
+              classTable={classes.table}
+              tableHeader={
+                <TableRow className={classes.rowHeader}>
+                  <TableCell style={{ width: '10%' }} align="center">
+                    <Typography>{t('streaming_gift_report_screen.no')}</Typography>
+                  </TableCell>
+                  <TableCell style={{ width: '20%' }} align="center">
+                    <Typography> {t('point_management_tab.purchase_date')}</Typography>
+                  </TableCell>
+                  <TableCell style={{ width: '20%' }} align="center">
+                    <Typography> {t('streaming_gift_report_screen.eXeLAB_ID')}</Typography>
+                  </TableCell>
+                  <TableCell style={{ width: '15%' }} align="center">
+                    <Typography> {t('common.eXe_points')}</Typography>
+                  </TableCell>
+                  <TableCell style={{ width: '15%' }} align="center">
+                    <Typography> {t('streaming_gift_report_screen.kinds')}</Typography>
+                  </TableCell>
+                  <TableCell style={{ width: '20%' }} align="center">
+                    <Typography> {t('streaming_gift_report_screen.tip_target')}</Typography>
+                  </TableCell>
+                </TableRow>
+              }
+            >
+              {getItemPerPage(detailedReports.points, ITEM_PER_PAGE, page).map((i, key) => (
+                <TableRow key={key} className={classes.text}>
+                  <TableCell align="center">{key}</TableCell>
+                  <TableCell align="center">{DateHelper.formatDateTime(i.created_at)}</TableCell>
+                  <TableCell align="center">{i.nickname}</TableCell>
+                  <TableCell align="center">{FormatHelper.currencyFormat(i.point.toString())}</TableCell>
+                  <TableCell align="center">{i.type_report}</TableCell>
+                  <TableCell align="center">{i.gift_recipient}</TableCell>
+                </TableRow>
+              ))}
+            </ESTable>
+          ) : (
+            <></>
+          )}
+        </>
+      )}
     </Box>
   )
 }
