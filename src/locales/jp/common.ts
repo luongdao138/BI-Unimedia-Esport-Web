@@ -1891,6 +1891,7 @@ export default {
     message_gift_success_sp: `eXeLAB運営にて確認の上、申請結果を登録いただいた \nメールアドレスへご連絡いたしますので、返信をお待ちく\nださい。`,
     toast_message_success: 'チップ対象者申請が完了しました',
     txt_footer_button_success: '配信管理メニューへ戻る',
+    record_error_no: '対象者No.XXに入力不備があります。',
   },
   archive_detail_screen: {
     title: 'アーカイブ詳細',

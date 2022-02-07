@@ -1,7 +1,7 @@
 import { Box, FormControlLabel, makeStyles, Radio, RadioGroup, Typography, useMediaQuery, useTheme } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
 import ButtonPrimary from '@components/ButtonPrimary'
-import React, { FC } from 'react'
+import React, { FC, useEffect } from 'react'
 import { Colors } from '@theme/colors'
 import ESInput from '@components/Input'
 import ESLabel from '@components/Label'
@@ -9,16 +9,18 @@ import { useFormik } from 'formik'
 import { validationAddTargetPerson } from './ValidationAddPersonTarget'
 import useGiftManage from './useGiftTarget'
 import CharacterLimited from '@components/CharacterLimited'
+import { SnsUrlValidType } from '@store/giftManage/reducers'
 
 interface AddPersonTargetProps {
   handleSuccess: () => void
 }
+
 const AddPersonTarget: FC<AddPersonTargetProps> = ({ handleSuccess }): JSX.Element => {
   const classes = useStyles()
   const { t } = useTranslation('common')
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down(414))
-  const { addTargetPerson } = useGiftManage()
+  const { addTargetPerson, checkSnsUrl, snsUrlValidCheckStatus, resetSnsUrlStateCheck } = useGiftManage()
   const initialValues = {
     target_value: t('streaming_gift_management.team_title'),
     target_name: '',
@@ -34,9 +36,22 @@ const AddPersonTarget: FC<AddPersonTargetProps> = ({ handleSuccess }): JSX.Eleme
   })
   const { values, errors, touched, handleBlur, setFieldValue, setErrors, handleSubmit } = formik
 
+  useEffect(() => {
+    if (snsUrlValidCheckStatus !== SnsUrlValidType.INIT) {
+      if (snsUrlValidCheckStatus === SnsUrlValidType.VALID) {
+        addTargetPerson(values)
+        handleSuccess()
+        resetSnsUrlStateCheck()
+      } else {
+        // TODO: Show error
+      }
+    }
+  }, [snsUrlValidCheckStatus])
+
   const handleAdd = () => {
-    handleSubmit()
-    handleSuccess()
+    checkSnsUrl(values)
+    // handleSubmit()
+    // handleSuccess()
   }
 
   const handleChangeTargetValue = (event) => {

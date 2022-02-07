@@ -14,8 +14,9 @@ import i18n from '@locales/i18n'
 type ListTargetPersonType = {
   handlePress?: () => void
   handleFooterConfirm?: () => void
+  errorMessage?: string
 }
-const ListTargetPerson: FC<ListTargetPersonType> = ({ handlePress, handleFooterConfirm }): JSX.Element => {
+const ListTargetPerson: FC<ListTargetPersonType> = ({ handlePress, handleFooterConfirm, errorMessage }): JSX.Element => {
   const classes = useStyles()
   const dispatch = useAppDispatch()
   const { t } = useTranslation('common')
@@ -52,7 +53,7 @@ const ListTargetPerson: FC<ListTargetPersonType> = ({ handlePress, handleFooterC
           {t('streaming_gift_management.add')}
         </ButtonPrimary>
       </Box>
-      <Footer onCancel={handleOnFooterCancelClick} onConfirm={handleFooterConfirmPress} />
+      <Footer onCancel={handleOnFooterCancelClick} onConfirm={handleFooterConfirmPress} errorMessage={errorMessage} />
     </>
   )
 }

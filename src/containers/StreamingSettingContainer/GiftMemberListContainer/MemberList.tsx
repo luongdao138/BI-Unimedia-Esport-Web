@@ -1,23 +1,51 @@
 import { Box, Icon, makeStyles, Typography } from '@material-ui/core'
 import ESButton from '@components/Button'
-import React, { useCallback } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import ESInput from '@components/Input'
 import { Colors } from '@theme/colors'
 import MemberItem from '@containers/StreamingSettingContainer/GiftMemberListContainer/MemberItem'
 import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
+import useGiftTarget from '@containers/StreamingGiftManagement/useGiftTarget'
+import { GiftMasterUserType } from '@services/gift.service'
+import _ from 'lodash'
 
 const MemberList: React.FC = () => {
   const router = useRouter()
   const { t } = useTranslation('common')
   const classes = useStyles()
 
-  const getData = () => Array.from(Array(20).keys())
+  const { getAllGiftMaster, giftMasterList } = useGiftTarget()
 
-  const FilterButton = ({ label, selected = false }) => {
+  useEffect(() => {
+    getAllGiftMaster('')
+  }, [])
+
+  const [filterByType, setFilterByType] = useState(GiftMasterUserType.NO_FILTER)
+  const [filterByName, setFilterByName] = useState('')
+
+  const getFilterFunction = () => {
+    if (filterByType === GiftMasterUserType.NO_FILTER) {
+      return (item) => _.startsWith(item?.name, filterByName)
+    } else {
+      return (item) => filterByType === item.type && _.startsWith(item?.name, filterByName)
+    }
+  }
+
+  const getData = () => giftMasterList.filter(getFilterFunction())
+
+  const onFilterButtonClick = (option) => () => {
+    setFilterByType(option)
+  }
+
+  const FilterButton = ({ label, option }) => {
+    const selected = option === filterByType
     return (
-      <ESButton className={`${classes.filterButton} ${selected ? '' : classes.filterButtonNonSelected}`}>
+      <ESButton
+        onClick={onFilterButtonClick(option)}
+        className={`${classes.filterButton} ${selected ? '' : classes.filterButtonNonSelected}`}
+      >
         <Typography className={classes.filterButtonText}>{label}</Typography>
       </ESButton>
     )
@@ -35,12 +63,13 @@ const MemberList: React.FC = () => {
       </ESButton>
     )
   }
+
   const filterButtonGroup = () => {
     return (
       <Box className={classes.filterButtonGroupContainer}>
-        <FilterButton label={'すべて'} selected />
-        <FilterButton label={'チーム'} />
-        <FilterButton label={'個人'} />
+        <FilterButton label={t('streaming_setting_screen.member_list.filter_all')} option={GiftMasterUserType.NO_FILTER} />
+        <FilterButton label={t('streaming_setting_screen.member_list.tag_team')} option={GiftMasterUserType.TEAM} />
+        <FilterButton label={t('streaming_setting_screen.member_list.filter_individual')} option={GiftMasterUserType.INDIVIDUAL} />
         <Box display="flex" flex={1} flexDirection="row-reverse">
           <AddNewButton />
         </Box>
@@ -49,7 +78,15 @@ const MemberList: React.FC = () => {
   }
 
   const filterInputField = () => {
-    return <ESInput className={classes.filterInputField} fullWidth placeholder="キーワード検索" />
+    return (
+      <ESInput
+        className={classes.filterInputField}
+        fullWidth
+        placeholder="キーワード検索"
+        value={filterByName}
+        onChange={(e) => setFilterByName(e.target.value)}
+      />
+    )
   }
 
   const memberList = useCallback(() => {
@@ -59,13 +96,13 @@ const MemberList: React.FC = () => {
           <Typography className={classes.newListHeader}>{t('streaming_setting_screen.member_list.new_list')}</Typography>
         </Box>
         <Box className={classes.listContainer}>
-          {getData().map((_, index) => {
-            return <MemberItem key={`MemberItem-${index}`} />
+          {getData().map((item, index) => {
+            return <MemberItem key={`MemberItem-${index}`} item={item} />
           })}
         </Box>
       </Box>
     )
-  }, [])
+  }, [getData(), filterByType, filterByName])
 
   return (
     <Box className={classes.container}>
