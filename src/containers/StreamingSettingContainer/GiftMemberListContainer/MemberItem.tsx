@@ -4,8 +4,12 @@ import ESAvatar from '@components/Avatar'
 import ESButton from '@components/Button'
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
+import { GiftMasterType, GiftMasterUserStatus } from '@services/gift.service'
 
-const MemberItem: React.FC = () => {
+type Prop = {
+  item?: GiftMasterType
+}
+const MemberItem: React.FC<Prop> = ({ item }) => {
   const classes = useStyles()
   const { t } = useTranslation('common')
 
@@ -16,23 +20,31 @@ const MemberItem: React.FC = () => {
 
   const tagText = () => {
     // TODO: One of 「チーム」: team,「個人」: mem cá nhân,「申請中」: màu vàng, admin đang vẫn confirm, 「停止」: admin đã cho block, hiện thị xám
-    return t('streaming_setting_screen.member_list.tag_team')
+    const { type, status } = item
+    if (status !== GiftMasterUserStatus.ACTIVE)
+      return status === GiftMasterUserStatus.REQUEST
+        ? t('streaming_setting_screen.member_list.tag_approving')
+        : t('streaming_setting_screen.member_list.tag_block')
+
+    return type === 1 ? t('streaming_setting_screen.member_list.tag_team') : t('streaming_setting_screen.member_list.tag_individual')
   }
 
   const name = () => {
-    return 'もるチャン'
+    return item?.name
   }
 
   return (
     <Box className={classes.container}>
-      <ESAvatar
-        src={
-          'https://i.guim.co.uk/img/media/adb81d8dde35e9acdbb37a6d39c2725ba01c5379/328_278_4497_2698/master/4497.jpg?width=1200&height=1200&quality=85&auto=format&fit=crop&s=f6d97defc0bc3a3ea7f081f2b440374f'
-        }
-      />
+      <ESAvatar src={item?.image} alt={name()} />
       <Box className={classes.textContainer}>
         <Box className={classes.tagContainer}>
-          <Typography className={classes.tag}>{tagText()}</Typography>
+          <Typography
+            className={`${classes.tag} ${item?.status === GiftMasterUserStatus.REQUEST ? classes.tagRequest : ''} ${
+              item?.status === GiftMasterUserStatus.DEACTIVE ? classes.tagBlock : ''
+            }`}
+          >
+            {tagText()}
+          </Typography>
         </Box>
         <Typography className={classes.name}>{name()}</Typography>
       </Box>
@@ -64,11 +76,19 @@ const useStyles = makeStyles(() => ({
   tag: {
     width: '52px',
     textAlign: 'center',
-    backgroundColor: '#F4F43A',
+    backgroundColor: '#575757',
     borderRadius: '5px',
-    color: Colors.black,
+    color: Colors.white,
     fontSize: '10px',
     fontWeight: 'bold',
+  },
+  tagRequest: {
+    backgroundColor: '#F4F43A',
+    color: Colors.black,
+  },
+  tagBlock: {
+    color: Colors.white_opacity['30'],
+    backgroundColor: '#707070',
   },
   name: {
     color: Colors.white_opacity['70'],

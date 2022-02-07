@@ -191,4 +191,8 @@ export const URI = {
   TIP_REPORT: '/v2/gift/list-user-give-gift',
   TICKET_REPORT: '/v2/report/list-user-sell-ticket',
   DETAILED_REPORT: '/v2/gift/gift-report-detail',
+  // Gift
+  VERIFY_SNS_URL: '/v2/gift/master/sns_url',
+  ADD_NEW_GIFT_MASTER: '/v2/gift/master',
+  GET_ALL_GIFT_MASTER: '/v2/gift/master',
 }

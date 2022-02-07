@@ -8,9 +8,8 @@ import React from 'react'
 
 const ItemTicket: React.FC<TicketsResponse> = (props) => {
   // const { t } = useTranslation('common')
-  const { created_at, image_url, nickname, point, type } = props
+  const { created_at, image_url, nickname, point } = props
   const classes = useStyles()
-  console.log(type)
   return (
     <TableRow key={1}>
       <TableCell align="center">

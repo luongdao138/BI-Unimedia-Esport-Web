@@ -6,23 +6,58 @@ import AddPersonTarget from './AddPersonTarget'
 import ListTargetPerson from './ListTargetPerson'
 import { Colors } from '@theme/colors'
 import Footer from './footer'
+import useGiftManage from '@containers/StreamingGiftManagement/useGiftTarget'
+import { useRouter } from 'next/router'
+import { ESRoutes } from '@constants/route.constants'
 // import useGiftManage from './useGiftTarget'
 
 const StreamingGiftManagement: React.FC = () => {
   const classes = useStyles()
+  const router = useRouter()
   const { t } = useTranslation('common')
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down(414))
   const [step, setStep] = useState(1)
+  const [addNewErrorMessage, setErrorMessage] = useState('')
+
+  const { resetSnsUrlStateCheck, addNewGiftMaster, giftTargetData } = useGiftManage()
 
   const handleNext = () => {
     setStep(1)
   }
 
+  const handleAddPersonPress = () => {
+    resetSnsUrlStateCheck()
+    setStep(2)
+  }
+
+  const addNewGiftMasterSuccessCallback = () => {
+    setStep(3)
+  }
+
+  const addNewGiftMasterErrorCallback = (message) => {
+    setErrorMessage(message)
+  }
+  const handleFooterConfirmClick = () => {
+    // console.log('giftTargetDataa', giftTargetData);
+    setErrorMessage('')
+    addNewGiftMaster(addNewGiftMasterSuccessCallback, addNewGiftMasterErrorCallback)
+  }
+
+  const handleOnNavigateBackToStreamSettingScreen = () => {
+    router.push(ESRoutes.VIDEO_STREAMING_SETTING)
+  }
+
   const renderContent = useCallback(() => {
     switch (step) {
       case 1:
-        return <ListTargetPerson handlePress={() => setStep(2)} handleFooterConfirm={() => setStep(3)} />
+        return (
+          <ListTargetPerson
+            handlePress={handleAddPersonPress}
+            handleFooterConfirm={handleFooterConfirmClick}
+            errorMessage={addNewErrorMessage}
+          />
+        )
       case 2:
         return (
           <Grid container className={classes.contentContainer}>
@@ -40,13 +75,13 @@ const StreamingGiftManagement: React.FC = () => {
       default:
         return <AddPersonTarget handleSuccess={handleNext} />
     }
-  }, [setStep, step])
+  }, [addNewErrorMessage, setStep, step, giftTargetData])
 
   return (
     <>
       <HeaderWithButton title={t('streaming_gift_management.title')} />
       {renderContent()}
-      {step === 3 && <Footer success />}
+      {step === 3 && <Footer success onCancel={handleOnNavigateBackToStreamSettingScreen} />}
     </>
   )
 }

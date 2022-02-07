@@ -95,9 +95,7 @@ const useStyles = makeStyles(() => ({
     cursor: 'pointer',
   },
   reasonPicker: {
-    '&.MuiSelect-select': {
-      backgroundColor: 'green',
-    },
+    '&.MuiSelect-select': {},
   },
   sendButton: {
     marginTop: '16px',
