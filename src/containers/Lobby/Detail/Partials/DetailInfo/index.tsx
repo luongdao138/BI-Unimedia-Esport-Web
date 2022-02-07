@@ -21,6 +21,7 @@ import { ESRoutes } from '@constants/route.constants'
 import { useRouter } from 'next/router'
 import _ from 'lodash'
 import ESTwitterShareButton from '@components/TwitterShareButton'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
 
 interface Props {
   detail: LobbyDetail
@@ -48,7 +49,11 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit }) => {
     dispatch(commonActions.addToast(t('common:lobby.copy_toast')))
   }
 
-  const toProfile = (user_code) => router.push(`${ESRoutes.PROFILE}/${user_code}`)
+  const toProfile = (user_code) => {
+    CommonHelper.checkUserCode(user_code, () => {
+      router.push(`${ESRoutes.PROFILE}/${user_code}`)
+    })
+  }
 
   const handleReportOpen = () => setOpenReport(true)
 

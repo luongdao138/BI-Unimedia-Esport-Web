@@ -11,13 +11,18 @@ import { ESRoutes } from '@constants/route.constants'
 import { OPEN_RANGE, JOIN_CONDITION } from '@constants/community.constants'
 import Linkify from 'react-linkify'
 import { Colors } from '@theme/colors'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
 
 const InfoContainer: React.FC<{ isOfficial: boolean; data: CommunityDetail['attributes'] }> = ({ isOfficial, data }) => {
   const router = useRouter()
   const classes = useStyles()
   const { t } = useTranslation(['common'])
 
-  const toProfile = (user_code) => router.push(`${ESRoutes.PROFILE}/${user_code}`)
+  const toProfile = (user_code) => {
+    CommonHelper.checkUserCode(user_code, () => {
+      router.push(`${ESRoutes.PROFILE}/${user_code}`)
+    })
+  }
 
   return (
     <>
