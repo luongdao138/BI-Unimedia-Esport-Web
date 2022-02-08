@@ -15,6 +15,7 @@ import i18n from '@locales/i18n'
 import moment from 'moment'
 
 import StatusChip from './StatusChip'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
 
 interface Props {
   tournament: TournamentListItem
@@ -97,7 +98,10 @@ const TournamentCard: React.FC<Props> = ({ tournament }) => {
                 </span>
                 <ESAvatar
                   onClick={() => {
-                    participant?.user_code ? router.push(`${ESRoutes.PROFILE}/${participant.user_code}`) : null
+                    participant?.user_code &&
+                      CommonHelper.checkUserCode(participant?.user_code, () => {
+                        router.push(`${ESRoutes.PROFILE}/${participant.user_code}`)
+                      })
                   }}
                   className={classes.marginV}
                   alt={participant?.name}
