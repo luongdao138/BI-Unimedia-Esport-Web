@@ -53,6 +53,40 @@ export const listUsers = /* GraphQL */ `
     }
   }
 `
+export const getGiftMaster = /* GraphQL */ `
+  query GetGiftMaster($id: ID!) {
+    getGiftMaster(id: $id) {
+      id
+      name
+      image
+      master_id
+      master_uuid
+      delete_flag
+      messages {
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const listGiftMasters = /* GraphQL */ `
+  query ListGiftMasters($filter: ModelGiftMasterFilterInput, $limit: Int, $nextToken: String) {
+    listGiftMasters(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        image
+        master_id
+        master_uuid
+        delete_flag
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`
 export const getMessage = /* GraphQL */ `
   query GetMessage($id: ID!) {
     getMessage(id: $id) {
@@ -68,6 +102,7 @@ export const getMessage = /* GraphQL */ `
       use_point_id
       is_premium
       userId
+      giftMasterId
       local_id
       created_time
       parent {
@@ -76,9 +111,16 @@ export const getMessage = /* GraphQL */ `
         avatar
         user_name
         delete_flag
-        messages {
-          nextToken
-        }
+        createdAt
+        updatedAt
+      }
+      receiver {
+        id
+        name
+        image
+        master_id
+        master_uuid
+        delete_flag
         createdAt
         updatedAt
       }
@@ -103,17 +145,9 @@ export const listMessages = /* GraphQL */ `
         use_point_id
         is_premium
         userId
+        giftMasterId
         local_id
         created_time
-        parent {
-          id
-          uuid
-          avatar
-          user_name
-          delete_flag
-          createdAt
-          updatedAt
-        }
         createdAt
         updatedAt
       }
@@ -218,6 +252,29 @@ export const getUsersByUuid = /* GraphQL */ `
     }
   }
 `
+export const getReceiverByUuid = /* GraphQL */ `
+  query GetReceiverByUuid(
+    $master_uuid: String
+    $sortDirection: ModelSortDirection
+    $filter: ModelGiftMasterFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    getReceiverByUuid(master_uuid: $master_uuid, sortDirection: $sortDirection, filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        image
+        master_id
+        master_uuid
+        delete_flag
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`
 export const getMessagesByVideoId = /* GraphQL */ `
   query GetMessagesByVideoId(
     $video_id: String
@@ -248,6 +305,7 @@ export const getMessagesByVideoId = /* GraphQL */ `
         use_point_id
         is_premium
         userId
+        giftMasterId
         local_id
         created_time
         parent {
@@ -255,6 +313,16 @@ export const getMessagesByVideoId = /* GraphQL */ `
           uuid
           avatar
           user_name
+          delete_flag
+          createdAt
+          updatedAt
+        }
+        receiver {
+          id
+          name
+          image
+          master_id
+          master_uuid
           delete_flag
           createdAt
           updatedAt
@@ -296,6 +364,7 @@ export const getMessagesByVideoIdWithSort = /* GraphQL */ `
         use_point_id
         is_premium
         userId
+        giftMasterId
         local_id
         created_time
         parent {
@@ -303,6 +372,16 @@ export const getMessagesByVideoIdWithSort = /* GraphQL */ `
           uuid
           avatar
           user_name
+          delete_flag
+          createdAt
+          updatedAt
+        }
+        receiver {
+          id
+          name
+          image
+          master_id
+          master_uuid
           delete_flag
           createdAt
           updatedAt
