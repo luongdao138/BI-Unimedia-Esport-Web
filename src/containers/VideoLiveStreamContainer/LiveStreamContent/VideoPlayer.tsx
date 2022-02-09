@@ -75,6 +75,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   const { width: videoDisplayWidth } = useWindowDimensions(0)
   const androidPl = /Android/i.test(window.navigator.userAgent)
   const iPhonePl = /iPhone/i.test(window.navigator.userAgent)
+  const iPadPl = /iPad/i.test(window.navigator.userAgent)
 
   const isStreamingEnd = useRef(liveStreamInfo.is_streaming_end)
   const handlePauseAndSeekVideo = () => {
@@ -334,7 +335,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       videoInfo ? handleUpdateVideoTime.current(videoInfo) : ''
     })
 
-    videoEl.current?.addEventListener('durationchange', (event) => {
+    videoEl.current.addEventListener('durationchange', (event) => {
       console.log('------->>durationchange<<<-----', event.target.duration, state.playing)
       if (isStreamingEnd.current) {
         onVideoEnd()
@@ -530,7 +531,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
 
   return (
     <div className={classes.videoPlayer}>
-      {(iPhonePl || androidPl) && (
+      {(iPhonePl || androidPl || (!iPadPl && isDownMd)) && (
         <div>
           <video
             id="video"
