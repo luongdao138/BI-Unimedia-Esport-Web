@@ -98,6 +98,108 @@ export const deleteUser = /* GraphQL */ `
     }
   }
 `
+export const createGiftMaster = /* GraphQL */ `
+  mutation CreateGiftMaster($input: CreateGiftMasterInput!, $condition: ModelGiftMasterConditionInput) {
+    createGiftMaster(input: $input, condition: $condition) {
+      id
+      name
+      image
+      master_id
+      master_uuid
+      delete_flag
+      messages {
+        items {
+          id
+          owner
+          text
+          uuid
+          video_id
+          delete_flag
+          video_time
+          display_avatar_time
+          point
+          use_point_id
+          is_premium
+          userId
+          giftMasterId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const updateGiftMaster = /* GraphQL */ `
+  mutation UpdateGiftMaster($input: UpdateGiftMasterInput!, $condition: ModelGiftMasterConditionInput) {
+    updateGiftMaster(input: $input, condition: $condition) {
+      id
+      name
+      image
+      master_id
+      master_uuid
+      delete_flag
+      messages {
+        items {
+          id
+          owner
+          text
+          uuid
+          video_id
+          delete_flag
+          video_time
+          display_avatar_time
+          point
+          use_point_id
+          is_premium
+          userId
+          giftMasterId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const deleteGiftMaster = /* GraphQL */ `
+  mutation DeleteGiftMaster($input: DeleteGiftMasterInput!, $condition: ModelGiftMasterConditionInput) {
+    deleteGiftMaster(input: $input, condition: $condition) {
+      id
+      name
+      image
+      master_id
+      master_uuid
+      delete_flag
+      messages {
+        items {
+          id
+          owner
+          text
+          uuid
+          video_id
+          delete_flag
+          video_time
+          display_avatar_time
+          point
+          use_point_id
+          is_premium
+          userId
+          giftMasterId
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`
 export const createMessage = /* GraphQL */ `
   mutation CreateMessage($input: CreateMessageInput!, $condition: ModelMessageConditionInput) {
     createMessage(input: $input, condition: $condition) {
@@ -113,6 +215,7 @@ export const createMessage = /* GraphQL */ `
       use_point_id
       is_premium
       userId
+      giftMasterId
       local_id
       created_time
       parent {
@@ -120,6 +223,19 @@ export const createMessage = /* GraphQL */ `
         uuid
         avatar
         user_name
+        delete_flag
+        messages {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      receiver {
+        id
+        name
+        image
+        master_id
+        master_uuid
         delete_flag
         messages {
           nextToken
@@ -147,6 +263,7 @@ export const updateMessage = /* GraphQL */ `
       use_point_id
       is_premium
       userId
+      giftMasterId
       local_id
       created_time
       parent {
@@ -154,6 +271,19 @@ export const updateMessage = /* GraphQL */ `
         uuid
         avatar
         user_name
+        delete_flag
+        messages {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      receiver {
+        id
+        name
+        image
+        master_id
+        master_uuid
         delete_flag
         messages {
           nextToken
@@ -181,6 +311,7 @@ export const deleteMessage = /* GraphQL */ `
       use_point_id
       is_premium
       userId
+      giftMasterId
       local_id
       created_time
       parent {
@@ -188,6 +319,19 @@ export const deleteMessage = /* GraphQL */ `
         uuid
         avatar
         user_name
+        delete_flag
+        messages {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      receiver {
+        id
+        name
+        image
+        master_id
+        master_uuid
         delete_flag
         messages {
           nextToken
