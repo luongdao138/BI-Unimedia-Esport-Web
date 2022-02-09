@@ -773,7 +773,7 @@ const Steps: React.FC<StepsProps> = ({
                       isNumber={true}
                       formik={formik}
                       disabled={isLive}
-                      className={getAddClassByStep(classes.input_text)}
+                      className={getAddClassByStep(classes.input_text_ticket)}
                       readOnly={!formik?.values?.stepSettingOne?.use_ticket}
                       nowrapHelperText
                       endAdornment={
@@ -1036,6 +1036,29 @@ const useStyles = makeStyles((theme: Theme) => ({
       alignItems: 'center',
       padding: '4px 0 4px 0',
       color: Colors.white_opacity['70'],
+    },
+    '& :-webkit-autofill': {
+      WebkitBoxShadow: '0 0 0 100px transparent inset',
+    },
+  },
+  input_text_ticket: {
+    '&.Mui-disabled': {
+      color: Colors.white_opacity['70'],
+      '& .MuiOutlinedInput-notchedOutline': {
+        // borderColor: 'transparent',
+        backgroundColor: 'transparent',
+      },
+      '&.MuiOutlinedInput-multiline.MuiOutlinedInput-marginDense': {
+        padding: 0,
+        display: 'flex',
+      },
+    },
+    '& .MuiInputBase-input.Mui-disabled': {
+      display: 'flex',
+      alignItems: 'center',
+      padding: '10.5px 14px 10.5px 14px',
+      color: Colors.white_opacity['70'],
+      borderColor: 'transparent',
     },
     '& :-webkit-autofill': {
       WebkitBoxShadow: '0 0 0 100px transparent inset',
