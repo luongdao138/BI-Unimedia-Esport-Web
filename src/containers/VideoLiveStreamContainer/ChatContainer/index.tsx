@@ -267,7 +267,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
 
     const { width: pageWidth } = useWindowDimensions(0)
     const isDesktopDown1280 = pageWidth > 768 && pageWidth <= 1280
-    const { userResult, streamingSecond, playedSecond, liveStreamInfo, resetState } = useDetailVideo()
+    const { userResult, streamingSecond, playedSecond, liveStreamInfo, resetChatState } = useDetailVideo()
     // const { streamingSecond, playedSecond, isViewingStream, liveStreamInfo } = useDetailVideo()
     // const userResult = {streamer: 1}
     const { dataPurchaseTicketSuperChat } = usePurchaseTicketSuperChat()
@@ -1081,7 +1081,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
 
     useEffect(
       () => () => {
-        dispatch(resetState())
+        dispatch(resetChatState())
       },
       ['componentWillUnMount']
     )
