@@ -7,8 +7,7 @@ import SelectMemberItem from '@containers/StreamingSettingContainer/GiftMemberLi
 import Footer from '@containers/StreamingSettingContainer/GiftMemberListContainer/footer'
 import useGiftTarget from '@containers/StreamingGiftManagement/useGiftTarget'
 import CharacterLimited from '@components/CharacterLimited'
-import { useAppDispatch } from '@store/hooks'
-import * as commonActions from '@store/common/actions'
+// import { useAppDispatch } from '@store/hooks'
 
 type Props = {
   handleBackToListState?: () => void
@@ -17,7 +16,7 @@ type Props = {
 const GiftMemberListContainer: React.FC<Props> = ({ handleBackToListState }) => {
   const { t } = useTranslation('common')
   const classes = useStyles()
-  const dispatch = useAppDispatch()
+  // const dispatch = useAppDispatch()
 
   const { newGiftGroupGiftMasterList, createNewGiftGroup } = useGiftTarget()
   const [title, setTitle] = useState('')
@@ -69,17 +68,17 @@ const GiftMemberListContainer: React.FC<Props> = ({ handleBackToListState }) => 
     return <Box className={classes.listContainer}>{getData().length > 0 ? listWithData() : emptyListView()}</Box>
   }
 
-  const handleOnSuccessCallback = () => {
-    dispatch(commonActions.addToast(t('streaming_setting_screen.member_list.create_group_success')))
-    handleBackToListState()
-  }
+  // const handleOnSuccessCallback = () => {
+  //   dispatch(commonActions.addToast(t('streaming_setting_screen.member_list.create_group_success')))
+  //   handleBackToListState()
+  // }
 
   const handleOnConfirmClick = () => {
     const requestData = {
       title,
       group_item: newGiftGroupGiftMasterList.map(({ id }) => id),
     }
-    createNewGiftGroup(requestData, handleOnSuccessCallback)
+    createNewGiftGroup(requestData)
   }
 
   return (
