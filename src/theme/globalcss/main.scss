@@ -934,3 +934,22 @@ body.has-sticky-div .sticky-div {
     min-height: calc(100vh - 264px);
   }
 }
+
+@media (orientation: landscape) {
+  .landscape_video_page {
+    .minimize_content_wrapper,
+    .minimize_content,
+    &.main_wrapper {
+      min-height: unset;
+    }
+    .minimize_aside_left {
+      display: none;
+    }
+    .hamburger {
+      display: block;
+    }
+    .minimize_main {
+      padding-left: 0px;
+    }
+  }
+}

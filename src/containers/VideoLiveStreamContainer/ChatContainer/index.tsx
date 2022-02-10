@@ -69,6 +69,11 @@ import TabsGroup from '@components/TabsGroup'
 import RankingTab from './Tabs/RankingTab'
 import { Colors } from '@theme/colors'
 import TipChatDialog from './TipChatDialog'
+import { useRotateScreen } from '@utils/hooks/useRotateScreen'
+
+export type ChatStyleProps = {
+  isLandscape: boolean
+}
 
 export type ChatContainerProps = {
   onPressDonate?: (donatedPoint: number, purchaseComment: string) => void
@@ -211,6 +216,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     ref
   ) => {
     const dispatch = useAppDispatch()
+    const { isLandscape } = useRotateScreen()
 
     // const [tab, setTab] = useState(VIDEO_TABS.CHAT)
     // const [messageTab, setMessageTab] = useState(SUB_TABS.MESS.ALL)
@@ -281,7 +287,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
 
     const [chatUser, setChatUser] = useState<any>({})
     const theme = useTheme()
-    const isMobile = useMediaQuery(theme.breakpoints.down(769))
+    const isMobile = useMediaQuery(theme.breakpoints.down(769)) || isLandscape
     const { checkVideoNgWord } = useCheckNgWord()
     // const [savedMess, setSavedMess] = useState([])
     // const [savedDonateMess, setSavedDonateMess] = useState([])
@@ -309,7 +315,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       successGetListDonateMess
     // const isEnabledChat = true
 
-    const classes = useStyles()
+    const classes = useStyles({ isLandscape })
 
     const resetStates = () => {
       setStateMessages([])
@@ -748,17 +754,17 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     const isStreaming = (() => {
       // console.log('🚀 ~ isStreaming ~ videoType', videoType, playedSecond, streamingSecond)
       // console.log('🚀 ~ isStreaming ~ playedSecond >= streamingSecond', playedSecond >= streamingSecond)
-      // return true
-      if (videoType === STATUS_VIDEO.LIVE_STREAM) {
-        return true
-        // if (streamingSecond === Infinity) {
-        //   return true
-        // }
-        // if (playedSecond >= streamingSecond) {
-        //   return true
-        // }
-      }
-      return false
+      return true
+      // if (videoType === STATUS_VIDEO.LIVE_STREAM) {
+      //   return true
+      //   // if (streamingSecond === Infinity) {
+      //   //   return true
+      //   // }
+      //   // if (playedSecond >= streamingSecond) {
+      //   //   return true
+      //   // }
+      // }
+      // return false
     })()
 
     const renderLoader = () => {
@@ -2109,7 +2115,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
 
     return (
       <Box
-        className={classes.container}
+        className={classes.chatArea}
         style={
           displayChatContent() && isMobile
             ? {

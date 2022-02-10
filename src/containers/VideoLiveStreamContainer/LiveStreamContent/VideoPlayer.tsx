@@ -123,7 +123,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
 
   useEffect(() => {
     // if (!isPortrait) {
-    // screenfull.request(playerContainerRef.current)
+    //   toggleFullScreen1()
     // }
   }, [isPortrait])
 
@@ -589,7 +589,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   return (
     <div className={classes.videoPlayer}>
       {(iPhonePl || androidPl) && (
-        <div>
+        <div style={{ height: '100%', justifyContent: 'center' }}>
           <video
             id="video"
             ref={videoEl}

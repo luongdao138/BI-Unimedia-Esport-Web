@@ -49,14 +49,15 @@ export type TabSelectProps = {
   sideChatContainer: () => void
   renderVideoSubInfo: () => void
   infoTabsContent: (currentTab: number) => void
+  isLandscape?: boolean
 }
 
-const TabSelectContainer: React.FC<TabSelectProps> = ({ sideChatContainer, infoTabsContent, renderVideoSubInfo }) => {
+const TabSelectContainer: React.FC<TabSelectProps> = ({ sideChatContainer, infoTabsContent, renderVideoSubInfo, isLandscape }) => {
   const { liveStreamInfo, setActiveTab, setActiveSubTab } = useDetailVideo()
 
   const { activeTab, activeSubTab } = liveStreamInfo
   // const { t } = useTranslation('common')
-  const classes = useStyles()
+  const classes = useStyles({ isLandscape })
   // const [activeTab, setActiveTab] = useState(VIDEO_TABS.CHAT)
   const [activeSelectTab, setActiveSelectTab] = useState(DEFAULT_SELECT_TAB)
   const [activeInfoTab, setActiveInfoTab] = useState(VIDEO_INFO_TABS.PROGRAM_INFO)
@@ -96,10 +97,10 @@ const TabSelectContainer: React.FC<TabSelectProps> = ({ sideChatContainer, infoT
   }
   return (
     <>
-      <Box display="flex" width="100%" className={classes.container}>
+      <Box display="flex" width="100%" className={classes.tabSelectContainer}>
         {videoTabs.map((item, k) => {
           return (
-            <Box className={classes.tab} key={k}>
+            <Box className={`${classes.tab} ${activeTab === item.value && classes.active}`} key={k}>
               <Box className={classes.boxTab}>
                 <Typography
                   onClick={() => {
@@ -118,6 +119,11 @@ const TabSelectContainer: React.FC<TabSelectProps> = ({ sideChatContainer, infoT
                 >
                   {item.title}
                 </Typography>
+                <Box className={classes.wrapSelectIcon}>
+                  <img className="select_icon" src="/images/arrow_down.svg" />
+                </Box>
+
+                {/* sub tab */}
                 {item?.subTabs && (
                   <Box className={`${classes.subTab} ${activeSelectTab === item.value && classes.active}`}>
                     {item?.subTabs.map((v, key) => (
@@ -146,14 +152,24 @@ const TabSelectContainer: React.FC<TabSelectProps> = ({ sideChatContainer, infoT
 }
 
 const useStyles = makeStyles((theme) => ({
-  container: {
+  wrapSelectIcon: {
+    paddingLeft: 4,
+  },
+  tabSelectContainer: {
     backgroundColor: Colors.black,
     gap: '16px',
-    padding: '6px 10px',
+    padding: '8px 10px',
+    flexShrink: 0,
   },
   tab: {
     width: 'calc(100%/3)',
     // padding: 10,
+    display: 'flex',
+    borderBottom: `2px solid #4D4D4D`,
+    '&$active': {
+      color: Colors.white,
+      borderBottom: `2px solid ${Colors.white}`,
+    },
   },
   messageTab: {},
   receiptSendTab: {},
@@ -169,6 +185,9 @@ const useStyles = makeStyles((theme) => ({
   boxTab: {
     // cursor: 'pointer',
     position: 'relative',
+    width: '100%',
+    display: 'flex',
+    padding: '3px 8px 8px 8px',
   },
   subTab: {
     width: '100%',
@@ -183,7 +202,7 @@ const useStyles = makeStyles((theme) => ({
   },
   textTabVideoProgramInfo: {
     borderBottom: '2px solid #4D4D4D',
-    padding: 10,
+    padding: 0,
     textAlign: 'left',
     position: 'relative',
     fontSize: 12,
@@ -191,30 +210,32 @@ const useStyles = makeStyles((theme) => ({
     '&$active': {
       color: Colors.white,
       borderBottom: `2px solid ${Colors.white}`,
+      // borderBottom: `2px solid #4D4D4D`,
     },
   },
   textTabVideo: {
-    borderBottom: '2px solid #4D4D4D',
-    padding: 10,
+    // borderBottom: '2px solid #4D4D4D',
+    padding: 0,
     paddingRight: 30,
     textAlign: 'left',
     position: 'relative',
-    '&::before': {
-      right: 15,
-      top: '33%',
-      content: '""',
-      position: 'absolute',
-      border: `4px solid ${Colors.grey['200']}`,
-      borderColor: `${Colors.transparent} ${Colors.grey['200']} ${Colors.grey['200']} ${Colors.transparent}`,
-      transform: 'rotate(45deg)',
-    },
+    flex: 1,
+    // '&::before': {
+    //   right: 15,
+    //   top: '33%',
+    //   content: '""',
+    //   position: 'absolute',
+    //   border: `4px solid ${Colors.grey['200']}`,
+    //   borderColor: `${Colors.transparent} ${Colors.grey['200']} ${Colors.grey['200']} ${Colors.transparent}`,
+    //   transform: 'rotate(45deg)',
+    // },
     '&$active': {
-      color: Colors.white,
-      borderBottom: `2px solid ${Colors.white}`,
-      '&::before': {
-        // transform: 'rotate(225deg)',
-        borderColor: `${Colors.transparent} ${Colors.white} ${Colors.white} ${Colors.transparent}`,
-      },
+      // color: Colors.white,
+      // borderBottom: `2px solid ${Colors.white}`,
+      // '&::before': {
+      //   // transform: 'rotate(225deg)',
+      //   borderColor: `${Colors.transparent} ${Colors.white} ${Colors.white} ${Colors.transparent}`,
+      // },
     },
   },
   textTab: {
@@ -235,10 +256,12 @@ const useStyles = makeStyles((theme) => ({
   },
   active: {},
   [theme.breakpoints.down(769)]: {
-    textTabVideo: {
-      fontSize: 12,
-      lineHeight: '17px',
-      color: Colors.white_opacity[30],
+    textTabVideo: (props: { isLandscape?: boolean }) => {
+      return {
+        fontSize: props.isLandscape ? 10 : 12,
+        lineHeight: '17px',
+        color: Colors.white_opacity[30],
+      }
     },
   },
   [theme.breakpoints.down(376)]: {
@@ -256,6 +279,9 @@ const useStyles = makeStyles((theme) => ({
       fontSize: 10,
     },
   },
+  // landscapeSize: {
+  //   fontSize: 10,
+  // },
 }))
 
 export default TabSelectContainer
