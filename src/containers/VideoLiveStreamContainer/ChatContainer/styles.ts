@@ -1,5 +1,5 @@
 import { makeStyles } from '@material-ui/core'
-import { purchasePoints } from './index'
+import { ChatStyleProps, purchasePoints } from './index'
 import { Colors } from '@theme/colors'
 
 const useStyles = makeStyles((theme) => ({
@@ -75,7 +75,7 @@ const useStyles = makeStyles((theme) => ({
     height: 40,
     width: '100%',
   },
-  container: {
+  chatArea: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -449,12 +449,12 @@ const useStyles = makeStyles((theme) => ({
     height: 50,
   },
   [theme.breakpoints.down(1100)]: {
-    container: {
+    chatArea: {
       // width: 350,
     },
   },
   [theme.breakpoints.down(870)]: {
-    container: {
+    chatArea: {
       // width: 240,
     },
   },
@@ -472,7 +472,7 @@ const useStyles = makeStyles((theme) => ({
       marginRight: '16px',
       marginTop: '16px',
     },
-    container: {
+    chatArea: {
       width: '100%',
       border: 'unset',
       paddingBottom: 'unset',
@@ -509,6 +509,38 @@ const useStyles = makeStyles((theme) => ({
     },
     hideIconGift: {
       padding: '6px',
+    },
+  },
+  [`@media (orientation: landscape)`]: {
+    chatBoard: (props: ChatStyleProps) => {
+      if (props.isLandscape)
+        return {
+          height: '100%',
+        }
+    },
+    chatArea: (props: ChatStyleProps) => {
+      if (props.isLandscape)
+        return {
+          width: '100%',
+          border: 'unset',
+          paddingBottom: 'unset',
+          marginRight: 'unset',
+          marginLeft: 'unset',
+          height: 'auto',
+        }
+    },
+    chatBoardContainer: (props: ChatStyleProps) => {
+      if (props.isLandscape)
+        return {
+          flex: '1 1 0',
+          minWidth: 0,
+        }
+    },
+    tabsContainer: (props: ChatStyleProps) => {
+      if (props.isLandscape)
+        return {
+          display: 'none',
+        }
     },
   },
 }))

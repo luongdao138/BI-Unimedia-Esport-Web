@@ -46,6 +46,13 @@ const APIt: any = useGraphqlAPI()
 import ProgramInfo from './ProgramInfo'
 import RelatedVideos from './RelatedVideos'
 import VideoSubInfo from './VideoSubInfo'
+import { use100vh } from 'react-div-100vh'
+import { useRotateScreen } from '@utils/hooks/useRotateScreen'
+export interface videoStyleProps {
+  availHeight: number
+  availWidth: number
+  isLandscape: boolean
+}
 
 export enum VIDEO_TYPE {
   LIVE_STREAM = 0,
@@ -62,10 +69,17 @@ const VideoDetail: React.FC = () => {
     PURCHASE_TICKET: 1,
     PURCHASE_SUPER_CHAT: 2,
   }
-  const classes = useStyles()
+  // console.log('🚀 ~ height', height)
+  const height = use100vh()
+  console.log('🚀 ~ heighta', height)
+  console.log('🚀 ~ innerHeight', window.innerHeight)
+  const { isLandscape } = useRotateScreen()
+  const classes = useStyles({ availHeight: height, availWidth: window.innerWidth, isLandscape })
   const { t } = useTranslation('common')
   const { width: pageWidth } = useWindowDimensions(0)
-  const isMobile = pageWidth <= 768
+
+  const isMobile = pageWidth <= 768 || isLandscape
+  console.log('🚀 ~ isMobile', isMobile)
   const dispatch = useAppDispatch()
   const router = useRouter()
   const video_id = Array.isArray(router.query?.vid) ? router.query.vid[0] : router.query.vid // uuid video
@@ -113,6 +127,8 @@ const VideoDetail: React.FC = () => {
   const isPendingPurchaseSuperChat = meta_purchase_ticket_super_chat.pending && purchaseType === PURCHASE_TYPE.PURCHASE_SUPER_CHAT
 
   const [isVideoFreeToWatch, setIsVideoFreeToWatch] = useState(detailVideoResult?.use_ticket ? detailVideoResult?.use_ticket : -1)
+
+  console.log('🚀 ~ isLandscape', isLandscape)
 
   const handleShowDialogLogin = () => {
     setShowDialogLogin(true)
@@ -286,6 +302,7 @@ const VideoDetail: React.FC = () => {
   }
 
   useEffect(() => {
+    // handle update video
     const updateVideoSubscription = subscribeUpdateVideoAction()
     const updateChannelSubscription = subscribeUpdateChannelAction()
     return () => {
@@ -458,11 +475,12 @@ const VideoDetail: React.FC = () => {
   }
 
   const componentsSize = (() => {
+    const factor = isLandscape ? 0.42 : 0.3
     const chatMaxWidth = 482
-    const chatMinWidth = 380
+    const chatMinWidth = isLandscape ? 0 : 380
     const pageWidthWithoutMenu = pageWidth - sizeMenuWidth()
     // render chat component is 30% of page width without menu
-    let chatWidth = Math.round(pageWidthWithoutMenu * 0.3)
+    let chatWidth = Math.round(pageWidthWithoutMenu * factor)
     // limit width of chat component
     chatWidth = chatWidth > chatMaxWidth ? chatMaxWidth : chatWidth < chatMinWidth ? chatMinWidth : chatWidth
     const videoWidth = isMobile ? pageWidthWithoutMenu : pageWidthWithoutMenu - chatWidth
@@ -480,6 +498,7 @@ const VideoDetail: React.FC = () => {
         className={`${classes.wrapChatContainer} ${is_normal_view_mode ? '' : classes.wrapTheatreChatContainer}`}
         style={{
           width: isMobile ? '100%' : componentsSize.chatWidth,
+          // width: componentsSize.chatWidth,
         }}
       >
         <ChatContainer
@@ -554,15 +573,91 @@ const VideoDetail: React.FC = () => {
       />
     )
   }
+
+  console.log('🚀 ~ cle ~ window.---333 ', window.innerWidth, window.innerHeight)
+
+  // const renderLandscapeMobile = () => {
+  //   return (
+  //     <Box className={classes.rootHorizontal}>
+  //       {isPendingPurchaseTicket && <ESLoader />}
+  //       {isPendingPurchaseSuperChat && <FullESLoader open={isPendingPurchaseSuperChat} />}
+
+  //       <Box className={classes.boxRow}>
+  //         <Box
+  //           className={classes.containerHorizontal}
+  //           style={{
+  //             width: !is_normal_view_mode || isMobile ? '100%' : componentsSize.videoWidth,
+  //             marginRight: !is_normal_view_mode && !isMobile ? '16px' : '0',
+  //           }}
+  //           onClick={() => {
+  //             changeIsHoveredVideoStatus(!isHoveredVideo)
+  //             console.log('🚀 ~ isHoveredVideo', isHoveredVideo)
+  //           }}
+  //         >
+  //           {isLoadingVideo ? (
+  //             <Box
+  //               style={{
+  //                 backgroundColor: '#6A6A6C',
+  //                 width: window.innerWidth / 2,
+  //                 height: window.innerHeight,
+  //                 display: 'flex',
+  //                 justifyContent: 'center',
+  //                 alignItems: 'center',
+  //                 textAlign: 'center',
+  //                 borderRadius: 8,
+  //               }}
+  //             >
+  //               <ESLoader />
+  //             </Box>
+  //           ) : (
+  //             <>
+  //               <LiveStreamContent
+  //                 componentsSize={componentsSize}
+  //                 isArchived={isArchived}
+  //                 video_id={getVideoId()}
+  //                 userHasViewingTicket={userHasViewingTicket()}
+  //                 videoType={videoStatus}
+  //                 freeToWatch={isVideoFreeToWatch}
+  //                 ticketAvailableForSale={isTicketAvailableForSale()}
+  //                 softKeyboardIsShown={softKeyboardIsShown}
+  //                 ticketPrice={detailVideoResult?.ticket_price}
+  //                 clickButtonPurchaseTicket={handlePurchaseTicket}
+  //                 onVideoEnd={onVideoEnd}
+  //               />
+  //             </>
+  //           )}
+  //         </Box>
+
+  //         {!isLoadingVideo && (
+  //           <Box className={classes.container} style={{ width: componentsSize.videoWidth }}>
+  //             <Grid container direction="row" className={classes.contentContainer}>
+  //               <TabSelectContainer
+  //                 sideChatContainer={sideChatContainer}
+  //                 renderVideoSubInfo={renderVideoSubInfo}
+  //                 infoTabsContent={(currentTab) => getContent(currentTab)}
+  //                 isLandscape={isLandscape}
+  //               ></TabSelectContainer>
+  //             </Grid>
+  //           </Box>
+  //         )}
+
+  //         {/* {sideChatContainer()} */}
+  //       </Box>
+  //     </Box>
+  //   )
+  // }
   return (
     <React.Fragment>
+      {/* {isLandscape ? (
+        renderLandscapeMobile()
+      ) : ( */}
       <Box className={classes.root}>
         {isPendingPurchaseTicket && <ESLoader />}
         {isPendingPurchaseSuperChat && <FullESLoader open={isPendingPurchaseSuperChat} />}
 
-        {/* <Box className={classes.container} style={{ width: isMobile ? '100%' : componentsSize.videoWidth }}> */}
+        {/* render video */}
         <Box
-          className={classes.container}
+          className={classes.videoContainer}
           style={{
             width: !is_normal_view_mode || isMobile ? '100%' : componentsSize.videoWidth,
             marginRight: !is_normal_view_mode && !isMobile ? '16px' : '0',
@@ -606,30 +701,36 @@ const VideoDetail: React.FC = () => {
           )}
         </Box>
 
+        {/* render tabs and content tabs */}
         {!isLoadingVideo && (
-          <Box className={classes.container} style={{ width: isMobile ? '100%' : componentsSize.videoWidth }}>
+          <Box
+            className={classes.allTabsContainer}
+            style={{ width: isLandscape ? componentsSize.chatWidth : isMobile ? '100%' : componentsSize.videoWidth }}
+          >
             {!isMobile && renderVideoSubInfo()}
             <Grid container direction="row" className={classes.contentContainer}>
               {/* {getTabs()}
               {getContent()} */}
-              {!isMobile ? (
-                <>
-                  {getTabs()}
-                  {getContent(tab)}
-                </>
-              ) : (
+              {isMobile ? (
                 <>
                   <TabSelectContainer
                     sideChatContainer={sideChatContainer}
                     renderVideoSubInfo={renderVideoSubInfo}
                     infoTabsContent={(currentTab) => getContent(currentTab)}
+                    isLandscape={isLandscape}
                   ></TabSelectContainer>
+                </>
+              ) : (
+                <>
+                  {getTabs()}
+                  {getContent(tab)}
                 </>
               )}
             </Grid>
           </Box>
         )}
 
+        {/* render chat loading and chat container on PC */}
         {!isMobile &&
           (_.isEmpty(detailVideoResult) ? (
             <Box
@@ -652,6 +753,9 @@ const VideoDetail: React.FC = () => {
             sideChatContainer()
           ))}
       </Box>
+      {/* )} */}
+
+      {/* all modal */}
       <PurchaseTicketSuperChat
         myPoints={myPoint}
         donatedPoints={detailVideoResult?.ticket_price}
@@ -680,7 +784,15 @@ const VideoDetail: React.FC = () => {
 }
 export default VideoDetail
 
+// props: { availHeight: number; availWidth: number; isLandscape: boolean }
 const useStyles = makeStyles((theme) => ({
+  // textTabVideo: (props: { isLandscape?: boolean }) => {
+  //   return {
+  //     fontSize: props.isLandscape ? 10 : 12,
+  //     lineHeight: '17px',
+  //     color: Colors.white_opacity[30],
+  //   }
+  // },
   root: {
     backgroundColor: '#212121',
     display: 'flex',
@@ -689,6 +801,16 @@ const useStyles = makeStyles((theme) => ({
     flexWrap: 'wrap',
   },
   container: {
+    display: 'flex',
+    flexDirection: 'column',
+    width: '100%',
+  },
+  videoContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    width: '100%',
+  },
+  allTabsContainer: {
     display: 'flex',
     flexDirection: 'column',
     width: '100%',
@@ -795,6 +917,62 @@ const useStyles = makeStyles((theme) => ({
       // '& .MuiTab-wrapper': {
       //   fontSize: 12,
       // },
+    },
+  },
+  //horizontal
+  // rootHorizontal: (props: { availHeight: number; availWidth: number }) => {
+  //   return {
+  //     display: 'flex',
+  //     position: 'relative',
+  //     width: '100%',
+  //     flexWrap: 'wrap',
+  //     height: props.availHeight,
+  //   }
+  // },
+  // boxRow: {
+  //   flexDirection: 'row',
+  //   display: 'flex',
+  //   // height:'calc(100%)'
+  // },
+  // containerHorizontal: (props: { availHeight: number; availWidth: number }) => {
+  //   return {
+  //     display: 'flex',
+  //     flexDirection: 'column',
+  //     width: '100%',
+  //     height: props.availHeight,
+  //   }
+  // },
+  [`@media (orientation: landscape)`]: {
+    root: (props: videoStyleProps) => {
+      if (props.isLandscape)
+        return {
+          flexWrap: 'nowrap',
+        }
+    },
+    allTabsContainer: (props: videoStyleProps) => {
+      if (props.isLandscape)
+        return {
+          flexShrink: 0,
+        }
+    },
+    wrapChatContainer: (props: videoStyleProps) => {
+      if (props.isLandscape)
+        return {
+          flex: 1,
+          width: '100%',
+          position: 'relative',
+          top: 'auto',
+          height: 'auto',
+          bottom: 'auto',
+        }
+    },
+    contentContainer: (props: videoStyleProps) => {
+      if (props.isLandscape)
+        return {
+          height: props.availHeight,
+          flexWrap: 'nowrap',
+          flexDirection: 'column',
+        }
     },
   },
 }))

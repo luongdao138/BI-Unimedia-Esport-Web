@@ -47,6 +47,7 @@ import _ from 'lodash'
 import useDetailVideo from '@containers/VideoLiveStreamContainer/useDetailVideo'
 import { Colors } from '@theme/colors'
 import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
+import { useRotateScreen } from '@utils/hooks/useRotateScreen'
 
 interface returnItem {
   value: string
@@ -139,8 +140,9 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open, video_id = '
     }
   }, [isAuthenticated])
 
+  const { isLandscape } = useRotateScreen()
   const { width: pageWidth } = useWindowDimensions(0)
-  const isMobile = pageWidth <= 768
+  const isMobile = pageWidth <= 768 || isLandscape
 
   return (
     <div className={classes.grow}>

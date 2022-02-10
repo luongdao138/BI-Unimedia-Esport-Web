@@ -16,6 +16,7 @@ import useMediaQuery from '@material-ui/core/useMediaQuery'
 import { useTheme } from '@material-ui/core/styles'
 import useGetProfile from '@utils/hooks/useGetProfile'
 import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
+import { useRotateScreen } from '@utils/hooks/useRotateScreen'
 
 interface StreamLayoutProps {
   patternBg?: boolean
@@ -51,8 +52,9 @@ const StreamLayout: React.FC<StreamLayoutProps> = ({
   // config layout for video detail page
   const queryKey = 'vid'
   const video_id = router.query[queryKey] || router.asPath.match(new RegExp(`[&?]${queryKey}=(.*)(&|$)`))
+  const { isLandscape } = useRotateScreen()
   const { width: pageWidth } = useWindowDimensions(0)
-  const isMobile = pageWidth <= 768
+  const isMobile = pageWidth <= 768 || isLandscape
 
   const toggleDrawer = (open: boolean) => {
     setOpen(open)
@@ -81,7 +83,11 @@ const StreamLayout: React.FC<StreamLayoutProps> = ({
   }
 
   return (
-    <div className={`main_wrapper ${minimizeLayout ? 'minimize_main_wrapper' : ''} ${isFullLayout ? 'full_layout_wrapper' : ''}`}>
+    <div
+      className={`main_wrapper ${minimizeLayout ? 'minimize_main_wrapper' : ''} ${isFullLayout ? 'full_layout_wrapper' : ''} ${
+        video_id && isLandscape ? 'landscape_video_page' : ''
+      }`}
+    >
       <Header open={open} toggleDrawer={toggleDrawer} video_id={video_id} />
       {!minimizeLayout ? (
         <>

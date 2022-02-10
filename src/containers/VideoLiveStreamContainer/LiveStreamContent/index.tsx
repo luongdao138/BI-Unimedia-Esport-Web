@@ -185,13 +185,16 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
   }
 
   return (
-    <Box className={classes.container}>
+    <Box className={classes.videoPanel}>
       {_.isEmpty(detailVideoResult) ? (
         <Box className={classes.containerLoad} style={{ height: componentsSize.videoHeight }}>
           {renderReloadPlayer()}
         </Box>
       ) : (
-        <Box className={classes.mediaPlayerContainer} style={{ height: componentsSize.videoHeight }}>
+        <Box
+          className={classes.mediaPlayerContainer}
+          // style={{ height: componentsSize.videoHeight }}
+        >
           {mediaPlayer()}
           {showOverlayOnMediaPlayer() && mediaOverlayPurchaseTicketView()}
         </Box>
@@ -200,12 +203,12 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
   )
 }
 const useStyles = makeStyles(() => ({
-  container: {
+  videoPanel: {
     display: 'flex',
     width: '100%',
     flexWrap: 'wrap',
     background: '#000000',
-    // height: '100%',
+    height: '100%',
   },
   containerLoad: {
     display: 'flex',
