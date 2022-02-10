@@ -3,6 +3,7 @@ import ButtonPrimary from '@components/ButtonPrimary'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Colors } from '@theme/colors'
+import useGiftTarget from '@containers/StreamingGiftManagement/useGiftTarget'
 
 /**
  * TODO: Raise bottom margin of side menu
@@ -16,8 +17,9 @@ interface Props {
 const Footer: React.FC<Props> = ({ onConfirm = () => null, onCancel = () => null }) => {
   const classes = useStyles()
   const { t } = useTranslation('common')
+  const { newGiftGroupGiftMasterList } = useGiftTarget()
   const getNumberItemSelected = () => {
-    return 4
+    return newGiftGroupGiftMasterList.length
   }
 
   return (
@@ -29,7 +31,13 @@ const Footer: React.FC<Props> = ({ onConfirm = () => null, onCancel = () => null
         <ButtonPrimary size="small" className={classes.actionBtnClose} gradient={false} onClick={onCancel}>
           {t('streaming_setting_screen.member_list.cancel')}
         </ButtonPrimary>
-        <ButtonPrimary gradient size="small" className={classes.actionBtnClose} onClick={onConfirm}>
+        <ButtonPrimary
+          gradient
+          size="small"
+          className={classes.actionBtnClose}
+          onClick={onConfirm}
+          disabled={getNumberItemSelected() === 0}
+        >
           {t('streaming_setting_screen.member_list.confirm')}
         </ButtonPrimary>
       </Box>

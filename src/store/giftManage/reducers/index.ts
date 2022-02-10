@@ -1,7 +1,8 @@
 import { createReducer } from '@reduxjs/toolkit'
 import * as actions from '../actions'
 import * as authActions from '@store/auth/actions'
-import { GiftMasterType } from '@services/gift.service'
+import { GiftGroupType, GiftMasterType } from '@services/gift.service'
+import _ from 'lodash'
 
 export type GiftTargetItemType = {
   target_value: string
@@ -19,12 +20,18 @@ type StateType = {
   gift_target_data: Array<GiftTargetItemType>
   check_sns_url: SnsUrlValidType
   gift_master_list: Array<GiftMasterType>
+  new_group_gift_master_list: Array<GiftMasterType>
+  gift_group_list: Array<GiftGroupType>
+  gift_group_total: number
 }
 
 const initialState: StateType = {
   gift_target_data: [],
   check_sns_url: SnsUrlValidType.INIT,
   gift_master_list: [],
+  new_group_gift_master_list: [],
+  gift_group_list: [],
+  gift_group_total: 0,
 }
 
 export default createReducer(initialState, (builder) => {
@@ -57,5 +64,26 @@ export default createReducer(initialState, (builder) => {
 
     .addCase(actions.getAllGiftMaster.fulfilled, (state, action) => {
       state.gift_master_list = action.payload.data
+    })
+
+    .addCase(actions.addGiftMasterToNewGroup, (state, action) => {
+      const { data } = action.payload
+      const { new_group_gift_master_list: list } = state
+      const included = _.find(list, ({ id }) => id === data.id)
+      if (included) return
+      state.new_group_gift_master_list = [...list, data]
+    })
+
+    .addCase(actions.removeGiftMasterFromNewGroup, (state, action) => {
+      const { data } = action.payload
+      const { new_group_gift_master_list: list } = state
+      state.new_group_gift_master_list = list.filter(({ id }) => id !== data.id)
+    })
+
+    .addCase(actions.getGiftGroupList.fulfilled, (state, action) => {
+      const { data } = action.payload
+      const { groups, total } = data
+      state.gift_group_list = groups
+      state.gift_group_total = total
     })
 })

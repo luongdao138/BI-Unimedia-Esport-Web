@@ -69,3 +69,47 @@ export const getAllGiftMaster = async (params: GetAllGiftMasterRequestParams): P
   const { data } = await api.get<GetAllGiftMasterResponse>(URI.GET_ALL_GIFT_MASTER, { params })
   return data
 }
+
+export type CreateNewGiftGroupRequestBody = {
+  user_id?: number
+  title?: string
+  group_id?: string
+  group_item?: Array<number>
+  timezone?: string
+}
+
+export type CreateNewGiftGroupResponse = {
+  message?: string
+  code?: number
+}
+
+export const createNewGiftGroup = async (params: CreateNewGiftGroupRequestBody): Promise<CreateNewGiftGroupResponse> => {
+  const { data } = await api.post<CreateNewGiftGroupResponse>(URI.ADD_NEW_GIFT_GROUP, params)
+  return data
+}
+
+export type GetAllGiftGroupRequest = {
+  user_id?: number
+  page?: number
+  limit?: number
+}
+
+export type GiftGroupType = {
+  title?: string
+  id?: number
+  total_master?: number
+}
+
+export type GetAllGiftGroupResponse = {
+  message?: string
+  code?: number
+  data?: {
+    total?: number
+    groups?: Array<GiftGroupType>
+  }
+}
+
+export const getAllGiftGroup = async (params: GetAllGiftGroupRequest): Promise<GetAllGiftGroupResponse> => {
+  const { data } = await api.get<GetAllGiftGroupResponse>(URI.GET_ALL_GIFT_GROUP, { params })
+  return data
+}

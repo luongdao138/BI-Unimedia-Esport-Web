@@ -1,9 +1,10 @@
 import { Box, Icon, makeStyles, Typography } from '@material-ui/core'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import ESButton from '@components/Button'
 import { useTranslation } from 'react-i18next'
 import GiftTable from '@containers/StreamingSettingContainer/IndividualGiftList/GiftTable'
 import GiftListPagination from '@containers/StreamingSettingContainer/IndividualGiftList/Pagination'
+import useGiftManage from '@containers/StreamingGiftManagement/useGiftTarget'
 
 type Props = {
   handleGoToCreateNewListState?: () => void
@@ -12,11 +13,11 @@ type Props = {
 const IndividualGiftListContainer: React.FC<Props> = ({ handleGoToCreateNewListState }) => {
   const classes = useStyles()
   const { t } = useTranslation('common')
-  const mockData = Array.from(Array(20).keys()).map((index) => ({
-    index,
-    name: 'チームかやを',
-    number_of_registration: 128,
-  }))
+  const { getGiftGroupList, giftGroupList } = useGiftManage()
+  useEffect(() => {
+    getGiftGroupList(1, 10)
+  }, [])
+
   const [currentPage, setCurrentPage] = useState(1)
   // const [totalPage, setTotalPage] = useState(10);
 
@@ -29,7 +30,7 @@ const IndividualGiftListContainer: React.FC<Props> = ({ handleGoToCreateNewListS
     )
   }, [])
 
-  const displayData = () => mockData.slice(10 * (currentPage - 1), 10 * currentPage)
+  const displayData = () => giftGroupList.slice(10 * (currentPage - 1), 10 * currentPage)
 
   const displayTable = () => {
     return (

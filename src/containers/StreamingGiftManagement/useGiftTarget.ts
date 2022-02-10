@@ -3,6 +3,8 @@ import { createMetaSelector } from '@store/metadata/selectors'
 import giftManage from '@store/giftManage'
 import useCommonData from '@containers/Lobby/UpsertForm/useCommonData'
 import { useTranslation } from 'react-i18next'
+import _ from 'lodash'
+import { getTimeZone } from '@utils/helpers/CommonHelper'
 
 const { selectors, actions } = giftManage
 const _addGiftTargetData = createMetaSelector(actions.addTargetPerson)
@@ -47,6 +49,26 @@ const useGiftManage = () => {
   }
   const giftMasterList = useAppSelector(selectors.getListGiftMaster)
 
+  const addGiftMasterToNewGroup = (data) => dispatch(actions.addGiftMasterToNewGroup({ data }))
+  const removeGiftMasterFromNewGroup = (data) => dispatch(actions.removeGiftMasterFromNewGroup({ data }))
+  const newGiftGroupGiftMasterList = useAppSelector(selectors.getNewGroupGiftMasterList)
+  const includedInNewList = (data) => !!_.find(newGiftGroupGiftMasterList, ({ id }) => id === data.id)
+
+  const createNewGiftGroup = async (data) => {
+    const requestData = {
+      ...data,
+      user_id: user?.id,
+      timezone: getTimeZone(),
+    }
+    const resultAction = await dispatch(actions.createNewGiftGroup(requestData))
+    if (actions.createNewGiftGroup.fulfilled.match(resultAction)) {
+      // TODO
+    }
+  }
+
+  const getGiftGroupList = (page, limit) => dispatch(actions.getGiftGroupList({ page, limit }))
+  const giftGroupList = useAppSelector(selectors.getListGiftGroup)
+
   return {
     giftTargetData,
     meta_gift_target,
@@ -58,6 +80,13 @@ const useGiftManage = () => {
     addNewGiftMaster,
     getAllGiftMaster,
     giftMasterList,
+    addGiftMasterToNewGroup,
+    removeGiftMasterFromNewGroup,
+    newGiftGroupGiftMasterList,
+    includedInNewList,
+    createNewGiftGroup,
+    getGiftGroupList,
+    giftGroupList,
   }
 }
 
