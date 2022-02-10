@@ -368,6 +368,10 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     videoEl.current.addEventListener('seeked', () => {
       //rewind complete
       console.log('=================SEEKED===================')
+      if (iPhonePl || androidPl || isMobile) {
+        changeSeekCount(Math.floor(videoEl.current.currentTime))
+      }
+
       if (!isStreamingEnd.current) {
         setVisible({ ...visible, loading: false, videoLoaded: false })
       }
