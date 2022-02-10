@@ -2,20 +2,21 @@ import React, { useState } from 'react'
 import { Box, makeStyles, Typography, useMediaQuery, useTheme } from '@material-ui/core'
 import ESButton from '@components/Button'
 import DeleteConfirmModal from '@containers/StreamingSettingContainer/IndividualGiftList/deletemodal'
-import { GiftIndividual } from '@services/liveStream.service'
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
+import { GiftGroupType } from '@services/gift.service'
 
 type Props = {
-  item?: GiftIndividual
+  item?: GiftGroupType
+  index?: number
 }
 
-const GiftTableRow: React.FC<Props> = ({ item }) => {
+const GiftTableRow: React.FC<Props> = ({ item, index }) => {
   const classes = useStyles()
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
   const { t } = useTranslation('common')
-  const { index, name, number_of_registration: numberOfRegistration } = item
+  const { title: name, total_master: numberOfRegistration } = item
   const handleOnRemoveClick = () => {
     setDeleteModalVisible(true)
   }

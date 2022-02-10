@@ -195,4 +195,6 @@ export const URI = {
   VERIFY_SNS_URL: '/v2/gift/master/sns_url',
   ADD_NEW_GIFT_MASTER: '/v2/gift/master',
   GET_ALL_GIFT_MASTER: '/v2/gift/master',
+  ADD_NEW_GIFT_GROUP: 'v2/gift/group',
+  GET_ALL_GIFT_GROUP: 'v2/gift/group',
 }

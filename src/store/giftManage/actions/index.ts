@@ -8,6 +8,11 @@ import {
   AddNewGiftMasterRequestParams,
   GetAllGiftMasterResponse,
   GetAllGiftMasterRequestParams,
+  GiftMasterType,
+  CreateNewGiftGroupResponse,
+  CreateNewGiftGroupRequestBody,
+  GetAllGiftGroupResponse,
+  GetAllGiftGroupRequest,
 } from '@services/gift.service'
 
 export type TargetPersonType = {
@@ -70,6 +75,47 @@ export const getAllGiftMaster = createAsyncThunk<GetAllGiftMasterResponse, GetAl
   async (requestParams, { rejectWithValue }) => {
     try {
       const res = await services.getAllGiftMaster(requestParams)
+      if (res?.code === 200) {
+        return res
+      } else {
+        return rejectWithValue(JSON.stringify(res.message))
+      }
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
+export const addGiftMasterToNewGroup = createAction<{ data: GiftMasterType }>(GIFT_MANAGE_ACTION_TYPE.NEW_GROUP_ADD_GIFT_MASTER)
+export const removeGiftMasterFromNewGroup = createAction<{ data: GiftMasterType }>(GIFT_MANAGE_ACTION_TYPE.NEW_GROUP_REMOVE_GIFT_MASTER)
+
+export const createNewGiftGroup = createAsyncThunk<CreateNewGiftGroupResponse, CreateNewGiftGroupRequestBody>(
+  GIFT_MANAGE_ACTION_TYPE.CREATE_NEW_GIFT_GROUP,
+  async (requestParams, { rejectWithValue }) => {
+    try {
+      const res = await services.createNewGiftGroup(requestParams)
+      if (res?.code === 200) {
+        return res
+      } else {
+        return rejectWithValue(JSON.stringify(res.message))
+      }
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
+export const getGiftGroupList = createAsyncThunk<GetAllGiftGroupResponse, GetAllGiftGroupRequest>(
+  GIFT_MANAGE_ACTION_TYPE.GET_GIFT_GROUP,
+  async (requestParams, { rejectWithValue }) => {
+    try {
+      const res = await services.getAllGiftGroup(requestParams)
       if (res?.code === 200) {
         return res
       } else {

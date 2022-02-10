@@ -1627,6 +1627,7 @@ export default {
       tag_block: '停止',
       selected: '選択済',
       select: '選択',
+      invalid: '無効',
       name_list: 'リスト名',
       require: '必須',
       name_entered_place_holder: '60文字まで入力することができます。',
@@ -1634,6 +1635,7 @@ export default {
       confirm_message: '件を選択しています',
       cancel: 'キャンセル',
       confirm: 'この内容で作成する',
+      create_group_success: '個別ギフトリストを作成しました。',
     },
   },
   delivery_reservation_tab: {

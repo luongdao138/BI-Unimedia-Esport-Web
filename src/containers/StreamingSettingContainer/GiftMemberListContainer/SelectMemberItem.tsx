@@ -2,25 +2,54 @@ import React from 'react'
 import { Box, Icon, makeStyles, Typography } from '@material-ui/core'
 import ESAvatar from '@components/Avatar'
 import { Colors } from '@theme/colors'
+import { GiftMasterType, GiftMasterUserStatus, GiftMasterUserType } from '@services/gift.service'
+import { useTranslation } from 'react-i18next'
+import useGiftTarget from '@containers/StreamingGiftManagement/useGiftTarget'
 
-const SelectMemberItem: React.FC = () => {
+type PropType = {
+  item?: GiftMasterType
+}
+
+const SelectMemberItem: React.FC<PropType> = ({ item }) => {
   const classes = useStyles()
+  const { t } = useTranslation('common')
+  const { removeGiftMasterFromNewGroup } = useGiftTarget()
+
   const itemType = () => {
-    return 'チーム'
+    // TODO: One of 「チーム」: team,「個人」: mem cá nhân,「申請中」: màu vàng, admin đang vẫn confirm, 「停止」: admin đã cho block, hiện thị xám
+    const { type, status } = item
+    if (status !== GiftMasterUserStatus.ACTIVE)
+      return status === GiftMasterUserStatus.REQUEST
+        ? t('streaming_setting_screen.member_list.tag_approving')
+        : t('streaming_setting_screen.member_list.tag_block')
+
+    return type === GiftMasterUserType.TEAM
+      ? t('streaming_setting_screen.member_list.tag_team')
+      : t('streaming_setting_screen.member_list.tag_individual')
   }
 
   const itemName = () => {
-    return 'もるチャン'
+    return item?.name
+  }
+
+  const handleCloseButtonClick = () => {
+    removeGiftMasterFromNewGroup(item)
   }
 
   return (
     <Box className={classes.container}>
-      <ESAvatar />
+      <ESAvatar src={item?.image} alt={item?.name} />
       <Box className={classes.textContainer}>
-        <Typography className={classes.itemType}>{itemType()}</Typography>
+        <Typography
+          className={`${classes.itemType} 
+          ${item?.status === GiftMasterUserStatus.REQUEST ? classes.tagRequest : ''} 
+          ${item?.status === GiftMasterUserStatus.DEACTIVE ? classes.tagBlock : ''}`}
+        >
+          {itemType()}
+        </Typography>
         <Typography>{itemName()}</Typography>
       </Box>
-      <Box className={classes.buttonRemove}>
+      <Box onClick={handleCloseButtonClick} className={classes.buttonRemove}>
         <Icon className={`fa fa-times ${classes.iconRemove}`} fontSize="small" />
       </Box>
     </Box>
@@ -32,6 +61,7 @@ const useStyles = makeStyles(() => ({
   buttonRemove: {
     alignSelf: 'center',
     padding: '8px',
+    cursor: 'pointer',
   },
   container: {
     padding: '16px',
@@ -62,6 +92,14 @@ const useStyles = makeStyles(() => ({
     fontWeight: 'bold',
     backgroundColor: '#767676',
     textAlign: 'center',
+  },
+  tagRequest: {
+    backgroundColor: '#F4F43A',
+    color: Colors.black,
+  },
+  tagBlock: {
+    color: Colors.white_opacity['30'],
+    backgroundColor: '#707070',
   },
 }))
 

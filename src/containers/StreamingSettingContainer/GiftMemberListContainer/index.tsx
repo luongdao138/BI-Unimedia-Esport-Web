@@ -1,10 +1,14 @@
 import { Box, makeStyles, Typography } from '@material-ui/core'
-import React, { useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import ESInput from '@components/Input'
 import { Colors } from '@theme/colors'
 import SelectMemberItem from '@containers/StreamingSettingContainer/GiftMemberListContainer/SelectMemberItem'
 import Footer from '@containers/StreamingSettingContainer/GiftMemberListContainer/footer'
+import useGiftTarget from '@containers/StreamingGiftManagement/useGiftTarget'
+import CharacterLimited from '@components/CharacterLimited'
+import { useAppDispatch } from '@store/hooks'
+import * as commonActions from '@store/common/actions'
 
 type Props = {
   handleBackToListState?: () => void
@@ -13,7 +17,16 @@ type Props = {
 const GiftMemberListContainer: React.FC<Props> = ({ handleBackToListState }) => {
   const { t } = useTranslation('common')
   const classes = useStyles()
-  const getData = () => Array.from(Array(20).keys())
+  const dispatch = useAppDispatch()
+
+  const { newGiftGroupGiftMasterList, createNewGiftGroup } = useGiftTarget()
+  const [title, setTitle] = useState('')
+
+  const getData = () => newGiftGroupGiftMasterList
+
+  const handleTitleInputChange = (e) => {
+    setTitle(e.target.value)
+  }
 
   const header = () => {
     return (
@@ -26,40 +39,54 @@ const GiftMemberListContainer: React.FC<Props> = ({ handleBackToListState }) => 
           fullWidth
           placeholder={t('streaming_setting_screen.member_list.name_entered_place_holder')}
           className={classes.inputName}
+          endAdornment={<CharacterLimited value={title} limit={60} />}
+          value={title}
+          onChange={handleTitleInputChange}
         />
       </Box>
     )
   }
 
-  // const emptyListView = () => {
-  //   return (
-  //     <Box className={classes.emptyView}>
-  //       <Typography className={classes.emptyViewMessage}>
-  //         {t('streaming_setting_screen.member_list.empty_view_message')}
-  //       </Typography>
-  //     </Box>
-  //   )
-  // }
+  const emptyListView = () => {
+    return (
+      <Box className={classes.emptyView}>
+        <Typography className={classes.emptyViewMessage}>{t('streaming_setting_screen.member_list.empty_view_message')}</Typography>
+      </Box>
+    )
+  }
 
   const listWithData = useCallback(() => {
     return (
       <Box className={classes.listWithDataContainer}>
-        {getData().map((_, index) => {
-          return <SelectMemberItem key={`listWithData-${index}`} />
+        {getData().map((item, index) => {
+          return <SelectMemberItem key={`listWithData-${index}`} item={item} />
         })}
       </Box>
     )
-  }, [])
+  }, [getData()])
 
   const memberList = () => {
-    return <Box className={classes.listContainer}>{listWithData()}</Box>
+    return <Box className={classes.listContainer}>{getData().length > 0 ? listWithData() : emptyListView()}</Box>
+  }
+
+  const handleOnSuccessCallback = () => {
+    dispatch(commonActions.addToast(t('streaming_setting_screen.member_list.create_group_success')))
+    handleBackToListState()
+  }
+
+  const handleOnConfirmClick = () => {
+    const requestData = {
+      title,
+      group_item: newGiftGroupGiftMasterList.map(({ id }) => id),
+    }
+    createNewGiftGroup(requestData, handleOnSuccessCallback)
   }
 
   return (
     <Box className={classes.container}>
       {header()}
       {memberList()}
-      <Footer onCancel={handleBackToListState} />
+      <Footer onConfirm={handleOnConfirmClick} onCancel={handleBackToListState} />
     </Box>
   )
 }

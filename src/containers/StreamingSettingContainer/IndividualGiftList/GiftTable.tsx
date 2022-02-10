@@ -2,11 +2,11 @@ import { Box, makeStyles, Typography, useMediaQuery, useTheme } from '@material-
 import React from 'react'
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
-import { GiftIndividual } from '@services/liveStream.service'
 import GiftTableRow from '@containers/StreamingSettingContainer/IndividualGiftList/GiftTableRow'
+import { GiftGroupType } from '@services/gift.service'
 
 interface Props {
-  data: Array<GiftIndividual>
+  data: Array<GiftGroupType>
 }
 
 const GiftTable: React.FC<Props> = ({ data }) => {

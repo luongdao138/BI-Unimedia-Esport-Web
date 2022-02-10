@@ -5,6 +5,7 @@ import ESButton from '@components/Button'
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
 import { GiftMasterType, GiftMasterUserStatus } from '@services/gift.service'
+import useGiftTarget from '@containers/StreamingGiftManagement/useGiftTarget'
 
 type Prop = {
   item?: GiftMasterType
@@ -12,10 +13,12 @@ type Prop = {
 const MemberItem: React.FC<Prop> = ({ item }) => {
   const classes = useStyles()
   const { t } = useTranslation('common')
+  const { includedInNewList, addGiftMasterToNewGroup } = useGiftTarget()
+  const included = includedInNewList(item)
 
   const buttonText = () => {
     // TODO: One of 「選択」: da duoc them,「選択済」: them vao
-    return t('streaming_setting_screen.member_list.select')
+    return included ? t('streaming_setting_screen.member_list.selected') : t('streaming_setting_screen.member_list.select')
   }
 
   const tagText = () => {
@@ -33,6 +36,12 @@ const MemberItem: React.FC<Prop> = ({ item }) => {
     return item?.name
   }
 
+  const handleActionButtonClick = () => {
+    if (!included) {
+      addGiftMasterToNewGroup(item)
+    }
+  }
+
   return (
     <Box className={classes.container}>
       <ESAvatar src={item?.image} alt={name()} />
@@ -48,9 +57,13 @@ const MemberItem: React.FC<Prop> = ({ item }) => {
         </Box>
         <Typography className={classes.name}>{name()}</Typography>
       </Box>
-      <ESButton className={classes.actionButton}>
-        <Typography className={classes.buttonText}>{buttonText()}</Typography>
-      </ESButton>
+      {item?.status !== GiftMasterUserStatus.DEACTIVE ? (
+        <ESButton onClick={handleActionButtonClick} className={`${classes.actionButton} ${included ? classes.actionButtonSelected : ''}`}>
+          <Typography className={classes.buttonText}>{buttonText()}</Typography>
+        </ESButton>
+      ) : (
+        <Typography className={classes.buttonText}>{t('streaming_setting_screen.member_list.invalid')}</Typography>
+      )}
     </Box>
   )
 }
@@ -82,6 +95,7 @@ const useStyles = makeStyles(() => ({
     fontSize: '10px',
     fontWeight: 'bold',
   },
+
   tagRequest: {
     backgroundColor: '#F4F43A',
     color: Colors.black,
@@ -102,6 +116,9 @@ const useStyles = makeStyles(() => ({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: '5px',
+    backgroundColor: '#575757',
+  },
+  actionButtonSelected: {
     backgroundColor: Colors.primary,
   },
   buttonText: {
