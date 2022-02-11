@@ -754,17 +754,17 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     const isStreaming = (() => {
       // console.log('🚀 ~ isStreaming ~ videoType', videoType, playedSecond, streamingSecond)
       // console.log('🚀 ~ isStreaming ~ playedSecond >= streamingSecond', playedSecond >= streamingSecond)
-      return true
-      // if (videoType === STATUS_VIDEO.LIVE_STREAM) {
-      //   return true
-      //   // if (streamingSecond === Infinity) {
-      //   //   return true
-      //   // }
-      //   // if (playedSecond >= streamingSecond) {
-      //   //   return true
-      //   // }
-      // }
-      // return false
+      // return true
+      if (videoType === STATUS_VIDEO.LIVE_STREAM) {
+        return true
+        // if (streamingSecond === Infinity) {
+        //   return true
+        // }
+        // if (playedSecond >= streamingSecond) {
+        //   return true
+        // }
+      }
+      return false
     })()
 
     const renderLoader = () => {
@@ -1786,7 +1786,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         </ButtonBase> */}
         <IconButton
           disableRipple
-          style={{ display: !isBottom ? 'flex' : 'none', bottom: isMobile && isStreaming ? 177 : 30 }}
+          style={{ display: !isBottom ? 'flex' : 'none', bottom: isMobile && isStreaming ? (isLandscape ? 66 : 180) : 30 }}
           className={classes.bottomArrow}
           onClick={() => {
             setTimeout(() => {

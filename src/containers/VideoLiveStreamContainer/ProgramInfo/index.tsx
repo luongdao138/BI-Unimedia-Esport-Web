@@ -13,13 +13,16 @@ import ESLoader from '@components/Loader'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
 import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
 import SmallLoader from '@components/Loader/SmallLoader'
+import { useRotateScreen } from '@utils/hooks/useRotateScreen'
 
 type ProgramInfoProps = {
   video_id?: string | string[]
 }
 const LIMIT_ITEM = 12
 const ProgramInfo: React.FC<ProgramInfoProps> = ({ video_id }) => {
-  const classes = useStyles()
+  const { isLandscape } = useRotateScreen()
+
+  const classes = useStyles({ isLandscape })
   const theme = useTheme()
   const downMd = useMediaQuery(theme.breakpoints.down(769), { noSsr: true })
 
@@ -350,6 +353,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: 14,
     color: '#FFFFFF',
     opacity: 1,
+  },
+  [`@media (orientation: landscape)`]: {
+    wrapContentContainer: (props: { isLandscape: boolean }) => {
+      if (props.isLandscape)
+        return {
+          width: '100%',
+        }
+    },
   },
 }))
 export default ProgramInfo

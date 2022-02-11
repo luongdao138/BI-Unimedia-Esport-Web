@@ -12,6 +12,7 @@ import { getIsAuthenticated } from '@store/auth/selectors'
 import { useAppSelector } from '@store/hooks'
 import { Colors } from '@theme/colors'
 import { FormatHelper } from '@utils/helpers/FormatHelper'
+import { useRotateScreen } from '@utils/hooks/useRotateScreen'
 import _ from 'lodash'
 import { useContextualRouting } from 'next-use-contextual-routing'
 import { useRouter } from 'next/router'
@@ -47,6 +48,7 @@ const VideoSubInfo: React.FC<VideoSubInfoProps> = (props) => {
   const theme = useTheme()
   const { t } = useTranslation('common')
   const isAuthenticated = useAppSelector(getIsAuthenticated)
+  const { isLandscape } = useRotateScreen()
 
   const isMobile = useMediaQuery(theme.breakpoints.down(769))
   // const downMd = useMediaQuery(theme.breakpoints.down(769))
@@ -68,7 +70,7 @@ const VideoSubInfo: React.FC<VideoSubInfoProps> = (props) => {
 
   const isSubscribed = () => subscribe
 
-  const classes = useStyles({ isSubscribed: isSubscribed() })
+  const classes = useStyles({ isSubscribed: isSubscribed(), isLandscape })
 
   const toggleSubscribeClick = () => {
     const newSubscribe = subscribe === 0 ? 1 : 0
@@ -414,10 +416,10 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   icon: {},
-  heartIcon: (props: { isSubscribed?: number }) => ({
+  heartIcon: (props: { isSubscribed?: number; isLandscape: boolean }) => ({
     color: props?.isSubscribed === 1 ? Colors.white : Colors.primary,
   }),
-  subscribeLabel: (props: { isSubscribed?: number }) => ({
+  subscribeLabel: (props: { isSubscribed?: number; isLandscape: boolean }) => ({
     color: props?.isSubscribed === 1 ? Colors.white : Colors.primary,
   }),
   wrap_streamer_info: {
@@ -452,7 +454,7 @@ const useStyles = makeStyles((theme) => ({
     paddingRight: '34px',
   },
   register_person_number: {},
-  register_channel_btn: (props: { isSubscribed?: number }) => ({
+  register_channel_btn: (props: { isSubscribed?: number; isLandscape: boolean }) => ({
     background: props?.isSubscribed === 1 ? Colors.primary : Colors.transparent,
     ...(props?.isSubscribed !== 1 && {
       borderRadius: 4,
@@ -631,6 +633,22 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  [`@media (orientation: landscape)`]: {
+    wrap_streamer_info: (props: { isSubscribed?: number; isLandscape: boolean }) => {
+      if (props.isLandscape)
+        return {
+          flexDirection: 'column',
+          alignItems: 'flex-start',
+          gap: '16px',
+        }
+    },
+    register_channel_btn: (props: { isSubscribed?: number; isLandscape: boolean }) => {
+      if (props.isLandscape)
+        return {
+          marginLeft: 8,
+        }
+    },
   },
 }))
 export default VideoSubInfo

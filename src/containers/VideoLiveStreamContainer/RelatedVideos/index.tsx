@@ -10,13 +10,16 @@ import useLiveStreamDetail from '../useLiveStreamDetail'
 import { TypeVideoArchived } from '@services/liveStreamDetail.service'
 import ESLoader from '@components/Loader'
 import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
+import { useRotateScreen } from '@utils/hooks/useRotateScreen'
 
 type RelatedVideosProps = {
   video_id?: string | string[]
 }
 const LIMIT_ITEM = 12
 const RelatedVideos: React.FC<RelatedVideosProps> = ({ video_id }) => {
-  const classes = useStyles()
+  const { isLandscape } = useRotateScreen()
+  const classes = useStyles({ isLandscape })
+
   const theme = useTheme()
   const downMd = useMediaQuery(theme.breakpoints.down(769), { noSsr: true })
   const [page, setPage] = useState<number>(1)
@@ -205,6 +208,14 @@ const useStyles = makeStyles((theme: Theme) => ({
       display: 'flex',
       justifyContent: 'center',
       marginBottom: '24px',
+    },
+  },
+  [`@media (orientation: landscape)`]: {
+    wrapContentContainer: (props: { isLandscape: boolean }) => {
+      if (props.isLandscape)
+        return {
+          width: '100%',
+        }
     },
   },
 }))

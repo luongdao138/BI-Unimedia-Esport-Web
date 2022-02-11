@@ -574,83 +574,8 @@ const VideoDetail: React.FC = () => {
     )
   }
 
-  console.log('🚀 ~ cle ~ window.---333 ', window.innerWidth, window.innerHeight)
-
-  // const renderLandscapeMobile = () => {
-  //   return (
-  //     <Box className={classes.rootHorizontal}>
-  //       {isPendingPurchaseTicket && <ESLoader />}
-  //       {isPendingPurchaseSuperChat && <FullESLoader open={isPendingPurchaseSuperChat} />}
-
-  //       <Box className={classes.boxRow}>
-  //         <Box
-  //           className={classes.containerHorizontal}
-  //           style={{
-  //             width: !is_normal_view_mode || isMobile ? '100%' : componentsSize.videoWidth,
-  //             marginRight: !is_normal_view_mode && !isMobile ? '16px' : '0',
-  //           }}
-  //           onClick={() => {
-  //             changeIsHoveredVideoStatus(!isHoveredVideo)
-  //             console.log('🚀 ~ isHoveredVideo', isHoveredVideo)
-  //           }}
-  //         >
-  //           {isLoadingVideo ? (
-  //             <Box
-  //               style={{
-  //                 backgroundColor: '#6A6A6C',
-  //                 width: window.innerWidth / 2,
-  //                 height: window.innerHeight,
-  //                 display: 'flex',
-  //                 justifyContent: 'center',
-  //                 alignItems: 'center',
-  //                 textAlign: 'center',
-  //                 borderRadius: 8,
-  //               }}
-  //             >
-  //               <ESLoader />
-  //             </Box>
-  //           ) : (
-  //             <>
-  //               <LiveStreamContent
-  //                 componentsSize={componentsSize}
-  //                 isArchived={isArchived}
-  //                 video_id={getVideoId()}
-  //                 userHasViewingTicket={userHasViewingTicket()}
-  //                 videoType={videoStatus}
-  //                 freeToWatch={isVideoFreeToWatch}
-  //                 ticketAvailableForSale={isTicketAvailableForSale()}
-  //                 softKeyboardIsShown={softKeyboardIsShown}
-  //                 ticketPrice={detailVideoResult?.ticket_price}
-  //                 clickButtonPurchaseTicket={handlePurchaseTicket}
-  //                 onVideoEnd={onVideoEnd}
-  //               />
-  //             </>
-  //           )}
-  //         </Box>
-
-  //         {!isLoadingVideo && (
-  //           <Box className={classes.container} style={{ width: componentsSize.videoWidth }}>
-  //             <Grid container direction="row" className={classes.contentContainer}>
-  //               <TabSelectContainer
-  //                 sideChatContainer={sideChatContainer}
-  //                 renderVideoSubInfo={renderVideoSubInfo}
-  //                 infoTabsContent={(currentTab) => getContent(currentTab)}
-  //                 isLandscape={isLandscape}
-  //               ></TabSelectContainer>
-  //             </Grid>
-  //           </Box>
-  //         )}
-
-  //         {/* {sideChatContainer()} */}
-  //       </Box>
-  //     </Box>
-  //   )
-  // }
   return (
     <React.Fragment>
-      {/* {isLandscape ? (
-        renderLandscapeMobile()
-      ) : ( */}
       <Box className={classes.root}>
         {isPendingPurchaseTicket && <ESLoader />}
         {isPendingPurchaseSuperChat && <FullESLoader open={isPendingPurchaseSuperChat} />}
@@ -753,7 +678,6 @@ const VideoDetail: React.FC = () => {
             sideChatContainer()
           ))}
       </Box>
-      {/* )} */}
 
       {/* all modal */}
       <PurchaseTicketSuperChat
@@ -784,15 +708,7 @@ const VideoDetail: React.FC = () => {
 }
 export default VideoDetail
 
-// props: { availHeight: number; availWidth: number; isLandscape: boolean }
 const useStyles = makeStyles((theme) => ({
-  // textTabVideo: (props: { isLandscape?: boolean }) => {
-  //   return {
-  //     fontSize: props.isLandscape ? 10 : 12,
-  //     lineHeight: '17px',
-  //     color: Colors.white_opacity[30],
-  //   }
-  // },
   root: {
     backgroundColor: '#212121',
     display: 'flex',
@@ -919,29 +835,6 @@ const useStyles = makeStyles((theme) => ({
       // },
     },
   },
-  //horizontal
-  // rootHorizontal: (props: { availHeight: number; availWidth: number }) => {
-  //   return {
-  //     display: 'flex',
-  //     position: 'relative',
-  //     width: '100%',
-  //     flexWrap: 'wrap',
-  //     height: props.availHeight,
-  //   }
-  // },
-  // boxRow: {
-  //   flexDirection: 'row',
-  //   display: 'flex',
-  //   // height:'calc(100%)'
-  // },
-  // containerHorizontal: (props: { availHeight: number; availWidth: number }) => {
-  //   return {
-  //     display: 'flex',
-  //     flexDirection: 'column',
-  //     width: '100%',
-  //     height: props.availHeight,
-  //   }
-  // },
   [`@media (orientation: landscape)`]: {
     root: (props: videoStyleProps) => {
       if (props.isLandscape)
@@ -964,6 +857,7 @@ const useStyles = makeStyles((theme) => ({
           top: 'auto',
           height: 'auto',
           bottom: 'auto',
+          overflow: 'auto',
         }
     },
     contentContainer: (props: videoStyleProps) => {

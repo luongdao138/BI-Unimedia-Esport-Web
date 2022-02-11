@@ -9,6 +9,8 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     // height: '100%',
     padding: '16px',
+    // flex: 1 1 0px;
+    // overflow: auto;
   },
   singleTab: { maxWidth: 'none' },
   tabsContainer: {
@@ -468,8 +470,8 @@ const useStyles = makeStyles((theme) => ({
       height: 'auto',
     },
     userWatchingList: {
-      marginLeft: '16px',
-      marginRight: '16px',
+      // marginLeft: '16px',
+      // marginRight: '16px',
       marginTop: '16px',
     },
     chatArea: {
@@ -540,6 +542,13 @@ const useStyles = makeStyles((theme) => ({
       if (props.isLandscape)
         return {
           display: 'none',
+        }
+    },
+    chatInputMobileContainer: (props: ChatStyleProps) => {
+      if (props.isLandscape)
+        return {
+          width: 'calc(100% - 32px)',
+          bottom: 0,
         }
     },
   },
