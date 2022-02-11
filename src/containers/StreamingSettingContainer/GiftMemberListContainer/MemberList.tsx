@@ -118,6 +118,10 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: '#FFFFFF',
     marginRight: '16px',
     height: '30px',
+    '&:hover': {
+      boxShadow: 'none',
+      background: Colors.white,
+    },
   },
   filterButtonNonSelected: {
     backgroundColor: '#747474',

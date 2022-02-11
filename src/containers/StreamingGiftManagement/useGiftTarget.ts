@@ -8,6 +8,7 @@ import { getTimeZone } from '@utils/helpers/CommonHelper'
 
 const { selectors, actions } = giftManage
 const _addGiftTargetData = createMetaSelector(actions.addTargetPerson)
+const getGiftGroupListMeta = createMetaSelector(actions.getGiftGroupList)
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const useGiftManage = () => {
@@ -68,6 +69,8 @@ const useGiftManage = () => {
 
   const getGiftGroupList = (page, limit) => dispatch(actions.getGiftGroupList({ page, limit }))
   const giftGroupList = useAppSelector(selectors.getListGiftGroup)
+  const giftGroupTotal = useAppSelector(selectors.getGiftGroupTotal)
+  const giftGroupsMeta = useAppSelector(getGiftGroupListMeta)
 
   return {
     giftTargetData,
@@ -87,6 +90,8 @@ const useGiftManage = () => {
     createNewGiftGroup,
     getGiftGroupList,
     giftGroupList,
+    giftGroupTotal,
+    giftGroupsMeta,
   }
 }
 

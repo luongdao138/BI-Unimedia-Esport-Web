@@ -1,4 +1,4 @@
-import { MouseEventHandler, useState } from 'react'
+import { MouseEventHandler, useEffect, useState } from 'react'
 import { Box, Typography, IconButton, Icon, Theme, TableRow, TableCell } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
 import { makeStyles } from '@material-ui/core/styles'
@@ -10,22 +10,37 @@ import Button from '@components/Button'
 import ESTable from '@components/Table'
 import Pagination from '@containers/Community/Partials/Pagination'
 import { ESRoutes } from '@constants/route.constants'
+import useGiftManage from '@containers/StreamingGiftManagement/useGiftTarget'
+import ESLoader from '@components/Loader'
+import { TabState } from '../GiftManageTab'
 
 // export interface ListGroupGiftProps {}
 
-const rows = [1, 2, 3, 4, 5]
-const ListGroupGift: React.FC = () => {
+interface IProps {
+  onChangeTab?: (tab: TabState) => void
+}
+
+const ITEM_PER_PAGE = 10
+const ListGroupGift: React.FC<IProps> = ({ onChangeTab }) => {
   const { t } = useTranslation('common')
   const router = useRouter()
   const classes = useStyles()
+  const { getGiftGroupList, giftGroupList, giftGroupTotal, giftGroupsMeta } = useGiftManage()
 
   const handleReturn = () => {
     router.push(ESRoutes.VIDEO_STREAMING_SETTING)
   }
+  const [page, setPage] = useState(1)
+  const getTotalPage = () => Math.ceil(giftGroupTotal / ITEM_PER_PAGE)
+  const [pageNumber] = useState(getTotalPage())
 
-  const [page, setPage] = useState(10)
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [count] = useState(10)
+  useEffect(() => {
+    getGiftGroupList(page, ITEM_PER_PAGE)
+  }, [page])
+
+  const handleCreateTip = () => {
+    onChangeTab(TabState.CREATE_NEW)
+  }
 
   return (
     <div>
@@ -46,10 +61,7 @@ const ListGroupGift: React.FC = () => {
                 variant="outlined"
                 className={classes.btnTip}
                 round
-                onClick={() => {
-                  // eslint-disable-next-line no-console
-                  console.log('onLick')
-                }}
+                onClick={handleCreateTip}
                 startIcon={<Icon style={{ fontSize: 10, color: Colors.white }} className={`fa fa-plus`} />}
               >
                 {t('streaming_gift_report_screen.create_tip_target_list')}
@@ -58,44 +70,56 @@ const ListGroupGift: React.FC = () => {
             <Box mt={3} mb={3}>
               <Typography className={classes.tipTargetToSet}>{t('streaming_gift_report_screen.select_tip_target_list')}</Typography>
             </Box>
-            <ESTable
-              tableHeader={
-                <TableRow>
-                  <TableCell style={{ width: '10%' }} align="center">
-                    <Typography component={'span'}>{t('streaming_gift_report_screen.no')}</Typography>
-                  </TableCell>
-                  <TableCell style={{ width: '20%' }} align="center">
-                    <Typography component={'span'}>{t('streaming_gift_report_screen.list_name')}</Typography>
-                  </TableCell>
-                  <TableCell style={{ width: '20%' }} align="left" colSpan={2}>
-                    <Typography component={'span'}>{t('streaming_gift_report_screen.registration_number')}</Typography>
-                  </TableCell>
-                </TableRow>
-              }
-            >
-              {rows.map((row) => (
-                <TableRow key={row}>
-                  <TableCell align="center">
-                    <Typography component="span">1</Typography>
-                  </TableCell>
-                  <TableCell align="left">
-                    <Typography component="span">チームかやを</Typography>
-                  </TableCell>
-                  <TableCell align="center">
-                    <Typography component="span">1</Typography>
-                  </TableCell>
-                  <TableCell align="center">
-                    <Box display="flex" justifyContent="flex-end">
-                      <Typography className={classes.choice} variant="caption">
-                        個人
-                      </Typography>
-                    </Box>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </ESTable>
+            {giftGroupsMeta.pending ? (
+              <Box display="flex" justifyContent="center">
+                <ESLoader />
+              </Box>
+            ) : (
+              <>
+                {giftGroupList.length > 0 ? (
+                  <ESTable
+                    tableHeader={
+                      <TableRow>
+                        <TableCell style={{ width: '10%' }} align="center">
+                          <Typography component={'span'}>{t('streaming_gift_report_screen.no')}</Typography>
+                        </TableCell>
+                        <TableCell style={{ width: '20%' }} align="center">
+                          <Typography component={'span'}>{t('streaming_gift_report_screen.list_name')}</Typography>
+                        </TableCell>
+                        <TableCell style={{ width: '20%' }} align="left" colSpan={2}>
+                          <Typography component={'span'}>{t('streaming_gift_report_screen.registration_number')}</Typography>
+                        </TableCell>
+                      </TableRow>
+                    }
+                  >
+                    {giftGroupList.map((item) => (
+                      <TableRow key={item.id}>
+                        <TableCell align="center">
+                          <Typography component="span">{item.id}</Typography>
+                        </TableCell>
+                        <TableCell align="left">
+                          <Typography component="span">{item.title}</Typography>
+                        </TableCell>
+                        <TableCell align="center">
+                          <Typography component="span">{item.total_master}</Typography>
+                        </TableCell>
+                        <TableCell align="center">
+                          <Box display="flex" justifyContent="flex-end">
+                            <Typography className={classes.choice} variant="caption">
+                              個人
+                            </Typography>
+                          </Box>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </ESTable>
+                ) : (
+                  <></>
+                )}
+              </>
+            )}
             <Box display="flex" justifyContent="center" mt={4}>
-              <Pagination page={page} pageNumber={count} setPage={setPage} />
+              <Pagination page={page} pageNumber={pageNumber} setPage={setPage} />
             </Box>
           </Box>
         </Box>
@@ -143,8 +167,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: Colors.white,
     paddingTop: 4,
     paddingBottom: 4,
-    paddingLeft: 15,
-    paddingRight: 15,
+    paddingLeft: 20,
+    paddingRight: 20,
   },
 
   iconButtonBg: {

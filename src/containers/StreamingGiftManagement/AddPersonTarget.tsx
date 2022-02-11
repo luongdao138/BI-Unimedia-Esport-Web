@@ -10,6 +10,7 @@ import { validationAddTargetPerson } from './ValidationAddPersonTarget'
 import useGiftManage from './useGiftTarget'
 import CharacterLimited from '@components/CharacterLimited'
 import { SnsUrlValidType } from '@store/giftManage/reducers'
+import useToast from '@utils/hooks/useToast'
 
 interface AddPersonTargetProps {
   handleSuccess: () => void
@@ -20,21 +21,18 @@ const AddPersonTarget: FC<AddPersonTargetProps> = ({ handleSuccess }): JSX.Eleme
   const { t } = useTranslation('common')
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down(414))
+  const { addToast } = useToast()
   const { addTargetPerson, checkSnsUrl, snsUrlValidCheckStatus, resetSnsUrlStateCheck } = useGiftManage()
-  const initialValues = {
-    target_value: t('streaming_gift_management.team_title'),
-    target_name: '',
-    sns_url: '',
-  }
   const formik = useFormik({
-    initialValues: { ...initialValues },
+    initialValues: { target_value: t('streaming_gift_management.team_title'), target_name: '', sns_url: '' },
     validationSchema: validationAddTargetPerson,
     enableReinitialize: true,
+    validateOnChange: true,
     onSubmit: () => {
       addTargetPerson(values)
     },
   })
-  const { values, errors, touched, handleBlur, setFieldValue, setErrors, handleSubmit } = formik
+  const { values, errors, touched, handleBlur, setFieldValue, handleSubmit } = formik
 
   useEffect(() => {
     if (snsUrlValidCheckStatus !== SnsUrlValidType.INIT) {
@@ -44,6 +42,7 @@ const AddPersonTarget: FC<AddPersonTargetProps> = ({ handleSuccess }): JSX.Eleme
         resetSnsUrlStateCheck()
       } else {
         // TODO: Show error
+        addToast(`登録済みのxxです ${values.sns_url}`)
       }
     }
   }, [snsUrlValidCheckStatus])
@@ -55,17 +54,16 @@ const AddPersonTarget: FC<AddPersonTargetProps> = ({ handleSuccess }): JSX.Eleme
   }
 
   const handleChangeTargetValue = (event) => {
-    setErrors({})
     setFieldValue('target_value', event.target.value)
   }
   const handleChangeTargetName = (event) => {
-    setErrors({})
     setFieldValue('target_name', event.target.value)
   }
   const handleChangeSnsUrl = (event) => {
-    setErrors({})
     setFieldValue('sns_url', event.target.value)
   }
+
+  const disabledBtn = !formik.isValid || !formik.dirty
 
   return (
     <form onSubmit={handleSubmit} className={classes.container}>
@@ -134,7 +132,7 @@ const AddPersonTarget: FC<AddPersonTargetProps> = ({ handleSuccess }): JSX.Eleme
           />
         </Box>
       </Box>
-      <ButtonPrimary size="small" className={classes.buttonContainer} gradient={false} onClick={handleAdd} disabled={!formik.isValid}>
+      <ButtonPrimary size="small" className={classes.buttonContainer} gradient={false} onClick={handleAdd} disabled={disabledBtn}>
         {t('streaming_gift_management.txt_save_button')}
       </ButtonPrimary>
     </form>

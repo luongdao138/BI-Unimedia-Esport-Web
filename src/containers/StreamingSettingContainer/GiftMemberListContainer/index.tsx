@@ -99,6 +99,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     paddingLeft: '20px',
+    paddingRight: '20px',
   },
   nameListLabelContainer: {
     display: 'flex',

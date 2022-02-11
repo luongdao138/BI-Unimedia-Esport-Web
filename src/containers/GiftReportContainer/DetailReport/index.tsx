@@ -3,7 +3,7 @@ import ESLoader from '@components/Loader'
 import ESTable from '@components/Table'
 import Pagination from '@containers/Community/Partials/Pagination'
 import { Box, makeStyles, TableCell, TableRow, Typography, useMediaQuery, useTheme } from '@material-ui/core'
-import { DetailedResponse } from '@services/deliveryReport.service'
+import { DetailedReportParams } from '@services/deliveryReport.service'
 import { Colors } from '@theme/colors'
 import { DateHelper } from '@utils/helpers/DateHelper'
 import { FormatHelper } from '@utils/helpers/FormatHelper'
@@ -16,22 +16,24 @@ interface DetailReportProps {
 }
 
 const ITEM_PER_PAGE = 5
-const getItemPerPage = (data: DetailedResponse[], itemPerPage: number, page: number) => {
-  return data.slice(itemPerPage * page - itemPerPage, itemPerPage * page)
-}
+// const getItemPerPage = (data: DetailedResponse[], itemPerPage: number, page: number) => {
+//   return data.slice(itemPerPage * page - itemPerPage, itemPerPage * page)
+// }
 
 const DetailReport: React.FC<DetailReportProps> = ({ videoId }) => {
   const theme = useTheme()
   const matches = useMediaQuery(theme.breakpoints.down('sm'))
   const classes = useStyles()
   const { t } = useTranslation('common')
-  const getTotalPage = () => Math.ceil(40 / ITEM_PER_PAGE)
+  const { fetchDetailedReportList, detailedReports, detailedReportMeta } = useDeliveryReport()
+
+  const getTotalPage = () => Math.ceil(detailedReports.points.length / ITEM_PER_PAGE)
   const [page, setPage] = useState(1)
   const [pageNumber] = useState(getTotalPage())
-  const { fetchDetailedReportList, detailedReports, detailedReportMeta } = useDeliveryReport()
+
   // const { t } = useTranslation('common')
   useEffect(() => {
-    const paramDeliveryReport = { uuid: videoId }
+    const paramDeliveryReport: DetailedReportParams = { uuid: videoId, page: page, limit: ITEM_PER_PAGE }
     fetchDetailedReportList(paramDeliveryReport)
     // console.log(
     //   'rows.slice(page,ITEM_PER_PAGE)=>',
@@ -99,7 +101,7 @@ const DetailReport: React.FC<DetailReportProps> = ({ videoId }) => {
                 </TableRow>
               }
             >
-              {getItemPerPage(detailedReports.points, ITEM_PER_PAGE, page).map((i, key) => (
+              {detailedReports.points.map((i, key) => (
                 <TableRow key={key} className={classes.text}>
                   <TableCell align="center">{key}</TableCell>
                   <TableCell align="center">{DateHelper.formatDateTime(i.created_at)}</TableCell>

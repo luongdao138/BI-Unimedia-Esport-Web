@@ -11,6 +11,8 @@ export type TicketReportParams = {
 
 export type DetailedReportParams = {
   uuid: string | string[]
+  page?: number
+  limit?: number
 }
 export type PageMeta = {
   current_page: number

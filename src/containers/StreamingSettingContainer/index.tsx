@@ -177,6 +177,7 @@ const StreamingSettingContainer: React.FC<{ default_tab: any }> = ({ default_tab
   }
   const giftManageChangeTab = (tab: TabState) => {
     setGiftManageTabState(tab)
+    setTab(3)
   }
 
   const getContent = () => {
@@ -217,7 +218,7 @@ const StreamingSettingContainer: React.FC<{ default_tab: any }> = ({ default_tab
   const getListGroupGift = () => {
     return (
       <ESModal open={router.query.modalName === 'list_group_gift'}>
-        <ListGroupGift />
+        <ListGroupGift onChangeTab={giftManageChangeTab} />
       </ESModal>
     )
   }
@@ -233,7 +234,7 @@ const StreamingSettingContainer: React.FC<{ default_tab: any }> = ({ default_tab
         />
       </Box>
 
-      <Grid container direction="row" spacing={tab === TABS.GIFT_MEMBERS_LIST ? 2 : 0}>
+      <Grid container direction="row">
         <Grid item xs={12} md={tab === TABS.GIFT_MEMBERS_LIST ? 8 : 12}>
           <Grid container direction="column">
             {getTabs()}
