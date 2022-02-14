@@ -5,11 +5,9 @@ import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
 import BlankLayout from '@layouts/BlankLayout'
 import ESButton from '@components/Button'
-import { useRouter } from 'next/router'
 import Button from '@components/Button'
 import ESTable from '@components/Table'
 import Pagination from '@containers/Community/Partials/Pagination'
-import { ESRoutes } from '@constants/route.constants'
 import useGiftManage from '@containers/StreamingGiftManagement/useGiftTarget'
 import ESLoader from '@components/Loader'
 import { TabState } from '../GiftManageTab'
@@ -18,17 +16,18 @@ import { TabState } from '../GiftManageTab'
 
 interface IProps {
   onChangeTab?: (tab: TabState) => void
+  handleSelectGroup?: (groupItem) => void
+  handleClose?: (open: boolean) => void
 }
 
 const ITEM_PER_PAGE = 10
-const ListGroupGift: React.FC<IProps> = ({ onChangeTab }) => {
+const ListGroupGift: React.FC<IProps> = ({ onChangeTab, handleSelectGroup, handleClose }) => {
   const { t } = useTranslation('common')
-  const router = useRouter()
   const classes = useStyles()
   const { getGiftGroupList, giftGroupList, giftGroupTotal, giftGroupsMeta } = useGiftManage()
 
   const handleReturn = () => {
-    router.push(ESRoutes.VIDEO_STREAMING_SETTING)
+    handleClose(false)
   }
   const [page, setPage] = useState(1)
   const getTotalPage = () => Math.ceil(giftGroupTotal / ITEM_PER_PAGE)
@@ -40,6 +39,11 @@ const ListGroupGift: React.FC<IProps> = ({ onChangeTab }) => {
 
   const handleCreateTip = () => {
     onChangeTab(TabState.CREATE_NEW)
+  }
+
+  const onSelectGroupComplete = (item) => {
+    handleSelectGroup(item)
+    handleClose(false)
   }
 
   return (
@@ -104,7 +108,7 @@ const ListGroupGift: React.FC<IProps> = ({ onChangeTab }) => {
                           <Typography component="span">{item.total_master}</Typography>
                         </TableCell>
                         <TableCell align="center">
-                          <Box display="flex" justifyContent="flex-end">
+                          <Box onClick={() => onSelectGroupComplete(item)} className={classes.btnSelect}>
                             <Typography className={classes.choice} variant="caption">
                               個人
                             </Typography>
@@ -205,6 +209,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     overflowX: 'hidden',
     height: 600,
     paddingRight: 10,
+  },
+  btnSelect: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    cursor: 'pointer',
   },
   [theme.breakpoints.down('sm')]: {
     container: {

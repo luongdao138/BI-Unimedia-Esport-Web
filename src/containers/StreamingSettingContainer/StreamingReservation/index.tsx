@@ -32,7 +32,7 @@ interface Props {
   flagUpdateFieldDate?: (flag: boolean) => void
   handleUpdateValidateField?: (value: string) => void
   validateFieldProps?: string
-  openPopupGroupList?: () => void
+  openPopupGroupList?: (open: boolean) => void
 }
 
 const StreamingReservationContainer: React.FC<Props> = ({

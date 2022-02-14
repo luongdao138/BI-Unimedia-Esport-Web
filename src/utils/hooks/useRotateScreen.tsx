@@ -23,12 +23,12 @@ export const useRotateScreen = (): IProps => {
     const androidPl = /Android/i.test(window.navigator.userAgent)
     const iPhonePl = /iPhone/i.test(window.navigator.userAgent)
     const ipadPl = /ipad/i.test(window.navigator.userAgent)
-    console.log('🚀 ~ isOnDeviceSp ~ ipadPl', ipadPl)
+    // console.log('🚀 ~ isOnDeviceSp ~ ipadPl', ipadPl)
     return androidPl || iPhonePl || ipadPl
   }
 
   useEffect(() => {
-    console.log('🚀 ~ useEffect ~ isOnDeviceSp()', isOnDeviceSp())
+    // console.log('🚀 ~ useEffect ~ isOnDeviceSp()', isOnDeviceSp())
 
     // handle check rotate screen on sp
     if (isOnDeviceSp()) {

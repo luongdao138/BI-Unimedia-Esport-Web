@@ -43,7 +43,7 @@ import SmallLoader from '@components/Loader/SmallLoader'
 import { STATUS_VIDEO } from '@services/videoTop.services'
 import ESBoxftDashColumn from '@components/ESBoxftDashColumn'
 import ESLabelWithSwitch from '@components/LabelWithSwitch'
-import { useListGiftInfoDialog } from '../useListGiftInfoDialog'
+import { useListGiftInfoDialog, useRankingInfoDialog } from '../useListGiftInfoDialog'
 import CharacterLimited from '@components/CharacterLimited'
 
 interface StepsProps {
@@ -63,7 +63,7 @@ interface StepsProps {
   obsStatusDynamo?: string | number
   videoStatusDynamo?: string | number
   processStatusDynamo?: string
-  openPopupGroupList?: () => void
+  openPopupGroupList?: (open: boolean) => void
 }
 
 const KEY_TYPE = {
@@ -133,6 +133,7 @@ const Steps: React.FC<StepsProps> = ({
 
   const classes = useStyles({ statusRecord: obsStatusDynamo, isEnable: handleEnableLink(), channelArn: stateChannelArn, videoStatusDynamo })
   const listGiftInfo = useListGiftInfoDialog()
+  const rankingInfo = useRankingInfoDialog()
 
   const formRef = {
     title: useRef(null),
@@ -375,9 +376,9 @@ const Steps: React.FC<StepsProps> = ({
       use_gift: stepSettingTwo.use_gift === false ? 0 : 1,
       gift_group_id: stepSettingTwo.gift_group_id,
       group_title: stepSettingTwo.group_title,
+      ranking_flag: stepSettingTwo.ranking_flag === false ? 0 : 1,
     }
     setLiveStreamConfirm(data, (process) => {
-      // console.log('process===', process);
       onNext(
         step + 1,
         stepSettingTwo.share_sns_flag,
@@ -437,6 +438,21 @@ const Steps: React.FC<StepsProps> = ({
     listGiftInfo().then(() => {
       return
     })
+  }
+
+  const handleRankingInfo = () => {
+    rankingInfo().then(() => {
+      return
+    })
+  }
+
+  const onClearNameListChip = () => {
+    formik.setFieldValue('stepSettingTwo.group_title', '')
+    formik.setFieldValue('stepSettingTwo.gift_group_id', null)
+  }
+
+  const openGroupList = () => {
+    openPopupGroupList(true)
   }
 
   return (
@@ -973,7 +989,7 @@ const Steps: React.FC<StepsProps> = ({
                 <ESLabel label={i18n.t('common:streaming_setting_screen.ticket_use')} />
               )}
               {isFirstStep() ? (
-                <ESBoxftDashColumn isSelectedGift={formik?.values?.stepSettingTwo?.selected_gift}>
+                <ESBoxftDashColumn isSelectedGift>
                   {/* TODO: Apply component enter point eXeポイント */}
                   <div className={classes.boxRightTicket}>
                     {isFirstStep() ? (
@@ -1140,7 +1156,7 @@ const Steps: React.FC<StepsProps> = ({
             <ESBoxftDashColumn isSelectedGift={formik?.values?.stepSettingTwo?.use_gift}>
               <Box className={classes.boxAboutGift}>
                 <Box className={classes.select_show_about_gift} pt={1}>
-                  <label className={classes.labelNavigate} onClick={openPopupGroupList}>
+                  <label className={classes.labelNavigate} onClick={openGroupList}>
                     {i18n.t('common:streaming_setting_screen.chooses_list_person_gift')}
                   </label>
                   <Typography className={classes.giftInfoList} variant="body2" onClick={handleListGiftInfo}>
@@ -1149,23 +1165,32 @@ const Steps: React.FC<StepsProps> = ({
                   </Typography>
                 </Box>
                 <Box pt={1} className={classes.nameList}>
-                  <Typography className={classes.labelNameObject}>
-                    {`${i18n.t('common:streaming_setting_screen.list_gift_selected')} ${
-                      formik?.values?.stepSettingTwo?.group_title
-                        ? formik?.values?.stepSettingTwo?.group_title
-                        : i18n.t('common:streaming_setting_screen.unselected')
-                    }`}
-                  </Typography>
+                  <div className={classes.textAndClear}>
+                    <Typography className={classes.labelNameObject}>
+                      {`${i18n.t('common:streaming_setting_screen.list_gift_selected')} ${
+                        formik?.values?.stepSettingTwo?.group_title
+                          ? formik?.values?.stepSettingTwo?.group_title
+                          : i18n.t('common:streaming_setting_screen.unselected')
+                      }`}
+                    </Typography>
+                    <Box
+                      className={classes.iconClear}
+                      style={{ visibility: formik?.values?.stepSettingTwo?.group_title ? 'visible' : 'hidden' }}
+                      onClick={onClearNameListChip}
+                    >
+                      <Icon className={`far fa-times-circle ${classes.sizeIconClear}`} />{' '}
+                    </Box>
+                  </div>
                 </Box>
                 <Box className={classes.select_show_about_gift} pt={1.8} pb={1}>
                   <ESCheckboxBig
-                    checked={formik?.values?.stepSettingTwo?.publish_flag}
-                    onChange={() => formik.setFieldValue('stepSettingTwo.publish_flag', !formik?.values?.stepSettingTwo?.publish_flag)}
+                    checked={formik?.values?.stepSettingTwo?.ranking_flag}
+                    onChange={() => formik.setFieldValue('stepSettingTwo.ranking_flag', !formik?.values?.stepSettingTwo?.ranking_flag)}
                     label={t('common:streaming_setting_screen.individual_gift_ranking_display')}
-                    name="stepSettingTwo.publish_flag"
+                    name="stepSettingTwo.ranking_flag"
                     classNameLabel={classes.esCheckBox}
                   />
-                  <Typography className={classes.giftInfoList} variant="body2" onClick={handleListGiftInfo}>
+                  <Typography className={classes.giftInfoList} variant="body2" onClick={handleRankingInfo}>
                     <Icon className={`fa fa-info-circle ${classes.iconMargin}`} fontSize="small" />{' '}
                     {i18n.t('common:streaming_setting_screen.about_individual_gift_ranking')}
                   </Typography>
@@ -1187,9 +1212,11 @@ const Steps: React.FC<StepsProps> = ({
                   </Box>
                   <Box className={`${classes.nameList} ${classes.nameListRanking}`}>
                     <Typography className={`${classes.labelNameObject} ${classes.labelRank}`}>
-                      {`${i18n.t('common:streaming_setting_screen.individual_gift_ranking_display')}： ${i18n.t(
-                        'common:streaming_setting_screen.unselected'
-                      )}`}
+                      {`${i18n.t('common:streaming_setting_screen.individual_gift_ranking_display')}： ${
+                        formik?.values?.stepSettingTwo?.ranking_flag
+                          ? i18n.t('common:streaming_setting_screen.ranking_flag.on')
+                          : i18n.t('common:streaming_setting_screen.ranking_flag.off')
+                      }`}
                     </Typography>
                   </Box>
                 </Box>
@@ -1668,6 +1695,19 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   pd8: {
     paddingTop: 8,
+  },
+  textAndClear: {
+    flexDirection: 'row',
+    display: 'flex',
+    alignItems: 'center',
+    width: '100%',
+  },
+  iconClear: {
+    paddingLeft: 20,
+  },
+  sizeIconClear: {
+    fontSize: 21,
+    color: Colors.white_opacity[50],
   },
   [theme.breakpoints.down(768)]: {
     container: {

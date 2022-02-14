@@ -50,10 +50,10 @@ export type LiveStreamSetting = {
   channel_id?: number
   arn?: string
   uuid_clone?: string
-  selected_gift?: boolean
   use_gift?: number
   gift_group_id?: number
   group_title?: string
+  ranking_flag?: boolean | number
 }
 
 export type DistributorStepSetting = {
@@ -129,6 +129,7 @@ export type SetLiveStreamParams = {
   use_gift?: number
   gift_group_id?: number
   group_title?: string
+  ranking_flag?: number
 }
 export type SetLiveStreamResponse = {
   code: number

@@ -18,7 +18,7 @@ import { Box, Grid, makeStyles, Typography } from '@material-ui/core'
 import { LiveStreamSettingResponse, TYPE_SETTING } from '@services/liveStream.service'
 import { Colors } from '@theme/colors'
 import { useRouter } from 'next/router'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import DistributorInformationContainer from './DistributorInformation'
 import LiveStreamContainer from './LiveStream'
@@ -30,7 +30,7 @@ import MemberList from './GiftMemberListContainer/MemberList'
 import ESModal from '@components/Modal'
 import ListGroupGift from './ListGroupGift'
 import GiftManageTab, { TabState } from '@containers/StreamingSettingContainer/GiftManageTab'
-import useListGroupGift from './ListGroupGift/useListGroupGift'
+import { GiftGroupType } from '@services/gift.service'
 // import ESButton from '@components/Button'
 // import useListGroupGift from './ListGroupGift/useListGroupGift'
 
@@ -49,7 +49,6 @@ const StreamingSettingContainer: React.FC<{ default_tab: any }> = ({ default_tab
   const [tab, setTab] = useState(default_tab)
   const [disable, setDisable] = useState(false)
   const [giftManageTabState, setGiftManageTabState] = useState(TabState.LIST)
-  const { toListGroupGift } = useListGroupGift()
   //TODO: check call api
   const {
     liveSettingInformation,
@@ -72,6 +71,7 @@ const StreamingSettingContainer: React.FC<{ default_tab: any }> = ({ default_tab
   const [liveValidateField, setLiveValidateField] = useState<string>('')
   const [isUpdate, setIsUpdate] = useState(false)
   const [isLive, setIsLive] = useState(false)
+  const [openDialog, setOpenDialog] = useState(false)
 
   const formikLive = useFormik<FormLiveType>({
     initialValues: initialValues,
@@ -217,14 +217,33 @@ const StreamingSettingContainer: React.FC<{ default_tab: any }> = ({ default_tab
 
   const getListGroupGift = () => {
     return (
-      <ESModal open={router.query.modalName === 'list_group_gift'}>
-        <ListGroupGift onChangeTab={giftManageChangeTab} />
+      <ESModal open={openDialog}>
+        <ListGroupGift onChangeTab={giftManageChangeTab} handleSelectGroup={handleSelectGroup} handleClose={handleClickSelectGift} />
       </ESModal>
     )
   }
-  const handleClickSelectGift = () => {
-    toListGroupGift()
+
+  const handleSelectGroup = (value: GiftGroupType) => {
+    switch (tab) {
+      case TABS.LIVE_STREAM:
+        formikLive?.setFieldValue('stepSettingOne.group_title', value.title)
+        formikLive?.setFieldValue('stepSettingOne.gift_group_id', value.id)
+        break
+
+      case TABS.STREAMING_RESERVATION:
+        formikSchedule?.setFieldValue('stepSettingTwo.group_title', value.title)
+        formikSchedule?.setFieldValue('stepSettingTwo.gift_group_id', value.id)
+        break
+
+      default:
+        break
+    }
   }
+
+  const handleClickSelectGift = useCallback((open) => {
+    setOpenDialog(open)
+  }, [])
+
   return (
     <>
       <Box className="header_streaming_setting">
