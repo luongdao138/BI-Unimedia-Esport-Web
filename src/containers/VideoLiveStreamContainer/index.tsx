@@ -302,7 +302,7 @@ const VideoDetail: React.FC = () => {
   }
 
   useEffect(() => {
-    // handle update video
+    document.body.style.overflow = 'overlay' //Fix bug not show chat um
     const updateVideoSubscription = subscribeUpdateVideoAction()
     const updateChannelSubscription = subscribeUpdateChannelAction()
     return () => {
