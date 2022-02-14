@@ -41,6 +41,7 @@ import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
 import LiveStreamContent from './LiveStreamContent'
 import { PurchaseTicketParams } from '@services/points.service'
 import useGraphqlAPI from 'src/types/useGraphqlAPI'
+import { useResizeScreen } from '@utils/hooks/useResizeScreen'
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 const APIt: any = useGraphqlAPI()
@@ -69,6 +70,7 @@ const VideoDetail: React.FC = () => {
   }
   const classes = useStyles()
   const { t } = useTranslation('common')
+  const { isResizedScreen, setIsResizedScreen } = useResizeScreen()
   const { width: pageWidth } = useWindowDimensions(0)
   const isMobile = pageWidth <= 768
   const dispatch = useAppDispatch()
@@ -84,6 +86,7 @@ const VideoDetail: React.FC = () => {
 
   const [tab, setTab] = useState(TABS.PROGRAM_INFO)
   const [showDialogLogin, setShowDialogLogin] = useState<boolean>(false)
+  const [firstRender, setFirstRender] = useState(true)
 
   const [showConfirmModal, setShowConfirmModal] = useState(false)
   const [showModalPurchasePoint, setShowModalPurchasePoint] = useState(false)
@@ -217,6 +220,18 @@ const VideoDetail: React.FC = () => {
       navigateToArchiveUrl()
     }
   }, [JSON.stringify(detailVideoResult)])
+
+  useEffect(() => {
+    const key_video_id = detailVideoResult?.key_video_id
+    if (firstRender) {
+      if (key_video_id) setFirstRender(false)
+    } else {
+      if (key_video_id) {
+        setIsResizedScreen(false)
+        setVideoStatus(null)
+      }
+    }
+  }, [detailVideoResult?.key_video_id])
 
   const refOnUpdateVideo = useRef(null)
   const onUpdateVideoData = (updateVideoData) => {
@@ -479,12 +494,13 @@ const VideoDetail: React.FC = () => {
       <Box className={classes.wrapChatContainer} style={{ width: isMobile ? '100%' : componentsSize.chatWidth }}>
         <ChatContainer
           ref={refChatContainer}
+          isResizedScreen={isResizedScreen}
           myPoint={myPoint}
           chatWidth={componentsSize.chatWidth}
           key_video_id={detailVideoResult?.key_video_id}
           onPressDonate={confirmDonatePoint}
           userHasViewingTicket={userHasViewingTicket()}
-          videoType={+videoStatus}
+          videoType={videoStatus}
           freeToWatch={isVideoFreeToWatch}
           handleKeyboardVisibleState={changeSoftKeyboardVisibleState}
           donateConfirmModalIsShown={modalIsShown}
