@@ -1617,12 +1617,12 @@ export default {
       remove: '削除',
     },
     title_gift: 'チップ機能',
-    chooses_list_person_gift: '個別チップリスト選択',
+    chooses_list_person_gift: 'チップ対象リスト選択',
     unselected: '未選択',
-    list_gift_selected: '選択中の個別チップリスト：',
-    about_the_gift_list: 'チップリストについて',
-    about_individual_gift_ranking: '個別チップランキングについて',
-    individual_gift_ranking_display: '個別チップランキング表示',
+    list_gift_selected: '選択中のチップ対象リスト：',
+    about_the_gift_list: 'チップ対象リストについて',
+    about_individual_gift_ranking: 'ランキングについて',
+    individual_gift_ranking_display: 'ランキング表示',
     member_list: {
       filter_all: 'すべて',
       filter_team: 'チーム',
@@ -1644,6 +1644,30 @@ export default {
       cancel: 'キャンセル',
       confirm: 'この内容で作成する',
       create_group_success: '個別ギフトリストを作成しました。',
+    },
+    dialog_info_gift_list: {
+      title: 'チップ対象リスト選択',
+      description: 'チップ機能をオンにすることで配信者へeXeポイントを送ることができます。',
+      content: {
+        row1: `また、チップ対象リスト選択を設定することで、配信者以外にも出演者やチームを選択してeXeポイントを送ることができます。`,
+        row2: '※1　チップ対象リストは[配信設定]→[個別チップリスト]から事前に作成する必要がありますのでご注意ください。',
+        row3: '※2　個別チップリストで希望する対象者が存在しない場合は、個別チップ対象者申請から追加申請が必要となります。',
+        row4:
+          '個別に送られたチップは一時的に配信者に送られますので、[配信レポート]→[チップレポート]を参照して対象者へ振り分けてください。`',
+      },
+    },
+    dialog_info_ranking: {
+      title: 'ランキング表示',
+      description: '',
+      content: {
+        row1:
+          'ランキング機能をオンにした場合、送付ランキング(チップを送付したユーザのランキング)と受取ランキング(チップが送られた対象者ランキング)がそれぞれ表示されます。',
+        row2: '※チップ対象リストを選択した場合の受取ランキングは、受け取った出演者ならびに配信者のランキングが表示されます。',
+      },
+    },
+    ranking_flag: {
+      on: '有',
+      off: '無',
     },
   },
   delivery_reservation_tab: {

@@ -33,7 +33,7 @@ interface Props {
   formik?: FormikProps<FormLiveType>
   validateField?: string
   handleUpdateValidateField?: (value: string) => void
-  openPopupGroupList?: () => void
+  openPopupGroupList?: (open: boolean) => void
 }
 
 const LiveStreamContainer: React.FC<Props> = ({ formik, validateField, handleUpdateValidateField, openPopupGroupList }) => {
