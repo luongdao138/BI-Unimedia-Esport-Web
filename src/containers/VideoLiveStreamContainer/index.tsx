@@ -291,6 +291,7 @@ const VideoDetail: React.FC = () => {
   }
 
   useEffect(() => {
+    document.body.style.overflow = 'overlay' //Fix bug not show chat um
     const updateVideoSubscription = subscribeUpdateVideoAction()
     const updateChannelSubscription = subscribeUpdateChannelAction()
     return () => {
