@@ -291,6 +291,7 @@ const VideoDetail: React.FC = () => {
   }
 
   useEffect(() => {
+    document.body.style.overflow = 'overlay'
     const updateVideoSubscription = subscribeUpdateVideoAction()
     const updateChannelSubscription = subscribeUpdateChannelAction()
     return () => {
