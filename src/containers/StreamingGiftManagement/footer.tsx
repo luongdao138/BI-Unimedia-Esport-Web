@@ -12,9 +12,10 @@ interface Props {
   confirmDisable?: boolean
   success?: boolean
   errorMessage?: string
+  confirmButtonDisabled?: boolean
 }
 
-const Footer: React.FC<Props> = ({ onConfirm, onCancel, success, errorMessage }) => {
+const Footer: React.FC<Props> = ({ onConfirm, onCancel, success, errorMessage, confirmButtonDisabled = false }) => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
   return (
@@ -26,7 +27,7 @@ const Footer: React.FC<Props> = ({ onConfirm, onCancel, success, errorMessage })
             <ButtonPrimary size="small" className={classes.actionBtnClose} gradient={false} onClick={onCancel}>
               {t('common:streaming_gift_management.cancel')}
             </ButtonPrimary>
-            <ButtonPrimary gradient size="small" className={classes.actionBtnConfirm} onClick={onConfirm}>
+            <ButtonPrimary gradient size="small" className={classes.actionBtnConfirm} onClick={onConfirm} disabled={confirmButtonDisabled}>
               {t('common:streaming_gift_management.apply')}
             </ButtonPrimary>
           </Box>

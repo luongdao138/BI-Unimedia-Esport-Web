@@ -5,17 +5,20 @@ import { Colors } from '@theme/colors'
 import ESButton from '@components/Button'
 import DeleteConfirmModal from '@containers/StreamingGiftManagement/deletemodal'
 import { TargetPersonType } from '@store/giftManage/actions'
+import useGiftManage from './useGiftTarget'
 
 interface Props {
   index: number
   item: TargetPersonType
+  handleModeUpdate: (id: string) => void
 }
 
-const GiftItem: React.FC<Props> = ({ item, index }) => {
+const GiftItem: React.FC<Props> = ({ item, index, handleModeUpdate }) => {
   const classes = useStyles()
   const { t } = useTranslation('common')
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
+  const { deleteTargetPerson } = useGiftManage()
 
   const [openDialog, setOpenDialog] = useState(false)
 
@@ -23,8 +26,8 @@ const GiftItem: React.FC<Props> = ({ item, index }) => {
     // TODO:
     setOpenDialog(true)
   }
-  const handleOnEditClick = () => {
-    // TODO
+  const handleOnUpdateClick = () => {
+    handleModeUpdate(item.id)
   }
 
   const tableRow = useCallback((label, value, marginBottom) => {
@@ -47,13 +50,13 @@ const GiftItem: React.FC<Props> = ({ item, index }) => {
   }
 
   const handleConfirmDelete = () => {
-    // TODO
+    deleteTargetPerson(item.id)
   }
 
   const deleteModal = () => {
     return (
       <DeleteConfirmModal
-        name={'かやをかやをかやをかやをか'}
+        name={item.target_name}
         open={openDialog}
         handleClose={handleCloseConfirmModal}
         handleDelete={handleConfirmDelete}
@@ -66,7 +69,7 @@ const GiftItem: React.FC<Props> = ({ item, index }) => {
       <Box className={classes.header}>
         <Typography className={classes.label}>{`対象者${index}`}</Typography>
         <Box display="flex" flexDirection="row">
-          <ESButton className={classes.editButton} onClick={handleOnEditClick}>
+          <ESButton className={classes.editButton} onClick={handleOnUpdateClick}>
             {t('streaming_gift_management.edit')}
           </ESButton>
           <ESButton className={classes.deleteButton} onClick={handleOnDeleteClick}>

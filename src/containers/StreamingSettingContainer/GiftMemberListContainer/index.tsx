@@ -1,5 +1,5 @@
 import { Box, makeStyles, Typography } from '@material-ui/core'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import ESInput from '@components/Input'
 import { Colors } from '@theme/colors'
@@ -7,25 +7,56 @@ import SelectMemberItem from '@containers/StreamingSettingContainer/GiftMemberLi
 import Footer from '@containers/StreamingSettingContainer/GiftMemberListContainer/footer'
 import useGiftTarget from '@containers/StreamingGiftManagement/useGiftTarget'
 import CharacterLimited from '@components/CharacterLimited'
-// import { useAppDispatch } from '@store/hooks'
+import { useFormik } from 'formik'
+import { CreateNewGiftGroupRequestBody } from '@services/gift.service'
+import { useAppDispatch } from '@store/hooks'
+import * as commonActions from '@store/common/actions'
+import * as Yup from 'yup'
 
+const validationFormScheme = () => {
+  return Yup.object({
+    title: Yup.string().required('require_message').min(0, 'require_message').max(60, 'max_character_message').trim(),
+  })
+}
 type Props = {
   handleBackToListState?: () => void
 }
 
 const GiftMemberListContainer: React.FC<Props> = ({ handleBackToListState }) => {
   const { t } = useTranslation('common')
+  const dispatch = useAppDispatch()
   const classes = useStyles()
-  // const dispatch = useAppDispatch()
+  const { newGiftGroupGiftMasterList, createNewGiftGroup, resetNewGroupMasterList } = useGiftTarget()
+  const getNumberItemSelected = () => {
+    return newGiftGroupGiftMasterList.length
+  }
 
-  const { newGiftGroupGiftMasterList, createNewGiftGroup } = useGiftTarget()
-  const [title, setTitle] = useState('')
+  // const dispatch = useAppDispatch()
+  const initialValues = () => {
+    return {
+      title: '',
+    }
+  }
+
+  const handleOnSuccessCallback = () => {
+    dispatch(commonActions.addToast(t('streaming_setting_screen.member_list.create_group_success')))
+    resetNewGroupMasterList()
+    handleBackToListState()
+  }
+
+  const { values, handleChange, handleSubmit, errors, touched, handleBlur } = useFormik<CreateNewGiftGroupRequestBody>({
+    initialValues: initialValues(),
+    validationSchema: validationFormScheme(),
+    onSubmit: ({ title }) => {
+      const requestData = {
+        title,
+        group_item: newGiftGroupGiftMasterList.map(({ master_uuid }) => master_uuid),
+      }
+      createNewGiftGroup(requestData, handleOnSuccessCallback)
+    },
+  })
 
   const getData = () => newGiftGroupGiftMasterList
-
-  const handleTitleInputChange = (e) => {
-    setTitle(e.target.value)
-  }
 
   const header = () => {
     return (
@@ -35,12 +66,17 @@ const GiftMemberListContainer: React.FC<Props> = ({ handleBackToListState }) => 
           <Typography className={classes.requireTag}>{t('streaming_setting_screen.member_list.require')}</Typography>
         </Box>
         <ESInput
+          id="title"
+          name="title"
           fullWidth
           placeholder={t('streaming_setting_screen.member_list.name_entered_place_holder')}
           className={classes.inputName}
-          endAdornment={<CharacterLimited value={title} limit={60} />}
-          value={title}
-          onChange={handleTitleInputChange}
+          endAdornment={<CharacterLimited value={values.title} limit={60} />}
+          value={values.title}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          helperText={touched.title && errors.title}
+          error={touched.title && !!errors.title}
         />
       </Box>
     )
@@ -68,24 +104,11 @@ const GiftMemberListContainer: React.FC<Props> = ({ handleBackToListState }) => 
     return <Box className={classes.listContainer}>{getData().length > 0 ? listWithData() : emptyListView()}</Box>
   }
 
-  // const handleOnSuccessCallback = () => {
-  //   dispatch(commonActions.addToast(t('streaming_setting_screen.member_list.create_group_success')))
-  //   handleBackToListState()
-  // }
-
-  const handleOnConfirmClick = () => {
-    const requestData = {
-      title,
-      group_item: newGiftGroupGiftMasterList.map(({ id }) => id),
-    }
-    createNewGiftGroup(requestData)
-  }
-
   return (
     <Box className={classes.container}>
       {header()}
       {memberList()}
-      <Footer onConfirm={handleOnConfirmClick} onCancel={handleBackToListState} />
+      <Footer onConfirm={handleSubmit} onCancel={handleBackToListState} confirmDisable={!!errors?.title || getNumberItemSelected() === 0} />
     </Box>
   )
 }

@@ -5,20 +5,14 @@ import { GiftGroupType, GiftMasterType } from '@services/gift.service'
 import _ from 'lodash'
 
 export type GiftTargetItemType = {
+  id: string
   target_value: string
   target_name: string
   sns_url: string
 }
 
-export enum SnsUrlValidType {
-  INIT,
-  VALID,
-  INVALID,
-}
-
 type StateType = {
   gift_target_data: Array<GiftTargetItemType>
-  check_sns_url: SnsUrlValidType
   gift_master_list: Array<GiftMasterType>
   new_group_gift_master_list: Array<GiftMasterType>
   gift_group_list: Array<GiftGroupType>
@@ -27,7 +21,6 @@ type StateType = {
 
 const initialState: StateType = {
   gift_target_data: [],
-  check_sns_url: SnsUrlValidType.INIT,
   gift_master_list: [],
   new_group_gift_master_list: [],
   gift_group_list: [],
@@ -43,23 +36,27 @@ export default createReducer(initialState, (builder) => {
         state.gift_target_data = state.gift_target_data?.concat(action.payload)
       }
     })
+    .addCase(actions.updateTargetPerson.fulfilled, (state, action) => {
+      const newGiftTargetData = state.gift_target_data.map((gift) => {
+        if (gift.id === action.payload.id) {
+          return {
+            ...gift,
+            target_value: action.payload.target_value,
+            target_name: action.payload.target_name,
+            sns_url: action.payload.sns_url,
+          }
+        }
+        return gift
+      })
+      state.gift_target_data = newGiftTargetData
+    })
+    .addCase(actions.deleteTargetPerson.fulfilled, (state, action) => {
+      state.gift_target_data = state.gift_target_data.filter((gift) => gift.id !== action.payload)
+    })
 
     // logout clear data gift target person
     .addCase(authActions.logout.fulfilled, (state) => {
       state.gift_target_data = []
-    })
-
-    .addCase(actions.checkSnsUrl.fulfilled, (state, action) => {
-      if (action.payload.code !== 200) {
-        state.check_sns_url = SnsUrlValidType.INVALID
-      } else {
-        const isExist = state.gift_target_data?.some((item) => item.sns_url === action.payload.sns_url)
-        state.check_sns_url = isExist ? SnsUrlValidType.INVALID : SnsUrlValidType.VALID
-      }
-    })
-
-    .addCase(actions.resetSnsStateCheck, (state) => {
-      state.check_sns_url = SnsUrlValidType.INIT
     })
 
     .addCase(actions.getAllGiftMaster.fulfilled, (state, action) => {
@@ -85,5 +82,15 @@ export default createReducer(initialState, (builder) => {
       const { groups, total } = data
       state.gift_group_list = groups
       state.gift_group_total = total
+    })
+
+    .addCase(actions.resetGiftGroupMasterList, (state) => {
+      state.new_group_gift_master_list = []
+    })
+
+    .addCase(actions.deleteGiftMasterFromLocalList, (state, action) => {
+      const { data } = action.payload
+      const { gift_target_data } = state
+      state.gift_target_data = gift_target_data.filter((item) => item.sns_url !== data.sns_url)
     })
 })

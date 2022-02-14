@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import IndividualGiftListContainer from '@containers/StreamingSettingContainer/IndividualGiftList'
 import GiftMemberListContainer from '@containers/StreamingSettingContainer/GiftMemberListContainer'
+import useGiftTarget from '@containers/StreamingGiftManagement/useGiftTarget'
 
 type Props = {
   onChangeTab?: (tab: TabState) => void
@@ -13,6 +14,7 @@ export enum TabState {
 
 const GiftManageTab: React.FC<Props> = ({ onChangeTab }) => {
   const [tabState, setTabState] = useState(TabState.LIST)
+  const { resetNewGroupMasterList } = useGiftTarget()
 
   useEffect(() => {
     onChangeTab(tabState)
@@ -20,6 +22,7 @@ const GiftManageTab: React.FC<Props> = ({ onChangeTab }) => {
 
   const handleGoToCreateNewListState = () => {
     setTabState(TabState.CREATE_NEW)
+    resetNewGroupMasterList()
   }
 
   const handleBackToListState = () => {

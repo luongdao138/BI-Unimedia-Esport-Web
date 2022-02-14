@@ -13,7 +13,7 @@ type Props = {
 const IndividualGiftListContainer: React.FC<Props> = ({ handleGoToCreateNewListState }) => {
   const classes = useStyles()
   const { t } = useTranslation('common')
-  const { getGiftGroupList, giftGroupList } = useGiftManage()
+  const { getGiftGroupList, giftGroupList, giftGroupTotal } = useGiftManage()
   useEffect(() => {
     getGiftGroupList(1, 10)
   }, [])
@@ -40,15 +40,19 @@ const IndividualGiftListContainer: React.FC<Props> = ({ handleGoToCreateNewListS
     )
   }
 
+  const totalPage = () => Math.floor(giftGroupTotal / 10) + 1
+
   const onChangePage = (page) => {
     if (page > 0 && page <= 10) setCurrentPage(page)
   }
 
   const pagination = () => {
-    return (
+    return totalPage() > 1 ? (
       <Box display="flex" alignItems="center" justifyContent="center" className={classes.pagination}>
-        <GiftListPagination currentPage={currentPage} totalPage={2} onChangePage={onChangePage} />
+        <GiftListPagination currentPage={currentPage} totalPage={totalPage()} onChangePage={onChangePage} />
       </Box>
+    ) : (
+      <Box />
     )
   }
   return (

@@ -15,8 +15,9 @@ type ListTargetPersonType = {
   handlePress?: () => void
   handleFooterConfirm?: () => void
   errorMessage?: string
+  handleModeUpdate: (id: string) => void
 }
-const ListTargetPerson: FC<ListTargetPersonType> = ({ handlePress, handleFooterConfirm, errorMessage }): JSX.Element => {
+const ListTargetPerson: FC<ListTargetPersonType> = ({ handlePress, handleFooterConfirm, errorMessage, handleModeUpdate }): JSX.Element => {
   const classes = useStyles()
   const dispatch = useAppDispatch()
   const { t } = useTranslation('common')
@@ -43,7 +44,7 @@ const ListTargetPerson: FC<ListTargetPersonType> = ({ handlePress, handleFooterC
         {giftTargetData?.length > 0 ? (
           <Box className={classes.list}>
             {giftTargetData.map((item, index) => {
-              return <GiftItem key={item.sns_url} index={index + 1} item={item} />
+              return <GiftItem key={item.sns_url} index={index + 1} item={item} handleModeUpdate={handleModeUpdate} />
             })}
           </Box>
         ) : (

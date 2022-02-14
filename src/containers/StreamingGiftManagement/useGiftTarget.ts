@@ -5,6 +5,7 @@ import useCommonData from '@containers/Lobby/UpsertForm/useCommonData'
 import { useTranslation } from 'react-i18next'
 import _ from 'lodash'
 import { getTimeZone } from '@utils/helpers/CommonHelper'
+import { TargetPersonType } from '@store/giftManage/actions'
 
 const { selectors, actions } = giftManage
 const _addGiftTargetData = createMetaSelector(actions.addTargetPerson)
@@ -15,17 +16,32 @@ const useGiftManage = () => {
   const { user } = useCommonData()
   const dispatch = useAppDispatch()
   const giftTargetData = useAppSelector(selectors.getListGiftTargetPerson)
-  const snsUrlValidCheckStatus = useAppSelector(selectors.getSnsUrlValidCheckStatus)
   const { t } = useTranslation('common')
 
   const meta_gift_target = useAppSelector(_addGiftTargetData)
 
-  const addTargetPerson = (params: any) => dispatch(actions.addTargetPerson(params))
+  const addTargetPerson = (params: TargetPersonType) => dispatch(actions.addTargetPerson(params))
+
+  const updateTargetPerson = (params: TargetPersonType) => dispatch(actions.updateTargetPerson(params))
+
+  const deleteTargetPerson = (params: string) => dispatch(actions.deleteTargetPerson(params))
 
   const resetTargetPersonData = () => dispatch(actions.resetGiftTargetPerson())
 
-  const checkSnsUrl = ({ sns_url }: any) => dispatch(actions.checkSnsUrl({ sns_url, user_id: user?.id }))
-  const resetSnsUrlStateCheck = () => dispatch(actions.resetSnsStateCheck())
+  const checkSnsUrl = async ({ sns_url }: any, successCallback?: () => void, errorCallback?: () => void) => {
+    const isExist = giftTargetData?.some((item) => item.sns_url === sns_url)
+    if (isExist) {
+      errorCallback()
+      return
+    }
+    const resultAction = await dispatch(actions.checkSnsUrl({ sns_url, user_id: user?.id }))
+    if (actions.checkSnsUrl.fulfilled.match(resultAction)) {
+      successCallback()
+    }
+    if (actions.checkSnsUrl.rejected.match(resultAction)) {
+      errorCallback()
+    }
+  }
 
   const addNewGiftMaster = async (onSuccess: () => void, onError: (message) => void) => {
     const data = giftTargetData.map((item) => {
@@ -55,7 +71,7 @@ const useGiftManage = () => {
   const newGiftGroupGiftMasterList = useAppSelector(selectors.getNewGroupGiftMasterList)
   const includedInNewList = (data) => !!_.find(newGiftGroupGiftMasterList, ({ id }) => id === data.id)
 
-  const createNewGiftGroup = async (data) => {
+  const createNewGiftGroup = async (data, successCallback) => {
     const requestData = {
       ...data,
       user_id: user?.id,
@@ -63,23 +79,26 @@ const useGiftManage = () => {
     }
     const resultAction = await dispatch(actions.createNewGiftGroup(requestData))
     if (actions.createNewGiftGroup.fulfilled.match(resultAction)) {
-      // TODO
+      successCallback()
     }
   }
 
+  const resetNewGroupMasterList = () => dispatch(actions.resetGiftGroupMasterList())
   const getGiftGroupList = (page, limit) => dispatch(actions.getGiftGroupList({ page, limit }))
   const giftGroupList = useAppSelector(selectors.getListGiftGroup)
   const giftGroupTotal = useAppSelector(selectors.getGiftGroupTotal)
   const giftGroupsMeta = useAppSelector(getGiftGroupListMeta)
 
+  const deleteGiftMasterFromLocalList = (data) => dispatch(actions.deleteGiftMasterFromLocalList({ data }))
+
   return {
     giftTargetData,
     meta_gift_target,
     addTargetPerson,
+    updateTargetPerson,
+    deleteTargetPerson,
     resetTargetPersonData,
     checkSnsUrl,
-    snsUrlValidCheckStatus,
-    resetSnsUrlStateCheck,
     addNewGiftMaster,
     getAllGiftMaster,
     giftMasterList,
@@ -91,7 +110,9 @@ const useGiftManage = () => {
     getGiftGroupList,
     giftGroupList,
     giftGroupTotal,
+    resetNewGroupMasterList,
     giftGroupsMeta,
+    deleteGiftMasterFromLocalList,
   }
 }
 

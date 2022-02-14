@@ -14,7 +14,7 @@ interface Props {
   confirmDisable?: boolean
 }
 
-const Footer: React.FC<Props> = ({ onConfirm = () => null, onCancel = () => null }) => {
+const Footer: React.FC<Props> = ({ onConfirm = () => null, onCancel = () => null, confirmDisable }) => {
   const classes = useStyles()
   const { t } = useTranslation('common')
   const { newGiftGroupGiftMasterList } = useGiftTarget()
@@ -31,13 +31,7 @@ const Footer: React.FC<Props> = ({ onConfirm = () => null, onCancel = () => null
         <ButtonPrimary size="small" className={classes.actionBtnClose} gradient={false} onClick={onCancel}>
           {t('streaming_setting_screen.member_list.cancel')}
         </ButtonPrimary>
-        <ButtonPrimary
-          gradient
-          size="small"
-          className={classes.actionBtnClose}
-          onClick={onConfirm}
-          disabled={getNumberItemSelected() === 0}
-        >
+        <ButtonPrimary gradient size="small" className={classes.actionBtnClose} onClick={onConfirm} disabled={confirmDisable}>
           {t('streaming_setting_screen.member_list.confirm')}
         </ButtonPrimary>
       </Box>

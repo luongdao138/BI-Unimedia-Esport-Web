@@ -1,7 +1,7 @@
 import i18n from '@locales/i18n'
 import * as Yup from 'yup'
 
-export const validationAddTargetPerson = (): any => {
+export const validationTargetPerson = (): any => {
   const required_mess = i18n.t('common:streaming_gift_management.validation.require')
   const wrong_format_mess = i18n.t('common:streaming_gift_management.validation.input_incorrect')
   return Yup.object().shape({

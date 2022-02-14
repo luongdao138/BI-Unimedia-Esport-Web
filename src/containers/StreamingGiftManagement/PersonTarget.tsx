@@ -6,52 +6,73 @@ import { Colors } from '@theme/colors'
 import ESInput from '@components/Input'
 import ESLabel from '@components/Label'
 import { useFormik } from 'formik'
-import { validationAddTargetPerson } from './ValidationAddPersonTarget'
+import { validationTargetPerson } from './ValidationPersonTarget'
 import useGiftManage from './useGiftTarget'
 import CharacterLimited from '@components/CharacterLimited'
-import { SnsUrlValidType } from '@store/giftManage/reducers'
 import useToast from '@utils/hooks/useToast'
+import { v4 as uuidv4 } from 'uuid'
+import { MODE } from '.'
 
-interface AddPersonTargetProps {
+interface PersonTargetProps {
   handleSuccess: () => void
+  mode: string
+  idTargetPerson: string
 }
 
-const AddPersonTarget: FC<AddPersonTargetProps> = ({ handleSuccess }): JSX.Element => {
+const PersonTarget: FC<PersonTargetProps> = ({ handleSuccess, mode, idTargetPerson }): JSX.Element => {
   const classes = useStyles()
   const { t } = useTranslation('common')
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down(414))
   const { addToast } = useToast()
-  const { addTargetPerson, checkSnsUrl, snsUrlValidCheckStatus, resetSnsUrlStateCheck } = useGiftManage()
+  const { addTargetPerson, checkSnsUrl, giftTargetData, updateTargetPerson } = useGiftManage()
+  const targetPersonId = uuidv4()
+
+  const validateSnsSuccess = () => {
+    if (mode === MODE.ADD) {
+      addTargetPerson({ id: targetPersonId, ...values })
+      handleSuccess()
+    } else {
+      const itemUpdate = giftTargetData.find((i) => i.id === idTargetPerson)
+      updateTargetPerson({ id: itemUpdate.id, ...values })
+      handleSuccess()
+    }
+  }
+
+  const validateError = () => {
+    addToast(`登録済みのxxです ${values.sns_url}`)
+  }
+
   const formik = useFormik({
     initialValues: { target_value: t('streaming_gift_management.team_title'), target_name: '', sns_url: '' },
-    validationSchema: validationAddTargetPerson,
-    enableReinitialize: true,
-    validateOnChange: true,
+    validationSchema: validationTargetPerson,
     onSubmit: () => {
-      addTargetPerson(values)
+      if (mode === MODE.ADD) {
+        checkSnsUrl(values, validateSnsSuccess, validateError)
+      } else if (mode === MODE.UPDATE) {
+        const itemUpdate = giftTargetData.find((i) => i.id === idTargetPerson)
+        if (itemUpdate.sns_url != values.sns_url) {
+          checkSnsUrl(values, validateSnsSuccess, validateError)
+        } else {
+          //TODO: call function update
+
+          updateTargetPerson({ id: itemUpdate.id, ...values })
+          handleSuccess()
+        }
+      }
     },
   })
-  const { values, errors, touched, handleBlur, setFieldValue, handleSubmit } = formik
+
+  const { values, errors, touched, handleBlur, setFieldValue, setValues, handleSubmit } = formik
 
   useEffect(() => {
-    if (snsUrlValidCheckStatus !== SnsUrlValidType.INIT) {
-      if (snsUrlValidCheckStatus === SnsUrlValidType.VALID) {
-        addTargetPerson(values)
-        handleSuccess()
-        resetSnsUrlStateCheck()
-      } else {
-        // TODO: Show error
-        addToast(`登録済みのxxです ${values.sns_url}`)
+    if (mode === MODE.UPDATE) {
+      if (giftTargetData) {
+        const itemUpdate = giftTargetData.find((i) => i.id === idTargetPerson)
+        setValues({ target_value: itemUpdate.target_value, target_name: itemUpdate.target_name, sns_url: itemUpdate.sns_url })
       }
     }
-  }, [snsUrlValidCheckStatus])
-
-  const handleAdd = () => {
-    checkSnsUrl(values)
-    // handleSubmit()
-    // handleSuccess()
-  }
+  }, [giftTargetData])
 
   const handleChangeTargetValue = (event) => {
     setFieldValue('target_value', event.target.value)
@@ -62,7 +83,6 @@ const AddPersonTarget: FC<AddPersonTargetProps> = ({ handleSuccess }): JSX.Eleme
   const handleChangeSnsUrl = (event) => {
     setFieldValue('sns_url', event.target.value)
   }
-
   const disabledBtn = !formik.isValid || !formik.dirty
 
   return (
@@ -103,7 +123,6 @@ const AddPersonTarget: FC<AddPersonTargetProps> = ({ handleSuccess }): JSX.Eleme
           <ESInput
             id="target_name"
             name="target_name"
-            required={true}
             size="big"
             placeholder={t('streaming_gift_management.placeholder_target_person_name')}
             labelPrimary={t('streaming_gift_management.target_person_name')}
@@ -119,7 +138,6 @@ const AddPersonTarget: FC<AddPersonTargetProps> = ({ handleSuccess }): JSX.Eleme
           <ESInput
             id="sns_url"
             name="sns_url"
-            required={true}
             size="big"
             placeholder={t('streaming_gift_management.sns_placeholder')}
             labelPrimary={t('streaming_gift_management.sns_url')}
@@ -132,7 +150,7 @@ const AddPersonTarget: FC<AddPersonTargetProps> = ({ handleSuccess }): JSX.Eleme
           />
         </Box>
       </Box>
-      <ButtonPrimary size="small" className={classes.buttonContainer} gradient={false} onClick={handleAdd} disabled={disabledBtn}>
+      <ButtonPrimary type="submit" size="small" className={classes.buttonContainer} gradient={false} disabled={disabledBtn}>
         {t('streaming_gift_management.txt_save_button')}
       </ButtonPrimary>
     </form>
@@ -248,4 +266,4 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-export default AddPersonTarget
+export default PersonTarget

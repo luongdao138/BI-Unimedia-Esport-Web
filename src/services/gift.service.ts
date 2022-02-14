@@ -57,6 +57,7 @@ export type GiftMasterType = {
   image?: string
   type?: GiftMasterUserType
   requested_user_id?: number
+  master_uuid?: string
 }
 
 export type GetAllGiftMasterResponse = {
@@ -74,7 +75,7 @@ export type CreateNewGiftGroupRequestBody = {
   user_id?: number
   title?: string
   group_id?: string
-  group_item?: Array<number>
+  group_item?: Array<string>
   timezone?: string
 }
 
