@@ -347,12 +347,15 @@ const useStyles = makeStyles((theme) => ({
     marginRight: 24,
   },
   movie_title: {
-    paddingRight: '64px',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
+    // paddingRight: '64px',
     fontSize: '20px',
     fontWeight: 'bold',
     color: '#FFFFFF',
+    overflow: 'hidden',
+    'text-overflow': 'ellipsis',
+    display: '-webkit-box',
+    '-webkit-line-clamp': 2,
+    '-webkit-box-orient': 'vertical',
   },
   device_name: {
     fontSize: '15px',
@@ -421,7 +424,8 @@ const useStyles = makeStyles((theme) => ({
     color: props?.isSubscribed === 1 ? Colors.white : Colors.primary,
   }),
   wrap_streamer_info: {
-    height: '112px',
+    // height: '112px',
+    padding: '20px 0',
     display: 'flex',
     borderTop: '1px solid #212121',
     width: '100%',
@@ -444,6 +448,11 @@ const useStyles = makeStyles((theme) => ({
   streamer_name: {
     fontSize: '18px',
     fontWeight: 'bold',
+    overflow: 'hidden',
+    'text-overflow': 'ellipsis',
+    display: '-webkit-box',
+    '-webkit-line-clamp': 2,
+    '-webkit-box-orient': 'vertical',
   },
   registration: {
     display: 'flex',
@@ -468,6 +477,8 @@ const useStyles = makeStyles((theme) => ({
     marginRight: '16px',
     alignItems: 'center',
     display: 'flex',
+    flexShrink: 0,
+    marginLeft: 30,
   }),
   [theme.breakpoints.down(768)]: {
     wrap_movie_info: {},
@@ -481,7 +492,8 @@ const useStyles = makeStyles((theme) => ({
     },
     movie_title: {
       fontSize: '16px',
-      maxWidth: '200px',
+      // maxWidth: '200px',
+      paddingRight: 15,
     },
     device_name: {
       fontSize: '14px',
@@ -543,9 +555,9 @@ const useStyles = makeStyles((theme) => ({
     streamer_name: {
       fontSize: '14px',
       fontWeight: 'bold',
-      whiteSpace: 'nowrap',
-      overflow: 'hidden',
-      textOverflow: 'ellipsis',
+      // whiteSpace: 'nowrap',
+      // overflow: 'hidden',
+      // textOverflow: 'ellipsis',
       flex: 1,
     },
     subscribeLabel: {
@@ -573,6 +585,7 @@ const useStyles = makeStyles((theme) => ({
     },
     register_channel_btn: () => ({
       padding: '2x 10px',
+      marginLeft: 15,
     }),
   },
   process: {
