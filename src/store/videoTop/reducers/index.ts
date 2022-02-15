@@ -198,6 +198,7 @@ export default createReducer(initialState, (builder) => {
   })
   builder.addCase(actions.changeVideoViewMode, (state, action) => {
     state.is_normal_view_mode = action.payload.is_normal_view_mode
+  })
   builder.addCase(actions.resetChatState, (state) => {
     return { ...state, ...defaultChatState }
   })
