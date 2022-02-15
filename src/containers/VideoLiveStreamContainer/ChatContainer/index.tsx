@@ -266,7 +266,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
 
     const { width: pageWidth } = useWindowDimensions(0)
     const isDesktopDown1280 = pageWidth > 768 && pageWidth <= 1280
-    const { userResult, streamingSecond, playedSecond, liveStreamInfo, resetState } = useDetailVideo()
+    const { userResult, streamingSecond, playedSecond, liveStreamInfo, resetChatState } = useDetailVideo()
     // const { streamingSecond, playedSecond, isViewingStream, liveStreamInfo } = useDetailVideo()
     // const userResult = {streamer: 1}
     const { dataPurchaseTicketSuperChat } = usePurchaseTicketSuperChat()
@@ -1017,7 +1017,6 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         setBottom(true)
         // console.log('🚀 ~ useEffect ~ setBottom--000', isBottom)
         resetMessagesWhenRewind()
-        // console.log('🚀 ~ useEffect ~ liveStreamInfo.seeked_second', liveStreamInfo.seeked_second)
         // filterMessByPlayedSecond(liveStreamInfo.seeked_second, 'smooth')
         fetchPrevMessWhenRewind(liveStreamInfo.seeked_second)
         // fetchNextMess(GET_MESS_TYPE.FETCH_NEXT, liveStreamInfo.seeked_second)
@@ -1080,7 +1079,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
 
     useEffect(
       () => () => {
-        dispatch(resetState())
+        dispatch(resetChatState())
       },
       ['componentWillUnMount']
     )
@@ -1108,6 +1107,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
 
     useEffect(() => {
       if (key_video_id) {
+        console.log('🚀 ~ useEffect ~ key_video_id', key_video_id)
         resetMessages()
       }
     }, [key_video_id])
