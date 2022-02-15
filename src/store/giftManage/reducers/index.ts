@@ -1,7 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit'
 import * as actions from '../actions'
 import * as authActions from '@store/auth/actions'
-import { GiftGroupType, GiftMasterType } from '@services/gift.service'
+import { GiftGroupDetail, GiftGroupType, GiftMasterType } from '@services/gift.service'
 import _ from 'lodash'
 
 export type GiftTargetItemType = {
@@ -17,6 +17,7 @@ type StateType = {
   new_group_gift_master_list: Array<GiftMasterType>
   gift_group_list: Array<GiftGroupType>
   gift_group_total: number
+  gift_group_edit_detail: GiftGroupDetail
 }
 
 const initialState: StateType = {
@@ -25,6 +26,7 @@ const initialState: StateType = {
   new_group_gift_master_list: [],
   gift_group_list: [],
   gift_group_total: 0,
+  gift_group_edit_detail: null,
 }
 
 export default createReducer(initialState, (builder) => {
@@ -95,5 +97,11 @@ export default createReducer(initialState, (builder) => {
       const { data } = action.payload
       const { gift_target_data } = state
       state.gift_target_data = gift_target_data.filter((item) => item.sns_url !== data.sns_url)
+    })
+
+    .addCase(actions.getGiftGroupDetail.fulfilled, (state, action) => {
+      const { data } = action.payload
+      state.gift_group_edit_detail = data
+      state.new_group_gift_master_list = data.group_item
     })
 })

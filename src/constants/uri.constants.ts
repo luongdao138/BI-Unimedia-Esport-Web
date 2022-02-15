@@ -197,4 +197,6 @@ export const URI = {
   GET_ALL_GIFT_MASTER: '/v2/gift/master',
   ADD_NEW_GIFT_GROUP: 'v2/gift/group',
   GET_ALL_GIFT_GROUP: 'v2/gift/group',
+  GET_GIFT_GROUP_DETAIL: 'v2/gift/group_detail',
+  DELETE_GIFT_GROUP: 'v2/gift/group/delete',
 }

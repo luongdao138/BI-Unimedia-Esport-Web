@@ -1644,6 +1644,7 @@ export default {
       cancel: 'キャンセル',
       confirm: 'この内容で作成する',
       create_group_success: '個別ギフトリストを作成しました。',
+      edit_group_success: '個別ギフトリストを編集しました。',
     },
     dialog_info_gift_list: {
       title: 'チップ対象リスト選択',
@@ -1784,6 +1785,11 @@ export default {
     standard: '標準',
     play_speed: '視聴速度',
     mini_player_message: 'ホップアウト機能で動画を表示しています',
+    tooltip_control_bar: {
+      mini_player: 'ポップアウト',
+      setting: '設定',
+      play_speed: '視聴速度',
+    },
   },
   live_stream_screen: {
     program_info: '番組情報',
@@ -1957,6 +1963,7 @@ export default {
     toast_message_success: 'チップ対象者申請が完了しました',
     txt_footer_button_success: '配信管理メニューへ戻る',
     record_error_no: '対象者No.XXに入力不備があります。',
+    toast_delete_group_success: '個別ギフトリストを削除しました。',
   },
   archive_detail_screen: {
     title: 'アーカイブ詳細',

@@ -24,6 +24,7 @@ const ITEM_PER_PAGE = 10
 const ListGroupGift: React.FC<IProps> = ({ onChangeTab, handleSelectGroup, handleClose }) => {
   const { t } = useTranslation('common')
   const classes = useStyles()
+
   const { getGiftGroupList, giftGroupList, giftGroupTotal, giftGroupsMeta } = useGiftManage()
 
   const handleReturn = () => {
@@ -38,6 +39,7 @@ const ListGroupGift: React.FC<IProps> = ({ onChangeTab, handleSelectGroup, handl
   }, [page])
 
   const handleCreateTip = () => {
+    handleReturn()
     onChangeTab(TabState.CREATE_NEW)
   }
 
@@ -96,10 +98,10 @@ const ListGroupGift: React.FC<IProps> = ({ onChangeTab, handleSelectGroup, handl
                       </TableRow>
                     }
                   >
-                    {giftGroupList.map((item) => (
+                    {giftGroupList.map((item, index) => (
                       <TableRow key={item.id}>
                         <TableCell align="center">
-                          <Typography component="span">{item.id}</Typography>
+                          <Typography component="span">{index + 1}</Typography>
                         </TableCell>
                         <TableCell align="left">
                           <Typography component="span">{item.title}</Typography>

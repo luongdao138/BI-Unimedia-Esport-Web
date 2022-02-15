@@ -47,7 +47,7 @@ const SelectMemberItem: React.FC<PropType> = ({ item }) => {
         >
           {itemType()}
         </Typography>
-        <Typography>{itemName()}</Typography>
+        <Typography className={classes.name}>{itemName()}</Typography>
       </Box>
       <Box onClick={handleCloseButtonClick} className={classes.buttonRemove}>
         <Icon className={`fa fa-times ${classes.iconRemove}`} fontSize="small" />
@@ -77,11 +77,11 @@ const useStyles = makeStyles(() => ({
   textContainer: {
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'space-between',
     flex: 1,
     marginLeft: '8px',
     paddingBottom: '4px',
     paddingTop: '4px',
+    marginRight: '24px',
   },
   itemType: {
     width: '52px',
@@ -100,6 +100,11 @@ const useStyles = makeStyles(() => ({
   tagBlock: {
     color: Colors.white_opacity['30'],
     backgroundColor: '#707070',
+  },
+  name: {
+    color: Colors.white_opacity['70'],
+    marginBottom: '4px',
+    marginTop: '8px',
   },
 }))
 

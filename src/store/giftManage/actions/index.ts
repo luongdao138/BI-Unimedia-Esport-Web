@@ -13,6 +13,9 @@ import {
   CreateNewGiftGroupRequestBody,
   GetAllGiftGroupResponse,
   GetAllGiftGroupRequest,
+  GetGiftGroupDetailRequestParams,
+  GetGiftGroupDetailResponse,
+  DeleteGiftGroupRequestParams,
 } from '@services/gift.service'
 
 export type TargetPersonType = {
@@ -147,4 +150,42 @@ export const resetGiftGroupMasterList = createAction(GIFT_MANAGE_ACTION_TYPE.RES
 
 export const deleteGiftMasterFromLocalList = createAction<{ data: TargetPersonType }>(
   GIFT_MANAGE_ACTION_TYPE.DELETE_GIFT_MASTER_FROM_LOCAL_LIST
+)
+
+export const getGiftGroupDetail = createAsyncThunk<GetGiftGroupDetailResponse, GetGiftGroupDetailRequestParams>(
+  GIFT_MANAGE_ACTION_TYPE.GET_GIFT_GROUP_DETAIL,
+  async (requestParams, { rejectWithValue }) => {
+    try {
+      const res = await services.getGiftGroupDetail(requestParams)
+      if (res?.code === 200) {
+        return res
+      } else {
+        return rejectWithValue(JSON.stringify(res.message))
+      }
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
+export const deleteGiftGroup = createAsyncThunk<CreateNewGiftGroupResponse, DeleteGiftGroupRequestParams>(
+  GIFT_MANAGE_ACTION_TYPE.DELETE_GIFT_GROUP,
+  async (requestParams, { rejectWithValue }) => {
+    try {
+      const res = await services.deleteGiftGroup(requestParams)
+      if (res?.code === 200) {
+        return res
+      } else {
+        return rejectWithValue(JSON.stringify(res.message))
+      }
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
 )

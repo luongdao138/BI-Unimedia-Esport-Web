@@ -91,6 +91,30 @@ const useGiftManage = () => {
 
   const deleteGiftMasterFromLocalList = (data) => dispatch(actions.deleteGiftMasterFromLocalList({ data }))
 
+  const giftGroupDetail = useAppSelector(selectors.getGiftGroupDetail)
+  const getGiftGroupDetail = (uuid?: string) =>
+    dispatch(
+      actions.getGiftGroupDetail({
+        group_id: uuid,
+        user_id: user?.id,
+      })
+    )
+
+  const deleteGiftGroup = async (uuid: string, successCallback, errorCallback) => {
+    const resultAction = await dispatch(
+      actions.deleteGiftGroup({
+        group_id: uuid,
+        user_id: user?.id,
+      })
+    )
+    if (actions.deleteGiftGroup.fulfilled.match(resultAction)) {
+      successCallback()
+    }
+    if (actions.deleteGiftGroup.rejected.match(resultAction)) {
+      errorCallback()
+    }
+  }
+
   return {
     giftTargetData,
     meta_gift_target,
@@ -113,6 +137,9 @@ const useGiftManage = () => {
     resetNewGroupMasterList,
     giftGroupsMeta,
     deleteGiftMasterFromLocalList,
+    getGiftGroupDetail,
+    giftGroupDetail,
+    deleteGiftGroup,
   }
 }
 

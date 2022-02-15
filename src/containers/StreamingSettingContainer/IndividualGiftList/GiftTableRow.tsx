@@ -5,33 +5,49 @@ import DeleteConfirmModal from '@containers/StreamingSettingContainer/Individual
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
 import { GiftGroupType } from '@services/gift.service'
+import useGiftManage from '@containers/StreamingGiftManagement/useGiftTarget'
+import * as commonActions from '@store/common/actions'
+import { useAppDispatch } from '@store/hooks'
 
 type Props = {
   item?: GiftGroupType
   index?: number
+  handleGoToEditGiftGroupState?: (data?: GiftGroupType) => () => void
+  refreshData?: () => void
 }
 
-const GiftTableRow: React.FC<Props> = ({ item, index }) => {
+const GiftTableRow: React.FC<Props> = ({ item, index, handleGoToEditGiftGroupState, refreshData }) => {
   const classes = useStyles()
   const theme = useTheme()
+  const dispatch = useAppDispatch()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
   const { t } = useTranslation('common')
   const { title: name, total_master: numberOfRegistration } = item
+  const { deleteGiftGroup } = useGiftManage()
+
   const handleOnRemoveClick = () => {
     setDeleteModalVisible(true)
   }
 
-  const handleOnEditClick = () => {
-    // TODO
-  }
-
+  const handleOnEditClick = handleGoToEditGiftGroupState(item)
   const handleCloseModal = () => {
     setDeleteModalVisible(false)
   }
 
-  const handleDeleteConfirmPress = () => {
-    // TODO
+  const deleteGiftGroupSuccessCallback = () => {
+    dispatch(commonActions.addToast(t('streaming_gift_management.toast_delete_group_success')))
+    setDeleteModalVisible(false)
+    refreshData()
   }
+
+  const deleteGiftGroupErrorCallback = () => {
+    setDeleteModalVisible(false)
+  }
+
+  const handleDeleteConfirmPress = () => {
+    deleteGiftGroup(item?.group_uuid, deleteGiftGroupSuccessCallback, deleteGiftGroupErrorCallback)
+  }
+
   const [deleteModalVisible, setDeleteModalVisible] = useState(false)
   return (
     <Box className={classes.tableRow}>

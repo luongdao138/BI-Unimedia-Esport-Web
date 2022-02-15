@@ -5,21 +5,28 @@ import { useTranslation } from 'react-i18next'
 import GiftTable from '@containers/StreamingSettingContainer/IndividualGiftList/GiftTable'
 import GiftListPagination from '@containers/StreamingSettingContainer/IndividualGiftList/Pagination'
 import useGiftManage from '@containers/StreamingGiftManagement/useGiftTarget'
+import { GiftGroupType } from '@services/gift.service'
 
 type Props = {
   handleGoToCreateNewListState?: () => void
+  handleGoToEditGiftGroupState?: (data: GiftGroupType) => () => void
 }
 
-const IndividualGiftListContainer: React.FC<Props> = ({ handleGoToCreateNewListState }) => {
+const IndividualGiftListContainer: React.FC<Props> = ({ handleGoToCreateNewListState, handleGoToEditGiftGroupState }) => {
   const classes = useStyles()
   const { t } = useTranslation('common')
   const { getGiftGroupList, giftGroupList, giftGroupTotal } = useGiftManage()
-  useEffect(() => {
-    getGiftGroupList(1, 10)
-  }, [])
-
   const [currentPage, setCurrentPage] = useState(1)
+
+  useEffect(() => {
+    getNewOrRefreshData()
+  }, [currentPage])
+
   // const [totalPage, setTotalPage] = useState(10);
+
+  const getNewOrRefreshData = () => {
+    getGiftGroupList(currentPage, 10)
+  }
 
   const createNewButton = useCallback(() => {
     return (
@@ -30,17 +37,17 @@ const IndividualGiftListContainer: React.FC<Props> = ({ handleGoToCreateNewListS
     )
   }, [])
 
-  const displayData = () => giftGroupList.slice(10 * (currentPage - 1), 10 * currentPage)
+  const displayData = () => giftGroupList
 
   const displayTable = () => {
     return (
       <Box>
-        <GiftTable data={displayData()} />
+        <GiftTable data={displayData()} handleGoToEditGiftGroupState={handleGoToEditGiftGroupState} refreshData={getNewOrRefreshData} />
       </Box>
     )
   }
 
-  const totalPage = () => Math.floor(giftGroupTotal / 10) + 1
+  const totalPage = () => Math.floor(giftGroupTotal / 10.1) + 1
 
   const onChangePage = (page) => {
     if (page > 0 && page <= 10) setCurrentPage(page)

@@ -78,9 +78,9 @@ const useStyles = makeStyles(() => ({
   textContainer: {
     flex: 1,
     marginLeft: '8px',
-    justifyContent: 'space-between',
     display: 'flex',
     flexDirection: 'column',
+    marginRight: '24px',
   },
   tagContainer: {
     display: 'flex',
@@ -107,9 +107,9 @@ const useStyles = makeStyles(() => ({
   name: {
     color: Colors.white_opacity['70'],
     marginBottom: '4px',
+    marginTop: '8px',
   },
   actionButton: {
-    alignSelf: 'center',
     width: '70px',
     height: '28px',
     display: 'flex',
