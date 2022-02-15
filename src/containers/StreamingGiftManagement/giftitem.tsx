@@ -1,9 +1,8 @@
 import { Box, makeStyles, Typography, useMediaQuery, useTheme } from '@material-ui/core'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Colors } from '@theme/colors'
 import ESButton from '@components/Button'
-import DeleteConfirmModal from '@containers/StreamingGiftManagement/deletemodal'
 import { TargetPersonType } from '@store/giftManage/actions'
 import useGiftManage from './useGiftTarget'
 
@@ -20,12 +19,10 @@ const GiftItem: React.FC<Props> = ({ item, index, handleModeUpdate }) => {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
   const { deleteTargetPerson } = useGiftManage()
 
-  const [openDialog, setOpenDialog] = useState(false)
-
   const handleOnDeleteClick = () => {
-    // TODO:
-    setOpenDialog(true)
+    deleteTargetPerson(item.id)
   }
+
   const handleOnUpdateClick = () => {
     handleModeUpdate(item.id)
   }
@@ -45,25 +42,6 @@ const GiftItem: React.FC<Props> = ({ item, index, handleModeUpdate }) => {
     sns_url: isMobile ? t(`streaming_gift_management.sns_url_sm`) : t(`streaming_gift_management.sns_url`),
   }
 
-  const handleCloseConfirmModal = () => {
-    setOpenDialog(false)
-  }
-
-  const handleConfirmDelete = () => {
-    deleteTargetPerson(item.id)
-  }
-
-  const deleteModal = () => {
-    return (
-      <DeleteConfirmModal
-        name={item.target_name}
-        open={openDialog}
-        handleClose={handleCloseConfirmModal}
-        handleDelete={handleConfirmDelete}
-      />
-    )
-  }
-
   return (
     <Box className={classes.container}>
       <Box className={classes.header}>
@@ -80,7 +58,7 @@ const GiftItem: React.FC<Props> = ({ item, index, handleModeUpdate }) => {
       {tableRow(tableLabel.team_or_individual, item.target_value, '8px')}
       {tableRow(tableLabel.target, item.target_name, '8px')}
       {tableRow(tableLabel.sns_url, item.sns_url, '16px')}
-      {deleteModal()}
+      {/* {deleteModal()} */}
     </Box>
   )
 }

@@ -53,6 +53,9 @@ export default createReducer(initialState, (builder) => {
     .addCase(actions.deleteTargetPerson.fulfilled, (state, action) => {
       state.gift_target_data = state.gift_target_data.filter((gift) => gift.id !== action.payload)
     })
+    .addCase(actions.resetGiftTargetPerson, (state) => {
+      state.gift_target_data = []
+    })
 
     // logout clear data gift target person
     .addCase(authActions.logout.fulfilled, (state) => {

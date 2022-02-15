@@ -9,7 +9,8 @@ import Footer from './footer'
 import useGiftManage from '@containers/StreamingGiftManagement/useGiftTarget'
 import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
-// import useGiftManage from './useGiftTarget'
+import useToast from '@utils/hooks/useToast'
+import i18n from '@locales/i18n'
 
 export const MODE = {
   ADD: 'ADD',
@@ -26,8 +27,9 @@ const StreamingGiftManagement: React.FC = () => {
   const [addNewErrorMessage, setErrorMessage] = useState('')
   const [mode, setMode] = useState('')
   const [idTargetPerson, setIdTargetPerson] = useState('')
+  const { addToast } = useToast()
 
-  const { addNewGiftMaster, giftTargetData } = useGiftManage()
+  const { addNewGiftMaster, giftTargetData, resetTargetPersonData } = useGiftManage()
 
   const handleNext = () => {
     setStep(1)
@@ -46,19 +48,20 @@ const StreamingGiftManagement: React.FC = () => {
 
   const addNewGiftMasterSuccessCallback = () => {
     setStep(3)
+    addToast(i18n.t('common:streaming_gift_management.toast_message_success'))
+    resetTargetPersonData()
   }
 
   const addNewGiftMasterErrorCallback = (message) => {
     setErrorMessage(message)
   }
   const handleFooterConfirmClick = () => {
-    // console.log('giftTargetDataa', giftTargetData);
     setErrorMessage('')
     addNewGiftMaster(addNewGiftMasterSuccessCallback, addNewGiftMasterErrorCallback)
   }
 
   const handleOnNavigateBackToStreamSettingScreen = () => {
-    router.push(ESRoutes.VIDEO_STREAMING_SETTING)
+    router.push(ESRoutes.VIDEO_STREAMING_MANAGEMENT)
   }
 
   const renderContent = useCallback(() => {
@@ -78,22 +81,20 @@ const StreamingGiftManagement: React.FC = () => {
           </Box>
         )
       default:
-        return (
-          <ListTargetPerson
-            handlePress={handleAddPersonPress}
-            handleFooterConfirm={handleFooterConfirmClick}
-            errorMessage={addNewErrorMessage}
-            handleModeUpdate={handleUpdatePersonPress}
-          />
-        )
+        return <ListTargetPerson handlePress={handleAddPersonPress} handleModeUpdate={handleUpdatePersonPress} />
     }
   }, [addNewErrorMessage, setStep, step, giftTargetData])
-
   return (
     <>
       <HeaderWithButton title={t('streaming_gift_management.title')} />
       {renderContent()}
-      {step === 3 && <Footer success onCancel={handleOnNavigateBackToStreamSettingScreen} />}
+      {/* <Footer onConfirm={} onCancel={handleOnNavigateBackToStreamSettingScreen} step={step} /> */}
+      <Footer
+        step={step}
+        onCancel={handleOnNavigateBackToStreamSettingScreen}
+        onConfirm={handleFooterConfirmClick}
+        errorMessage={addNewErrorMessage}
+      />
     </>
   )
 }
