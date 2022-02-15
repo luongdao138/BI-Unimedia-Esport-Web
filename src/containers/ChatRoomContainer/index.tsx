@@ -36,6 +36,7 @@ import useCopyToClipboard from '@utils/hooks/useCopyToClipboard'
 import { NextRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
 import { ReplyContent } from '@components/Chat/elements'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
 
 interface ChatRoomContainerProps {
   roomId: string | string[]
@@ -241,7 +242,9 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId, router })
   }
 
   const onNavigateToProfile = (code: string) => {
-    router.push(`${ESRoutes.PROFILE}/${code}`)
+    CommonHelper.checkUserCode(code, () => {
+      router.push(`${ESRoutes.PROFILE}/${code}`)
+    })
   }
 
   const renderReplyPanel = () => {

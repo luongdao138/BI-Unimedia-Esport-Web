@@ -10,6 +10,7 @@ import NOTIFICATION_ACTION_TYPES from '@store/notification/actions/types'
 import HeaderWithButton from '@components/HeaderWithButton'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { ESRoutes } from '@constants/route.constants'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
 
 const NotificationContainer: React.FC = () => {
   const classes = useStyles()
@@ -64,7 +65,9 @@ const NotificationContainer: React.FC = () => {
                 switch (notification.attributes.ntype_id) {
                   case NOTIFICATION_ACTION_TYPES.NOTIFICATION_TYPE_FOLLOW: {
                     seenNotificationBadge()
-                    router.push(`${ESRoutes.PROFILE}/${notification.attributes.user_code}`)
+                    CommonHelper.checkUserCode(notification.attributes.user_code, () => {
+                      router.push(`${ESRoutes.PROFILE}/${notification.attributes.user_code}`)
+                    })
                     break
                   }
                   case NOTIFICATION_ACTION_TYPES.NOTIFICATION_TYPE_SYSTEM: {

@@ -84,7 +84,10 @@ const ESReport: React.FC<ESReportProps> = ({
     fetchReasons({ page: 1 })
   }, [])
 
-  const toProfile = (user_code) => router.push(`${ESRoutes.PROFILE}/${user_code}`)
+  const toProfile = (user_code) =>
+    CommonHelper.checkUserCode(user_code, () => {
+      router.push(`${ESRoutes.PROFILE}/${user_code}`)
+    })
 
   const validationSchema = Yup.object().shape({
     user_email: Yup.string()

@@ -8,6 +8,7 @@ import { ESRoutes } from '@constants/route.constants'
 import { useRouter } from 'next/router'
 import useGetProfile from '@utils/hooks/useGetProfile'
 import { makeStyles } from '@material-ui/core/styles'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
 
 interface Props {
   user: any
@@ -22,7 +23,9 @@ const UserRow: React.FC<Props> = ({ user, handleClose, changeFollowState }) => {
 
   const toProfile = () => {
     if (handleClose) handleClose()
-    router.push(`${ESRoutes.PROFILE}/${user.user_code}`)
+    CommonHelper.checkUserCode(user.user_code, () => {
+      router.push(`${ESRoutes.PROFILE}/${user.user_code}`)
+    })
   }
 
   return (

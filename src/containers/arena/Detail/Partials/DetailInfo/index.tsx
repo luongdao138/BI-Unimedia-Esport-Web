@@ -24,6 +24,7 @@ import { RULE } from '@constants/tournament.constants'
 import { ESRoutes } from '@constants/route.constants'
 import { useRouter } from 'next/router'
 import ESTwitterShareButton from '@components/TwitterShareButton'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
 
 interface Props {
   detail: TournamentDetail
@@ -51,7 +52,10 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
     dispatch(commonActions.addToast(t('common:arena.copy_toast')))
   }
 
-  const toProfile = (user_code) => router.push(`${ESRoutes.PROFILE}/${user_code}`)
+  const toProfile = (user_code) =>
+    CommonHelper.checkUserCode(user_code, () => {
+      router.push(`${ESRoutes.PROFILE}/${user_code}`)
+    })
 
   const handleReportOpen = () => setOpenReport(true)
 
