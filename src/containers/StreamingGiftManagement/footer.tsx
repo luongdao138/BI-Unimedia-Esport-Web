@@ -2,6 +2,7 @@ import { Box, makeStyles, Theme, Typography } from '@material-ui/core'
 import ButtonPrimary from '@components/ButtonPrimary'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
+import useGiftManage from './useGiftTarget'
 
 /**
  * TODO: Raise bottom margin of side menu
@@ -9,36 +10,28 @@ import { useTranslation } from 'react-i18next'
 interface Props {
   onConfirm?: () => void
   onCancel?: () => void
-  confirmDisable?: boolean
-  success?: boolean
   errorMessage?: string
-  confirmButtonDisabled?: boolean
+  step?: number
 }
 
-const Footer: React.FC<Props> = ({ onConfirm, onCancel, success, errorMessage, confirmButtonDisabled = false }) => {
+const Footer: React.FC<Props> = ({ onConfirm, onCancel, errorMessage, step }) => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
+  const { giftTargetData } = useGiftManage()
+  const disableBtnConfirm = step === 2 || giftTargetData.length === 0 ? true : false
   return (
     <>
-      {!success ? (
-        <Box className={classes.container}>
-          {errorMessage && <Typography className={classes.errorMessage}>{errorMessage}</Typography>}
-          <Box className={classes.buttonContainer}>
-            <ButtonPrimary size="small" className={classes.actionBtnClose} gradient={false} onClick={onCancel}>
-              {t('common:streaming_gift_management.cancel')}
-            </ButtonPrimary>
-            <ButtonPrimary gradient size="small" className={classes.actionBtnConfirm} onClick={onConfirm} disabled={confirmButtonDisabled}>
-              {t('common:streaming_gift_management.apply')}
-            </ButtonPrimary>
-          </Box>
+      <Box className={classes.container}>
+        {errorMessage && <Typography className={classes.errorMessage}>{errorMessage}</Typography>}
+        <Box className={classes.buttonContainer}>
+          <ButtonPrimary size="small" className={classes.actionBtnClose} gradient={false} onClick={onCancel}>
+            {t('common:streaming_gift_management.cancel')}
+          </ButtonPrimary>
+          <ButtonPrimary gradient size="small" className={classes.actionBtnConfirm} onClick={onConfirm} disabled={disableBtnConfirm}>
+            {t('common:streaming_gift_management.apply')}
+          </ButtonPrimary>
         </Box>
-      ) : (
-        <Box className={classes.container}>
-          {/*<ButtonPrimary gradient size="small" className={classes.buttonSuccess} onClick={onCancel}>*/}
-          {/*  {t('common:streaming_gift_management.txt_footer_button_success')}*/}
-          {/*</ButtonPrimary>*/}
-        </Box>
-      )}
+      </Box>
     </>
   )
 }

@@ -9,7 +9,6 @@ import { useFormik } from 'formik'
 import { validationTargetPerson } from './ValidationPersonTarget'
 import useGiftManage from './useGiftTarget'
 import CharacterLimited from '@components/CharacterLimited'
-import useToast from '@utils/hooks/useToast'
 import { v4 as uuidv4 } from 'uuid'
 import { MODE } from '.'
 
@@ -24,7 +23,6 @@ const PersonTarget: FC<PersonTargetProps> = ({ handleSuccess, mode, idTargetPers
   const { t } = useTranslation('common')
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down(414))
-  const { addToast } = useToast()
   const { addTargetPerson, checkSnsUrl, giftTargetData, updateTargetPerson } = useGiftManage()
   const targetPersonId = uuidv4()
 
@@ -40,7 +38,7 @@ const PersonTarget: FC<PersonTargetProps> = ({ handleSuccess, mode, idTargetPers
   }
 
   const validateError = () => {
-    addToast(`登録済みのxxです ${values.sns_url}`)
+    setFieldError('sns_url', `登録済みの${values.sns_url}です`)
   }
 
   const formik = useFormik({
@@ -63,7 +61,7 @@ const PersonTarget: FC<PersonTargetProps> = ({ handleSuccess, mode, idTargetPers
     },
   })
 
-  const { values, errors, touched, handleBlur, setFieldValue, setValues, handleSubmit } = formik
+  const { values, errors, touched, handleBlur, setFieldValue, setValues, handleSubmit, setFieldError } = formik
 
   useEffect(() => {
     if (mode === MODE.UPDATE) {
