@@ -46,6 +46,7 @@ import ESLabelWithSwitch from '@components/LabelWithSwitch'
 import ESBoxftDashColumn from '@components/ESBoxftDashColumn'
 import { useListGiftInfoDialog, useRankingInfoDialog } from '../useListGiftInfoDialog'
 import CharacterLimited from '@components/CharacterLimited'
+import { hhmmss } from '@containers/VideoPlayer/customPlugins/time'
 
 interface StepsProps {
   step: number
@@ -63,6 +64,7 @@ interface StepsProps {
   validateField?: string
   handleUpdateValidateField?: (value: string) => void
   openPopupGroupList?: (open: boolean) => void
+  liveStartTime?: string
 }
 
 const KEY_TYPE = {
@@ -87,6 +89,7 @@ const Steps: React.FC<StepsProps> = ({
   validateField,
   handleUpdateValidateField,
   openPopupGroupList,
+  liveStartTime,
 }) => {
   const dispatch = useAppDispatch()
   const { t } = useTranslation(['common'])
@@ -108,6 +111,8 @@ const Steps: React.FC<StepsProps> = ({
   const classes = useStyles({ statusRecord: obsStatusDynamo, channelArn: stateChannelArn, videoStatusDynamo })
   const listGiftInfo = useListGiftInfoDialog()
   const rankingInfo = useRankingInfoDialog()
+  const [countTime, setCountTime] = useState('')
+
   const formRef = {
     title: useRef(null),
     description: useRef(null),
@@ -424,6 +429,24 @@ const Steps: React.FC<StepsProps> = ({
     openPopupGroupList(true)
   }
 
+  //V3.0 count time
+  useEffect(() => {
+    const updTime = () => {
+      const diff = (Date.now() - new Date(liveStartTime).getTime()) / 1000
+      hhmmss(diff)
+      setCountTime(hhmmss(diff))
+    }
+    updTime()
+    const interval = setInterval(() => {
+      if (liveStartTime && obsStatusDynamo === TAG_STATUS_RECORD.LIVE_STREAMING && videoStatusDynamo == '1') {
+        updTime()
+      }
+    }, 1000)
+    return () => {
+      clearInterval(interval)
+    }
+  })
+
   return (
     <Box py={4} className={classes.container}>
       <Box className={classes.formContainer}>
@@ -456,6 +479,20 @@ const Steps: React.FC<StepsProps> = ({
                   ? i18n.t('common:streaming_setting_screen.status_tag_updated')
                   : i18n.t('common:streaming_setting_screen.status_tag_live_streaming')}
               </Typography>
+              <Box
+                className={classes.countTime}
+                style={{
+                  visibility:
+                    liveStartTime && obsStatusDynamo === TAG_STATUS_RECORD.LIVE_STREAMING && videoStatusDynamo == '1'
+                      ? 'visible'
+                      : 'hidden',
+                }}
+              >
+                <Typography className={classes.textTagStatus}>{i18n.t('common:streaming_setting_screen.title_count_time')}</Typography>
+                <Typography className={classes.textTagStatus} style={{ marginLeft: 16 }}>
+                  {countTime}
+                </Typography>
+              </Box>
             </Box>
             <Box
               // py={1}
@@ -1372,7 +1409,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: 21,
     color: Colors.white_opacity[50],
   },
-
+  countTime: {
+    flexDirection: 'row',
+    display: 'flex',
+    marginLeft: 24,
+  },
   [theme.breakpoints.down(768)]: {
     container: {
       padding: '34px 24px 32px 24px',
@@ -1441,6 +1482,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     labelRank: {
       paddingTop: 0,
       paddingBottom: 8,
+    },
+    countTime: {
+      marginLeft: 16,
     },
   },
   addPaddingNote: {

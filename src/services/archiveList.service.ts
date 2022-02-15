@@ -35,6 +35,10 @@ export type ArchiveDetailDataType = {
   convert_status: string
   live_stream_start_time?: string
   video_thumbnail?: string
+  use_gift?: number
+  gift_group_id?: number
+  group_title?: string
+  ranking_flag?: boolean | number
 }
 
 export type TYPE_VIDEO_ARCHIVE = {

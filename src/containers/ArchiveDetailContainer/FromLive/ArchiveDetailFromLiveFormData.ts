@@ -36,6 +36,10 @@ export type ArchiveDetailFormType = {
   step_setting?: number
   arn?: string
   video_thumbnail?: string
+  use_gift?: boolean
+  gift_group_id?: number
+  group_title?: string
+  ranking_flag?: boolean
 }
 
 export const getInitialArchiveDetailValues = (data?: ArchiveDetailDataType): ArchiveDetailFormType => ({
@@ -57,4 +61,8 @@ export const getInitialArchiveDetailValues = (data?: ArchiveDetailDataType): Arc
   step_setting: 1,
   arn: data && data.arn ? data.arn : '',
   video_thumbnail: data && data.video_thumbnail ? data.video_thumbnail : '',
+  use_gift: data && data.use_gift ? (data.use_gift == 1 ? true : false) : true,
+  group_title: data && data.group_title ? data.group_title : '',
+  gift_group_id: data && data.gift_group_id ? data.gift_group_id : null,
+  ranking_flag: data && data.ranking_flag ? (data.ranking_flag == 1 ? true : false) : false,
 })
