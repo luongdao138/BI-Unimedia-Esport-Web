@@ -73,6 +73,7 @@ export type ChatContainerProps = {
   freeToWatch?: boolean | number
   ref: any
   chatWidth: any
+  isResizedScreen: boolean
 }
 
 export enum GET_MESS_TYPE {
@@ -184,6 +185,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       openPurchasePointModal,
       videoType,
       freeToWatch,
+      isResizedScreen,
     },
     ref
   ) => {
@@ -266,7 +268,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
 
     const { width: pageWidth } = useWindowDimensions(0)
     const isDesktopDown1280 = pageWidth > 768 && pageWidth <= 1280
-    const { userResult, streamingSecond, playedSecond, liveStreamInfo, resetState } = useDetailVideo()
+    const { userResult, streamingSecond, playedSecond, liveStreamInfo, resetChatState } = useDetailVideo()
     // const { streamingSecond, playedSecond, isViewingStream, liveStreamInfo } = useDetailVideo()
     // const userResult = {streamer: 1}
     const { dataPurchaseTicketSuperChat } = usePurchaseTicketSuperChat()
@@ -925,6 +927,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         const realStreamingSecond = playedSecond
         // check archive video => no use that case
         if (!firstRender && +realStreamingSecond > 0) {
+          // console.log('🚀 ~ filterByStreaming ~ firstRender', firstRender)
           setFirstRender(true)
           const newMess = cacheMess.filter((item) => +item.video_time <= +realStreamingSecond)
           const isMessageInBottom = checkMessIsInBottom()
@@ -1017,7 +1020,6 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         setBottom(true)
         // console.log('🚀 ~ useEffect ~ setBottom--000', isBottom)
         resetMessagesWhenRewind()
-        // console.log('🚀 ~ useEffect ~ liveStreamInfo.seeked_second', liveStreamInfo.seeked_second)
         // filterMessByPlayedSecond(liveStreamInfo.seeked_second, 'smooth')
         fetchPrevMessWhenRewind(liveStreamInfo.seeked_second)
         // fetchNextMess(GET_MESS_TYPE.FETCH_NEXT, liveStreamInfo.seeked_second)
@@ -1080,7 +1082,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
 
     useEffect(
       () => () => {
-        dispatch(resetState())
+        dispatch(resetChatState())
       },
       ['componentWillUnMount']
     )
@@ -1114,11 +1116,13 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
 
     useEffect(() => {
       // console.log('🚀 ~ useEffect ~ isStreaming--000', isStreaming, videoType)
+      // console.log('🚀 ~ useEffect ~ isStreaming', playedSecond)
+      // console.log('🚀 ~ useEffect ~ isResizedScreen', isResizedScreen)
       if (isStreaming) {
         // console.log('🚀 ~ useEffect ~ isStreaming', isStreaming)
         fetchMessInitialStreaming()
       } else if (!isStreaming && videoType === STATUS_VIDEO.ARCHIVE) {
-        fetchNextMess(GET_MESS_TYPE.FETCH_ARCHIVE_INITIAL, 0)
+        fetchNextMess(GET_MESS_TYPE.FETCH_ARCHIVE_INITIAL, isResizedScreen ? playedSecond : 0)
       }
     }, [videoType])
 
