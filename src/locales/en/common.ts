@@ -1669,6 +1669,7 @@ export default {
       on: '有',
       off: '無',
     },
+    title_count_time: '配信時間',
   },
   delivery_reservation_tab: {
     category: 'カテゴリー',

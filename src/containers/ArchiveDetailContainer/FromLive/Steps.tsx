@@ -491,16 +491,18 @@ const Steps: React.FC<StepsProps> = ({
               <Box className={classes.newTextftDash}>
                 <Box pt={1} className={classes.nameList}>
                   <Typography className={`${classes.labelNameObject} ${classes.labelRank}`}>
-                    {`${i18n.t('common:streaming_setting_screen.list_gift_selected')} ${i18n.t(
-                      'common:streaming_setting_screen.unselected'
-                    )}`}
+                    {`${i18n.t('common:streaming_setting_screen.list_gift_selected')} ${
+                      formik?.values?.group_title ? formik?.values?.group_title : i18n.t('common:streaming_setting_screen.unselected')
+                    }`}
                   </Typography>
                 </Box>
                 <Box className={`${classes.nameList} ${classes.nameListRanking}`}>
                   <Typography className={`${classes.labelNameObject} ${classes.labelRank}`}>
-                    {`${i18n.t('common:streaming_setting_screen.individual_gift_ranking_display')}： ${i18n.t(
-                      'common:streaming_setting_screen.unselected'
-                    )}`}
+                    {`${i18n.t('common:streaming_setting_screen.individual_gift_ranking_display')}： ${
+                      formik?.values?.ranking_flag
+                        ? i18n.t('common:streaming_setting_screen.ranking_flag.on')
+                        : i18n.t('common:streaming_setting_screen.ranking_flag.off')
+                    }`}
                   </Typography>
                 </Box>
               </Box>

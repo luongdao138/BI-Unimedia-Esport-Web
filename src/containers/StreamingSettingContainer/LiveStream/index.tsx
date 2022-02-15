@@ -53,6 +53,7 @@ const LiveStreamContainer: React.FC<Props> = ({ formik, validateField, handleUpd
   const [showResultDialog, setShowResultDialog] = useState(false)
   const [obsStatusDynamo, setObsStatusDynamo] = useState(null)
   const [videoStatusDynamo, setVideoStatusDynamo] = useState(null)
+  const [liveStartTime, setLiveStartTime] = useState('')
 
   const onChangeStep = (step: number, isShare?: boolean, post?: { title: string; content: string }): void => {
     console.log('click next step', step, stateChannelMedia)
@@ -170,8 +171,10 @@ const LiveStreamContainer: React.FC<Props> = ({ formik, validateField, handleUpd
       const videoRs: any = await API.graphql(graphqlOperation(getVideoByUuid, listQV))
       const videoData = videoRs.data.getVideoByUuid.items.find((item) => item.uuid === videoId)
       console.log('LIVE::queryVideoByUUID===>', videoData, videoRs)
+      // setLiveStartTime('2022-02-15 13:40:12')
       if (videoData) {
         setVideoStatusDynamo(videoData?.video_status)
+        setLiveStartTime(videoData?.live_start_time)
         if (videoData?.process_status === EVENT_LIVE_STATUS.STREAM_OFF) {
           //Updated
           setObsStatusDynamo(0)
@@ -209,6 +212,7 @@ const LiveStreamContainer: React.FC<Props> = ({ formik, validateField, handleUpd
         if (updateVideoData) {
           if (updateVideoData?.uuid === formik.values?.stepSettingOne?.uuid_clone) {
             setVideoStatusDynamo(updateVideoData?.video_status)
+            setLiveStartTime(updateVideoData?.live_start_time)
             if (updateVideoData?.process_status === EVENT_LIVE_STATUS.STREAM_START) {
               //live
               setObsStatusDynamo(1)
@@ -250,6 +254,7 @@ const LiveStreamContainer: React.FC<Props> = ({ formik, validateField, handleUpd
         if (createdVideo) {
           if (createdVideo?.uuid === formik.values?.stepSettingOne?.uuid_clone) {
             setVideoStatusDynamo(createdVideo?.video_status)
+            setLiveStartTime(createdVideo?.live_start_time)
             if (createdVideo?.process_status === EVENT_LIVE_STATUS.STREAM_START) {
               //live
               setObsStatusDynamo(1)
@@ -315,6 +320,7 @@ const LiveStreamContainer: React.FC<Props> = ({ formik, validateField, handleUpd
         validateField={validateField}
         handleUpdateValidateField={handleUpdateValidateField}
         openPopupGroupList={openPopupGroupList}
+        liveStartTime={liveStartTime}
       />
       <ESModal open={modal && showResultDialog} handleClose={handleClose}>
         <BlankLayout>

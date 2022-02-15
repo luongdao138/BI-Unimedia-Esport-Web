@@ -62,6 +62,7 @@ const StreamingReservationContainer: React.FC<Props> = ({
   const [obsStatusDynamo, setObsStatusDynamo] = useState(null)
   const [videoStatusDynamo, setVideoStatusDynamo] = useState(null)
   const [processStatusDynamo, setProcessStatusDynamo] = useState(null)
+  const [liveStartTime, setLiveStartTime] = useState('')
 
   const onChangeStep = (step: number, isShare?: boolean, post?: { title: string; content: string }, channel_progress?: string): void => {
     console.log('SCHEDULE: click next step', step, stateChannelMedia, channel_progress)
@@ -197,9 +198,11 @@ const StreamingReservationContainer: React.FC<Props> = ({
       const videoRs: any = await API.graphql(graphqlOperation(getVideoByUuid, listQV))
       const videoData = videoRs.data.getVideoByUuid.items.find((item) => item.uuid === videoId)
       console.log('SCHEDULE::queryVideoByUUID===>', videoData, videoRs)
+      // setLiveStartTime('2022-02-15 13:40:12')
       if (videoData) {
         setVideoStatusDynamo(videoData?.video_status)
         setProcessStatusDynamo(videoData?.process_status)
+        setLiveStartTime(videoData?.live_start_time)
         if (videoData?.process_status === EVENT_LIVE_STATUS.STREAM_OFF) {
           //Updated
           setObsStatusDynamo(0)
@@ -238,6 +241,7 @@ const StreamingReservationContainer: React.FC<Props> = ({
           if (updateVideoData?.uuid === formik.values?.stepSettingTwo?.uuid) {
             setVideoStatusDynamo(updateVideoData?.video_status)
             setProcessStatusDynamo(updateVideoData?.process_status)
+            setLiveStartTime(updateVideoData?.live_start_time)
             if (updateVideoData?.process_status === EVENT_LIVE_STATUS.STREAM_START) {
               //live
               setObsStatusDynamo(1)
@@ -280,6 +284,7 @@ const StreamingReservationContainer: React.FC<Props> = ({
           if (createdVideo?.uuid === formik.values?.stepSettingTwo?.uuid) {
             setVideoStatusDynamo(createdVideo?.video_status)
             setProcessStatusDynamo(createdVideo?.process_status)
+            setLiveStartTime(createdVideo?.live_start_time)
             if (createdVideo?.process_status === EVENT_LIVE_STATUS.STREAM_START) {
               //live
               setObsStatusDynamo(1)
@@ -345,6 +350,7 @@ const StreamingReservationContainer: React.FC<Props> = ({
         videoStatusDynamo={videoStatusDynamo}
         processStatusDynamo={processStatusDynamo}
         openPopupGroupList={openPopupGroupList}
+        liveStartTime={liveStartTime}
       />
       <ESModal open={modal && (showResultDialog || channelProgress)} handleClose={handleClose}>
         <BlankLayout>
