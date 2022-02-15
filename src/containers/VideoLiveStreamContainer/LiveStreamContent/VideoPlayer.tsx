@@ -45,6 +45,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   isArchived,
   // type,
   videoType,
+  // componentsSize,
 }) => {
   // const checkStatusVideo = 1
   const classes = useStyles({ checkStatusVideo: videoType })
