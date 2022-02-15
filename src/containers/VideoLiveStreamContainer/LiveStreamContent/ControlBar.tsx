@@ -227,7 +227,7 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
             <img src={'/images/ic_mini_player.svg'} />
             <PlayerTooltip
               id={'toggleMiniPlayer'}
-              title={'videos_top_tab.mini_player'}
+              title={t('videos_top_tab.tooltip_control_bar.mini_player')}
               offset={{
                 top: 0,
                 left: 0,
@@ -236,8 +236,23 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
             />
           </Box>
           {!isLive && (
-            <Box onClick={handleOnPlaySpeedButtonClick} className={classes.playSpeedButton}>
+            <Box
+              onClick={handleOnPlaySpeedButtonClick}
+              className={classes.playSpeedButton}
+              data-tip
+              data-for="togglePlaySpeed"
+              id={'playSpeedRef'}
+            >
               <Typography>{'2x'}</Typography>
+              <PlayerTooltip
+                id={'togglePlaySpeed'}
+                title={t('videos_top_tab.tooltip_control_bar.play_speed')}
+                offset={{
+                  top: 0,
+                  left: 0,
+                }}
+                place={'top'}
+              />
             </Box>
           )}
           <Box
@@ -250,7 +265,7 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
             <img src={'/images/ic_settings.svg'} />
             <PlayerTooltip
               id={'toggleSettingPanel'}
-              title={'videos_top_tab.settings'}
+              title={t('videos_top_tab.tooltip_control_bar.setting')}
               offset={{
                 top: 0,
                 left: 0,

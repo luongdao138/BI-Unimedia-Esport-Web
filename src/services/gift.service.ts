@@ -99,6 +99,7 @@ export type GiftGroupType = {
   title?: string
   id?: number
   total_master?: number
+  group_uuid?: string
 }
 
 export type GetAllGiftGroupResponse = {
@@ -112,5 +113,40 @@ export type GetAllGiftGroupResponse = {
 
 export const getAllGiftGroup = async (params: GetAllGiftGroupRequest): Promise<GetAllGiftGroupResponse> => {
   const { data } = await api.get<GetAllGiftGroupResponse>(URI.GET_ALL_GIFT_GROUP, { params })
+  return data
+}
+
+export type GetGiftGroupDetailRequestParams = {
+  user_id?: number
+  group_id?: string
+}
+
+export type GiftGroupDetail = {
+  id?: number
+  title?: string
+  user_id?: number
+  status?: number
+  group_uuid?: string
+  group_item?: Array<GiftMasterType>
+}
+
+export type GetGiftGroupDetailResponse = {
+  message?: string
+  code?: number
+  data?: GiftGroupDetail
+}
+
+export const getGiftGroupDetail = async (params: GetGiftGroupDetailRequestParams): Promise<GetGiftGroupDetailResponse> => {
+  const { data } = await api.get<GetGiftGroupDetailResponse>(URI.GET_GIFT_GROUP_DETAIL, { params })
+  return data
+}
+
+export type DeleteGiftGroupRequestParams = {
+  user_id?: number
+  group_id?: string
+}
+
+export const deleteGiftGroup = async (params: DeleteGiftGroupRequestParams): Promise<CreateNewGiftGroupResponse> => {
+  const { data } = await api.post<CreateNewGiftGroupResponse>(URI.DELETE_GIFT_GROUP, params)
   return data
 }

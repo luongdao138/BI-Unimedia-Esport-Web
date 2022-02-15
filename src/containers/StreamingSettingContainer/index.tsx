@@ -122,6 +122,9 @@ const StreamingSettingContainer: React.FC<{ default_tab: any }> = ({ default_tab
   }, [])
 
   useEffect(() => {
+    if (tab !== TABS.GIFT_MEMBERS_LIST) {
+      setGiftManageTabState(TabState.LIST)
+    }
     if (tab === TABS.STREAMING_RESERVATION) {
       isFirstRunTab2.current && getScheduleSettingTab({ type: TYPE_SETTING.SCHEDULE })
       if (isFirstRunTab2.current) {
@@ -175,6 +178,7 @@ const StreamingSettingContainer: React.FC<{ default_tab: any }> = ({ default_tab
       </Grid>
     )
   }
+
   const giftManageChangeTab = (tab: TabState) => {
     setGiftManageTabState(tab)
     setTab(3)
@@ -204,7 +208,7 @@ const StreamingSettingContainer: React.FC<{ default_tab: any }> = ({ default_tab
       case TABS.DISTRIBUTOR:
         return <DistributorInformationContainer formik={formikDistributor} />
       case TABS.GIFT_MEMBERS_LIST:
-        return <GiftManageTab onChangeTab={giftManageChangeTab} />
+        return <GiftManageTab tabState={giftManageTabState} onChangeTab={giftManageChangeTab} />
       default:
         break
     }

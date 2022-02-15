@@ -119,6 +119,7 @@ const PersonTarget: FC<PersonTargetProps> = ({ handleSuccess, mode, idTargetPers
           </Box>
           <Box mt={1} />
           <ESInput
+            required
             id="target_name"
             name="target_name"
             size="big"
@@ -134,6 +135,7 @@ const PersonTarget: FC<PersonTargetProps> = ({ handleSuccess, mode, idTargetPers
           />
           <Box mt={2} />
           <ESInput
+            required
             id="sns_url"
             name="sns_url"
             size="big"

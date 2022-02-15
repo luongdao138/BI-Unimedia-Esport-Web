@@ -1,5 +1,5 @@
 import { Box, makeStyles, Typography } from '@material-ui/core'
-import React, { useCallback } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import ESInput from '@components/Input'
 import { Colors } from '@theme/colors'
@@ -12,21 +12,29 @@ import { CreateNewGiftGroupRequestBody } from '@services/gift.service'
 import { useAppDispatch } from '@store/hooks'
 import * as commonActions from '@store/common/actions'
 import * as Yup from 'yup'
+import { CreateMode } from '@containers/StreamingSettingContainer/GiftManageTab'
 
 const validationFormScheme = () => {
+  const { t } = useTranslation('common')
   return Yup.object({
-    title: Yup.string().required('require_message').min(0, 'require_message').max(60, 'max_character_message').trim(),
+    title: Yup.string()
+      .required(t('streaming_gift_management.validation.require'))
+      .min(0, t('streaming_gift_management.validation.require'))
+      .max(60, 'max_character_message')
+      .trim(),
   })
 }
+
 type Props = {
   handleBackToListState?: () => void
+  createMode?: CreateMode
 }
 
-const GiftMemberListContainer: React.FC<Props> = ({ handleBackToListState }) => {
+const GiftMemberListContainer: React.FC<Props> = ({ handleBackToListState, createMode }) => {
   const { t } = useTranslation('common')
   const dispatch = useAppDispatch()
   const classes = useStyles()
-  const { newGiftGroupGiftMasterList, createNewGiftGroup, resetNewGroupMasterList } = useGiftTarget()
+  const { newGiftGroupGiftMasterList, createNewGiftGroup, resetNewGroupMasterList, giftGroupDetail } = useGiftTarget()
   const getNumberItemSelected = () => {
     return newGiftGroupGiftMasterList.length
   }
@@ -39,24 +47,44 @@ const GiftMemberListContainer: React.FC<Props> = ({ handleBackToListState }) => 
   }
 
   const handleOnSuccessCallback = () => {
-    dispatch(commonActions.addToast(t('streaming_setting_screen.member_list.create_group_success')))
+    if (createMode === CreateMode.CREATE) {
+      dispatch(commonActions.addToast(t('streaming_setting_screen.member_list.create_group_success')))
+    } else {
+      dispatch(commonActions.addToast(t('streaming_setting_screen.member_list.edit_group_success')))
+    }
     resetNewGroupMasterList()
     handleBackToListState()
   }
 
-  const { values, handleChange, handleSubmit, errors, touched, handleBlur } = useFormik<CreateNewGiftGroupRequestBody>({
+  const { values, setFieldValue, handleSubmit, errors, touched, handleBlur, setValues, validateForm, setErrors } = useFormik<
+    CreateNewGiftGroupRequestBody
+  >({
     initialValues: initialValues(),
     validationSchema: validationFormScheme(),
     onSubmit: ({ title }) => {
       const requestData = {
         title,
         group_item: newGiftGroupGiftMasterList.map(({ master_uuid }) => master_uuid),
+        ...(createMode === CreateMode.EDIT && { group_id: giftGroupDetail.group_uuid }),
       }
       createNewGiftGroup(requestData, handleOnSuccessCallback)
     },
   })
 
+  useEffect(() => {
+    if (createMode === CreateMode.EDIT && giftGroupDetail) {
+      setValues({ title: giftGroupDetail.title })
+      validateForm({ title: giftGroupDetail.title }).then((err) => {
+        setErrors(err)
+      })
+    }
+  }, [giftGroupDetail])
+
   const getData = () => newGiftGroupGiftMasterList
+
+  const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFieldValue('title', event.target.value.slice(0, 60))
+  }
 
   const header = () => {
     return (
@@ -73,7 +101,7 @@ const GiftMemberListContainer: React.FC<Props> = ({ handleBackToListState }) => 
           className={classes.inputName}
           endAdornment={<CharacterLimited value={values.title} limit={60} />}
           value={values.title}
-          onChange={handleChange}
+          onChange={handleTitleChange}
           onBlur={handleBlur}
           helperText={touched.title && errors.title}
           error={touched.title && !!errors.title}

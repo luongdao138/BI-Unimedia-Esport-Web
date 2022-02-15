@@ -12,4 +12,6 @@ export enum GIFT_MANAGE_ACTION_TYPE {
   GET_GIFT_GROUP = 'gift_manage/gift_group/get_list',
   RESET_GROUP_MASTER_LIST = 'gift_manage/gift_group/reset_master',
   DELETE_GIFT_MASTER_FROM_LOCAL_LIST = 'gift_manage/gift_master/local_delete',
+  GET_GIFT_GROUP_DETAIL = 'gift_manage/gift_group/detail',
+  DELETE_GIFT_GROUP = 'gift_manage/gift_group/delete',
 }

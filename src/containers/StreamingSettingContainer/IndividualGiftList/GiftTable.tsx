@@ -7,9 +7,11 @@ import { GiftGroupType } from '@services/gift.service'
 
 interface Props {
   data: Array<GiftGroupType>
+  handleGoToEditGiftGroupState?: (data?: GiftGroupType) => () => void
+  refreshData?: () => void
 }
 
-const GiftTable: React.FC<Props> = ({ data }) => {
+const GiftTable: React.FC<Props> = ({ data, handleGoToEditGiftGroupState, refreshData }) => {
   const classes = useStyles()
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
@@ -41,7 +43,14 @@ const GiftTable: React.FC<Props> = ({ data }) => {
     return (
       <Box className={classes.tableContent}>
         {data.map((item, index) => {
-          return <GiftTableRow item={item} key={`GiftTableRow-${index}`} />
+          return (
+            <GiftTableRow
+              item={item}
+              key={`GiftTableRow-${index}`}
+              handleGoToEditGiftGroupState={handleGoToEditGiftGroupState}
+              refreshData={refreshData}
+            />
+          )
         })}
       </Box>
     )
