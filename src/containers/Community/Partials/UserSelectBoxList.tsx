@@ -9,6 +9,7 @@ import { MEMBER_ROLE } from '@constants/community.constants'
 import { ESRoutes } from '@constants/route.constants'
 import { useRouter } from 'next/router'
 import { useState, useEffect } from 'react'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
 
 type UserSelectBoxListProps = {
   member: CommunityMember
@@ -49,7 +50,9 @@ const UserSelectBoxList: React.FC<UserSelectBoxListProps> = ({ member, setValue,
   }
 
   const toProfile = () => {
-    router.push(`${ESRoutes.PROFILE}/${data.user_code}`)
+    CommonHelper.checkUserCode(data.user_code, () => {
+      router.push(`${ESRoutes.PROFILE}/${data.user_code}`)
+    })
   }
 
   return (

@@ -90,7 +90,11 @@ const Comment: React.FC<CommunityHeaderProps> = ({
   const contentRef = useRef(null)
   const popoverInnerRef = useRef()
 
-  const toProfile = (user_code) => router.push(`${ESRoutes.PROFILE}/${user_code}`)
+  const toProfile = (user_code) => {
+    CommonHelper.checkUserCode(user_code, () => {
+      router.push(`${ESRoutes.PROFILE}/${user_code}`)
+    })
+  }
 
   const handleClickReply = (event, content) => {
     if (!_.isEmpty(replyAnchorEl)) {
@@ -280,7 +284,13 @@ const Comment: React.FC<CommunityHeaderProps> = ({
                 {commentData.is_system ? (
                   <ESAvatar className={classes.avatar} alt={commentData.owner_nickname} src={commentData.owner_profile} />
                 ) : (
-                  <ButtonBase onClick={() => router.push(`${ESRoutes.PROFILE}/${commentData.user_code}`)}>
+                  <ButtonBase
+                    onClick={() =>
+                      CommonHelper.checkUserCode(commentData.user_code, () => {
+                        router.push(`${ESRoutes.PROFILE}/${commentData.user_code}`)
+                      })
+                    }
+                  >
                     <ESAvatar className={classes.avatar} alt={commentData.owner_nickname} src={commentData.owner_profile} />
                   </ButtonBase>
                 )}
