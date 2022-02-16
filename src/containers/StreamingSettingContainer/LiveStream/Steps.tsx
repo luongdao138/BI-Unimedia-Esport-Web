@@ -288,24 +288,31 @@ const Steps: React.FC<StepsProps> = ({
       uuid_clone: uuid_clone,
     }
     setClickShowText(true)
-    setLiveStreamConfirm(data, () => {
-      onNext(step + 1, share_sns_flag, {
-        title: formik.values.stepSettingOne.title,
-        content: `${baseViewingURL}${formik.values.stepSettingOne.linkUrl}`,
-      })
-      formik.setFieldValue('stepSettingOne.step_setting', step + 1)
-      const { left, top } = getBoxPositionOnWindowCenter(550, 400)
-      if (isShare) {
-        window
-          .open(
-            getTwitterShareUrl(),
-            '',
-            `width=550,height=400,location=no,toolbar=no,status=no,directories=no,menubar=no,scrollbars=yes,resizable=no,centerscreen=yes,chrome=yes,left=${left},top=${top}`
-          )
-          ?.focus()
-      }
-    })
+    debouncedHandleConfirmForm(data, share_sns_flag)
   }
+
+  const debouncedHandleConfirmForm = useCallback(
+    _.debounce((data: SetLiveStreamParams, share_sns_flag: boolean) => {
+      setLiveStreamConfirm(data, () => {
+        onNext(step + 1, share_sns_flag, {
+          title: formik.values.stepSettingOne.title,
+          content: `${baseViewingURL}${formik.values.stepSettingOne.linkUrl}`,
+        })
+        formik.setFieldValue('stepSettingOne.step_setting', step + 1)
+        const { left, top } = getBoxPositionOnWindowCenter(550, 400)
+        if (isShare) {
+          window
+            .open(
+              getTwitterShareUrl(),
+              '',
+              `width=550,height=400,location=no,toolbar=no,status=no,directories=no,menubar=no,scrollbars=yes,resizable=no,centerscreen=yes,chrome=yes,left=${left},top=${top}`
+            )
+            ?.focus()
+        }
+      })
+    }, 700),
+    []
+  )
 
   const getBoxPositionOnWindowCenter = function (width, height) {
     return {
