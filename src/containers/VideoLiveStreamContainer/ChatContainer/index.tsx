@@ -267,7 +267,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
 
     const { width: pageWidth } = useWindowDimensions(0)
     const isDesktopDown1280 = pageWidth > 768 && pageWidth <= 1280
-    const { userResult, streamingSecond, playedSecond, liveStreamInfo, resetState } = useDetailVideo()
+    const { userResult, streamingSecond, playedSecond, liveStreamInfo, resetState, videoRefEl } = useDetailVideo()
     // const { streamingSecond, playedSecond, isViewingStream, liveStreamInfo } = useDetailVideo()
     // const userResult = {streamer: 1}
     const { dataPurchaseTicketSuperChat } = usePurchaseTicketSuperChat()
@@ -292,6 +292,15 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         resetStates: resetStates,
       }
     })
+    useEffect(() => {
+      console.log('videoel=====>>>>', videoRefEl)
+      if (videoRefEl && videoRefEl.videoElement && videoRefEl.videoQuery) {
+        console.log('CUR===', videoRefEl.videoElement.currentTime)
+        videoRefEl.videoQuery.ontimeupdate = (event) => {
+          console.log('The currentTime attribute has been updated. Again.', event)
+        }
+      }
+    }, [videoRefEl])
 
     useEffect(() => {
       cache.clearAll()

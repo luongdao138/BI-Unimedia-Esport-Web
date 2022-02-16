@@ -66,7 +66,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     videoError: false,
   })
 
-  const { changeVideoTime, liveStreamInfo, changeSeekCount } = useDetailVideo()
+  const { changeVideoTime, liveStreamInfo, changeSeekCount, onSaveVideoRef } = useDetailVideo()
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'), { noSsr: true })
   const isDownMd = useMediaQuery(theme.breakpoints.down(769), { noSsr: true })
@@ -322,6 +322,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
 
   //archived
   useEffect(() => {
+    onSaveVideoRef(document.querySelector('video'), document.createElement('video'))
     videoEl.current.addEventListener('timeupdate', (event) => {
       const videoInfo = event.target
       // console.log(
