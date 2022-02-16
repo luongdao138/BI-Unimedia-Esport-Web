@@ -515,18 +515,13 @@ const useStyles = makeStyles((theme) => ({
     position: 'relative',
     flexDirection: 'row',
     alignItems: 'center',
-    marginRight: 24,
+    // marginRight: 24,
   },
   movie_title: {
     // paddingRight: '64px',
     fontSize: '20px',
     fontWeight: 'bold',
     color: '#FFFFFF',
-    overflow: 'hidden',
-    'text-overflow': 'ellipsis',
-    display: '-webkit-box',
-    '-webkit-line-clamp': 2,
-    '-webkit-box-orient': 'vertical',
   },
   device_name: {
     fontSize: '15px',
@@ -619,11 +614,6 @@ const useStyles = makeStyles((theme) => ({
   streamer_name: {
     fontSize: '18px',
     fontWeight: 'bold',
-    overflow: 'hidden',
-    'text-overflow': 'ellipsis',
-    display: '-webkit-box',
-    '-webkit-line-clamp': 2,
-    '-webkit-box-orient': 'vertical',
   },
   registration: {
     display: 'flex',
@@ -739,6 +729,8 @@ const useStyles = makeStyles((theme) => ({
     },
     register_channel_btn: () => ({
       padding: '4px 10px',
+      marginLeft: 10,
+      marginRight: 8,
     }),
   },
   [theme.breakpoints.down(321)]: {
