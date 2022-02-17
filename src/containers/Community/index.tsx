@@ -17,6 +17,7 @@ import InfiniteScroll from 'react-infinite-scroll-component'
 import _ from 'lodash'
 import { WindowScroller, List, CellMeasurer, AutoSizer, CellMeasurerCache } from 'react-virtualized'
 import { useLayoutEffect } from 'react'
+import GoogleAd from '@components/GoogleAd'
 
 const cache = new CellMeasurerCache({
   fixedWidth: true,
@@ -147,6 +148,7 @@ const CommunityContainer: React.FC<CommunityContainerProps> = ({ filter }) => {
 
   return (
     <>
+      <GoogleAd id="ad_community_t" slot="" classNames="ad_community_t" />
       <Box className={classes.header}>
         <Typography variant="h2">{t('common:home.community')}</Typography>
 

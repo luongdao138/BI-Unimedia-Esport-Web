@@ -13,6 +13,7 @@ import { Box, Grid } from '@material-ui/core'
 import _ from 'lodash'
 import { ESRoutes } from '@constants/route.constants'
 import { ROUTE_FROM } from '@constants/community.constants'
+import GoogleAd from '@components/GoogleAd'
 
 const CommunityContainer: React.FC = () => {
   const router = useRouter()
@@ -55,6 +56,7 @@ const CommunityContainer: React.FC = () => {
   const renderBody = () => {
     return (
       <>
+        <GoogleAd id="ad_community_card" slot="" classNames="ad_community_card" />
         {!_.isEmpty(communityDetail) && (
           <>
             <CommunityDetailHeader

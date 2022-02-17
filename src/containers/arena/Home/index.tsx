@@ -13,6 +13,7 @@ import useReturnHref from '@utils/hooks/useReturnHref'
 import ESLoader from '@components/Loader'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import HeaderArea from './HeaderArea'
+import GoogleAd from '@components/GoogleAd'
 
 const cache = new CellMeasurerCache({
   fixedWidth: true,
@@ -121,6 +122,7 @@ const ArenaHome: React.FC<ArenaHomeProps> = ({ filter }) => {
 
   return (
     <>
+      <GoogleAd id="ad_arena_t" slot="" classNames="ad_arena_t" />
       <HeaderArea onFilter={onFilter} toCreate={toCreate} filter={filter} />
       <div>
         <div className={classes.container}>

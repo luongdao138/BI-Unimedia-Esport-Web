@@ -11,6 +11,7 @@ import { useRouter } from 'next/router'
 import { Colors } from '@theme/colors'
 import PageWithLayoutType from '@constants/page'
 import useSearch from '@containers/Search/useSearch'
+import GoogleAd from '@components/GoogleAd'
 
 const SearchPage: PageWithLayoutType = () => {
   const { t } = useTranslation(['common'])
@@ -82,6 +83,9 @@ const SearchPage: PageWithLayoutType = () => {
         </Box>
         <Box p={3}>{renderSwitch()}</Box>
       </Box>
+      <Box className={classes.googleAd}>
+        <GoogleAd id="ad_search_t" slot="" classNames="ad_search_t" />
+      </Box>
     </MainLayout>
   )
 }
@@ -101,6 +105,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   label: {
     wordBreak: 'break-all',
     fontWeight: 'bold',
+  },
+  googleAd: {
+    position: 'fixed',
+    bottom: 0,
   },
 }))
 

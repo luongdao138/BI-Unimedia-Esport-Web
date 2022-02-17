@@ -13,6 +13,7 @@ import { AutoSizer, WindowScroller, List, CellMeasurer, CellMeasurerCache } from
 import useReturnHref from '@utils/hooks/useReturnHref'
 import _ from 'lodash'
 import i18n from '@locales/i18n'
+import GoogleAd from '@components/GoogleAd'
 
 const cache = new CellMeasurerCache({
   fixedWidth: true,
@@ -119,6 +120,7 @@ const LobbyHome: React.FC<LobbyHomeProps> = ({ filter }) => {
 
   return (
     <>
+      <GoogleAd id="ad_lobby_t" slot="" classNames="ad_lobby_t" />
       <Header onFilter={onFilter} toCreate={toCreate} filter={filter} />
       <div className={classes.container}>
         <InfiniteScroll
