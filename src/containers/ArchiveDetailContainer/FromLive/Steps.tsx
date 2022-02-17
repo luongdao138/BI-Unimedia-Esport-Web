@@ -451,7 +451,7 @@ const Steps: React.FC<StepsProps> = ({
             <Box className={classes.label}>{i18n.t('common:archive_detail_screen.ticket_amount')}</Box>
             <Box className={classes.dateTime} pt={1} pl={1} height="28px">
               {videoArchivedDetail && videoArchivedDetail?.ticket_price
-                ? `${FormatHelper.currencyFormat(videoArchivedDetail?.ticket_price.toString())} ${i18n.t('common:common.money')}`
+                ? `${FormatHelper.currencyFormat(videoArchivedDetail?.ticket_price.toString())} ${i18n.t('common:common.eXe_points')}`
                 : ''}
             </Box>
           </Box>
