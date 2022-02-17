@@ -102,6 +102,7 @@ const VideoDetail: React.FC = () => {
   const [videoStatus, setVideoStatus] = useState(null)
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isArchived, setIsArchived] = useState(false)
+  const [disabled, setDisabled] = useState(false)
 
   const {
     getVideoDetail,
@@ -372,13 +373,33 @@ const VideoDetail: React.FC = () => {
   }
   const handleConfirmPurchaseSuperChat = async () => {
     setPurchaseType(PURCHASE_TYPE.PURCHASE_SUPER_CHAT)
-    await purchaseTicketSuperChat({
-      point: donatedPoints,
-      type: PURCHASE_TYPE.PURCHASE_SUPER_CHAT,
-      video_id: getVideoId(),
-      handleSuccess: handleCloseConfirmModal,
-    })
+    setDisabled(true)
+    debounceDonatePoint(donatedPoints, PURCHASE_TYPE.PURCHASE_SUPER_CHAT, getVideoId(), handleCloseConfirmModal)
   }
+
+  const debounceDonatePoint = useCallback(
+    _.debounce(async (donatedPoints, type, video_id, handleSuccess: () => void) => {
+      await purchaseTicketSuperChat(
+        {
+          point: donatedPoints,
+          type: type,
+          video_id: video_id,
+          handleSuccess: handleSuccess,
+        },
+        (isSuccess) => {
+          if (isSuccess) {
+            setShowConfirmModal(false)
+            setErrorPurchase(false)
+            setDisabled(false)
+          } else {
+            // setShowConfirmModal(false)
+            setDisabled(false)
+          }
+        }
+      )
+    }, 700),
+    []
+  )
 
   const handlePurchaseTicket = () => {
     if (isAuthenticated) {
@@ -667,6 +688,7 @@ const VideoDetail: React.FC = () => {
         ticketPoint={detailVideoResult?.ticket_price}
         msgContent={purchaseComment}
         handleConfirm={handleConfirmPurchaseSuperChat}
+        disabled={disabled}
       />
       <DonatePoints
         myPoint={myPoint}
