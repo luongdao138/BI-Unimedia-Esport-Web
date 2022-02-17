@@ -21,12 +21,14 @@ const usePurchaseTicketSuperChat = () => {
 
   const getVideoDetail = (params: VideoDetailParams) => dispatch(actionsVideoTop.videoDetail(params))
 
-  const purchaseTicketSuperChat = async (params: PurchaseTicketParams) => {
+  const purchaseTicketSuperChat = async (params: PurchaseTicketParams, onResult?: (isSuccess: boolean) => void) => {
     console.log('>>>>>>>>>>>>>>>> params purchaseTicketSuperChat >>>>>', params)
     const result = await dispatch(actions.purchaseTicketSuperChat(params))
     console.log('>>>>>>>>>>>>>>>> result purchase ticket: ', result)
+    onResult(actions.purchaseTicketSuperChat.fulfilled.match(result))
     if (actions.purchaseTicketSuperChat.fulfilled.match(result)) {
       params?.handleSuccess()
+      // onResult()
       if (params?.type === 1) {
         console.log(' >>>>>>>>>>>>>>>> purchase ticket success ==================*************')
         dispatch(addToast(i18n.t('common:donate_points.purchase_ticket_success')))
@@ -35,6 +37,7 @@ const usePurchaseTicketSuperChat = () => {
         console.log(' >>>>>>>>>>>>>>>> purchase super chat success ==================*************')
       }
     } else {
+      // onResult()
       if (params?.type === 1) {
         console.log('purchase ticket error')
         params?.handleError()
