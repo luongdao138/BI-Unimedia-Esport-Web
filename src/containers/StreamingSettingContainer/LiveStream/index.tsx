@@ -23,6 +23,8 @@ const { getChannelByArn, getVideoByUuid } = require(`src/graphql.${process.env.N
 const { onCreateVideo, onUpdateChannel, onUpdateVideo } = require(`src/graphql.${process.env.NEXT_PUBLIC_AWS_ENV}/subscriptions`)
 // import * as APIt from 'src/types/graphqlAPI'
 import useGraphqlAPI from 'src/types/useGraphqlAPI'
+import { getTimeZone } from '@utils/helpers/CommonHelper'
+import moment from 'moment'
 /* eslint-disable @typescript-eslint/no-unused-vars */
 // @ts-ignore
 const APIt: any = useGraphqlAPI()
@@ -174,7 +176,7 @@ const LiveStreamContainer: React.FC<Props> = ({ formik, validateField, handleUpd
       // setLiveStartTime('2022-02-15 13:40:12')
       if (videoData) {
         setVideoStatusDynamo(videoData?.video_status)
-        setLiveStartTime(videoData?.live_start_time)
+        setLiveStartTime(moment.utc(videoData?.live_start_time).tz(getTimeZone()).format('YYYY-MM-DD HH:mm:ss'))
         if (videoData?.process_status === EVENT_LIVE_STATUS.STREAM_OFF) {
           //Updated
           setObsStatusDynamo(0)
@@ -212,7 +214,7 @@ const LiveStreamContainer: React.FC<Props> = ({ formik, validateField, handleUpd
         if (updateVideoData) {
           if (updateVideoData?.uuid === formik.values?.stepSettingOne?.uuid_clone) {
             setVideoStatusDynamo(updateVideoData?.video_status)
-            setLiveStartTime(updateVideoData?.live_start_time)
+            setLiveStartTime(moment.utc(updateVideoData?.live_start_time).tz(getTimeZone()).format('YYYY-MM-DD HH:mm:ss'))
             if (updateVideoData?.process_status === EVENT_LIVE_STATUS.STREAM_START) {
               //live
               setObsStatusDynamo(1)
@@ -254,7 +256,7 @@ const LiveStreamContainer: React.FC<Props> = ({ formik, validateField, handleUpd
         if (createdVideo) {
           if (createdVideo?.uuid === formik.values?.stepSettingOne?.uuid_clone) {
             setVideoStatusDynamo(createdVideo?.video_status)
-            setLiveStartTime(createdVideo?.live_start_time)
+            setLiveStartTime(moment.utc(createdVideo?.live_start_time).tz(getTimeZone()).format('YYYY-MM-DD HH:mm:ss'))
             if (createdVideo?.process_status === EVENT_LIVE_STATUS.STREAM_START) {
               //live
               setObsStatusDynamo(1)

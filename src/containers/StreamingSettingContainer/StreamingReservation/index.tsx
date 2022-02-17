@@ -26,6 +26,8 @@ import { Box } from '@material-ui/core'
 import { STATUS_VIDEO } from '@services/videoTop.services'
 import { useAppDispatch } from '@store/hooks'
 import * as commonActions from '@store/common/actions'
+import { getTimeZone } from '@utils/helpers/CommonHelper'
+import moment from 'moment'
 
 interface Props {
   formik?: FormikProps<FormLiveType>
@@ -202,7 +204,7 @@ const StreamingReservationContainer: React.FC<Props> = ({
       if (videoData) {
         setVideoStatusDynamo(videoData?.video_status)
         setProcessStatusDynamo(videoData?.process_status)
-        setLiveStartTime(videoData?.live_start_time)
+        setLiveStartTime(moment.utc(videoData?.live_start_time).tz(getTimeZone()).format('YYYY-MM-DD HH:mm:ss'))
         if (videoData?.process_status === EVENT_LIVE_STATUS.STREAM_OFF) {
           //Updated
           setObsStatusDynamo(0)
@@ -241,7 +243,7 @@ const StreamingReservationContainer: React.FC<Props> = ({
           if (updateVideoData?.uuid === formik.values?.stepSettingTwo?.uuid) {
             setVideoStatusDynamo(updateVideoData?.video_status)
             setProcessStatusDynamo(updateVideoData?.process_status)
-            setLiveStartTime(updateVideoData?.live_start_time)
+            setLiveStartTime(moment.utc(updateVideoData?.live_start_time).tz(getTimeZone()).format('YYYY-MM-DD HH:mm:ss'))
             if (updateVideoData?.process_status === EVENT_LIVE_STATUS.STREAM_START) {
               //live
               setObsStatusDynamo(1)
@@ -284,7 +286,7 @@ const StreamingReservationContainer: React.FC<Props> = ({
           if (createdVideo?.uuid === formik.values?.stepSettingTwo?.uuid) {
             setVideoStatusDynamo(createdVideo?.video_status)
             setProcessStatusDynamo(createdVideo?.process_status)
-            setLiveStartTime(createdVideo?.live_start_time)
+            setLiveStartTime(moment.utc(createdVideo?.live_start_time).tz(getTimeZone()).format('YYYY-MM-DD HH:mm:ss'))
             if (createdVideo?.process_status === EVENT_LIVE_STATUS.STREAM_START) {
               //live
               setObsStatusDynamo(1)
