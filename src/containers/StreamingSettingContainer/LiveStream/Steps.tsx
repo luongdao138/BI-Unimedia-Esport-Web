@@ -288,11 +288,11 @@ const Steps: React.FC<StepsProps> = ({
       uuid_clone: uuid_clone,
     }
     setClickShowText(true)
-    debouncedHandleConfirmForm(data, share_sns_flag)
+    debouncedHandleConfirmForm(data, share_sns_flag, step)
   }
 
   const debouncedHandleConfirmForm = useCallback(
-    _.debounce((data: SetLiveStreamParams, share_sns_flag: boolean) => {
+    _.debounce((data: SetLiveStreamParams, share_sns_flag: boolean, step: number) => {
       setLiveStreamConfirm(data, () => {
         onNext(step + 1, share_sns_flag, {
           title: formik.values.stepSettingOne.title,
