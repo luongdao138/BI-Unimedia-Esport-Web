@@ -60,6 +60,7 @@ const VideosTop: React.FC = () => {
     // setTab(parseInt(defaultTab.toString(), 10) ?? 0)
     bannerTop()
     setFollow(0)
+    document.body.style.overflow = 'overlay'
   }, [])
 
   useEffect(() => {
