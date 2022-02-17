@@ -183,6 +183,10 @@ const StreamingSettingContainer: React.FC<{ default_tab: any }> = ({ default_tab
     setGiftManageTabState(tab)
     setTab(3)
   }
+  const giftManageChangeTabSubmitSuccess = () => {
+    setTab(TABS.LIVE_STREAM)
+    setOpenDialog(true)
+  }
 
   const getContent = () => {
     switch (tab) {
@@ -208,7 +212,13 @@ const StreamingSettingContainer: React.FC<{ default_tab: any }> = ({ default_tab
       case TABS.DISTRIBUTOR:
         return <DistributorInformationContainer formik={formikDistributor} />
       case TABS.GIFT_MEMBERS_LIST:
-        return <GiftManageTab tabState={giftManageTabState} onChangeTab={giftManageChangeTab} />
+        return (
+          <GiftManageTab
+            tabState={giftManageTabState}
+            onChangeTab={giftManageChangeTab}
+            onChangeTabSubmitSuccess={giftManageChangeTabSubmitSuccess}
+          />
+        )
       default:
         break
     }

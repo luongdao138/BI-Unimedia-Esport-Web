@@ -1921,6 +1921,7 @@ export default {
     csv_download: 'CSVダウンロード',
     list_name: 'リスト名',
     registration_number: '登録数',
+    choice: '選択',
   },
   streaming_gift_management: {
     title: '個別ギフト対象者申請',

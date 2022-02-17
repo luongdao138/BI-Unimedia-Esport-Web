@@ -6,6 +6,7 @@ import { GiftGroupType } from '@services/gift.service'
 
 type Props = {
   onChangeTab?: (tab: TabState) => void
+  onChangeTabSubmitSuccess?: () => void
   tabState?: TabState
 }
 
@@ -19,7 +20,7 @@ export enum CreateMode {
   EDIT,
 }
 
-const GiftManageTab: React.FC<Props> = ({ onChangeTab, tabState }) => {
+const GiftManageTab: React.FC<Props> = ({ onChangeTab, onChangeTabSubmitSuccess, tabState }) => {
   const [createMode, setCreateMode] = useState(CreateMode.CREATE)
 
   const { resetNewGroupMasterList, getGiftGroupDetail } = useGiftTarget()
@@ -42,7 +43,7 @@ const GiftManageTab: React.FC<Props> = ({ onChangeTab, tabState }) => {
   }
 
   const handleBackToListState = () => {
-    onChangeTab(TabState.LIST)
+    onChangeTabSubmitSuccess()
   }
 
   if (tabState === TabState.LIST) {

@@ -112,7 +112,7 @@ const ListGroupGift: React.FC<IProps> = ({ onChangeTab, handleSelectGroup, handl
                         <TableCell align="center">
                           <Box onClick={() => onSelectGroupComplete(item)} className={classes.btnSelect}>
                             <Typography className={classes.choice} variant="caption">
-                              個人
+                              {t('streaming_gift_report_screen.choice')}
                             </Typography>
                           </Box>
                         </TableCell>
