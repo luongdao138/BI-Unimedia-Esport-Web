@@ -11,6 +11,7 @@ import useGiftManage from './useGiftTarget'
 import CharacterLimited from '@components/CharacterLimited'
 import { v4 as uuidv4 } from 'uuid'
 import { MODE } from '.'
+import _ from 'lodash'
 
 interface PersonTargetProps {
   handleSuccess: () => void
@@ -24,6 +25,7 @@ const PersonTarget: FC<PersonTargetProps> = ({ handleSuccess, mode, idTargetPers
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down(414))
   const { addTargetPerson, checkSnsUrl, giftTargetData, updateTargetPerson } = useGiftManage()
+
   const targetPersonId = uuidv4()
 
   const validateSnsSuccess = () => {
@@ -67,7 +69,11 @@ const PersonTarget: FC<PersonTargetProps> = ({ handleSuccess, mode, idTargetPers
     if (mode === MODE.UPDATE) {
       if (giftTargetData) {
         const itemUpdate = giftTargetData.find((i) => i.id === idTargetPerson)
-        setValues({ target_value: itemUpdate.target_value, target_name: itemUpdate.target_name, sns_url: itemUpdate.sns_url })
+        setValues({
+          target_value: itemUpdate.target_value,
+          target_name: itemUpdate.target_name,
+          sns_url: itemUpdate.sns_url,
+        })
       }
     }
   }, [giftTargetData])
@@ -83,13 +89,21 @@ const PersonTarget: FC<PersonTargetProps> = ({ handleSuccess, mode, idTargetPers
   }
   const disabledBtn = !formik.isValid || !formik.dirty
 
+  const getMasterIndex = () => {
+    if (mode === MODE.ADD) {
+      return giftTargetData.length + 1
+    }
+    const index = _.findIndex(giftTargetData, (item) => item.id === idTargetPerson)
+    return index + 1
+  }
+
   return (
     <form onSubmit={handleSubmit} className={classes.container}>
       <span className={classes.label}>
         {isMobile ? t('streaming_gift_management.add_information_message_md') : t('streaming_gift_management.add_information_message')}
       </span>
       <Box className={classes.contentContainer}>
-        <Typography className={classes.title}>{`${t('streaming_gift_management.target_no')}${1}`}</Typography>
+        <Typography className={classes.title}>{`${t('streaming_gift_management.target_no')}${getMasterIndex()}`}</Typography>
         <Box className={classes.formContainer}>
           <ESLabel label={t('streaming_gift_management.team_or_individual')} required size={'small'} bold />
           <Box className={classes.wrap_check_box}>

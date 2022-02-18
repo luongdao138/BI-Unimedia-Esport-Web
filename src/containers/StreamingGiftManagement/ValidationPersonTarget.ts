@@ -32,8 +32,7 @@ export const validationTargetPerson = (): any => {
       })
       .test('url-format-check', '正しいURLを入力してください。', (val) => {
         return urlValidation(val)
-      })
-      .trim(),
+      }),
     // TODO validate URL
   })
 }
