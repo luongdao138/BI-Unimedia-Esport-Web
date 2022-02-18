@@ -24,12 +24,21 @@ const Footer: React.FC<Props> = ({ onConfirm, onCancel, errorMessage, step }) =>
       <Box className={classes.container}>
         {errorMessage && <Typography className={classes.errorMessage}>{errorMessage}</Typography>}
         <Box className={classes.buttonContainer}>
-          <ButtonPrimary size="small" className={classes.actionBtnClose} gradient={false} onClick={onCancel}>
-            {t('common:streaming_gift_management.cancel')}
-          </ButtonPrimary>
-          <ButtonPrimary gradient size="small" className={classes.actionBtnConfirm} onClick={onConfirm} disabled={disableBtnConfirm}>
-            {t('common:streaming_gift_management.apply')}
-          </ButtonPrimary>
+          {step !== 3 && (
+            <>
+              <ButtonPrimary size="small" className={classes.actionBtnClose} gradient={false} onClick={onCancel}>
+                {t('common:streaming_gift_management.cancel')}
+              </ButtonPrimary>
+              <ButtonPrimary gradient size="small" className={classes.actionBtnConfirm} onClick={onConfirm} disabled={disableBtnConfirm}>
+                {t('common:streaming_gift_management.apply')}
+              </ButtonPrimary>
+            </>
+          )}
+          {step === 3 && (
+            <ButtonPrimary gradient size="large" className={classes.actionBtnConfirm} onClick={onCancel}>
+              {t('common:streaming_gift_management.txt_footer_button_success')}
+            </ButtonPrimary>
+          )}
         </Box>
       </Box>
     </>

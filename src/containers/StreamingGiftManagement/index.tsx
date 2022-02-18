@@ -88,7 +88,6 @@ const StreamingGiftManagement: React.FC = () => {
     <>
       <HeaderWithButton title={t('streaming_gift_management.title')} />
       {renderContent()}
-      {/* <Footer onConfirm={} onCancel={handleOnNavigateBackToStreamSettingScreen} step={step} /> */}
       <Footer
         step={step}
         onCancel={handleOnNavigateBackToStreamSettingScreen}

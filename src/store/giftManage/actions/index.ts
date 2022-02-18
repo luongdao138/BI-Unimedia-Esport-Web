@@ -75,7 +75,7 @@ export const addNewGiftMaster = createAsyncThunk<AddNewGiftMasterResponse, AddNe
       if (res?.code === 200) {
         return res
       } else {
-        return rejectWithValue(JSON.stringify(res.message))
+        return rejectWithValue(res.data.url)
       }
     } catch (error) {
       if (!error.response) {

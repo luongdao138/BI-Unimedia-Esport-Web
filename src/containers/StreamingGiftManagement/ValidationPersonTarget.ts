@@ -1,14 +1,17 @@
 import i18n from '@locales/i18n'
 import * as Yup from 'yup'
 
-const urlValidation = (url) => {
-  try {
-    new URL(url)
-  } catch (e) {
-    console.error(e)
-    return false
-  }
-  return true
+function validURL(str) {
+  const pattern = new RegExp(
+    '^(https?:\\/\\/)?' +
+      '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' +
+      '((\\d{1,3}\\.){3}\\d{1,3}))' +
+      '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' +
+      '(\\?[;&a-z\\d%_.~+=-]*)?' +
+      '(\\#[-a-z\\d_]*)?$',
+    'i'
+  )
+  return !!pattern.test(str)
 }
 
 export const validationTargetPerson = (): any => {
@@ -30,8 +33,8 @@ export const validationTargetPerson = (): any => {
         if (val && val.length > 0 && val.trim().length === 0) return false
         return true
       })
-      .test('url-format-check', '正しいURLを入力してください。', (val) => {
-        return urlValidation(val)
+      .test('url-format-check', i18n.t('common:streaming_gift_management.validation.url_incorrect'), (val) => {
+        return validURL(val)
       }),
     // TODO validate URL
   })
