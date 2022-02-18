@@ -367,6 +367,8 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: Colors.primary,
     borderRadius: 2,
     minWidth: '84px',
+    flexShrink: 0,
+    marginLeft: 24,
   },
   txtVideoStatus: {
     fontSize: '12px',
