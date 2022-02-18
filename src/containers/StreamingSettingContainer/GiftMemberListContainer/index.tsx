@@ -69,6 +69,7 @@ const GiftMemberListContainer: React.FC<Props> = ({ handleBackToListState, creat
       }
       createNewGiftGroup(requestData, handleOnSuccessCallback)
     },
+    validateOnMount: true,
   })
 
   useEffect(() => {
@@ -132,11 +133,21 @@ const GiftMemberListContainer: React.FC<Props> = ({ handleBackToListState, creat
     return <Box className={classes.listContainer}>{getData().length > 0 ? listWithData() : emptyListView()}</Box>
   }
 
+  const submitButtonDisabled = () => {
+    if (errors?.title) {
+      return true
+    }
+    if (createMode === CreateMode.EDIT) {
+      return false
+    }
+    return getNumberItemSelected() === 0
+  }
+
   return (
     <Box className={classes.container}>
       {header()}
       {memberList()}
-      <Footer onConfirm={handleSubmit} onCancel={handleBackToListState} confirmDisable={!!errors?.title || getNumberItemSelected() === 0} />
+      <Footer onConfirm={handleSubmit} onCancel={handleBackToListState} confirmDisable={submitButtonDisabled()} />
     </Box>
   )
 }
@@ -181,7 +192,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
   },
   emptyViewMessage: {
-    whiteSpace: 'pre',
+    whiteSpace: 'pre-wrap',
     textAlign: 'center',
     fontSize: '14px',
     color: Colors.white_opacity['70'],
