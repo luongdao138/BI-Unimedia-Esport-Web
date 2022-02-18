@@ -46,7 +46,8 @@ const TournamentHeader: React.FC<TournamentHeaderProps> = ({ title, status, chil
   }, [status])
   return (
     <>
-      <GoogleAd id="ad_arena_d" slot="" classNames="ad_arena_d" />
+      {/* GADS: detail arena/**** */}
+      <GoogleAd id={{ idPatten1: 'ad_arena_d' }} />
       <Box>
         <Box className={classes.backContainer}>
           <IconButton onClick={onHandleBack} className={classes.iconButtonBg2}>

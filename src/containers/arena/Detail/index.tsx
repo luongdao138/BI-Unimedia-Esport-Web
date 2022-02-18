@@ -21,6 +21,7 @@ import BRStatusRecruiting from './Partials/BRStatusRecruiting'
 import BRStatusRecruitmentClosed from './Partials/BRStatusRecruitmentClosed'
 import BRStatusInProgress from './Partials/BRStatusInProgress'
 import BRStatusComplete from './Partials/BRStatusComplete'
+import GoogleAd from '@components/GoogleAd'
 
 const TournamentDetail: React.FC = () => {
   const { tournament, meta, userProfile, handleBack } = useTournamentDetail()
@@ -49,31 +50,35 @@ const TournamentDetail: React.FC = () => {
   }
 
   return (
-    <div>
-      <ESLoader open={meta.pending} />
-      {tournament && meta.loaded && (
-        <>
-          <TournamentDetailHeader
-            title={tournament?.attributes?.title}
-            status={tournament?.attributes?.status || 'ready'}
-            cover={tournament?.attributes?.cover_image || '/images/default_card.png'}
-            onHandleBack={handleBack}
-          >
-            {isBattleRoyale ? brActionComponent[tournament.attributes.status] : actionComponent[tournament.attributes.status]}
-            {/* {actionComponent[tournament.attributes.status]} */}
-          </TournamentDetailHeader>
-          <DetailInfo toEdit={toEdit} detail={tournament} extended />
-          <ESModal open={router.query.modalName === 'participants'}>
-            <Participants detail={tournament} />
-          </ESModal>
-        </>
-      )}
-      <RegularModal open={router.asPath.endsWith('/edit')}>
-        <BlankLayout>
-          <UpsertForm />
-        </BlankLayout>
-      </RegularModal>
-    </div>
+    <>
+      <div>
+        <ESLoader open={meta.pending} />
+        {tournament && meta.loaded && (
+          <>
+            <TournamentDetailHeader
+              title={tournament?.attributes?.title}
+              status={tournament?.attributes?.status || 'ready'}
+              cover={tournament?.attributes?.cover_image || '/images/default_card.png'}
+              onHandleBack={handleBack}
+            >
+              {isBattleRoyale ? brActionComponent[tournament.attributes.status] : actionComponent[tournament.attributes.status]}
+              {/* {actionComponent[tournament.attributes.status]} */}
+            </TournamentDetailHeader>
+            <DetailInfo toEdit={toEdit} detail={tournament} extended />
+            <ESModal open={router.query.modalName === 'participants'}>
+              <Participants detail={tournament} />
+            </ESModal>
+          </>
+        )}
+        <RegularModal open={router.asPath.endsWith('/edit')}>
+          <BlankLayout>
+            <UpsertForm />
+          </BlankLayout>
+        </RegularModal>
+      </div>
+      {/* GADS: SP 3 detail arena/**** */}
+      <GoogleAd id={{ idPatten3: 'ad_arena_d' }} />
+    </>
   )
 }
 

@@ -14,6 +14,7 @@ import { HOME_SETTINGS } from '@constants/common.constants'
 import ESLoader from '@components/FullScreenLoader'
 import { RecentLobbies } from '@containers/Home/elements/Slider/RecentLobbies'
 import { RecommendedLobbies } from './elements/Slider/RecommendedLobbies'
+import GoogleAd from '@components/GoogleAd'
 
 const HomeContainer: React.FC = () => {
   const { recommendedUsers, getUserRecommendations, homeSettings, getUserProfile, metaHomeSettings } = useUserData()
@@ -63,12 +64,15 @@ const HomeContainer: React.FC = () => {
 
   return (
     <>
+      {/* GADS: Home */}
+      <GoogleAd id={{ idPatten1: 'ad_home_t' }} />
       <Header />
       {homeSettings.map((value, index) => {
         return renderItem(value, index)
       })}
       {metaHomeSettings.pending && <ESLoader open={metaHomeSettings.pending} />}
       <Box marginBottom={9} />
+      <GoogleAd id={{ idPatten3: 'ad_home_b' }} />
     </>
   )
 }

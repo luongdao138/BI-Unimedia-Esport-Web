@@ -303,7 +303,8 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
   return (
     <>
       <Grid container direction="column">
-        <GoogleAd id="ad_profile_t" slot="" classNames="ad_profile_t" />
+        {/* GADS: profile */}
+        <GoogleAd id={{ idPatten1: 'ad_profile_t' }} />
         {getHeader()}
         {getTabs()}
         {getContent()}

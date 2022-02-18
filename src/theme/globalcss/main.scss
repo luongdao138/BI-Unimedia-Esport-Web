@@ -892,3 +892,46 @@ body.has-sticky-div .sticky-div {
     min-height: calc(100vh - 264px);
   }
 }
+
+//ggads
+.google_ad_patten_4 {
+  display: flex;
+  justify-content: center;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  display: none;
+}
+.google_ad_patten_1 {
+  display: flex;
+  justify-content: center;
+}
+.google_ad_patten_3 {
+  display: flex;
+  justify-content: center;
+  display: none;
+}
+ins[style] {
+  width: 100% !important;
+}
+iframe[style] {
+  width: 100% !important;
+}
+.position_bottom {
+  padding-bottom: 0px;
+}
+@media (max-width: 576px) {
+  .google_ad_patten_1 {
+    display: none;
+  }
+  .google_ad_patten_3 {
+    display: flex;
+  }
+  .google_ad_patten_4 {
+    display: flex;
+    z-index: 1;
+  }
+  .position_bottom {
+    padding-bottom: 60px;
+  }
+}

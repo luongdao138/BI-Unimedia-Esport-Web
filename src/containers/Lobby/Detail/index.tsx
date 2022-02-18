@@ -22,7 +22,6 @@ import Participants from '@containers/Lobby/Participants'
 import ConfirmParticipants from '../ConfirmParticipants'
 import { useConfirm } from '@components/Confirm'
 import { LOBBY_DIALOGS, LOBBY_STATUS } from '@constants/lobby.constants'
-import GoogleAd from '@components/GoogleAd'
 
 const LobbyDetailBody: React.FC = () => {
   const [openList, setList] = useState<boolean>(false)
@@ -80,7 +79,6 @@ const LobbyDetailBody: React.FC = () => {
   const renderBody = () => {
     return (
       <>
-        <GoogleAd id="ad_lobby_card" slot="" classNames="ad_lobby_card" />
         <HeaderBar title={title} cover={cover_image_url} onHandleBack={handleBack} />
         <Box className={classes.root}>
           <LobbyStatusHeader status={status} />
