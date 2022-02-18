@@ -25,6 +25,9 @@ export type AddNewGiftMasterRequestParams = {
 export type AddNewGiftMasterResponse = {
   message?: string
   code?: number
+  data?: {
+    url: string
+  }
 }
 
 export const addNewGiftMaster = async (params: AddNewGiftMasterRequestParams): Promise<AddNewGiftMasterResponse> => {

@@ -6,6 +6,9 @@ import { useTranslation } from 'react-i18next'
 import _ from 'lodash'
 import { getTimeZone } from '@utils/helpers/CommonHelper'
 import { TargetPersonType } from '@store/giftManage/actions'
+import { NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
+import { showDialog } from '@store/common/actions'
+import useCheckNgWord from '@utils/hooks/useCheckNgWord'
 
 const { selectors, actions } = giftManage
 const _addGiftTargetData = createMetaSelector(actions.addTargetPerson)
@@ -17,8 +20,22 @@ const useGiftManage = () => {
   const dispatch = useAppDispatch()
   const giftTargetData = useAppSelector(selectors.getListGiftTargetPerson)
   const { t } = useTranslation('common')
+  const { checkVideoNgWordFields, checkVideoNgWordByField } = useCheckNgWord()
 
   const meta_gift_target = useAppSelector(_addGiftTargetData)
+
+  const checkNgWordTargetPerson = (fields: any, onSuccessCallback: () => void) => {
+    const fieldIdentifier = checkVideoNgWordFields(fields)
+    const ngFields = checkVideoNgWordByField({
+      [t('streaming_gift_management.target_name')]: fields.target_name,
+      [t('streaming_gift_management.sns_url')]: fields.sns_url,
+    })
+    if (fieldIdentifier) {
+      dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: ngFields.join(', ') }))
+    } else {
+      onSuccessCallback()
+    }
+  }
 
   const addTargetPerson = (params: TargetPersonType) => dispatch(actions.addTargetPerson(params))
 
@@ -57,7 +74,9 @@ const useGiftManage = () => {
     } else if (actions.addNewGiftMaster.rejected.match(resultAction)) {
       // console.log('resultAction::', resultAction)
       // // TODO: Show error
-      onError(t('streaming_gift_management.record_error_no').replace('XX', '1'))
+      const urlResponseExist = resultAction.payload
+      const indexGift = (giftTargetData.findIndex((gift) => gift.sns_url === urlResponseExist) + 1).toString()
+      onError(t('streaming_gift_management.record_error_no').replace('XX', indexGift))
     }
   }
 
@@ -118,6 +137,7 @@ const useGiftManage = () => {
   return {
     giftTargetData,
     meta_gift_target,
+    checkNgWordTargetPerson,
     addTargetPerson,
     updateTargetPerson,
     deleteTargetPerson,

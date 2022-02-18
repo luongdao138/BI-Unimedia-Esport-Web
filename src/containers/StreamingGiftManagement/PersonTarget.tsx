@@ -24,7 +24,7 @@ const PersonTarget: FC<PersonTargetProps> = ({ handleSuccess, mode, idTargetPers
   const { t } = useTranslation('common')
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down(414))
-  const { addTargetPerson, checkSnsUrl, giftTargetData, updateTargetPerson } = useGiftManage()
+  const { addTargetPerson, checkSnsUrl, giftTargetData, updateTargetPerson, checkNgWordTargetPerson } = useGiftManage()
 
   const targetPersonId = uuidv4()
 
@@ -43,23 +43,33 @@ const PersonTarget: FC<PersonTargetProps> = ({ handleSuccess, mode, idTargetPers
     setFieldError('sns_url', `登録済みの${values.sns_url}です`)
   }
 
+  const onSuccessSubmit = () => {
+    if (mode === MODE.ADD) {
+      checkSnsUrl(values, validateSnsSuccess, validateError)
+    } else if (mode === MODE.UPDATE) {
+      const itemUpdate = giftTargetData.find((i) => i.id === idTargetPerson)
+      if (itemUpdate.sns_url != values.sns_url) {
+        checkSnsUrl(values, validateSnsSuccess, validateError)
+      } else {
+        //TODO: call function update
+
+        updateTargetPerson({ id: itemUpdate.id, ...values })
+        handleSuccess()
+      }
+    }
+  }
+
   const formik = useFormik({
     initialValues: { target_value: t('streaming_gift_management.team_title'), target_name: '', sns_url: '' },
     validationSchema: validationTargetPerson,
     onSubmit: () => {
-      if (mode === MODE.ADD) {
-        checkSnsUrl(values, validateSnsSuccess, validateError)
-      } else if (mode === MODE.UPDATE) {
-        const itemUpdate = giftTargetData.find((i) => i.id === idTargetPerson)
-        if (itemUpdate.sns_url != values.sns_url) {
-          checkSnsUrl(values, validateSnsSuccess, validateError)
-        } else {
-          //TODO: call function update
-
-          updateTargetPerson({ id: itemUpdate.id, ...values })
-          handleSuccess()
-        }
-      }
+      checkNgWordTargetPerson(
+        {
+          target_name: formik.values.target_name,
+          sns_url: formik.values.sns_url,
+        },
+        onSuccessSubmit
+      )
     },
   })
 
