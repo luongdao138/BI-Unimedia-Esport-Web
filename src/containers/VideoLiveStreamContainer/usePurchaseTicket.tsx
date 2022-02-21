@@ -25,7 +25,7 @@ const usePurchaseTicketSuperChat = () => {
     console.log('>>>>>>>>>>>>>>>> params purchaseTicketSuperChat >>>>>', params)
     const result = await dispatch(actions.purchaseTicketSuperChat(params))
     console.log('>>>>>>>>>>>>>>>> result purchase ticket: ', result)
-    onResult(actions.purchaseTicketSuperChat.fulfilled.match(result))
+    if (onResult) onResult(actions.purchaseTicketSuperChat.fulfilled.match(result))
     if (actions.purchaseTicketSuperChat.fulfilled.match(result)) {
       params?.handleSuccess()
       // onResult()
