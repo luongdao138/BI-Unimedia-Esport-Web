@@ -106,6 +106,8 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({
                     router.push(`${ESRoutes.PROFILE}/${topicData?.owner_user_code}`)
                   })
                 }
+                style={{ cursor: CommonHelper.handleAccountSystem(topicData?.owner_user_code) ? 'default' : 'point' }}
+                disabled={CommonHelper.handleAccountSystem(topicData?.owner_user_code)}
               >
                 <ESAvatar
                   className={classes.avatar}

@@ -258,7 +258,11 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
               <Box className={classes.value}>
                 {data.owner && (
                   <Box display="flex" flexDirection="row" alignItems="center">
-                    <ButtonBase onClick={() => toProfile(data.owner.data.attributes.user_code)}>
+                    <ButtonBase
+                      onClick={() => toProfile(data.owner.data.attributes.user_code)}
+                      style={{ cursor: CommonHelper.handleAccountSystem(data.owner.data.attributes.user_code) ? 'default' : 'point' }}
+                      disabled={CommonHelper.handleAccountSystem(data.owner.data.attributes.user_code)}
+                    >
                       <ESAvatar alt={data.owner.data.attributes.nickname} src={data.owner.data.attributes.avatar} size={35} />
                     </ButtonBase>
                     <Typography className={classes.breakWord}>{data.owner.data.attributes.nickname}</Typography>

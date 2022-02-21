@@ -237,7 +237,11 @@ const Comment: React.FC<CommunityHeaderProps> = ({
               {replyData.is_system ? (
                 <ESAvatar className={classes.avatar} alt={replyData.owner_nickname} src={replyData.owner_profile} />
               ) : (
-                <ButtonBase onClick={() => toProfile(replyData.user_code)}>
+                <ButtonBase
+                  onClick={() => toProfile(replyData.user_code)}
+                  style={{ cursor: CommonHelper.handleAccountSystem(replyData.user_code) ? 'default' : 'point' }}
+                  disabled={CommonHelper.handleAccountSystem(replyData.user_code)}
+                >
                   <ESAvatar className={classes.avatar} alt={replyData.owner_nickname} src={replyData.owner_profile} />
                 </ButtonBase>
               )}
@@ -290,6 +294,8 @@ const Comment: React.FC<CommunityHeaderProps> = ({
                         router.push(`${ESRoutes.PROFILE}/${commentData.user_code}`)
                       })
                     }
+                    style={{ cursor: CommonHelper.handleAccountSystem(commentData.user_code) ? 'default' : 'point' }}
+                    disabled={CommonHelper.handleAccountSystem(commentData.user_code)}
                   >
                     <ESAvatar className={classes.avatar} alt={commentData.owner_nickname} src={commentData.owner_profile} />
                   </ButtonBase>

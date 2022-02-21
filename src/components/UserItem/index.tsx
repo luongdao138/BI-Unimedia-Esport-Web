@@ -120,7 +120,11 @@ const UserListItem: React.FC<Props> = ({
   return (
     <Box className={classes.container} pr={2}>
       <Box display="flex" overflow="hidden">
-        <ButtonBase onClick={clickable ? handleClick : toProfile}>
+        <ButtonBase
+          onClick={clickable ? handleClick : toProfile}
+          style={{ cursor: CommonHelper.handleAccountSystem(user.user_code) ? 'default' : 'point' }}
+          disabled={CommonHelper.handleAccountSystem(user.user_code)}
+        >
           <ESAvatar alt={user.nickname} src={user.avatar} />
         </ButtonBase>
         <Box

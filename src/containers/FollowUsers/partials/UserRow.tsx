@@ -31,7 +31,11 @@ const UserRow: React.FC<Props> = ({ user, handleClose, changeFollowState }) => {
   return (
     <Box className={classes.container} pr={2}>
       <Box display="flex" overflow="hidden">
-        <ButtonBase onClick={toProfile}>
+        <ButtonBase
+          onClick={toProfile}
+          style={{ cursor: CommonHelper.handleAccountSystem(user.user_code) ? 'default' : 'point' }}
+          disabled={CommonHelper.handleAccountSystem(user.user_code)}
+        >
           <ESAvatar alt={user.nickname} src={user.avatar} />
         </ButtonBase>
         <Box overflow="hidden" textOverflow="ellipsis" ml={2} display="flex" flexDirection="column" justifyContent="center">
