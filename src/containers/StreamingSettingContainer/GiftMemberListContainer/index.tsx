@@ -232,8 +232,15 @@ const useStyles = makeStyles((theme) => ({
     listWithDataContainer: {
       padding: '0 8px',
     },
+  },
+  [theme.breakpoints.down(1200)]: {
     container: {
-      paddingRight: '20px',
+      marginRight: '48px',
+    },
+  },
+  [theme.breakpoints.down(768)]: {
+    container: {
+      marginRight: 0,
     },
   },
 }))

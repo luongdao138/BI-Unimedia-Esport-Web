@@ -80,8 +80,8 @@ const useGiftManage = () => {
     }
   }
 
-  const getAllGiftMaster = (keyword: string) => {
-    dispatch(actions.getAllGiftMaster({ keyword, user_id: user?.id }))
+  const getAllGiftMaster = (keyword: string, type: number) => {
+    dispatch(actions.getAllGiftMaster({ keyword, user_id: user?.id, type }))
   }
   const giftMasterList = useAppSelector(selectors.getListGiftMaster)
 
