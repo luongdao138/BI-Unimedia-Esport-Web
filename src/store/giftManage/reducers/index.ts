@@ -1,6 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit'
 import * as actions from '../actions'
-import * as authActions from '@store/auth/actions'
 import { GiftGroupDetail, GiftGroupType, GiftMasterType } from '@services/gift.service'
 import _ from 'lodash'
 
@@ -56,11 +55,6 @@ export default createReducer(initialState, (builder) => {
       state.gift_target_data = state.gift_target_data.filter((gift) => gift.id !== action.payload)
     })
     .addCase(actions.resetGiftTargetPerson, (state) => {
-      state.gift_target_data = []
-    })
-
-    // logout clear data gift target person
-    .addCase(authActions.logout.fulfilled, (state) => {
       state.gift_target_data = []
     })
 

@@ -38,12 +38,13 @@ export const addNewGiftMaster = async (params: AddNewGiftMasterRequestParams): P
 export type GetAllGiftMasterRequestParams = {
   user_id?: number
   keyword?: string
+  type?: number
 }
 
 export enum GiftMasterUserType {
-  INDIVIDUAL,
-  TEAM,
-  NO_FILTER,
+  INDIVIDUAL = 0,
+  TEAM = 1,
+  NO_FILTER = -1,
 }
 
 export enum GiftMasterUserStatus {

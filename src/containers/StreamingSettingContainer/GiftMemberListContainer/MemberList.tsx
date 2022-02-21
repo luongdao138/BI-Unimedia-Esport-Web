@@ -18,25 +18,18 @@ const MemberList: React.FC = () => {
 
   const { getAllGiftMaster, giftMasterList } = useGiftTarget()
 
-  useEffect(() => {
-    getAllGiftMaster('')
-  }, [])
-
   const [filterByType, setFilterByType] = useState(GiftMasterUserType.NO_FILTER)
   const [filterByName, setFilterByName] = useState('')
 
-  const getFilterFunction = () => {
-    if (filterByType === GiftMasterUserType.NO_FILTER) {
-      return (item) => _.startsWith(item?.name, filterByName)
-    } else {
-      return (item) => filterByType === item.type && _.startsWith(item?.name, filterByName)
-    }
-  }
+  useEffect(() => {
+    getAllGiftMaster(filterByName, filterByType)
+  }, [])
 
-  const getData = () => giftMasterList.filter(getFilterFunction())
+  const getData = () => giftMasterList
 
   const onFilterButtonClick = (option) => () => {
     setFilterByType(option)
+    filterByTypeDebounce(option)
   }
 
   const FilterButton = ({ label, option }) => {
@@ -77,15 +70,28 @@ const MemberList: React.FC = () => {
     )
   }
 
+  const filterByTypeDebounce = useCallback(
+    _.debounce((type) => {
+      getAllGiftMaster(filterByName, type)
+    }, 700),
+    []
+  )
+  const inputDebounce = useCallback(
+    _.debounce((keyword: string) => {
+      getAllGiftMaster(keyword, filterByType)
+    }, 500),
+    []
+  )
+
+  const handleChange = (e) => {
+    const { value } = e.target
+    setFilterByName(value)
+    inputDebounce(value)
+  }
+
   const filterInputField = () => {
     return (
-      <ESInput
-        className={classes.filterInputField}
-        fullWidth
-        placeholder="キーワード検索"
-        value={filterByName}
-        onChange={(e) => setFilterByName(e.target.value)}
-      />
+      <ESInput className={classes.filterInputField} fullWidth placeholder="キーワード検索" value={filterByName} onChange={handleChange} />
     )
   }
 
@@ -122,6 +128,7 @@ const useStyles = makeStyles((theme) => ({
       boxShadow: 'none',
       background: Colors.white,
     },
+    padding: '3px 4px',
   },
   filterButtonNonSelected: {
     backgroundColor: '#747474',
@@ -197,6 +204,18 @@ const useStyles = makeStyles((theme) => ({
     },
     addNewButton: {
       display: 'none',
+    },
+  },
+  [theme.breakpoints.down(1344)]: {
+    filterButton: {
+      marginRight: '8px',
+      minWidth: 'unset',
+    },
+    addNewButtonText: {
+      fontSize: '12px',
+    },
+    addNewButton: {
+      padding: '4px 6px',
     },
   },
 }))
