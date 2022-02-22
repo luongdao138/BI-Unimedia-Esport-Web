@@ -10,6 +10,11 @@ import {
 } from '@services/videoTop.services'
 import * as actions from '../actions'
 
+const defaultChatState = {
+  seek_count: 0,
+  seeked_second: 0,
+}
+
 type StateType = {
   listVideoAll?: {
     live?: Array<TypeVideo>
@@ -202,5 +207,8 @@ export default createReducer(initialState, (builder) => {
   builder.addCase(actions.saveVideoRef, (state, action) => {
     state.videoEl.videoQuery = action.payload.videoQuery
     state.videoEl.videoElement = action.payload.videoElement
+  })
+  builder.addCase(actions.resetChatState, (state) => {
+    return { ...state, ...defaultChatState }
   })
 })

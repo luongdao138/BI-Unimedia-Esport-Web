@@ -44,6 +44,7 @@ const useDetailVideo = () => {
   const changeIsPausingLive = (is_pausing_live) => dispatch(actions.changeIsPausingLive({ is_pausing_live }))
   const changeIsStreamingEnd = (is_streaming_end) => dispatch(actions.changeIsStreamingEnd({ is_streaming_end }))
   const resetState = () => dispatch(actions.resetState())
+  const resetChatState = () => dispatch(actions.resetChatState())
 
   return {
     meta,
@@ -68,6 +69,7 @@ const useDetailVideo = () => {
     resetState,
     onSaveVideoRef,
     videoRefEl,
+    resetChatState,
   }
 }
 
