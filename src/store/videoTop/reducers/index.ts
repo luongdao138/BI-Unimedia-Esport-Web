@@ -1,5 +1,13 @@
 import { createReducer } from '@reduxjs/toolkit'
-import { BannerItem, CategoryPopularData, DetailUserData, SearchType, TypeVideo, VideoDetailData } from '@services/videoTop.services'
+import {
+  BannerItem,
+  CategoryPopularData,
+  DetailUserData,
+  SearchType,
+  TypeVideo,
+  VideoDetailData,
+  VideoRefType,
+} from '@services/videoTop.services'
 import * as actions from '../actions'
 import { VIDEO_NORMAL_VIEW_MODE, SUB_TABS, VIDEO_TABS } from '@constants/common.constants'
 
@@ -43,6 +51,7 @@ type StateType = {
   activeTab?: number
   activeSubTab?: number
   isHoveredVideo?: boolean
+  videoEl?: VideoRefType
 }
 
 const initialState: StateType = {
@@ -89,6 +98,10 @@ const initialState: StateType = {
   activeTab: VIDEO_TABS.CHAT,
   activeSubTab: SUB_TABS.MESS.ALL,
   isHoveredVideo: false,
+  videoEl: {
+    videoQuery: null,
+    videoElement: null,
+  },
 }
 
 export default createReducer(initialState, (builder) => {
@@ -216,5 +229,9 @@ export default createReducer(initialState, (builder) => {
   })
   builder.addCase(actions.changeIsHoveredVideoStatus, (state, action) => {
     state.isHoveredVideo = action.payload.isHoveredVideo
+  })
+  builder.addCase(actions.saveVideoRef, (state, action) => {
+    state.videoEl.videoQuery = action.payload.videoQuery
+    state.videoEl.videoElement = action.payload.videoElement
   })
 })

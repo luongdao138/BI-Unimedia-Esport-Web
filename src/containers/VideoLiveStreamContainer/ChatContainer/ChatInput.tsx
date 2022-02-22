@@ -1,4 +1,3 @@
-import ESInput from '@components/Input'
 import LoginRequired from '@containers/LoginRequired'
 import i18n from '@locales/i18n'
 import { Box, Button, InputAdornment, makeStyles } from '@material-ui/core'
@@ -7,6 +6,7 @@ import { useFormik } from 'formik'
 import React, { memo, useEffect, useState } from 'react'
 import * as Yup from 'yup'
 import { sanitizeMess } from './index'
+import ESFastInput from '@components/FastInput'
 
 type MessageValidationType = {
   message: string
@@ -70,7 +70,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
   return (
     <Box className={classes.chatBox}>
       <Box className={classes.spPurchaseButton}>{purchaseButton()}</Box>
-      <ESInput
+      <ESFastInput
         id={'message'}
         name="message"
         onChange={handleChange}

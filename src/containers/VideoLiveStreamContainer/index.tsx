@@ -40,6 +40,8 @@ import LiveStreamContent from './LiveStreamContent'
 import { PurchaseTicketParams } from '@services/points.service'
 import useGraphqlAPI from 'src/types/useGraphqlAPI'
 import TabSelectContainer from './TabSelectContainer'
+import { VideoContext } from './VideoContext.js'
+
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 const APIt: any = useGraphqlAPI()
@@ -86,6 +88,8 @@ const VideoDetail: React.FC = () => {
   // const { selectors } = userProfileStore
   const isAuthenticated = useAppSelector(getIsAuthenticated)
   // const userProfile = useAppSelector(selectors.getUserProfile)
+  const [videoRefInfo, setVideoRefInfo] = useState(null)
+  console.log('🚀 ~ useEffect ~ videoRefInfo---222', videoRefInfo)
 
   const { getMyPointData, myPointsData } = usePointsManage()
   const { purchaseTicketSuperChat, meta_purchase_ticket_super_chat } = usePurchaseTicketSuperChat()
@@ -596,7 +600,7 @@ const VideoDetail: React.FC = () => {
   }
 
   return (
-    <React.Fragment>
+    <VideoContext.Provider value={{ videoRefInfo, setVideoRefInfo }}>
       <Box className={classes.root}>
         {isPendingPurchaseTicket && <ESLoader />}
         {isPendingPurchaseSuperChat && <FullESLoader open={isPendingPurchaseSuperChat} />}
@@ -725,7 +729,7 @@ const VideoDetail: React.FC = () => {
         showModalPurchasePoint={showModalPurchasePoint}
         setShowModalPurchasePoint={(value) => setShowModalPurchasePoint(value)}
       />
-    </React.Fragment>
+    </VideoContext.Provider>
   )
 }
 export default VideoDetail

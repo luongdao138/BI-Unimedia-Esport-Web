@@ -276,6 +276,11 @@ export type CategoryPopularParams = {
   limit?: number
 }
 
+export type VideoRefType = {
+  videoQuery: any
+  videoElement: any
+}
+
 export const ListVideoAll = async (params: ListVideoTopParams): Promise<ListVideoTopResponse> => {
   const { data } = await api.get<ListVideoTopResponse>(URI.GET_LIST_VIDEO_TOP, { params })
   return data
