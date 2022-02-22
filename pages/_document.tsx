@@ -6,6 +6,7 @@ type Props = unknown
 class Document extends NextDocument<Props> {
   render(): ReactElement {
     const GA_TRACKING_ID = process.env.GA_TRACKING_ID
+    const GADS_CLIENT_ID = process.env.GADS_CLIENT_ID
     const GTM_ID = process.env.GTM_ID
     return (
       <Html>
@@ -15,6 +16,12 @@ class Document extends NextDocument<Props> {
           <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"></link>
           <link href="/fonts/fontawesome-free-5.15.3-web/css/all.css" rel="stylesheet"></link>
           <meta name="twitter:card" content="summary_large_image" />
+          {/*Google Adsense */}
+          <script
+            async
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${GADS_CLIENT_ID}`}
+            crossOrigin="anonymous"
+          ></script>
           {/* Global Site Tag (gtag.js) - Google Analytics */}
           <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`} />
           <script
