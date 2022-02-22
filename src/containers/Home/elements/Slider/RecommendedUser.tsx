@@ -68,6 +68,7 @@ export const RecommendedUser: React.FC<Props> = ({ users }) => {
                 router.push(`${ESRoutes.PROFILE}/${user.attributes.user_code}`)
               })
             }
+            style={{ cursor: CommonHelper.handleAccountSystem(user.attributes.user_code) ? 'default' : 'point' }}
           >
             <ESAvatar alt={user.attributes.nickname} className={classes.avatar} src={user.attributes.avatar_url} />
             <Typography variant="caption" className={classes.name}>
