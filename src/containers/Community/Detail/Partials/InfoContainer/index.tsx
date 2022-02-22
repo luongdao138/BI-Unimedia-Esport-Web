@@ -115,7 +115,11 @@ const InfoContainer: React.FC<{ isOfficial: boolean; data: CommunityDetail['attr
                 {isOfficial ? (
                   <ESAvatar alt={data.admin.nickname} src={data.admin.avatar_image_url} size={35} />
                 ) : (
-                  <ButtonBase onClick={() => toProfile(data.admin.user_code)}>
+                  <ButtonBase
+                    onClick={() => toProfile(data.admin.user_code)}
+                    style={{ cursor: CommonHelper.handleAccountSystem(data.admin.user_code) ? 'default' : 'point' }}
+                    disabled={CommonHelper.handleAccountSystem(data.admin.user_code)}
+                  >
                     <ESAvatar alt={data.admin.nickname} src={data.admin.avatar_image_url} size={35} />
                   </ButtonBase>
                 )}

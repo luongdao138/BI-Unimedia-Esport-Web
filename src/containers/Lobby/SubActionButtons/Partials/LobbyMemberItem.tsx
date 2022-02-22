@@ -7,6 +7,7 @@ import ESButton from '@components/Button'
 import i18n from '@locales/i18n'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import { Colors } from '@theme/colors'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
 
 interface Props {
   data: ParticipantsItem
@@ -94,7 +95,7 @@ const LobbyMemberItem: React.FC<Props> = ({ data, follow, unFollow, unBlock, goT
           overlap="circle"
           badgeContent={0}
           showZero={false}
-          style={{ cursor: 'pointer' }}
+          style={{ cursor: CommonHelper.handleAccountSystem(userCode) ? 'default' : 'point' }}
           onClick={() => goToProfile && goToProfile(userCode)}
         >
           <Avatar src={avatar} alt={nickName} />

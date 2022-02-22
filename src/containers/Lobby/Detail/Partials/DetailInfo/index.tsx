@@ -177,7 +177,11 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit }) => {
                 {data.organizer && (
                   <Box display="flex" flexDirection="row" alignItems="center">
                     <LoginRequired>
-                      <ButtonBase onClick={() => toProfile(data.organizer.user_code)}>
+                      <ButtonBase
+                        onClick={() => toProfile(data.organizer.user_code)}
+                        style={{ cursor: CommonHelper.handleAccountSystem(data.organizer.user_code) ? 'default' : 'point' }}
+                        disabled={CommonHelper.handleAccountSystem(data.organizer.user_code)}
+                      >
                         <ESAvatar alt={data.organizer.nickname} src={data.organizer_avatar} size={35} />
                       </ButtonBase>
                     </LoginRequired>

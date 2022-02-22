@@ -106,6 +106,7 @@ const TournamentCard: React.FC<Props> = ({ tournament }) => {
                   className={classes.marginV}
                   alt={participant?.name}
                   src={participant?.profile_image}
+                  style={{ cursor: CommonHelper.handleAccountSystem(participant?.user_code) ? 'default' : 'point' }}
                 />
                 <Box className={classes.captionTitle}>
                   <Typography noWrap variant="overline">

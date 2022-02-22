@@ -59,7 +59,11 @@ const UserSelectBoxList: React.FC<UserSelectBoxListProps> = ({ member, setValue,
     <>
       <Box className={classes.container} mb={3}>
         <Box className={classes.userContainer}>
-          <ButtonBase onClick={toProfile}>
+          <ButtonBase
+            onClick={toProfile}
+            style={{ cursor: CommonHelper.handleAccountSystem(data.user_code) ? 'default' : 'point' }}
+            disabled={CommonHelper.handleAccountSystem(data.user_code)}
+          >
             <ESAvatar
               className={classes.avatar}
               alt={data.nickname}

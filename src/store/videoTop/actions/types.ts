@@ -25,4 +25,5 @@ export const ACTION_VIDEO_TOP = {
   RESET_STATE: 'streaming/resetState',
   CHANGE_VIDEO_VIEW_MODE: 'streaming/changeVideoViewMode',
   RESET_CHAT_STATE: 'streaming/resetChatState',
+  VIDEO_REF: 'streaming/videoRef',
 }
