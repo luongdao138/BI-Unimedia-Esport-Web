@@ -177,6 +177,7 @@ export const changeIsStreamingEnd = createAction<{ is_streaming_end: boolean }>(
 export const resetState = createAction(ACTION_VIDEO_TOP.RESET_STATE)
 export const changeVideoViewMode = createAction<{ is_normal_view_mode: boolean }>(ACTION_VIDEO_TOP.CHANGE_VIDEO_VIEW_MODE)
 export const resetChatState = createAction(ACTION_VIDEO_TOP.RESET_CHAT_STATE)
+export const saveVideoRef = createAction<services.VideoRefType>(ACTION_VIDEO_TOP.VIDEO_REF)
 
 export const videoDetail = createAsyncThunk<services.VideoDetailResponse, services.VideoDetailParams>(
   ACTION_VIDEO_TOP.VIDEO_DETAIL,
