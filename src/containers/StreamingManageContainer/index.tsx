@@ -42,7 +42,7 @@ const StreamingManageContainer: React.FC = () => {
               router.push(ESRoutes.ARCHIVED_LIST)
             }}
           >
-            <SettingsRowItem key="archived_list" title={t('streaming_manage_screen.archived_list')} showSwitch={false} />
+            <SettingsRowItem key="archived_list" title={t('streaming_manage_screen.archive_list')} showSwitch={false} />
           </div>
           <div
             onClick={() => {

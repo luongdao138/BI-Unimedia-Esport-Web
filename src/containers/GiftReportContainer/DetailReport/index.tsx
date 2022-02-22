@@ -62,7 +62,7 @@ const DetailReport: React.FC<DetailReportProps> = ({ videoId }) => {
   return (
     <Box mb={4}>
       <Box display="flex" justifyContent="space-between" alignItems="baseline" mb={2}>
-        <Box alignItems="center" width="100%">
+        <Box alignItems="center" flex={1}>
           <Box mb={3} display="flex" justifyContent="center">
             {detailedReports.points.length > 0 ? renderPagination() : <></>}
           </Box>
