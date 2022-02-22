@@ -18,7 +18,7 @@ const ListTargetPerson: FC<ListTargetPersonType> = ({ handlePress, handleModeUpd
   const { giftTargetData } = useGiftManage()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
 
-  const pageMessage = isMobile ? t('streaming_gift_management.empty_message_md') : t('streaming_gift_management.empty_message')
+  const pageMessage = isMobile ? t('streaming_gift_management.add_master_message_md') : t('streaming_gift_management.add_master_message')
   return (
     <>
       <Box className={classes.listContainer}>
