@@ -3,7 +3,7 @@
 /* eslint-disable no-console */
 import { Icon, makeStyles, Theme, useMediaQuery, useTheme } from '@material-ui/core'
 import { Colors } from '@theme/colors'
-import React, { memo, useEffect, useRef, useState } from 'react'
+import React, { memo, useContext, useEffect, useRef, useState } from 'react'
 import ControlBarPlayer from './ControlBar'
 import SeekBar from './ControlComponent/SeekBar'
 // import ReactPlayer from 'react-player'
@@ -15,6 +15,8 @@ import Hls from 'hls.js'
 import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
 import { DELAY_SECONDS } from '@constants/common.constants'
 import { STATUS_VIDEO } from '@services/videoTop.services'
+import { VideoContext } from '../VideoContext.js'
+
 interface PlayerProps {
   src?: string
   thumbnail?: string
@@ -40,6 +42,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   // type,
   videoType,
 }) => {
+  const { setVideoRefInfo } = useContext(VideoContext)
   // const checkStatusVideo = 1
   const classes = useStyles({ checkStatusVideo: videoType })
   const videoEl = useRef(null)
@@ -66,7 +69,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     videoError: false,
   })
 
-  const { changeVideoTime, liveStreamInfo, changeSeekCount } = useDetailVideo()
+  const { liveStreamInfo, changeSeekCount } = useDetailVideo()
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'), { noSsr: true })
   const isDownMd = useMediaQuery(theme.breakpoints.down(769), { noSsr: true })
@@ -304,7 +307,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       Math.floor(newPlayedSecondTime) !== liveStreamInfo.played_second ||
       Math.floor(newDurationTime) !== liveStreamInfo.streaming_second
     ) {
-      changeVideoTime(Math.floor(newDurationTime), Math.floor(newPlayedSecondTime))
+      // changeVideoTime(Math.floor(newDurationTime), Math.floor(newPlayedSecondTime))
     }
   }
   handleUpdateVideoTime.current = onUpdateVideoTime
@@ -313,7 +316,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   const onUpdateVideoduration = (duration) => {
     if (!state.playing) {
       if (Math.floor(duration) !== liveStreamInfo.played_second) {
-        changeVideoTime(Math.floor(duration), Math.floor(duration))
+        // changeVideoTime(Math.floor(duration), Math.floor(duration))
       }
       setDurationPlayer(duration)
     }
@@ -322,6 +325,9 @@ const VideoPlayer: React.FC<PlayerProps> = ({
 
   //archived
   useEffect(() => {
+    setVideoRefInfo(videoEl)
+    console.log('🚀 ~ useEffect ~ videoEl---0000', videoEl)
+    // onSaveVideoRef(document.querySelector('video'), document.createElement('video'))
     videoEl.current.addEventListener('timeupdate', (event) => {
       const videoInfo = event.target
       // console.log(
@@ -492,7 +498,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     videoEl.current.currentTime = durationPlayer
     setPlayedSeconds(durationPlayer)
     const newDurationPlayer = Math.floor(durationPlayer)
-    changeVideoTime(newDurationPlayer, newDurationPlayer)
+    // changeVideoTime(newDurationPlayer, newDurationPlayer)
     changeSeekCount(newDurationPlayer)
     setIsStreaming(true)
   }

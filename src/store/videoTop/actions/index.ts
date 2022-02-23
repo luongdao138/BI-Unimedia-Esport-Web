@@ -175,6 +175,7 @@ export const resetVideoDetailError = createAction(ACTION_VIDEO_TOP.RESET_VIDEO_D
 export const changeIsPausingLive = createAction<{ is_pausing_live: boolean }>(ACTION_VIDEO_TOP.CHANGE_IS_PAUSING_LIVE)
 export const changeIsStreamingEnd = createAction<{ is_streaming_end: boolean }>(ACTION_VIDEO_TOP.CHANGE_IS_STREAMING_END)
 export const resetState = createAction(ACTION_VIDEO_TOP.RESET_STATE)
+export const saveVideoRef = createAction<services.VideoRefType>(ACTION_VIDEO_TOP.VIDEO_REF)
 export const resetChatState = createAction(ACTION_VIDEO_TOP.RESET_CHAT_STATE)
 
 export const videoDetail = createAsyncThunk<services.VideoDetailResponse, services.VideoDetailParams>(
