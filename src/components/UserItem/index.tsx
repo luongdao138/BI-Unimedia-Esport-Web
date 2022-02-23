@@ -10,6 +10,7 @@ import { ESRoutes } from '@constants/route.constants'
 import { useRouter } from 'next/router'
 import useGetProfile from '@utils/hooks/useGetProfile'
 import { makeStyles } from '@material-ui/core/styles'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
 
 interface Props {
   data: any
@@ -109,7 +110,9 @@ const UserListItem: React.FC<Props> = ({
 
   const toProfile = () => {
     if (handleClose) handleClose()
-    router.push(`${ESRoutes.PROFILE}/${user.user_code}`)
+    CommonHelper.checkUserCode(user.user_code, () => {
+      router.push(`${ESRoutes.PROFILE}/${user.user_code}`)
+    })
   }
 
   const clickable = !!handleClick
@@ -117,7 +120,11 @@ const UserListItem: React.FC<Props> = ({
   return (
     <Box className={classes.container} pr={2}>
       <Box display="flex" overflow="hidden">
-        <ButtonBase onClick={clickable ? handleClick : toProfile}>
+        <ButtonBase
+          onClick={clickable ? handleClick : toProfile}
+          style={{ cursor: CommonHelper.handleAccountSystem(user.user_code) ? 'default' : 'point' }}
+          disabled={CommonHelper.handleAccountSystem(user.user_code)}
+        >
           <ESAvatar alt={user.nickname} src={user.avatar} />
         </ButtonBase>
         <Box

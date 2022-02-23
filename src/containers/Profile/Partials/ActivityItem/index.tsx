@@ -84,7 +84,9 @@ const ActivityItem: React.FC<Props> = ({ activity }) => {
           router.push(`${ESRoutes.COMMUNITY}/${data.hash_key}`)
           break
         case ACTIVITY_ACTION_TYPE.USER_FOLLOWS:
-          router.push(`${ESRoutes.PROFILE}/${data.user_code}`)
+          CommonHelper.checkUserCode(data.user_code, () => {
+            router.push(`${ESRoutes.PROFILE}/${data.user_code}`)
+          })
           break
         case ACTIVITY_ACTION_TYPE.RECRUITMENT_CREATE:
           router.push(`${ESRoutes.LOBBY}/${data.hash_key}`)

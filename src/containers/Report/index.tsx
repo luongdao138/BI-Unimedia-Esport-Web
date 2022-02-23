@@ -84,7 +84,10 @@ const ESReport: React.FC<ESReportProps> = ({
     fetchReasons({ page: 1 })
   }, [])
 
-  const toProfile = (user_code) => router.push(`${ESRoutes.PROFILE}/${user_code}`)
+  const toProfile = (user_code) =>
+    CommonHelper.checkUserCode(user_code, () => {
+      router.push(`${ESRoutes.PROFILE}/${user_code}`)
+    })
 
   const validationSchema = Yup.object().shape({
     user_email: Yup.string()
@@ -173,7 +176,12 @@ const ESReport: React.FC<ESReportProps> = ({
             </Typography>
           )}
           <Box display="flex" mb={2}>
-            <ButtonBase onClick={() => toProfile(attr.user_code)} className={classes.topicAvatarWrap}>
+            <ButtonBase
+              onClick={() => toProfile(attr.user_code)}
+              className={classes.topicAvatarWrap}
+              style={{ cursor: CommonHelper.handleAccountSystem(attr.user_code) ? 'default' : 'point' }}
+              disabled={CommonHelper.handleAccountSystem(attr.user_code)}
+            >
               <Avatar className={classes.topicAvatar} alt={attr.nickname} src={attr.avatar_image} />
             </ButtonBase>
 

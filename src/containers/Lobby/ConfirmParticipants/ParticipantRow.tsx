@@ -6,6 +6,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import ESSwitchIOS from '@components/Switch'
 import { ConfirmParticipantItem } from '@services/lobby.service'
 import _ from 'lodash'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
 
 interface Props {
   data: ConfirmParticipantItem
@@ -25,7 +26,11 @@ const ParticipantRow: React.FC<Props> = ({ data, isMe, toProfile, handleChange }
   return (
     <Box className={classes.container} pr={2}>
       <Box display="flex" overflow="hidden">
-        <ButtonBase onClick={() => toProfile && toProfile(userCode)}>
+        <ButtonBase
+          onClick={() => toProfile && toProfile(userCode)}
+          style={{ cursor: CommonHelper.handleAccountSystem(userCode) ? 'default' : 'point' }}
+          disabled={CommonHelper.handleAccountSystem(userCode)}
+        >
           <ESAvatar alt={nickName} src={avatar} />
         </ButtonBase>
         <Box overflow="hidden" textOverflow="ellipsis" ml={2} display="flex" flexDirection="column" justifyContent="center">

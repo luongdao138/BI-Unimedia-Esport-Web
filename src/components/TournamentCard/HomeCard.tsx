@@ -15,6 +15,7 @@ import i18n from '@locales/i18n'
 import _ from 'lodash'
 
 import StatusChip from './StatusChip'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
 
 export interface TournamentListFiltered extends TournamentListItem {
   total?: number
@@ -104,11 +105,15 @@ const TournamentHomeCard: React.FC<Props> = ({ tournament }) => {
                 </span>
                 <ESAvatar
                   onClick={() => {
-                    participant?.user_code ? router.push(`${ESRoutes.PROFILE}/${participant.user_code}`) : null
+                    participant?.user_code &&
+                      CommonHelper.checkUserCode(participant?.user_code, () => {
+                        router.push(`${ESRoutes.PROFILE}/${participant.user_code}`)
+                      })
                   }}
                   className={classes.marginV}
                   alt={participant?.name}
                   src={participant?.profile_image}
+                  style={{ cursor: CommonHelper.handleAccountSystem(participant?.user_code) ? 'default' : 'point' }}
                 />
                 <Box className={classes.captionTitle}>
                   <Typography noWrap variant="overline">
