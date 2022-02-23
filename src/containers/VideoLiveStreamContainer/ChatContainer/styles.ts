@@ -343,10 +343,10 @@ const useStyles = makeStyles((theme) => ({
     },
     '&::-webkit-scrollbar-track': {
       paddingLeft: 1,
-      background: 'rgba(0,0,0,0.5)',
+      background: '#3d3d3c',
     },
     '&::-webkit-scrollbar-thumb': {
-      backgroundColor: '#222222',
+      backgroundColor: '#222',
       borderRadius: 6,
     },
   },

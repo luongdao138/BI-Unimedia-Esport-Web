@@ -90,15 +90,17 @@ const ChatInput: React.FC<ChatInputProps> = ({
         error={!!errors?.message}
         onKeyPress={handlePressEnter}
         endAdornment={
-          <InputAdornment
-            position="end"
-            className={classes.button_send_sp}
-            onClick={() => {
-              handleSubmit()
-            }}
-          >
-            {isFocusedInput ? <img src="/images/send_icon_pink_sp.svg" /> : <img src="/images/send_icon_white_sp.svg" />}
-          </InputAdornment>
+          <LoginRequired>
+            <InputAdornment
+              position="end"
+              className={classes.button_send_sp}
+              onClick={() => {
+                handleSubmit()
+              }}
+            >
+              {isFocusedInput ? <img src="/images/send_icon_pink_sp.svg" /> : <img src="/images/send_icon_white_sp.svg" />}
+            </InputAdornment>
+          </LoginRequired>
         }
       />
       <LoginRequired>
