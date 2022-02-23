@@ -485,8 +485,13 @@ const useStyles = makeStyles((theme) => ({
     },
     movie_title: {
       fontSize: '16px',
-      maxWidth: '200px',
-      whiteSpace: 'nowrap',
+      // maxWidth: '200px',
+      paddingRight: 15,
+      display: '-webkit-box',
+      WebkitBoxOrient: 'vertical',
+      WebkitLineClamp: 2,
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
     },
     device_name: {
       fontSize: '14px',

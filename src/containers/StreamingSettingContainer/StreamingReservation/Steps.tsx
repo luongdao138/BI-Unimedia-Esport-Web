@@ -382,29 +382,37 @@ const Steps: React.FC<StepsProps> = ({
       group_title: stepSettingTwo.group_title,
       ranking_flag: stepSettingTwo.ranking_flag === false ? 0 : 1,
     }
-    setLiveStreamConfirm(data, (process) => {
-      onNext(
-        step + 1,
-        stepSettingTwo.share_sns_flag,
-        {
-          title: stepSettingTwo.title,
-          content: `${baseViewingURL}${stepSettingTwo.uuid}`,
-        },
-        process
-      )
-      formik.setFieldValue('stepSettingTwo.step_setting', step + 1)
-      const { left, top } = getBoxPositionOnWindowCenter(550, 400)
-      if (isShare) {
-        window
-          .open(
-            getTwitterShareUrl(),
-            '',
-            `width=550,height=400,location=no,toolbar=no,status=no,directories=no,menubar=no,scrollbars=yes,resizable=no,centerscreen=yes,chrome=yes,left=${left},top=${top}`
-          )
-          ?.focus()
-      }
-    })
+    debouncedHandleConfirmForm(data, stepSettingTwo, step)
   }
+
+  const debouncedHandleConfirmForm = useCallback(
+    _.debounce((data: SetLiveStreamParams, stepSettingTwo, step: number) => {
+      setLiveStreamConfirm(data, (process) => {
+        // console.log('process===', process);
+        onNext(
+          step + 1,
+          stepSettingTwo.share_sns_flag,
+          {
+            title: stepSettingTwo.title,
+            content: `${baseViewingURL}${stepSettingTwo.uuid}`,
+          },
+          process
+        )
+        formik.setFieldValue('stepSettingTwo.step_setting', step + 1)
+        const { left, top } = getBoxPositionOnWindowCenter(550, 400)
+        if (isShare) {
+          window
+            .open(
+              getTwitterShareUrl(),
+              '',
+              `width=550,height=400,location=no,toolbar=no,status=no,directories=no,menubar=no,scrollbars=yes,resizable=no,centerscreen=yes,chrome=yes,left=${left},top=${top}`
+            )
+            ?.focus()
+        }
+      })
+    }, 700),
+    []
+  )
 
   const getBoxPositionOnWindowCenter = function (width, height) {
     return {
