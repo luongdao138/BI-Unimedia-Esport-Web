@@ -234,6 +234,7 @@ export type VideoDetailData = {
   live_stream_end_time?: string
   id?: number
   video_thumbnail?: string
+  quality?: Array<string>
 }
 
 export type DetailUserData = {

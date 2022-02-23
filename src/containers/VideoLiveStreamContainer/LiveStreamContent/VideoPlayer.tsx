@@ -4,19 +4,20 @@
 // import ReactPlayer from 'react-player'
 import ESLoader from '@components/Loader'
 import { DELAY_SECONDS } from '@constants/common.constants'
-import { Box, Icon, makeStyles, Theme, Typography, useMediaQuery, useTheme } from '@material-ui/core'
+import { Icon, makeStyles, Theme, useMediaQuery, useTheme } from '@material-ui/core'
 import { STATUS_VIDEO } from '@services/videoTop.services'
 import useLiveStreamDetail from '../useLiveStreamDetail'
 import { Colors } from '@theme/colors'
-import React, { memo, useContext, useEffect, useRef, useState } from 'react'
+import React, { memo, useCallback, useContext, useEffect, useRef, useState } from 'react'
 import ControlBarPlayer from './ControlBar'
 import SeekBar from './ControlComponent/SeekBar'
-import { useTranslation } from 'react-i18next'
+// import { useTranslation } from 'react-i18next'
 
 import useDetailVideo from '../useDetailVideo'
 import Hls from 'hls.js'
 import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
 import { VideoContext } from '../VideoContext.js'
+import { VIDEO_RESOLUTION_HLS } from '@services/liveStreamDetail.service'
 
 interface PlayerProps {
   src?: string
@@ -34,6 +35,7 @@ interface PlayerProps {
     videoWidth: number
     videoHeight: number
   }
+  quality?: Array<string>
 }
 
 const VideoPlayer: React.FC<PlayerProps> = ({
@@ -47,13 +49,14 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   isArchived,
   // type,
   videoType,
-  componentsSize,
+  // componentsSize,
+  quality,
 }) => {
   const { setVideoRefInfo } = useContext(VideoContext)
   // const checkStatusVideo = 1
   const classes = useStyles({ checkStatusVideo: videoType })
   const videoEl = useRef(null)
-  const { t } = useTranslation('common')
+  // const { t } = useTranslation('common')
 
   const [durationPlayer, setDurationPlayer] = useState(0)
   const [playedSeconds, setPlayedSeconds] = useState(0)
@@ -76,7 +79,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     videoLoaded: true,
     videoError: false,
   })
-
+  const [flagResol, setFlagResol] = useState(false)
   const refControlBar = useRef<any>(null)
   const { liveStreamInfo, changeSeekCount, detailVideoResult } = useDetailVideo()
   const theme = useTheme()
@@ -105,8 +108,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   }
 
   const [isPortrait, setIsPortrait] = useState<boolean>(!!isMobile)
-
-  // const [flagPaused, setFlagPaused] = useState(null)
+  const [resolution, setResolution] = useState(VIDEO_RESOLUTION_HLS.AUTO)
 
   useEffect(() => {
     if (getMiniPlayerState) {
@@ -253,14 +255,9 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   // ===================hls.js==================================
   useEffect(() => {
     const video = document.getElementById('video')
-    // const hls = new Hls({
-    //   // liveSyncDurationCount: 1,
-    //   // initialLiveManifestSize: 1,
-    //   // liveMaxLatencyDurationCount:10
-    //   liveDurationInfinity: true,
-    //   startPosition: 0,
-    // })
+
     const hls = new Hls()
+    console.warn('HLS=====>>>', hls.levels, hls.currentLevel)
     //function event MEDIA_ATTACHED
     const handleMedia = () => {
       console.log('video and hls.js are now bound together !')
@@ -273,6 +270,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
 
     const handleLoaded = (_, data) => {
       console.log('~~~~LEVEL_LOADED~~~~~', data)
+      console.warn('HLS=====>>>', hls.levels, hls.currentLevel)
       // setDurationPlayer(data.details.totalduration)
       setIsLive(data.details.live)
     }
@@ -317,6 +315,33 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       }
     }
   }, [src])
+
+  //on switch resolution
+  useEffect(() => {
+    const hls = new Hls({
+      // liveSyncDurationCount: 1,
+      // initialLiveManifestSize: 1,
+      // liveMaxLatencyDurationCount:10,
+      startPosition: playedSeconds,
+      startLevel: resolution,
+    })
+
+    if ((Hls.isSupported() || androidPl) && src) {
+      console.log('222222videoEl?.current?.currentTime===', playedSeconds, flagResol)
+      // bind them together
+      hls.loadSource(src)
+      //@ts-ignore
+      hls.attachMedia(document.getElementById('video'))
+      // hls.on(Hls.Events.MEDIA_ATTACHED, handleMedia)
+    }
+    return () => {
+      if (hls && src) {
+        hls.detachMedia()
+        hls.destroy()
+        hls.stopLoad()
+      }
+    }
+  }, [resolution])
 
   // useEffect(() => {
   //   if(Math.floor(playedSeconds) !== liveStreamInfo.played_second) {
@@ -372,8 +397,10 @@ const VideoPlayer: React.FC<PlayerProps> = ({
 
   //archived
   useEffect(() => {
+    console.log('videoEl.current?.paused==', videoEl.current?.paused, playing)
     setVideoRefInfo(videoEl)
-    console.log('🚀 ~ useEffect ~ videoEl---0000', videoEl)
+    handleReturnPlayPause()
+    //console.log('🚀 ~ useEffect ~ videoEl---0000', videoEl)
     // onSaveVideoRef(document.querySelector('video'), document.createElement('video'))
     videoEl.current?.addEventListener('timeupdate', (event) => {
       const videoInfo = event.target
@@ -430,6 +457,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     videoEl.current?.addEventListener('loadedmetadata', (event) => {
       console.log('=================loadedmetadata===================')
       console.log(event)
+      setFlagResol(false)
       if (!isStreamingEnd.current) {
         setVisible({ ...visible, loading: true, videoLoaded: true })
       }
@@ -441,6 +469,9 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     videoEl.current?.addEventListener('emptied', (event) => {
       console.log('=================emptied===================')
       console.log(event)
+      if (flagResol) {
+        setVisible({ ...visible, loading: true, videoLoaded: true })
+      }
     })
     videoEl.current?.addEventListener('canplay', (event) => {
       console.log('=================canplay===================')
@@ -481,7 +512,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
         //TODO: remove event onscroll window
       }
     }
-  }, [])
+  }, [resolution])
   const toggleFullScreen1 = () => {
     if (!document.fullscreenElement) {
       if (playerContainerRef.current.requestFullscreen) {
@@ -533,6 +564,20 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       setIsStreaming(false)
     }
   }
+  const handleReturnPlayPause = () => {
+    if (flagResol) {
+      if (videoEl.current?.paused || videoEl.current?.ended) {
+        videoEl.current?.play()
+        // setState({ ...state, playing: true })
+        // setVisible({ ...visible, loading: false, videoLoaded: false })
+      } else {
+        videoEl.current?.pause()
+        // setState({ ...state, playing: false })
+        // setVisible({ ...visible, loading: true, videoLoaded: false })
+        // setIsStreaming(false)
+      }
+    }
+  }
 
   // const handleTryAgain = () => {
   //   hls.loadSource(src)
@@ -564,6 +609,15 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     setIsStreaming(false)
   }
 
+  const changeResolution = useCallback(
+    (index, flag) => {
+      setResolution(index - 1)
+      // setResolution(index===0?-1:0)
+      setFlagResol(flag)
+    },
+    [resolution]
+  )
+
   //new version
   // useEffect(() => {
   //   let interval
@@ -593,8 +647,8 @@ const VideoPlayer: React.FC<PlayerProps> = ({
 
   return (
     <div className={classes.videoPlayer}>
-      {(iPhonePl || androidPl) && (
-        <div style={{ height: '100%', justifyContent: 'center' }}>
+      {/* {(iPhonePl || androidPl || (!iPadPl && isDownMd)) && (
+        <div>
           <video
             id="video"
             ref={videoEl}
@@ -618,51 +672,49 @@ const VideoPlayer: React.FC<PlayerProps> = ({
             </Box>
           )}
         </div>
-      )}
-      {!isMobile && !androidPl && !iPhonePl && (
-        <div ref={playerContainerRef} className={classes.playerContainer}>
-          <div style={{ height: '100%' }} onClick={handlePlayPauseOut}>
-            <video
-              id="video"
-              ref={videoEl}
-              muted={muted}
-              style={{ width: '100%', height: '100%' }}
-              autoPlay={autoPlay}
-              // className={classes.video}
-            />
-            {getMiniPlayerState && (
-              <Box className={classes.miniPlayerContainer}>
-                <img src="/images/ic_mini_player.svg" className={classes.miniPlayerIcon} />
-                <Typography className={classes.miniPlayerText}>{t('videos_top_tab.mini_player_message')}</Typography>
-              </Box>
-            )}
-            {!androidPl && !iPhonePl && !mediaOverlayIsShown && loading && (
-              <div className={classes.playOverView}>
-                {videoLoaded && (
-                  <div
-                    className={classes.thumbBegin}
-                    style={{
-                      backgroundImage: `url(${thumbnail ?? '/images/live_stream/thumbnail_default.png'})`,
-                      backgroundSize: 'cover',
-                      width:
-                        liveStreamInfo.is_normal_view_mode || isMobile || refControlBar?.current?.isFull
-                          ? '100%'
-                          : componentsSize.videoWidth,
-                    }}
-                  >
-                    <div className={classes.loadingThumbBlur} />
-                  </div>
-                )}
-                {ended || !playing ? (
-                  <Icon className={`fas fa-play ${classes.fontSizeLarge}`} />
-                ) : (
-                  <div className={classes.showLoader}>
-                    <ESLoader />
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
+      )} */}
+      {/* {(!isMobile && !androidPl && !iPhonePl)  && ( */}
+      <div ref={playerContainerRef} className={classes.playerContainer}>
+        <div style={{ height: '100%' }} onClick={handlePlayPauseOut}>
+          <video
+            id="video"
+            ref={videoEl}
+            muted={muted}
+            style={{ width: '100%', height: '100%' }}
+            autoPlay={autoPlay}
+            src={src}
+            controls={iPhonePl || androidPl || isMobile}
+            //@ts-ignore
+            playsInline={iPhonePl || androidPl}
+            preload={'auto'}
+            controlsList="noplaybackrate foobar"
+            // className={classes.video}
+          />
+
+          {!isMobile && !androidPl && !iPhonePl && !mediaOverlayIsShown && loading && (
+            <div className={classes.playOverView}>
+              {videoLoaded && (
+                <div
+                  className={classes.thumbBegin}
+                  style={{
+                    backgroundImage: `url(${thumbnail ?? '/images/live_stream/thumbnail_default.png'})`,
+                    backgroundSize: 'cover',
+                  }}
+                >
+                  <div className={classes.loadingThumbBlur} />
+                </div>
+              )}
+              {ended || !playing ? (
+                <Icon className={`fas fa-play ${classes.fontSizeLarge}`} />
+              ) : (
+                <div className={classes.showLoader}>
+                  <ESLoader />
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+        {!isMobile && !androidPl && !iPhonePl && (
           <div className={classes.processControl}>
             {videoType !== STATUS_VIDEO.LIVE_STREAM && (
               <SeekBar
@@ -692,11 +744,14 @@ const VideoPlayer: React.FC<PlayerProps> = ({
                 videoStatus={videoType}
                 onReloadTime={handleReloadTime}
                 handleOnRestart={handleOnRestart}
+                resultResolution={(index, flag) => changeResolution(index, flag)}
+                quality={quality}
               />
             </div>
           </div>
-          {/*errorVideo && <div className={classes.loading} />} */}
-          {/* {visible.videoError && (
+        )}
+        {/*errorVideo && <div className={classes.loading} />} */}
+        {/* {visible.videoError && (
           <div className={classes.overViewError}>
             <div
               className={classes.thumbBegin}
@@ -715,8 +770,8 @@ const VideoPlayer: React.FC<PlayerProps> = ({
             </Box>
           </div>
         )} */}
-        </div>
-      )}
+      </div>
+      {/* )} */}
     </div>
   )
 }
@@ -882,4 +937,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
-export default memo(VideoPlayer)
+export default memo(VideoPlayer, (prev, next) => {
+  console.warn('===redenr===', prev.src !== next.src)
+  if (prev.src !== next.src) {
+    return false
+  }
+  return true
+})

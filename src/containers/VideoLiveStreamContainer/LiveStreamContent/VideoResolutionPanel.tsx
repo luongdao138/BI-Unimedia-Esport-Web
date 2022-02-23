@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo } from 'react'
 import { Box, Icon, makeStyles, Typography } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
@@ -6,29 +6,38 @@ import { useTranslation } from 'react-i18next'
 type Props = {
   handleOnBackClick?: () => void
   resolutionList: Array<any>
-  selectedResolution: string
+  selectedResolution?: string
+  onSelected?: (item, index) => void
 }
 
-const VideoResolutionPanel: React.FC<Props> = ({ handleOnBackClick, resolutionList, selectedResolution = '1080p' }) => {
+const VideoResolutionPanel: React.FC<Props> = ({ handleOnBackClick, resolutionList, selectedResolution = '1080p', onSelected }) => {
   const classes = useStyles()
   const { t } = useTranslation('common')
-  const RadioButton = ({ title, selected }) => {
+  const RadioButton = ({ title, selected, onClick }) => {
     return (
-      <Box className={classes.radioContainer}>
+      <Box className={classes.radioContainer} onClick={onClick}>
         <Box className={`${classes.radio} ${selected ? classes.radioSelected : classes.radioUnselected}`} />
         <Typography className={classes.radioTitle}>{title}</Typography>
       </Box>
     )
   }
-
   return (
     <Box className={classes.container}>
       <Box className={classes.header}>
         <Icon onClick={handleOnBackClick} className={`fas fa-chevron-left ${classes.backIcon}`} fontSize="small" />
         <Typography className={classes.textHeader}>{t('videos_top_tab.resolution_select')}</Typography>
       </Box>
-      {resolutionList.map((item) => {
-        return <RadioButton key={`RadioButton-${item}`} title={item} selected={item === selectedResolution} />
+      {resolutionList.map((item, index) => {
+        return (
+          <RadioButton
+            key={`RadioButton-${item}`}
+            title={item}
+            selected={item === selectedResolution}
+            onClick={() => {
+              onSelected(item, index)
+            }}
+          />
+        )
       })}
     </Box>
   )
@@ -91,4 +100,9 @@ const useStyles = makeStyles(() => ({
     cursor: 'pointer',
   },
 }))
-export default VideoResolutionPanel
+export default memo(VideoResolutionPanel, (prev, next) => {
+  if (prev.selectedResolution !== next.selectedResolution) {
+    return false
+  }
+  return true
+})

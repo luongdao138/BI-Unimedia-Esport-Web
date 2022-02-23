@@ -13,6 +13,7 @@ import SettingPanel from '@containers/VideoLiveStreamContainer/LiveStreamContent
 import VideoResolutionPanel from '@containers/VideoLiveStreamContainer/LiveStreamContent/VideoResolutionPanel'
 import ReportPanel from '@containers/VideoLiveStreamContainer/LiveStreamContent/ReportPanel'
 import useLiveStreamDetail from '@containers/VideoLiveStreamContainer/useLiveStreamDetail'
+import { VIDEO_RESOLUTION } from '@services/liveStreamDetail.service'
 
 interface ControlProps {
   ref: any
@@ -31,6 +32,8 @@ interface ControlProps {
   videoStatus?: number
   onReloadTime?: () => void
   handleOnRestart?: () => void
+  resultResolution?: (index?: number, flag?: boolean) => void
+  quality?: Array<string>
 }
 
 enum SettingPanelState {
@@ -59,6 +62,8 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
       videoStatus,
       // onReloadTime,
       handleOnRestart,
+      resultResolution,
+      quality,
     },
     ref
   ) => {
@@ -69,6 +74,7 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
     const { is_normal_view_mode } = liveStreamInfo
     const [settingPanel, setSettingPanel] = useState(SettingPanelState.NONE)
     const { changeMiniPlayerState, getMiniPlayerState } = useLiveStreamDetail()
+    const [resolution, setResolution] = useState(t('videos_top_tab.auto'))
 
     useImperativeHandle(ref, () => {
       return {
@@ -131,6 +137,11 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
 
     const handleOnMiniPlayerClick = () => {
       changeMiniPlayerState(!getMiniPlayerState)
+    }
+
+    const handleSelectedResolution = (item, index) => {
+      setResolution(item)
+      resultResolution(index, true)
     }
 
     return (
@@ -300,13 +311,16 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
             handleOnReportClick={handleOnOpenReportPanel}
             isLive={isLive}
             handleOnPlaySpeedClick={handleOnOpenPlaySpeedPanel}
+            settingResult={{ resolution }}
           />
         )}
         {settingPanel === SettingPanelState.VIDEO_RESOLUTION && (
           <VideoResolutionPanel
-            selectedResolution="1080p"
-            resolutionList={[t('videos_top_tab.auto'), '1080p', '720p', '480p', '360p']}
+            selectedResolution={resolution}
+            resolutionList={[VIDEO_RESOLUTION.AUTO].concat(quality)}
+            // resolutionList={['480p']}
             handleOnBackClick={handleOnResolutionPanelBackClick}
+            onSelected={handleSelectedResolution}
           />
         )}
         {settingPanel === SettingPanelState.REPORT_PANEL && <ReportPanel handleOnBackClick={handleOnReportPanelBackClick} />}
