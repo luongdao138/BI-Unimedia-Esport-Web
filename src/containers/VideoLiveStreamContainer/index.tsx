@@ -42,6 +42,7 @@ import useGraphqlAPI from 'src/types/useGraphqlAPI'
 import TabSelectContainer from './TabSelectContainer'
 import { VideoContext } from './VideoContext.js'
 
+import { useResizeScreen } from '@utils/hooks/useResizeScreen'
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 const APIt: any = useGraphqlAPI()
@@ -78,6 +79,7 @@ const VideoDetail: React.FC = () => {
   const { isLandscape } = useRotateScreen()
   const classes = useStyles({ availHeight: height, availWidth: window.innerWidth, isLandscape })
   const { t } = useTranslation('common')
+  const { isResizedScreen, setIsResizedScreen } = useResizeScreen()
   const { width: pageWidth } = useWindowDimensions(0)
 
   const isMobile = pageWidth <= 768 || isLandscape
@@ -97,6 +99,7 @@ const VideoDetail: React.FC = () => {
 
   const [tab, setTab] = useState(VIDEO_INFO_TABS.PROGRAM_INFO)
   const [showDialogLogin, setShowDialogLogin] = useState<boolean>(false)
+  const [firstRender, setFirstRender] = useState(true)
 
   const [showConfirmModal, setShowConfirmModal] = useState(false)
   const [showModalPurchasePoint, setShowModalPurchasePoint] = useState(false)
@@ -237,6 +240,18 @@ const VideoDetail: React.FC = () => {
       navigateToArchiveUrl()
     }
   }, [JSON.stringify(detailVideoResult)])
+
+  useEffect(() => {
+    const key_video_id = detailVideoResult?.key_video_id
+    if (firstRender) {
+      if (key_video_id) setFirstRender(false)
+    } else {
+      if (key_video_id) {
+        setIsResizedScreen(false)
+        setVideoStatus(null)
+      }
+    }
+  }, [detailVideoResult?.key_video_id])
 
   const refOnUpdateVideo = useRef(null)
   const onUpdateVideoData = (updateVideoData) => {
@@ -528,12 +543,13 @@ const VideoDetail: React.FC = () => {
       >
         <ChatContainer
           ref={refChatContainer}
+          isResizedScreen={isResizedScreen}
           myPoint={myPoint}
           chatWidth={componentsSize.chatWidth}
           key_video_id={detailVideoResult?.key_video_id}
           onPressDonate={confirmDonatePoint}
           userHasViewingTicket={userHasViewingTicket()}
-          videoType={+videoStatus}
+          videoType={videoStatus}
           freeToWatch={isVideoFreeToWatch}
           handleKeyboardVisibleState={changeSoftKeyboardVisibleState}
           donateConfirmModalIsShown={modalIsShown}
