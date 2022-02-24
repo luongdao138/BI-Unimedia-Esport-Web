@@ -49,6 +49,8 @@ const useDetailVideo = () => {
   const setActiveTab = (activeTab) => dispatch(actions.setActiveTab({ activeTab }))
   const setActiveSubTab = (activeSubTab) => dispatch(actions.setActiveSubTab({ activeSubTab }))
   const changeIsHoveredVideoStatus = (isHoveredVideo) => dispatch(actions.changeIsHoveredVideoStatus({ isHoveredVideo }))
+  const getVideoGiftMasterList = (params) => dispatch(actions.getVideoGiftMaster(params))
+  const videoGiftMaster = useAppSelector(selectors.videoGiftMaster)
 
   return {
     meta,
@@ -78,6 +80,8 @@ const useDetailVideo = () => {
     changeIsHoveredVideoStatus,
     onSaveVideoRef,
     videoRefEl,
+    getVideoGiftMasterList,
+    videoGiftMaster,
   }
 }
 

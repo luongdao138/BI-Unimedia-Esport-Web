@@ -4,6 +4,7 @@ import i18n from '@locales/i18n'
 import { Box, makeStyles } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import React from 'react'
+import useDetailVideo from '@containers/VideoLiveStreamContainer/useDetailVideo'
 
 type Step1Props = {
   onChangeStep?: (newStep: number) => void
@@ -12,22 +13,12 @@ type Step1Props = {
 
 const Step1: React.FC<Step1Props> = ({ onChangeStep, onChangeSelectedMember }) => {
   const classes = useStyles()
-
-  const members = Array(9)
-    .fill('')
-    .map((_, key) => {
-      return {
-        key: key,
-        src: 'https://s3-ap-northeast-1.amazonaws.com/cowell-dev-avatar-media/users/cover/366/1632934543-366.jpg',
-        name: 'user ' + key,
-        receiverType: i18n.t('common:live_stream_screen.team_receiver_type'),
-      }
-    })
+  const { videoGiftMaster } = useDetailVideo()
 
   const renderMember = (item, isStreamer = false) => {
     return (
       <Box className={classes.wrapStreamer}>
-        <GiftMember data={item} isStreamer={isStreamer} />
+        <GiftMember data={item} isStreamer={isStreamer} isCutTextOverflow />
         <ButtonSelectMember
           memberId={item.id}
           onClick={() => {
@@ -39,15 +30,21 @@ const Step1: React.FC<Step1Props> = ({ onChangeStep, onChangeSelectedMember }) =
     )
   }
 
+  const streamerGiftData = () => ({
+    image: videoGiftMaster?.user_avatar,
+    name: videoGiftMaster?.user_nickname,
+    id: videoGiftMaster?.user_id,
+  })
+
   return (
     <Box>
       <Box className={classes.wrapGiftMemberList}>
         <Box className={`scroll_common ${classes.giftMemberList}`}>
           <Box className={classes.streamerTitle}>{`${i18n.t('common:live_stream_screen.streamer_title')}`}</Box>
-          {renderMember(members[0], true)}
+          {renderMember(streamerGiftData(), true)}
           <Box className={classes.streamerTitle}>{`${i18n.t('common:live_stream_screen.receiver_title')}`}</Box>
           <Box display={'flex'} style={{ gap: '16px' }} flexDirection={'column'}>
-            {members.map((item) => {
+            {videoGiftMaster?.group_item?.map((item) => {
               return renderMember(item)
             })}
           </Box>
@@ -58,7 +55,14 @@ const Step1: React.FC<Step1Props> = ({ onChangeStep, onChangeSelectedMember }) =
 }
 
 const useStyles = makeStyles((theme) => ({
-  giftMemberList: { maxHeight: '421px', overflow: 'auto', paddingRight: 4, gap: '8px', display: 'flex', flexDirection: 'column' },
+  giftMemberList: {
+    maxHeight: '421px',
+    overflow: 'auto',
+    paddingRight: 4,
+    gap: '8px',
+    display: 'flex',
+    flexDirection: 'column',
+  },
   wrapGiftMemberList: {
     background: Colors.white_opacity[10],
     borderRadius: '5px',
@@ -72,7 +76,7 @@ const useStyles = makeStyles((theme) => ({
     textAlign: 'center',
     border: '0px',
     fontSize: 12,
-    color: '#fff',
+    color: '#FFFFFF',
     '&:after': {
       content: "''",
       width: '100%',

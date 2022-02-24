@@ -20,13 +20,13 @@ type TipChatDialogProps = {
   createMess: (message: string, point?: number) => Promise<void>
 }
 
-const TipChatDialog: React.FC<TipChatDialogProps> = ({ onClickOutside, normalMessHasError }) => {
+const TipChatDialog: React.FC<TipChatDialogProps> = ({ onClickOutside, normalMessHasError, createMess }) => {
   // const dispatch = useAppDispatch()
 
   const { myPointsData } = usePointsManage()
   // const getPurchasePointList = () => Object.values(purchasePoints)
   const myPoint = myPointsData?.total_point ? Number(myPointsData.total_point) : 0
-  const totalSteps = 4
+  const totalSteps = 3
   const [step, setStep] = useState(1)
   const [selectedMember, setSelectedMember] = useState(null)
   const [tipInfo, setTipInfo] = useState(null)
@@ -96,7 +96,7 @@ const TipChatDialog: React.FC<TipChatDialogProps> = ({ onClickOutside, normalMes
       case 2:
         return <Step2 {...commonStepProps} onChangeTipInfo={onChangeTipInfo} />
       case 3:
-        return <Step3 {...commonStepProps} tipInfo={tipInfo} />
+        return <Step3 {...commonStepProps} tipInfo={tipInfo} createMess={createMess} />
       default:
         return null
     }

@@ -23,3 +23,4 @@ export const isViewingStream = createSelector(getRoot, (state) => state.is_viewi
 export const liveStreamInfo = createSelector(getRoot, (state) => state)
 export const videoDetailError = createSelector(getRoot, (state) => state.videoDetailError)
 export const videoRef = createSelector(getRoot, (state) => state.videoEl)
+export const videoGiftMaster = createSelector(getRoot, (state) => state.videoGiftMaster)

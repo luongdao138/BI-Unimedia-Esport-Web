@@ -126,6 +126,7 @@ const VideoDetail: React.FC = () => {
     changeIsStreamingEnd,
     liveStreamInfo,
     changeIsHoveredVideoStatus,
+    getVideoGiftMasterList,
   } = useDetailVideo()
 
   const { is_normal_view_mode, isHoveredVideo } = liveStreamInfo
@@ -354,6 +355,11 @@ const VideoDetail: React.FC = () => {
     }
   }, [video_id, isAuthenticated])
 
+  useEffect(() => {
+    if (detailVideoResult) {
+      getVideoGiftMasterList({ video_id: `${detailVideoResult?.uuid}` })
+    }
+  }, [detailVideoResult])
   useEffect(() => {
     // setTab(isMobile ? VIDEO_INFO_TABS.COMMENT : VIDEO_INFO_TABS.PROGRAM_INFO)
   }, [isMobile])

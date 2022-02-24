@@ -7,6 +7,7 @@ import {
   TypeVideo,
   VideoDetailData,
   VideoRefType,
+  VideoGiftMasterData,
 } from '@services/videoTop.services'
 import * as actions from '../actions'
 import { VIDEO_NORMAL_VIEW_MODE, SUB_TABS, VIDEO_TABS } from '@constants/common.constants'
@@ -52,6 +53,7 @@ type StateType = {
   activeSubTab?: number
   isHoveredVideo?: boolean
   videoEl?: VideoRefType
+  videoGiftMaster?: VideoGiftMasterData
 }
 
 const initialState: StateType = {
@@ -102,6 +104,7 @@ const initialState: StateType = {
     videoQuery: null,
     videoElement: null,
   },
+  videoGiftMaster: null,
 }
 
 export default createReducer(initialState, (builder) => {
@@ -233,5 +236,8 @@ export default createReducer(initialState, (builder) => {
   builder.addCase(actions.saveVideoRef, (state, action) => {
     state.videoEl.videoQuery = action.payload.videoQuery
     state.videoEl.videoElement = action.payload.videoElement
+  })
+  builder.addCase(actions.getVideoGiftMaster.fulfilled, (state, action) => {
+    state.videoGiftMaster = action.payload.data
   })
 })
