@@ -555,10 +555,12 @@ const useStyles = makeStyles((theme) => ({
     streamer_name: {
       fontSize: '14px',
       fontWeight: 'bold',
-      whiteSpace: 'nowrap',
+      flex: 1,
+      display: '-webkit-box',
+      WebkitBoxOrient: 'vertical',
+      WebkitLineClamp: 2,
       overflow: 'hidden',
       textOverflow: 'ellipsis',
-      flex: 1,
     },
     subscribeLabel: {
       fontSize: 12,
