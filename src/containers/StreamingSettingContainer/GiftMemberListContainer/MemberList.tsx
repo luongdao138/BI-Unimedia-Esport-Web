@@ -57,7 +57,7 @@ const MemberList: React.FC = () => {
     )
   }
 
-  const filterButtonGroup = () => {
+  const filterButtonGroup = useCallback(() => {
     return (
       <Box className={classes.filterButtonGroupContainer}>
         <FilterButton label={t('streaming_setting_screen.member_list.filter_all')} option={GiftMasterUserType.NO_FILTER} />
@@ -68,7 +68,7 @@ const MemberList: React.FC = () => {
         </Box>
       </Box>
     )
-  }
+  }, [filterByType])
 
   const filterByTypeDebounce = useCallback(
     _.debounce((type) => {

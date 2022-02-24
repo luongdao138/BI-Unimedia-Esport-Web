@@ -70,6 +70,7 @@ import RankingTab from './Tabs/RankingTab'
 import { Colors } from '@theme/colors'
 import TipChatDialog from './TipChatDialog'
 import { useRotateScreen } from '@utils/hooks/useRotateScreen'
+import * as commonActions from '@store/common/actions'
 
 export type ChatStyleProps = {
   isLandscape: boolean
@@ -269,7 +270,6 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     // console.log('🚀 ~ nextTime', nextTime)
     const [isTokenBroken, setIsTokenBroken] = useState(false)
     const [videoTimeIsRewinding, setVideoTimeIsRewinding] = useState(0)
-    const isEnabledGift = false
     // console.log('🚀 ~ videoTimeIsRewinding', videoTimeIsRewinding)
 
     // const getChatData = () =>
@@ -305,7 +305,9 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
 
     // const { width: pageWidth } = useWindowDimensions(0)
     // const isDesktopDown1280 = pageWidth > 768 && pageWidth <= 1280
-    const { userResult, streamingSecond, liveStreamInfo, resetChatState, setActiveTab, setActiveSubTab, playedSecond } = useDetailVideo()
+    const { userResult, streamingSecond, liveStreamInfo, resetChatState, setActiveTab, setActiveSubTab, playedSecond, detailVideoResult } = useDetailVideo()
+    const isEnabledGift = (detailVideoResult?.use_gift ?? 0) === 1
+    const isEnabledRanking = detailVideoResult?.ranking_flag ?? 0
 
     const { activeTab, activeSubTab } = liveStreamInfo
 
@@ -1508,6 +1510,8 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         try {
           const result = await API.graphql(graphqlOperation(createMessage, { input }))
           refCreateMessLocal.current(result, local_message)
+          handlePremiumChatBoxClickOutside()
+          dispatch(commonActions.addToast(i18n.t('common:live_stream_screen.send_gift_success')))
         } catch (errors) {
           if (errors && errors.errors.length !== 0) refCreateMessLocal.current([], local_message, true)
           console.error(errors)
@@ -1560,6 +1564,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     }
 
     const purchaseButton = () => {
+      if (!isEnabledGift) return <Box />
       return (
         <LoginRequired>
           <IconButton onClick={purchaseIconClick} id="btnOpenPremiumChatDialog" className={classes.iconPurchase}>
@@ -1842,7 +1847,10 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         </ButtonBase> */}
         <IconButton
           disableRipple
-          style={{ display: !isBottom ? 'flex' : 'none', bottom: isMobile && isStreaming ? (isLandscape ? 66 : 180) : 30 }}
+          style={{
+            display: !isBottom ? 'flex' : 'none',
+            bottom: isMobile && isStreaming ? (isLandscape ? 66 : 180) : 30,
+          }}
           className={classes.bottomArrow}
           onClick={() => {
             setTimeout(() => {
@@ -2183,7 +2191,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         <Box className={classes.tabsContainer}>
           <ESTabs value={activeTab} onChange={(_, v) => setActiveTab(v)} className={classes.tabs} scrollButtons="off" variant="scrollable">
             <ESTab className={classes.singleTab} label={i18n.t('common:live_stream_screen.chat_header')} value={VIDEO_TABS.CHAT} />
-            {isEnabledGift && (
+            {isEnabledRanking && (
               <ESTab
                 className={classes.singleTab}
                 label={i18n.t('common:live_stream_screen.ranking_tab_title')}

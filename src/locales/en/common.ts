@@ -1857,6 +1857,7 @@ export default {
     point_to_donate: '送付eXeポイント',
     no_mess: 'コメントはありません',
     gift_ranking: 'ギフトランキング',
+    send_gift_success: 'チップを送信しました',
   },
   live_stream_screen_chat: {
     receipt: '受取',

@@ -201,3 +201,23 @@ export const videoDetail = createAsyncThunk<services.VideoDetailResponse, servic
     }
   }
 )
+
+export const getVideoGiftMaster = createAsyncThunk<services.VideoGiftMasterResponse, services.VideoDetailParams>(
+  ACTION_VIDEO_TOP.VIDEO_GIFT_MASTER,
+  async (params, { rejectWithValue }) => {
+    try {
+      const res = await services.getVideoGiftMasterList({ ...params, timezone: getTimeZone() })
+      if (res?.code === 200) {
+        return res
+      } else {
+        // throw res.message
+        return rejectWithValue(res.message)
+      }
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)

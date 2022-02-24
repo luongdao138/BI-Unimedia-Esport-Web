@@ -1,5 +1,6 @@
 import { URI } from '@constants/uri.constants'
 import api from './api'
+import { GiftMasterType } from '@services/gift.service'
 
 export const TYPE_VIDEO_TOP = {
   ALL: 'all',
@@ -196,6 +197,7 @@ export type SearchType = {
 export type VideoDetailParams = {
   video_id: string
   timezone?: string
+  user_id?: number
 }
 
 export type VideoDetailData = {
@@ -234,6 +236,8 @@ export type VideoDetailData = {
   live_stream_end_time?: string
   id?: number
   video_thumbnail?: string
+  ranking_flag?: number
+  use_gift?: number
 }
 
 export type DetailUserData = {
@@ -323,5 +327,28 @@ export const VideoSearch = async (params: SearchVideoParams): Promise<SearchVide
 
 export const DetailVideo = async (params: VideoDetailParams): Promise<VideoDetailResponse> => {
   const { data } = await api.get<VideoDetailResponse>(URI.VIDEO_DETAIL, { params })
+  return data
+}
+
+export type VideoGiftMasterResponse = {
+  message?: string
+  code?: number
+  data?: VideoGiftMasterData
+}
+
+export type VideoGiftMasterData = {
+  gift_group_id?: number
+  id?: number
+  title?: string
+  user_id?: number
+  status?: number
+  group_uuid?: string
+  user_nickname?: string
+  user_avatar?: string
+  group_item?: Array<GiftMasterType>
+}
+
+export const getVideoGiftMasterList = async (params: VideoDetailParams): Promise<VideoGiftMasterResponse> => {
+  const { data } = await api.get<VideoGiftMasterResponse>(URI.VIDEO_GIFT_MASTER, { params })
   return data
 }

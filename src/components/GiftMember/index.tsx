@@ -2,26 +2,34 @@ import ESAvatar from '@components/Avatar'
 import { Box, makeStyles, Typography } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import React from 'react'
+import { GiftMasterType, GiftMasterUserType } from '@services/gift.service'
+import { useTranslation } from 'react-i18next'
 
 export type IGiftMember = {
-  data: {
-    src?: string
-    receiverType?: string
-    name?: string
-  }
+  data: GiftMasterType
   isStreamer?: boolean
   isCutTextOverflow?: boolean
 }
 
-const GiftMember: React.FC<IGiftMember> = ({ isCutTextOverflow = true, isStreamer = false, data: { src, receiverType, name } }) => {
+const GiftMember: React.FC<IGiftMember> = ({
+  isCutTextOverflow = false,
+  isStreamer = false,
+  data: { image, type: receiverType, name },
+}) => {
   const classes = useStyles()
+  const { t } = useTranslation('common')
 
+  const userType = () => {
+    return receiverType === GiftMasterUserType.TEAM
+      ? t('streaming_setting_screen.member_list.tag_team')
+      : t('streaming_setting_screen.member_list.tag_individual')
+  }
   return (
     <Box className={classes.wrapStreamerInfo}>
-      <ESAvatar src={src} size={56} alt={'item.parent.user_name'} />
+      <ESAvatar src={image} size={56} alt={image} />
       <Box className={classes.wrapStreamerName} style={{ justifyContent: isStreamer ? 'center' : 'space-between' }}>
-        {!isStreamer && <Box className={classes.receiverType}>{receiverType}</Box>}
-        <Typography className={`${isCutTextOverflow ? '' : ''} ${classes.streamerName}`}>{name}</Typography>
+        {!isStreamer && <Box className={classes.receiverType}>{userType()}</Box>}
+        <Typography className={`${isCutTextOverflow ? classes.streamerNameWrapText : ''} ${classes.streamerName}`}>{name}</Typography>
       </Box>
     </Box>
   )
@@ -55,6 +63,8 @@ const useStyles = makeStyles(() => ({
     fontSize: '12px',
     color: Colors.white_opacity[70],
     lineHeight: '16px',
+  },
+  streamerNameWrapText: {
     maxWidth: 100,
   },
 }))

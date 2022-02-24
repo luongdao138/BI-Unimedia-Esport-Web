@@ -5,21 +5,23 @@ import { Colors } from '@theme/colors'
 import { FormatHelper } from '@utils/helpers/FormatHelper'
 import React from 'react'
 import TipButtonGroup from './TipButtonGroup'
+import { sanitizeMess } from '../index'
 
 type Step3Props = {
   onChangeStep?: (newStep: number) => void
   selectedMember?: any
   tipInfo: any
+  createMess: (message: string, point?: number) => Promise<void>
 }
 
-const Step3: React.FC<Step3Props> = ({ tipInfo, onChangeStep, selectedMember }) => {
+const Step3: React.FC<Step3Props> = ({ tipInfo, onChangeStep, selectedMember, createMess }) => {
   const classes = useStyles()
 
   const onCancel = () => {
     onChangeStep(2)
   }
   const onClick = () => {
-    onChangeStep(2)
+    createMess(sanitizeMess(tipInfo?.message), tipInfo?.donatedPoint)
   }
 
   return (
