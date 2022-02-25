@@ -77,6 +77,7 @@ export type ChatStyleProps = {
   isLandscape: boolean
 }
 import { VideoContext } from '../VideoContext.js'
+import { useCheckDisplayChat } from '@utils/hooks/useCheckDisplayChat'
 
 export type ChatContainerProps = {
   onPressDonate?: (donatedPoint: number, purchaseComment: string) => void
@@ -319,18 +320,8 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
 
     // const { width: pageWidth } = useWindowDimensions(0)
     // const isDesktopDown1280 = pageWidth > 768 && pageWidth <= 1280
-    const {
-      userResult,
-      streamingSecond,
-      liveStreamInfo,
-      resetChatState,
-      setActiveTab,
-      setActiveSubTab,
-      playedSecond,
-      detailVideoResult,
-    } = useDetailVideo()
-    const isEnabledGift = (detailVideoResult?.use_gift ?? 0) === 1
-    const isEnabledRanking = detailVideoResult?.ranking_flag ?? 0
+    const { userResult, streamingSecond, liveStreamInfo, resetChatState, setActiveTab, setActiveSubTab, playedSecond } = useDetailVideo()
+    const { isEnabledGift, isEnabledMessFilter, isDisplayedRankingTab } = useCheckDisplayChat()
 
     const { activeTab, activeSubTab } = liveStreamInfo
 
@@ -2526,20 +2517,22 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     const renderMessageTab = () => {
       return (
         <Box>
-          <TabsGroup
-            data={[
-              {
-                value: SUB_TABS.MESS.ALL,
-                label: i18n.t('common:live_stream_screen.all_mess_tab_title'),
-              },
-              {
-                value: SUB_TABS.MESS.TIP,
-                label: i18n.t('common:live_stream_screen.tip_mess_tab_title'),
-              },
-            ]}
-            value={activeSubTab}
-            onClick={(value) => setActiveSubTab(value)}
-          ></TabsGroup>
+          {isEnabledMessFilter && (
+            <TabsGroup
+              data={[
+                {
+                  value: SUB_TABS.MESS.ALL,
+                  label: i18n.t('common:live_stream_screen.all_mess_tab_title'),
+                },
+                {
+                  value: SUB_TABS.MESS.TIP,
+                  label: i18n.t('common:live_stream_screen.tip_mess_tab_title'),
+                },
+              ]}
+              value={activeSubTab}
+              onClick={(value) => setActiveSubTab(value)}
+            ></TabsGroup>
+          )}
           {/* {displayChatContent() ? chatContent() : userDoesNotHaveViewingTicketView()} */}
           {/* <ChatTab activeTab={messageTab} /> */}
         </Box>
@@ -2575,7 +2568,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         <Box className={classes.tabsContainer}>
           <ESTabs value={activeTab} onChange={(_, v) => setActiveTab(v)} className={classes.tabs} scrollButtons="off" variant="scrollable">
             <ESTab className={classes.singleTab} label={i18n.t('common:live_stream_screen.chat_header')} value={VIDEO_TABS.CHAT} />
-            {isEnabledRanking && (
+            {isDisplayedRankingTab && (
               <ESTab
                 className={classes.singleTab}
                 label={i18n.t('common:live_stream_screen.ranking_tab_title')}

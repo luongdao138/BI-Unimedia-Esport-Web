@@ -238,6 +238,7 @@ export type VideoDetailData = {
   video_thumbnail?: string
   ranking_flag?: number
   use_gift?: number
+  group_items?: any
 }
 
 export type DetailUserData = {

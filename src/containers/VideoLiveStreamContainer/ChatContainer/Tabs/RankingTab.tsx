@@ -8,6 +8,7 @@ import useDetailVideo from '@containers/VideoLiveStreamContainer/useDetailVideo'
 import useRankingVideo from '@containers/VideoLiveStreamContainer/useRankingVideo'
 import { Box, makeStyles, Typography, useMediaQuery, useTheme } from '@material-ui/core'
 import { useEffect } from 'react'
+import { useCheckDisplayChat } from '@utils/hooks/useCheckDisplayChat'
 
 import { useTranslation } from 'react-i18next'
 
@@ -27,6 +28,7 @@ export enum RECEIPT_SEND_TABS {
 // ]
 
 const RankingTab: React.FC<RankingTabProps> = () => {
+  const { isEnabledRankFilter } = useCheckDisplayChat()
   const { liveStreamInfo, setActiveSubTab } = useDetailVideo()
   const { fetchRakingVideo, rankingsGiver, rankingsReceive } = useRankingVideo()
   const { activeSubTab } = liveStreamInfo
@@ -112,7 +114,7 @@ const RankingTab: React.FC<RankingTabProps> = () => {
 
   return (
     <Box className={classes.rankingContainer}>
-      {!isMobile && (
+      {!isMobile && isEnabledRankFilter && (
         <TabsGroup
           data={[
             {
