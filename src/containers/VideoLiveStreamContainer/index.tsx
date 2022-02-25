@@ -39,6 +39,8 @@ import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
 import LiveStreamContent from './LiveStreamContent'
 import { PurchaseTicketParams } from '@services/points.service'
 import useGraphqlAPI from 'src/types/useGraphqlAPI'
+import { VideoContext } from './VideoContext.js'
+
 import { useResizeScreen } from '@utils/hooks/useResizeScreen'
 import { VideoContext } from './VideoContext.js'
 
