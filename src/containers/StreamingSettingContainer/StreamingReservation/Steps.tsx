@@ -367,11 +367,11 @@ const Steps: React.FC<StepsProps> = ({
       video_publish_end_time:
         stepSettingTwo.video_publish_end_time !== null ? CommonHelper.formatDateTimeJP(stepSettingTwo.video_publish_end_time) : null,
     }
-    debouncedHandleConfirmForm(data, stepSettingTwo, step)
+    debouncedHandleConfirmForm(data, stepSettingTwo, step, isShare)
   }
 
   const debouncedHandleConfirmForm = useCallback(
-    _.debounce((data: SetLiveStreamParams, stepSettingTwo, step: number) => {
+    _.debounce((data: SetLiveStreamParams, stepSettingTwo, step: number, isShare: boolean) => {
       setLiveStreamConfirm(data, (process) => {
         // console.log('process===', process);
         onNext(
