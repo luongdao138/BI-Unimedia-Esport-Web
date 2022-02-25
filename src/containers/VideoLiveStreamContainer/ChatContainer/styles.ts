@@ -81,7 +81,6 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    marginRight: '16px',
     height: '100%',
     flex: 1,
   },

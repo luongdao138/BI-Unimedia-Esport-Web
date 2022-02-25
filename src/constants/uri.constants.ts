@@ -200,4 +200,5 @@ export const URI = {
   GET_ALL_GIFT_GROUP: 'v2/gift/group',
   GET_GIFT_GROUP_DETAIL: 'v2/gift/group_detail',
   DELETE_GIFT_GROUP: 'v2/gift/group/delete',
+  GET_RANKINGS: 'v2/gift/ranking',
 }

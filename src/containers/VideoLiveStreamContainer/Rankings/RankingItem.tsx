@@ -173,15 +173,22 @@ const useStyles = makeStyles((theme) => ({
   user_code: {
     color: Colors.white_opacity['70'],
     fontSize: 12,
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    maxWidth: '100px',
   },
   tip: {
     fontSize: 16,
     color: theme.palette.common.white,
     textAlign: 'right',
+    wordBreak: 'break-word',
   },
   [theme.breakpoints.down('sm')]: {
     contentWrapper: {
       paddingLeft: 0,
+    },
+    user_code: {
+      maxWidth: '80px',
     },
   },
   [theme.breakpoints.down('xs')]: {
