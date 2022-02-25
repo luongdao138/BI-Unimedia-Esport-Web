@@ -2547,8 +2547,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     }
 
     const getTabsContent = () => {
-      //activeTab
-      switch (1) {
+      switch (activeTab) {
         case VIDEO_TABS.CHAT:
           return renderMessageTab()
         case VIDEO_TABS.RANKING:
