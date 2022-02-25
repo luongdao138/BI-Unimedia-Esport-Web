@@ -142,13 +142,20 @@ const useStyles = makeStyles((theme) => ({
   user_code: {
     color: Colors.white_opacity['70'],
     fontSize: 12,
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    maxWidth: '100px',
   },
   tip: {
     fontSize: 16,
     color: theme.palette.common.white,
     textAlign: 'right',
   },
-  [theme.breakpoints.down('sm')]: {},
+  [theme.breakpoints.down('sm')]: {
+    user_code: {
+      maxWidth: '80px',
+    },
+  },
   [theme.breakpoints.down('xs')]: {
     text: {
       fontSize: '20px !important',

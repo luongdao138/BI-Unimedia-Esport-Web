@@ -9,3 +9,5 @@ export const reactionVideoData = createSelector(getRoot, (state) => state.reacti
 export const followChannelData = createSelector(getRoot, (state) => state.followData)
 export const videoWatchTimeReportData = createSelector(getRoot, (state) => state.videoWatchTimeReport)
 export const getMiniVideoVisibleState = createSelector(getRoot, (state) => state.miniVideoVisible)
+export const getRankingGiver = createSelector(getRoot, (state) => state.rankings.giver)
+export const getRankingReceive = createSelector(getRoot, (state) => state.rankings.receive)

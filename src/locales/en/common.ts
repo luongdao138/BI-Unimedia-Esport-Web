@@ -1858,6 +1858,7 @@ export default {
     no_mess: 'コメントはありません',
     gift_ranking: 'ギフトランキング',
     send_gift_success: 'チップを送信しました',
+    no_ranking: 'ランキングがありません。',
   },
   live_stream_screen_chat: {
     receipt: '受取',

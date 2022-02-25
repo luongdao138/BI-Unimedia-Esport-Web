@@ -106,3 +106,18 @@ export const videoWatchTimeReportRequest = createAsyncThunk<services.TimeReportR
     }
   }
 )
+
+export const getRankingList = createAsyncThunk<services.RankingsResponse, services.RankingsParams>(
+  ACTION_VIDEO_DETAIL_STREAM.GET_RANKINGS,
+  async (rankingParams, { rejectWithValue }) => {
+    try {
+      const res = await services.rankingList(rankingParams)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
