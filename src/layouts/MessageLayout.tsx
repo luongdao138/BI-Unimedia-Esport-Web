@@ -14,6 +14,7 @@ import Button from '@components/Button'
 import { useRouter } from 'next/router'
 import { RouteContext } from 'pages/_app'
 import { use100vh } from 'react-div-100vh'
+import GoogleAdsPatten2 from '@components/GoogleAd/GoogleAdsPatten2'
 
 interface LayoutProps {
   defaultListState?: boolean
@@ -67,6 +68,7 @@ const MessageLayout: React.FC<LayoutProps> = ({ children, defaultListState, crea
 
   return (
     <div className="main-wrapper">
+      <GoogleAdsPatten2 id={{ idPatten2: 'ad_message_r' }} />
       <Header open={open} toggleDrawer={toggleDrawer} />
       <aside className="aside-left mui-fixed">
         <SideMenu />

@@ -1,5 +1,4 @@
 // import { makeStyles } from '@material-ui/core/styles'
-import { useMediaQuery, useTheme } from '@material-ui/core'
 import { useEffect } from 'react'
 
 type Patten = {
@@ -25,10 +24,8 @@ declare global {
 const googleAdId = process.env.GADS_CLIENT_ID
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const GoogleAd: React.FC<Props> = ({ timeout = 2000, style, id }) => {
+const GoogleAdsPatten2: React.FC<Props> = ({ timeout = 2000, style }) => {
   //   const classes = useStyles()
-  const theme = useTheme()
-  const screenDownSP = useMediaQuery(theme.breakpoints.down(576))
 
   useEffect(() => {
     const googleInit = setTimeout(() => {
@@ -40,32 +37,25 @@ const GoogleAd: React.FC<Props> = ({ timeout = 2000, style, id }) => {
   }, [])
   const styles = {
     display: 'block',
-    height: screenDownSP ? 50 : 90,
+    height: 250,
     // background: 'red',
-    width: screenDownSP ? 320 : '100%',
+    width: 'calc((100% - 960px) / 2)',
+    maxWidth: 300,
+    minWidth: 170,
   }
   return (
-    // <>
-    //   {isHasSlot ? (
-    //     <ins
-    //       className="adsbygoogle"
-    //       style={{ display: 'block' }}
-    //       data-ad-client={googleAdId}
-    //       data-ad-slot={slot}
-    //       data-ad-format="auto"
-    //       data-full-width-responsive="true"
-    //     ></ins>
-    //   ) : (
-    <div className={id.idPatten1 ? 'google_ad_patten_1' : id.idPatten3 ? 'google_ad_patten_3' : 'google_ad_patten_4'}>
-      <div
-        style={{
-          width: screenDownSP ? 320 : '100%',
-          height: screenDownSP ? 50 : 90,
-          background: 'pink',
-          justifyContent: 'center',
-          display: 'flex',
-        }}
-      >
+    // <>mes
+    <div className={'google_ad_patten_2'}>
+      <div className="layout_ads_div">
+        <ins
+          className="adsbygoogle"
+          style={{ ...styles, ...style }}
+          data-ad-client={googleAdId}
+          data-ad-format=""
+          data-full-width-responsive="true"
+        ></ins>
+      </div>
+      <div className="layout_ads_div" style={{ marginTop: 40 }}>
         <ins
           className="adsbygoogle"
           style={{ ...styles, ...style }}
@@ -85,9 +75,9 @@ const GoogleAd: React.FC<Props> = ({ timeout = 2000, style, id }) => {
 //   },
 // }))
 
-GoogleAd.defaultProps = {
+GoogleAdsPatten2.defaultProps = {
   classNames: '',
   timeout: 200,
 }
 
-export default GoogleAd
+export default GoogleAdsPatten2

@@ -902,6 +902,18 @@ body.has-sticky-div .sticky-div {
   width: 100%;
   display: none;
 }
+.google_ad_patten_2 {
+  display: flex;
+  justify-content: center;
+  position: fixed;
+  right: 0;
+  height: 100%;
+  z-index: 10000;
+  align-items: center;
+  width: calc((100% - 960px) / 2);
+  max-width: 300px;
+  flex-direction: column;
+}
 .google_ad_patten_1 {
   display: flex;
   justify-content: center;
@@ -934,4 +946,18 @@ iframe[style] {
   .position_bottom {
     padding-bottom: 60px;
   }
+}
+@media (max-width: 1280px) {
+  .google_ad_patten_2 {
+    display: none;
+  }
+}
+.layout_ads_div {
+  width: 100%;
+  height: 250px;
+  max-width: 300px;
+  min-width: 170px;
+  // background: pink;
+  justify-content: right;
+  display: flex;
 }
