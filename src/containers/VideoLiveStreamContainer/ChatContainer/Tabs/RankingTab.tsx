@@ -6,6 +6,7 @@ import RankingItem from '@containers/VideoLiveStreamContainer/Rankings/RankingIt
 import RankingItemSelf from '@containers/VideoLiveStreamContainer/Rankings/RankingItemSelf'
 import useDetailVideo from '@containers/VideoLiveStreamContainer/useDetailVideo'
 import { Box, makeStyles, useMediaQuery, useTheme } from '@material-ui/core'
+import { useCheckDisplayChat } from '@utils/hooks/useCheckDisplayChat'
 
 import { useTranslation } from 'react-i18next'
 
@@ -25,6 +26,7 @@ const rows = [
 ]
 
 const RankingTab: React.FC<RankingTabProps> = () => {
+  const { isEnabledRankFilter } = useCheckDisplayChat()
   const { liveStreamInfo, setActiveSubTab } = useDetailVideo()
   const { activeSubTab } = liveStreamInfo
 
@@ -90,7 +92,7 @@ const RankingTab: React.FC<RankingTabProps> = () => {
 
   return (
     <Box className={classes.rankingContainer}>
-      {!isMobile && (
+      {!isMobile && isEnabledRankFilter && (
         <TabsGroup
           data={[
             {

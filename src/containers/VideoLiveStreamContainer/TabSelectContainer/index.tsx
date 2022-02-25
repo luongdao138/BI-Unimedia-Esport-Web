@@ -8,6 +8,7 @@ import { SUB_TABS, VIDEO_INFO_TABS, VIDEO_TABS } from '@constants/common.constan
 import i18n from '@locales/i18n'
 import useDetailVideo from '../useDetailVideo'
 import TabsGroup from '@components/TabsGroup'
+import { useCheckDisplayChat } from '@utils/hooks/useCheckDisplayChat'
 const DEFAULT_SELECT_TAB = -1
 
 export const videoTabs = [
@@ -54,6 +55,7 @@ export type TabSelectProps = {
 
 const TabSelectContainer: React.FC<TabSelectProps> = ({ sideChatContainer, infoTabsContent, renderVideoSubInfo, isLandscape }) => {
   const { liveStreamInfo, setActiveTab, setActiveSubTab } = useDetailVideo()
+  const { isEnabledMessFilter, isDisplayedRankingTab, isDisplayedRankingReceiver } = useCheckDisplayChat()
 
   const { activeTab, activeSubTab } = liveStreamInfo
   // const { t } = useTranslation('common')
@@ -106,68 +108,85 @@ const TabSelectContainer: React.FC<TabSelectProps> = ({ sideChatContainer, infoT
         {videoTabs.map((item, k) => {
           // console.log('🚀 ~ {videoTabs.map ~ item', item.value)
           // console.log('🚀 ~ {videoTabs.map ~ value', item)
+          let isDisplayed = true
+          if (item.value === VIDEO_TABS.RANKING) {
+            isDisplayed = isDisplayedRankingTab
+          }
           return (
-            <>
-              <ClickAwayListener
-                onClickAway={() => {
-                  if (activeSelectTab === item.value) {
-                    setActiveSelectTab(DEFAULT_SELECT_TAB)
-                  }
-                }}
-                key={k}
-              >
-                <Box
-                  onClick={() => {
-                    if (item?.subTabs) {
-                      setActiveSelectTab(item?.value)
-                      // setActiveTab(item.value)
-                    } else {
-                      setActiveTab(item.value)
-                    }
-                    if (item.value === VIDEO_TABS.PROGRAM_INFO) {
-                      setActiveInfoTab(VIDEO_INFO_TABS.PROGRAM_INFO)
+            isDisplayed && (
+              <>
+                <ClickAwayListener
+                  onClickAway={() => {
+                    if (activeSelectTab === item.value) {
+                      setActiveSelectTab(DEFAULT_SELECT_TAB)
                     }
                   }}
-                  className={`${classes.tab} ${activeTab === item.value && classes.active}`}
-                  // key={k}
+                  key={k}
                 >
-                  <Box className={classes.boxTab}>
-                    <Typography
-                      className={`${item?.subTabs ? classes.textTabVideo : classes.textTabVideoProgramInfo} ${
-                        activeTab === item.value && classes.active
-                      }`}
-                    >
-                      {item.title}
-                    </Typography>
-                    {item.value !== VIDEO_TABS.PROGRAM_INFO && (
-                      <Box className={classes.wrapSelectIcon}>
-                        <img className="select_icon" src="/images/arrow_down.svg" />
+                  <Box
+                    onClick={() => {
+                      if (item?.subTabs) {
+                        setActiveSelectTab(item?.value)
+                        // setActiveTab(item.value)
+                      } else {
+                        setActiveTab(item.value)
+                      }
+                      if (item.value === VIDEO_TABS.PROGRAM_INFO) {
+                        setActiveInfoTab(VIDEO_INFO_TABS.PROGRAM_INFO)
+                      }
+                    }}
+                    className={`${classes.tab} ${activeTab === item.value && classes.active}`}
+                    // key={k}
+                  >
+                    <Box className={classes.boxTab}>
+                      <Typography
+                        className={`${item?.subTabs ? classes.textTabVideo : classes.textTabVideoProgramInfo} ${
+                          activeTab === item.value && classes.active
+                        }`}
+                      >
+                        {item.title}
+                      </Typography>
+                      {item.value !== VIDEO_TABS.PROGRAM_INFO && (
+                        <Box className={classes.wrapSelectIcon}>
+                          <img className="select_icon" src="/images/arrow_down.svg" />
+                        </Box>
+                      )}
+                    </Box>
+                    {/* sub tab */}
+                    {item?.subTabs && (
+                      <Box className={`${classes.subTab} ${activeSelectTab === item.value && classes.active}`}>
+                        {item?.subTabs.map((v, key) => {
+                          let isDisplayedSubTab = true
+                          if (v.value === SUB_TABS.RANKING.RECEIPT) {
+                            isDisplayedSubTab = isDisplayedRankingReceiver
+                          }
+                          if (v.value === SUB_TABS.MESS.TIP) {
+                            isDisplayedSubTab = isEnabledMessFilter
+                          }
+                          return (
+                            isDisplayedSubTab && (
+                              <Typography
+                                key={key}
+                                onClick={(event) => {
+                                  event.stopPropagation()
+                                  setActiveSubTab(v.value)
+                                  setActiveTab(item.value)
+                                  // console.log('🚀 ~ {videoTabs.map ~ 1111', item)
+                                  setActiveSelectTab(DEFAULT_SELECT_TAB)
+                                }}
+                                className={`${classes.selectSubTab} ${activeSubTab === v?.value && classes.active}`}
+                              >
+                                {v.title}
+                              </Typography>
+                            )
+                          )
+                        })}
                       </Box>
                     )}
                   </Box>
-                  {/* sub tab */}
-                  {item?.subTabs && (
-                    <Box className={`${classes.subTab} ${activeSelectTab === item.value && classes.active}`}>
-                      {item?.subTabs.map((v, key) => (
-                        <Typography
-                          key={key}
-                          onClick={(event) => {
-                            event.stopPropagation()
-                            setActiveSubTab(v.value)
-                            setActiveTab(item.value)
-                            // console.log('🚀 ~ {videoTabs.map ~ 1111', item)
-                            setActiveSelectTab(DEFAULT_SELECT_TAB)
-                          }}
-                          className={`${classes.selectSubTab} ${activeSubTab === v?.value && classes.active}`}
-                        >
-                          {v.title}
-                        </Typography>
-                      ))}
-                    </Box>
-                  )}
-                </Box>
-              </ClickAwayListener>
-            </>
+                </ClickAwayListener>
+              </>
+            )
           )
         })}
       </Box>
