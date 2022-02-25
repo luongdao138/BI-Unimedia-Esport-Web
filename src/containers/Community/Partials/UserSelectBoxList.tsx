@@ -9,6 +9,7 @@ import { MEMBER_ROLE } from '@constants/community.constants'
 import { ESRoutes } from '@constants/route.constants'
 import { useRouter } from 'next/router'
 import { useState, useEffect } from 'react'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
 
 type UserSelectBoxListProps = {
   member: CommunityMember
@@ -49,14 +50,20 @@ const UserSelectBoxList: React.FC<UserSelectBoxListProps> = ({ member, setValue,
   }
 
   const toProfile = () => {
-    router.push(`${ESRoutes.PROFILE}/${data.user_code}`)
+    CommonHelper.checkUserCode(data.user_code, () => {
+      router.push(`${ESRoutes.PROFILE}/${data.user_code}`)
+    })
   }
 
   return (
     <>
       <Box className={classes.container} mb={3}>
         <Box className={classes.userContainer}>
-          <ButtonBase onClick={toProfile}>
+          <ButtonBase
+            onClick={toProfile}
+            style={{ cursor: CommonHelper.handleAccountSystem(data.user_code) ? 'default' : 'point' }}
+            disabled={CommonHelper.handleAccountSystem(data.user_code)}
+          >
             <ESAvatar
               className={classes.avatar}
               alt={data.nickname}

@@ -21,6 +21,7 @@ import { ESRoutes } from '@constants/route.constants'
 import { useRouter } from 'next/router'
 import _ from 'lodash'
 import ESTwitterShareButton from '@components/TwitterShareButton'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
 
 interface Props {
   detail: LobbyDetail
@@ -48,7 +49,11 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit }) => {
     dispatch(commonActions.addToast(t('common:lobby.copy_toast')))
   }
 
-  const toProfile = (user_code) => router.push(`${ESRoutes.PROFILE}/${user_code}`)
+  const toProfile = (user_code) => {
+    CommonHelper.checkUserCode(user_code, () => {
+      router.push(`${ESRoutes.PROFILE}/${user_code}`)
+    })
+  }
 
   const handleReportOpen = () => setOpenReport(true)
 
@@ -172,7 +177,11 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit }) => {
                 {data.organizer && (
                   <Box display="flex" flexDirection="row" alignItems="center">
                     <LoginRequired>
-                      <ButtonBase onClick={() => toProfile(data.organizer.user_code)}>
+                      <ButtonBase
+                        onClick={() => toProfile(data.organizer.user_code)}
+                        style={{ cursor: CommonHelper.handleAccountSystem(data.organizer.user_code) ? 'default' : 'point' }}
+                        disabled={CommonHelper.handleAccountSystem(data.organizer.user_code)}
+                      >
                         <ESAvatar alt={data.organizer.nickname} src={data.organizer_avatar} size={35} />
                       </ButtonBase>
                     </LoginRequired>

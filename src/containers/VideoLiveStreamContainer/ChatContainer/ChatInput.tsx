@@ -4,7 +4,7 @@ import React, { useEffect, memo } from 'react'
 import { sanitizeMess } from './index'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
-import ESInput from '@components/Input'
+import ESFastInput from '@components/FastInput'
 import LoginRequired from '@containers/LoginRequired'
 
 type MessageValidationType = {
@@ -65,7 +65,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
   }
   return (
     <Box className={classes.chatBox}>
-      <ESInput
+      <ESFastInput
         id={'message'}
         name="message"
         onChange={handleChange}

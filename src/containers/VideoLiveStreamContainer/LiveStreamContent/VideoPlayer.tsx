@@ -3,7 +3,7 @@
 /* eslint-disable no-console */
 import { Icon, makeStyles, Theme, useMediaQuery, useTheme } from '@material-ui/core'
 import { Colors } from '@theme/colors'
-import React, { memo, useEffect, useRef, useState } from 'react'
+import React, { memo, useContext, useEffect, useRef, useState } from 'react'
 import ControlBarPlayer from './ControlBar'
 import SeekBar from './ControlComponent/SeekBar'
 // import ReactPlayer from 'react-player'
@@ -15,6 +15,8 @@ import Hls from 'hls.js'
 import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
 import { DELAY_SECONDS } from '@constants/common.constants'
 import { STATUS_VIDEO } from '@services/videoTop.services'
+import { VideoContext } from '../VideoContext.js'
+
 interface PlayerProps {
   src?: string
   thumbnail?: string
@@ -40,6 +42,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   // type,
   videoType,
 }) => {
+  const { setVideoRefInfo } = useContext(VideoContext)
   // const checkStatusVideo = 1
   const classes = useStyles({ checkStatusVideo: videoType })
   const videoEl = useRef(null)
@@ -66,7 +69,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     videoError: false,
   })
 
-  const { changeVideoTime, liveStreamInfo, changeSeekCount } = useDetailVideo()
+  const { liveStreamInfo, changeSeekCount } = useDetailVideo()
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'), { noSsr: true })
   const isDownMd = useMediaQuery(theme.breakpoints.down(769), { noSsr: true })
@@ -304,7 +307,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       Math.floor(newPlayedSecondTime) !== liveStreamInfo.played_second ||
       Math.floor(newDurationTime) !== liveStreamInfo.streaming_second
     ) {
-      changeVideoTime(Math.floor(newDurationTime), Math.floor(newPlayedSecondTime))
+      // changeVideoTime(Math.floor(newDurationTime), Math.floor(newPlayedSecondTime))
     }
   }
   handleUpdateVideoTime.current = onUpdateVideoTime
@@ -313,7 +316,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   const onUpdateVideoduration = (duration) => {
     if (!state.playing) {
       if (Math.floor(duration) !== liveStreamInfo.played_second) {
-        changeVideoTime(Math.floor(duration), Math.floor(duration))
+        // changeVideoTime(Math.floor(duration), Math.floor(duration))
       }
       setDurationPlayer(duration)
     }
@@ -322,6 +325,9 @@ const VideoPlayer: React.FC<PlayerProps> = ({
 
   //archived
   useEffect(() => {
+    setVideoRefInfo(videoEl)
+    console.log('🚀 ~ useEffect ~ videoEl---0000', videoEl)
+    // onSaveVideoRef(document.querySelector('video'), document.createElement('video'))
     videoEl.current.addEventListener('timeupdate', (event) => {
       const videoInfo = event.target
       // console.log(
@@ -334,7 +340,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       videoInfo ? handleUpdateVideoTime.current(videoInfo) : ''
     })
 
-    videoEl.current?.addEventListener('durationchange', (event) => {
+    videoEl.current.addEventListener('durationchange', (event) => {
       console.log('------->>durationchange<<<-----', event.target.duration, state.playing)
       if (isStreamingEnd.current) {
         onVideoEnd()
@@ -368,6 +374,10 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     videoEl.current.addEventListener('seeked', () => {
       //rewind complete
       console.log('=================SEEKED===================')
+      if (iPhonePl || androidPl || isMobile) {
+        changeSeekCount(Math.floor(videoEl.current.currentTime))
+      }
+
       if (!isStreamingEnd.current) {
         setVisible({ ...visible, loading: false, videoLoaded: false })
       }
@@ -439,20 +449,22 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     }
   }
   const handlePlayPauseOut = () => {
-    handlePauseAndSeekVideo()
-    if (videoEl.current.paused || videoEl.current.ended) {
-      videoEl.current.play()
-      //new version
-      if (videoType === STATUS_VIDEO.LIVE_STREAM) {
-        videoEl.current.currentTime = durationPlayer
+    if (!isMobile && !iPhonePl && !androidPl) {
+      handlePauseAndSeekVideo()
+      if (videoEl.current.paused || videoEl.current.ended) {
+        videoEl.current.play()
+        //new version
+        if (videoType === STATUS_VIDEO.LIVE_STREAM) {
+          videoEl.current.currentTime = durationPlayer
+        }
+        setState({ ...state, playing: true })
+        setVisible({ ...visible, loading: false, videoLoaded: false })
+      } else {
+        videoEl.current.pause()
+        setState({ ...state, playing: false })
+        setVisible({ ...visible, loading: true, videoLoaded: false })
+        setIsStreaming(false)
       }
-      setState({ ...state, playing: true })
-      setVisible({ ...visible, loading: false, videoLoaded: false })
-    } else {
-      videoEl.current.pause()
-      setState({ ...state, playing: false })
-      setVisible({ ...visible, loading: true, videoLoaded: false })
-      setIsStreaming(false)
     }
   }
   const handlePlayPause = () => {
@@ -486,7 +498,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     videoEl.current.currentTime = durationPlayer
     setPlayedSeconds(durationPlayer)
     const newDurationPlayer = Math.floor(durationPlayer)
-    changeVideoTime(newDurationPlayer, newDurationPlayer)
+    // changeVideoTime(newDurationPlayer, newDurationPlayer)
     changeSeekCount(newDurationPlayer)
     setIsStreaming(true)
   }
@@ -530,7 +542,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
 
   return (
     <div className={classes.videoPlayer}>
-      {(iPhonePl || androidPl) && (
+      {/* {(iPhonePl || androidPl || (!iPadPl && isDownMd)) && (
         <div>
           <video
             id="video"
@@ -549,42 +561,49 @@ const VideoPlayer: React.FC<PlayerProps> = ({
             <source src={src} type={'video/MP4'} />
           </video>
         </div>
-      )}
-      {!isMobile && !androidPl && !iPhonePl && (
-        <div ref={playerContainerRef} className={classes.playerContainer}>
-          <div style={{ height: '100%' }} onClick={handlePlayPauseOut}>
-            <video
-              id="video"
-              ref={videoEl}
-              muted={muted}
-              style={{ width: '100%', height: '100%' }}
-              autoPlay={autoPlay}
-              // className={classes.video}
-            />
+      )} */}
+      {/* {(!isMobile && !androidPl && !iPhonePl)  && ( */}
+      <div ref={playerContainerRef} className={classes.playerContainer}>
+        <div style={{ height: '100%' }} onClick={handlePlayPauseOut}>
+          <video
+            id="video"
+            ref={videoEl}
+            muted={muted}
+            style={{ width: '100%', height: '100%' }}
+            autoPlay={autoPlay}
+            src={src}
+            controls={iPhonePl || androidPl || isMobile}
+            //@ts-ignore
+            playsInline={iPhonePl || androidPl}
+            preload={'auto'}
+            controlsList="noplaybackrate foobar"
+            // className={classes.video}
+          />
 
-            {!androidPl && !iPhonePl && !mediaOverlayIsShown && loading && (
-              <div className={classes.playOverView}>
-                {videoLoaded && (
-                  <div
-                    className={classes.thumbBegin}
-                    style={{
-                      backgroundImage: `url(${thumbnail ?? '/images/live_stream/thumbnail_default.png'})`,
-                      backgroundSize: 'cover',
-                    }}
-                  >
-                    <div className={classes.loadingThumbBlur} />
-                  </div>
-                )}
-                {ended || !playing ? (
-                  <Icon className={`fas fa-play ${classes.fontSizeLarge}`} />
-                ) : (
-                  <div className={classes.showLoader}>
-                    <ESLoader />
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
+          {!isMobile && !androidPl && !iPhonePl && !mediaOverlayIsShown && loading && (
+            <div className={classes.playOverView}>
+              {videoLoaded && (
+                <div
+                  className={classes.thumbBegin}
+                  style={{
+                    backgroundImage: `url(${thumbnail ?? '/images/live_stream/thumbnail_default.png'})`,
+                    backgroundSize: 'cover',
+                  }}
+                >
+                  <div className={classes.loadingThumbBlur} />
+                </div>
+              )}
+              {ended || !playing ? (
+                <Icon className={`fas fa-play ${classes.fontSizeLarge}`} />
+              ) : (
+                <div className={classes.showLoader}>
+                  <ESLoader />
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+        {!isMobile && !androidPl && !iPhonePl && (
           <div className={classes.processControl}>
             {videoType !== STATUS_VIDEO.LIVE_STREAM && (
               <SeekBar
@@ -616,8 +635,9 @@ const VideoPlayer: React.FC<PlayerProps> = ({
               />
             </div>
           </div>
-          {/*errorVideo && <div className={classes.loading} />} */}
-          {/* {visible.videoError && (
+        )}
+        {/*errorVideo && <div className={classes.loading} />} */}
+        {/* {visible.videoError && (
           <div className={classes.overViewError}>
             <div
               className={classes.thumbBegin}
@@ -636,8 +656,8 @@ const VideoPlayer: React.FC<PlayerProps> = ({
             </Box>
           </div>
         )} */}
-        </div>
-      )}
+      </div>
+      {/* )} */}
     </div>
   )
 }

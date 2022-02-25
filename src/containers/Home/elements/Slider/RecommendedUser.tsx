@@ -6,6 +6,7 @@ import { Colors } from '@theme/colors'
 import { ESRoutes } from '@constants/route.constants'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'react-i18next'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
 
 const useStyles = makeStyles((theme: Theme) => ({
   wrap: {
@@ -60,7 +61,15 @@ export const RecommendedUser: React.FC<Props> = ({ users }) => {
       smallSliderButton
       items={users.slice(0, USER_LIMIT).map((user, i) => (
         <Box key={i}>
-          <Box className={classes.innerWrap} onClick={() => router.push(`${ESRoutes.PROFILE}/${user.attributes.user_code}`)}>
+          <Box
+            className={classes.innerWrap}
+            onClick={() =>
+              CommonHelper.checkUserCode(user.attributes.user_code, () => {
+                router.push(`${ESRoutes.PROFILE}/${user.attributes.user_code}`)
+              })
+            }
+            style={{ cursor: CommonHelper.handleAccountSystem(user.attributes.user_code) ? 'default' : 'point' }}
+          >
             <ESAvatar alt={user.attributes.nickname} className={classes.avatar} src={user.attributes.avatar_url} />
             <Typography variant="caption" className={classes.name}>
               {user.attributes.nickname}

@@ -22,6 +22,7 @@ import moment from 'moment'
 import Linkify from 'react-linkify'
 import { useConfirm } from '@components/Confirm'
 import { COMMUNITY_DIALOGS } from '@constants/community.constants'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
 
 type CommunityHeaderProps = {
   user_avatar?: string
@@ -99,7 +100,15 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({
         <Box m={2}>
           <Box className={classes.userContainer}>
             <Box className={topicData?.created_at ? classes.userInfoContainer : classes.userInfoContainerNoDate}>
-              <ButtonBase onClick={() => router.push(`${ESRoutes.PROFILE}/${topicData?.owner_user_code}`)}>
+              <ButtonBase
+                onClick={() =>
+                  CommonHelper.checkUserCode(topicData?.owner_user_code, () => {
+                    router.push(`${ESRoutes.PROFILE}/${topicData?.owner_user_code}`)
+                  })
+                }
+                style={{ cursor: CommonHelper.handleAccountSystem(topicData?.owner_user_code) ? 'default' : 'point' }}
+                disabled={CommonHelper.handleAccountSystem(topicData?.owner_user_code)}
+              >
                 <ESAvatar
                   className={classes.avatar}
                   alt={isConfirm ? nickname : topicData?.owner_name}
