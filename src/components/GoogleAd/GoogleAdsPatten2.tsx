@@ -1,14 +1,8 @@
 // import { makeStyles } from '@material-ui/core/styles'
 import { useEffect } from 'react'
 
-type Patten = {
-  idPatten1?: string
-  idPatten2?: string
-  idPatten3?: string
-  idPatten4?: string
-}
 interface Props {
-  id: Patten
+  id: string
   classNames?: string
   slot?: string
   timeout?: number
@@ -45,26 +39,17 @@ const GoogleAdsPatten2: React.FC<Props> = ({ timeout = 2000, style }) => {
   }
   return (
     // <>mes
-    <div className={'google_ad_patten_2'}>
-      <div className="layout_ads_div">
-        <ins
-          className="adsbygoogle"
-          style={{ ...styles, ...style }}
-          data-ad-client={googleAdId}
-          data-ad-format=""
-          data-full-width-responsive="true"
-        ></ins>
-      </div>
-      <div className="layout_ads_div" style={{ marginTop: 40 }}>
-        <ins
-          className="adsbygoogle"
-          style={{ ...styles, ...style }}
-          data-ad-client={googleAdId}
-          data-ad-format=""
-          data-full-width-responsive="true"
-        ></ins>
-      </div>
+    // <div className={`${id} google_ad_patten_2`}>
+    <div className="layout_ads_div">
+      <ins
+        className="adsbygoogle"
+        style={{ ...styles, ...style }}
+        data-ad-client={googleAdId}
+        data-ad-format=""
+        data-full-width-responsive="true"
+      ></ins>
     </div>
+    // </div>
   )
 }
 

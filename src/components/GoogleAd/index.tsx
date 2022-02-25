@@ -61,7 +61,7 @@ const GoogleAd: React.FC<Props> = ({ timeout = 2000, style, id }) => {
         style={{
           width: screenDownSP ? 320 : '100%',
           height: screenDownSP ? 50 : 90,
-          background: 'pink',
+          // background: 'pink',
           justifyContent: 'center',
           display: 'flex',
         }}

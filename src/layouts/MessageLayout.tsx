@@ -68,7 +68,10 @@ const MessageLayout: React.FC<LayoutProps> = ({ children, defaultListState, crea
 
   return (
     <div className="main-wrapper">
-      <GoogleAdsPatten2 id={{ idPatten2: 'ad_message_r' }} />
+      <div className="ad_message_r google_ad_patten_2">
+        <GoogleAdsPatten2 id={'ad_message_r'} />
+        <GoogleAdsPatten2 id={'ad_message_r_2'} />
+      </div>
       <Header open={open} toggleDrawer={toggleDrawer} />
       <aside className="aside-left mui-fixed">
         <SideMenu />
