@@ -47,7 +47,13 @@ const Message: React.FC<MessageProps> = (props) => {
   const renderAvatar = () => {
     return (
       <Box style={{ cursor: 'pointer' }}>
-        <Avatar onClick={() => navigateToProfile(userCode)} size={36} src={avatar} alt={nickName} />
+        <Avatar
+          onClick={() => navigateToProfile(userCode)}
+          size={36}
+          src={avatar}
+          alt={nickName}
+          style={{ cursor: CommonHelper.handleAccountSystem(userCode) ? 'default' : 'point' }}
+        />
       </Box>
     )
   }

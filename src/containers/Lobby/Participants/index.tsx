@@ -17,6 +17,7 @@ import { use100vh } from 'react-div-100vh'
 import { getIsAuthenticated } from '@store/auth/selectors'
 import { useAppSelector } from '@store/hooks'
 import ParticipantCount from '@components/ParticipantCount'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
 
 export interface ParticipantsProps {
   open: boolean
@@ -87,7 +88,11 @@ const Participants: React.FC<ParticipantsProps> = ({ open, data, handleClose }) 
 
   const onUnBlock = (userCode: string) => unBlock(userCode)
 
-  const goToProfile = (userCode: string) => router.push(`${ESRoutes.PROFILE}/${userCode}`)
+  const goToProfile = (userCode: string) => {
+    CommonHelper.checkUserCode(userCode, () => {
+      router.push(`${ESRoutes.PROFILE}/${userCode}`)
+    })
+  }
 
   return (
     <ESModal open={open}>

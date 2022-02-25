@@ -1,6 +1,19 @@
 import { createReducer } from '@reduxjs/toolkit'
-import { BannerItem, CategoryPopularData, DetailUserData, SearchType, TypeVideo, VideoDetailData } from '@services/videoTop.services'
+import {
+  BannerItem,
+  CategoryPopularData,
+  DetailUserData,
+  SearchType,
+  TypeVideo,
+  VideoDetailData,
+  VideoRefType,
+} from '@services/videoTop.services'
 import * as actions from '../actions'
+
+const defaultChatState = {
+  seek_count: 0,
+  seeked_second: 0,
+}
 
 type StateType = {
   listVideoAll?: {
@@ -32,6 +45,7 @@ type StateType = {
   seeked_second?: number
   is_pausing_live?: boolean
   is_streaming_end?: boolean
+  videoEl?: VideoRefType
 }
 
 const initialState: StateType = {
@@ -74,6 +88,10 @@ const initialState: StateType = {
   seeked_second: 0,
   is_pausing_live: false,
   is_streaming_end: false,
+  videoEl: {
+    videoQuery: null,
+    videoElement: null,
+  },
 }
 
 export default createReducer(initialState, (builder) => {
@@ -185,5 +203,12 @@ export default createReducer(initialState, (builder) => {
   })
   builder.addCase(actions.resetState, () => {
     return { ...initialState }
+  })
+  builder.addCase(actions.saveVideoRef, (state, action) => {
+    state.videoEl.videoQuery = action.payload.videoQuery
+    state.videoEl.videoElement = action.payload.videoElement
+  })
+  builder.addCase(actions.resetChatState, (state) => {
+    return { ...state, ...defaultChatState }
   })
 })
