@@ -97,6 +97,7 @@ export type Message = {
   point?: string | null
   use_point_id?: string | null
   is_premium?: boolean | null
+  is_premium_number?: number | null
   userId?: string
   giftMasterId?: string | null
   local_id?: string | null
@@ -177,6 +178,7 @@ export type CreateMessageInput = {
   point?: string | null
   use_point_id?: string | null
   is_premium?: boolean | null
+  is_premium_number?: number | null
   userId: string
   giftMasterId?: string | null
   local_id?: string | null
@@ -196,6 +198,7 @@ export type ModelMessageConditionInput = {
   point?: ModelStringInput | null
   use_point_id?: ModelStringInput | null
   is_premium?: ModelBooleanInput | null
+  is_premium_number?: ModelIntInput | null
   userId?: ModelIDInput | null
   giftMasterId?: ModelIDInput | null
   local_id?: ModelStringInput | null
@@ -247,6 +250,7 @@ export type UpdateMessageInput = {
   point?: string | null
   use_point_id?: string | null
   is_premium?: boolean | null
+  is_premium_number?: number | null
   userId?: string | null
   giftMasterId?: string | null
   local_id?: string | null
@@ -417,6 +421,7 @@ export type ModelMessageFilterInput = {
   point?: ModelStringInput | null
   use_point_id?: ModelStringInput | null
   is_premium?: ModelBooleanInput | null
+  is_premium_number?: ModelIntInput | null
   userId?: ModelIDInput | null
   giftMasterId?: ModelIDInput | null
   local_id?: ModelStringInput | null
@@ -654,6 +659,7 @@ export type CreateMessageMutation = {
     point?: string | null
     use_point_id?: string | null
     is_premium?: boolean | null
+    is_premium_number?: number | null
     userId: string
     giftMasterId?: string | null
     local_id?: string | null
@@ -703,6 +709,7 @@ export type UpdateMessageMutation = {
     point?: string | null
     use_point_id?: string | null
     is_premium?: boolean | null
+    is_premium_number?: number | null
     userId: string
     giftMasterId?: string | null
     local_id?: string | null
@@ -752,6 +759,7 @@ export type DeleteMessageMutation = {
     point?: string | null
     use_point_id?: string | null
     is_premium?: boolean | null
+    is_premium_number?: number | null
     userId: string
     giftMasterId?: string | null
     local_id?: string | null
@@ -1043,6 +1051,7 @@ export type GetMessageQuery = {
     point?: string | null
     use_point_id?: string | null
     is_premium?: boolean | null
+    is_premium_number?: number | null
     userId: string
     giftMasterId?: string | null
     local_id?: string | null
@@ -1095,6 +1104,7 @@ export type ListMessagesQuery = {
       point?: string | null
       use_point_id?: string | null
       is_premium?: boolean | null
+      is_premium_number?: number | null
       userId: string
       giftMasterId?: string | null
       local_id?: string | null
@@ -1296,6 +1306,7 @@ export type GetMessagesByVideoIdQuery = {
       point?: string | null
       use_point_id?: string | null
       is_premium?: boolean | null
+      is_premium_number?: number | null
       userId: string
       giftMasterId?: string | null
       local_id?: string | null
@@ -1332,6 +1343,44 @@ export type GetMessagesByVideoIdWithSortQuery = {
       point?: string | null
       use_point_id?: string | null
       is_premium?: boolean | null
+      is_premium_number?: number | null
+      userId: string
+      giftMasterId?: string | null
+      local_id?: string | null
+      created_time?: string | null
+      createdAt: string
+      updatedAt: string
+    } | null>
+    nextToken?: string | null
+  } | null
+}
+
+export type GetMessagesByVideoByPremiumQueryVariables = {
+  video_id?: string | null
+  is_premium_number?: ModelIntKeyConditionInput | null
+  sortDirection?: ModelSortDirection | null
+  filter?: ModelMessageFilterInput | null
+  limit?: number | null
+  nextToken?: string | null
+}
+
+export type GetMessagesByVideoByPremiumQuery = {
+  getMessagesByVideoByPremium?: {
+    __typename: 'ModelMessageConnection'
+    items: Array<{
+      __typename: 'Message'
+      id: string
+      owner: string
+      text: string
+      uuid?: string | null
+      video_id: string
+      delete_flag?: boolean | null
+      video_time: number
+      display_avatar_time?: string | null
+      point?: string | null
+      use_point_id?: string | null
+      is_premium?: boolean | null
+      is_premium_number?: number | null
       userId: string
       giftMasterId?: string | null
       local_id?: string | null
@@ -1538,6 +1587,7 @@ export type OnCreateMessageSubscription = {
     point?: string | null
     use_point_id?: string | null
     is_premium?: boolean | null
+    is_premium_number?: number | null
     userId: string
     giftMasterId?: string | null
     local_id?: string | null
@@ -1582,6 +1632,7 @@ export type OnUpdateMessageSubscription = {
     point?: string | null
     use_point_id?: string | null
     is_premium?: boolean | null
+    is_premium_number?: number | null
     userId: string
     giftMasterId?: string | null
     local_id?: string | null
@@ -1626,6 +1677,7 @@ export type OnDeleteMessageSubscription = {
     point?: string | null
     use_point_id?: string | null
     is_premium?: boolean | null
+    is_premium_number?: number | null
     userId: string
     giftMasterId?: string | null
     local_id?: string | null

@@ -214,6 +214,7 @@ export const createMessage = /* GraphQL */ `
       point
       use_point_id
       is_premium
+      is_premium_number
       userId
       giftMasterId
       local_id
@@ -262,6 +263,7 @@ export const updateMessage = /* GraphQL */ `
       point
       use_point_id
       is_premium
+      is_premium_number
       userId
       giftMasterId
       local_id
@@ -310,6 +312,7 @@ export const deleteMessage = /* GraphQL */ `
       point
       use_point_id
       is_premium
+      is_premium_number
       userId
       giftMasterId
       local_id

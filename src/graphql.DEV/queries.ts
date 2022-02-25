@@ -101,6 +101,7 @@ export const getMessage = /* GraphQL */ `
       point
       use_point_id
       is_premium
+      is_premium_number
       userId
       giftMasterId
       local_id
@@ -144,6 +145,7 @@ export const listMessages = /* GraphQL */ `
         point
         use_point_id
         is_premium
+        is_premium_number
         userId
         giftMasterId
         local_id
@@ -304,6 +306,7 @@ export const getMessagesByVideoId = /* GraphQL */ `
         point
         use_point_id
         is_premium
+        is_premium_number
         userId
         giftMasterId
         local_id
@@ -363,6 +366,48 @@ export const getMessagesByVideoIdWithSort = /* GraphQL */ `
         point
         use_point_id
         is_premium
+        is_premium_number
+        userId
+        giftMasterId
+        local_id
+        created_time
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`
+export const getMessagesByVideoByPremium = /* GraphQL */ `
+  query GetMessagesByVideoByPremium(
+    $video_id: String
+    $is_premium_number: ModelIntKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelMessageFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    getMessagesByVideoByPremium(
+      video_id: $video_id
+      is_premium_number: $is_premium_number
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        owner
+        text
+        uuid
+        video_id
+        delete_flag
+        video_time
+        display_avatar_time
+        point
+        use_point_id
+        is_premium
+        is_premium_number
         userId
         giftMasterId
         local_id
