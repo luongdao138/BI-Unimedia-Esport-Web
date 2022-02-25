@@ -91,7 +91,7 @@ const Steps: React.FC<StepsProps> = ({
   const { userProfile } = useGetProfile()
   const [showStreamURL, setShowStreamURL] = useState(false)
   const [showStreamKey, setShowStreamKey] = useState(false)
-  const { checkNgWordFields, checkNgWordByField } = useCheckNgWord()
+  const { checkVideoNgWordFields, checkVideoNgWordByField } = useCheckNgWord()
   const paid_delivery_flag = userProfile?.attributes?.paid_delivery_flag
   const [obsNotEnable, setObsNotEnable] = useState<boolean>(false)
   // const [errPublicTime, setErrPublicTime] = useState(false)
@@ -195,13 +195,13 @@ const Steps: React.FC<StepsProps> = ({
   const onClickNext = () => {
     const { stepSettingOne } = formik.values
 
-    const fieldIdentifier = checkNgWordFields({
+    const fieldIdentifier = checkVideoNgWordFields({
       title: stepSettingOne.title,
       description: stepSettingOne.description,
       ticket_price: stepSettingOne.ticket_price,
     })
 
-    const ngFields = checkNgWordByField({
+    const ngFields = checkVideoNgWordByField({
       [FIELD_TITLES.stepSettingOne.title]: stepSettingOne.title,
       [FIELD_TITLES.stepSettingOne.description]: stepSettingOne.description,
       [FIELD_TITLES.stepSettingOne.ticket_price]: stepSettingOne.ticket_price,
@@ -288,11 +288,11 @@ const Steps: React.FC<StepsProps> = ({
       uuid_clone: uuid_clone,
     }
     setClickShowText(true)
-    debouncedHandleConfirmForm(data, share_sns_flag, step)
+    debouncedHandleConfirmForm(data, share_sns_flag, step, isShare)
   }
 
   const debouncedHandleConfirmForm = useCallback(
-    _.debounce((data: SetLiveStreamParams, share_sns_flag: boolean, step: number) => {
+    _.debounce((data: SetLiveStreamParams, share_sns_flag: boolean, step: number, isShare: boolean) => {
       setLiveStreamConfirm(data, () => {
         onNext(step + 1, share_sns_flag, {
           title: formik.values.stepSettingOne.title,
@@ -780,7 +780,7 @@ const Steps: React.FC<StepsProps> = ({
                       isNumber={true}
                       formik={formik}
                       disabled={isLive}
-                      className={getAddClassByStep(classes.input_text)}
+                      className={getAddClassByStep(classes.input_text_ticket)}
                       readOnly={!formik?.values?.stepSettingOne?.use_ticket}
                       nowrapHelperText
                       endAdornment={
@@ -1043,6 +1043,29 @@ const useStyles = makeStyles((theme: Theme) => ({
       alignItems: 'center',
       padding: '4px 0 4px 0',
       color: Colors.white_opacity['70'],
+    },
+    '& :-webkit-autofill': {
+      WebkitBoxShadow: '0 0 0 100px transparent inset',
+    },
+  },
+  input_text_ticket: {
+    '&.Mui-disabled': {
+      color: Colors.white_opacity['70'],
+      '& .MuiOutlinedInput-notchedOutline': {
+        // borderColor: 'transparent',
+        backgroundColor: 'transparent',
+      },
+      '&.MuiOutlinedInput-multiline.MuiOutlinedInput-marginDense': {
+        padding: 0,
+        display: 'flex',
+      },
+    },
+    '& .MuiInputBase-input.Mui-disabled': {
+      display: 'flex',
+      alignItems: 'center',
+      padding: '10.5px 14px 10.5px 14px',
+      color: Colors.white_opacity['70'],
+      borderColor: 'transparent',
     },
     '& :-webkit-autofill': {
       WebkitBoxShadow: '0 0 0 100px transparent inset',

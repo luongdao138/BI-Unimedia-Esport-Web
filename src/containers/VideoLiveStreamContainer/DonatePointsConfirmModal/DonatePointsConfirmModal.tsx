@@ -15,6 +15,7 @@ interface ModalProps {
   handleClose?: () => void
   handleConfirm?: () => void
   msgContent?: string
+  disabled?: boolean
 }
 
 const DonatePointsConfirmModal: React.FC<ModalProps> = ({
@@ -25,6 +26,7 @@ const DonatePointsConfirmModal: React.FC<ModalProps> = ({
   msgContent,
   hasError,
   ticketPoint,
+  disabled,
 }) => {
   const { t } = useTranslation('common')
   const classes = useStyles()
@@ -75,7 +77,7 @@ const DonatePointsConfirmModal: React.FC<ModalProps> = ({
             <ButtonPrimary className={classes.actionBtnClose} gradient={false} onClick={handleClose}>
               {t('donate_points.cancel_text_btn')}
             </ButtonPrimary>
-            <ButtonPrimary className={classes.actionBtnConfirm} onClick={handleConfirm}>
+            <ButtonPrimary className={classes.actionBtnConfirm} onClick={handleConfirm} disabled={disabled}>
               {t('donate_points.confirm_text_btn')}
             </ButtonPrimary>
           </Box>
@@ -95,8 +97,8 @@ export default memo(DonatePointsConfirmModal, (prevProps, nextProps) => {
   if (
     prevProps.hasError !== nextProps.hasError ||
     prevProps.showConfirmModal !== nextProps.showConfirmModal ||
-    prevProps.myPoint !== nextProps.myPoint ||
-    prevProps.ticketPoint !== nextProps.ticketPoint ||
+    // prevProps.myPoint !== nextProps.myPoint ||
+    // prevProps.ticketPoint !== nextProps.ticketPoint ||
     prevProps.msgContent !== nextProps.msgContent
   ) {
     return false

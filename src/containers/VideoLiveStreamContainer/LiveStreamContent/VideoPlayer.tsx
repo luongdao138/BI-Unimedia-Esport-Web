@@ -1,20 +1,20 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable no-console */
+// import ReactPlayer from 'react-player'
+import ESLoader from '@components/Loader'
+import { DELAY_SECONDS } from '@constants/common.constants'
 import { Icon, makeStyles, Theme, useMediaQuery, useTheme } from '@material-ui/core'
+import { STATUS_VIDEO } from '@services/videoTop.services'
+import useLiveStreamDetail from '../useLiveStreamDetail'
 import { Colors } from '@theme/colors'
 import React, { memo, useContext, useEffect, useRef, useState } from 'react'
 import ControlBarPlayer from './ControlBar'
 import SeekBar from './ControlComponent/SeekBar'
-// import ReactPlayer from 'react-player'
-import ESLoader from '@components/Loader'
-// import screenfull from 'screenfull'
 
 import useDetailVideo from '../useDetailVideo'
 import Hls from 'hls.js'
 import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
-import { DELAY_SECONDS } from '@constants/common.constants'
-import { STATUS_VIDEO } from '@services/videoTop.services'
 import { VideoContext } from '../VideoContext.js'
 
 interface PlayerProps {
@@ -28,6 +28,11 @@ interface PlayerProps {
   endLive?: string
   type?: number
   isArchived?: boolean
+  componentsSize?: {
+    chatWidth: number
+    videoWidth: number
+    videoHeight: number
+  }
 }
 
 const VideoPlayer: React.FC<PlayerProps> = ({
@@ -41,6 +46,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   isArchived,
   // type,
   videoType,
+  // componentsSize,
 }) => {
   const { setVideoRefInfo } = useContext(VideoContext)
   // const checkStatusVideo = 1
@@ -69,7 +75,8 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     videoError: false,
   })
 
-  const { liveStreamInfo, changeSeekCount } = useDetailVideo()
+  const refControlBar = useRef<any>(null)
+  const { liveStreamInfo, changeSeekCount, detailVideoResult } = useDetailVideo()
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'), { noSsr: true })
   const isDownMd = useMediaQuery(theme.breakpoints.down(769), { noSsr: true })
@@ -79,6 +86,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   const androidPl = /Android/i.test(window.navigator.userAgent)
   const iPhonePl = /iPhone/i.test(window.navigator.userAgent)
 
+  const { videoWatchTimeReportRequest } = useLiveStreamDetail()
   const isStreamingEnd = useRef(liveStreamInfo.is_streaming_end)
   const handlePauseAndSeekVideo = () => {
     // // seek to current live stream second if is pausing live and is not playing
@@ -114,7 +122,23 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       setState({ ...state, playing: false })
       setAutoPlay(false)
     }
-  }, [isArchived])
+  }, [!isArchived])
+
+  // video watch time report request
+  const videoTimeReport = () => {
+    // call api time report if video is streaming and not archived
+    if (detailVideoResult?.status === STATUS_VIDEO.LIVE_STREAM && !isArchived) {
+      console.count('==================== report video time ===================')
+      videoWatchTimeReportRequest({ video_id: detailVideoResult?.uuid })
+    }
+  }
+  // call api time report every 60s
+  useEffect(() => {
+    const intervalTimer = setInterval(() => {
+      videoTimeReport()
+    }, 60000)
+    return () => clearInterval(intervalTimer)
+  }, [])
 
   const handleOrientationChange = (event) => {
     console.log('event::', event)
@@ -617,6 +641,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
             )}
             <div className={classes.controlOut}>
               <ControlBarPlayer
+                ref={refControlBar}
                 videoRef={videoEl}
                 onPlayPause={handlePlayPause}
                 playing={playing}

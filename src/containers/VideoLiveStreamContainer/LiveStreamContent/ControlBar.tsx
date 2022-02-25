@@ -1,13 +1,16 @@
 import { Box, Icon, makeStyles, Slider, Typography } from '@material-ui/core'
+import { Crop54 as TheatreViewMode, Crop75 as NormalViewMode } from '@material-ui/icons'
 import { Colors } from '@theme/colors'
-import React, { memo, useEffect, useState } from 'react'
+import React, { forwardRef, memo, useEffect, useImperativeHandle, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import ReactTooltip from 'react-tooltip'
+import useDetailVideo from '../useDetailVideo'
 import Play from './ControlComponent/Play'
 import PlayerTooltip from './ControlComponent/PlayerTooltip'
 import Reload from './ControlComponent/Reload'
 import TimeBar from './ControlComponent/TimeBar'
-
 interface ControlProps {
+  ref: any
   videoRef?: any
   onPlayPause?: () => void
   playing?: boolean
@@ -25,141 +28,191 @@ interface ControlProps {
   handleOnRestart?: () => void
 }
 
-const ControlBarPlayer: React.FC<ControlProps> = ({
-  videoRef,
-  onPlayPause,
-  playing = false,
-  currentTime,
-  durationsPlayer,
-  handleFullScreen,
-  muted,
-  onMute,
-  onChangeVol,
-  onChangeVolDrag,
-  volume,
-  isLive = null,
-  videoStatus,
-  // onReloadTime,
-  handleOnRestart,
-}) => {
-  const classes = useStyles({ liveStreaming: durationsPlayer === currentTime ? true : false })
-  const { t } = useTranslation('common')
-  const [isFull, setFull] = useState<boolean>(false)
+const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
+  (
+    {
+      videoRef,
+      onPlayPause,
+      playing = false,
+      currentTime,
+      durationsPlayer,
+      handleFullScreen,
+      muted,
+      onMute,
+      onChangeVol,
+      onChangeVolDrag,
+      volume,
+      isLive = null,
+      videoStatus,
+      // onReloadTime,
+      handleOnRestart,
+    },
+    ref
+  ) => {
+    const classes = useStyles({ liveStreaming: durationsPlayer === currentTime ? true : false })
+    const { t } = useTranslation('common')
+    const [isFull, setFull] = useState<boolean>(false)
+    const { changeVideoViewMode, liveStreamInfo } = useDetailVideo()
+    const { is_normal_view_mode } = liveStreamInfo
 
-  //Tooltip
-  // const PlayerTooltip = (id: string, title: string, offset?: any) => {
-  //   return (
-  //     <ReactTooltip id={id} type="dark" effect="solid" className={classes.playerTooltip} offset={offset || { top: -10, left: 10 }}>
-  //       <span>{title}</span>
-  //     </ReactTooltip>
-  //   )
-  // }
-  const toggleFullScreen = () => {
-    handleFullScreen()
-    setFull(!isFull)
-  }
-
-  useEffect(() => {
-    document.addEventListener('fullscreenchange', () => {
-      if (document.fullscreenElement) {
-        setFull(true)
-      } else {
-        setFull(false)
+    useImperativeHandle(ref, () => {
+      return {
+        isFull: isFull,
       }
     })
-  }, [])
 
-  return (
-    // <div className={classes.controlBar}>
-    <>
-      <div className={classes.controlLeft}>
-        <Play onPlayPause={onPlayPause} playing={playing} />
-        <Reload
-          videoRef={videoRef}
-          typeButton={'reload'}
-          onPressCallback={handleOnRestart}
-          videoStatus={videoStatus}
-          durationsPlayer={durationsPlayer}
-        />
-        <Box className={classes.buttonVolume}>
-          <Box className={classes.boxIconVolume} onClick={onMute} data-tip data-for="mute">
-            {!muted ? (
-              <img src={'/images/ic_volume.svg'} />
-            ) : (
-              <Icon fontSize={'small'} className={`fas fa-volume-mute ${classes.mutedIcon}`} />
-            )}
-          </Box>
-          <PlayerTooltip id={'mute'} title={!muted ? t('videos_top_tab.mute') : t('videos_top_tab.unmute')} offset={{ top: -5, left: 0 }} />
-          <div className={classes.slider}>
-            <Slider
-              max={1}
-              min={0}
-              value={volume}
-              step={0.1}
-              className={classes.volumeBar}
-              onChange={onChangeVol}
-              onChangeCommitted={onChangeVolDrag}
-            />
-          </div>
-        </Box>
+    const tooltipRef = React.createRef<any>()
 
-        <div className={classes.time}>
-          <TimeBar statusVideo={videoStatus} currentTime={currentTime} durationsPlayer={durationsPlayer} />
-        </div>
-        {!isLive && isLive !== null && (
-          <>
-            <Reload
-              videoRef={videoRef}
-              typeButton={'previous'}
-              currentTime={currentTime}
-              durationsPlayer={durationsPlayer}
-              isLive={isLive}
+    //Tooltip
+    // const PlayerTooltip = (id: string, title: string, offset?: any) => {
+    //   return (
+    //     <ReactTooltip id={id} type="dark" effect="solid" className={classes.playerTooltip} offset={offset || { top: -10, left: 10 }}>
+    //       <span>{title}</span>
+    //     </ReactTooltip>
+    //   )
+    // }
+    const toggleFullScreen = () => {
+      handleFullScreen()
+      setFull(!isFull)
+    }
+
+    useEffect(() => {
+      document.addEventListener('fullscreenchange', () => {
+        if (document.fullscreenElement) {
+          setFull(true)
+        } else {
+          setFull(false)
+        }
+      })
+    }, [])
+
+    return (
+      // <div className={classes.controlBar}>
+      <>
+        <div className={classes.controlLeft}>
+          <Play onPlayPause={onPlayPause} playing={playing} />
+          <Reload
+            videoRef={videoRef}
+            typeButton={'reload'}
+            onPressCallback={handleOnRestart}
+            videoStatus={videoStatus}
+            durationsPlayer={durationsPlayer}
+          />
+          <Box className={classes.buttonVolume}>
+            <Box className={classes.boxIconVolume} onClick={onMute} data-tip data-for="mute">
+              {!muted ? (
+                <img src={'/images/ic_volume.svg'} />
+              ) : (
+                <Icon fontSize={'small'} className={`fas fa-volume-mute ${classes.mutedIcon}`} />
+              )}
+            </Box>
+            <PlayerTooltip
+              id={'mute'}
+              title={!muted ? t('videos_top_tab.mute') : t('videos_top_tab.unmute')}
+              offset={{ top: -5, left: 0 }}
             />
-            <Reload videoRef={videoRef} typeButton={'next'} currentTime={currentTime} durationsPlayer={durationsPlayer} isLive={isLive} />
-          </>
-        )}
-        {/* dot live streaming */}
-        {isLive && isLive !== null && (
-          <>
-            <div className={classes.liveStreaming}>
-              {/* <div className={classes.dot} /> */}
-              <div className={classes.dotAlwaysHighLight} />
+            <div className={classes.slider}>
+              <Slider
+                max={1}
+                min={0}
+                value={volume}
+                step={0.1}
+                className={classes.volumeBar}
+                onChange={onChangeVol}
+                onChangeCommitted={onChangeVolDrag}
+              />
             </div>
-            {/* <div className={classes.btnRefreshTime} onClick={onReloadTime}>
+          </Box>
+
+          <div className={classes.time}>
+            <TimeBar statusVideo={videoStatus} currentTime={currentTime} durationsPlayer={durationsPlayer} />
+          </div>
+          {!isLive && isLive !== null && (
+            <>
+              <Reload
+                videoRef={videoRef}
+                typeButton={'previous'}
+                currentTime={currentTime}
+                durationsPlayer={durationsPlayer}
+                isLive={isLive}
+              />
+              <Reload videoRef={videoRef} typeButton={'next'} currentTime={currentTime} durationsPlayer={durationsPlayer} isLive={isLive} />
+            </>
+          )}
+          {/* dot live streaming */}
+          {isLive && isLive !== null && (
+            <>
+              <div className={classes.liveStreaming}>
+                {/* <div className={classes.dot} /> */}
+                <div className={classes.dotAlwaysHighLight} />
+              </div>
+              {/* <div className={classes.btnRefreshTime} onClick={onReloadTime}>
               <Typography className={classes.textRefresh}>{t('live_stream_screen.refresh_new_live')}</Typography>
             </div> */}
-            <div className={classes.btnRefreshTimeLive}>
-              <Typography className={classes.textRefreshLive}>{t('live_stream_screen.tag_live_control')}</Typography>
+              <div className={classes.btnRefreshTimeLive}>
+                <Typography className={classes.textRefreshLive}>{t('live_stream_screen.tag_live_control')}</Typography>
+              </div>
+            </>
+          )}
+        </div>
+        <div className={classes.controlRight}>
+          {!isFull && (
+            <div
+              ref={tooltipRef}
+              className={classes.wrapViewMode}
+              onClick={() => {
+                changeVideoViewMode(!is_normal_view_mode)
+                ReactTooltip.hide(tooltipRef?.current)
+              }}
+              data-tip
+              data-for="view_mode"
+            >
+              {is_normal_view_mode ? <TheatreViewMode /> : <NormalViewMode />}
+              <PlayerTooltip
+                id={'view_mode'}
+                title={is_normal_view_mode ? t('videos_top_tab.theatre_mode') : t('videos_top_tab.normal_mode')}
+                offset={{ top: -10, left: 10 }}
+                place={'top'}
+              />
             </div>
-          </>
-        )}
-      </div>
-      <Box pr={2} className={classes.buttonNormal} onClick={toggleFullScreen} data-tip data-for="toggleFullScreen" id={'fullscreenRef'}>
-        {!isFull ? (
-          <img src={'/images/ic_full_screen.svg'} />
-        ) : (
-          <Icon fontSize={'small'} className={`fas fa-compress ${classes.pauseSmall}`} />
-        )}
-        <PlayerTooltip
-          id={'toggleFullScreen'}
-          title={!isFull ? t('videos_top_tab.full_screen') : t('videos_top_tab.exit_full_screen')}
-          offset={
-            !isFull
-              ? { top: -10, left: 10 }
-              : {
-                  top: 0,
-                  left: 0,
-                }
-          }
-          place={!isFull ? 'top' : 'left'}
-        />
-      </Box>
-    </>
-    // </div>
-  )
-}
+          )}
+          <Box className={classes.buttonNormal} onClick={toggleFullScreen} data-tip data-for="toggleFullScreen" id={'fullscreenRef'}>
+            {!isFull ? (
+              <img src={'/images/ic_full_screen.svg'} />
+            ) : (
+              <Icon fontSize={'small'} className={`fas fa-compress ${classes.pauseSmall}`} />
+            )}
+            <PlayerTooltip
+              id={'toggleFullScreen'}
+              title={!isFull ? t('videos_top_tab.full_screen') : t('videos_top_tab.exit_full_screen')}
+              offset={
+                !isFull
+                  ? { top: -10, left: 10 }
+                  : {
+                      top: 0,
+                      left: 0,
+                    }
+              }
+              place={!isFull ? 'top' : 'left'}
+            />
+          </Box>
+        </div>
+      </>
+      // </div>
+    )
+  }
+)
 
 const useStyles = makeStyles(() => ({
+  controlRight: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  wrapViewMode: {
+    cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+  },
   fontSizeLarge: {
     fontSize: 100,
   },
@@ -180,6 +233,7 @@ const useStyles = makeStyles(() => ({
     zIndex: 99,
   },
   buttonNormal: {
+    padding: '0 16px',
     alignItems: 'center',
     display: 'flex',
     cursor: 'pointer',

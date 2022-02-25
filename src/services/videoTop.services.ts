@@ -96,6 +96,7 @@ export type TypeVideo = {
   type?: string
   status?: number
   archived_end_time?: string
+  video_thumbnail?: string
 }
 
 export type ListVideoTopResponse = {
@@ -232,6 +233,7 @@ export type VideoDetailData = {
   live_stream_start_time?: string
   live_stream_end_time?: string
   id?: number
+  video_thumbnail?: string
 }
 
 export type DetailUserData = {
