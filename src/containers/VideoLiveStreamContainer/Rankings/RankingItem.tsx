@@ -7,14 +7,14 @@ import { FormatHelper } from '@utils/helpers/FormatHelper'
 interface Props {
   position: number | string
   avatar: JSX.Element
-  type?: string
+  type?: number
   tab: number
   name?: string | undefined
-  tip?: number
+  total?: string
   self?: boolean
 }
 
-const RankingItem: React.FC<Props> = ({ position, avatar, type, tab, name, tip }) => {
+const RankingItem: React.FC<Props> = ({ position, avatar, type, tab, name, total }) => {
   const classes = useStyles()
   // const { t } = useTranslation('common')
 
@@ -40,7 +40,7 @@ const RankingItem: React.FC<Props> = ({ position, avatar, type, tab, name, tip }
           <Box className={classes.nameWrapper} justifyContent={`${tab === SUB_TABS.RANKING.RECEIPT ? 'space-between' : 'center'}`}>
             {tab === SUB_TABS.RANKING.RECEIPT && (
               <Typography variant="h3" component="p" noWrap className={classes.type}>
-                {type}
+                {type === 0 ? '個人' : 'チーム'}
               </Typography>
             )}
             {name && (
@@ -52,7 +52,7 @@ const RankingItem: React.FC<Props> = ({ position, avatar, type, tab, name, tip }
         </Box>
       </TableCell>
       <TableCell>
-        <Typography className={classes.tip}>{FormatHelper.currencyFormat(tip.toString())}</Typography>
+        <Typography className={classes.tip}>{FormatHelper.currencyFormat(total)}</Typography>
       </TableCell>
     </TableRow>
   )

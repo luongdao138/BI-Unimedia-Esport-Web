@@ -7,6 +7,8 @@ import RankingItemSelf from '@containers/VideoLiveStreamContainer/Rankings/Ranki
 import useDetailVideo from '@containers/VideoLiveStreamContainer/useDetailVideo'
 import { Box, makeStyles, Typography, useMediaQuery, useTheme } from '@material-ui/core'
 import { useCheckDisplayChat } from '@utils/hooks/useCheckDisplayChat'
+import { useEffect } from 'react'
+import ESLoader from '@components/Loader'
 
 import { useTranslation } from 'react-i18next'
 
@@ -27,7 +29,7 @@ export enum RECEIPT_SEND_TABS {
 
 const RankingTab: React.FC<RankingTabProps> = () => {
   const { isEnabledRankFilter } = useCheckDisplayChat()
-  const { liveStreamInfo, setActiveSubTab, giverRankings, receiverRankings } = useDetailVideo()
+  const { liveStreamInfo, setActiveSubTab, giverRankings, receiverRankings, rankingListMeta } = useDetailVideo()
   const { activeSubTab } = liveStreamInfo
 
   const { t } = useTranslation('common')
@@ -37,6 +39,9 @@ const RankingTab: React.FC<RankingTabProps> = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down(768))
 
   const isSelf = 5
+  useEffect(() => {
+    setActiveSubTab(SUB_TABS.RANKING.RECEIPT)
+  }, [])
 
   // useEffect(() => {
   //   if (videoId) {
@@ -57,11 +62,11 @@ const RankingTab: React.FC<RankingTabProps> = () => {
                     return (
                       <RankingItemSelf
                         key={index}
-                        position={item.position}
+                        position={1}
                         avatar={<ESAvatar src="" alt="avatar" size={40} />}
                         tab={SUB_TABS.RANKING.SEND}
-                        name={item.name}
-                        tip={item.tip}
+                        name={item.nickname}
+                        total={item.total}
                         self={false}
                       />
                     )
@@ -69,11 +74,11 @@ const RankingTab: React.FC<RankingTabProps> = () => {
                   return (
                     <RankingItem
                       key={index}
-                      position={item.position}
+                      position={1}
                       avatar={<ESAvatar src="" alt="avatar" size={40} />}
                       tab={SUB_TABS.RANKING.SEND}
-                      name={item.name}
-                      tip={item.tip}
+                      name={item.nickname}
+                      total={item.total}
                       self={false}
                     />
                   )
@@ -92,12 +97,12 @@ const RankingTab: React.FC<RankingTabProps> = () => {
                 {receiverRankings.map((item, index) => (
                   <RankingItem
                     key={index}
-                    position={item.position}
+                    position={1}
                     avatar={<ESAvatar src="" alt="avatar" size={40} />}
-                    type={item.type}
+                    type={0}
                     tab={SUB_TABS.RANKING.RECEIPT}
-                    name={item.name}
-                    tip={item.tip}
+                    name={item.nickname}
+                    total={item.total}
                   />
                 ))}
               </Rankings>
@@ -107,6 +112,14 @@ const RankingTab: React.FC<RankingTabProps> = () => {
           </>
         )
     }
+  }
+
+  if (rankingListMeta.pending) {
+    return (
+      <Box textAlign={'center'}>
+        <ESLoader />
+      </Box>
+    )
   }
 
   return (

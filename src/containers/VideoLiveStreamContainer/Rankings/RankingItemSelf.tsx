@@ -8,11 +8,11 @@ interface Props {
   type?: string
   tab: number
   name?: string | undefined
-  tip?: number
+  total?: string
   self?: boolean
 }
 
-const RankingItemSelf: React.FC<Props> = ({ position, avatar, name, tip }) => {
+const RankingItemSelf: React.FC<Props> = ({ position, avatar, name, total }) => {
   const classes = useStyles()
   // const { t } = useTranslation('common')
 
@@ -46,7 +46,7 @@ const RankingItemSelf: React.FC<Props> = ({ position, avatar, name, tip }) => {
           </Box>
         </TableCell>
         <TableCell>
-          <Typography className={classes.tip}>{tip}</Typography>
+          <Typography className={classes.tip}>{total}</Typography>
         </TableCell>
       </TableRow>
     </>
