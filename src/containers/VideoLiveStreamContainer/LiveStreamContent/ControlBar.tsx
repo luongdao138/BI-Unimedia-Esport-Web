@@ -33,7 +33,7 @@ interface ControlProps {
   onReloadTime?: () => void
   handleOnRestart?: () => void
   resultResolution?: (index?: number, flag?: boolean) => void
-  quality?: Array<string>
+  qualities?: Array<string>
 }
 
 enum SettingPanelState {
@@ -63,7 +63,7 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
       // onReloadTime,
       handleOnRestart,
       resultResolution,
-      quality,
+      qualities,
     },
     ref
   ) => {
@@ -75,6 +75,7 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
     const [settingPanel, setSettingPanel] = useState(SettingPanelState.NONE)
     const { changeMiniPlayerState, getMiniPlayerState } = useLiveStreamDetail()
     const [resolution, setResolution] = useState(t('videos_top_tab.auto'))
+    const [speed, setSpeed] = useState(t('videos_top_tab.standard'))
 
     useImperativeHandle(ref, () => {
       return {
@@ -142,6 +143,11 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
     const handleSelectedResolution = (item, index) => {
       setResolution(item)
       resultResolution(index, true)
+    }
+
+    const handleChangeSpeed = (item, index) => {
+      videoRef.current.playbackRate = parseFloat(index === 1 ? 1.0 : item)
+      setSpeed(item)
     }
 
     return (
@@ -254,7 +260,7 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
               data-for="togglePlaySpeed"
               id={'playSpeedRef'}
             >
-              <Typography>{'2x'}</Typography>
+              <Typography>{parseFloat(speed) ? `${speed}x` : '1.0x'}</Typography>
               <PlayerTooltip
                 id={'togglePlaySpeed'}
                 title={t('videos_top_tab.tooltip_control_bar.play_speed')}
@@ -311,13 +317,13 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
             handleOnReportClick={handleOnOpenReportPanel}
             isLive={isLive}
             handleOnPlaySpeedClick={handleOnOpenPlaySpeedPanel}
-            settingResult={{ resolution }}
+            settingResult={{ resolution, speed }}
           />
         )}
         {settingPanel === SettingPanelState.VIDEO_RESOLUTION && (
           <VideoResolutionPanel
             selectedResolution={resolution}
-            resolutionList={[VIDEO_RESOLUTION.AUTO].concat(quality)}
+            resolutionList={[VIDEO_RESOLUTION.AUTO].concat(qualities)}
             // resolutionList={['480p']}
             handleOnBackClick={handleOnResolutionPanelBackClick}
             onSelected={handleSelectedResolution}
@@ -326,9 +332,10 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
         {settingPanel === SettingPanelState.REPORT_PANEL && <ReportPanel handleOnBackClick={handleOnReportPanelBackClick} />}
         {settingPanel === SettingPanelState.PLAY_SPEED && (
           <VideoResolutionPanel
-            selectedResolution={t('videos_top_tab.standard')}
+            selectedResolution={speed}
             resolutionList={['0.5', t('videos_top_tab.standard'), '1.5', '2.0']}
             handleOnBackClick={handleOnResolutionPanelBackClick}
+            onSelected={handleChangeSpeed}
           />
         )}
       </>

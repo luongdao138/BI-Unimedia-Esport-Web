@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 
 export type SettingResult = {
   resolution?: string
+  speed?: string
 }
 
 type Props = {
@@ -15,16 +16,22 @@ type Props = {
   settingResult?: SettingResult
 }
 
-const SettingPanel: React.FC<Props> = ({ isLive, handleOnQualityChangeClick, handleOnReportClick, settingResult }) => {
+const SettingPanel: React.FC<Props> = ({
+  isLive,
+  handleOnQualityChangeClick,
+  handleOnReportClick,
+  settingResult,
+  handleOnPlaySpeedClick,
+}) => {
   const classes = useStyles()
   const { t } = useTranslation('common')
   return (
     <Box className={classes.container}>
       {!isLive && (
-        <Box onClick={handleOnQualityChangeClick} className={classes.row}>
+        <Box onClick={handleOnPlaySpeedClick} className={classes.row}>
           <Typography className={classes.text}>{t('videos_top_tab.play_speed')}</Typography>
           <Box className={classes.iconContainer}>
-            <Typography>{t('videos_top_tab.standard')}</Typography>
+            <Typography>{parseFloat(settingResult.speed) ? `${settingResult.speed}x` : settingResult.speed}</Typography>
             <Icon className={`fa fa-chevron-right ${classes.icon}`} fontSize="small" />
           </Box>
         </Box>

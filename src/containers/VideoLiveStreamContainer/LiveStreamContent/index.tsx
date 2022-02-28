@@ -92,8 +92,7 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
             startLive={Date.parse(detailVideoResult?.live_stream_start_time)}
             endLive={detailVideoResult?.live_stream_end_time}
             type={detailVideoResult?.status}
-            // quality={detailVideoResult?.quality}
-            quality={['480p']}
+            qualities={detailVideoResult?.qualities}
           />
         )}
       </>

@@ -35,7 +35,7 @@ interface PlayerProps {
     videoWidth: number
     videoHeight: number
   }
-  quality?: Array<string>
+  qualities?: Array<string>
 }
 
 const VideoPlayer: React.FC<PlayerProps> = ({
@@ -50,7 +50,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   // type,
   videoType,
   // componentsSize,
-  quality,
+  qualities,
 }) => {
   const { setVideoRefInfo } = useContext(VideoContext)
   // const checkStatusVideo = 1
@@ -745,7 +745,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
                 onReloadTime={handleReloadTime}
                 handleOnRestart={handleOnRestart}
                 resultResolution={(index, flag) => changeResolution(index, flag)}
-                quality={quality}
+                qualities={qualities}
               />
             </div>
           </div>

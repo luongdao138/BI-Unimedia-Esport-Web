@@ -7,7 +7,7 @@ type Props = {
   handleOnBackClick?: () => void
   resolutionList: Array<any>
   selectedResolution?: string
-  onSelected?: (item, index) => void
+  onSelected?: (item: string, index?: number) => void
 }
 
 const VideoResolutionPanel: React.FC<Props> = ({ handleOnBackClick, resolutionList, selectedResolution = '1080p', onSelected }) => {
