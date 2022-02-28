@@ -42,7 +42,6 @@ import useGraphqlAPI from 'src/types/useGraphqlAPI'
 import { VideoContext } from './VideoContext.js'
 
 import { useResizeScreen } from '@utils/hooks/useResizeScreen'
-import { VideoContext } from './VideoContext.js'
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
