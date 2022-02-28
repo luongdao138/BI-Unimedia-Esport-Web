@@ -444,6 +444,9 @@ const Steps: React.FC<StepsProps> = ({
   const changeFieldAndResetSelectedGift = (): void => {
     // formik.handleChange(e)
     formik.setFieldValue('stepSettingTwo.use_gift', !formik?.values?.stepSettingTwo?.use_gift)
+    formik.setFieldValue('stepSettingTwo.ranking_flag', false)
+    formik.setFieldValue('stepSettingTwo.group_title', '')
+    formik.setFieldValue('stepSettingTwo.gift_group_id', null)
   }
 
   const handleListGiftInfo = () => {
