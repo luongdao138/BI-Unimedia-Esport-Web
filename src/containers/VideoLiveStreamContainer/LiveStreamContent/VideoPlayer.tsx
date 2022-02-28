@@ -8,7 +8,7 @@ import { Icon, makeStyles, Theme, useMediaQuery, useTheme } from '@material-ui/c
 import { STATUS_VIDEO } from '@services/videoTop.services'
 import useLiveStreamDetail from '../useLiveStreamDetail'
 import { Colors } from '@theme/colors'
-import React, { memo, useContext, useEffect, useRef, useState } from 'react'
+import React, { memo, useCallback, useContext, useEffect, useRef, useState } from 'react'
 import ControlBarPlayer from './ControlBar'
 import SeekBar from './ControlComponent/SeekBar'
 // import { useTranslation } from 'react-i18next'
@@ -17,6 +17,7 @@ import useDetailVideo from '../useDetailVideo'
 import Hls from 'hls.js'
 import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
 import { VideoContext } from '../VideoContext.js'
+import { VIDEO_RESOLUTION_HLS } from '@services/liveStreamDetail.service'
 
 interface PlayerProps {
   src?: string
@@ -34,6 +35,7 @@ interface PlayerProps {
     videoWidth: number
     videoHeight: number
   }
+  qualities?: Array<string>
 }
 
 const VideoPlayer: React.FC<PlayerProps> = ({
@@ -48,6 +50,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   // type,
   videoType,
   // componentsSize,
+  qualities,
 }) => {
   const { setVideoRefInfo } = useContext(VideoContext)
   // const checkStatusVideo = 1
@@ -76,7 +79,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     videoLoaded: true,
     videoError: false,
   })
-
+  const [flagResol, setFlagResol] = useState(false)
   const refControlBar = useRef<any>(null)
   const { liveStreamInfo, changeSeekCount, detailVideoResult } = useDetailVideo()
   const theme = useTheme()
@@ -105,8 +108,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   }
 
   const [isPortrait, setIsPortrait] = useState<boolean>(!!isMobile)
-
-  // const [flagPaused, setFlagPaused] = useState(null)
+  const [resolution, setResolution] = useState(VIDEO_RESOLUTION_HLS.AUTO)
 
   useEffect(() => {
     if (getMiniPlayerState) {
@@ -253,14 +255,9 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   // ===================hls.js==================================
   useEffect(() => {
     const video = document.getElementById('video')
-    // const hls = new Hls({
-    //   // liveSyncDurationCount: 1,
-    //   // initialLiveManifestSize: 1,
-    //   // liveMaxLatencyDurationCount:10
-    //   liveDurationInfinity: true,
-    //   startPosition: 0,
-    // })
+
     const hls = new Hls()
+    console.warn('HLS=====>>>', hls.levels, hls.currentLevel)
     //function event MEDIA_ATTACHED
     const handleMedia = () => {
       console.log('video and hls.js are now bound together !')
@@ -273,6 +270,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
 
     const handleLoaded = (_, data) => {
       console.log('~~~~LEVEL_LOADED~~~~~', data)
+      console.warn('HLS=====>>>', hls.levels, hls.currentLevel)
       // setDurationPlayer(data.details.totalduration)
       setIsLive(data.details.live)
     }
@@ -317,6 +315,33 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       }
     }
   }, [src])
+
+  //on switch resolution
+  useEffect(() => {
+    const hls = new Hls({
+      // liveSyncDurationCount: 1,
+      // initialLiveManifestSize: 1,
+      // liveMaxLatencyDurationCount:10,
+      startPosition: playedSeconds,
+      startLevel: resolution,
+    })
+
+    if ((Hls.isSupported() || androidPl) && src) {
+      console.log('222222videoEl?.current?.currentTime===', playedSeconds, flagResol)
+      // bind them together
+      hls.loadSource(src)
+      //@ts-ignore
+      hls.attachMedia(document.getElementById('video'))
+      // hls.on(Hls.Events.MEDIA_ATTACHED, handleMedia)
+    }
+    return () => {
+      if (hls && src) {
+        hls.detachMedia()
+        hls.destroy()
+        hls.stopLoad()
+      }
+    }
+  }, [resolution])
 
   // useEffect(() => {
   //   if(Math.floor(playedSeconds) !== liveStreamInfo.played_second) {
@@ -372,8 +397,10 @@ const VideoPlayer: React.FC<PlayerProps> = ({
 
   //archived
   useEffect(() => {
+    console.log('videoEl.current?.paused==', videoEl.current?.paused, playing)
     setVideoRefInfo(videoEl)
-    console.log('🚀 ~ useEffect ~ videoEl---0000', videoEl)
+    handleReturnPlayPause()
+    //console.log('🚀 ~ useEffect ~ videoEl---0000', videoEl)
     // onSaveVideoRef(document.querySelector('video'), document.createElement('video'))
     videoEl.current?.addEventListener('timeupdate', (event) => {
       const videoInfo = event.target
@@ -434,6 +461,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     videoEl.current?.addEventListener('loadedmetadata', (event) => {
       console.log('=================loadedmetadata===================')
       console.log(event)
+      setFlagResol(false)
       if (!isStreamingEnd.current) {
         setVisible({ ...visible, loading: true, videoLoaded: true })
       }
@@ -445,6 +473,9 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     videoEl.current?.addEventListener('emptied', (event) => {
       console.log('=================emptied===================')
       console.log(event)
+      if (flagResol) {
+        setVisible({ ...visible, loading: true, videoLoaded: true })
+      }
     })
     videoEl.current?.addEventListener('canplay', (event) => {
       console.log('=================canplay===================')
@@ -485,7 +516,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
         //TODO: remove event onscroll window
       }
     }
-  }, [])
+  }, [resolution])
   const toggleFullScreen1 = () => {
     if (!document.fullscreenElement) {
       if (playerContainerRef.current.requestFullscreen) {
@@ -539,6 +570,20 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       setIsStreaming(false)
     }
   }
+  const handleReturnPlayPause = () => {
+    if (flagResol) {
+      if (videoEl.current?.paused || videoEl.current?.ended) {
+        videoEl.current?.play()
+        // setState({ ...state, playing: true })
+        // setVisible({ ...visible, loading: false, videoLoaded: false })
+      } else {
+        videoEl.current?.pause()
+        // setState({ ...state, playing: false })
+        // setVisible({ ...visible, loading: true, videoLoaded: false })
+        // setIsStreaming(false)
+      }
+    }
+  }
 
   // const handleTryAgain = () => {
   //   hls.loadSource(src)
@@ -569,6 +614,15 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   const handleOnRestart = () => {
     setIsStreaming(false)
   }
+
+  const changeResolution = useCallback(
+    (index, flag) => {
+      setResolution(index - 1)
+      // setResolution(index===0?-1:0)
+      setFlagResol(flag)
+    },
+    [resolution]
+  )
 
   //new version
   // useEffect(() => {
@@ -696,6 +750,8 @@ const VideoPlayer: React.FC<PlayerProps> = ({
                 videoStatus={videoType}
                 onReloadTime={handleReloadTime}
                 handleOnRestart={handleOnRestart}
+                resultResolution={(index, flag) => changeResolution(index, flag)}
+                qualities={qualities}
               />
             </div>
           </div>
@@ -887,4 +943,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
-export default memo(VideoPlayer)
+export default memo(VideoPlayer, (prev, next) => {
+  console.warn('===redenr===', prev.src !== next.src)
+  if (prev.src !== next.src) {
+    return false
+  }
+  return true
+})

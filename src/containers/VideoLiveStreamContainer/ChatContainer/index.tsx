@@ -319,7 +319,17 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
 
     // const { width: pageWidth } = useWindowDimensions(0)
     // const isDesktopDown1280 = pageWidth > 768 && pageWidth <= 1280
-    const { userResult, streamingSecond, liveStreamInfo, resetChatState, setActiveTab, setActiveSubTab, playedSecond, detailVideoResult, getVideoGiftMasterList } = useDetailVideo()
+    const {
+      userResult,
+      streamingSecond,
+      liveStreamInfo,
+      resetChatState,
+      setActiveTab,
+      setActiveSubTab,
+      playedSecond,
+      detailVideoResult,
+      getVideoGiftMasterList,
+    } = useDetailVideo()
     const { isEnabledGift, isEnabledMessFilter, isDisplayedRankingTab } = useCheckDisplayChat()
 
     const { activeTab, activeSubTab } = liveStreamInfo
