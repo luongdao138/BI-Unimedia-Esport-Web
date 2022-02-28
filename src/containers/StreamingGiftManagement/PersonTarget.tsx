@@ -211,6 +211,7 @@ const useStyles = makeStyles((theme) => ({
     height: '38px !important',
     borderRadius: '5px !important',
     marginTop: '46px',
+    marginBottom: '46px',
   },
   title: {
     margin: '24px 0px 0px 24px',
