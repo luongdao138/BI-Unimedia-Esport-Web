@@ -54,6 +54,7 @@ type StateType = {
   isHoveredVideo?: boolean
   videoEl?: VideoRefType
   videoGiftMaster?: VideoGiftMasterData
+  videoGiftMasterLoading?: boolean
 }
 
 const initialState: StateType = {
@@ -105,6 +106,7 @@ const initialState: StateType = {
     videoElement: null,
   },
   videoGiftMaster: null,
+  videoGiftMasterLoading: false,
 }
 
 export default createReducer(initialState, (builder) => {
@@ -237,7 +239,14 @@ export default createReducer(initialState, (builder) => {
     state.videoEl.videoQuery = action.payload.videoQuery
     state.videoEl.videoElement = action.payload.videoElement
   })
+  builder.addCase(actions.getVideoGiftMaster.pending, (state) => {
+    state.videoGiftMasterLoading = true
+  })
   builder.addCase(actions.getVideoGiftMaster.fulfilled, (state, action) => {
+    state.videoGiftMasterLoading = false
     state.videoGiftMaster = action.payload.data
+  })
+  builder.addCase(actions.getVideoGiftMaster.rejected, (state) => {
+    state.videoGiftMasterLoading = false
   })
 })

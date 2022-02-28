@@ -4,9 +4,10 @@ import { URI } from '@constants/uri.constants'
 export type PurchaseTicketParams = {
   user_id?: number
   point: number
-  type: number //1 : mua ticket, 2 : supper chat
+  type: number //1 : mua ticket, 2 : supper chat, 4: give gift to master
   video_id: string | string[]
   timezone?: string
+  master_id?: string
   handleError?: () => void
   handleSuccess?: () => void
 }

@@ -9,18 +9,19 @@ import React, { useEffect, useMemo, useRef, useState } from 'react'
 import Step1 from './Step1'
 import Step2 from './Step2'
 import Step3 from './Step3'
+import Icon from '@material-ui/core/Icon'
 // import * as commonActions from '@store/common/actions'
 // import { useAppDispatch } from '@store/hooks'
 
 type TipChatDialogProps = {
   openPurchasePointModal?: (point: any) => void
   onClickOutside?: () => void
-  onPressDonate?: (donatedPoint: number, purchaseComment: string) => void
+  onPressDonate?: (donatedPoint: number, purchaseComment: string, master_id?: string) => void
   normalMessHasError?: boolean
   createMess: (message: string, point?: number) => Promise<void>
 }
 
-const TipChatDialog: React.FC<TipChatDialogProps> = ({ onClickOutside, normalMessHasError, createMess }) => {
+const TipChatDialog: React.FC<TipChatDialogProps> = ({ onPressDonate, onClickOutside, normalMessHasError, openPurchasePointModal }) => {
   // const dispatch = useAppDispatch()
 
   const { myPointsData } = usePointsManage()
@@ -87,6 +88,7 @@ const TipChatDialog: React.FC<TipChatDialogProps> = ({ onClickOutside, normalMes
   const commonStepProps = {
     onChangeStep,
     selectedMember,
+    onPressDonate,
   }
 
   const renderSteps = () => {
@@ -96,7 +98,7 @@ const TipChatDialog: React.FC<TipChatDialogProps> = ({ onClickOutside, normalMes
       case 2:
         return <Step2 {...commonStepProps} onChangeTipInfo={onChangeTipInfo} />
       case 3:
-        return <Step3 {...commonStepProps} tipInfo={tipInfo} createMess={createMess} />
+        return <Step3 {...commonStepProps} tipInfo={tipInfo} />
       default:
         return null
     }
@@ -150,6 +152,9 @@ const TipChatDialog: React.FC<TipChatDialogProps> = ({ onClickOutside, normalMes
   return (
     <div className={classes.tipChatDialogContainer} ref={ref} style={{ bottom: isMobile ? 80 : normalMessHasError ? 116 : 105 }}>
       <Box className={classes.wrapTitle}>
+        <Box className={classes.closeButton} onClick={onClickOutside}>
+          <Icon className={`fa fa-times`} fontSize="small" />
+        </Box>
         <Typography className={classes.titleDialog}>{`${i18n.t('common:live_stream_screen.tip_title_dialog')}`}</Typography>
         {renderMoreInfo}
       </Box>
@@ -164,10 +169,7 @@ const TipChatDialog: React.FC<TipChatDialogProps> = ({ onClickOutside, normalMes
             'common:donate_points.step_one_points'
           )}`}
         </Typography>
-        <Typography
-          className={classes.purchasePointText}
-          // onClick={() => openPurchasePointModal(purchasePoints[purchaseValueSelected].value)}
-        >
+        <Typography className={classes.purchasePointText} onClick={() => openPurchasePointModal(0)}>
           {`${i18n.t('common:live_stream_screen.purchase_tip_point')}`}
         </Typography>
       </Box>
@@ -189,6 +191,10 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     position: 'absolute',
     right: 8,
+  },
+  closeButton: {
+    position: 'absolute',
+    left: 8,
   },
   textMoreInfo: { fontSize: '10px', color: '#ffff00', marginLeft: 4 },
   textPleaseSelect: { lineHeight: '16px', fontSize: '12px', color: '#fff', fontWeight: 400, textAlign: 'center' },

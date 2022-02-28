@@ -28,6 +28,7 @@ import { STATUS_VIDEO } from '@services/videoTop.services'
 import { useAppSelector } from '@store/hooks'
 import { getIsAuthenticated } from '@store/auth/selectors'
 import { ESRoutes } from '@constants/route.constants'
+
 const { getVideoByUuid } = require(`src/graphql.${process.env.NEXT_PUBLIC_AWS_ENV}/queries`)
 const { onUpdateVideo, onUpdateChannel } = require(`src/graphql.${process.env.NEXT_PUBLIC_AWS_ENV}/subscriptions`)
 // import * as APIt from 'src/types/graphqlAPI'
@@ -51,6 +52,8 @@ import RelatedVideos from './RelatedVideos'
 import VideoSubInfo from './VideoSubInfo'
 import { use100vh } from 'react-div-100vh'
 import { useRotateScreen } from '@utils/hooks/useRotateScreen'
+import * as commonActions from '@store/common/actions'
+
 export interface videoStyleProps {
   availHeight: number
   availWidth: number
@@ -62,6 +65,7 @@ export enum VIDEO_TYPE {
   SCHEDULE = 1,
   ARCHIVED = 2,
 }
+
 type VIDEO_INFO = {
   video_status: string | number
   process_status: string
@@ -71,6 +75,7 @@ const VideoDetail: React.FC = () => {
   const PURCHASE_TYPE = {
     PURCHASE_TICKET: 1,
     PURCHASE_SUPER_CHAT: 2,
+    GIVE_GIFT_TO_MASTER: 4,
   }
   // console.log('🚀 ~ height', height)
   const height = use100vh()
@@ -115,6 +120,7 @@ const VideoDetail: React.FC = () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isArchived, setIsArchived] = useState(false)
   const [disabled, setDisabled] = useState(false)
+  const [giftMasterUuid, setGiftMasterUuid] = useState('')
 
   const {
     getVideoDetail,
@@ -126,7 +132,6 @@ const VideoDetail: React.FC = () => {
     changeIsStreamingEnd,
     liveStreamInfo,
     changeIsHoveredVideoStatus,
-    getVideoGiftMasterList,
   } = useDetailVideo()
 
   const { is_normal_view_mode, isHoveredVideo } = liveStreamInfo
@@ -356,11 +361,6 @@ const VideoDetail: React.FC = () => {
   }, [video_id, isAuthenticated])
 
   useEffect(() => {
-    if (detailVideoResult) {
-      getVideoGiftMasterList({ video_id: `${detailVideoResult?.uuid}` })
-    }
-  }, [detailVideoResult])
-  useEffect(() => {
     // setTab(isMobile ? VIDEO_INFO_TABS.COMMENT : VIDEO_INFO_TABS.PROGRAM_INFO)
   }, [isMobile])
 
@@ -371,8 +371,10 @@ const VideoDetail: React.FC = () => {
     }
   }, [videoDetailError])
 
-  const confirmDonatePoint = (donated_point, comment) => {
+  const confirmDonatePoint = (donated_point, comment, master_id = '') => {
+    console.log('master_id', master_id)
     // reset donate point
+    setGiftMasterUuid(master_id)
     setDonatedPoints(0)
     setDonatedPoints(donated_point)
     // reset lack point
@@ -395,23 +397,31 @@ const VideoDetail: React.FC = () => {
   const handleConfirmPurchaseSuperChat = async () => {
     setPurchaseType(PURCHASE_TYPE.PURCHASE_SUPER_CHAT)
     setDisabled(true)
-    debounceDonatePoint(donatedPoints, PURCHASE_TYPE.PURCHASE_SUPER_CHAT, getVideoId(), handleCloseConfirmModal)
+    debounceDonatePoint(
+      donatedPoints,
+      giftMasterUuid === '' ? PURCHASE_TYPE.PURCHASE_SUPER_CHAT : PURCHASE_TYPE.GIVE_GIFT_TO_MASTER,
+      getVideoId(),
+      giftMasterUuid,
+      handleCloseConfirmModal
+    )
   }
 
   const debounceDonatePoint = useCallback(
-    _.debounce(async (donatedPoints, type, video_id, handleSuccess: () => void) => {
+    _.debounce(async (donatedPoints, type, video_id, masterUuid, handleSuccess: () => void) => {
       await purchaseTicketSuperChat(
         {
           point: donatedPoints,
           type: type,
           video_id: video_id,
           handleSuccess: handleSuccess,
+          ...(type === PURCHASE_TYPE.GIVE_GIFT_TO_MASTER && { master_id: masterUuid }),
         },
         (isSuccess) => {
           if (isSuccess) {
             setShowConfirmModal(false)
             setErrorPurchase(false)
             setDisabled(false)
+            dispatch(commonActions.addToast(i18n.t('common:live_stream_screen.send_gift_success')))
           } else {
             // setShowConfirmModal(false)
             setDisabled(false)

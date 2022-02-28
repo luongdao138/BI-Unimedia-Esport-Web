@@ -6,22 +6,27 @@ import { FormatHelper } from '@utils/helpers/FormatHelper'
 import React from 'react'
 import TipButtonGroup from './TipButtonGroup'
 import { sanitizeMess } from '../index'
+import { DonateReceiverType } from '@containers/VideoLiveStreamContainer/ChatContainer/TipChatDialog/Step1'
 
 type Step3Props = {
   onChangeStep?: (newStep: number) => void
   selectedMember?: any
   tipInfo: any
-  createMess: (message: string, point?: number) => Promise<void>
+  onPressDonate?: (donatedPoint: number, purchaseComment: string, master_id?: string) => void
 }
 
-const Step3: React.FC<Step3Props> = ({ tipInfo, onChangeStep, selectedMember, createMess }) => {
+const Step3: React.FC<Step3Props> = ({ tipInfo, onChangeStep, selectedMember, onPressDonate }) => {
   const classes = useStyles()
 
   const onCancel = () => {
     onChangeStep(2)
   }
   const onClick = () => {
-    createMess(sanitizeMess(tipInfo?.message), tipInfo?.donatedPoint)
+    if (selectedMember?.type === DonateReceiverType.STREAMER) {
+      onPressDonate(tipInfo?.donatedPoint, sanitizeMess(tipInfo?.message))
+    } else {
+      onPressDonate(tipInfo?.donatedPoint, sanitizeMess(tipInfo?.message), selectedMember.master_uuid)
+    }
   }
 
   return (
