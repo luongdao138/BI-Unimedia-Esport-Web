@@ -928,6 +928,7 @@ ins[style] {
 }
 iframe[style] {
   width: 100% !important;
+  border: 1px solid blue !important;
 }
 .position_bottom {
   padding-bottom: 0px;
@@ -945,6 +946,15 @@ iframe[style] {
   }
   .position_bottom {
     padding-bottom: 60px;
+  }
+  ins[style] {
+    width: 100% !important;
+    height: 50px !important;
+  }
+  iframe[style] {
+    width: 100% !important;
+    // border: 1px solid blue !important;
+    height: 50px !important;
   }
 }
 @media (max-width: 1280px) {
