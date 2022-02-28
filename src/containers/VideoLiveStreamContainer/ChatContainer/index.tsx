@@ -71,7 +71,6 @@ import RankingTab from './Tabs/RankingTab'
 import { Colors } from '@theme/colors'
 import TipChatDialog from './TipChatDialog'
 import { useRotateScreen } from '@utils/hooks/useRotateScreen'
-import * as commonActions from '@store/common/actions'
 
 export type ChatStyleProps = {
   isLandscape: boolean
@@ -80,7 +79,7 @@ import { VideoContext } from '../VideoContext.js'
 import { useCheckDisplayChat } from '@utils/hooks/useCheckDisplayChat'
 
 export type ChatContainerProps = {
-  onPressDonate?: (donatedPoint: number, purchaseComment: string) => void
+  onPressDonate?: (donatedPoint: number, purchaseComment: string, master_id?: string) => void
   userHasViewingTicket?: boolean | number
   key_video_id?: string
   myPoint?: any
@@ -320,7 +319,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
 
     // const { width: pageWidth } = useWindowDimensions(0)
     // const isDesktopDown1280 = pageWidth > 768 && pageWidth <= 1280
-    const { userResult, streamingSecond, liveStreamInfo, resetChatState, setActiveTab, setActiveSubTab, playedSecond } = useDetailVideo()
+    const { userResult, streamingSecond, liveStreamInfo, resetChatState, setActiveTab, setActiveSubTab, playedSecond, detailVideoResult, getVideoGiftMasterList } = useDetailVideo()
     const { isEnabledGift, isEnabledMessFilter, isDisplayedRankingTab } = useCheckDisplayChat()
 
     const { activeTab, activeSubTab } = liveStreamInfo
@@ -1693,6 +1692,9 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     )
 
     const purchaseIconClick = () => {
+      if (detailVideoResult) {
+        getVideoGiftMasterList({ video_id: `${detailVideoResult?.uuid}` })
+      }
       setPurchaseDialogVisible(!purchaseDialogVisible)
     }
 
@@ -1885,8 +1887,6 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         try {
           const result = await API.graphql(graphqlOperation(createMessage, { input }))
           refCreateMessLocal.current(result, local_message)
-          handlePremiumChatBoxClickOutside()
-          dispatch(commonActions.addToast(i18n.t('common:live_stream_screen.send_gift_success')))
         } catch (errors) {
           if (errors && errors.errors.length !== 0) refCreateMessLocal.current([], local_message, true)
           console.error(errors)

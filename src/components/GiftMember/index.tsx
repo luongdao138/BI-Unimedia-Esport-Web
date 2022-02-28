@@ -26,7 +26,7 @@ const GiftMember: React.FC<IGiftMember> = ({
   }
   return (
     <Box className={classes.wrapStreamerInfo}>
-      <ESAvatar src={image} size={56} alt={image} />
+      <ESAvatar src={image} size={56} alt={name} />
       <Box className={classes.wrapStreamerName} style={{ justifyContent: isStreamer ? 'center' : 'space-between' }}>
         {!isStreamer && <Box className={classes.receiverType}>{userType()}</Box>}
         <Typography className={`${isCutTextOverflow ? classes.streamerNameWrapText : ''} ${classes.streamerName}`}>{name}</Typography>

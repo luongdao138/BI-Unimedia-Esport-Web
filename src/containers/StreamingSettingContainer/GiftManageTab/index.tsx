@@ -22,7 +22,7 @@ export enum CreateMode {
 
 const GiftManageTab: React.FC<Props> = ({ onChangeTab, onChangeTabSubmitSuccess, tabState }) => {
   const [createMode, setCreateMode] = useState(CreateMode.CREATE)
-
+  const [isManualClickAddNewGroup, setManualClick] = useState(false)
   const { resetNewGroupMasterList, getGiftGroupDetail } = useGiftTarget()
 
   useEffect(() => {
@@ -30,6 +30,7 @@ const GiftManageTab: React.FC<Props> = ({ onChangeTab, onChangeTabSubmitSuccess,
   }, [tabState])
 
   const handleGoToCreateNewListState = () => {
+    setManualClick(true)
     setCreateMode(CreateMode.CREATE)
     onChangeTab(TabState.CREATE_NEW)
     resetNewGroupMasterList()
@@ -43,7 +44,12 @@ const GiftManageTab: React.FC<Props> = ({ onChangeTab, onChangeTabSubmitSuccess,
   }
 
   const handleBackToListState = () => {
-    onChangeTabSubmitSuccess()
+    if (isManualClickAddNewGroup) {
+      onChangeTab(TabState.LIST)
+      setManualClick(false)
+    } else {
+      onChangeTabSubmitSuccess()
+    }
   }
 
   if (tabState === TabState.LIST) {

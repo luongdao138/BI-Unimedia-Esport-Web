@@ -5,6 +5,12 @@ import { Box, makeStyles } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import React from 'react'
 import useDetailVideo from '@containers/VideoLiveStreamContainer/useDetailVideo'
+import Loader from '@components/Loader'
+
+export enum DonateReceiverType {
+  STREAMER,
+  GIFT_MASTER,
+}
 
 type Step1Props = {
   onChangeStep?: (newStep: number) => void
@@ -13,7 +19,7 @@ type Step1Props = {
 
 const Step1: React.FC<Step1Props> = ({ onChangeStep, onChangeSelectedMember }) => {
   const classes = useStyles()
-  const { videoGiftMaster } = useDetailVideo()
+  const { videoGiftMaster, videoGiftMasterLoading } = useDetailVideo()
 
   const renderMember = (item, isStreamer = false) => {
     return (
@@ -34,7 +40,14 @@ const Step1: React.FC<Step1Props> = ({ onChangeStep, onChangeSelectedMember }) =
     image: videoGiftMaster?.user_avatar,
     name: videoGiftMaster?.user_nickname,
     id: videoGiftMaster?.user_id,
+    type: DonateReceiverType.STREAMER,
   })
+
+  const giftMasterData = () =>
+    (videoGiftMaster?.group_item ?? []).map((item) => ({
+      ...item,
+      type: DonateReceiverType.GIFT_MASTER,
+    }))
 
   return (
     <Box>
@@ -44,9 +57,15 @@ const Step1: React.FC<Step1Props> = ({ onChangeStep, onChangeSelectedMember }) =
           {renderMember(streamerGiftData(), true)}
           <Box className={classes.streamerTitle}>{`${i18n.t('common:live_stream_screen.receiver_title')}`}</Box>
           <Box display={'flex'} style={{ gap: '16px' }} flexDirection={'column'}>
-            {videoGiftMaster?.group_item?.map((item) => {
-              return renderMember(item)
-            })}
+            {videoGiftMasterLoading ? (
+              <Box height="100px" display="flex" justifyContent="center" alignItems="center">
+                <Loader />
+              </Box>
+            ) : (
+              giftMasterData().map((item) => {
+                return renderMember(item)
+              })
+            )}
           </Box>
         </Box>
       </Box>

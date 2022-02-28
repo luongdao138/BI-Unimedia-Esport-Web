@@ -51,6 +51,7 @@ const useDetailVideo = () => {
   const changeIsHoveredVideoStatus = (isHoveredVideo) => dispatch(actions.changeIsHoveredVideoStatus({ isHoveredVideo }))
   const getVideoGiftMasterList = (params) => dispatch(actions.getVideoGiftMaster(params))
   const videoGiftMaster = useAppSelector(selectors.videoGiftMaster)
+  const videoGiftMasterLoading = useAppSelector(selectors.videoGiftMasterLoading)
 
   return {
     meta,
@@ -82,6 +83,7 @@ const useDetailVideo = () => {
     videoRefEl,
     getVideoGiftMasterList,
     videoGiftMaster,
+    videoGiftMasterLoading,
   }
 }
 
