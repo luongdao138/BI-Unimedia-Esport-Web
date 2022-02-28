@@ -1,15 +1,17 @@
-import { VideoDetailParams } from '@services/videoTop.services'
+import { RankingsParams, VideoDetailParams } from '@services/videoTop.services'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
 import { createMetaSelector } from '@store/metadata/selectors'
 import videoTop from '@store/videoTop'
 
 const { selectors, actions } = videoTop
 const _getDetailMeta = createMetaSelector(actions.videoDetail)
+const getRankingListMeta = createMetaSelector(actions.getRankingList)
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const useDetailVideo = () => {
   const dispatch = useAppDispatch()
 
+  const rankingListMeta = useAppSelector(getRankingListMeta)
   const detailVideoResult = useAppSelector(selectors.videoDetailResult)
   const userResult = useAppSelector(selectors.userStreamerResult)
   const getVideoDetail = (params: VideoDetailParams) => dispatch(actions.videoDetail(params))
@@ -52,6 +54,9 @@ const useDetailVideo = () => {
   const getVideoGiftMasterList = (params) => dispatch(actions.getVideoGiftMaster(params))
   const videoGiftMaster = useAppSelector(selectors.videoGiftMaster)
   const videoGiftMasterLoading = useAppSelector(selectors.videoGiftMasterLoading)
+  const giverRankings = useAppSelector(selectors.giverRankings)
+  const receiverRankings = useAppSelector(selectors.receiverRankings)
+  const fetchDonateRanking = (params: RankingsParams) => dispatch(actions.getRankingList(params))
 
   return {
     meta,
@@ -84,6 +89,10 @@ const useDetailVideo = () => {
     getVideoGiftMasterList,
     videoGiftMaster,
     videoGiftMasterLoading,
+    fetchDonateRanking,
+    rankingListMeta,
+    giverRankings,
+    receiverRankings,
   }
 }
 

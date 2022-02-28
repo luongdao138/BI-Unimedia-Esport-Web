@@ -100,27 +100,6 @@ export type TimeReportResponse = {
   data?: Array<any>
 }
 
-export type RankingsParams = {
-  video_id?: string
-}
-
-export type RankingsItem = {
-  id: string
-  name: string
-  type: string
-  tip: number
-  position: number
-}
-
-export type RankingsResponse = {
-  message?: string
-  code?: number
-  data: {
-    giver: Array<RankingsItem>
-    receive: Array<RankingsItem>
-  }
-}
-
 export const ListArchivedVideoStream = async (params: ListArchivedVideoStreamParams): Promise<ListArchivedVideoStreamResponse> => {
   const URL = URI.VIDEOS + `${params.video_id}/archived`
   const { data } = await api.get<ListArchivedVideoStreamResponse>(URL, { params })
@@ -150,11 +129,5 @@ export const FollowChannelService = async (params: FollowChannelParams): Promise
 
 export const VideoWatchTimeReport = async (params: TimeReportParams): Promise<TimeReportResponse> => {
   const { data } = await api.post<TimeReportResponse>(URI.TIME_REPORT, params)
-  return data
-}
-
-export const rankingList = async (params: RankingsParams): Promise<RankingsResponse> => {
-  const URL = `${URI.GET_RANKINGS}/${params.video_id}`
-  const { data } = await api.get<RankingsResponse>(URL)
   return data
 }

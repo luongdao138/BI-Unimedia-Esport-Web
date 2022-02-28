@@ -25,3 +25,5 @@ export const videoDetailError = createSelector(getRoot, (state) => state.videoDe
 export const videoRef = createSelector(getRoot, (state) => state.videoEl)
 export const videoGiftMaster = createSelector(getRoot, (state) => state.videoGiftMaster)
 export const videoGiftMasterLoading = createSelector(getRoot, (state) => state.videoGiftMasterLoading)
+export const giverRankings = createSelector(getRoot, (state) => state.giver_rankings)
+export const receiverRankings = createSelector(getRoot, (state) => state.receiver_rankings)

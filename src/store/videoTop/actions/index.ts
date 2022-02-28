@@ -221,3 +221,18 @@ export const getVideoGiftMaster = createAsyncThunk<services.VideoGiftMasterRespo
     }
   }
 )
+
+export const getRankingList = createAsyncThunk<services.RankingsResponse, services.RankingsParams>(
+  ACTION_VIDEO_TOP.GET_RANKINGS,
+  async (rankingParams, { rejectWithValue }) => {
+    try {
+      const res = await services.rankingList(rankingParams)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)

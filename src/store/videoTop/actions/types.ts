@@ -30,4 +30,5 @@ export const ACTION_VIDEO_TOP = {
   CHANGE__HOVERED_VIDEO_STATUS: 'streaming/changeIsHoveredVideoStatus',
   VIDEO_REF: 'streaming/videoRef',
   VIDEO_GIFT_MASTER: 'video/giftMaster',
+  GET_RANKINGS: 'video/getRankings',
 }

@@ -1,5 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit'
-import { RankingsItem, TypeVideoArchived } from '@services/liveStreamDetail.service'
+import { TypeVideoArchived } from '@services/liveStreamDetail.service'
 import * as actions from '../actions'
 
 type StateType = {
@@ -9,10 +9,6 @@ type StateType = {
   followData?: any
   videoWatchTimeReport?: any
   miniVideoVisible?: boolean
-  rankings: {
-    giver: Array<RankingsItem>
-    receive: Array<RankingsItem>
-  }
 }
 const initialState: StateType = {
   videoArchived: [],
@@ -21,10 +17,6 @@ const initialState: StateType = {
   followData: null,
   videoWatchTimeReport: null,
   miniVideoVisible: false,
-  rankings: {
-    giver: [],
-    receive: [],
-  },
 }
 
 export default createReducer(initialState, (builder) => {
@@ -67,10 +59,5 @@ export default createReducer(initialState, (builder) => {
   // request video watch time report
   builder.addCase(actions.videoWatchTimeReportRequest.fulfilled, (state, action) => {
     state.videoWatchTimeReport = action.payload
-  })
-  // get ranking video
-  builder.addCase(actions.getRankingList.fulfilled, (state, action) => {
-    state.rankings.giver = action.payload.data.giver
-    state.rankings.receive = action.payload.data.receive
   })
 })

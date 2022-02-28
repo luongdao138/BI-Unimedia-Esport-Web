@@ -287,6 +287,27 @@ export type VideoRefType = {
   videoElement: any
 }
 
+export type RankingsItem = {
+  id: string
+  name: string
+  type: string
+  tip: number
+  position: number
+}
+
+export type RankingsResponse = {
+  message?: string
+  code?: number
+  data: {
+    giver: Array<RankingsItem>
+    receive: Array<RankingsItem>
+  }
+}
+
+export type RankingsParams = {
+  video_id?: string
+}
+
 export const ListVideoAll = async (params: ListVideoTopParams): Promise<ListVideoTopResponse> => {
   const { data } = await api.get<ListVideoTopResponse>(URI.GET_LIST_VIDEO_TOP, { params })
   return data
@@ -352,5 +373,11 @@ export type VideoGiftMasterData = {
 
 export const getVideoGiftMasterList = async (params: VideoDetailParams): Promise<VideoGiftMasterResponse> => {
   const { data } = await api.get<VideoGiftMasterResponse>(URI.VIDEO_GIFT_MASTER, { params })
+  return data
+}
+
+export const rankingList = async (params: RankingsParams): Promise<RankingsResponse> => {
+  const URL = `${URI.GET_RANKINGS}/${params.video_id}`
+  const { data } = await api.get<RankingsResponse>(URL)
   return data
 }
