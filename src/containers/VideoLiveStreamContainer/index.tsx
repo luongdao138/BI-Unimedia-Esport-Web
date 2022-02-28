@@ -96,7 +96,8 @@ const VideoDetail: React.FC = () => {
   const isAuthenticated = useAppSelector(getIsAuthenticated)
   // const userProfile = useAppSelector(selectors.getUserProfile)
   const [videoRefInfo, setVideoRefInfo] = useState(null)
-  console.log('🚀 ~ useEffect ~ videoRefInfo---222', videoRefInfo)
+  // const [giverRankInfo, setGiverRankInfo] = useState([])
+  // const [receiverRankInfo, setReceiverRankInfo] = useState([])
 
   const { getMyPointData, myPointsData } = usePointsManage()
   const { purchaseTicketSuperChat, meta_purchase_ticket_super_chat } = usePurchaseTicketSuperChat()
@@ -132,6 +133,7 @@ const VideoDetail: React.FC = () => {
     changeIsStreamingEnd,
     liveStreamInfo,
     changeIsHoveredVideoStatus,
+    fetchDonateRanking,
   } = useDetailVideo()
 
   const { is_normal_view_mode, isHoveredVideo } = liveStreamInfo
@@ -359,6 +361,12 @@ const VideoDetail: React.FC = () => {
       getVideoDetail({ video_id: `${video_id}` })
     }
   }, [video_id, isAuthenticated])
+
+  useEffect(() => {
+    if (detailVideoResult.uuid) {
+      fetchDonateRanking({ video_id: detailVideoResult.uuid })
+    }
+  }, [detailVideoResult.uuid])
 
   useEffect(() => {
     // setTab(isMobile ? VIDEO_INFO_TABS.COMMENT : VIDEO_INFO_TABS.PROGRAM_INFO)

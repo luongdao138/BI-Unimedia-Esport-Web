@@ -8,6 +8,7 @@ import {
   VideoDetailData,
   VideoRefType,
   VideoGiftMasterData,
+  RankingsItem,
 } from '@services/videoTop.services'
 import * as actions from '../actions'
 import { VIDEO_NORMAL_VIEW_MODE, SUB_TABS, VIDEO_TABS } from '@constants/common.constants'
@@ -55,6 +56,8 @@ type StateType = {
   videoEl?: VideoRefType
   videoGiftMaster?: VideoGiftMasterData
   videoGiftMasterLoading?: boolean
+  giver_rankings: Array<RankingsItem>
+  receiver_rankings: Array<RankingsItem>
 }
 
 const initialState: StateType = {
@@ -107,6 +110,8 @@ const initialState: StateType = {
   },
   videoGiftMaster: null,
   videoGiftMasterLoading: false,
+  giver_rankings: [],
+  receiver_rankings: [],
 }
 
 export default createReducer(initialState, (builder) => {
@@ -248,5 +253,11 @@ export default createReducer(initialState, (builder) => {
   })
   builder.addCase(actions.getVideoGiftMaster.rejected, (state) => {
     state.videoGiftMasterLoading = false
+  })
+
+  // get ranking video
+  builder.addCase(actions.getRankingList.fulfilled, (state, action) => {
+    state.giver_rankings = action.payload.data.giver
+    state.receiver_rankings = action.payload.data.receive
   })
 })

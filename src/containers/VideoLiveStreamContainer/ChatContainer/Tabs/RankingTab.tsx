@@ -5,9 +5,7 @@ import Rankings from '@containers/VideoLiveStreamContainer/Rankings'
 import RankingItem from '@containers/VideoLiveStreamContainer/Rankings/RankingItem'
 import RankingItemSelf from '@containers/VideoLiveStreamContainer/Rankings/RankingItemSelf'
 import useDetailVideo from '@containers/VideoLiveStreamContainer/useDetailVideo'
-import useRankingVideo from '@containers/VideoLiveStreamContainer/useRankingVideo'
 import { Box, makeStyles, Typography, useMediaQuery, useTheme } from '@material-ui/core'
-import { useEffect } from 'react'
 import { useCheckDisplayChat } from '@utils/hooks/useCheckDisplayChat'
 
 import { useTranslation } from 'react-i18next'
@@ -29,8 +27,7 @@ export enum RECEIPT_SEND_TABS {
 
 const RankingTab: React.FC<RankingTabProps> = () => {
   const { isEnabledRankFilter } = useCheckDisplayChat()
-  const { liveStreamInfo, setActiveSubTab } = useDetailVideo()
-  const { fetchRakingVideo, rankingsGiver, rankingsReceive } = useRankingVideo()
+  const { liveStreamInfo, setActiveSubTab, giverRankings, receiverRankings } = useDetailVideo()
   const { activeSubTab } = liveStreamInfo
 
   const { t } = useTranslation('common')
@@ -40,22 +37,22 @@ const RankingTab: React.FC<RankingTabProps> = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down(768))
 
   const isSelf = 5
-  const videoId = liveStreamInfo.videoDetailData.uuid
 
-  useEffect(() => {
-    if (videoId) {
-      fetchRakingVideo({ video_id: videoId })
-    }
-  }, [videoId])
+  // useEffect(() => {
+  //   if (videoId) {
+  //     console.log('🚀 ~ useEffect ~ videoId', videoId)
+  //     // fetchDonateRanking({ video_id: videoId })
+  //   }
+  // }, [videoId])
 
   const getContent = () => {
     switch (activeSubTab) {
       case SUB_TABS.RANKING.SEND:
         return (
           <>
-            {rankingsGiver.length > 0 ? (
+            {giverRankings.length > 0 ? (
               <Rankings>
-                {rankingsGiver.map((item, index) => {
+                {giverRankings.map((item, index) => {
                   if (index === isSelf) {
                     return (
                       <RankingItemSelf
@@ -90,9 +87,9 @@ const RankingTab: React.FC<RankingTabProps> = () => {
       default:
         return (
           <>
-            {rankingsReceive.length > 0 ? (
+            {receiverRankings.length > 0 ? (
               <Rankings>
-                {rankingsReceive.map((item, index) => (
+                {receiverRankings.map((item, index) => (
                   <RankingItem
                     key={index}
                     position={item.position}

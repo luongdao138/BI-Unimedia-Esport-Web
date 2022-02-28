@@ -6,10 +6,11 @@ import { Colors } from '@theme/colors'
 import { FormatHelper } from '@utils/helpers/FormatHelper'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 // import { purchasePoints } from './index'
-import Step1 from './Step1'
+import Step1, { DonateReceiverType } from './Step1'
 import Step2 from './Step2'
 import Step3 from './Step3'
 import Icon from '@material-ui/core/Icon'
+import usePurchaseTicketSuperChat from '@containers/VideoLiveStreamContainer/usePurchaseTicket'
 // import * as commonActions from '@store/common/actions'
 // import { useAppDispatch } from '@store/hooks'
 
@@ -18,11 +19,18 @@ type TipChatDialogProps = {
   onClickOutside?: () => void
   onPressDonate?: (donatedPoint: number, purchaseComment: string, master_id?: string) => void
   normalMessHasError?: boolean
-  createMess: (message: string, point?: number) => Promise<void>
+  createMess: (message: string, point?: number, master_uuid?: string) => Promise<void>
 }
 
-const TipChatDialog: React.FC<TipChatDialogProps> = ({ onPressDonate, onClickOutside, normalMessHasError, openPurchasePointModal }) => {
+const TipChatDialog: React.FC<TipChatDialogProps> = ({
+  createMess,
+  onPressDonate,
+  onClickOutside,
+  normalMessHasError,
+  openPurchasePointModal,
+}) => {
   // const dispatch = useAppDispatch()
+  const { dataPurchaseTicketSuperChat } = usePurchaseTicketSuperChat()
 
   const { myPointsData } = usePointsManage()
   // const getPurchasePointList = () => Object.values(purchasePoints)
@@ -31,6 +39,8 @@ const TipChatDialog: React.FC<TipChatDialogProps> = ({ onPressDonate, onClickOut
   const [step, setStep] = useState(1)
   const [selectedMember, setSelectedMember] = useState(null)
   const [tipInfo, setTipInfo] = useState(null)
+  const [isFirstRender, setIsFirstRender] = useState(true)
+
   // const onChangeStep = (new_step: number): void => {
   //   setStep(new_step)
   // }
@@ -84,6 +94,31 @@ const TipChatDialog: React.FC<TipChatDialogProps> = ({ onPressDonate, onClickOut
       onClickOutside()
     }
   }
+
+  useEffect(() => {
+    if (isFirstRender) {
+      setIsFirstRender(false)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (dataPurchaseTicketSuperChat?.code === 200 && !isFirstRender) {
+      const { message, donatedPoint } = tipInfo
+      console.log('🚀 ~ useEffect ~ message, donatedPoint', message, donatedPoint, selectedMember)
+      if (selectedMember?.type === DonateReceiverType.STREAMER) {
+        createMess(message, donatedPoint)
+      } else {
+        createMess(message, donatedPoint, selectedMember.master_uuid)
+      }
+      // values.message = ''
+    }
+  }, [dataPurchaseTicketSuperChat])
+
+  // const handleDonate = (point, mess, master_uuid) => {
+  //   console.log('🚀 ~ handleDonate ~ point, mess, master_uuid', point, mess, master_uuid)
+  //   onPressDonate(point, mess, master_uuid)
+  //   // createMess(point, mess, master_uuid)
+  // }
 
   const commonStepProps = {
     onChangeStep,

@@ -1742,6 +1742,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         avatar?: string
         user_name?: string
       }
+      giftMasterId?: string
     }
 
     const updateOldMessData = (updatedMessage, objWithNewProps, compareProp = 'id') => {
@@ -1812,7 +1813,8 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       }
     }
 
-    const createMess = async (message: string, point = 0): Promise<void> => {
+    const createMess = async (message: string, point = 0, master_uuid = ''): Promise<void> => {
+      console.log('🚀 ~ createMess ~ master_uuid', master_uuid)
       if (successFlagGetAddUSer && Object.keys(chatUser).length > 0 && message && isEnabledChat && isStreaming) {
         const videoTime = videoPlayedSecond.current
         let input: MessInput = {
@@ -1836,6 +1838,8 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             //@ts-ignore
             point: point.toString(),
+            // giftMasterId: '60',
+            // giftMasterId: master_uuid,
             is_premium: true,
             is_premium_number: 1,
             display_avatar_time: videoTime + purchasePoints[`p_${point}`].displayTime,
