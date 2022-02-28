@@ -104,6 +104,7 @@ const TipChatDialog: React.FC<TipChatDialogProps> = ({
   useEffect(() => {
     if (dataPurchaseTicketSuperChat?.code === 200 && !isFirstRender) {
       const { message, donatedPoint } = tipInfo
+      // eslint-disable-next-line no-console
       console.log('🚀 ~ useEffect ~ message, donatedPoint', message, donatedPoint, selectedMember)
       if (selectedMember?.type === DonateReceiverType.STREAMER) {
         createMess(message, donatedPoint)

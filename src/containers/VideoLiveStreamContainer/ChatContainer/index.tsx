@@ -329,6 +329,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       playedSecond,
       detailVideoResult,
       getVideoGiftMasterList,
+      fetchDonateRanking,
     } = useDetailVideo()
     const { isEnabledGift, isEnabledMessFilter, isDisplayedRankingTab } = useCheckDisplayChat()
 
@@ -364,6 +365,12 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     useEffect(() => {
       cache.clearAll()
     }, [contentRect?.width])
+
+    useEffect(() => {
+      if (isDisplayedRankingTab && detailVideoResult.uuid && activeTab === VIDEO_TABS.RANKING) {
+        fetchDonateRanking({ video_id: detailVideoResult.uuid })
+      }
+    }, [isDisplayedRankingTab, detailVideoResult.uuid, activeTab])
 
     const debouncedHandleLoadMore = useCallback(
       debounce(() => {
