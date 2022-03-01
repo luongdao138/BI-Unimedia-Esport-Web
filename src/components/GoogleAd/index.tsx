@@ -56,7 +56,10 @@ const GoogleAd: React.FC<Props> = ({ timeout = 2000, style, id }) => {
     //       data-full-width-responsive="true"
     //     ></ins>
     //   ) : (
-    <div className={id.idPatten1 ? 'google_ad_patten_1' : id.idPatten3 ? 'google_ad_patten_3' : 'google_ad_patten_4'}>
+    <div
+      id={id.idPatten1 || id.idPatten2 || id.idPatten3 || id.idPatten4}
+      className={id.idPatten1 ? 'google_ad_patten_1' : id.idPatten3 ? 'google_ad_patten_3' : 'google_ad_patten_4'}
+    >
       <div
         style={{
           width: screenDownSP ? 320 : '100%',

@@ -18,7 +18,7 @@ declare global {
 const googleAdId = process.env.GADS_CLIENT_ID
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const GoogleAdsPatten2: React.FC<Props> = ({ timeout = 2000, style }) => {
+const GoogleAdsPatten2: React.FC<Props> = ({ timeout = 2000, style, id }) => {
   //   const classes = useStyles()
 
   useEffect(() => {
@@ -40,7 +40,7 @@ const GoogleAdsPatten2: React.FC<Props> = ({ timeout = 2000, style }) => {
   return (
     // <>mes
     // <div className={`${id} google_ad_patten_2`}>
-    <div className="layout_ads_div">
+    <div id={id} className="layout_ads_div">
       <ins
         className="adsbygoogle"
         style={{ ...styles, ...style }}
