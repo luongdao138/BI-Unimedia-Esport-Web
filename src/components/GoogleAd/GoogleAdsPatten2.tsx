@@ -51,9 +51,9 @@ const GoogleAdsPatten2: React.FC<Props> = ({ timeout = 2000, style }) => {
   return (
     // <>mes
     // <div className={`${id} google_ad_patten_2`}>
-    <div className={`layout_ads_div ${windowDimensions}`}>
+    <div className={`${windowDimensions} layout_ads_div`}>
       <ins
-        className={`adsbygoogle ${'banner_ads'}-${windowDimensions}`}
+        className={`${'banner_ads'}-${windowDimensions} adsbygoogle`}
         style={{ ...styles, ...style }}
         data-ad-client={googleAdId}
         data-ad-format=""

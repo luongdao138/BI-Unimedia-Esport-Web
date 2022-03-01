@@ -70,7 +70,7 @@ const GoogleAd: React.FC<Props> = ({ timeout = 2000, style, id }) => {
     //   ) : (
     <div
       // id={`${id.idPatten1 || id.idPatten2 || id.idPatten3 || id.idPatten4}-${windowDimensions}`}
-      className={`${id.idPatten1 ? 'google_ad_patten_1' : id.idPatten3 ? 'google_ad_patten_3' : 'google_ad_patten_4'} ${windowDimensions}`}
+      className={`${windowDimensions} ${id.idPatten1 ? 'google_ad_patten_1' : id.idPatten3 ? 'google_ad_patten_3' : 'google_ad_patten_4'}`}
     >
       <div
         style={{
@@ -82,7 +82,7 @@ const GoogleAd: React.FC<Props> = ({ timeout = 2000, style, id }) => {
         }}
       >
         <ins
-          className={`adsbygoogle ${'banner_ads'}-${windowDimensions}`}
+          className={`${'banner_ads'}-${windowDimensions} adsbygoogle`}
           style={{ ...styles, ...style }}
           data-ad-client={googleAdId}
           data-ad-format=""
