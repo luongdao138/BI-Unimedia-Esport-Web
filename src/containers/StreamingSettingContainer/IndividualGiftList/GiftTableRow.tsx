@@ -47,7 +47,6 @@ const GiftTableRow: React.FC<Props> = ({ item, index, handleGoToEditGiftGroupSta
   const handleDeleteConfirmPress = () => {
     deleteGiftGroup(item?.group_uuid, deleteGiftGroupSuccessCallback, deleteGiftGroupErrorCallback)
   }
-
   const [deleteModalVisible, setDeleteModalVisible] = useState(false)
   return (
     <Box className={classes.tableRow}>
@@ -89,14 +88,7 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  tableText: {
-    display: '-webkit-box',
-    WebkitBoxOrient: 'vertical',
-    WebkitLineClamp: 1,
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    wordBreak: 'break-all',
-  },
+  tableText: {},
   nameColumn: {
     flex: 1,
     display: 'flex',
@@ -135,6 +127,14 @@ const useStyles = makeStyles((theme) => ({
   [theme.breakpoints.down('sm')]: {
     actionButtonColumn: {
       width: '162px',
+    },
+    tableText: {
+      display: '-webkit-box',
+      WebkitBoxOrient: 'vertical',
+      WebkitLineClamp: 1,
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      wordBreak: 'break-all',
     },
   },
 }))

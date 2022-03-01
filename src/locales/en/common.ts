@@ -1532,6 +1532,7 @@ export default {
     schedule_status_title: '予定',
   },
   streaming_setting_screen: {
+    no_one_has_been_created_yet: 'まだ1件も作成されていません。',
     gift_members_list_title: 'チップ対象リスト',
     title: '配信設定',
     live_stream: 'ライブ配信',
@@ -1959,7 +1960,7 @@ export default {
     },
     delete_dialog_title: 'チップ対象リストを削除します',
     delete_dialog_deleted_name: 'リスト名',
-    delete_dialog_warning_1: '削除したチップ対象リストを復元させることはできません。\n。',
+    delete_dialog_warning_1: '削除したチップ対象リストを復元させることはできません。\n',
     delete_dialog_warning_2: '削除してよろしいですか？',
     delete_confirm: '削除する',
     delete_cancel: 'キャンセル',

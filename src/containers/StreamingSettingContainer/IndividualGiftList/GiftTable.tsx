@@ -46,6 +46,7 @@ const GiftTable: React.FC<Props> = ({ data, handleGoToEditGiftGroupState, refres
           return (
             <GiftTableRow
               item={item}
+              index={index}
               key={`GiftTableRow-${index}`}
               handleGoToEditGiftGroupState={handleGoToEditGiftGroupState}
               refreshData={refreshData}
