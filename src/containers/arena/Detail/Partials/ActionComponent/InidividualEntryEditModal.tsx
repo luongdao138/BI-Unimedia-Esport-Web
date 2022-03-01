@@ -27,6 +27,7 @@ import { useRouter } from 'next/router'
 import { FocusContext, FocusContextProvider } from '@utils/hooks/input-focus-context'
 import i18n from '@locales/i18n'
 import CharacterLimited from '@components/CharacterLimited'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
 
 interface EntryEditModalProps {
   tournament: TournamentDetail
@@ -137,7 +138,9 @@ const InidividualEntryEditModal: React.FC<EntryEditModalProps> = ({
   const onUserClick = (participant: ParticipantName) => {
     const userCode = _.get(participant, 'attributes.user.user_code')
     if (_.isString(userCode)) {
-      router.push(`${ESRoutes.PROFILE}/${userCode}`)
+      CommonHelper.checkUserCode(userCode, () => {
+        router.push(`${ESRoutes.PROFILE}/${userCode}`)
+      })
     }
   }
 
