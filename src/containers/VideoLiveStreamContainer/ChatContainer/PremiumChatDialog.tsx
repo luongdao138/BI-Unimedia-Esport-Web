@@ -6,7 +6,7 @@ import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import usePurchaseTicketSuperChat from '../usePurchaseTicket'
 import { FormatHelper } from '@utils/helpers/FormatHelper'
-import ESInput from '@components/Input'
+import ESFastInput from '@components/FastInput'
 import { Colors } from '@theme/colors'
 
 type PremiumChatBoxProps = {
@@ -147,7 +147,7 @@ const PremiumChatBox: React.FC<PremiumChatBoxProps> = ({
         <Box className={classes.purchaseDialogContent}>
           <Typography className={classes.dialogTitle}>{i18n.t('common:live_stream_screen.premium_comment')}</Typography>
           <Box className={classes.purchaseCommentInputContainer}>
-            <ESInput
+            <ESFastInput
               ref={premiumMessageRef}
               id="premium_message"
               name="message"

@@ -27,6 +27,14 @@ const useDetailVideo = () => {
         played_second,
       })
     )
+  const onSaveVideoRef = (videoQuery, videoElement) =>
+    dispatch(
+      actions.saveVideoRef({
+        videoQuery,
+        videoElement,
+      })
+    )
+  const videoRefEl = useAppSelector(selectors.videoRef)
   const changePlayedSecond = (played_second) => dispatch(actions.changePlayedSecond({ played_second }))
   const changeIsViewingStream = (is_viewing_stream) => dispatch(actions.changeIsViewingStream({ is_viewing_stream }))
   const changeIsEndLive = (is_end_live) => dispatch(actions.changeIsEndLive({ is_end_live }))
@@ -36,6 +44,7 @@ const useDetailVideo = () => {
   const changeIsPausingLive = (is_pausing_live) => dispatch(actions.changeIsPausingLive({ is_pausing_live }))
   const changeIsStreamingEnd = (is_streaming_end) => dispatch(actions.changeIsStreamingEnd({ is_streaming_end }))
   const resetState = () => dispatch(actions.resetState())
+  const resetChatState = () => dispatch(actions.resetChatState())
 
   return {
     meta,
@@ -58,6 +67,9 @@ const useDetailVideo = () => {
     changeIsPausingLive,
     changeIsStreamingEnd,
     resetState,
+    onSaveVideoRef,
+    videoRefEl,
+    resetChatState,
   }
 }
 

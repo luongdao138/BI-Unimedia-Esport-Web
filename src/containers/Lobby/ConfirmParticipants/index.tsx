@@ -22,6 +22,7 @@ import { useConfirm } from '@components/Confirm'
 import { use100vh } from 'react-div-100vh'
 import { useRect } from '@utils/hooks/useRect'
 import useGetProfile from '@utils/hooks/useGetProfile'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
 
 interface CloseRecruitmentModalProps {
   lobby: LobbyDetail
@@ -127,7 +128,11 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ lobby, op
     }
   }
 
-  const handleToProfile = (userCode: string) => router.push(`${ESRoutes.PROFILE}/${userCode}`)
+  const handleToProfile = (userCode: string) => {
+    CommonHelper.checkUserCode(userCode, () => {
+      router.push(`${ESRoutes.PROFILE}/${userCode}`)
+    })
+  }
 
   return (
     <Box>

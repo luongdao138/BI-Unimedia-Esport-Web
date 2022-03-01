@@ -351,6 +351,23 @@ const hasScrollBar = (elem_id: string): boolean => {
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+const checkUserCode = (userCode: string | number, callback: () => void) => {
+  if (userCode == 'exelab' || userCode == 'system') {
+    return
+  } else {
+    callback()
+  }
+}
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+const handleAccountSystem = (userCode: string | number) => {
+  if (userCode == 'exelab' || userCode == 'system') {
+    return true
+  } else {
+    return false
+  }
+}
+
 export const CommonHelper = {
   validateEmail,
   genRanHex,
@@ -378,4 +395,6 @@ export const CommonHelper = {
   randomIntegerInRange,
   formatDateYearMonth,
   hasScrollBar,
+  checkUserCode,
+  handleAccountSystem,
 }

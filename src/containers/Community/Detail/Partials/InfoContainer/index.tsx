@@ -11,13 +11,18 @@ import { ESRoutes } from '@constants/route.constants'
 import { OPEN_RANGE, JOIN_CONDITION } from '@constants/community.constants'
 import Linkify from 'react-linkify'
 import { Colors } from '@theme/colors'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
 
 const InfoContainer: React.FC<{ isOfficial: boolean; data: CommunityDetail['attributes'] }> = ({ isOfficial, data }) => {
   const router = useRouter()
   const classes = useStyles()
   const { t } = useTranslation(['common'])
 
-  const toProfile = (user_code) => router.push(`${ESRoutes.PROFILE}/${user_code}`)
+  const toProfile = (user_code) => {
+    CommonHelper.checkUserCode(user_code, () => {
+      router.push(`${ESRoutes.PROFILE}/${user_code}`)
+    })
+  }
 
   return (
     <>
@@ -110,7 +115,11 @@ const InfoContainer: React.FC<{ isOfficial: boolean; data: CommunityDetail['attr
                 {isOfficial ? (
                   <ESAvatar alt={data.admin.nickname} src={data.admin.avatar_image_url} size={35} />
                 ) : (
-                  <ButtonBase onClick={() => toProfile(data.admin.user_code)}>
+                  <ButtonBase
+                    onClick={() => toProfile(data.admin.user_code)}
+                    style={{ cursor: CommonHelper.handleAccountSystem(data.admin.user_code) ? 'default' : 'point' }}
+                    disabled={CommonHelper.handleAccountSystem(data.admin.user_code)}
+                  >
                     <ESAvatar alt={data.admin.nickname} src={data.admin.avatar_image_url} size={35} />
                   </ButtonBase>
                 )}

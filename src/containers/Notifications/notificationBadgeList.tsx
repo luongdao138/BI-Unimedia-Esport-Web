@@ -4,6 +4,7 @@ import NotificationBadgeItem from './notificationBadgeItem'
 import NOTIFICATION_ACTION_TYPES from '@store/notification/actions/types'
 import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
 
 const NotificationBadgeListContainer: React.FC = () => {
   const { badgeNotifications, fetchBadgeNotifications, seenNotificationBadge } = useNotificationList()
@@ -18,7 +19,9 @@ const NotificationBadgeListContainer: React.FC = () => {
       switch (notification.attributes.ntype_id) {
         case NOTIFICATION_ACTION_TYPES.NOTIFICATION_TYPE_FOLLOW: {
           seenNotificationBadge()
-          router.push(`${ESRoutes.PROFILE}/${notification.attributes.user_code}`)
+          CommonHelper.checkUserCode(notification.attributes.user_code, () => {
+            router.push(`${ESRoutes.PROFILE}/${notification.attributes.user_code}`)
+          })
           break
         }
         case NOTIFICATION_ACTION_TYPES.NOTIFICATION_TYPE_SYSTEM: {
