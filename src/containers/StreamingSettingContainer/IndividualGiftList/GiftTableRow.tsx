@@ -51,7 +51,7 @@ const GiftTableRow: React.FC<Props> = ({ item, index, handleGoToEditGiftGroupSta
   return (
     <Box className={classes.tableRow}>
       <Box className={classes.indexColumn}>
-        <Typography className={classes.tableText}>{index}</Typography>
+        <Typography className={classes.tableText}>{index + 1}</Typography>
       </Box>
       <Box className={classes.nameColumn}>
         <Typography className={classes.tableText}>{name}</Typography>
