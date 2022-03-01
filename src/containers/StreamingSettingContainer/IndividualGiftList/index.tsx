@@ -15,7 +15,7 @@ type Props = {
 const IndividualGiftListContainer: React.FC<Props> = ({ handleGoToCreateNewListState, handleGoToEditGiftGroupState }) => {
   const classes = useStyles()
   const { t } = useTranslation('common')
-  const { getGiftGroupList, giftGroupList, giftGroupTotal } = useGiftManage()
+  const { getGiftGroupList, giftGroupList, giftGroupTotal, giftGroupsMeta } = useGiftManage()
   const [currentPage, setCurrentPage] = useState(1)
 
   useEffect(() => {
@@ -42,7 +42,13 @@ const IndividualGiftListContainer: React.FC<Props> = ({ handleGoToCreateNewListS
   const displayTable = () => {
     return (
       <Box>
-        <GiftTable data={displayData()} handleGoToEditGiftGroupState={handleGoToEditGiftGroupState} refreshData={getNewOrRefreshData} />
+        <GiftTable
+          isLoading={giftGroupsMeta.pending}
+          currentPage={currentPage}
+          data={displayData()}
+          handleGoToEditGiftGroupState={handleGoToEditGiftGroupState}
+          refreshData={getNewOrRefreshData}
+        />
       </Box>
     )
   }

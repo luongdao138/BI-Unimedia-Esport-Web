@@ -4,14 +4,18 @@ import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
 import GiftTableRow from '@containers/StreamingSettingContainer/IndividualGiftList/GiftTableRow'
 import { GiftGroupType } from '@services/gift.service'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
+import ESLoader from '@components/Loader'
 
 interface Props {
   data: Array<GiftGroupType>
   handleGoToEditGiftGroupState?: (data?: GiftGroupType) => () => void
   refreshData?: () => void
+  currentPage: number
+  isLoading: boolean
 }
 
-const GiftTable: React.FC<Props> = ({ data, handleGoToEditGiftGroupState, refreshData }) => {
+const GiftTable: React.FC<Props> = ({ data, handleGoToEditGiftGroupState, refreshData, currentPage, isLoading }) => {
   const classes = useStyles()
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
@@ -42,7 +46,7 @@ const GiftTable: React.FC<Props> = ({ data, handleGoToEditGiftGroupState, refres
   const tableContent = () => {
     return (
       <Box className={classes.tableContent}>
-        {data.map((item, index) => {
+        {CommonHelper.addSttDataList(data, 10, currentPage).map((item, index) => {
           return (
             <GiftTableRow
               item={item}
@@ -59,7 +63,13 @@ const GiftTable: React.FC<Props> = ({ data, handleGoToEditGiftGroupState, refres
   return (
     <Box className={classes.container}>
       {header()}
-      {tableContent()}
+      {isLoading ? (
+        <Box display="flex" justifyContent="center" mt={3} mb={3}>
+          <ESLoader />
+        </Box>
+      ) : (
+        <>{tableContent()}</>
+      )}
     </Box>
   )
 }

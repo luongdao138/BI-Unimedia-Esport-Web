@@ -100,6 +100,7 @@ export type GetAllGiftGroupRequest = {
 }
 
 export type GiftGroupType = {
+  no?: number
   title?: string
   id?: number
   total_master?: number

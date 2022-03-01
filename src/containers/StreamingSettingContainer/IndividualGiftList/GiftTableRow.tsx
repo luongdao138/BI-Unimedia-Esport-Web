@@ -16,7 +16,7 @@ type Props = {
   refreshData?: () => void
 }
 
-const GiftTableRow: React.FC<Props> = ({ item, index, handleGoToEditGiftGroupState, refreshData }) => {
+const GiftTableRow: React.FC<Props> = ({ item, handleGoToEditGiftGroupState, refreshData }) => {
   const classes = useStyles()
   const theme = useTheme()
   const dispatch = useAppDispatch()
@@ -51,7 +51,7 @@ const GiftTableRow: React.FC<Props> = ({ item, index, handleGoToEditGiftGroupSta
   return (
     <Box className={classes.tableRow}>
       <Box className={classes.indexColumn}>
-        <Typography className={classes.tableText}>{index + 1}</Typography>
+        <Typography className={classes.tableText}>{item.no}</Typography>
       </Box>
       <Box className={classes.nameColumn}>
         <Typography className={classes.tableText}>{name}</Typography>

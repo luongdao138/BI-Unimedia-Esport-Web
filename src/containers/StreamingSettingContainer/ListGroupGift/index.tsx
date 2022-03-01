@@ -11,6 +11,7 @@ import Pagination from '@containers/Community/Partials/Pagination'
 import useGiftManage from '@containers/StreamingGiftManagement/useGiftTarget'
 import ESLoader from '@components/Loader'
 import { TabState } from '../GiftManageTab'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
 
 // export interface ListGroupGiftProps {}
 
@@ -98,10 +99,10 @@ const ListGroupGift: React.FC<IProps> = ({ onChangeTab, handleSelectGroup, handl
                       </TableRow>
                     }
                   >
-                    {giftGroupList.map((item, index) => (
+                    {CommonHelper.addSttDataList(giftGroupList, ITEM_PER_PAGE, page).map((item) => (
                       <TableRow key={item.id}>
                         <TableCell align="center">
-                          <Typography component="span">{index + 1}</Typography>
+                          <Typography component="span">{item.no}</Typography>
                         </TableCell>
                         <TableCell align="left">
                           <Typography component="span">{item.title}</Typography>

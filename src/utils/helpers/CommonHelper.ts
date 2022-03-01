@@ -350,6 +350,10 @@ const hasScrollBar = (elem_id: string): boolean => {
     false
   }
 }
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+const addSttDataList = (data: any, itemPerPage: number, page: number): any => {
+  return data.map((dataObj, index) => ({ ...dataObj, no: itemPerPage * page - itemPerPage + index + 1 }))
+}
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const checkUserCode = (userCode: string | number, callback: () => void) => {
@@ -397,4 +401,5 @@ export const CommonHelper = {
   hasScrollBar,
   checkUserCode,
   handleAccountSystem,
+  addSttDataList,
 }
