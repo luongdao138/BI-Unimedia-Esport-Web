@@ -120,7 +120,7 @@ const ListGroupGift: React.FC<IProps> = ({ onChangeTab, handleSelectGroup, handl
                     ))}
                   </ESTable>
                 ) : (
-                  <></>
+                  <Typography align="center">{t('streaming_setting_screen.no_one_has_been_created_yet')}</Typography>
                 )}
               </>
             )}
