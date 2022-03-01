@@ -1,6 +1,6 @@
 // import { makeStyles } from '@material-ui/core/styles'
 import { useMediaQuery, useTheme } from '@material-ui/core'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 type Patten = {
   idPatten1?: string
@@ -29,6 +29,17 @@ const GoogleAd: React.FC<Props> = ({ timeout = 2000, style, id }) => {
   //   const classes = useStyles()
   const theme = useTheme()
   const screenDownSP = useMediaQuery(theme.breakpoints.down(576))
+  const [windowDimensions, setWindowDimensions] = useState(window.innerWidth)
+
+  useEffect(() => {
+    function handleResize(e) {
+      console.warn('RESIZE====', e.target.innerWidth)
+      setWindowDimensions(e.target.innerWidth)
+    }
+
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
 
   useEffect(() => {
     const googleInit = setTimeout(() => {
@@ -44,6 +55,7 @@ const GoogleAd: React.FC<Props> = ({ timeout = 2000, style, id }) => {
     // background: 'red',
     width: screenDownSP ? 320 : '100%',
   }
+  console.warn('RE-RENDER====>>', id.idPatten1 || id.idPatten2 || id.idPatten3 || id.idPatten4)
   return (
     // <>
     //   {isHasSlot ? (
@@ -57,8 +69,8 @@ const GoogleAd: React.FC<Props> = ({ timeout = 2000, style, id }) => {
     //     ></ins>
     //   ) : (
     <div
-      id={id.idPatten1 || id.idPatten2 || id.idPatten3 || id.idPatten4}
-      className={id.idPatten1 ? 'google_ad_patten_1' : id.idPatten3 ? 'google_ad_patten_3' : 'google_ad_patten_4'}
+      // id={`${id.idPatten1 || id.idPatten2 || id.idPatten3 || id.idPatten4}-${windowDimensions}`}
+      className={`${id.idPatten1 ? 'google_ad_patten_1' : id.idPatten3 ? 'google_ad_patten_3' : 'google_ad_patten_4'} ${windowDimensions}`}
     >
       <div
         style={{
@@ -70,7 +82,7 @@ const GoogleAd: React.FC<Props> = ({ timeout = 2000, style, id }) => {
         }}
       >
         <ins
-          className="adsbygoogle"
+          className={`adsbygoogle ${'banner_ads'}-${windowDimensions}`}
           style={{ ...styles, ...style }}
           data-ad-client={googleAdId}
           data-ad-format=""

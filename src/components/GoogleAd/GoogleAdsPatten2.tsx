@@ -1,5 +1,5 @@
 // import { makeStyles } from '@material-ui/core/styles'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 interface Props {
   id: string
@@ -18,8 +18,19 @@ declare global {
 const googleAdId = process.env.GADS_CLIENT_ID
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const GoogleAdsPatten2: React.FC<Props> = ({ timeout = 2000, style, id }) => {
+const GoogleAdsPatten2: React.FC<Props> = ({ timeout = 2000, style }) => {
   //   const classes = useStyles()
+  const [windowDimensions, setWindowDimensions] = useState(window.innerWidth)
+
+  useEffect(() => {
+    function handleResize(e) {
+      console.warn('RESIZE P2====', e.target.innerWidth)
+      setWindowDimensions(e.target.innerWidth)
+    }
+
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
 
   useEffect(() => {
     const googleInit = setTimeout(() => {
@@ -40,9 +51,9 @@ const GoogleAdsPatten2: React.FC<Props> = ({ timeout = 2000, style, id }) => {
   return (
     // <>mes
     // <div className={`${id} google_ad_patten_2`}>
-    <div id={id} className="layout_ads_div">
+    <div className={`layout_ads_div ${windowDimensions}`}>
       <ins
-        className="adsbygoogle"
+        className={`adsbygoogle ${'banner_ads'}-${windowDimensions}`}
         style={{ ...styles, ...style }}
         data-ad-client={googleAdId}
         data-ad-format=""
