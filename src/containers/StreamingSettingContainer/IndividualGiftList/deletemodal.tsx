@@ -66,7 +66,7 @@ const useStyles = makeStyles((theme) => ({
   name: {
     color: Colors.white_opacity[70],
     textAlign: 'center',
-    whiteSpace: 'pre',
+    marginBottom: '16px',
   },
   message: {
     color: Colors.white_opacity[70],

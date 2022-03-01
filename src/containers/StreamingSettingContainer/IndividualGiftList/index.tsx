@@ -65,8 +65,17 @@ const IndividualGiftListContainer: React.FC<Props> = ({ handleGoToCreateNewListS
   return (
     <Box className={classes.container}>
       {createNewButton()}
-      {displayTable()}
-      {pagination()}
+
+      {giftGroupTotal > 0 ? (
+        <>
+          {displayTable()}
+          {pagination()}
+        </>
+      ) : (
+        <Box textAlign="center" mt={3} mb={3}>
+          <Typography component="p">{t('streaming_setting_screen.no_one_has_been_created_yet')}</Typography>
+        </Box>
+      )}
     </Box>
   )
 }
@@ -92,6 +101,7 @@ const useStyles = makeStyles((theme) => ({
   },
   pagination: {
     marginTop: '32px',
+    marginBottom: '32px',
   },
   [theme.breakpoints.down('sm')]: {
     createButton: {
