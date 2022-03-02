@@ -11,11 +11,12 @@ interface Props {
   data: Array<GiftGroupType>
   handleGoToEditGiftGroupState?: (data?: GiftGroupType) => () => void
   refreshData?: () => void
+  setCurrentPage?: (currentPage: number) => void
   currentPage: number
   isLoading: boolean
 }
 
-const GiftTable: React.FC<Props> = ({ data, handleGoToEditGiftGroupState, refreshData, currentPage, isLoading }) => {
+const GiftTable: React.FC<Props> = ({ data, handleGoToEditGiftGroupState, refreshData, currentPage, isLoading, setCurrentPage }) => {
   const classes = useStyles()
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
@@ -54,6 +55,7 @@ const GiftTable: React.FC<Props> = ({ data, handleGoToEditGiftGroupState, refres
               key={`GiftTableRow-${index}`}
               handleGoToEditGiftGroupState={handleGoToEditGiftGroupState}
               refreshData={refreshData}
+              setCurrentPage={setCurrentPage}
             />
           )
         })}

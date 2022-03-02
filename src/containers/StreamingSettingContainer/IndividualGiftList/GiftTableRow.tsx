@@ -14,16 +14,17 @@ type Props = {
   index?: number
   handleGoToEditGiftGroupState?: (data?: GiftGroupType) => () => void
   refreshData?: () => void
+  setCurrentPage?: (currentPage: number) => void
 }
 
-const GiftTableRow: React.FC<Props> = ({ item, handleGoToEditGiftGroupState, refreshData }) => {
+const GiftTableRow: React.FC<Props> = ({ item, handleGoToEditGiftGroupState, refreshData, setCurrentPage }) => {
   const classes = useStyles()
   const theme = useTheme()
   const dispatch = useAppDispatch()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
   const { t } = useTranslation('common')
   const { title: name, total_master: numberOfRegistration } = item
-  const { deleteGiftGroup } = useGiftManage()
+  const { deleteGiftGroup, giftGroupList } = useGiftManage()
 
   const handleOnRemoveClick = () => {
     setDeleteModalVisible(true)
@@ -37,7 +38,13 @@ const GiftTableRow: React.FC<Props> = ({ item, handleGoToEditGiftGroupState, ref
   const deleteGiftGroupSuccessCallback = () => {
     dispatch(commonActions.addToast(t('streaming_gift_management.toast_delete_group_success')))
     setDeleteModalVisible(false)
-    refreshData()
+
+    if (giftGroupList.length === 1) {
+      refreshData()
+      setCurrentPage(1)
+    } else {
+      refreshData()
+    }
   }
 
   const deleteGiftGroupErrorCallback = () => {
