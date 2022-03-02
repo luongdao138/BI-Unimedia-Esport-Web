@@ -7,10 +7,13 @@ import RankingItemSelf from '@containers/VideoLiveStreamContainer/Rankings/Ranki
 import useDetailVideo from '@containers/VideoLiveStreamContainer/useDetailVideo'
 import { Box, makeStyles, Typography, useMediaQuery, useTheme } from '@material-ui/core'
 import { useCheckDisplayChat } from '@utils/hooks/useCheckDisplayChat'
-import { useEffect } from 'react'
+import { useContext, useEffect } from 'react'
 import ESLoader from '@components/Loader'
 
 import { useTranslation } from 'react-i18next'
+import { VideoContext } from '@containers/VideoLiveStreamContainer/VideoContext'
+import _ from 'lodash'
+import { RankingsItem } from '@services/videoTop.services'
 
 type RankingTabProps = { type?: string }
 
@@ -19,6 +22,7 @@ export enum RECEIPT_SEND_TABS {
   SEND = 1,
 }
 
+const LIMIT_RANK = 10
 // const rows = [
 //   { key: 1, position: 1, name: 'もるチャン', tip: 9999999999, type: '個人' },
 //   { key: 2, position: 2, name: 'もんもんもん', tip: 10000, type: 'チーム' },
@@ -29,8 +33,11 @@ export enum RECEIPT_SEND_TABS {
 
 const RankingTab: React.FC<RankingTabProps> = () => {
   const { isEnabledRankFilter } = useCheckDisplayChat()
-  const { liveStreamInfo, setActiveSubTab, giverRankings, receiverRankings, rankingListMeta } = useDetailVideo()
+  const { liveStreamInfo, setActiveSubTab, rankingListMeta } = useDetailVideo()
   const { activeSubTab } = liveStreamInfo
+  const { giverRankInfo, receiverRankInfo } = useContext(VideoContext)
+  // eslint-disable-next-line no-console
+  console.log('🚀 ~ receiverRankInfo--000', receiverRankInfo)
 
   const { t } = useTranslation('common')
   const classes = useStyles()
@@ -50,35 +57,37 @@ const RankingTab: React.FC<RankingTabProps> = () => {
   //   }
   // }, [videoId])
 
+  const giver: Array<RankingsItem> = _.slice(giverRankInfo, 0, LIMIT_RANK)
+  const receiver: Array<RankingsItem> = _.slice(receiverRankInfo, 0, LIMIT_RANK)
   const getContent = () => {
     switch (activeSubTab) {
       case SUB_TABS.RANKING.SEND:
         return (
           <>
-            {giverRankings.length > 0 ? (
+            {giverRankInfo.length > 0 ? (
               <Rankings>
-                {giverRankings.map((item, index) => {
-                  if (index === isSelf) {
+                {giver.map((v, k) => {
+                  if (k === isSelf) {
                     return (
                       <RankingItemSelf
-                        key={index}
+                        key={k}
                         position={1}
-                        avatar={<ESAvatar src="" alt="avatar" size={40} />}
+                        avatar={<ESAvatar src={v?.user_avatar} alt="avatar" size={40} />}
                         tab={SUB_TABS.RANKING.SEND}
-                        name={item.nickname}
-                        total={item.total}
+                        name={v?.user_nickname}
+                        total={v?.total}
                         self={false}
                       />
                     )
                   }
                   return (
                     <RankingItem
-                      key={index}
-                      position={1}
-                      avatar={<ESAvatar src="" alt="avatar" size={40} />}
+                      key={k}
+                      position={k + 1}
+                      avatar={<ESAvatar src={v?.user_avatar} alt="avatar" size={40} />}
                       tab={SUB_TABS.RANKING.SEND}
-                      name={item.nickname}
-                      total={item.total}
+                      name={v?.user_nickname}
+                      total={v?.total}
                       self={false}
                     />
                   )
@@ -92,17 +101,17 @@ const RankingTab: React.FC<RankingTabProps> = () => {
       default:
         return (
           <>
-            {receiverRankings.length > 0 ? (
+            {receiverRankInfo.length > 0 ? (
               <Rankings>
-                {receiverRankings.map((item, index) => (
+                {receiver.map((v, k) => (
                   <RankingItem
-                    key={index}
-                    position={1}
-                    avatar={<ESAvatar src="" alt="avatar" size={40} />}
-                    type={0}
+                    key={k}
+                    position={k + 1}
+                    avatar={<ESAvatar src={v?.master_uuid ? v?.master_avatar : v?.user_avatar} alt="avatar" size={40} />}
+                    type={v?.type}
                     tab={SUB_TABS.RANKING.RECEIPT}
-                    name={item.nickname}
-                    total={item.total}
+                    name={v?.master_name || v?.user_nickname}
+                    total={v?.total}
                   />
                 ))}
               </Rankings>

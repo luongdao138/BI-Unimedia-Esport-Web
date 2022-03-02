@@ -395,3 +395,6 @@ export const SUB_TABS = {
     RECEIPT: 6,
   },
 }
+
+export const GIVER_RANK_TYPE = 'GIVER'
+export const RECEIVER_RANK_TYPE = 'RECEIVER'

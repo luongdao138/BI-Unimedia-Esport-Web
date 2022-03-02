@@ -16,8 +16,8 @@ import SeekBar from './ControlComponent/SeekBar'
 import useDetailVideo from '../useDetailVideo'
 import Hls from 'hls.js'
 import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
-import { VideoContext } from '../VideoContext.js'
 import { VIDEO_RESOLUTION_HLS } from '@services/liveStreamDetail.service'
+import { VideoContext } from '@containers/VideoLiveStreamContainer/VideoContext'
 
 interface PlayerProps {
   src?: string

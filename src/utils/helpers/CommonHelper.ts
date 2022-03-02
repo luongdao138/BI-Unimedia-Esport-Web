@@ -1,5 +1,13 @@
-import { FORMAT_DATE_TIME_JP, FORMAT_SCHEDULE_TIME, TAX, REGEX_DETECT_BRANCH, FORMAT_YEAR_MONTH } from '@constants/common.constants'
+import {
+  FORMAT_DATE_TIME_JP,
+  FORMAT_SCHEDULE_TIME,
+  TAX,
+  REGEX_DETECT_BRANCH,
+  FORMAT_YEAR_MONTH,
+  RECEIVER_RANK_TYPE,
+} from '@constants/common.constants'
 import { StoreType } from '@store/store'
+import _ from 'lodash'
 import moment from 'moment'
 import * as mTimeZone from 'moment-timezone'
 
@@ -316,7 +324,7 @@ const linkifyString = (url = ''): string => {
   return '<a target="_blank" href="' + url + '" style="color:#FFF">' + url + '</a>'
 }
 
-const splitToLinkifyComponent = (text = '') => {
+const splitToLinkifyComponent = (text = ''): any => {
   const { url: linkifyRegex } = regex
   const urlFromText = text.match(linkifyRegex)
   if (!urlFromText || urlFromText.length === 0) {
@@ -372,6 +380,61 @@ const handleAccountSystem = (userCode: string | number) => {
   }
 }
 
+const calculateRankTotal = (oldRankInfo, newRankInfo, compareProp = 'master_uuid') => {
+  let rankInfo = [...oldRankInfo]
+  newRankInfo.map((v) => {
+    const foundIndex = _.findIndex(oldRankInfo, [compareProp, v?.[compareProp]])
+    const foundItem = _.find(oldRankInfo, [compareProp, v?.[compareProp]])
+    // eslint-disable-next-line no-console
+    console.log('🚀 ~ newRankInfo.map ~ foundIndex', foundIndex)
+    // eslint-disable-next-line no-console
+    console.log('🚀 ~ newRankInfo.map ~ foundItem', foundItem)
+    if (foundIndex !== -1) {
+      // update total of old ranking
+      const newItem = { ...foundItem, total: +foundItem?.total + +v?.total }
+      rankInfo[foundIndex] = { ...newItem }
+    } else {
+      const foundIndex = _.findIndex(oldRankInfo, (oldInfo: { total: string | number }) => {
+        // eslint-disable-next-line no-console
+        console.log('🚀 ~ foundIndex ~ o', oldInfo)
+        // eslint-disable-next-line no-console
+        console.log('🚀 ~ foundIndex ~ compare', +oldInfo.total <= +v.total)
+        // eslint-disable-next-line no-console
+        console.log('🚀 ~ foundIndex ~ +v.total', +v.total)
+        // eslint-disable-next-line no-console
+        console.log('🚀 ~ foundIndex ~ +o.total', +oldInfo.total)
+        return +oldInfo.total <= +v.total
+      })
+      // eslint-disable-next-line no-console
+      console.log('🚀 ~ foundIndex ~ foundIndex---111', foundIndex)
+      // insert rank of new user to list ranking if has lower ranking
+      if (foundIndex !== -1) {
+        rankInfo.splice(foundIndex, 0, v)
+      } else {
+        // add rank of new user to lowest level of ranking
+        rankInfo = [...rankInfo, { ...v }]
+      }
+    }
+    return ''
+  })
+  return rankInfo
+}
+
+const getRankInfo = (oldRankInfo: Array<any>, newRankInfo: Array<any>, rankType = RECEIVER_RANK_TYPE): Array<any> => {
+  let rankInfo = [...oldRankInfo]
+  const isReceiverRankType = rankType === RECEIVER_RANK_TYPE
+  if (isReceiverRankType) {
+    rankInfo = calculateRankTotal(rankInfo, newRankInfo)
+    // eslint-disable-next-line no-console
+    console.log('🚀 ~ getRankInfo ~ rankInfo--000', rankInfo)
+  } else {
+    rankInfo = calculateRankTotal(rankInfo, newRankInfo, 'user_id')
+    // eslint-disable-next-line no-console
+    console.log('🚀 ~ getRankInfo ~ rankInfo---111', rankInfo)
+  }
+  return rankInfo
+}
+
 export const CommonHelper = {
   validateEmail,
   genRanHex,
@@ -402,4 +465,5 @@ export const CommonHelper = {
   checkUserCode,
   handleAccountSystem,
   addSttDataList,
+  getRankInfo,
 }

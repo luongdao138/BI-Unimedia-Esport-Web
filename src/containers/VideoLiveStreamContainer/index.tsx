@@ -24,7 +24,7 @@ import useDetailVideo from './useDetailVideo'
 import moment from 'moment'
 import ESLoader from '@components/Loader'
 import PreloadChatContainer from './PreloadContainer/PreloadChatContainer'
-import { STATUS_VIDEO } from '@services/videoTop.services'
+import { RankingsItem, STATUS_VIDEO } from '@services/videoTop.services'
 import { useAppSelector } from '@store/hooks'
 import { getIsAuthenticated } from '@store/auth/selectors'
 import { ESRoutes } from '@constants/route.constants'
@@ -41,7 +41,8 @@ import LiveStreamContent from './LiveStreamContent'
 import { PurchaseTicketParams } from '@services/points.service'
 import useGraphqlAPI from 'src/types/useGraphqlAPI'
 import TabSelectContainer from './TabSelectContainer'
-import { VideoContext } from './VideoContext.js'
+import { VideoContext } from '@containers/VideoLiveStreamContainer/VideoContext'
+// import { CommonHelper } from '@utils/helpers/CommonHelper'
 
 import { useResizeScreen } from '@utils/hooks/useResizeScreen'
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -96,8 +97,8 @@ const VideoDetail: React.FC = () => {
   const isAuthenticated = useAppSelector(getIsAuthenticated)
   // const userProfile = useAppSelector(selectors.getUserProfile)
   const [videoRefInfo, setVideoRefInfo] = useState(null)
-  // const [giverRankInfo, setGiverRankInfo] = useState([])
-  // const [receiverRankInfo, setReceiverRankInfo] = useState([])
+  const [giverRankInfo, setGiverRankInfo] = useState<Array<RankingsItem>>([])
+  const [receiverRankInfo, setReceiverRankInfo] = useState<Array<RankingsItem>>([])
 
   const { getMyPointData, myPointsData } = usePointsManage()
   const { purchaseTicketSuperChat, meta_purchase_ticket_super_chat } = usePurchaseTicketSuperChat()
@@ -133,7 +134,12 @@ const VideoDetail: React.FC = () => {
     changeIsStreamingEnd,
     liveStreamInfo,
     changeIsHoveredVideoStatus,
+    fetchDonateRanking,
+    rankingListMeta,
+    giverRankings,
+    receiverRankings,
   } = useDetailVideo()
+  console.log('🚀 ~ rankingListMeta', rankingListMeta)
 
   const { is_normal_view_mode, isHoveredVideo } = liveStreamInfo
 
@@ -225,6 +231,35 @@ const VideoDetail: React.FC = () => {
       setVideoStatus(STATUS_VIDEO.LIVE_STREAM)
     }
   }, [JSON.stringify(videoInfo)])
+
+  useEffect(() => {
+    if (rankingListMeta.loaded) {
+      console.log('🚀 ~ useEffect ~ rankingListMeta.loaded', rankingListMeta.loaded)
+      // const newData = CommonHelper.getRankInfo(
+      //   giverRankings,
+      //   [
+      //     {
+      //       video_id: 2014,
+      //       user_nickname: 'aitx7270_8',
+      //       user_avatar: 'https://s3-ap-northeast-1.amazonaws.com/cowell-dev-avatar-media/users/cover/420/1640752240-420.jpg',
+      //       user_id: 420,
+      //       master_id: 60,
+      //       master_name: 'Thanh Binh',
+      //       master_avatar: '',
+      //       master_uuid: '123',
+      //       type: 0,
+      //       total: '20000',
+      //     },
+      //   ],
+      //   GIVER_RANK_TYPE
+      // )
+      // console.log('🚀 ~ useEffect ~ newData--000', newData)
+      setGiverRankInfo(giverRankings)
+      setReceiverRankInfo(receiverRankings)
+      // setGiverRankInfo((newInfo) => CommonHelper.getRankInfo(giverRankings, newInfo, GIVER_RANK_TYPE))
+      // setReceiverRankInfo((newInfo) => CommonHelper.getRankInfo(receiverRankings, newInfo))
+    }
+  }, [rankingListMeta])
 
   useEffect(() => {
     // update IsVideoFreeToWatch
@@ -361,11 +396,11 @@ const VideoDetail: React.FC = () => {
     }
   }, [video_id, isAuthenticated])
 
-  // useEffect(() => {
-  //   if (detailVideoResult.uuid) {
-  //     fetchDonateRanking({ video_id: detailVideoResult.uuid })
-  //   }
-  // }, [detailVideoResult.uuid])
+  useEffect(() => {
+    if (detailVideoResult.uuid) {
+      fetchDonateRanking({ video_id: detailVideoResult.uuid })
+    }
+  }, [detailVideoResult.uuid, isAuthenticated])
 
   useEffect(() => {
     // setTab(isMobile ? VIDEO_INFO_TABS.COMMENT : VIDEO_INFO_TABS.PROGRAM_INFO)
@@ -639,7 +674,9 @@ const VideoDetail: React.FC = () => {
   }
 
   return (
-    <VideoContext.Provider value={{ videoRefInfo, setVideoRefInfo }}>
+    <VideoContext.Provider
+      value={{ videoRefInfo, setVideoRefInfo, giverRankInfo, setGiverRankInfo, receiverRankInfo, setReceiverRankInfo }}
+    >
       <Box className={classes.root}>
         {isPendingPurchaseTicket && <ESLoader />}
         {isPendingPurchaseSuperChat && <FullESLoader open={isPendingPurchaseSuperChat} />}

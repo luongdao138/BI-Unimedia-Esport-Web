@@ -7,10 +7,10 @@ import { FormatHelper } from '@utils/helpers/FormatHelper'
 interface Props {
   position: number | string
   avatar: JSX.Element
-  type?: number
+  type?: string | number
   tab: number
   name?: string | undefined
-  total?: string
+  total?: string | number
   self?: boolean
 }
 
@@ -52,7 +52,7 @@ const RankingItem: React.FC<Props> = ({ position, avatar, type, tab, name, total
         </Box>
       </TableCell>
       <TableCell>
-        <Typography className={classes.tip}>{FormatHelper.currencyFormat(total)}</Typography>
+        <Typography className={classes.tip}>{FormatHelper.currencyFormat(total.toString())}</Typography>
       </TableCell>
     </TableRow>
   )

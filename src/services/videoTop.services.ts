@@ -288,13 +288,21 @@ export type VideoRefType = {
 }
 
 export type RankingsItem = {
-  id: number
-  email: string
-  nickname: string
-  point: number
-  total: string
-  user_id: number
-  video_id: number
+  id?: number
+  email?: string
+  nickname?: string
+  point?: number
+  //
+  master_avatar?: string
+  master_id?: string
+  master_name?: string
+  master_uuid?: string
+  total?: string | number
+  type?: string | number
+  user_avatar?: string
+  user_id?: string
+  user_nickname?: string
+  video_id?: string
 }
 
 export type RankingsResponse = {

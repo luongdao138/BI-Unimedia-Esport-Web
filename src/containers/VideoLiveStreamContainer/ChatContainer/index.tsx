@@ -75,8 +75,8 @@ import { useRotateScreen } from '@utils/hooks/useRotateScreen'
 export type ChatStyleProps = {
   isLandscape: boolean
 }
-import { VideoContext } from '../VideoContext.js'
 import { useCheckDisplayChat } from '@utils/hooks/useCheckDisplayChat'
+import { VideoContext } from '../VideoContext'
 
 export type ChatContainerProps = {
   onPressDonate?: (donatedPoint: number, purchaseComment: string, master_id?: string) => void
@@ -329,7 +329,6 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       playedSecond,
       detailVideoResult,
       getVideoGiftMasterList,
-      fetchDonateRanking,
     } = useDetailVideo()
     const { isEnabledGift, isEnabledMessFilter, isDisplayedRankingTab } = useCheckDisplayChat()
 
@@ -366,11 +365,11 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       cache.clearAll()
     }, [contentRect?.width])
 
-    useEffect(() => {
-      if (isDisplayedRankingTab && detailVideoResult.uuid && activeTab === VIDEO_TABS.RANKING) {
-        fetchDonateRanking({ video_id: detailVideoResult.uuid })
-      }
-    }, [isDisplayedRankingTab, detailVideoResult.uuid, activeTab])
+    // useEffect(() => {
+    //   if (isDisplayedRankingTab && detailVideoResult.uuid && activeTab === VIDEO_TABS.RANKING) {
+    //     fetchDonateRanking({ video_id: detailVideoResult.uuid })
+    //   }
+    // }, [isDisplayedRankingTab, detailVideoResult.uuid, activeTab])
 
     const debouncedHandleLoadMore = useCallback(
       debounce(() => {

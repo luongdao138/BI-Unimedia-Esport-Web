@@ -8,7 +8,7 @@ interface Props {
   type?: string
   tab: number
   name?: string | undefined
-  total?: string
+  total?: string | number
   self?: boolean
 }
 
