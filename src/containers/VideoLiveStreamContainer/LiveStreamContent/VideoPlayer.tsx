@@ -318,16 +318,16 @@ const VideoPlayer: React.FC<PlayerProps> = ({
 
   //on switch resolution
   useEffect(() => {
+    setIsLive(videoType === STATUS_VIDEO.LIVE_STREAM)
     const hls = new Hls({
       // liveSyncDurationCount: 1,
       // initialLiveManifestSize: 1,
       // liveMaxLatencyDurationCount:10,
-      startPosition: playedSeconds,
+      startPosition: videoType === STATUS_VIDEO.LIVE_STREAM ? -1 : playedSeconds,
       startLevel: resolution,
     })
 
     if ((Hls.isSupported() || androidPl) && src) {
-      console.log('222222videoEl?.current?.currentTime===', playedSeconds, flagResol)
       // bind them together
       hls.loadSource(src)
       //@ts-ignore
@@ -341,7 +341,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
         hls.stopLoad()
       }
     }
-  }, [resolution])
+  }, [src, resolution])
 
   // useEffect(() => {
   //   if(Math.floor(playedSeconds) !== liveStreamInfo.played_second) {
