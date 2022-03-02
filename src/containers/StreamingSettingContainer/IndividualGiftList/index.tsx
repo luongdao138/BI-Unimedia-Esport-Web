@@ -48,6 +48,7 @@ const IndividualGiftListContainer: React.FC<Props> = ({ handleGoToCreateNewListS
           data={displayData()}
           handleGoToEditGiftGroupState={handleGoToEditGiftGroupState}
           refreshData={getNewOrRefreshData}
+          setCurrentPage={setCurrentPage}
         />
       </Box>
     )

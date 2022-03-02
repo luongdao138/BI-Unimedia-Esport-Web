@@ -33,7 +33,6 @@ const ListGroupGift: React.FC<IProps> = ({ onChangeTab, handleSelectGroup, handl
   }
   const [page, setPage] = useState(1)
   const getTotalPage = () => Math.ceil(giftGroupTotal / ITEM_PER_PAGE)
-  const [pageNumber] = useState(getTotalPage())
 
   useEffect(() => {
     getGiftGroupList(page, ITEM_PER_PAGE)
@@ -48,7 +47,6 @@ const ListGroupGift: React.FC<IProps> = ({ onChangeTab, handleSelectGroup, handl
     handleSelectGroup(item)
     handleClose(false)
   }
-
   return (
     <div>
       <BlankLayout isWide={true}>
@@ -83,7 +81,7 @@ const ListGroupGift: React.FC<IProps> = ({ onChangeTab, handleSelectGroup, handl
               </Box>
             ) : (
               <>
-                {giftGroupList.length > 0 ? (
+                {giftGroupTotal > 0 ? (
                   <ESTable
                     tableHeader={
                       <TableRow>
@@ -126,7 +124,7 @@ const ListGroupGift: React.FC<IProps> = ({ onChangeTab, handleSelectGroup, handl
               </>
             )}
             <Box display="flex" justifyContent="center" mt={4}>
-              <Pagination page={page} pageNumber={pageNumber} setPage={setPage} />
+              <Pagination page={page} pageNumber={getTotalPage()} setPage={setPage} />
             </Box>
           </Box>
         </Box>
