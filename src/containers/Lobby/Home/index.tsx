@@ -1,4 +1,4 @@
-import { Grid, Box, makeStyles, useMediaQuery, Theme, Typography } from '@material-ui/core'
+import { Grid, Box, makeStyles, useMediaQuery, Theme, Typography, useTheme } from '@material-ui/core'
 import { LobbyFilterOption } from '@services/lobby.service'
 import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
@@ -13,6 +13,7 @@ import { AutoSizer, WindowScroller, List, CellMeasurer, CellMeasurerCache } from
 import useReturnHref from '@utils/hooks/useReturnHref'
 import _ from 'lodash'
 import i18n from '@locales/i18n'
+import GoogleAd from '@components/GoogleAd'
 
 const cache = new CellMeasurerCache({
   fixedWidth: true,
@@ -37,6 +38,9 @@ const LobbyHome: React.FC<LobbyHomeProps> = ({ filter }) => {
   const matchesXL = useMediaQuery((theme: Theme) => theme.breakpoints.up('xl'))
   const matchesLG = useMediaQuery((theme: Theme) => theme.breakpoints.up('lg'))
   const matchesSM = useMediaQuery((theme: Theme) => theme.breakpoints.up('sm'))
+
+  const theme = useTheme()
+  const screenDownSP = useMediaQuery(theme.breakpoints.down(576))
 
   useEffect(() => {
     if (listRef && listRef.current) listRef.current.recomputeRowHeights()
@@ -119,8 +123,10 @@ const LobbyHome: React.FC<LobbyHomeProps> = ({ filter }) => {
 
   return (
     <>
+      {/* GADS: home lobby 1-4*/}
+      <GoogleAd id={{ idPatten1: !screenDownSP && 'ad_lobby_t', idPatten4: screenDownSP && 'ad_lobby_b' }} />
       <Header onFilter={onFilter} toCreate={toCreate} filter={filter} />
-      <div className={classes.container}>
+      <div className={`${classes.container} position_bottom`}>
         <InfiniteScroll
           dataLength={lobbies.length}
           next={!meta.pending && loadMore}

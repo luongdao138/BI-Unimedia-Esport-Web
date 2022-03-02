@@ -7,13 +7,14 @@ import { TournamentResult } from './elements/Slider/TournamentResult'
 import { TopicFollow } from './elements/Slider/TopicFollow'
 import useUserData from './useUserData'
 // import useEventData from './useEventData'
-import { Box } from '@material-ui/core'
+import { Box, useMediaQuery, useTheme } from '@material-ui/core'
 import useTournamentData from './useTournamentData'
 import useTopicData from './useTopicData'
 import { HOME_SETTINGS } from '@constants/common.constants'
 import ESLoader from '@components/FullScreenLoader'
 import { RecentLobbies } from '@containers/Home/elements/Slider/RecentLobbies'
 import { RecommendedLobbies } from './elements/Slider/RecommendedLobbies'
+import GoogleAd from '@components/GoogleAd'
 
 const HomeContainer: React.FC = () => {
   const { recommendedUsers, getUserRecommendations, homeSettings, getUserProfile, metaHomeSettings } = useUserData()
@@ -27,6 +28,8 @@ const HomeContainer: React.FC = () => {
     tournamentResultsMeta,
   } = useTournamentData()
   const { followersTopicList, followersTopicListMeta, getFollowersTopicList, resetFollowersTopicList } = useTopicData()
+  const theme = useTheme()
+  const screenDownSP = useMediaQuery(theme.breakpoints.down(576))
 
   useEffect(() => {
     getUserProfile()
@@ -63,12 +66,15 @@ const HomeContainer: React.FC = () => {
 
   return (
     <>
+      {/* GADS: Home */}
+      {!screenDownSP && <GoogleAd id={{ idPatten1: 'ad_home_t' }} />}
       <Header />
       {homeSettings.map((value, index) => {
         return renderItem(value, index)
       })}
       {metaHomeSettings.pending && <ESLoader open={metaHomeSettings.pending} />}
       <Box marginBottom={9} />
+      {screenDownSP && <GoogleAd id={{ idPatten3: 'ad_home_b' }} />}
     </>
   )
 }
