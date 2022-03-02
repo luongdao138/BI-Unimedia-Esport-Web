@@ -23,7 +23,11 @@ export const createUser = /* GraphQL */ `
           point
           use_point_id
           is_premium
+          is_premium_number
           userId
+          giftMasterId
+          local_id
+          created_time
           createdAt
           updatedAt
         }
@@ -55,7 +59,11 @@ export const updateUser = /* GraphQL */ `
           point
           use_point_id
           is_premium
+          is_premium_number
           userId
+          giftMasterId
+          local_id
+          created_time
           createdAt
           updatedAt
         }
@@ -87,7 +95,11 @@ export const deleteUser = /* GraphQL */ `
           point
           use_point_id
           is_premium
+          is_premium_number
           userId
+          giftMasterId
+          local_id
+          created_time
           createdAt
           updatedAt
         }
@@ -120,8 +132,11 @@ export const createGiftMaster = /* GraphQL */ `
           point
           use_point_id
           is_premium
+          is_premium_number
           userId
           giftMasterId
+          local_id
+          created_time
           createdAt
           updatedAt
         }
@@ -154,8 +169,11 @@ export const updateGiftMaster = /* GraphQL */ `
           point
           use_point_id
           is_premium
+          is_premium_number
           userId
           giftMasterId
+          local_id
+          created_time
           createdAt
           updatedAt
         }
@@ -188,8 +206,11 @@ export const deleteGiftMaster = /* GraphQL */ `
           point
           use_point_id
           is_premium
+          is_premium_number
           userId
           giftMasterId
+          local_id
+          created_time
           createdAt
           updatedAt
         }

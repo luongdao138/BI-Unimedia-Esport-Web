@@ -140,6 +140,8 @@ export type CreateGiftMasterInput = {
   master_id: string
   master_uuid: string
   delete_flag?: boolean | null
+  createdAt?: string | null
+  updatedAt?: string | null
 }
 
 export type ModelGiftMasterConditionInput = {
@@ -148,6 +150,8 @@ export type ModelGiftMasterConditionInput = {
   master_id?: ModelStringInput | null
   master_uuid?: ModelStringInput | null
   delete_flag?: ModelBooleanInput | null
+  createdAt?: ModelStringInput | null
+  updatedAt?: ModelStringInput | null
   and?: Array<ModelGiftMasterConditionInput | null> | null
   or?: Array<ModelGiftMasterConditionInput | null> | null
   not?: ModelGiftMasterConditionInput | null
@@ -160,6 +164,8 @@ export type UpdateGiftMasterInput = {
   master_id?: string | null
   master_uuid?: string | null
   delete_flag?: boolean | null
+  createdAt?: string | null
+  updatedAt?: string | null
 }
 
 export type DeleteGiftMasterInput = {
@@ -398,6 +404,8 @@ export type ModelGiftMasterFilterInput = {
   master_id?: ModelStringInput | null
   master_uuid?: ModelStringInput | null
   delete_flag?: ModelBooleanInput | null
+  createdAt?: ModelStringInput | null
+  updatedAt?: ModelStringInput | null
   and?: Array<ModelGiftMasterFilterInput | null> | null
   or?: Array<ModelGiftMasterFilterInput | null> | null
   not?: ModelGiftMasterFilterInput | null
@@ -520,6 +528,27 @@ export type CreateUserMutation = {
     delete_flag?: boolean | null
     messages?: {
       __typename: 'ModelMessageConnection'
+      items: Array<{
+        __typename: 'Message'
+        id: string
+        owner: string
+        text: string
+        uuid?: string | null
+        video_id: string
+        delete_flag?: boolean | null
+        video_time: number
+        display_avatar_time?: string | null
+        point?: string | null
+        use_point_id?: string | null
+        is_premium?: boolean | null
+        is_premium_number?: number | null
+        userId: string
+        giftMasterId?: string | null
+        local_id?: string | null
+        created_time?: string | null
+        createdAt: string
+        updatedAt: string
+      } | null>
       nextToken?: string | null
     } | null
     createdAt: string
@@ -542,6 +571,27 @@ export type UpdateUserMutation = {
     delete_flag?: boolean | null
     messages?: {
       __typename: 'ModelMessageConnection'
+      items: Array<{
+        __typename: 'Message'
+        id: string
+        owner: string
+        text: string
+        uuid?: string | null
+        video_id: string
+        delete_flag?: boolean | null
+        video_time: number
+        display_avatar_time?: string | null
+        point?: string | null
+        use_point_id?: string | null
+        is_premium?: boolean | null
+        is_premium_number?: number | null
+        userId: string
+        giftMasterId?: string | null
+        local_id?: string | null
+        created_time?: string | null
+        createdAt: string
+        updatedAt: string
+      } | null>
       nextToken?: string | null
     } | null
     createdAt: string
@@ -564,6 +614,27 @@ export type DeleteUserMutation = {
     delete_flag?: boolean | null
     messages?: {
       __typename: 'ModelMessageConnection'
+      items: Array<{
+        __typename: 'Message'
+        id: string
+        owner: string
+        text: string
+        uuid?: string | null
+        video_id: string
+        delete_flag?: boolean | null
+        video_time: number
+        display_avatar_time?: string | null
+        point?: string | null
+        use_point_id?: string | null
+        is_premium?: boolean | null
+        is_premium_number?: number | null
+        userId: string
+        giftMasterId?: string | null
+        local_id?: string | null
+        created_time?: string | null
+        createdAt: string
+        updatedAt: string
+      } | null>
       nextToken?: string | null
     } | null
     createdAt: string
@@ -587,6 +658,27 @@ export type CreateGiftMasterMutation = {
     delete_flag?: boolean | null
     messages?: {
       __typename: 'ModelMessageConnection'
+      items: Array<{
+        __typename: 'Message'
+        id: string
+        owner: string
+        text: string
+        uuid?: string | null
+        video_id: string
+        delete_flag?: boolean | null
+        video_time: number
+        display_avatar_time?: string | null
+        point?: string | null
+        use_point_id?: string | null
+        is_premium?: boolean | null
+        is_premium_number?: number | null
+        userId: string
+        giftMasterId?: string | null
+        local_id?: string | null
+        created_time?: string | null
+        createdAt: string
+        updatedAt: string
+      } | null>
       nextToken?: string | null
     } | null
     createdAt: string
@@ -610,6 +702,27 @@ export type UpdateGiftMasterMutation = {
     delete_flag?: boolean | null
     messages?: {
       __typename: 'ModelMessageConnection'
+      items: Array<{
+        __typename: 'Message'
+        id: string
+        owner: string
+        text: string
+        uuid?: string | null
+        video_id: string
+        delete_flag?: boolean | null
+        video_time: number
+        display_avatar_time?: string | null
+        point?: string | null
+        use_point_id?: string | null
+        is_premium?: boolean | null
+        is_premium_number?: number | null
+        userId: string
+        giftMasterId?: string | null
+        local_id?: string | null
+        created_time?: string | null
+        createdAt: string
+        updatedAt: string
+      } | null>
       nextToken?: string | null
     } | null
     createdAt: string
@@ -633,6 +746,27 @@ export type DeleteGiftMasterMutation = {
     delete_flag?: boolean | null
     messages?: {
       __typename: 'ModelMessageConnection'
+      items: Array<{
+        __typename: 'Message'
+        id: string
+        owner: string
+        text: string
+        uuid?: string | null
+        video_id: string
+        delete_flag?: boolean | null
+        video_time: number
+        display_avatar_time?: string | null
+        point?: string | null
+        use_point_id?: string | null
+        is_premium?: boolean | null
+        is_premium_number?: number | null
+        userId: string
+        giftMasterId?: string | null
+        local_id?: string | null
+        created_time?: string | null
+        createdAt: string
+        updatedAt: string
+      } | null>
       nextToken?: string | null
     } | null
     createdAt: string
@@ -671,6 +805,10 @@ export type CreateMessageMutation = {
       avatar?: string | null
       user_name: string
       delete_flag?: boolean | null
+      messages?: {
+        __typename: 'ModelMessageConnection'
+        nextToken?: string | null
+      } | null
       createdAt: string
       updatedAt: string
     } | null
@@ -682,6 +820,10 @@ export type CreateMessageMutation = {
       master_id: string
       master_uuid: string
       delete_flag?: boolean | null
+      messages?: {
+        __typename: 'ModelMessageConnection'
+        nextToken?: string | null
+      } | null
       createdAt: string
       updatedAt: string
     } | null
@@ -721,6 +863,10 @@ export type UpdateMessageMutation = {
       avatar?: string | null
       user_name: string
       delete_flag?: boolean | null
+      messages?: {
+        __typename: 'ModelMessageConnection'
+        nextToken?: string | null
+      } | null
       createdAt: string
       updatedAt: string
     } | null
@@ -732,6 +878,10 @@ export type UpdateMessageMutation = {
       master_id: string
       master_uuid: string
       delete_flag?: boolean | null
+      messages?: {
+        __typename: 'ModelMessageConnection'
+        nextToken?: string | null
+      } | null
       createdAt: string
       updatedAt: string
     } | null
@@ -771,6 +921,10 @@ export type DeleteMessageMutation = {
       avatar?: string | null
       user_name: string
       delete_flag?: boolean | null
+      messages?: {
+        __typename: 'ModelMessageConnection'
+        nextToken?: string | null
+      } | null
       createdAt: string
       updatedAt: string
     } | null
@@ -782,6 +936,10 @@ export type DeleteMessageMutation = {
       master_id: string
       master_uuid: string
       delete_flag?: boolean | null
+      messages?: {
+        __typename: 'ModelMessageConnection'
+        nextToken?: string | null
+      } | null
       createdAt: string
       updatedAt: string
     } | null
@@ -957,6 +1115,27 @@ export type GetUserQuery = {
     delete_flag?: boolean | null
     messages?: {
       __typename: 'ModelMessageConnection'
+      items: Array<{
+        __typename: 'Message'
+        id: string
+        owner: string
+        text: string
+        uuid?: string | null
+        video_id: string
+        delete_flag?: boolean | null
+        video_time: number
+        display_avatar_time?: string | null
+        point?: string | null
+        use_point_id?: string | null
+        is_premium?: boolean | null
+        is_premium_number?: number | null
+        userId: string
+        giftMasterId?: string | null
+        local_id?: string | null
+        created_time?: string | null
+        createdAt: string
+        updatedAt: string
+      } | null>
       nextToken?: string | null
     } | null
     createdAt: string
@@ -980,6 +1159,10 @@ export type ListUsersQuery = {
       avatar?: string | null
       user_name: string
       delete_flag?: boolean | null
+      messages?: {
+        __typename: 'ModelMessageConnection'
+        nextToken?: string | null
+      } | null
       createdAt: string
       updatedAt: string
     } | null>
@@ -1002,6 +1185,27 @@ export type GetGiftMasterQuery = {
     delete_flag?: boolean | null
     messages?: {
       __typename: 'ModelMessageConnection'
+      items: Array<{
+        __typename: 'Message'
+        id: string
+        owner: string
+        text: string
+        uuid?: string | null
+        video_id: string
+        delete_flag?: boolean | null
+        video_time: number
+        display_avatar_time?: string | null
+        point?: string | null
+        use_point_id?: string | null
+        is_premium?: boolean | null
+        is_premium_number?: number | null
+        userId: string
+        giftMasterId?: string | null
+        local_id?: string | null
+        created_time?: string | null
+        createdAt: string
+        updatedAt: string
+      } | null>
       nextToken?: string | null
     } | null
     createdAt: string
@@ -1026,6 +1230,10 @@ export type ListGiftMastersQuery = {
       master_id: string
       master_uuid: string
       delete_flag?: boolean | null
+      messages?: {
+        __typename: 'ModelMessageConnection'
+        nextToken?: string | null
+      } | null
       createdAt: string
       updatedAt: string
     } | null>
@@ -1063,6 +1271,10 @@ export type GetMessageQuery = {
       avatar?: string | null
       user_name: string
       delete_flag?: boolean | null
+      messages?: {
+        __typename: 'ModelMessageConnection'
+        nextToken?: string | null
+      } | null
       createdAt: string
       updatedAt: string
     } | null
@@ -1074,6 +1286,10 @@ export type GetMessageQuery = {
       master_id: string
       master_uuid: string
       delete_flag?: boolean | null
+      messages?: {
+        __typename: 'ModelMessageConnection'
+        nextToken?: string | null
+      } | null
       createdAt: string
       updatedAt: string
     } | null
@@ -1109,6 +1325,27 @@ export type ListMessagesQuery = {
       giftMasterId?: string | null
       local_id?: string | null
       created_time?: string | null
+      parent?: {
+        __typename: 'User'
+        id: string
+        uuid: string
+        avatar?: string | null
+        user_name: string
+        delete_flag?: boolean | null
+        createdAt: string
+        updatedAt: string
+      } | null
+      receiver?: {
+        __typename: 'GiftMaster'
+        id: string
+        name: string
+        image?: string | null
+        master_id: string
+        master_uuid: string
+        delete_flag?: boolean | null
+        createdAt: string
+        updatedAt: string
+      } | null
       createdAt: string
       updatedAt: string
     } | null>
@@ -1248,6 +1485,10 @@ export type GetUsersByUuidQuery = {
       avatar?: string | null
       user_name: string
       delete_flag?: boolean | null
+      messages?: {
+        __typename: 'ModelMessageConnection'
+        nextToken?: string | null
+      } | null
       createdAt: string
       updatedAt: string
     } | null>
@@ -1274,6 +1515,10 @@ export type GetReceiverByUuidQuery = {
       master_id: string
       master_uuid: string
       delete_flag?: boolean | null
+      messages?: {
+        __typename: 'ModelMessageConnection'
+        nextToken?: string | null
+      } | null
       createdAt: string
       updatedAt: string
     } | null>
@@ -1311,6 +1556,27 @@ export type GetMessagesByVideoIdQuery = {
       giftMasterId?: string | null
       local_id?: string | null
       created_time?: string | null
+      parent?: {
+        __typename: 'User'
+        id: string
+        uuid: string
+        avatar?: string | null
+        user_name: string
+        delete_flag?: boolean | null
+        createdAt: string
+        updatedAt: string
+      } | null
+      receiver?: {
+        __typename: 'GiftMaster'
+        id: string
+        name: string
+        image?: string | null
+        master_id: string
+        master_uuid: string
+        delete_flag?: boolean | null
+        createdAt: string
+        updatedAt: string
+      } | null
       createdAt: string
       updatedAt: string
     } | null>
@@ -1348,6 +1614,27 @@ export type GetMessagesByVideoIdWithSortQuery = {
       giftMasterId?: string | null
       local_id?: string | null
       created_time?: string | null
+      parent?: {
+        __typename: 'User'
+        id: string
+        uuid: string
+        avatar?: string | null
+        user_name: string
+        delete_flag?: boolean | null
+        createdAt: string
+        updatedAt: string
+      } | null
+      receiver?: {
+        __typename: 'GiftMaster'
+        id: string
+        name: string
+        image?: string | null
+        master_id: string
+        master_uuid: string
+        delete_flag?: boolean | null
+        createdAt: string
+        updatedAt: string
+      } | null
       createdAt: string
       updatedAt: string
     } | null>
@@ -1385,6 +1672,27 @@ export type GetMessagesByVideoByPremiumQuery = {
       giftMasterId?: string | null
       local_id?: string | null
       created_time?: string | null
+      parent?: {
+        __typename: 'User'
+        id: string
+        uuid: string
+        avatar?: string | null
+        user_name: string
+        delete_flag?: boolean | null
+        createdAt: string
+        updatedAt: string
+      } | null
+      receiver?: {
+        __typename: 'GiftMaster'
+        id: string
+        name: string
+        image?: string | null
+        master_id: string
+        master_uuid: string
+        delete_flag?: boolean | null
+        createdAt: string
+        updatedAt: string
+      } | null
       createdAt: string
       updatedAt: string
     } | null>
@@ -1478,6 +1786,27 @@ export type OnCreateUserSubscription = {
     delete_flag?: boolean | null
     messages?: {
       __typename: 'ModelMessageConnection'
+      items: Array<{
+        __typename: 'Message'
+        id: string
+        owner: string
+        text: string
+        uuid?: string | null
+        video_id: string
+        delete_flag?: boolean | null
+        video_time: number
+        display_avatar_time?: string | null
+        point?: string | null
+        use_point_id?: string | null
+        is_premium?: boolean | null
+        is_premium_number?: number | null
+        userId: string
+        giftMasterId?: string | null
+        local_id?: string | null
+        created_time?: string | null
+        createdAt: string
+        updatedAt: string
+      } | null>
       nextToken?: string | null
     } | null
     createdAt: string
@@ -1495,6 +1824,27 @@ export type OnUpdateUserSubscription = {
     delete_flag?: boolean | null
     messages?: {
       __typename: 'ModelMessageConnection'
+      items: Array<{
+        __typename: 'Message'
+        id: string
+        owner: string
+        text: string
+        uuid?: string | null
+        video_id: string
+        delete_flag?: boolean | null
+        video_time: number
+        display_avatar_time?: string | null
+        point?: string | null
+        use_point_id?: string | null
+        is_premium?: boolean | null
+        is_premium_number?: number | null
+        userId: string
+        giftMasterId?: string | null
+        local_id?: string | null
+        created_time?: string | null
+        createdAt: string
+        updatedAt: string
+      } | null>
       nextToken?: string | null
     } | null
     createdAt: string
@@ -1512,6 +1862,27 @@ export type OnDeleteUserSubscription = {
     delete_flag?: boolean | null
     messages?: {
       __typename: 'ModelMessageConnection'
+      items: Array<{
+        __typename: 'Message'
+        id: string
+        owner: string
+        text: string
+        uuid?: string | null
+        video_id: string
+        delete_flag?: boolean | null
+        video_time: number
+        display_avatar_time?: string | null
+        point?: string | null
+        use_point_id?: string | null
+        is_premium?: boolean | null
+        is_premium_number?: number | null
+        userId: string
+        giftMasterId?: string | null
+        local_id?: string | null
+        created_time?: string | null
+        createdAt: string
+        updatedAt: string
+      } | null>
       nextToken?: string | null
     } | null
     createdAt: string
@@ -1530,6 +1901,27 @@ export type OnCreateGiftMasterSubscription = {
     delete_flag?: boolean | null
     messages?: {
       __typename: 'ModelMessageConnection'
+      items: Array<{
+        __typename: 'Message'
+        id: string
+        owner: string
+        text: string
+        uuid?: string | null
+        video_id: string
+        delete_flag?: boolean | null
+        video_time: number
+        display_avatar_time?: string | null
+        point?: string | null
+        use_point_id?: string | null
+        is_premium?: boolean | null
+        is_premium_number?: number | null
+        userId: string
+        giftMasterId?: string | null
+        local_id?: string | null
+        created_time?: string | null
+        createdAt: string
+        updatedAt: string
+      } | null>
       nextToken?: string | null
     } | null
     createdAt: string
@@ -1548,6 +1940,27 @@ export type OnUpdateGiftMasterSubscription = {
     delete_flag?: boolean | null
     messages?: {
       __typename: 'ModelMessageConnection'
+      items: Array<{
+        __typename: 'Message'
+        id: string
+        owner: string
+        text: string
+        uuid?: string | null
+        video_id: string
+        delete_flag?: boolean | null
+        video_time: number
+        display_avatar_time?: string | null
+        point?: string | null
+        use_point_id?: string | null
+        is_premium?: boolean | null
+        is_premium_number?: number | null
+        userId: string
+        giftMasterId?: string | null
+        local_id?: string | null
+        created_time?: string | null
+        createdAt: string
+        updatedAt: string
+      } | null>
       nextToken?: string | null
     } | null
     createdAt: string
@@ -1566,6 +1979,27 @@ export type OnDeleteGiftMasterSubscription = {
     delete_flag?: boolean | null
     messages?: {
       __typename: 'ModelMessageConnection'
+      items: Array<{
+        __typename: 'Message'
+        id: string
+        owner: string
+        text: string
+        uuid?: string | null
+        video_id: string
+        delete_flag?: boolean | null
+        video_time: number
+        display_avatar_time?: string | null
+        point?: string | null
+        use_point_id?: string | null
+        is_premium?: boolean | null
+        is_premium_number?: number | null
+        userId: string
+        giftMasterId?: string | null
+        local_id?: string | null
+        created_time?: string | null
+        createdAt: string
+        updatedAt: string
+      } | null>
       nextToken?: string | null
     } | null
     createdAt: string
@@ -1599,6 +2033,10 @@ export type OnCreateMessageSubscription = {
       avatar?: string | null
       user_name: string
       delete_flag?: boolean | null
+      messages?: {
+        __typename: 'ModelMessageConnection'
+        nextToken?: string | null
+      } | null
       createdAt: string
       updatedAt: string
     } | null
@@ -1610,6 +2048,10 @@ export type OnCreateMessageSubscription = {
       master_id: string
       master_uuid: string
       delete_flag?: boolean | null
+      messages?: {
+        __typename: 'ModelMessageConnection'
+        nextToken?: string | null
+      } | null
       createdAt: string
       updatedAt: string
     } | null
@@ -1644,6 +2086,10 @@ export type OnUpdateMessageSubscription = {
       avatar?: string | null
       user_name: string
       delete_flag?: boolean | null
+      messages?: {
+        __typename: 'ModelMessageConnection'
+        nextToken?: string | null
+      } | null
       createdAt: string
       updatedAt: string
     } | null
@@ -1655,6 +2101,10 @@ export type OnUpdateMessageSubscription = {
       master_id: string
       master_uuid: string
       delete_flag?: boolean | null
+      messages?: {
+        __typename: 'ModelMessageConnection'
+        nextToken?: string | null
+      } | null
       createdAt: string
       updatedAt: string
     } | null
@@ -1689,6 +2139,10 @@ export type OnDeleteMessageSubscription = {
       avatar?: string | null
       user_name: string
       delete_flag?: boolean | null
+      messages?: {
+        __typename: 'ModelMessageConnection'
+        nextToken?: string | null
+      } | null
       createdAt: string
       updatedAt: string
     } | null
@@ -1700,6 +2154,10 @@ export type OnDeleteMessageSubscription = {
       master_id: string
       master_uuid: string
       delete_flag?: boolean | null
+      messages?: {
+        __typename: 'ModelMessageConnection'
+        nextToken?: string | null
+      } | null
       createdAt: string
       updatedAt: string
     } | null

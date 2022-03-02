@@ -23,7 +23,11 @@ export const getUser = /* GraphQL */ `
           point
           use_point_id
           is_premium
+          is_premium_number
           userId
+          giftMasterId
+          local_id
+          created_time
           createdAt
           updatedAt
         }
@@ -63,6 +67,26 @@ export const getGiftMaster = /* GraphQL */ `
       master_uuid
       delete_flag
       messages {
+        items {
+          id
+          owner
+          text
+          uuid
+          video_id
+          delete_flag
+          video_time
+          display_avatar_time
+          point
+          use_point_id
+          is_premium
+          is_premium_number
+          userId
+          giftMasterId
+          local_id
+          created_time
+          createdAt
+          updatedAt
+        }
         nextToken
       }
       createdAt
@@ -80,6 +104,9 @@ export const listGiftMasters = /* GraphQL */ `
         master_id
         master_uuid
         delete_flag
+        messages {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -105,13 +132,15 @@ export const getMessage = /* GraphQL */ `
       userId
       giftMasterId
       local_id
-      created_time
       parent {
         id
         uuid
         avatar
         user_name
         delete_flag
+        messages {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -122,9 +151,13 @@ export const getMessage = /* GraphQL */ `
         master_id
         master_uuid
         delete_flag
+        messages {
+          nextToken
+        }
         createdAt
         updatedAt
       }
+      created_time
       createdAt
       updatedAt
     }
@@ -150,6 +183,25 @@ export const listMessages = /* GraphQL */ `
         giftMasterId
         local_id
         created_time
+        parent {
+          id
+          uuid
+          avatar
+          user_name
+          delete_flag
+          createdAt
+          updatedAt
+        }
+        receiver {
+          id
+          name
+          image
+          master_id
+          master_uuid
+          delete_flag
+          createdAt
+          updatedAt
+        }
         createdAt
         updatedAt
       }
@@ -247,6 +299,9 @@ export const getUsersByUuid = /* GraphQL */ `
         avatar
         user_name
         delete_flag
+        messages {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -270,6 +325,9 @@ export const getReceiverByUuid = /* GraphQL */ `
         master_id
         master_uuid
         delete_flag
+        messages {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -330,6 +388,7 @@ export const getMessagesByVideoId = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        created_time
         createdAt
         updatedAt
       }
@@ -370,7 +429,45 @@ export const getMessagesByVideoIdWithSort = /* GraphQL */ `
         userId
         giftMasterId
         local_id
+        parent {
+          id
+          uuid
+          avatar
+          user_name
+          delete_flag
+          createdAt
+          updatedAt
+        }
+        receiver {
+          id
+          name
+          image
+          master_id
+          master_uuid
+          delete_flag
+          createdAt
+          updatedAt
+        }
         created_time
+        parent {
+          id
+          uuid
+          avatar
+          user_name
+          delete_flag
+          createdAt
+          updatedAt
+        }
+        receiver {
+          id
+          name
+          image
+          master_id
+          master_uuid
+          delete_flag
+          createdAt
+          updatedAt
+        }
         createdAt
         updatedAt
       }
@@ -411,7 +508,6 @@ export const getMessagesByVideoByPremium = /* GraphQL */ `
         userId
         giftMasterId
         local_id
-        created_time
         parent {
           id
           uuid
@@ -431,6 +527,7 @@ export const getMessagesByVideoByPremium = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        created_time
         createdAt
         updatedAt
       }

@@ -11,6 +11,26 @@ export const onCreateUser = /* GraphQL */ `
       user_name
       delete_flag
       messages {
+        items {
+          id
+          owner
+          text
+          uuid
+          video_id
+          delete_flag
+          video_time
+          display_avatar_time
+          point
+          use_point_id
+          is_premium
+          is_premium_number
+          userId
+          giftMasterId
+          local_id
+          created_time
+          createdAt
+          updatedAt
+        }
         nextToken
       }
       createdAt
@@ -27,6 +47,26 @@ export const onUpdateUser = /* GraphQL */ `
       user_name
       delete_flag
       messages {
+        items {
+          id
+          owner
+          text
+          uuid
+          video_id
+          delete_flag
+          video_time
+          display_avatar_time
+          point
+          use_point_id
+          is_premium
+          is_premium_number
+          userId
+          giftMasterId
+          local_id
+          created_time
+          createdAt
+          updatedAt
+        }
         nextToken
       }
       createdAt
@@ -43,6 +83,26 @@ export const onDeleteUser = /* GraphQL */ `
       user_name
       delete_flag
       messages {
+        items {
+          id
+          owner
+          text
+          uuid
+          video_id
+          delete_flag
+          video_time
+          display_avatar_time
+          point
+          use_point_id
+          is_premium
+          is_premium_number
+          userId
+          giftMasterId
+          local_id
+          created_time
+          createdAt
+          updatedAt
+        }
         nextToken
       }
       createdAt
@@ -60,6 +120,26 @@ export const onCreateGiftMaster = /* GraphQL */ `
       master_uuid
       delete_flag
       messages {
+        items {
+          id
+          owner
+          text
+          uuid
+          video_id
+          delete_flag
+          video_time
+          display_avatar_time
+          point
+          use_point_id
+          is_premium
+          is_premium_number
+          userId
+          giftMasterId
+          local_id
+          created_time
+          createdAt
+          updatedAt
+        }
         nextToken
       }
       createdAt
@@ -77,6 +157,26 @@ export const onUpdateGiftMaster = /* GraphQL */ `
       master_uuid
       delete_flag
       messages {
+        items {
+          id
+          owner
+          text
+          uuid
+          video_id
+          delete_flag
+          video_time
+          display_avatar_time
+          point
+          use_point_id
+          is_premium
+          is_premium_number
+          userId
+          giftMasterId
+          local_id
+          created_time
+          createdAt
+          updatedAt
+        }
         nextToken
       }
       createdAt
@@ -94,6 +194,26 @@ export const onDeleteGiftMaster = /* GraphQL */ `
       master_uuid
       delete_flag
       messages {
+        items {
+          id
+          owner
+          text
+          uuid
+          video_id
+          delete_flag
+          video_time
+          display_avatar_time
+          point
+          use_point_id
+          is_premium
+          is_premium_number
+          userId
+          giftMasterId
+          local_id
+          created_time
+          createdAt
+          updatedAt
+        }
         nextToken
       }
       createdAt
@@ -126,6 +246,9 @@ export const onCreateMessage = /* GraphQL */ `
         avatar
         user_name
         delete_flag
+        messages {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -136,6 +259,9 @@ export const onCreateMessage = /* GraphQL */ `
         master_id
         master_uuid
         delete_flag
+        messages {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -169,6 +295,9 @@ export const onUpdateMessage = /* GraphQL */ `
         avatar
         user_name
         delete_flag
+        messages {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -179,6 +308,9 @@ export const onUpdateMessage = /* GraphQL */ `
         master_id
         master_uuid
         delete_flag
+        messages {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -212,6 +344,9 @@ export const onDeleteMessage = /* GraphQL */ `
         avatar
         user_name
         delete_flag
+        messages {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -222,6 +357,9 @@ export const onDeleteMessage = /* GraphQL */ `
         master_id
         master_uuid
         delete_flag
+        messages {
+          nextToken
+        }
         createdAt
         updatedAt
       }

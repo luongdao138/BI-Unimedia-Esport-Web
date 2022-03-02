@@ -1845,11 +1845,15 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             //@ts-ignore
             point: point.toString(),
-            // giftMasterId: '60',
-            // giftMasterId: master_uuid,
             is_premium: true,
             is_premium_number: 1,
             display_avatar_time: videoTime + purchasePoints[`p_${point}`].displayTime,
+          }
+          if (master_uuid) {
+            input = {
+              ...input,
+              giftMasterId: master_uuid,
+            }
           }
         }
 
