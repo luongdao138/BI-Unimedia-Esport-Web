@@ -21,23 +21,18 @@ export enum RECEIPT_SEND_TABS {
   RECEIPT = 0,
   SEND = 1,
 }
+export enum ROLE_USER {
+  STREAMER = 1,
+  VIEWER = 0,
+}
 
 const LIMIT_RANK = 10
-// const rows = [
-//   { key: 1, position: 1, name: 'もるチャン', tip: 9999999999, type: '個人' },
-//   { key: 2, position: 2, name: 'もんもんもん', tip: 10000, type: 'チーム' },
-//   { key: 3, position: 3, name: 'もるチャン', tip: 10000, type: '個人' },
-//   { key: 4, position: 4, name: 'もるチャン', tip: 10000, type: '個人' },
-//   { key: 5, position: '-', name: 'もるチャン', tip: 10000, type: '個人' },
-// ]
 
 const RankingTab: React.FC<RankingTabProps> = () => {
   const { isEnabledRankFilter } = useCheckDisplayChat()
   const { liveStreamInfo, setActiveSubTab, rankingListMeta } = useDetailVideo()
   const { activeSubTab } = liveStreamInfo
   const { giverRankInfo, receiverRankInfo } = useContext(VideoContext)
-  // eslint-disable-next-line no-console
-  console.log('🚀 ~ receiverRankInfo--000', receiverRankInfo)
 
   const { t } = useTranslation('common')
   const classes = useStyles()
@@ -45,7 +40,6 @@ const RankingTab: React.FC<RankingTabProps> = () => {
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down(768))
 
-  const isSelf = 5
   useEffect(() => {
     setActiveSubTab(SUB_TABS.RANKING.RECEIPT)
   }, [])
@@ -67,16 +61,15 @@ const RankingTab: React.FC<RankingTabProps> = () => {
             {giverRankInfo.length > 0 ? (
               <Rankings>
                 {giver.map((v, k) => {
-                  if (k === isSelf) {
+                  if (v.streamer === ROLE_USER.STREAMER) {
                     return (
                       <RankingItemSelf
                         key={k}
-                        position={1}
                         avatar={<ESAvatar src={v?.user_avatar} alt="avatar" size={40} />}
                         tab={SUB_TABS.RANKING.SEND}
                         name={v?.user_nickname}
                         total={v?.total}
-                        self={false}
+                        position={k + 1}
                       />
                     )
                   }
@@ -88,7 +81,6 @@ const RankingTab: React.FC<RankingTabProps> = () => {
                       tab={SUB_TABS.RANKING.SEND}
                       name={v?.user_nickname}
                       total={v?.total}
-                      self={false}
                     />
                   )
                 })}

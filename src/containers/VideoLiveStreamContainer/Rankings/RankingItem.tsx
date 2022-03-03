@@ -25,7 +25,7 @@ const RankingItem: React.FC<Props> = ({ position, avatar, type, tab, name, total
           <Typography
             className={`${classes.text} ${position === 1 && classes.first} ${position === 2 && classes.second} ${
               position === 3 && classes.third
-            } ${position >= 4 && classes.other} ${self && classes.self}`}
+            } ${position >= 4 && classes.other} `}
           >
             {position}
             {position === 1 && <span>st</span>}
@@ -93,7 +93,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   text: {
-    fontSize: 24,
+    fontSize: 30,
     fontWeight: 800,
     fontStyle: 'normal',
     textAlign: 'left',
@@ -137,9 +137,12 @@ const useStyles = makeStyles((theme) => ({
     },
     '&$other': {
       textAlign: 'center',
+      fontStyle: 'italic',
     },
     '&$self': {
       textAlign: 'center',
+      fontSize: 30,
+      fontWeight: 'bold',
     },
   },
   first: {},
@@ -166,6 +169,7 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 4,
     textAlign: 'center',
     fontSize: 10,
+    maxWidth: 51,
   },
   breakWord: {
     wordBreak: 'break-word',
@@ -176,12 +180,15 @@ const useStyles = makeStyles((theme) => ({
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     maxWidth: '100px',
+    fontFamily: "'Noto Sans JP', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
   },
   tip: {
     fontSize: 16,
     color: theme.palette.common.white,
     textAlign: 'right',
     wordBreak: 'break-word',
+    fontFamily: "'Noto Sans JP', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+    fontWeight: 'bold',
   },
   [theme.breakpoints.down('sm')]: {
     contentWrapper: {

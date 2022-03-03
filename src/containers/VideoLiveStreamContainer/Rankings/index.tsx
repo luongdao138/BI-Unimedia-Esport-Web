@@ -45,7 +45,7 @@ const useStyles = makeStyles(() => ({
     overflowX: 'auto',
   },
   table: {
-    borderCollapse: 'inherit',
+    borderCollapse: 'collapse',
   },
   headerTable: {
     borderBottom: 0,
