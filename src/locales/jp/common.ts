@@ -1850,6 +1850,7 @@ export default {
     no_mess: 'コメントはありません',
     gift_ranking: 'ギフトランキング',
     send_gift_success: 'チップを送信しました',
+    tip_message_limit: 'メッセージは%d文字までです',
   },
   video_search: {
     video_results: '動画「:key」 の検索結果',

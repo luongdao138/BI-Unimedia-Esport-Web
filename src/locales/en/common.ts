@@ -1860,6 +1860,7 @@ export default {
     gift_ranking: 'ギフトランキング',
     send_gift_success: 'チップを送信しました',
     no_ranking: 'ランキングがありません。',
+    tip_message_limit: 'メッセージは%d文字までです',
   },
   live_stream_screen_chat: {
     receipt: '受取',

@@ -321,6 +321,9 @@ const useStyles = makeStyles((theme) => ({
   iconPurchase: {
     padding: '0px',
     margin: '0 0 3px 0',
+    '&.giftDisabled': {
+      opacity: 0.5,
+    },
   },
   userWatchingList: {
     marginTop: '16px',
