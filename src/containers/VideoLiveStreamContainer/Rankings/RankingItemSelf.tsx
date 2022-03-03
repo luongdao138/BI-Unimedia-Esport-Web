@@ -98,6 +98,7 @@ const useStyles = makeStyles((theme) => ({
   mySelf: {
     position: 'relative',
     marginLeft: '3%',
+    color: '#fff',
     '&::before': {
       content: "''",
       width: '87%',
@@ -113,7 +114,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 30,
     fontWeight: 800,
     fontStyle: 'normal',
-    textAlign: 'left',
+    textAlign: 'center',
     marginTop: 0,
     marginBottom: 0,
     '& span': {
@@ -181,7 +182,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   rowSelf: {
-    borderBottom: '1px solid #707070',
+    // borderBottom: '1px solid #707070',
   },
   nameWrapper: {
     overflow: 'hidden',
@@ -201,7 +202,7 @@ const useStyles = makeStyles((theme) => ({
   },
   tip: {
     fontSize: 16,
-    color: theme.palette.common.white,
+    color: Colors.white_opacity['70'],
     textAlign: 'right',
     wordBreak: 'break-word',
     fontFamily: "'Noto Sans JP', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",

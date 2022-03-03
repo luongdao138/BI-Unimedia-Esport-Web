@@ -391,33 +391,49 @@ const calculateRankTotal = (oldRankInfo, newRankInfo, compareProp = 'master_uuid
     console.log('🚀 ~ newRankInfo.map ~ foundItem', foundItem)
     if (foundIndex !== -1) {
       // update total of old ranking
-      const newItem = { ...foundItem, total: +foundItem?.total + +v?.total }
+      const newItem = { ...foundItem, total: +foundItem?.total + +v?.total, created_at: v?.created_at }
       rankInfo[foundIndex] = { ...newItem }
     } else {
-      const foundIndex = _.findIndex(oldRankInfo, (oldInfo: { total: string | number }) => {
-        // eslint-disable-next-line no-console
-        console.log('🚀 ~ foundIndex ~ o', oldInfo)
-        // eslint-disable-next-line no-console
-        console.log('🚀 ~ foundIndex ~ compare', +oldInfo.total <= +v.total)
-        // eslint-disable-next-line no-console
-        console.log('🚀 ~ foundIndex ~ +v.total', +v.total)
-        // eslint-disable-next-line no-console
-        console.log('🚀 ~ foundIndex ~ +o.total', +oldInfo.total)
-        return +oldInfo.total <= +v.total
-      })
-      // eslint-disable-next-line no-console
-      console.log('🚀 ~ foundIndex ~ foundIndex---111', foundIndex)
-      // insert rank of new user to list ranking if has lower ranking
-      if (foundIndex !== -1) {
-        rankInfo.splice(foundIndex, 0, v)
-      } else {
-        // add rank of new user to lowest level of ranking
-        rankInfo = [...rankInfo, { ...v }]
-      }
+      // const foundIndex = _.findIndex(oldRankInfo, (oldInfo: { total: string | number }) => {
+      //   // eslint-disable-next-line no-console
+      //   console.log('🚀 ~ foundIndex ~ o', oldInfo)
+      //   // eslint-disable-next-line no-console
+      //   console.log('🚀 ~ foundIndex ~ compare', +oldInfo.total <= +v.total)
+      //   // eslint-disable-next-line no-console
+      //   console.log('🚀 ~ foundIndex ~ +v.total', +v.total)
+      //   // eslint-disable-next-line no-console
+      //   console.log('🚀 ~ foundIndex ~ +o.total', +oldInfo.total)
+      //   return +oldInfo.total <= +v.total
+      // })
+      // // eslint-disable-next-line no-console
+      // console.log('🚀 ~ foundIndex ~ foundIndex---111', foundIndex)
+      // // insert rank of new user to list ranking if has lower ranking
+      // if (foundIndex !== -1) {
+      //   rankInfo.splice(foundIndex, 0, v)
+      // } else {
+      //   // add rank of new user to lowest level of ranking
+      //   rankInfo = [...rankInfo, { ...v }]
+      // }
+      // add rank of new user to lowest level of ranking
+      rankInfo = [...rankInfo, { ...v }]
     }
     return ''
   })
-  return rankInfo
+
+  // sort rank info
+  return rankInfo.sort((a, b) => {
+    if (+a.total === +b.total) {
+      if (a.created_at && b.created_at) {
+        return -1 * (+moment(a.created_at).valueOf() - +moment(b.created_at).valueOf())
+      } else if (!a.created_at && b.created_at) {
+        return 1
+      } else {
+        return -1
+      }
+    } else {
+      return -1 * (+a.total - +b.total)
+    }
+  })
 }
 
 const getRankInfo = (oldRankInfo: Array<any>, newRankInfo: Array<any>, rankType = RECEIVER_RANK_TYPE): Array<any> => {
@@ -428,7 +444,7 @@ const getRankInfo = (oldRankInfo: Array<any>, newRankInfo: Array<any>, rankType 
     // eslint-disable-next-line no-console
     console.log('🚀 ~ getRankInfo ~ rankInfo--000', rankInfo)
   } else {
-    rankInfo = calculateRankTotal(rankInfo, newRankInfo, 'user_id')
+    rankInfo = calculateRankTotal(rankInfo, newRankInfo, 'uuid')
     // eslint-disable-next-line no-console
     console.log('🚀 ~ getRankInfo ~ rankInfo---111', rankInfo)
   }

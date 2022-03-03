@@ -1,28 +1,33 @@
 import { useTranslation } from 'react-i18next'
 import { makeStyles, Box, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, TableFooter } from '@material-ui/core'
 import { memo, ReactNode } from 'react'
+import { useRotateScreen } from '@utils/hooks/useRotateScreen'
+import { videoStyleProps } from '..'
 
 interface Props {
   children: ReactNode
 }
 
 const Rankings: React.FC<Props> = ({ children }) => {
-  const classes = useStyles()
+  const { isLandscape } = useRotateScreen()
+  const classes = useStyles({ availHeight: 1, availWidth: 1, isLandscape })
   const { t } = useTranslation('common')
 
   return (
-    <Box mt={1}>
+    <Box>
       <TableContainer className={classes.container}>
         <Table className={classes.table}>
+          <colgroup>
+            <col style={{ width: isLandscape ? 56 : 68 }} />
+            <col style={{ width: isLandscape ? 140 : 165 }} />
+            <col style={{ width: 'auto' }} />
+          </colgroup>
           <TableHead className={classes.headerTable}>
             <TableRow>
-              <TableCell style={{ width: '20%' }}>{t('arena.listHeaders.place')}</TableCell>
-              <TableCell style={{ width: '40%' }} align="left">
-                {t('register_profile.nickname')}
-              </TableCell>
-              <TableCell style={{ width: '40%' }} align="center">
-                {t('live_stream_screen.tip_mess_tab_title')}
-              </TableCell>
+              <TableCell>{t('arena.listHeaders.place')}</TableCell>
+              <TableCell align="left">{t('register_profile.nickname')}</TableCell>
+              {/* <TableCell style={{ width: '40%' }} align="center"> */}
+              <TableCell align="right">{t('live_stream_screen.tip_mess_tab_title')}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody className={classes.bodyTable}>{children}</TableBody>
@@ -39,13 +44,17 @@ const Rankings: React.FC<Props> = ({ children }) => {
 
 export default memo(Rankings)
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   container: {
     borderCollapse: 'inherit',
     overflowX: 'auto',
   },
   table: {
     borderCollapse: 'collapse',
+    tableLayout: 'fixed',
+    '& .MuiTableCell-root': {
+      borderColor: '#707070',
+    },
   },
   headerTable: {
     borderBottom: 0,
@@ -53,6 +62,10 @@ const useStyles = makeStyles(() => ({
       '& td': {
         borderBottomColor: '#707070',
         borderBottomWidth: 1,
+      },
+      '& th': {
+        color: '#fff',
+        padding: '16px 16px 6px 16px',
       },
     },
   },
@@ -73,6 +86,38 @@ const useStyles = makeStyles(() => ({
         paddingTop: 5,
         paddingBottom: 0,
       },
+    },
+  },
+  [theme.breakpoints.down(769)]: {
+    headerTable: {
+      '& tr': {
+        '& th:first-child': {
+          textAlign: 'center',
+        },
+      },
+    },
+  },
+  [`@media (orientation: landscape)`]: {
+    contentContainer: (props: videoStyleProps) => {
+      if (props.isLandscape)
+        return {
+          headerTable: {
+            '& tr': {
+              '& th': {
+                padding: '8px 8px 6px 8px',
+              },
+            },
+          },
+          bodyTable: {
+            '& tr': {
+              '& td': {
+                '&:first-child': {
+                  padding: '0px',
+                },
+              },
+            },
+          },
+        }
     },
   },
 }))

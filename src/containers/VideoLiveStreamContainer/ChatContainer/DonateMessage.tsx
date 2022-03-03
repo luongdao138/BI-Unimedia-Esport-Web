@@ -74,13 +74,16 @@ const DonateMessage: React.FC<DonateMessageProps> = ({
         )}
       </Box>
       <Box className={classes.accountInfoContent} style={renderBgColor('backgroundColor')}>
-        <Box className={classes.receiverContainer} style={renderBgColor('receiverHeaderBgColor', true)}>
-          <img className={classes.receiverSign} src="/images/receiverSign.svg" />
-          <ESAvatar src={message?.parent?.avatar} size={34} alt={message?.parent?.user_name} className={classes.receiverAvatar} />
-          <Typography className={classes.receiverName}>
-            <span className={getClassDeletedMess()}>{message.owner}</span>
-          </Typography>
-        </Box>
+        {message?.receiver && (
+          <Box className={classes.receiverContainer} style={renderBgColor('receiverHeaderBgColor', true)}>
+            <img className={classes.receiverSign} src="/images/receiverSign.svg" />
+            <ESAvatar src={message?.receiver?.image} size={34} alt={message?.receiver?.name} className={classes.receiverAvatar} />
+            <Typography className={classes.receiverName}>
+              <span className={getClassDeletedMess()}>{message?.receiver?.name}</span>
+            </Typography>
+          </Box>
+        )}
+
         <Typography className={classes.accountInfoContentText}>
           {/* <span className={getClassDeletedMess()}>{getMessageWithoutNgWords(message.text) + ' ' + message.video_time + 's'}</span> */}
           <span className={getClassDeletedMess()}>{getMessageWithoutNgWords(message.text)}</span>

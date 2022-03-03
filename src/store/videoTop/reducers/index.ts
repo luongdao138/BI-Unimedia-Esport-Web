@@ -58,6 +58,11 @@ type StateType = {
   videoGiftMasterLoading?: boolean
   giver_rankings: Array<RankingsItem>
   receiver_rankings: Array<RankingsItem>
+  streamer: {
+    uuid?: string
+    user_avatar?: string
+    user_nickname?: string
+  }
 }
 
 const initialState: StateType = {
@@ -112,6 +117,7 @@ const initialState: StateType = {
   videoGiftMasterLoading: false,
   giver_rankings: [],
   receiver_rankings: [],
+  streamer: { uuid: '', user_avatar: '', user_nickname: '' },
 }
 
 export default createReducer(initialState, (builder) => {
@@ -259,5 +265,6 @@ export default createReducer(initialState, (builder) => {
   builder.addCase(actions.getRankingList.fulfilled, (state, action) => {
     state.giver_rankings = action.payload.data.giver
     state.receiver_rankings = action.payload.data.receive
+    state.streamer = action.payload.data.streamer
   })
 })
