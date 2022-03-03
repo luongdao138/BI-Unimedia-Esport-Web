@@ -1960,10 +1960,14 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     }
 
     const purchaseButton = () => {
-      if (!isEnabledGift) return <Box />
       return (
         <LoginRequired>
-          <IconButton onClick={purchaseIconClick} id="btnOpenPremiumChatDialog" className={classes.iconPurchase}>
+          <IconButton
+            disabled={!isEnabledGift}
+            onClick={purchaseIconClick}
+            id="btnOpenPremiumChatDialog"
+            className={`${classes.iconPurchase} ${isEnabledGift ? '' : 'giftDisabled'}`}
+          >
             <img id="btnOpenPremiumChatDialogImage" src="/images/tip_icon.svg" />
           </IconButton>
         </LoginRequired>

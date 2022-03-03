@@ -22,6 +22,7 @@ const Step1: React.FC<Step1Props> = ({ onChangeStep, onChangeSelectedMember }) =
   const { videoGiftMaster, videoGiftMasterLoading } = useDetailVideo()
 
   const renderMember = (item, isStreamer = false) => {
+    if (!item) return <Box />
     return (
       <Box className={classes.wrapStreamer}>
         <GiftMember data={item} isStreamer={isStreamer} isCutTextOverflow />
@@ -36,12 +37,15 @@ const Step1: React.FC<Step1Props> = ({ onChangeStep, onChangeSelectedMember }) =
     )
   }
 
-  const streamerGiftData = () => ({
-    image: videoGiftMaster?.user_avatar,
-    name: videoGiftMaster?.user_nickname,
-    id: videoGiftMaster?.user_id,
-    type: DonateReceiverType.STREAMER,
-  })
+  const streamerGiftData = () => {
+    if (!videoGiftMaster) return null
+    return {
+      image: videoGiftMaster?.user_avatar,
+      name: videoGiftMaster?.user_nickname,
+      id: videoGiftMaster?.user_id,
+      type: DonateReceiverType.STREAMER,
+    }
+  }
 
   const giftMasterData = () =>
     (videoGiftMaster?.group_item ?? []).map((item) => ({
@@ -55,7 +59,9 @@ const Step1: React.FC<Step1Props> = ({ onChangeStep, onChangeSelectedMember }) =
         <Box className={`scroll_common ${classes.giftMemberList}`}>
           <Box className={classes.streamerTitle}>{`${i18n.t('common:live_stream_screen.streamer_title')}`}</Box>
           {renderMember(streamerGiftData(), true)}
-          <Box className={classes.streamerTitle}>{`${i18n.t('common:live_stream_screen.receiver_title')}`}</Box>
+          {giftMasterData().length > 0 && (
+            <Box className={classes.streamerTitle}>{`${i18n.t('common:live_stream_screen.receiver_title')}`}</Box>
+          )}
           <Box display={'flex'} style={{ gap: '16px' }} flexDirection={'column'}>
             {videoGiftMasterLoading ? (
               <Box height="100px" display="flex" justifyContent="center" alignItems="center">

@@ -86,6 +86,8 @@ const useStyles = makeStyles((theme) => ({
   message: {
     maxHeight: 68,
     overflow: 'auto',
+    whiteSpace: 'pre-wrap',
+    wordBreak: 'break-word',
   },
   [theme.breakpoints.down(769)]: {
     selectedPoint: {

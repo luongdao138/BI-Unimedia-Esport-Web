@@ -33,7 +33,7 @@ const Step2: React.FC<Step2Props> = ({ onChangeStep, selectedMember, onChangeTip
         className={`${classes[item.id]} ${classes.purchaseItem} ${itemSelected ? classes.purchaseItemSelected : ''}`}
         style={isLast ? {} : { marginRight: '12px' }}
       >
-        <Typography className={classes.purchaseItemText} style={{ color: itemSelected ? item.backgroundColor : '#fff' }}>
+        <Typography className={classes.purchaseItemText} style={{ color: itemSelected ? item.backgroundColor : '#FFFFFF' }}>
           {FormatHelper.currencyFormat(item?.value?.toString())}
         </Typography>
       </Box>
@@ -80,6 +80,11 @@ const Step2: React.FC<Step2Props> = ({ onChangeStep, selectedMember, onChangeTip
 
   const onCancel = () => {
     onChangeStep(1)
+  }
+
+  const characterLimitExceed = () => {
+    const limit = purchasePoints[purchaseValueSelected].maxLengthInput
+    return i18n.t('common:live_stream_screen.tip_message_limit').replace('%d', limit)
   }
 
   return (
@@ -130,7 +135,8 @@ const Step2: React.FC<Step2Props> = ({ onChangeStep, selectedMember, onChangeTip
               }
             />
           </Box>
-          <Box mt={2}>
+          <Box mt={2} display="flex" flexDirection="column">
+            {formHasError && <Typography className={classes.characterLimitError}>{characterLimitExceed()}</Typography>}
             <TipButtonGroup onClick={handlePremiumChatClick} onCancel={onCancel} formHasError={formHasError}></TipButtonGroup>
           </Box>
         </Box>
@@ -237,6 +243,14 @@ const useStyles = makeStyles((theme) => ({
     '&.formHasError': {
       color: '#FFFF00',
     },
+  },
+  characterLimitError: {
+    fontSize: '12px',
+    fontWeight: 'bold',
+    color: '#F7F735',
+    lineHeight: '18px',
+    alignSelf: 'center',
+    marginBottom: '15px',
   },
   purchaseCommentInputContainer: {
     width: '100%',
