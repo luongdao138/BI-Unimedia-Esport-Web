@@ -303,6 +303,7 @@ export type RankingsItem = {
   user_id?: string
   user_nickname?: string
   video_id?: string
+  streamer?: number
 }
 
 export type RankingsResponse = {
