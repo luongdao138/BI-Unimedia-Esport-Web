@@ -28,13 +28,14 @@ import { useAppDispatch } from '@store/hooks'
 import * as commonActions from '@store/common/actions'
 import { getTimeZone } from '@utils/helpers/CommonHelper'
 import moment from 'moment'
+import { TABS } from '@containers/StreamingSettingContainer'
 
 interface Props {
   formik?: FormikProps<FormLiveType>
   flagUpdateFieldDate?: (flag: boolean) => void
   handleUpdateValidateField?: (value: string) => void
   validateFieldProps?: string
-  openPopupGroupList?: (open: boolean) => void
+  openPopupGroupList?: (open: boolean, tab: TABS) => void
 }
 
 const StreamingReservationContainer: React.FC<Props> = ({

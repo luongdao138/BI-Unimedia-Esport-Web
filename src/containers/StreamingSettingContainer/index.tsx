@@ -31,10 +31,11 @@ import ESModal from '@components/Modal'
 import ListGroupGift from './ListGroupGift'
 import GiftManageTab, { TabState } from '@containers/StreamingSettingContainer/GiftManageTab'
 import { GiftGroupType } from '@services/gift.service'
+import _ from 'lodash'
 // import ESButton from '@components/Button'
 // import useListGroupGift from './ListGroupGift/useListGroupGift'
 
-enum TABS {
+export enum TABS {
   LIVE_STREAM = 0,
   STREAMING_RESERVATION = 1,
   DISTRIBUTOR = 2,
@@ -72,6 +73,7 @@ const StreamingSettingContainer: React.FC<{ default_tab: any }> = ({ default_tab
   const [isUpdate, setIsUpdate] = useState(false)
   const [isLive, setIsLive] = useState(false)
   const [openDialog, setOpenDialog] = useState(false)
+  const [tabOpenDialog, setTabOpenDialog] = useState(-1)
 
   const formikLive = useFormik<FormLiveType>({
     initialValues: initialValues,
@@ -184,7 +186,7 @@ const StreamingSettingContainer: React.FC<{ default_tab: any }> = ({ default_tab
     setTab(3)
   }
   const giftManageChangeTabSubmitSuccess = () => {
-    setTab(TABS.LIVE_STREAM)
+    setTab(tabOpenDialog)
     setOpenDialog(true)
   }
 
@@ -254,8 +256,11 @@ const StreamingSettingContainer: React.FC<{ default_tab: any }> = ({ default_tab
     }
   }
 
-  const handleClickSelectGift = useCallback((open) => {
+  const handleClickSelectGift = useCallback((open, tab = null) => {
     setOpenDialog(open)
+    if (_.isNumber(tab)) {
+      setTabOpenDialog(tab)
+    }
   }, [])
 
   return (

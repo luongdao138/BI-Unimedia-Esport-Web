@@ -62,7 +62,7 @@ const MemberItem: React.FC<Prop> = ({ item }) => {
           <Typography className={classes.buttonText}>{buttonText()}</Typography>
         </ESButton>
       ) : (
-        <Typography className={classes.buttonText}>{t('streaming_setting_screen.member_list.invalid')}</Typography>
+        <Typography className={`${classes.buttonText} block-master`}>{t('streaming_setting_screen.member_list.invalid')}</Typography>
       )}
     </Box>
   )
@@ -125,6 +125,10 @@ const useStyles = makeStyles(() => ({
     color: Colors.white,
     fontSize: '14px',
     fontWeight: 'bold',
+    '&.block-master': {
+      width: '70px',
+      textAlign: 'center',
+    },
   },
 }))
 export default MemberItem
