@@ -400,7 +400,7 @@ const VideoDetail: React.FC = () => {
     if (detailVideoResult.uuid) {
       fetchDonateRanking({ video_id: detailVideoResult.uuid })
     }
-  }, [detailVideoResult.uuid, isAuthenticated])
+  }, [detailVideoResult.uuid])
 
   useEffect(() => {
     // setTab(isMobile ? VIDEO_INFO_TABS.COMMENT : VIDEO_INFO_TABS.PROGRAM_INFO)
@@ -884,6 +884,10 @@ const useStyles = makeStyles((theme) => ({
     top: 0,
   },
   [theme.breakpoints.down(769)]: {
+    root: {
+      minHeight: '100vh',
+      flexDirection: 'column',
+    },
     wrapChatContainer: {
       width: '100%',
       position: 'relative',
@@ -942,6 +946,7 @@ const useStyles = makeStyles((theme) => ({
       if (props.isLandscape)
         return {
           flexWrap: 'nowrap',
+          flexDirection: 'row',
         }
     },
     allTabsContainer: (props: videoStyleProps) => {

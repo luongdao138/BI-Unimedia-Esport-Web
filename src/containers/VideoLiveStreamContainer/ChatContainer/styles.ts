@@ -484,6 +484,7 @@ const useStyles = makeStyles((theme) => ({
       marginRight: 'unset',
       marginLeft: 'unset',
       height: 'auto',
+      background: '#212121',
     },
     chatBoard: {
       height: 389,

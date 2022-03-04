@@ -8,12 +8,16 @@ import useDetailVideo from '@containers/VideoLiveStreamContainer/useDetailVideo'
 import { Box, makeStyles, Typography, useMediaQuery, useTheme } from '@material-ui/core'
 import { useCheckDisplayChat } from '@utils/hooks/useCheckDisplayChat'
 import { useContext, useEffect } from 'react'
-import ESLoader from '@components/Loader'
+import Loader from '@components/Loader'
+
+import { useAppSelector } from '@store/hooks'
 
 import { useTranslation } from 'react-i18next'
 import { VideoContext } from '@containers/VideoLiveStreamContainer/VideoContext'
 import _ from 'lodash'
 import { RankingsItem } from '@services/videoTop.services'
+import userProfileStore from '@store/userProfile'
+import { UserProfile } from '@services/user.service'
 
 type RankingTabProps = { type?: string }
 
@@ -34,11 +38,19 @@ const RankingTab: React.FC<RankingTabProps> = () => {
   const { activeSubTab } = liveStreamInfo
   const { giverRankInfo, receiverRankInfo } = useContext(VideoContext)
 
+  // eslint-disable-next-line no-console
+  const { selectors } = userProfileStore
+  const userProfile = useAppSelector<UserProfile>(selectors.getUserProfile)
+  const user_uuid = userProfile?.attributes?.uuid
   const { t } = useTranslation('common')
   const classes = useStyles()
   // const [activeSubTab, setActiveSubTab] = useState(SUB_TABS.RANKING.RECEIPT)
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down(768))
+
+  const mineGiveInfo: RankingsItem = _.find(giverRankInfo, (v) => {
+    return user_uuid && v?.uuid === user_uuid
+  })
 
   useEffect(() => {
     setActiveSubTab(SUB_TABS.RANKING.RECEIPT)
@@ -52,6 +64,7 @@ const RankingTab: React.FC<RankingTabProps> = () => {
   // }, [videoId])
 
   const giver: Array<RankingsItem> = _.slice(giverRankInfo, 0, LIMIT_RANK)
+  const isUserInTopRank = _.findIndex(giver, (v) => v?.uuid === user_uuid) !== -1
   const receiver: Array<RankingsItem> = _.slice(receiverRankInfo, 0, LIMIT_RANK)
   const getContent = () => {
     switch (activeSubTab) {
@@ -61,7 +74,8 @@ const RankingTab: React.FC<RankingTabProps> = () => {
             {giverRankInfo.length > 0 ? (
               <Rankings>
                 {giver.map((v, k) => {
-                  if (v.streamer === ROLE_USER.STREAMER) {
+                  if (v.uuid === user_uuid) {
+                    // if (k === 1) {
                     return (
                       <RankingItemSelf
                         key={k}
@@ -72,18 +86,30 @@ const RankingTab: React.FC<RankingTabProps> = () => {
                         position={k + 1}
                       />
                     )
+                  } else {
+                    return (
+                      <RankingItem
+                        key={k}
+                        position={k + 1}
+                        avatar={<ESAvatar src={v?.user_avatar} alt={v?.user_nickname} size={40} />}
+                        tab={SUB_TABS.RANKING.SEND}
+                        name={v?.user_nickname}
+                        total={v?.total}
+                      />
+                    )
                   }
-                  return (
-                    <RankingItem
-                      key={k}
-                      position={k + 1}
-                      avatar={<ESAvatar src={v?.user_avatar} alt="avatar" size={40} />}
-                      tab={SUB_TABS.RANKING.SEND}
-                      name={v?.user_nickname}
-                      total={v?.total}
-                    />
-                  )
                 })}
+                {/* display rank of user if user is not in top rank and logged in and donated point */}
+                {/* {mineGiveInfo && ( */}
+                {!isUserInTopRank && mineGiveInfo && (
+                  <RankingItemSelf
+                    position={11}
+                    avatar={<ESAvatar src={mineGiveInfo?.user_avatar} alt={mineGiveInfo?.user_nickname} size={40} />}
+                    tab={SUB_TABS.RANKING.SEND}
+                    name={mineGiveInfo?.user_nickname}
+                    total={mineGiveInfo?.total}
+                  />
+                )}
               </Rankings>
             ) : (
               <Typography className={classes.noData}>{t('live_stream_screen.no_ranking')}</Typography>
@@ -95,17 +121,21 @@ const RankingTab: React.FC<RankingTabProps> = () => {
           <>
             {receiverRankInfo.length > 0 ? (
               <Rankings>
-                {receiver.map((v, k) => (
-                  <RankingItem
-                    key={k}
-                    position={k + 1}
-                    avatar={<ESAvatar src={v?.master_uuid ? v?.master_avatar : v?.user_avatar} alt="avatar" size={40} />}
-                    type={v?.type}
-                    tab={SUB_TABS.RANKING.RECEIPT}
-                    name={v?.master_name || v?.user_nickname}
-                    total={v?.total}
-                  />
-                ))}
+                {receiver.map((v, k) => {
+                  const name = v?.master_name || v?.user_nickname
+                  return (
+                    <RankingItem
+                      key={k}
+                      position={k + 1}
+                      avatar={<ESAvatar src={v?.master_uuid ? v?.master_avatar : v?.user_avatar} alt={name} size={40} />}
+                      type={v?.type}
+                      tab={SUB_TABS.RANKING.RECEIPT}
+                      name={name}
+                      total={v?.total}
+                      isStreamer={v?.master_uuid ? false : true}
+                    />
+                  )
+                })}
               </Rankings>
             ) : (
               <Typography className={classes.noData}>{t('live_stream_screen.no_ranking')}</Typography>
@@ -113,14 +143,6 @@ const RankingTab: React.FC<RankingTabProps> = () => {
           </>
         )
     }
-  }
-
-  if (rankingListMeta.pending) {
-    return (
-      <Box textAlign={'center'}>
-        <ESLoader />
-      </Box>
-    )
   }
 
   return (
@@ -141,21 +163,46 @@ const RankingTab: React.FC<RankingTabProps> = () => {
           onClick={(value) => setActiveSubTab(value)}
         />
       )}
-
+      {rankingListMeta.pending && (
+        <Box textAlign={'center'} className={classes.loaderBox}>
+          <Loader />
+        </Box>
+      )}
       <Box>{getContent()}</Box>
     </Box>
   )
 }
 
 const useStyles = makeStyles((theme) => ({
+  loaderBox: {
+    flexGrow: 0,
+    width: 20,
+    height: 20,
+    zIndex: 1000,
+    left: 0,
+    right: 0,
+    top: '0px',
+    margin: '0 auto',
+    '& svg': {
+      width: '100%',
+      color: 'red',
+    },
+  },
   noData: {
     marginTop: 20,
     textAlign: 'center',
+  },
+  rankingContainer: {
+    width: '100%',
+    height: '100%',
+    padding: '16px',
   },
   [theme.breakpoints.down(769)]: {
     rankingContainer: {
       marginLeft: 10,
       marginRight: 10,
+      background: '#212121',
+      padding: '0 8px',
     },
   },
 }))

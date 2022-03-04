@@ -12,9 +12,10 @@ interface Props {
   name?: string | undefined
   total?: string | number
   self?: boolean
+  isStreamer?: boolean
 }
 
-const RankingItem: React.FC<Props> = ({ position, avatar, type, tab, name, total }) => {
+const RankingItem: React.FC<Props> = ({ isStreamer, position, avatar, type, tab, name, total }) => {
   const classes = useStyles()
   // const { t } = useTranslation('common')
 
@@ -37,8 +38,11 @@ const RankingItem: React.FC<Props> = ({ position, avatar, type, tab, name, total
       <TableCell>
         <Box display="flex">
           <Box>{avatar}</Box>
-          <Box className={classes.nameWrapper} justifyContent={`${tab === SUB_TABS.RANKING.RECEIPT ? 'space-between' : 'center'}`}>
-            {tab === SUB_TABS.RANKING.RECEIPT && (
+          <Box
+            className={classes.nameWrapper}
+            justifyContent={`${tab === SUB_TABS.RANKING.SEND || isStreamer ? 'center' : 'space-between'}`}
+          >
+            {tab === SUB_TABS.RANKING.RECEIPT && !isStreamer && (
               <Typography variant="h3" component="p" noWrap className={classes.type}>
                 {type === 0 ? '個人' : 'チーム'}
               </Typography>
@@ -96,7 +100,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 30,
     fontWeight: 800,
     fontStyle: 'normal',
-    textAlign: 'left',
+    textAlign: 'center',
     marginTop: 0,
     marginBottom: 0,
     '& span': {
@@ -184,7 +188,7 @@ const useStyles = makeStyles((theme) => ({
   },
   tip: {
     fontSize: 16,
-    color: theme.palette.common.white,
+    color: Colors.white_opacity['70'],
     textAlign: 'right',
     wordBreak: 'break-word',
     fontFamily: "'Noto Sans JP', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",

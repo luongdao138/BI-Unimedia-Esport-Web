@@ -13,13 +13,18 @@ import Icon from '@material-ui/core/Icon'
 import usePurchaseTicketSuperChat from '@containers/VideoLiveStreamContainer/usePurchaseTicket'
 // import * as commonActions from '@store/common/actions'
 // import { useAppDispatch } from '@store/hooks'
+export type TipMessProps = {
+  master_uuid: string
+  image: string
+  name: string
+}
 
 type TipChatDialogProps = {
   openPurchasePointModal?: (point: any) => void
   onClickOutside?: () => void
   onPressDonate?: (donatedPoint: number, purchaseComment: string, master_id?: string) => void
   normalMessHasError?: boolean
-  createMess: (message: string, point?: number, master_uuid?: string) => Promise<void>
+  createMess: (message: string, point?: number, tip_mess?: TipMessProps) => Promise<void>
 }
 
 const TipChatDialog: React.FC<TipChatDialogProps> = ({
@@ -107,9 +112,17 @@ const TipChatDialog: React.FC<TipChatDialogProps> = ({
       // eslint-disable-next-line no-console
       console.log('🚀 ~ useEffect ~ message, donatedPoint', message, donatedPoint, selectedMember)
       if (selectedMember?.type === DonateReceiverType.STREAMER) {
-        createMess(message, donatedPoint)
+        createMess(message, donatedPoint, {
+          master_uuid: null,
+          image: selectedMember?.image,
+          name: selectedMember?.name,
+        })
       } else {
-        createMess(message, donatedPoint, selectedMember.master_uuid)
+        createMess(message, donatedPoint, {
+          master_uuid: selectedMember?.master_uuid,
+          image: selectedMember?.image,
+          name: selectedMember?.name,
+        })
       }
       // values.message = ''
     }

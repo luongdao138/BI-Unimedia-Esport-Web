@@ -304,6 +304,8 @@ export type RankingsItem = {
   user_nickname?: string
   video_id?: string
   streamer?: number
+  uuid?: string
+  created_at?: string
 }
 
 export type RankingsResponse = {
@@ -312,6 +314,7 @@ export type RankingsResponse = {
   data: {
     giver: Array<RankingsItem>
     receive: Array<RankingsItem>
+    streamer: { uuid?: string; user_avatar?: string; user_nickname?: string }
   }
 }
 

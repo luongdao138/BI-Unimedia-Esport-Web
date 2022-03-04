@@ -34,15 +34,17 @@ import ChatTextMessage from '@containers/VideoLiveStreamContainer/ChatContainer/
 import DonateMessage from './DonateMessage'
 import ESAvatar from '@components/Avatar'
 // import ESInput from '@components/Input'
-import { STATUS_VIDEO } from '@services/videoTop.services'
+import { RankingsItem, STATUS_VIDEO } from '@services/videoTop.services'
 import LoginRequired from '@containers/LoginRequired'
 import moment from 'moment'
 import {
+  GIVER_RANK_TYPE,
   INTERVAL_AUTO_GET_MESS,
   LIMIT_FETCH_NEXT,
   LIMIT_MAX_MESS_PREV_REWIND,
   LIMIT_MESS,
   LIMIT_MIN_MESS_PREV_REWIND,
+  RECEIVER_RANK_TYPE,
   SECOND_AUTO_GET_MESS_BEFORE,
   STATUS_SEND_MESS,
   SUB_TABS,
@@ -69,7 +71,7 @@ import TabsGroup from '@components/TabsGroup'
 // import ChatTab from './Tabs/ChatTab'
 import RankingTab from './Tabs/RankingTab'
 import { Colors } from '@theme/colors'
-import TipChatDialog from './TipChatDialog'
+import TipChatDialog, { TipMessProps } from './TipChatDialog'
 import { useRotateScreen } from '@utils/hooks/useRotateScreen'
 
 export type ChatStyleProps = {
@@ -224,7 +226,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
   ) => {
     const dispatch = useAppDispatch()
     const { isLandscape } = useRotateScreen()
-    const { videoRefInfo } = useContext(VideoContext)
+    const { videoRefInfo, giverRankInfo, setGiverRankInfo, receiverRankInfo, setReceiverRankInfo } = useContext(VideoContext)
     const videoPlayedSecond = useRef(0)
     console.log('🚀 ~ videoPlayedSecond', videoPlayedSecond?.current)
     const videoStreamingSecond = useRef(0)
@@ -329,6 +331,8 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       playedSecond,
       detailVideoResult,
       getVideoGiftMasterList,
+      rankingListMeta,
+      fetchDonateRanking,
     } = useDetailVideo()
     const { isEnabledGift, isEnabledMessFilter, isDisplayedRankingTab } = useCheckDisplayChat()
 
@@ -364,12 +368,6 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     useEffect(() => {
       cache.clearAll()
     }, [contentRect?.width])
-
-    // useEffect(() => {
-    //   if (isDisplayedRankingTab && detailVideoResult.uuid && activeTab === VIDEO_TABS.RANKING) {
-    //     fetchDonateRanking({ video_id: detailVideoResult.uuid })
-    //   }
-    // }, [isDisplayedRankingTab, detailVideoResult.uuid, activeTab])
 
     const debouncedHandleLoadMore = useCallback(
       debounce(() => {
@@ -1033,6 +1031,38 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     const refOnCreateMess = useRef(null)
     const onCreateMess = (createdMessage) => {
       if (createdMessage?.video_id === key_video_id && videoType === STATUS_VIDEO.LIVE_STREAM) {
+        const created_at = createdMessage?.createdAt ? moment(createdMessage?.createdAt).utc().format('YYYY-MM-DD HH:mm:ss') : null
+        if (createdMessage?.is_premium) {
+          const uuid = createdMessage?.uuid
+          const total = createdMessage?.point
+          const newDataGiver = CommonHelper.getRankInfo(
+            [...giverRankInfo],
+            [{ uuid, total, user_avatar: createdMessage?.parent?.avatar, user_nickname: createdMessage?.parent?.user_name, created_at }],
+            GIVER_RANK_TYPE
+          )
+          setGiverRankInfo(newDataGiver)
+          let newReceiver: RankingsItem = { total, created_at }
+          // donate for user gift
+          if (createdMessage?.giftMasterId) {
+            newReceiver = {
+              ...newReceiver,
+              master_uuid: createdMessage?.giftMasterId,
+              master_name: createdMessage?.receiver?.name,
+              master_avatar: createdMessage?.receiver?.image,
+            }
+          } else {
+            // donate for streamer
+            newReceiver = {
+              ...newReceiver,
+              master_uuid: null,
+              user_nickname: liveStreamInfo?.streamer?.user_nickname,
+              user_avatar: liveStreamInfo?.streamer?.user_avatar,
+            }
+          }
+          const newDataReceiver = CommonHelper.getRankInfo([...receiverRankInfo], [{ ...newReceiver }], RECEIVER_RANK_TYPE)
+          setReceiverRankInfo(newDataReceiver)
+        }
+
         const foundIndex = findMessUpdated(cacheMess, createdMessage, 'local_id')
         // only add new message if no found message in local
         if (foundIndex === -1) {
@@ -1577,6 +1607,10 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
           setActiveSubTab(SUB_TABS.MESS.ALL)
         }
       }
+      // get list ranking if has not get
+      if (activeTab === VIDEO_TABS.RANKING && !rankingListMeta.pending && !rankingListMeta.loaded) {
+        fetchDonateRanking({ video_id: detailVideoResult.uuid })
+      }
     }, [activeTab])
 
     useEffect(() => {
@@ -1749,6 +1783,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         user_name?: string
       }
       giftMasterId?: string
+      receiver?: { name: string; image: string }
     }
 
     const updateOldMessData = (updatedMessage, objWithNewProps, compareProp = 'id') => {
@@ -1819,8 +1854,8 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       }
     }
 
-    const createMess = async (message: string, point = 0, master_uuid = ''): Promise<void> => {
-      console.log('🚀 ~ createMess ~ master_uuid', master_uuid)
+    const createMess = async (message: string, point = 0, tip_mess?: TipMessProps): Promise<void> => {
+      const { master_uuid, name, image } = tip_mess
       if (successFlagGetAddUSer && Object.keys(chatUser).length > 0 && message && isEnabledChat && isStreaming) {
         const videoTime = videoPlayedSecond.current
         let input: MessInput = {
@@ -1865,6 +1900,12 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
           local_message = {
             ...local_message,
             parent: { avatar: avatar_url, user_name: nickname },
+          }
+          if (master_uuid) {
+            local_message = {
+              ...local_message,
+              receiver: { name, image },
+            }
           }
         }
 
@@ -2446,11 +2487,15 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       return i18n.t('common:live_stream_screen.chat_purchase_ticket_note')
     }
 
-    const userDoesNotHaveViewingTicketView = () => (
-      <Box className={classes.chatPurchaseTicketBox}>
-        <Typography className={classes.chatPurchaseTicketNote}>{chatNotAvailableMessage()}</Typography>
-      </Box>
-    )
+    const userDoesNotHaveViewingTicketView = () => {
+      return (
+        activeTab === VIDEO_TABS.RANKING && (
+          <Box className={classes.chatPurchaseTicketBox}>
+            <Typography className={classes.chatPurchaseTicketNote}>{chatNotAvailableMessage()}</Typography>
+          </Box>
+        )
+      )
+    }
 
     // const chatContentPaddingBottom = () => {
     //   if (purchaseDialogVisible) {
@@ -2463,41 +2508,46 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
 
     const chatContent = () => (
       <>
-        {/* <Button onClick={scrollToCurrentMess}>Scroll to chat mess</Button> */}
-        <Box className={classes.userWatchingList} style={{ marginTop: getMarginTopOfComponents('userIcon') }}>
-          {messagesDonate
-            .slice()
-            .reverse()
-            .map((item, index) =>
-              !item.delete_flag ? (
-                <Box
-                  key={index}
-                  className={classes.userWatchingItem}
-                  style={{
-                    backgroundColor: purchasePoints[`p_${item.point}`].backgroundColor,
-                    opacity: !messActiveUser ? 1 : item.id === messActiveUser.id ? 1 : 0.5,
-                  }}
-                  onClick={() => {
-                    // close modal user icon if click icon of user is showed
-                    if (messActiveUser && (messActiveUser.id === item.id || messActiveUser.local_id === item.local_id)) {
-                      setMessActiveUser(null)
-                      setDisplayDialogMess(false)
-                    } else {
-                      setDisplayDialogMess(true)
-                      setMessActiveUser(item)
-                    }
-                  }}
-                >
-                  <ESAvatar src={item?.parent?.avatar} size={33} alt={item?.parent?.user_name} />
-                  <Box className={classes.textPoint}>{item.point}</Box>
-                </Box>
-              ) : (
-                ''
-              )
-            )}
-        </Box>
+        {activeTab === VIDEO_TABS.CHAT && (
+          <>
+            {/* <Button onClick={scrollToCurrentMess}>Scroll to chat mess</Button> */}
+            <Box className={classes.userWatchingList} style={{ marginTop: getMarginTopOfComponents('userIcon') }}>
+              {messagesDonate
+                .slice()
+                .reverse()
+                .map((item, index) =>
+                  !item.delete_flag ? (
+                    <Box
+                      key={index}
+                      className={classes.userWatchingItem}
+                      style={{
+                        backgroundColor: purchasePoints[`p_${item.point}`].backgroundColor,
+                        opacity: !messActiveUser ? 1 : item.id === messActiveUser.id ? 1 : 0.5,
+                      }}
+                      onClick={() => {
+                        // close modal user icon if click icon of user is showed
+                        if (messActiveUser && (messActiveUser.id === item.id || messActiveUser.local_id === item.local_id)) {
+                          setMessActiveUser(null)
+                          setDisplayDialogMess(false)
+                        } else {
+                          setDisplayDialogMess(true)
+                          setMessActiveUser(item)
+                        }
+                      }}
+                    >
+                      <ESAvatar src={item?.parent?.avatar} size={33} alt={item?.parent?.user_name} />
+                      <Box className={classes.textPoint}>{item.point}</Box>
+                    </Box>
+                  ) : (
+                    ''
+                  )
+                )}
+            </Box>
 
-        {chatBoardComponent()}
+            {chatBoardComponent()}
+          </>
+        )}
+
         {isMobile ? chatComponentMobile() : chatInputComponent()}
         {isEnabledChat && !isStreaming ? (
           <Box className={classes.chatInputContainer} style={{ width: '100%', height: 81 }}>
@@ -2571,10 +2621,10 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       switch (activeTab) {
         case VIDEO_TABS.CHAT:
           return renderMessageTab()
-        case VIDEO_TABS.RANKING:
-          return <RankingTab />
+        // case VIDEO_TABS.RANKING:
+        //   return <RankingTab />
         default:
-          return <></>
+          return ''
       }
     }
 
@@ -2605,15 +2655,21 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
             )}
           </ESTabs>
         </Box>
-        <Box className={classes.tabsContent} style={{ display: isMobile && activeTab === VIDEO_TABS.CHAT ? 'none' : 'block' }}>
-          {getTabsContent()}
-        </Box>
+        {activeTab === VIDEO_TABS.CHAT && (
+          <Box className={classes.tabsContent} style={{ display: isMobile && activeTab === VIDEO_TABS.CHAT ? 'none' : 'block' }}>
+            {getTabsContent()}
+          </Box>
+        )}
+
+        {activeTab === VIDEO_TABS.RANKING && <RankingTab />}
+        {renderContent()}
+
         {/* {!isMobile && (
           <Box className={classes.chatHeader}>
             <Typography className={classes.headerTitle}>{i18n.t('common:live_stream_screen.chat_header')}</Typography>
           </Box>
         )} */}
-        {activeTab === VIDEO_TABS.CHAT ? renderContent() : ''}
+        {/* {activeTab === VIDEO_TABS.CHAT ? renderContent() : ''} */}
       </Box>
     )
   }
