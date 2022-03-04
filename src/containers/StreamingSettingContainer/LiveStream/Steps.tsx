@@ -47,6 +47,7 @@ import ESBoxftDashColumn from '@components/ESBoxftDashColumn'
 import { useListGiftInfoDialog, useRankingInfoDialog } from '../useListGiftInfoDialog'
 import CharacterLimited from '@components/CharacterLimited'
 import { hhmmss } from '@containers/VideoPlayer/customPlugins/time'
+import { TABS } from '@containers/StreamingSettingContainer'
 
 interface StepsProps {
   step: number
@@ -63,7 +64,7 @@ interface StepsProps {
   videoStatusDynamo?: string | number
   validateField?: string
   handleUpdateValidateField?: (value: string) => void
-  openPopupGroupList?: (open: boolean) => void
+  openPopupGroupList?: (open: boolean, tab: TABS) => void
   liveStartTime?: string
 }
 
@@ -436,7 +437,7 @@ const Steps: React.FC<StepsProps> = ({
   }
 
   const openGroupList = () => {
-    openPopupGroupList(true)
+    openPopupGroupList(true, TABS.LIVE_STREAM)
   }
 
   //V3.0 count time

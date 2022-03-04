@@ -46,6 +46,7 @@ import ESLabelWithSwitch from '@components/LabelWithSwitch'
 import { useListGiftInfoDialog, useRankingInfoDialog } from '../useListGiftInfoDialog'
 import CharacterLimited from '@components/CharacterLimited'
 import { hhmmss } from '@containers/VideoPlayer/customPlugins/time'
+import { TABS } from '@containers/StreamingSettingContainer'
 
 interface StepsProps {
   step: number
@@ -64,7 +65,7 @@ interface StepsProps {
   obsStatusDynamo?: string | number
   videoStatusDynamo?: string | number
   processStatusDynamo?: string
-  openPopupGroupList?: (open: boolean) => void
+  openPopupGroupList?: (open: boolean, tab: TABS) => void
   liveStartTime?: string
 }
 
@@ -467,7 +468,7 @@ const Steps: React.FC<StepsProps> = ({
   }
 
   const openGroupList = () => {
-    openPopupGroupList(true)
+    openPopupGroupList(true, TABS.STREAMING_RESERVATION)
   }
 
   //V3.0 count time

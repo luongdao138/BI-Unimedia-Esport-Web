@@ -25,6 +25,7 @@ const { onCreateVideo, onUpdateChannel, onUpdateVideo } = require(`src/graphql.$
 import useGraphqlAPI from 'src/types/useGraphqlAPI'
 import { getTimeZone } from '@utils/helpers/CommonHelper'
 import moment from 'moment'
+import { TABS } from '@containers/StreamingSettingContainer'
 /* eslint-disable @typescript-eslint/no-unused-vars */
 // @ts-ignore
 const APIt: any = useGraphqlAPI()
@@ -35,7 +36,7 @@ interface Props {
   formik?: FormikProps<FormLiveType>
   validateField?: string
   handleUpdateValidateField?: (value: string) => void
-  openPopupGroupList?: (open: boolean) => void
+  openPopupGroupList?: (open: boolean, tab: TABS) => void
 }
 
 const LiveStreamContainer: React.FC<Props> = ({ formik, validateField, handleUpdateValidateField, openPopupGroupList }) => {
