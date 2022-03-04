@@ -1646,6 +1646,7 @@ export default {
       confirm: 'この内容で作成する',
       create_group_success: 'チップ対象リストを作成しました。',
       edit_group_success: 'チップ対象リストを編集しました。',
+      create_group_failed_master_invalid: 'チップ対処者情報の更新があるので、メンバーリストを再度確認お願いいたします。',
     },
     dialog_info_gift_list: {
       title: 'チップ対象リスト選択',

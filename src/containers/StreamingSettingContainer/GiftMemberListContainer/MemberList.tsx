@@ -16,7 +16,7 @@ const MemberList: React.FC = () => {
   const { t } = useTranslation('common')
   const classes = useStyles()
 
-  const { getAllGiftMaster, giftMasterList } = useGiftTarget()
+  const { getAllGiftMaster, giftMasterList, reloadGiftMasterFlag } = useGiftTarget()
 
   const [filterByType, setFilterByType] = useState(GiftMasterUserType.NO_FILTER)
   const [filterByName, setFilterByName] = useState('')
@@ -24,6 +24,12 @@ const MemberList: React.FC = () => {
   useEffect(() => {
     getAllGiftMaster(filterByName, filterByType)
   }, [])
+
+  useEffect(() => {
+    if (reloadGiftMasterFlag) {
+      getAllGiftMaster(filterByName, filterByType)
+    }
+  }, [reloadGiftMasterFlag])
 
   const getData = () => giftMasterList
 
@@ -77,16 +83,16 @@ const MemberList: React.FC = () => {
     []
   )
   const inputDebounce = useCallback(
-    _.debounce((keyword: string) => {
-      getAllGiftMaster(keyword, filterByType)
-    }, 500),
+    _.debounce((keyword: string, type) => {
+      getAllGiftMaster(keyword, type)
+    }, 350),
     []
   )
 
   const handleChange = (e) => {
     const { value } = e.target
     setFilterByName(value)
-    inputDebounce(value)
+    inputDebounce(value, filterByType)
   }
 
   const filterInputField = () => {

@@ -9,3 +9,4 @@ export const getNewGroupGiftMasterList = createSelector(getRoot, (state) => stat
 export const getListGiftGroup = createSelector(getRoot, (state) => state.gift_group_list)
 export const getGiftGroupTotal = createSelector(getRoot, (state) => state.gift_group_total)
 export const getGiftGroupDetail = createSelector(getRoot, (state) => state.gift_group_edit_detail)
+export const getReloadGiftMasterFlag = createSelector(getRoot, (state) => state.reload_gift_master_list_flag)
