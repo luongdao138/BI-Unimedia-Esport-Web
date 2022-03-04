@@ -1,5 +1,5 @@
 import { Box, makeStyles, Typography } from '@material-ui/core'
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import ESInput from '@components/Input'
 import { Colors } from '@theme/colors'
@@ -31,6 +31,7 @@ type Props = {
 }
 
 const GiftMemberListContainer: React.FC<Props> = ({ handleBackToListState, createMode }) => {
+  const [submitErrorMsg, setErrorMsg] = useState('')
   const { t } = useTranslation('common')
   const dispatch = useAppDispatch()
   const classes = useStyles()
@@ -56,18 +57,25 @@ const GiftMemberListContainer: React.FC<Props> = ({ handleBackToListState, creat
     handleBackToListState()
   }
 
+  const handleOnErrorCallback = (errorMsg) => {
+    if (errorMsg === 'validation.group_item_valid') {
+      setErrorMsg(t('streaming_setting_screen.member_list.create_group_failed_master_invalid'))
+    }
+  }
+
   const { values, setFieldValue, handleSubmit, errors, touched, handleBlur, setValues, validateForm, setErrors } = useFormik<
     CreateNewGiftGroupRequestBody
   >({
     initialValues: initialValues(),
     validationSchema: validationFormScheme(),
     onSubmit: ({ title }) => {
+      setErrorMsg('')
       const requestData = {
         title,
         group_item: newGiftGroupGiftMasterList.map(({ master_uuid }) => master_uuid),
         ...(createMode === CreateMode.EDIT && { group_id: giftGroupDetail.group_uuid }),
       }
-      createNewGiftGroup(requestData, handleOnSuccessCallback)
+      createNewGiftGroup(requestData, handleOnSuccessCallback, handleOnErrorCallback)
     },
     validateOnMount: true,
   })
@@ -147,7 +155,12 @@ const GiftMemberListContainer: React.FC<Props> = ({ handleBackToListState, creat
     <Box className={classes.container}>
       {header()}
       {memberList()}
-      <Footer onConfirm={handleSubmit} onCancel={handleBackToListState} confirmDisable={submitButtonDisabled()} />
+      <Footer
+        onConfirm={handleSubmit}
+        onCancel={handleBackToListState}
+        confirmDisable={submitButtonDisabled()}
+        errorMessage={submitErrorMsg}
+      />
     </Box>
   )
 }

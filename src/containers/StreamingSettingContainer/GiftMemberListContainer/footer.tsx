@@ -12,9 +12,10 @@ interface Props {
   onConfirm?: () => void
   onCancel?: () => void
   confirmDisable?: boolean
+  errorMessage?: string
 }
 
-const Footer: React.FC<Props> = ({ onConfirm = () => null, onCancel = () => null, confirmDisable }) => {
+const Footer: React.FC<Props> = ({ onConfirm = () => null, onCancel = () => null, confirmDisable, errorMessage }) => {
   const classes = useStyles()
   const { t } = useTranslation('common')
   const { newGiftGroupGiftMasterList } = useGiftTarget()
@@ -24,6 +25,7 @@ const Footer: React.FC<Props> = ({ onConfirm = () => null, onCancel = () => null
 
   return (
     <Box className={classes.container}>
+      {errorMessage && <Typography className={classes.errorMessage}>{errorMessage}</Typography>}
       <Typography className={classes.confirmMessage}>
         {`${getNumberItemSelected()}${t('streaming_setting_screen.member_list.confirm_message')}`}
       </Typography>
@@ -39,6 +41,11 @@ const Footer: React.FC<Props> = ({ onConfirm = () => null, onCancel = () => null
   )
 }
 const useStyles = makeStyles((theme: Theme) => ({
+  errorMessage: {
+    fontSize: '16px',
+    color: '#F7F735',
+    textAlign: 'center',
+  },
   container: {
     display: 'flex',
     flexDirection: 'column',

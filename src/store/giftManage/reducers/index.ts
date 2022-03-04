@@ -17,6 +17,7 @@ type StateType = {
   gift_group_list: Array<GiftGroupType>
   gift_group_total: number
   gift_group_edit_detail: GiftGroupDetail
+  reload_gift_master_list_flag: boolean
 }
 
 const initialState: StateType = {
@@ -26,6 +27,7 @@ const initialState: StateType = {
   gift_group_list: [],
   gift_group_total: 0,
   gift_group_edit_detail: null,
+  reload_gift_master_list_flag: false,
 }
 
 export default createReducer(initialState, (builder) => {
@@ -60,6 +62,7 @@ export default createReducer(initialState, (builder) => {
 
     .addCase(actions.getAllGiftMaster.fulfilled, (state, action) => {
       state.gift_master_list = action.payload.data
+      state.reload_gift_master_list_flag = false
     })
 
     .addCase(actions.addGiftMasterToNewGroup, (state, action) => {
@@ -76,6 +79,10 @@ export default createReducer(initialState, (builder) => {
       state.new_group_gift_master_list = list.filter(({ id }) => id !== data.id)
     })
 
+    .addCase(actions.updateGiftMasterList, (state, action) => {
+      const { data } = action.payload
+      state.new_group_gift_master_list = data
+    })
     .addCase(actions.getGiftGroupList.fulfilled, (state, action) => {
       const { data } = action.payload
       const { groups, total } = data
@@ -97,5 +104,10 @@ export default createReducer(initialState, (builder) => {
       const { data } = action.payload
       state.gift_group_edit_detail = data
       state.new_group_gift_master_list = data.group_item
+    })
+
+    .addCase(actions.setReloadGiftMasterFlag, (state, action) => {
+      const { flag } = action.payload
+      state.reload_gift_master_list_flag = flag
     })
 })

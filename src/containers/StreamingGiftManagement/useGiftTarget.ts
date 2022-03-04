@@ -1,7 +1,7 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { useAppDispatch, useAppSelector } from '@store/hooks'
 import { createMetaSelector } from '@store/metadata/selectors'
 import giftManage from '@store/giftManage'
-import useCommonData from '@containers/Lobby/UpsertForm/useCommonData'
 import { useTranslation } from 'react-i18next'
 import _ from 'lodash'
 import { getTimeZone } from '@utils/helpers/CommonHelper'
@@ -9,14 +9,20 @@ import { TargetPersonType } from '@store/giftManage/actions'
 import { NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
 import { showDialog } from '@store/common/actions'
 import useCheckNgWord from '@utils/hooks/useCheckNgWord'
+import authStore from '@store/auth'
+import { CreateNewGiftGroupRequestBody } from '@services/gift.service'
+import { getReloadGiftMasterFlag } from '@store/giftManage/selectors'
 
 const { selectors, actions } = giftManage
 const _addGiftTargetData = createMetaSelector(actions.addTargetPerson)
 const getGiftGroupListMeta = createMetaSelector(actions.getGiftGroupList)
+const {
+  selectors: { getAuth },
+} = authStore
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const useGiftManage = () => {
-  const { user } = useCommonData()
+  const user = useAppSelector(getAuth)
   const dispatch = useAppDispatch()
   const giftTargetData = useAppSelector(selectors.getListGiftTargetPerson)
   const { t } = useTranslation('common')
@@ -89,14 +95,24 @@ const useGiftManage = () => {
   const removeGiftMasterFromNewGroup = (data) => dispatch(actions.removeGiftMasterFromNewGroup({ data }))
   const newGiftGroupGiftMasterList = useAppSelector(selectors.getNewGroupGiftMasterList)
   const includedInNewList = (data) => !!_.find(newGiftGroupGiftMasterList, ({ id }) => id === data.id)
+  const updateNewGiftMasterList = (data) => dispatch(actions.updateGiftMasterList({ data }))
 
-  const createNewGiftGroup = async (data, successCallback) => {
-    const requestData = {
+  const createNewGiftGroup = async (data, successCallback, errorCallback) => {
+    const requestData: CreateNewGiftGroupRequestBody = {
       ...data,
       user_id: user?.id,
       timezone: getTimeZone(),
     }
     const resultAction = await dispatch(actions.createNewGiftGroup(requestData))
+    if (actions.createNewGiftGroup.rejected.match(resultAction)) {
+      //@ts-ignore
+      const { message, data } = resultAction.payload
+      errorCallback(message)
+      if (message === 'validation.group_item_valid') {
+        updateNewGiftMasterList(data)
+        setReloadGiftMasterFlag(true)
+      }
+    }
     if (actions.createNewGiftGroup.fulfilled.match(resultAction)) {
       successCallback()
     }
@@ -134,6 +150,9 @@ const useGiftManage = () => {
     }
   }
 
+  const reloadGiftMasterFlag = useAppSelector(getReloadGiftMasterFlag)
+  const setReloadGiftMasterFlag = (flag) => dispatch(actions.setReloadGiftMasterFlag({ flag }))
+
   return {
     giftTargetData,
     meta_gift_target,
@@ -160,6 +179,8 @@ const useGiftManage = () => {
     getGiftGroupDetail,
     giftGroupDetail,
     deleteGiftGroup,
+    reloadGiftMasterFlag,
+    setReloadGiftMasterFlag,
   }
 }
 

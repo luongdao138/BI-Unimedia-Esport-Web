@@ -107,6 +107,9 @@ export const getAllGiftMaster = createAsyncThunk<GetAllGiftMasterResponse, GetAl
 
 export const addGiftMasterToNewGroup = createAction<{ data: GiftMasterType }>(GIFT_MANAGE_ACTION_TYPE.NEW_GROUP_ADD_GIFT_MASTER)
 export const removeGiftMasterFromNewGroup = createAction<{ data: GiftMasterType }>(GIFT_MANAGE_ACTION_TYPE.NEW_GROUP_REMOVE_GIFT_MASTER)
+export const updateGiftMasterList = createAction<{ data: Array<GiftMasterType> }>(
+  GIFT_MANAGE_ACTION_TYPE.CREATE_NEW_GROUP_UPDATE_GIFT_MASTER
+)
 
 export const createNewGiftGroup = createAsyncThunk<CreateNewGiftGroupResponse, CreateNewGiftGroupRequestBody>(
   GIFT_MANAGE_ACTION_TYPE.CREATE_NEW_GIFT_GROUP,
@@ -116,7 +119,7 @@ export const createNewGiftGroup = createAsyncThunk<CreateNewGiftGroupResponse, C
       if (res?.code === 200) {
         return res
       } else {
-        return rejectWithValue(JSON.stringify(res.message))
+        return rejectWithValue(res)
       }
     } catch (error) {
       if (!error.response) {
@@ -189,3 +192,5 @@ export const deleteGiftGroup = createAsyncThunk<CreateNewGiftGroupResponse, Dele
     }
   }
 )
+
+export const setReloadGiftMasterFlag = createAction<{ flag: boolean }>(GIFT_MANAGE_ACTION_TYPE.RELOAD_GIFT_MASTER_LIST)
