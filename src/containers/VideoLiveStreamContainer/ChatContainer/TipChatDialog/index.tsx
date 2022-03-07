@@ -6,7 +6,7 @@ import { Colors } from '@theme/colors'
 import { FormatHelper } from '@utils/helpers/FormatHelper'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 // import { purchasePoints } from './index'
-import Step1, { DonateReceiverType } from './Step1'
+import Step1 from './Step1'
 import Step2 from './Step2'
 import Step3 from './Step3'
 import Icon from '@material-ui/core/Icon'
@@ -111,15 +111,17 @@ const TipChatDialog: React.FC<TipChatDialogProps> = ({
       const { message, donatedPoint } = tipInfo
       // eslint-disable-next-line no-console
       console.log('🚀 ~ useEffect ~ message, donatedPoint', message, donatedPoint, selectedMember)
-      if (selectedMember?.type === DonateReceiverType.STREAMER) {
+      // tip for member in list gift
+      if (selectedMember?.master_uuid) {
         createMess(message, donatedPoint, {
-          master_uuid: null,
+          master_uuid: selectedMember?.master_uuid,
           image: selectedMember?.image,
           name: selectedMember?.name,
         })
       } else {
+        // tip for streamer
         createMess(message, donatedPoint, {
-          master_uuid: selectedMember?.master_uuid,
+          master_uuid: null,
           image: selectedMember?.image,
           name: selectedMember?.name,
         })
