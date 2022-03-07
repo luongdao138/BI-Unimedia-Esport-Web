@@ -168,7 +168,9 @@ const RankingTab: React.FC<RankingTabProps> = () => {
           <Loader />
         </Box>
       )}
-      <Box>{getContent()}</Box>
+      <Box display={'flex'} style={{ overflow: 'hidden' }}>
+        {getContent()}
+      </Box>
     </Box>
   )
 }
@@ -196,6 +198,9 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     height: '100%',
     padding: '16px',
+    overflow: 'hidden',
+    display: 'flex',
+    flexDirection: 'column',
   },
   [theme.breakpoints.down(769)]: {
     rankingContainer: {
