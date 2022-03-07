@@ -14,9 +14,9 @@ const Rankings: React.FC<Props> = ({ children }) => {
   const { t } = useTranslation('common')
 
   return (
-    <Box>
+    <Box display={'flex'}>
       <TableContainer className={classes.container}>
-        <Table className={classes.table}>
+        <Table className={classes.table} stickyHeader aria-label="sticky table">
           <colgroup>
             <col style={{ width: isLandscape ? 56 : 68 }} />
             <col style={{ width: isLandscape ? 140 : 165 }} />
@@ -54,6 +54,7 @@ const useStyles = makeStyles((theme) => ({
     tableLayout: 'fixed',
     '& .MuiTableCell-root': {
       borderColor: '#707070',
+      backgroundColor: '#3d3d3c',
     },
   },
   headerTable: {
