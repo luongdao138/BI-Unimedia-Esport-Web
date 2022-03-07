@@ -145,7 +145,7 @@ const TipChatDialog: React.FC<TipChatDialogProps> = ({
       case 1:
         return <Step1 {...commonStepProps} onChangeSelectedMember={onChangeSelectedMember} />
       case 2:
-        return <Step2 {...commonStepProps} onChangeTipInfo={onChangeTipInfo} />
+        return <Step2 {...commonStepProps} onChangeTipInfo={onChangeTipInfo} tipInfo={tipInfo} />
       case 3:
         return <Step3 {...commonStepProps} tipInfo={tipInfo} />
       default:

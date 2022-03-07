@@ -50,7 +50,6 @@ const Step1: React.FC<Step1Props> = ({ onChangeStep, onChangeSelectedMember }) =
   const giftMasterData = () =>
     (videoGiftMaster?.group_item ?? []).map((item) => ({
       ...item,
-      type: DonateReceiverType.GIFT_MASTER,
     }))
 
   return (

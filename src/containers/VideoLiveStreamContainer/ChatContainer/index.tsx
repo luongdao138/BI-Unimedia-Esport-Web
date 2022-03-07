@@ -1856,7 +1856,10 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
 
     const createMess = async (message: string, point = 0, tip_mess?: TipMessProps): Promise<void> => {
       const { master_uuid, name, image } = tip_mess
-      if (successFlagGetAddUSer && Object.keys(chatUser).length > 0 && message && isEnabledChat && isStreaming) {
+      if (!point && !message) {
+        return
+      }
+      if (successFlagGetAddUSer && Object.keys(chatUser).length > 0 && isEnabledChat && isStreaming) {
         const videoTime = videoPlayedSecond.current
         let input: MessInput = {
           // id is auto populated by AWS Amplify

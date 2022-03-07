@@ -5,7 +5,7 @@ import { Box, InputAdornment, makeStyles, Typography } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import { FormatHelper } from '@utils/helpers/FormatHelper'
 import { useFormik } from 'formik'
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 // import * as Yup from 'yup'
 import { purchasePoints, sanitizeMess } from '..'
 import TipButtonGroup from './TipButtonGroup'
@@ -14,9 +14,10 @@ type Step2Props = {
   onChangeTipInfo?: (tipInfo: any) => void
   onChangeStep?: (newStep: number) => void
   selectedMember?: any
+  tipInfo?: any
 }
 
-const Step2: React.FC<Step2Props> = ({ onChangeStep, selectedMember, onChangeTipInfo }) => {
+const Step2: React.FC<Step2Props> = ({ onChangeStep, selectedMember, onChangeTipInfo, tipInfo }) => {
   const classes = useStyles()
   const getPurchasePointList = () => Object.values(purchasePoints)
   const [purchaseValueSelected, setPurchaseValueSelected] = useState<string>('p_100')
@@ -50,7 +51,7 @@ const Step2: React.FC<Step2Props> = ({ onChangeStep, selectedMember, onChangeTip
   //     )
   //     .trim(),
   // })
-  const { handleChange, values, handleSubmit, errors, touched } = useFormik({
+  const { handleChange, values, handleSubmit, errors, touched, setValues } = useFormik({
     initialValues: {
       message: '',
     },
@@ -86,6 +87,10 @@ const Step2: React.FC<Step2Props> = ({ onChangeStep, selectedMember, onChangeTip
     const limit = purchasePoints[purchaseValueSelected].maxLengthInput
     return i18n.t('common:live_stream_screen.tip_message_limit').replace('%d', limit)
   }
+
+  useEffect(() => {
+    setValues({ message: tipInfo?.message || '' })
+  }, [])
 
   return (
     <Box>

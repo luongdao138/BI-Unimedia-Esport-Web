@@ -11,16 +11,12 @@ export type IGiftMember = {
   isCutTextOverflow?: boolean
 }
 
-const GiftMember: React.FC<IGiftMember> = ({
-  isCutTextOverflow = false,
-  isStreamer = false,
-  data: { image, type: receiverType, name },
-}) => {
+const GiftMember: React.FC<IGiftMember> = ({ isCutTextOverflow = false, isStreamer = false, data: { image, type, name } }) => {
   const classes = useStyles()
   const { t } = useTranslation('common')
 
   const userType = () => {
-    return receiverType === GiftMasterUserType.TEAM
+    return type === GiftMasterUserType.TEAM
       ? t('streaming_setting_screen.member_list.tag_team')
       : t('streaming_setting_screen.member_list.tag_individual')
   }
