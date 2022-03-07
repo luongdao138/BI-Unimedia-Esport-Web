@@ -335,7 +335,6 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       fetchDonateRanking,
     } = useDetailVideo()
     const { isEnabledGift, isEnabledMessFilter, isDisplayedRankingTab } = useCheckDisplayChat()
-
     const { activeTab, activeSubTab } = liveStreamInfo
 
     const isTipTab = activeSubTab === SUB_TABS.MESS.TIP
