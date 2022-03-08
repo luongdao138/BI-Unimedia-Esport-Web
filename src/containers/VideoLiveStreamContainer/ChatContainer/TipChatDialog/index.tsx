@@ -216,7 +216,7 @@ const TipChatDialog: React.FC<TipChatDialogProps> = ({
       )}
       <Box className={classes.wrapPointInfo} pt={2}>
         <Typography className={classes.textMyPoint}>
-          {`${i18n.t('common:donate_points.title_donate_point')}:${FormatHelper.currencyFormat(myPoint.toString())} ${i18n.t(
+          {`${i18n.t('common:donate_points.title_donate_point')}：${FormatHelper.currencyFormat(myPoint.toString())} ${i18n.t(
             'common:donate_points.step_one_points'
           )}`}
         </Typography>
@@ -271,7 +271,7 @@ const useStyles = makeStyles((theme) => ({
     left: '0',
     right: '0',
     zIndex: 4,
-    margin: '0 16px 13px 16px',
+    margin: '0 8px 13px 16px',
     padding: '13px 8px 13px',
     background: '#161616',
     borderRadius: '8px',

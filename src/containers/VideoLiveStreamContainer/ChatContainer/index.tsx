@@ -71,7 +71,7 @@ import TabsGroup from '@components/TabsGroup'
 // import ChatTab from './Tabs/ChatTab'
 import RankingTab from './Tabs/RankingTab'
 import { Colors } from '@theme/colors'
-import TipChatDialog, { TipMessProps } from './TipChatDialog'
+import TipChatDialog from './TipChatDialog'
 import { useRotateScreen } from '@utils/hooks/useRotateScreen'
 
 export type ChatStyleProps = {
@@ -1854,7 +1854,15 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       }
     }
 
-    const createMess = async (message: string, point = 0, tip_mess?: TipMessProps): Promise<void> => {
+    const createMess = async (
+      message: string,
+      point = 0,
+      tip_mess = {
+        master_uuid: null,
+        name: null,
+        image: null,
+      }
+    ): Promise<void> => {
       const { master_uuid, name, image } = tip_mess
       if (!point && !message) {
         return

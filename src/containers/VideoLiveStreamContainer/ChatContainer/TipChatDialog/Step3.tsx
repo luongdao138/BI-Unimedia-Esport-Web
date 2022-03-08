@@ -43,7 +43,9 @@ const Step3: React.FC<Step3Props> = ({ tipInfo, onChangeStep, selectedMember, on
             )}${i18n.t('common:donate_points.step_one_points')}`}
           </Box>
           <Box className={classes.wrapMessage} style={{ padding: tipInfo?.message ? '38px 7px' : '28px 7px' }}>
-            <Box className={classes.message}>{tipInfo?.message || `${i18n.t('common:live_stream_screen.no_mess')}`}</Box>
+            <Box className={`${classes.message} ${tipInfo?.message ? '' : classes.noMessage}`}>
+              {tipInfo?.message || `${i18n.t('common:live_stream_screen.no_mess')}`}
+            </Box>
           </Box>
 
           <Box mt={'11px'}>
@@ -89,7 +91,27 @@ const useStyles = makeStyles((theme) => ({
     overflow: 'auto',
     whiteSpace: 'pre-wrap',
     wordBreak: 'break-word',
+    scrollbarColor: '#222 transparent',
+    scrollbarWidth: 'thin',
+    width: '100%',
+    '&$noMessage': {
+      textAlign: 'center',
+    },
+    '&::-webkit-scrollbar': {
+      width: 5,
+      opacity: 1,
+      padding: 2,
+    },
+    '&::-webkit-scrollbar-track': {
+      paddingLeft: 1,
+      background: 'rgba(0,0,0,0.5)',
+    },
+    '&::-webkit-scrollbar-thumb': {
+      backgroundColor: '#222222',
+      borderRadius: 6,
+    },
   },
+  noMessage: {},
   [theme.breakpoints.down(769)]: {
     selectedPoint: {
       fontSize: '10px',
