@@ -74,7 +74,7 @@ const Step1: React.FC<Step1Props> = ({ onChangeStep, onChangeSelectedMember }) =
 
 const useStyles = makeStyles((theme) => ({
   giftMemberList: {
-    maxHeight: '421px',
+    maxHeight: '362px',
     overflow: 'auto',
     paddingRight: 4,
     gap: '8px',

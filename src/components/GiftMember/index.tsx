@@ -62,6 +62,9 @@ const useStyles = makeStyles(() => ({
   },
   streamerNameWrapText: {
     maxWidth: 100,
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
   },
 }))
 
