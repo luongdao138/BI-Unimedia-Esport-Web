@@ -8,7 +8,10 @@ const useStyles = makeStyles((theme) => ({
   tabsContent: {
     width: '100%',
     // height: '100%',
-    padding: '16px',
+    paddingLeft: '16px',
+    paddingRight: '16px',
+    paddingTop: '10px',
+    paddingBottom: '2px',
     // flex: 1 1 0px;
     // overflow: auto;
   },
