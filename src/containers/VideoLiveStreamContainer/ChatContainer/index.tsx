@@ -265,6 +265,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     const [isGettingPrevRewindMess, setIsGettingPrevRewindMess] = useState(false)
     const [isGettingRewindMess, setIsGettingRewindMess] = useState(false)
     const [cacheMess, setCacheMess] = useState([])
+    // save mess tip to cache, when switch tab => get mess in this cache and show
     const [cacheMessTip, setCacheMessTip] = useState([])
     console.log('🚀 ~ cacheMessTip', cacheMessTip)
     console.log('🚀 ~ cacheMess', cacheMess)
@@ -1089,6 +1090,9 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
           // save donated messages for local (not check display time)
           if (isPremiumChat(createdMessage, false)) {
             setCacheDonateMess((messages) => [...messages, createdMessage])
+          }
+          // save mess tip to cache
+          if (createdMessage?.is_premium === true) {
             setCacheMessTip((messages) => [...messages, createdMessage])
           }
         }
@@ -1817,7 +1821,9 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       if (foundIndex !== -1) {
         const newCacheMessTip = [...cacheMessTip]
         newCacheMessTip[foundIndex] = { ...updatedMessWithNewProp }
-        setCacheMessTip(newCacheMessTip)
+        if (updatedMessage?.is_premium === true) {
+          setCacheMessTip(newCacheMessTip)
+        }
       }
     }
 
@@ -1928,6 +1934,10 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         if (is_premium_local_message) {
           // setSavedDonateMess((messages) => [...messages, local_message])
           setCacheDonateMess((messages) => [...messages, local_message])
+        }
+        // only save mess tip when has point
+        if (point) {
+          setCacheMessTip((messages) => [...messages, local_message])
         }
 
         // save message to local
@@ -2174,7 +2184,8 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
                     resendMess={resendMess}
                     reDeleteMess={reDeleteMess}
                   />
-                ) : (
+                ) : isTipTab ? null : (
+                  // no display normal mess on tab tip
                   <ChatTextMessage
                     key={index}
                     message={msg}
