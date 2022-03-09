@@ -74,30 +74,16 @@ const RankingTab: React.FC<RankingTabProps> = () => {
             {giverRankInfo.length > 0 ? (
               <Rankings>
                 {giver.map((v, k) => {
-                  if (v.uuid === user_uuid) {
-                    // if (k === 1) {
-                    return (
-                      <RankingItemSelf
-                        key={k}
-                        avatar={<ESAvatar src={v?.user_avatar} alt="avatar" size={40} />}
-                        tab={SUB_TABS.RANKING.SEND}
-                        name={v?.user_nickname}
-                        total={v?.total}
-                        position={k + 1}
-                      />
-                    )
-                  } else {
-                    return (
-                      <RankingItem
-                        key={k}
-                        position={k + 1}
-                        avatar={<ESAvatar src={v?.user_avatar} alt={v?.user_nickname} size={40} />}
-                        tab={SUB_TABS.RANKING.SEND}
-                        name={v?.user_nickname}
-                        total={v?.total}
-                      />
-                    )
-                  }
+                  return (
+                    <RankingItem
+                      key={k}
+                      position={k + 1}
+                      avatar={<ESAvatar src={v?.user_avatar} alt={v?.user_nickname} size={40} />}
+                      tab={SUB_TABS.RANKING.SEND}
+                      name={v?.user_nickname}
+                      total={v?.total}
+                    />
+                  )
                 })}
                 {/* display rank of user if user is not in top rank and logged in and donated point */}
                 {/* {mineGiveInfo && ( */}
