@@ -11,6 +11,7 @@ import Step2 from './Step2'
 import Step3 from './Step3'
 import Icon from '@material-ui/core/Icon'
 import usePurchaseTicketSuperChat from '@containers/VideoLiveStreamContainer/usePurchaseTicket'
+import useDetailVideo from '@containers/VideoLiveStreamContainer/useDetailVideo'
 // import * as commonActions from '@store/common/actions'
 // import { useAppDispatch } from '@store/hooks'
 export type TipMessProps = {
@@ -36,6 +37,7 @@ const TipChatDialog: React.FC<TipChatDialogProps> = ({
 }) => {
   // const dispatch = useAppDispatch()
   const { dataPurchaseTicketSuperChat } = usePurchaseTicketSuperChat()
+  const { videoGiftMaster } = useDetailVideo()
 
   const { myPointsData } = usePointsManage()
   // const getPurchasePointList = () => Object.values(purchasePoints)
@@ -129,6 +131,19 @@ const TipChatDialog: React.FC<TipChatDialogProps> = ({
       // values.message = ''
     }
   }, [dataPurchaseTicketSuperChat])
+
+  useEffect(() => {
+    // check if didn't select tip in settings then default selected streamer
+    if (videoGiftMaster?.gift_group_id === null) {
+      setSelectedMember({
+        id: null,
+        image: videoGiftMaster.user_avatar,
+        name: videoGiftMaster.user_nickname,
+        type: DonateReceiverType.STREAMER,
+      })
+      setStep(2)
+    }
+  }, [videoGiftMaster])
 
   // const handleDonate = (point, mess, master_uuid) => {
   //   console.log('🚀 ~ handleDonate ~ point, mess, master_uuid', point, mess, master_uuid)
