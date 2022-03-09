@@ -19,6 +19,7 @@ import { STATUS_VIDEO } from '@services/videoTop.services'
 import VideoDeleteConfirmModal from '@containers/ArchiveDetailContainer/DeleteVideoConfirmModal/VideoDeleteConfirmModal'
 import ESLoader from '@components/FullScreenLoader'
 import { CookieData } from '@services/archiveList.service'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
 
 const ITEM_PER_PAGE = 25
 
@@ -140,9 +141,17 @@ const ArchivedListContainer: React.FC = () => {
 
     const handleDownloadVideo = () => {
       if (convert_status === 'COMPLETE') {
-        getCookieVideoDownload({ video_id: rowData?.uuid }, async (dataCookie: CookieData) => {
-          window.open(dataCookie?.url, '_blank')
-        })
+        const { isChrome } = CommonHelper.getBrowserInfo()
+        if (!isChrome) {
+          const newTab = window.open('', '_blank')
+          getCookieVideoDownload({ video_id: rowData?.uuid }, async (dataCookie: CookieData) => {
+            newTab.location.href = dataCookie?.url
+          })
+        } else {
+          getCookieVideoDownload({ video_id: rowData?.uuid }, async (dataCookie: CookieData) => {
+            window.open(dataCookie?.url, '_blank')
+          })
+        }
       }
     }
 

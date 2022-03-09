@@ -1647,6 +1647,7 @@ export default {
       create_group_success: 'チップ対象リストを作成しました。',
       edit_group_success: 'チップ対象リストを編集しました。',
       create_group_failed_master_invalid: 'チップ対処者情報の更新があるので、メンバーリストを再度確認お願いいたします。',
+      member_list_no_result: 'まだ誰もメンバーが追加されていません。\n個別ギフト対象一覧より対象者を登録してリストを作成してください。',
     },
     dialog_info_gift_list: {
       title: 'チップ対象リスト選択',

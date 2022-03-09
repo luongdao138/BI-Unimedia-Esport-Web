@@ -37,6 +37,7 @@ const GiftManageTab: React.FC<Props> = ({ onChangeTab, onChangeTabSubmitSuccess,
   }
 
   const handleGoToEditGiftGroupState = ({ group_uuid }: GiftGroupType) => () => {
+    setManualClick(true)
     setCreateMode(CreateMode.EDIT)
     onChangeTab(TabState.CREATE_NEW)
     resetNewGroupMasterList()
