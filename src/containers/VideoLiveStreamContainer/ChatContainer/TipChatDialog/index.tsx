@@ -139,7 +139,6 @@ const TipChatDialog: React.FC<TipChatDialogProps> = ({
         id: null,
         image: videoGiftMaster.user_avatar,
         name: videoGiftMaster.user_nickname,
-        type: DonateReceiverType.STREAMER,
       })
       setStep(2)
     }
