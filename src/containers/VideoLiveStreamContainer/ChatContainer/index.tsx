@@ -2510,9 +2510,14 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
 
     const userDoesNotHaveViewingTicketView = () => {
       return (
-        activeTab === VIDEO_TABS.RANKING && (
+        activeTab === VIDEO_TABS.CHAT && (
           <Box className={classes.chatPurchaseTicketBox}>
-            <Typography className={classes.chatPurchaseTicketNote}>{chatNotAvailableMessage()}</Typography>
+            <Typography
+              className={classes.chatPurchaseTicketNote}
+              style={{ margin: isEnabledMessFilter ? '0 16px 18px 16px' : '18px 16px' }}
+            >
+              {chatNotAvailableMessage()}
+            </Typography>
           </Box>
         )
       )

@@ -109,7 +109,6 @@ const useStyles = makeStyles((theme) => ({
   },
   chatPurchaseTicketNote: {
     fontSize: 14,
-    margin: '18px 16px',
   },
   purchaseCommentInputContainer: {
     width: '100%',
