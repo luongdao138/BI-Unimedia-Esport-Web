@@ -226,8 +226,12 @@ const Steps: React.FC<StepsProps> = ({
   const handleDownloadVideo = () => {
     const { uuid } = videoArchivedDetail
     if (videoArchivedDetail?.convert_status === 'COMPLETE') {
+      const newTab = window.open('', '_blank')
       getCookieVideoDownload({ video_id: uuid }, async (dataCookie: CookieData) => {
-        window.open(dataCookie?.url, '_blank')
+        newTab.location.href = dataCookie?.url
+        window.setTimeout(() => {
+          newTab.close()
+        }, 1000)
       })
     }
   }

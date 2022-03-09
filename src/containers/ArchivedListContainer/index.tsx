@@ -140,8 +140,12 @@ const ArchivedListContainer: React.FC = () => {
 
     const handleDownloadVideo = () => {
       if (convert_status === 'COMPLETE') {
+        const newTab = window.open('', '_blank')
         getCookieVideoDownload({ video_id: rowData?.uuid }, async (dataCookie: CookieData) => {
-          window.open(dataCookie?.url, '_blank')
+          newTab.location.href = dataCookie?.url
+          window.setTimeout(() => {
+            newTab.close()
+          }, 1000)
         })
       }
     }
