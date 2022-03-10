@@ -35,7 +35,7 @@ const MemberList: React.FC = () => {
 
   const onFilterButtonClick = (option) => () => {
     setFilterByType(option)
-    filterByTypeDebounce(option)
+    inputDebounce(filterByName, option)
   }
 
   const FilterButton = ({ label, option }) => {
@@ -74,14 +74,8 @@ const MemberList: React.FC = () => {
         </Box>
       </Box>
     )
-  }, [filterByType])
+  }, [filterByType, filterByName])
 
-  const filterByTypeDebounce = useCallback(
-    _.debounce((type) => {
-      getAllGiftMaster(filterByName, type)
-    }, 700),
-    []
-  )
   const inputDebounce = useCallback(
     _.debounce((keyword: string, type) => {
       getAllGiftMaster(keyword, type)
@@ -101,6 +95,14 @@ const MemberList: React.FC = () => {
     )
   }
 
+  const noResultView = useCallback(() => {
+    return (
+      <Box className={classes.noResultView}>
+        <Typography className={classes.noResultText}>{t('streaming_setting_screen.member_list.member_list_no_result')}</Typography>
+      </Box>
+    )
+  }, [])
+
   const memberList = useCallback(() => {
     return (
       <Box>
@@ -108,9 +110,11 @@ const MemberList: React.FC = () => {
           <Typography className={classes.newListHeader}>{t('streaming_setting_screen.member_list.new_list')}</Typography>
         </Box>
         <Box className={classes.listContainer}>
-          {getData().map((item, index) => {
-            return <MemberItem key={`MemberItem-${index}`} item={item} />
-          })}
+          {getData().length === 0
+            ? noResultView()
+            : getData().map((item, index) => {
+                return <MemberItem key={`MemberItem-${index}`} item={item} />
+              })}
         </Box>
       </Box>
     )
@@ -156,6 +160,12 @@ const useStyles = makeStyles((theme) => ({
   newListHeader: {
     fontSize: '12px',
     color: Colors.white,
+  },
+  noResultText: {
+    fontSize: '12px',
+    color: Colors.white,
+    whiteSpace: 'pre-wrap',
+    textAlign: 'center',
   },
   newListHeaderContainer: {
     backgroundColor: Colors.black,
@@ -203,6 +213,14 @@ const useStyles = makeStyles((theme) => ({
       borderRadius: 6,
     },
     overflowX: 'hidden',
+  },
+  noResultView: {
+    width: '100%',
+    height: '100%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '24px',
   },
   [theme.breakpoints.down('sm')]: {
     container: {

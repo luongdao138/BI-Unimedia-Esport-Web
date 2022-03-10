@@ -2,6 +2,7 @@ import { Box, Button, makeStyles, Typography } from '@material-ui/core'
 import React from 'react'
 import { Colors } from '@theme/colors'
 import i18n from '@locales/i18n'
+import ESButton from '@components/Button'
 
 type TipButtonGroupProps = {
   formHasError?: boolean
@@ -26,12 +27,12 @@ const TipButtonGroup: React.FC<TipButtonGroupProps> = ({
           {/* {i18n.t('common:live_stream_screen.send')} */}
         </Typography>
       </Button>
-      <Button onClick={onClick} className={`${classes.button} ${classes.purchaseButton}`} disabled={formHasError}>
+      <ESButton onClick={onClick} className={`${classes.button} ${classes.purchaseButton}`} disabled={formHasError}>
         <Typography className={classes.purchaseButtonText}>
           {textAgree}
           {/* {i18n.t('common:live_stream_screen.send')} */}
         </Typography>
-      </Button>
+      </ESButton>
     </Box>
   )
 }
@@ -50,6 +51,9 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: '#4D4D4D',
       '& $purchaseButtonText': {
         color: Colors.white_opacity['30'],
+      },
+      '&:hover': {
+        backgroundColor: '#4D4D4D !important',
       },
     },
   },
@@ -85,6 +89,14 @@ const useStyles = makeStyles((theme) => ({
     },
     backButtonText: {
       fontSize: 12,
+    },
+  },
+  [theme.breakpoints.down(769)]: {
+    purchaseButton: {
+      '&:hover': {
+        cursor: 'pointer',
+        backgroundColor: '#FF4786',
+      },
     },
   },
 }))

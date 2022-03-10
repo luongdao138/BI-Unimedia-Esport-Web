@@ -32,6 +32,7 @@ import ListGroupGift from './ListGroupGift'
 import GiftManageTab, { TabState } from '@containers/StreamingSettingContainer/GiftManageTab'
 import { GiftGroupType } from '@services/gift.service'
 import _ from 'lodash'
+import useGiftTarget from '@containers/StreamingGiftManagement/useGiftTarget'
 // import ESButton from '@components/Button'
 // import useListGroupGift from './ListGroupGift/useListGroupGift'
 
@@ -60,6 +61,7 @@ const StreamingSettingContainer: React.FC<{ default_tab: any }> = ({ default_tab
     channelInfo,
     getCategory,
   } = useLiveSetting()
+  const { resetNewGroupMasterList } = useGiftTarget()
   const liveInfo = liveSettingInformation?.data
   const initialValues = getInitialLiveSettingValues(liveInfo ? liveInfo : null)
   const scheduleInfo = scheduleInformation?.data
@@ -182,6 +184,7 @@ const StreamingSettingContainer: React.FC<{ default_tab: any }> = ({ default_tab
   }
 
   const giftManageChangeTab = (tab: TabState) => {
+    resetNewGroupMasterList()
     setGiftManageTabState(tab)
     setTab(3)
   }

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import {
   FORMAT_DATE_TIME_JP,
   FORMAT_SCHEDULE_TIME,
@@ -451,6 +452,36 @@ const getRankInfo = (oldRankInfo: Array<any>, newRankInfo: Array<any>, rankType 
   return rankInfo
 }
 
+const getBrowserInfo = () => {
+  // @ts-ignore
+  const isOpera = (!!window.opr && !!opr.addons) || !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0
+  // const { HTMLElement } = window
+  // @ts-ignore
+  // const isSafari =
+  //   /constructor/i.test(HTMLElement) ||
+  //   (function (p) {
+  //     return p.toString() === '[object SafariRemoteNotification]'
+  //   })(!window['safari'] || (typeof safari !== 'undefined' && window['safari'].pushNotification))
+  // @ts-ignore
+  const isIE = /*@cc_on!@*/ !!document.documentMode
+  const isEdge = !isIE && !!window.StyleMedia
+  // @ts-ignore
+  const isChrome = !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime)
+  // @ts-ignore
+  const isEdgeChromium = isChrome && navigator.userAgent.indexOf('Edg') != -1
+  // @ts-ignore
+  const isBlink = (isChrome || isOpera) && !!window.CSS
+  return {
+    isOpera,
+    isBlink,
+    isEdgeChromium,
+    isChrome,
+    isEdge,
+    // isSafari,
+    isIE,
+  }
+}
+
 export const CommonHelper = {
   validateEmail,
   genRanHex,
@@ -482,4 +513,5 @@ export const CommonHelper = {
   handleAccountSystem,
   addSttDataList,
   getRankInfo,
+  getBrowserInfo,
 }

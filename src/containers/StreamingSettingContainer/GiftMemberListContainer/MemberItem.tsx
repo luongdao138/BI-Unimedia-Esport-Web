@@ -128,6 +128,7 @@ const useStyles = makeStyles(() => ({
     '&.block-master': {
       width: '70px',
       textAlign: 'center',
+      color: Colors.white_opacity['30'],
     },
   },
 }))

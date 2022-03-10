@@ -204,6 +204,7 @@ const TipChatDialog: React.FC<TipChatDialogProps> = ({
           arrow
           placement="bottom"
           enterTouchDelay={0}
+          leaveTouchDelay={5000}
           // open={true}
           // open={false}
         >
