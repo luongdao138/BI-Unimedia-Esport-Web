@@ -11,7 +11,7 @@ import ChatContainer from './ChatContainer'
 import DistributorInfo from './DistributorInfo'
 // import LiveStreamContent from './LiveStreamContent'
 import DonatePoints from './DonatePoints'
-import DonatePointsConfirmModal from './DonatePointsConfirmModal/DonatePointsConfirmModal'
+// import DonatePointsConfirmModal from './DonatePointsConfirmModal/DonatePointsConfirmModal'
 import ProgramInfoNoViewingTicket from '@containers/VideoLiveStreamContainer/ProgramInfoNoViewingTicket'
 import usePointsManage from '@containers/PointManage/usePointsManage'
 import FullESLoader from '@components/FullScreenLoader'
@@ -123,6 +123,9 @@ const VideoDetail: React.FC = () => {
   const [isArchived, setIsArchived] = useState(false)
   const [disabled, setDisabled] = useState(false)
   const [giftMasterUuid, setGiftMasterUuid] = useState('')
+  const [isErrorDonatePoint, setIsErrorDonatePoint] = useState(false)
+
+  console.log('DonatePointsConfirmModal', disabled, errorPurchase, purchaseComment)
 
   const {
     getVideoDetail,
@@ -431,6 +434,12 @@ const VideoDetail: React.FC = () => {
       setShowModalPurchasePoint(true)
     }
   }
+  useEffect(() => {
+    if (showConfirmModal) {
+      handleConfirmPurchaseSuperChat()
+    }
+  }, [showConfirmModal])
+
   const handleCloseConfirmModal = () => {
     getMyPointData({ page: 1, limit: 10 })
     setShowConfirmModal(false)
@@ -463,11 +472,18 @@ const VideoDetail: React.FC = () => {
             setShowConfirmModal(false)
             setErrorPurchase(false)
             setDisabled(false)
+            setIsErrorDonatePoint(false)
             dispatch(commonActions.addToast(i18n.t('common:live_stream_screen.send_gift_success')))
           } else {
             // setShowConfirmModal(false)
             setDisabled(false)
           }
+        },
+        (error) => {
+          console.log('error==>', error)
+          setShowConfirmModal(false)
+          setErrorPurchase(true)
+          setIsErrorDonatePoint(true)
         }
       )
     }, 700),
@@ -590,6 +606,10 @@ const VideoDetail: React.FC = () => {
     }
   })()
 
+  const resetErrorDonateMessage = useCallback(() => {
+    setIsErrorDonatePoint(false)
+  }, [])
+
   const sideChatContainer = () => {
     return (
       <Box
@@ -624,6 +644,8 @@ const VideoDetail: React.FC = () => {
             setPurchaseType(PURCHASE_TYPE.PURCHASE_SUPER_CHAT)
             setShowModalPurchasePoint(true)
           }}
+          isErrorDonatePoint={isErrorDonatePoint}
+          clearMessageDonatePoint={resetErrorDonateMessage}
         />
       </Box>
     )
@@ -789,7 +811,7 @@ const VideoDetail: React.FC = () => {
         handlePurchaseTicket={doConfirmPurchaseTicket}
       />
       <DialogLoginContainer showDialogLogin={showDialogLogin} onCloseDialogLogin={handleCloseDialogLogin} />
-      <DonatePointsConfirmModal
+      {/* <DonatePointsConfirmModal
         hasError={errorPurchase}
         showConfirmModal={showConfirmModal}
         handleClose={handleCloseConfirmModal}
@@ -798,7 +820,7 @@ const VideoDetail: React.FC = () => {
         msgContent={purchaseComment}
         handleConfirm={handleConfirmPurchaseSuperChat}
         disabled={disabled}
-      />
+      /> */}
       <DonatePoints
         myPoint={myPoint}
         lackedPoint={lackedPoint}

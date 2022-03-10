@@ -21,7 +21,11 @@ const usePurchaseTicketSuperChat = () => {
 
   const getVideoDetail = (params: VideoDetailParams) => dispatch(actionsVideoTop.videoDetail(params))
 
-  const purchaseTicketSuperChat = async (params: PurchaseTicketParams, onResult?: (isSuccess: boolean) => void) => {
+  const purchaseTicketSuperChat = async (
+    params: PurchaseTicketParams,
+    onResult?: (isSuccess: boolean) => void,
+    onError?: (message: string) => void
+  ) => {
     console.log('>>>>>>>>>>>>>>>> params purchaseTicketSuperChat >>>>>', params)
     const result = await dispatch(actions.purchaseTicketSuperChat(params))
     console.log('>>>>>>>>>>>>>>>> result purchase ticket: ', result)
@@ -38,11 +42,16 @@ const usePurchaseTicketSuperChat = () => {
       }
     } else {
       // onResult()
-      if (params?.type === 1) {
-        console.log('purchase ticket error')
-        params?.handleError()
-      } else {
-        console.log('purchase super chat error')
+      if (actions.purchaseTicketSuperChat.rejected.match(result)) {
+        // TODO: Check error rejected call validation master invalid
+        if (params?.type === 1) {
+          console.log('purchase ticket error')
+          params?.handleError()
+        } else {
+          if (result.payload === 'validation.master_valid') {
+            onError(result.payload)
+          }
+        }
       }
     }
   }

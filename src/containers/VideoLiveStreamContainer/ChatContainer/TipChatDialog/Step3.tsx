@@ -1,6 +1,6 @@
 import GiftMember from '@components/GiftMember'
 import i18n from '@locales/i18n'
-import { Box, makeStyles } from '@material-ui/core'
+import { Box, makeStyles, Typography } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import { FormatHelper } from '@utils/helpers/FormatHelper'
 import React from 'react'
@@ -12,9 +12,10 @@ type Step3Props = {
   selectedMember?: any
   tipInfo: any
   onPressDonate?: (donatedPoint: number, purchaseComment: string, master_id?: string) => void
+  isErrorDonatePoint?: boolean
 }
 
-const Step3: React.FC<Step3Props> = ({ tipInfo, onChangeStep, selectedMember, onPressDonate }) => {
+const Step3: React.FC<Step3Props> = ({ tipInfo, onChangeStep, selectedMember, onPressDonate, isErrorDonatePoint }) => {
   const classes = useStyles()
 
   const onCancel = () => {
@@ -55,6 +56,12 @@ const Step3: React.FC<Step3Props> = ({ tipInfo, onChangeStep, selectedMember, on
               textAgree={`${i18n.t('common:live_stream_screen_chat.send')}`}
             ></TipButtonGroup>
           </Box>
+          {isErrorDonatePoint && (
+            <Box className={classes.errorMessage}>
+              <Typography>チップ送付先が変更されました。</Typography>
+              <Typography>再度チップ送付先をご確認ください。</Typography>
+            </Box>
+          )}
         </Box>
       </Box>
     </Box>
@@ -112,6 +119,12 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   noMessage: {},
+  errorMessage: {
+    color: '#F7F735',
+    fontSize: 12,
+    marginTop: 16,
+    textAlign: 'center',
+  },
   [theme.breakpoints.down(769)]: {
     selectedPoint: {
       fontSize: '10px',
