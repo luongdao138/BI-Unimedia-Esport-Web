@@ -118,16 +118,13 @@ const useStyles = makeStyles((theme) => ({
       borderRadius: 6,
     },
   },
-<<<<<<< HEAD
   noMessage: {},
-=======
   errorMessage: {
     color: '#F7F735',
     fontSize: 12,
     marginTop: 16,
     textAlign: 'center',
   },
->>>>>>> 1ab40218 (change spec issue 77472)
   [theme.breakpoints.down(769)]: {
     selectedPoint: {
       fontSize: '10px',
