@@ -93,6 +93,8 @@ export type ChatContainerProps = {
   ref: any
   chatWidth: any
   isResizedScreen: boolean
+  isErrorDonatePoint?: boolean
+  clearMessageDonatePoint: () => void
 }
 
 const DEBOUNCE_SECOND = 300
@@ -221,6 +223,8 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       videoType,
       freeToWatch,
       isResizedScreen,
+      isErrorDonatePoint,
+      clearMessageDonatePoint,
     },
     ref
   ) => {
@@ -1732,6 +1736,8 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         onClickOutside={donateConfirmModalIsShown() ? null : handlePremiumChatBoxClickOutside}
         onPressDonate={onPressDonate}
         openPurchasePointModal={openPurchasePointModal}
+        isErrorDonatePoint={isErrorDonatePoint}
+        clearMessageDonatePoint={clearMessageDonatePoint}
       />
       // <PremiumChatDialog
       //   normalMessHasError={errorMess ? true : false}

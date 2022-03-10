@@ -26,6 +26,8 @@ type TipChatDialogProps = {
   onPressDonate?: (donatedPoint: number, purchaseComment: string, master_id?: string) => void
   normalMessHasError?: boolean
   createMess: (message: string, point?: number, tip_mess?: TipMessProps) => Promise<void>
+  isErrorDonatePoint?: boolean
+  clearMessageDonatePoint?: () => void
 }
 
 const TipChatDialog: React.FC<TipChatDialogProps> = ({
@@ -34,6 +36,8 @@ const TipChatDialog: React.FC<TipChatDialogProps> = ({
   onClickOutside,
   normalMessHasError,
   openPurchasePointModal,
+  isErrorDonatePoint,
+  clearMessageDonatePoint,
 }) => {
   // const dispatch = useAppDispatch()
   const { dataPurchaseTicketSuperChat } = usePurchaseTicketSuperChat()
@@ -51,6 +55,10 @@ const TipChatDialog: React.FC<TipChatDialogProps> = ({
   // const onChangeStep = (new_step: number): void => {
   //   setStep(new_step)
   // }
+  useEffect(() => {
+    clearMessageDonatePoint()
+  }, [step])
+
   const onChangeStep = (newStep): void => {
     // dispatch(commonActions.addToast('success'))
     setStep(newStep)
@@ -163,7 +171,7 @@ const TipChatDialog: React.FC<TipChatDialogProps> = ({
       case 2:
         return <Step2 {...commonStepProps} onChangeTipInfo={onChangeTipInfo} tipInfo={tipInfo} />
       case 3:
-        return <Step3 {...commonStepProps} tipInfo={tipInfo} />
+        return <Step3 {...commonStepProps} tipInfo={tipInfo} isErrorDonatePoint={isErrorDonatePoint} />
       default:
         return null
     }
