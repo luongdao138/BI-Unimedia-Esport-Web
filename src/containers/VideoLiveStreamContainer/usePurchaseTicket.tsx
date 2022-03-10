@@ -44,15 +44,11 @@ const usePurchaseTicketSuperChat = () => {
       // onResult()
       if (actions.purchaseTicketSuperChat.rejected.match(result)) {
         // TODO: Check error rejected call validation master invalid
-        console.log(result.payload)
-        console.log(result.error)
         if (params?.type === 1) {
           console.log('purchase ticket error')
           params?.handleError()
         } else {
-          console.log('purchase super chat error')
           if (result.payload === 'validation.master_valid') {
-            console.log('Chay vo day chua')
             onError(result.payload)
           }
         }
