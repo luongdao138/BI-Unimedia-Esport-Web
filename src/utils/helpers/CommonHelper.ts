@@ -383,7 +383,7 @@ const getBrowserInfo = () => {
   const isIE = /*@cc_on!@*/ !!document.documentMode
   const isEdge = !isIE && !!window.StyleMedia
   // @ts-ignore
-  const isChrome = !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime)
+  const isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor)
   // @ts-ignore
   const isEdgeChromium = isChrome && navigator.userAgent.indexOf('Edg') != -1
   // @ts-ignore
