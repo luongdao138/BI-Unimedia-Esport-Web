@@ -6,7 +6,6 @@ import { Colors } from '@theme/colors'
 import { ReactNode, useEffect, useState } from 'react'
 import Tabs from '@components/Tabs'
 import Tab from '@components/Tab'
-import GoogleAd from '@components/GoogleAd'
 
 type TournamentHeaderProps = {
   title: string
@@ -46,66 +45,58 @@ const TournamentHeader: React.FC<TournamentHeaderProps> = ({ title, status, chil
   }, [status])
   return (
     <>
-      {/* GADS: detail arena/**** */}
-      <GoogleAd id={{ idPatten1: 'ad_arena_d' }} />
-      <Box>
-        <Box className={classes.backContainer}>
-          <IconButton onClick={onHandleBack} className={classes.iconButtonBg2}>
-            <Icon className="fa fa-arrow-left" fontSize="small" />
-          </IconButton>
-          <div style={{ overflow: 'hidden' }}>
-            {!isMobile && (
-              <Typography variant="h2" className={classes.wrapOne}>
-                {title}
-              </Typography>
-            )}
-          </div>
-        </Box>
-        <Box
-          style={{
-            background: `url(${cover})`,
-            paddingTop: '30.21756647864625%',
-            backgroundSize: 'cover',
-            backgroundRepeat: 'no-repeat',
-            backgroundPosition: 'center center',
-          }}
-          className={classes.coverWrapper}
-        ></Box>
-        <div className={classes.root}>
-          {showTab && (
-            <Tabs
-              value={tab}
-              // eslint-disable-next-line @typescript-eslint/no-empty-function
-              onChange={() => {}}
-              classes={{ indicator: classes.tabIndicator, flexContainer: classes.flexContainer, fixed: classes.tabsFixed }}
-            >
-              <Tab label={t('common:arena.status.ready')} icon={<Icon className="fa fa-desktop" />} classes={{ root: classes.tabRoot }} />
-              <Tab
-                label={t('common:arena.status.recruiting')}
-                icon={<Icon className="fa fa-door-open" />}
-                classes={{ root: classes.tabRoot }}
-              />
-              <Tab
-                label={t('common:arena.status.recruitment_closed')}
-                icon={<Icon className="fa fa-hourglass-start" />}
-                classes={{ root: classes.tabRoot }}
-              />
-              <Tab
-                label={t('common:arena.status.in_progress')}
-                icon={<Icon className="fa fa-headset" />}
-                classes={{ root: classes.tabRoot }}
-              />
-              <Tab
-                label={t('common:arena.status.completed')}
-                icon={<Icon className="fa fa-trophy" />}
-                classes={{ root: classes.tabRoot }}
-              />
-              <Tab style={{ display: 'none' }} />
-            </Tabs>
+      <Box className={classes.backContainer}>
+        <IconButton onClick={onHandleBack} className={classes.iconButtonBg2}>
+          <Icon className="fa fa-arrow-left" fontSize="small" />
+        </IconButton>
+        <div style={{ overflow: 'hidden' }}>
+          {!isMobile && (
+            <Typography variant="h2" className={classes.wrapOne}>
+              {title}
+            </Typography>
           )}
-          <Box>{children}</Box>
         </div>
       </Box>
+      <Box
+        style={{
+          background: `url(${cover})`,
+          paddingTop: '30.21756647864625%',
+          backgroundSize: 'cover',
+          backgroundRepeat: 'no-repeat',
+          backgroundPosition: 'center center',
+        }}
+        className={classes.coverWrapper}
+      ></Box>
+      <div className={classes.root}>
+        {showTab && (
+          <Tabs
+            value={tab}
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
+            onChange={() => {}}
+            classes={{ indicator: classes.tabIndicator, flexContainer: classes.flexContainer, fixed: classes.tabsFixed }}
+          >
+            <Tab label={t('common:arena.status.ready')} icon={<Icon className="fa fa-desktop" />} classes={{ root: classes.tabRoot }} />
+            <Tab
+              label={t('common:arena.status.recruiting')}
+              icon={<Icon className="fa fa-door-open" />}
+              classes={{ root: classes.tabRoot }}
+            />
+            <Tab
+              label={t('common:arena.status.recruitment_closed')}
+              icon={<Icon className="fa fa-hourglass-start" />}
+              classes={{ root: classes.tabRoot }}
+            />
+            <Tab
+              label={t('common:arena.status.in_progress')}
+              icon={<Icon className="fa fa-headset" />}
+              classes={{ root: classes.tabRoot }}
+            />
+            <Tab label={t('common:arena.status.completed')} icon={<Icon className="fa fa-trophy" />} classes={{ root: classes.tabRoot }} />
+            <Tab style={{ display: 'none' }} />
+          </Tabs>
+        )}
+        <Box>{children}</Box>
+      </div>
     </>
   )
 }

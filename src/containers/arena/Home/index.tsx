@@ -1,4 +1,4 @@
-import { Grid, Box, makeStyles, Theme, useTheme } from '@material-ui/core'
+import { Grid, Box, makeStyles, Theme } from '@material-ui/core'
 import useArenaHome from './useArenaHome'
 import TournamentCard from '@components/TournamentCard/HomeCard'
 import { TournamentFilterOption } from '@services/arena.service'
@@ -13,7 +13,6 @@ import useReturnHref from '@utils/hooks/useReturnHref'
 import ESLoader from '@components/Loader'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import HeaderArea from './HeaderArea'
-import GoogleAd from '@components/GoogleAd'
 
 const cache = new CellMeasurerCache({
   fixedWidth: true,
@@ -34,9 +33,6 @@ const ArenaHome: React.FC<ArenaHomeProps> = ({ filter }) => {
   const matchesXL = useMediaQuery((theme: Theme) => theme.breakpoints.up('xl'))
   const matchesLG = useMediaQuery((theme: Theme) => theme.breakpoints.up('lg'))
   const matchesSM = useMediaQuery((theme: Theme) => theme.breakpoints.up('sm'))
-
-  const theme = useTheme()
-  const screenDownSP = useMediaQuery(theme.breakpoints.down(576))
 
   useEffect(() => {
     if (listRef && listRef.current) listRef.current.recomputeRowHeights()
@@ -101,6 +97,7 @@ const ArenaHome: React.FC<ArenaHomeProps> = ({ filter }) => {
     const items = []
     const fromIndex = index * itemsPerRow
     const toIndex = Math.min(fromIndex + itemsPerRow, arenasFiltered.length)
+
     for (let i = fromIndex; i < toIndex; i++) {
       const data = arenasFiltered[i]
 
@@ -110,6 +107,7 @@ const ArenaHome: React.FC<ArenaHomeProps> = ({ filter }) => {
         </Grid>
       )
     }
+
     return (
       <CellMeasurer cache={cache} columnIndex={0} columnCount={1} key={key} parent={parent} rowIndex={index}>
         {({ registerChild }) => (
@@ -123,10 +121,8 @@ const ArenaHome: React.FC<ArenaHomeProps> = ({ filter }) => {
 
   return (
     <>
-      {/* GADS: home arena */}
-      <GoogleAd id={{ idPatten1: !screenDownSP && 'ad_arena_t', idPatten4: screenDownSP && 'ad_arena_b' }} />
       <HeaderArea onFilter={onFilter} toCreate={toCreate} filter={filter} />
-      <div className="position_bottom">
+      <div>
         <div className={classes.container}>
           <InfiniteScroll
             dataLength={arenasFiltered.length}

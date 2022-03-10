@@ -11,7 +11,6 @@ import LoginRequired from '@containers/LoginRequired'
 const SettingsPage: PageWithLayoutType = () => {
   const router = useRouter()
   const { t } = useTranslation('common')
-  // const classes = useStyles()
   return (
     <MainLayout loginRequired={false}>
       <div>
@@ -90,9 +89,3 @@ const SettingsPage: PageWithLayoutType = () => {
 }
 
 export default SettingsPage
-
-// const useStyles = makeStyles(() => ({
-//   setting: {
-//     marginBottom: 100,
-//   },
-// }))

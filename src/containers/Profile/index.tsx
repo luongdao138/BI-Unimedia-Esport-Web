@@ -26,7 +26,6 @@ import { ESRoutes } from '@constants/route.constants'
 import { FOLLOW_STATES, REPORT_TYPE } from '@constants/common.constants'
 import { UPLOADER_TYPE } from '@constants/image.constants'
 import useToast from '@utils/hooks/useToast'
-import GoogleAd from '@components/GoogleAd'
 interface WithRouterProps {
   router: NextRouter
 }
@@ -303,8 +302,6 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
   return (
     <>
       <Grid container direction="column">
-        {/* GADS: profile */}
-        <GoogleAd id={{ idPatten1: 'ad_profile_t' }} />
         {getHeader()}
         {getTabs()}
         {getContent()}
