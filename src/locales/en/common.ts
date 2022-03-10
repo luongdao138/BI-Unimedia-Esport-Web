@@ -1845,7 +1845,7 @@ export default {
     tag_live_control: 'ライブ',
     ranking_tab_title: 'ランキング',
     all_mess_tab_title: 'すべて',
-    tip_mess_tab_title: 'チップ',
+    tip_mess_tab_title: 'ギフトポイント',
     tip_title_dialog: 'チップ送付',
     text_more_info: 'チップについて',
     purchase_tip_point: 'eXeポイント購入',
