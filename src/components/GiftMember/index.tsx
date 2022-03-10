@@ -54,6 +54,7 @@ const useStyles = makeStyles(() => ({
     justifyContent: 'center',
     lineHeight: '15px',
     marginBottom: 16,
+    paddingTop: '2px',
   },
   streamerName: {
     fontSize: '12px',

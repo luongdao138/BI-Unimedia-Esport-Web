@@ -135,7 +135,7 @@ const TabSelectContainer: React.FC<TabSelectProps> = ({ sideChatContainer, infoT
                         setActiveInfoTab(VIDEO_INFO_TABS.PROGRAM_INFO)
                       }
                     }}
-                    className={`${classes.tab} ${activeTab === item.value && classes.active}`}
+                    className={`${classes.tab} ${activeTab === item.value && classes.active} ${k === 1 ? 'middleTab' : ''}`}
                     // key={k}
                   >
                     <Box className={classes.boxTab}>
@@ -203,13 +203,12 @@ const useStyles = makeStyles((theme) => ({
   tabSelectContainer: {
     backgroundColor: Colors.black,
     gap: '16px',
-    padding: '8px 10px',
+    padding: '10px 20px 8px 10px',
     flexShrink: 0,
   },
   tab: {
     cursor: 'pointer',
     position: 'relative',
-    width: 'calc(100%/3)',
     // padding: 10,
     display: 'flex',
     borderBottom: `2px solid #4D4D4D`,
@@ -220,6 +219,9 @@ const useStyles = makeStyles((theme) => ({
         transform: 'rotate(180deg)',
         filter: 'invert(100%) sepia(0%) saturate(0%) hue-rotate(197deg) brightness(101%) contrast(104%)',
       },
+    },
+    '&.middleTab': {
+      flex: 1,
     },
   },
   messageTab: {},
