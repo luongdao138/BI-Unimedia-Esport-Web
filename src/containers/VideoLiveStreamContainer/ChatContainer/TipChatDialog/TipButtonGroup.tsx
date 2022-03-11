@@ -46,6 +46,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: '#FF4786',
     '&:hover': {
       cursor: 'pointer',
+      backgroundColor: '#FF4786',
     },
     '&.Mui-disabled': {
       backgroundColor: '#4D4D4D',

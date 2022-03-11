@@ -1466,6 +1466,9 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     useEffect(() => {
       if (key_video_id) {
         resetMessages()
+        // reset tabs to default value when view other videos
+        setActiveTab(VIDEO_TABS.CHAT)
+        setActiveSubTab(SUB_TABS.MESS.ALL)
       }
     }, [key_video_id])
 

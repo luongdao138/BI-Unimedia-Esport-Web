@@ -194,6 +194,7 @@ const useStyles = makeStyles((theme) => ({
       marginRight: 10,
       background: '#212121',
       padding: '0 8px',
+      height: 440,
     },
   },
 }))
