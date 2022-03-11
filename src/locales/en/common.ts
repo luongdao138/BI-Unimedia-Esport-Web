@@ -1845,7 +1845,7 @@ export default {
     tag_live_control: 'ライブ',
     ranking_tab_title: 'ランキング',
     all_mess_tab_title: 'すべて',
-    tip_mess_tab_title: 'ギフトポイント',
+    tip_mess_tab_title: 'チップ',
     tip_title_dialog: 'チップ送付',
     text_more_info: 'チップについて',
     purchase_tip_point: 'eXeポイント購入',
@@ -1972,7 +1972,7 @@ export default {
     toast_message_success: 'チップ対象者申請が完了しました',
     txt_footer_button_success: '配信管理メニューへ戻る',
     record_error_no: '対象者No.XXに入力不備があります。',
-    toast_delete_group_success: '個別ギフトリストを削除しました。',
+    toast_delete_group_success: 'チップ対象リストを削除しました',
   },
   archive_detail_screen: {
     title: 'アーカイブ詳細',
