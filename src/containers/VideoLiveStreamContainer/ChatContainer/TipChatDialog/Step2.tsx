@@ -5,7 +5,7 @@ import { Box, InputAdornment, makeStyles, Typography } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import { FormatHelper } from '@utils/helpers/FormatHelper'
 import { useFormik } from 'formik'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef } from 'react'
 // import * as Yup from 'yup'
 import { purchasePoints, sanitizeMess } from '..'
 import TipButtonGroup from './TipButtonGroup'
@@ -15,12 +15,21 @@ type Step2Props = {
   onChangeStep?: (newStep: number) => void
   selectedMember?: any
   tipInfo?: any
+  purchaseValueSelected: string
+  onChangePurchaseValueSelected: (id: string) => void
 }
 
-const Step2: React.FC<Step2Props> = ({ onChangeStep, selectedMember, onChangeTipInfo, tipInfo }) => {
+const Step2: React.FC<Step2Props> = ({
+  onChangeStep,
+  selectedMember,
+  onChangeTipInfo,
+  tipInfo,
+  purchaseValueSelected,
+  onChangePurchaseValueSelected,
+}) => {
   const classes = useStyles()
   const getPurchasePointList = () => Object.values(purchasePoints)
-  const [purchaseValueSelected, setPurchaseValueSelected] = useState<string>('p_100')
+  // const [purchaseValueSelected, setPurchaseValueSelected] = useState<string>('p_100')
 
   const premiumMessageRef = useRef<any>()
 
@@ -29,7 +38,8 @@ const Step2: React.FC<Step2Props> = ({ onChangeStep, selectedMember, onChangeTip
     return (
       <Box
         onClick={() => {
-          setPurchaseValueSelected(item.id)
+          onChangePurchaseValueSelected(item.id)
+          // setPurchaseValueSelected(item.id)
         }}
         className={`${classes[item.id]} ${classes.purchaseItem} ${itemSelected ? classes.purchaseItemSelected : ''}`}
         style={isLast ? {} : { marginRight: '12px' }}

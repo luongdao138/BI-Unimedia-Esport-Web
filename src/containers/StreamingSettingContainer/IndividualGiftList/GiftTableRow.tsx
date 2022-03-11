@@ -135,14 +135,7 @@ const useStyles = makeStyles((theme) => ({
     actionButtonColumn: {
       width: '162px',
     },
-    tableText: {
-      display: '-webkit-box',
-      WebkitBoxOrient: 'vertical',
-      WebkitLineClamp: 1,
-      overflow: 'hidden',
-      textOverflow: 'ellipsis',
-      wordBreak: 'break-all',
-    },
+    tableText: {},
   },
 }))
 export default GiftTableRow

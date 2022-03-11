@@ -51,6 +51,7 @@ const TipChatDialog: React.FC<TipChatDialogProps> = ({
   const [selectedMember, setSelectedMember] = useState(null)
   const [tipInfo, setTipInfo] = useState(null)
   const [isFirstRender, setIsFirstRender] = useState(true)
+  const [purchaseValueSelected, setPurchaseValueSelected] = useState<string>('p_100')
 
   // const onChangeStep = (new_step: number): void => {
   //   setStep(new_step)
@@ -158,6 +159,13 @@ const TipChatDialog: React.FC<TipChatDialogProps> = ({
   //   // createMess(point, mess, master_uuid)
   // }
 
+  // const keepPurchaseValueSelected = () => {
+
+  // }
+  const changePurchaseValueSelected = (id) => {
+    setPurchaseValueSelected(id)
+  }
+
   const commonStepProps = {
     onChangeStep,
     selectedMember,
@@ -169,7 +177,15 @@ const TipChatDialog: React.FC<TipChatDialogProps> = ({
       case 1:
         return <Step1 {...commonStepProps} onChangeSelectedMember={onChangeSelectedMember} />
       case 2:
-        return <Step2 {...commonStepProps} onChangeTipInfo={onChangeTipInfo} tipInfo={tipInfo} />
+        return (
+          <Step2
+            {...commonStepProps}
+            onChangeTipInfo={onChangeTipInfo}
+            tipInfo={tipInfo}
+            purchaseValueSelected={purchaseValueSelected}
+            onChangePurchaseValueSelected={changePurchaseValueSelected}
+          />
+        )
       case 3:
         return <Step3 {...commonStepProps} tipInfo={tipInfo} isErrorDonatePoint={isErrorDonatePoint} />
       default:
