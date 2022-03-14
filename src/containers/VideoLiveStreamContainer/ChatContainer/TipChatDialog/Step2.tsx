@@ -17,6 +17,7 @@ type Step2Props = {
   tipInfo?: any
   purchaseValueSelected: string
   onChangePurchaseValueSelected: (id: string) => void
+  isNoHaveListUsers?: boolean
 }
 
 const Step2: React.FC<Step2Props> = ({
@@ -26,6 +27,7 @@ const Step2: React.FC<Step2Props> = ({
   tipInfo,
   purchaseValueSelected,
   onChangePurchaseValueSelected,
+  isNoHaveListUsers,
 }) => {
   const classes = useStyles()
   const getPurchasePointList = () => Object.values(purchasePoints)
@@ -152,7 +154,12 @@ const Step2: React.FC<Step2Props> = ({
           </Box>
           <Box mt={2} display="flex" flexDirection="column">
             {formHasError && <Typography className={classes.characterLimitError}>{characterLimitExceed()}</Typography>}
-            <TipButtonGroup onClick={handlePremiumChatClick} onCancel={onCancel} formHasError={formHasError}></TipButtonGroup>
+            <TipButtonGroup
+              onClick={handlePremiumChatClick}
+              onCancel={onCancel}
+              formHasError={formHasError}
+              isNoHaveListUsers={isNoHaveListUsers}
+            ></TipButtonGroup>
           </Box>
         </Box>
       </Box>

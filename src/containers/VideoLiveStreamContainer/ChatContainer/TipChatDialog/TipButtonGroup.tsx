@@ -9,6 +9,7 @@ type TipButtonGroupProps = {
   textAgree?: string
   onClick?: () => void
   onCancel?: () => void
+  isNoHaveListUsers?: boolean
 }
 
 const TipButtonGroup: React.FC<TipButtonGroupProps> = ({
@@ -16,17 +17,21 @@ const TipButtonGroup: React.FC<TipButtonGroupProps> = ({
   onClick,
   onCancel,
   formHasError = false,
+  isNoHaveListUsers,
 }) => {
   const classes = useStyles()
 
   return (
     <Box display={'flex'} justifyContent={'center'}>
-      <Button onClick={onCancel} className={`${classes.button} ${classes.backButton}`} disabled={false}>
-        <Typography className={classes.backButtonText}>
-          {`${i18n.t('common:common.confirm_back')}`}
-          {/* {i18n.t('common:live_stream_screen.send')} */}
-        </Typography>
-      </Button>
+      {!isNoHaveListUsers && (
+        <Button onClick={onCancel} className={`${classes.button} ${classes.backButton}`} disabled={false}>
+          <Typography className={classes.backButtonText}>
+            {`${i18n.t('common:common.confirm_back')}`}
+            {/* {i18n.t('common:live_stream_screen.send')} */}
+          </Typography>
+        </Button>
+      )}
+
       <ESButton onClick={onClick} className={`${classes.button} ${classes.purchaseButton}`} disabled={formHasError}>
         <Typography className={classes.purchaseButtonText}>
           {textAgree}

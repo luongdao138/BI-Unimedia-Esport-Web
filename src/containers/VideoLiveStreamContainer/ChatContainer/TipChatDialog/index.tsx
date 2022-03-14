@@ -52,6 +52,7 @@ const TipChatDialog: React.FC<TipChatDialogProps> = ({
   const [tipInfo, setTipInfo] = useState(null)
   const [isFirstRender, setIsFirstRender] = useState(true)
   const [purchaseValueSelected, setPurchaseValueSelected] = useState<string>('p_100')
+  const [isNoHaveListUsers, setIsNoHaveListUsers] = useState<boolean>(false)
 
   // const onChangeStep = (new_step: number): void => {
   //   setStep(new_step)
@@ -144,6 +145,7 @@ const TipChatDialog: React.FC<TipChatDialogProps> = ({
   useEffect(() => {
     // check if didn't select tip in settings then default selected streamer
     if (videoGiftMaster?.gift_group_id === null) {
+      setIsNoHaveListUsers(true)
       setSelectedMember({
         id: null,
         image: videoGiftMaster.user_avatar,
@@ -184,6 +186,7 @@ const TipChatDialog: React.FC<TipChatDialogProps> = ({
             tipInfo={tipInfo}
             purchaseValueSelected={purchaseValueSelected}
             onChangePurchaseValueSelected={changePurchaseValueSelected}
+            isNoHaveListUsers={isNoHaveListUsers}
           />
         )
       case 3:
@@ -266,8 +269,8 @@ const TipChatDialog: React.FC<TipChatDialogProps> = ({
 
       {renderSteps()}
       <Box className={classes.stepInfo} component="span">
-        <span className={classes.currentStep}>{`${step}`}</span>
-        <span className={classes.totalSteps}>{` / ${totalSteps}`}</span>
+        <span className={classes.currentStep}>{`${isNoHaveListUsers ? step - 1 : step}`}</span>
+        <span className={classes.totalSteps}>{` / ${isNoHaveListUsers ? totalSteps - 1 : totalSteps}`}</span>
       </Box>
     </div>
   )
