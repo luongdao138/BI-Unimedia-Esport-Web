@@ -365,6 +365,7 @@ export const INQUIRY_REQUEST_LABELS = [
 ]
 export const LIMIT_MESS = 100
 export const LIMIT_FETCH_NEXT = 500
+export const LIMIT_MESS_REWIND = 12
 export const LIMIT_MIN_MESS_PREV_REWIND = 5
 export const LIMIT_MAX_MESS_PREV_REWIND = 10
 // number of seconds repeat auto get mess

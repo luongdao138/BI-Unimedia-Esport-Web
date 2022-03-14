@@ -41,9 +41,8 @@ import {
   GIVER_RANK_TYPE,
   INTERVAL_AUTO_GET_MESS,
   LIMIT_FETCH_NEXT,
-  LIMIT_MAX_MESS_PREV_REWIND,
   LIMIT_MESS,
-  LIMIT_MIN_MESS_PREV_REWIND,
+  LIMIT_MESS_REWIND,
   RECEIVER_RANK_TYPE,
   SECOND_AUTO_GET_MESS_BEFORE,
   STATUS_SEND_MESS,
@@ -505,7 +504,8 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
           video_id: key_video_id,
           video_time: { le: video_time - 1 },
           sortDirection: sortOrder,
-          limit: CommonHelper.randomIntegerInRange(LIMIT_MIN_MESS_PREV_REWIND, LIMIT_MAX_MESS_PREV_REWIND),
+          limit: LIMIT_MESS_REWIND,
+          // limit: CommonHelper.randomIntegerInRange(LIMIT_MIN_MESS_PREV_REWIND, LIMIT_MAX_MESS_PREV_REWIND),
           nextToken: null,
         }
         API.graphql(graphqlOperation(getMessagesByVideoIdWithSort, listQV)).then((messagesResults) => {
@@ -782,6 +782,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         // console.log('🚀 ~ handleFetchRewindMess ~ newRewindMess', newRewindMess)
         const transformMessAsc = sortMessages([...newRewindMess])
 
+        setIsGettingMess(false)
         setStateMessages(transformMessAsc.filter((v) => +v.video_time <= +videoPlayedSecond.current))
         setCacheMess(transformMessAsc)
 
@@ -796,7 +797,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
 
         setPrevRewindMess({})
         setRewindMess({})
-        setIsGettingMess(false)
+
         setIsGettingRewindMess(false)
         // set prev time to scroll to load more
         setPrevTime(video_time - 1)
@@ -1309,7 +1310,8 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       let newMess = []
       // const limit = 2
       // when live stream get limit to 100 same as tab all mess
-      const limit = isStreaming ? LIMIT_MESS : CommonHelper.randomIntegerInRange(LIMIT_MIN_MESS_PREV_REWIND, LIMIT_MAX_MESS_PREV_REWIND)
+      const limit = isStreaming ? LIMIT_MESS : LIMIT_MESS_REWIND
+      // const limit = isStreaming ? LIMIT_MESS : CommonHelper.randomIntegerInRange(LIMIT_MIN_MESS_PREV_REWIND, LIMIT_MAX_MESS_PREV_REWIND)
       console.log('🚀 ~ fetchMessTipWhenRewind ~ limit', limit)
 
       let startSliceIndex = 0
