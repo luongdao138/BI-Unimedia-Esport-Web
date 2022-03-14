@@ -697,7 +697,7 @@ const VideoDetail: React.FC = () => {
 
   return (
     <VideoContext.Provider
-      value={{ videoRefInfo, setVideoRefInfo, giverRankInfo, setGiverRankInfo, receiverRankInfo, setReceiverRankInfo }}
+      value={{ videoRefInfo, setVideoRefInfo, giverRankInfo, setGiverRankInfo, receiverRankInfo, setReceiverRankInfo, isMobile }}
     >
       <Box className={classes.root}>
         {isPendingPurchaseTicket && <ESLoader />}

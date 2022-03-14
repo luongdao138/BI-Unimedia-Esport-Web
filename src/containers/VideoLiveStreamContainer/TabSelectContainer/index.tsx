@@ -117,6 +117,8 @@ const TabSelectContainer: React.FC<TabSelectProps> = ({ sideChatContainer, infoT
               <>
                 <ClickAwayListener
                   onClickAway={() => {
+                    // active tab <=> activeSelectTab
+                    // if activeSelectTab is its => when click outside => reset active select tab
                     if (activeSelectTab === item.value) {
                       setActiveSelectTab(DEFAULT_SELECT_TAB)
                     }
@@ -126,9 +128,12 @@ const TabSelectContainer: React.FC<TabSelectProps> = ({ sideChatContainer, infoT
                   <Box
                     onClick={() => {
                       if (item?.subTabs) {
+                        // setActiveSelectTab with ranking and chat tab
+                        // only set active select tab due to only display info of select tab
                         setActiveSelectTab(item?.value)
                         // setActiveTab(item.value)
                       } else {
+                        // set active tab with program info tab
                         setActiveTab(item.value)
                       }
                       if (item.value === VIDEO_TABS.PROGRAM_INFO) {
@@ -170,8 +175,10 @@ const TabSelectContainer: React.FC<TabSelectProps> = ({ sideChatContainer, infoT
                                 onClick={(event) => {
                                   event.stopPropagation()
                                   setActiveSubTab(v.value)
+                                  // change active tab
                                   setActiveTab(item.value)
                                   // console.log('🚀 ~ {videoTabs.map ~ 1111', item)
+                                  // reset active select tab
                                   setActiveSelectTab(DEFAULT_SELECT_TAB)
                                 }}
                                 className={`${classes.selectSubTab} ${activeSubTab === v?.value && classes.active}`}

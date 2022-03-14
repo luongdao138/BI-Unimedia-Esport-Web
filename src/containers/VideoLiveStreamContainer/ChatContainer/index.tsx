@@ -229,7 +229,9 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
   ) => {
     const dispatch = useAppDispatch()
     const { isLandscape } = useRotateScreen()
-    const { videoRefInfo, giverRankInfo, setGiverRankInfo, receiverRankInfo, setReceiverRankInfo } = useContext(VideoContext)
+    const { videoRefInfo, giverRankInfo, setGiverRankInfo, receiverRankInfo, setReceiverRankInfo, isMobile: isMobileParent } = useContext(
+      VideoContext
+    )
     const videoPlayedSecond = useRef(0)
     console.log('🚀 ~ videoPlayedSecond', videoPlayedSecond?.current)
     const videoStreamingSecond = useRef(0)
@@ -315,6 +317,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     const [chatUser, setChatUser] = useState<any>({})
     const theme = useTheme()
     const isMobile = useMediaQuery(theme.breakpoints.down(769)) || isLandscape
+    console.log('🚀 ~ isMobile', isMobile)
     const { checkVideoNgWord } = useCheckNgWord()
     // const [savedMess, setSavedMess] = useState([])
     // const [savedDonateMess, setSavedDonateMess] = useState([])
@@ -1442,9 +1445,21 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       }
     }, [userProfile])
 
+    const refHandleResetTabs = useRef(null)
+    const handleResetTabs = () => {
+      // only reset active tab on PC
+      // reset tabs to default value when view other videos
+      if (!isMobileParent) {
+        setActiveTab(VIDEO_TABS.CHAT)
+        setActiveSubTab(SUB_TABS.MESS.ALL)
+      }
+    }
+    refHandleResetTabs.current = handleResetTabs
+
     useEffect(
       () => () => {
         dispatch(resetChatState())
+        refHandleResetTabs.current()
       },
       ['componentWillUnMount']
     )
@@ -1473,9 +1488,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     useEffect(() => {
       if (key_video_id) {
         resetMessages()
-        // reset tabs to default value when view other videos
-        setActiveTab(VIDEO_TABS.CHAT)
-        setActiveSubTab(SUB_TABS.MESS.ALL)
+        refHandleResetTabs.current()
       }
     }, [key_video_id])
 

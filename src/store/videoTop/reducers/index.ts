@@ -16,8 +16,8 @@ import { VIDEO_NORMAL_VIEW_MODE, SUB_TABS, VIDEO_TABS } from '@constants/common.
 const defaultChatState = {
   seek_count: 0,
   seeked_second: 0,
-  activeTab: VIDEO_TABS.CHAT,
-  activeSubTab: SUB_TABS.MESS.ALL,
+  // activeTab: VIDEO_TABS.CHAT,
+  // activeSubTab: SUB_TABS.MESS.ALL,
 }
 
 type StateType = {
