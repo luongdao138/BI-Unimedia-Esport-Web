@@ -27,10 +27,10 @@ const DetailReport: React.FC<DetailReportProps> = ({ videoId }) => {
   const { t } = useTranslation('common')
   const { fetchDetailedReportList, detailedReports, detailedReportMeta } = useDeliveryReport()
 
-  const getTotalPage = () => Math.ceil(detailedReports.points.length / ITEM_PER_PAGE)
+  const getTotalPage = () => Math.ceil(detailedReports.total / ITEM_PER_PAGE)
   const [page, setPage] = useState(1)
   const [pageNumber] = useState(getTotalPage())
-
+  // TODO:
   // const { t } = useTranslation('common')
   useEffect(() => {
     const paramDeliveryReport: DetailedReportParams = { uuid: videoId, page: page, limit: ITEM_PER_PAGE }
@@ -70,9 +70,9 @@ const DetailReport: React.FC<DetailReportProps> = ({ videoId }) => {
         {renderBtnCSV()}
       </Box>
       {detailedReportMeta.pending ? (
-        <>
+        <Box className={classes.loaderCenter}>
           <ESLoader />
-        </>
+        </Box>
       ) : (
         <>
           {detailedReports.points.length > 0 ? (
@@ -103,7 +103,7 @@ const DetailReport: React.FC<DetailReportProps> = ({ videoId }) => {
             >
               {detailedReports.points.map((i, key) => (
                 <TableRow key={key} className={classes.text}>
-                  <TableCell align="center">{key}</TableCell>
+                  <TableCell align="center">{key + 1}</TableCell>
                   <TableCell align="center">{DateHelper.formatDateTime(i.created_at)}</TableCell>
                   <TableCell align="center">{i.nickname}</TableCell>
                   <TableCell align="center">{FormatHelper.currencyFormat(i.point.toString())}</TableCell>
@@ -163,6 +163,9 @@ const useStyles = makeStyles((theme) => ({
         borderBottom: 'none',
       },
     },
+  },
+  loaderCenter: {
+    textAlign: 'center',
   },
   wrapBtn: {
     textAlign: 'right',

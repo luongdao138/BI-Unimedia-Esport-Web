@@ -99,7 +99,7 @@ const GiftReportContainer: React.FC<{ default_tab: any }> = ({ default_tab }) =>
                     }
                   >
                     {tipReports.gifts.map((i, key) => (
-                      <ItemGift key={key} image={i.image} name={i.name} point_user_giver={i.point_user_giver} point={i.point} />
+                      <ItemGift key={key} image={i.image} name={i.name} point_user_giver={i.user_give_count} point={i.point} />
                     ))}
                   </ESTable>
                 ) : (
@@ -227,6 +227,11 @@ const useStyles = makeStyles((theme) => ({
       paddingLeft: 16,
       paddingRight: 16,
     },
+    wrapperDescTable: {
+      marginBottom: 20,
+      marginLeft: 16,
+      marginRight: 16,
+    },
   },
   [theme.breakpoints.down('xs')]: {
     giftReportContainer: {
@@ -267,6 +272,9 @@ const useStyles = makeStyles((theme) => ({
     singleTab: {
       width: 'calc((100vw - 48px) / 3)',
       minWidth: 'unset',
+    },
+    description: {
+      fontSize: 12,
     },
   },
 
