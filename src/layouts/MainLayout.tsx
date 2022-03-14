@@ -12,7 +12,6 @@ import useLogout from '@containers/Logout/useLogout'
 import * as selectors from '@store/common/selectors'
 import { setNotFound } from '@store/common/actions/index'
 import { use100vh } from 'react-div-100vh'
-
 interface MainLayoutProps {
   patternBg?: boolean
   loginRequired?: boolean
