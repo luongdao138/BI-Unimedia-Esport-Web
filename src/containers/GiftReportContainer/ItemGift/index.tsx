@@ -45,6 +45,10 @@ const useStyles = makeStyles((theme) => ({
     textAlign: 'center',
     borderRadius: 4,
     color: theme.palette.text.primary,
+    maxWidth: 51,
+    display: 'flex',
+    justifyContent: 'center',
+    alignContent: 'center',
   },
   teamAndName: {
     paddingTop: 2,
@@ -56,6 +60,7 @@ const useStyles = makeStyles((theme) => ({
     },
     name: {
       fontSize: 9,
+      marginTop: 5,
     },
   },
 }))
