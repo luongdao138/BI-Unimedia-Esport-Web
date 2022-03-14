@@ -23,13 +23,6 @@ const StreamingManageContainer: React.FC = () => {
           </div>
           <div
             onClick={() => {
-              router.push(ESRoutes.GIFT_MANAGEMENT)
-            }}
-          >
-            <SettingsRowItem key="distribution_data_management" title={t('streaming_manage_screen.gift_management')} showSwitch={false} />
-          </div>
-          <div
-            onClick={() => {
               // router.push(ESRoutes.VIDEO_STREAMING_SETTING)
               // TODO
               router.push(ESRoutes.LIVE_STREAM_LIST)
@@ -52,6 +45,13 @@ const StreamingManageContainer: React.FC = () => {
             }}
           >
             <SettingsRowItem key="payment_information" title={t('streaming_manage_screen.payment_information')} showSwitch={false} />
+          </div>
+          <div
+            onClick={() => {
+              router.push(ESRoutes.GIFT_MANAGEMENT)
+            }}
+          >
+            <SettingsRowItem key="distribution_data_management" title={t('streaming_manage_screen.gift_management')} showSwitch={false} />
           </div>
         </LoginRequired>
       </Box>
