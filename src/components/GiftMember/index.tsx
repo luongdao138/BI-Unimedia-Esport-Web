@@ -24,7 +24,11 @@ const GiftMember: React.FC<IGiftMember> = ({ isCutTextOverflow = false, isStream
     <Box className={classes.wrapStreamerInfo}>
       <ESAvatar src={image} size={56} alt={name} />
       <Box className={classes.wrapStreamerName} style={{ justifyContent: isStreamer ? 'center' : 'space-between' }}>
-        {!isStreamer && <Box className={classes.receiverType}>{userType()}</Box>}
+        {!isStreamer && (
+          <Typography component="p" className={classes.receiverType}>
+            {userType()}
+          </Typography>
+        )}
         <Typography className={`${isCutTextOverflow ? classes.streamerNameWrapText : ''} ${classes.streamerName}`}>{name}</Typography>
       </Box>
     </Box>
@@ -40,7 +44,8 @@ const useStyles = makeStyles(() => ({
   wrapStreamerName: {
     display: 'flex',
     flexDirection: 'column',
-    padding: '6px 0 5px 0',
+    gap: 14,
+    justifyContent: 'space-between',
   },
   receiverType: {
     borderRadius: '3px',
@@ -48,13 +53,9 @@ const useStyles = makeStyles(() => ({
     color: '#fff',
     fontWeight: 500,
     fontSize: '10px',
-    width: '51px',
-    alignItems: 'center',
-    display: 'flex',
-    justifyContent: 'center',
-    lineHeight: '15px',
-    marginBottom: 16,
-    paddingTop: '2px',
+    maxWidth: 51,
+    textAlign: 'center',
+    padding: '2px 10px',
   },
   streamerName: {
     fontSize: '12px',
