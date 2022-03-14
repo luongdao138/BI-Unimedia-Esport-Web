@@ -1303,11 +1303,13 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     const refFetchMessTipWhenRewind = useRef(null)
     const handleFetchMessTipWhenRewind = (second) => {
       console.log('🚀 ~ fetchMessTipWhenRewind ~ second', second)
+      // find position of latest mess to get prev mess
       const foundMessIndex = _.findIndex(cacheMessTip, (v) => v.video_time > +second)
       console.log('🚀 ~ fetchMessTipWhenRewind ~ foundMess', foundMessIndex)
       let newMess = []
       // const limit = 2
-      const limit = CommonHelper.randomIntegerInRange(LIMIT_MIN_MESS_PREV_REWIND, LIMIT_MAX_MESS_PREV_REWIND)
+      // when live stream get limit to 100 same as tab all mess
+      const limit = isStreaming ? LIMIT_MESS : CommonHelper.randomIntegerInRange(LIMIT_MIN_MESS_PREV_REWIND, LIMIT_MAX_MESS_PREV_REWIND)
       console.log('🚀 ~ fetchMessTipWhenRewind ~ limit', limit)
 
       let startSliceIndex = 0
@@ -1329,8 +1331,6 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       // const transformDonateMessAsc = transformMessAsc.filter(
       //   (item) => +item.display_avatar_time >= videoPlayedSecond.current && item.is_premium && +item.point > 300
       // )
-      setStateMessages(filterMess)
-      setCacheMess(newMess)
 
       console.log('🚀 ~ fetchMessTipWhenRewind ~ cacheMessTip[0]', cacheMessTip[0])
       console.log('🚀 ~ fetchMessTipWhenRewind ~ newMess[0]', newMess[0])
@@ -1338,6 +1338,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       if (_.first(newMess) && newMess[0]?.local_id === cacheMessTip[0]?.local_id) {
         setIsTokenTipBroken(false)
       } else {
+        // if first ele of newMess is not first ele of cacheMessTip => has mess before newMess => can get prev tip mess
         // enable feature get prev tip mess
         setIsTokenTipBroken(true)
       }
@@ -1346,10 +1347,14 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         filterMess,
         (v) => v.display_avatar_time >= videoPlayedSecond.current && v.is_premium && +v.point > 300
       )
+      const filterCacheDonateMess = _.filter(newMess, (v) => v.is_premium && +v.point > 300)
       console.log('🚀 ~ fetchMessTipWhenRewind ~ filterDonateMess', filterDonateMess)
-      setMessagesDonate(filterDonateMess)
-      setCacheDonateMess(newMess)
+
       setIsGettingMess(false)
+      setStateMessages(filterMess)
+      setCacheMess(newMess)
+      setMessagesDonate(filterDonateMess)
+      setCacheDonateMess(filterCacheDonateMess)
     }
     refFetchMessTipWhenRewind.current = handleFetchMessTipWhenRewind
 
@@ -1552,6 +1557,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     }
 
     const handleGetMessTip = () => {
+      // if get mess initial success => get mess same as when rewind time
       if (successGetListMessTip) {
         setIsGettingMess(true)
         setTimeout(() => {
@@ -1559,6 +1565,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
           fetchMessTipWhenRewind(videoPlayedSecond.current)
         }, DEBOUNCE_SECOND)
       } else {
+        // if has not get mess tip initial yet => get mess tip initial
         setInitTipMess([])
         fetchMessTipInitial()
       }
