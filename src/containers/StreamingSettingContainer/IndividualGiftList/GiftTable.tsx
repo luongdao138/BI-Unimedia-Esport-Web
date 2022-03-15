@@ -78,8 +78,8 @@ const GiftTable: React.FC<Props> = ({ data, handleGoToEditGiftGroupState, refres
 
 const useStyles = makeStyles((theme) => ({
   container: {
-    marginTop: '24px',
-    marginLeft: '48px',
+    // marginTop: '24px',
+    // marginLeft: '48px',
   },
   header: {
     height: '32px',
@@ -180,8 +180,8 @@ const useStyles = makeStyles((theme) => ({
   },
   [theme.breakpoints.down('sm')]: {
     container: {
-      marginLeft: '24px',
-      marginRight: '24px',
+      // marginLeft: '24px',
+      // marginRight: '24px',
     },
     indexColumn: {
       width: '54px',

@@ -91,7 +91,7 @@ const useStyles = makeStyles((theme) => ({
   container: {
     display: 'flex',
     flexDirection: 'column',
-    paddingTop: '12px',
+    padding: '12px 16px',
   },
   createButton: {
     marginTop: '8px',
@@ -102,6 +102,7 @@ const useStyles = makeStyles((theme) => ({
     border: '1px solid #FFFFFF',
     borderRadius: '20px',
     padding: '8px 12px',
+    marginBottom: '24px',
   },
   iconPlus: {
     marginRight: '4px',
@@ -110,11 +111,7 @@ const useStyles = makeStyles((theme) => ({
     marginTop: '32px',
     marginBottom: '32px',
   },
-  [theme.breakpoints.down('sm')]: {
-    createButton: {
-      marginRight: '24px',
-    },
-  },
+  [theme.breakpoints.down('sm')]: {},
 }))
 
 export default IndividualGiftListContainer
