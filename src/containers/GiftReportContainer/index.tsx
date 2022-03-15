@@ -270,7 +270,6 @@ const useStyles = makeStyles((theme) => ({
       paddingRight: '24px',
     },
     singleTab: {
-      width: 'calc((100vw - 48px) / 3)',
       minWidth: 'unset',
     },
     description: {

@@ -5,6 +5,7 @@ import Pagination from '@containers/Community/Partials/Pagination'
 import { Box, makeStyles, TableCell, TableRow, Typography, useMediaQuery, useTheme } from '@material-ui/core'
 import { DetailedReportParams } from '@services/deliveryReport.service'
 import { Colors } from '@theme/colors'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
 import { DateHelper } from '@utils/helpers/DateHelper'
 import { FormatHelper } from '@utils/helpers/FormatHelper'
 import React, { useEffect, useState } from 'react'
@@ -15,7 +16,7 @@ interface DetailReportProps {
   videoId: string | string[]
 }
 
-const ITEM_PER_PAGE = 5
+const ITEM_PER_PAGE = 20
 // const getItemPerPage = (data: DetailedResponse[], itemPerPage: number, page: number) => {
 //   return data.slice(itemPerPage * page - itemPerPage, itemPerPage * page)
 // }
@@ -29,7 +30,6 @@ const DetailReport: React.FC<DetailReportProps> = ({ videoId }) => {
 
   const getTotalPage = () => Math.ceil(detailedReports.total / ITEM_PER_PAGE)
   const [page, setPage] = useState(1)
-  const [pageNumber] = useState(getTotalPage())
   // TODO:
   // const { t } = useTranslation('common')
   useEffect(() => {
@@ -54,17 +54,17 @@ const DetailReport: React.FC<DetailReportProps> = ({ videoId }) => {
 
   const renderPagination = () =>
     matches ? (
-      <Pagination page={page} pageNumber={pageNumber} setPage={setPage} />
+      <Pagination page={page} pageNumber={getTotalPage()} setPage={setPage} />
     ) : (
-      <Pagination page={page} pageNumber={pageNumber} setPage={setPage} />
+      <Pagination page={page} pageNumber={getTotalPage()} setPage={setPage} />
     )
 
   return (
     <Box mb={4}>
       <Box display="flex" justifyContent="space-between" alignItems="baseline" mb={2}>
-        <Box alignItems="center" flex={1}>
+        <Box alignItems="center">
           <Box mb={3} display="flex" justifyContent="center">
-            {detailedReports.points.length > 0 ? renderPagination() : <></>}
+            {renderPagination()}
           </Box>
         </Box>
         {renderBtnCSV()}
@@ -81,29 +81,29 @@ const DetailReport: React.FC<DetailReportProps> = ({ videoId }) => {
               tableHeader={
                 <TableRow className={classes.rowHeader}>
                   <TableCell style={{ width: '10%' }} align="center">
-                    <Typography>{t('streaming_gift_report_screen.no')}</Typography>
+                    <Typography className={classes.textHeader}>{t('streaming_gift_report_screen.no')}</Typography>
                   </TableCell>
                   <TableCell style={{ width: '20%' }} align="center">
-                    <Typography> {t('point_management_tab.purchase_date')}</Typography>
+                    <Typography className={classes.textHeader}> {t('point_management_tab.purchase_date')}</Typography>
                   </TableCell>
                   <TableCell style={{ width: '20%' }} align="center">
-                    <Typography> {t('streaming_gift_report_screen.eXeLAB_ID')}</Typography>
+                    <Typography className={classes.textHeader}> {t('streaming_gift_report_screen.eXeLAB_ID')}</Typography>
                   </TableCell>
                   <TableCell style={{ width: '15%' }} align="center">
-                    <Typography> {t('common.eXe_points')}</Typography>
+                    <Typography className={classes.textHeader}> {t('common.eXe_points')}</Typography>
                   </TableCell>
                   <TableCell style={{ width: '15%' }} align="center">
-                    <Typography> {t('streaming_gift_report_screen.kinds')}</Typography>
+                    <Typography className={classes.textHeader}> {t('streaming_gift_report_screen.kinds')}</Typography>
                   </TableCell>
                   <TableCell style={{ width: '20%' }} align="center">
-                    <Typography> {t('streaming_gift_report_screen.tip_target')}</Typography>
+                    <Typography className={classes.textHeader}> {t('streaming_gift_report_screen.tip_target')}</Typography>
                   </TableCell>
                 </TableRow>
               }
             >
-              {detailedReports.points.map((i, key) => (
+              {CommonHelper.addSttDataList(detailedReports.points, ITEM_PER_PAGE, page).map((i, key) => (
                 <TableRow key={key} className={classes.text}>
-                  <TableCell align="center">{key + 1}</TableCell>
+                  <TableCell align="center">{i.no}</TableCell>
                   <TableCell align="center">{DateHelper.formatDateTime(i.created_at)}</TableCell>
                   <TableCell align="center">{i.nickname}</TableCell>
                   <TableCell align="center">{FormatHelper.currencyFormat(i.point.toString())}</TableCell>
@@ -142,25 +142,6 @@ const useStyles = makeStyles((theme) => ({
         paddingRight: 10,
         fontSize: 12,
         color: Colors.white,
-      },
-    },
-  },
-  bodyTable: {
-    borderWidth: 1,
-    borderStyle: 'solid',
-    borderColor: Colors.white_opacity[30],
-    background: '#161616',
-    padding: 15,
-    borderBottomLeftRadius: 10,
-    borderBottomRightRadius: 10,
-    '& tr': {
-      '& td': {
-        paddingTop: 5,
-        paddingBottom: 5,
-        paddingLeft: 10,
-        paddingRight: 10,
-        fontSize: 12,
-        borderBottom: 'none',
       },
     },
   },
@@ -205,22 +186,25 @@ const useStyles = makeStyles((theme) => ({
       flexDirection: 'column',
     },
   },
-  [theme.breakpoints.down('sm')]: {
-    rowHeader: {
-      '& td': {
-        fontSize: 10,
-      },
-    },
-    text: {
-      '& td': {
-        fontsize: 8,
-      },
-    },
-  },
 
   [theme.breakpoints.down(961)]: {
     paginationStyle: {
       marginRight: '0px',
+    },
+  },
+  [theme.breakpoints.down('sm')]: {
+    textHeader: {
+      fontSize: 10,
+    },
+
+    text: {
+      '& td': {
+        fontSize: 8,
+        padding: '5px!important' as '5px',
+      },
+    },
+    btnCSV: {
+      fontSize: 12,
     },
   },
   [theme.breakpoints.down(375)]: {
