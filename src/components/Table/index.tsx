@@ -59,7 +59,6 @@ const useStyles = makeStyles(() => ({
     '& tr': {
       '& td': {
         padding: 10,
-        fontSize: 12,
         borderBottom: 'none',
       },
     },
