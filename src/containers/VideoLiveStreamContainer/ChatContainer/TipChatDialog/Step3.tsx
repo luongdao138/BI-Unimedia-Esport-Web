@@ -58,8 +58,8 @@ const Step3: React.FC<Step3Props> = ({ tipInfo, onChangeStep, selectedMember, on
           </Box>
           {isErrorDonatePoint && (
             <Box className={classes.errorMessage}>
-              <Typography>チップ送付先が変更されました。</Typography>
-              <Typography>再度チップ送付先をご確認ください。</Typography>
+              <Typography>{i18n.t('common:live_stream_screen.error_address_updated_1')}</Typography>
+              <Typography>{i18n.t('common:live_stream_screen.error_address_updated_2')}</Typography>
             </Box>
           )}
         </Box>

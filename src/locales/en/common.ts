@@ -1845,7 +1845,7 @@ export default {
     tag_live_control: 'ライブ',
     ranking_tab_title: 'ランキング',
     all_mess_tab_title: 'すべて',
-    tip_mess_tab_title: 'チップ',
+    tip_mess_tab_title: 'ギフトポイント',
     tip_title_dialog: 'チップ送付',
     text_more_info: 'チップについて',
     purchase_tip_point: 'eXeポイント購入',
@@ -1863,6 +1863,8 @@ export default {
     send_gift_success: 'チップを送信しました',
     no_ranking: 'ランキングがありません。',
     tip_message_limit: 'メッセージは%d文字までです',
+    error_address_updated_1: 'チップ送付先が変更されました',
+    error_address_updated_2: '再度チップ送付先をご確認ください',
   },
   live_stream_screen_chat: {
     receipt: '受取',
