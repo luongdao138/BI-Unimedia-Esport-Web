@@ -242,8 +242,9 @@ const Steps: React.FC<StepsProps> = ({
     }
   }
 
-  const handleReportData = () => {
-    router.push(ESRoutes.STREAMING_GIFT_REPORT)
+  const handleReportClick = () => {
+    const { uuid } = videoArchivedDetail
+    router.push({ pathname: ESRoutes.STREAMING_GIFT_REPORT, query: { video_id: uuid } })
   }
 
   return (
@@ -609,7 +610,7 @@ const Steps: React.FC<StepsProps> = ({
           <Typography className={classes.captionNote}>{i18n.t('common:archive_detail_screen.note_for_publish_delivery_pb')}</Typography>
           <Box paddingBottom={3} />
 
-          <Box onClick={handleReportData} className={classes.boxFeature}>
+          <Box onClick={handleReportClick} className={classes.boxFeature}>
             <Box flexDirection="row" display="flex" marginBottom={1}>
               <Box className={classes.wrapIcon}>
                 <img src={'/images/icons/report.svg'} className={classes.imageIcon} />

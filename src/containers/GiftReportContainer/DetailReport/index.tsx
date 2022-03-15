@@ -1,4 +1,5 @@
 import ESButton from '@components/Button'
+import ExportCSV from '@components/ExportCSV'
 import ESLoader from '@components/Loader'
 import ESTable from '@components/Table'
 import Pagination from '@containers/Community/Partials/Pagination'
@@ -16,10 +17,19 @@ interface DetailReportProps {
   videoId: string | string[]
 }
 
-const ITEM_PER_PAGE = 20
+const ITEM_PER_PAGE = 30
 // const getItemPerPage = (data: DetailedResponse[], itemPerPage: number, page: number) => {
 //   return data.slice(itemPerPage * page - itemPerPage, itemPerPage * page)
 // }
+
+const headers = [
+  { label: 'No.', key: 'no' },
+  { label: '購入日時', key: 'created_at' },
+  { label: 'eXeLAB ID', key: 'nickname' },
+  { label: 'eXeポイント', key: 'point' },
+  { label: '種別', key: 'type_report' },
+  { label: 'チップ対象', key: 'gift_recipient' },
+]
 
 const DetailReport: React.FC<DetailReportProps> = ({ videoId }) => {
   const theme = useTheme()
@@ -44,11 +54,23 @@ const DetailReport: React.FC<DetailReportProps> = ({ videoId }) => {
   const renderBtnCSV = () =>
     matches ? (
       <ESButton variant={'contained'} className={classes.btnCSV}>
-        {t('streaming_gift_report_screen.csv')}
+        <ExportCSV
+          headers={headers}
+          data={CommonHelper.addSttDataList(detailedReports.points, ITEM_PER_PAGE, page)}
+          className={classes.textBtnCSV}
+          fileName={'report-detail.csv'}
+          textExport={t('streaming_gift_report_screen.csv')}
+        ></ExportCSV>
       </ESButton>
     ) : (
       <ESButton variant={'contained'} className={classes.btnCSV}>
-        {t('streaming_gift_report_screen.csv_download')}
+        <ExportCSV
+          headers={headers}
+          data={CommonHelper.addSttDataList(detailedReports.points, ITEM_PER_PAGE, page)}
+          className={classes.textBtnCSV}
+          fileName={'report-detail.csv'}
+          textExport={t('streaming_gift_report_screen.csv_download')}
+        ></ExportCSV>
       </ESButton>
     )
 
@@ -153,11 +175,17 @@ const useStyles = makeStyles((theme) => ({
   },
   btnCSV: {
     backgroundColor: '#FF4786',
-    color: Colors.white,
     '&:hover': {
-      color: '#FF4786',
+      '& $textBtnCSV': {
+        color: '#FF4786',
+      },
+
       backgroundColor: Colors.white,
     },
+  },
+  textBtnCSV: {
+    color: Colors.white,
+    textDecoration: 'none',
   },
   paginationStyle: {
     display: 'flex',
