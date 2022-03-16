@@ -683,7 +683,6 @@ const Steps: React.FC<StepsProps> = ({
         </form>
         <VideoDeleteConfirmModal
           open={deleteModalVisible}
-          video={videoArchivedDetail}
           handleClose={handleCloseDeleteModal}
           handleDeleteVideo={onDelete}
           isLoading={deleteLoading}

@@ -332,7 +332,6 @@ const ArchivedListContainer: React.FC = () => {
         {totalPage > 1 && pagination()}
         <VideoDeleteConfirmModal
           open={deleteModalVisible}
-          video={selectedDeleteVideo}
           handleClose={handleCloseDeleteModal}
           handleDeleteVideo={onDelete}
           isLoading={deleteLoading}

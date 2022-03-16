@@ -1992,9 +1992,9 @@ export default {
     note_for_publish_delivery_pt: `※チェックを入れた場合、TOPページの一覧に表示されます。`,
     note_for_publish_delivery_pb: '　' + `ただし、URLを知っていた場合は配信画面へアクセスすることは可能です。`,
     update_archive_video_success: '更新が完了しました',
-    delete_dialog_title: '動画削除確認',
-    delete_dialog_sub_title: '削除タイトル',
-    cancel: 'キャンセル',
+    delete_dialog_title: 'アーカイブ動画を削除',
+    delete_dialog_sub_title: '一度削除した動画を復元することはできません。\n' + '本当に削除してよろしいですか？',
+    cancel: '戻る',
     delete_confirm: '削除する',
     update: '更新',
     delete_warning:
