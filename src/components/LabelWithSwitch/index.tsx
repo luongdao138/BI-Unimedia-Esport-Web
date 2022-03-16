@@ -15,6 +15,7 @@ export type InputProps = {
   keySwitch?: string
   nameSwitch?: string
   valueSwitch?: boolean
+  disabled?: boolean
 }
 
 const ESLabelWithSwitch: React.FC<OutlinedInputProps & InputProps> = ({
@@ -27,6 +28,7 @@ const ESLabelWithSwitch: React.FC<OutlinedInputProps & InputProps> = ({
   keySwitch,
   nameSwitch,
   valueSwitch,
+  disabled,
   ...rest
 }) => {
   const classes = useStyles({ hasSecondary: !!labelSecondary, isBig: size === 'big', isNumber: rest.type === 'number' })
@@ -48,7 +50,7 @@ const ESLabelWithSwitch: React.FC<OutlinedInputProps & InputProps> = ({
               )}
             </Box>
           )}
-          <ESSwitchIOS key={keySwitch} handleChange={handleChangeSwitch} name={nameSwitch} checked={valueSwitch} />
+          <ESSwitchIOS key={keySwitch} handleChange={handleChangeSwitch} name={nameSwitch} checked={valueSwitch} disabled={disabled} />
           {typeof labelPrimary === 'object' && labelPrimary}
           {labelSecondary}
         </Box>
