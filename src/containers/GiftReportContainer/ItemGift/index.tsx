@@ -38,6 +38,8 @@ export default ItemGift
 const useStyles = makeStyles((theme) => ({
   name: {
     fontSize: 12,
+    marginTop: 5,
+    textAlign: 'left',
   },
   team: {
     fontSize: 10,
