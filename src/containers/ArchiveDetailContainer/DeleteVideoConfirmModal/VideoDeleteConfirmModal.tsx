@@ -9,13 +9,12 @@ import ESLoader from '@components/FullScreenLoader'
 interface ModalProps {
   isLoading: boolean
   open: boolean
-  video: any
   deleteError: any
   handleClose: () => void
   handleDeleteVideo: () => void
 }
 
-const VideoDeleteConfirmModal: React.FC<ModalProps> = ({ open, handleClose, video, handleDeleteVideo, deleteError, isLoading }) => {
+const VideoDeleteConfirmModal: React.FC<ModalProps> = ({ open, handleClose, handleDeleteVideo, deleteError, isLoading }) => {
   const { t } = useTranslation('common')
   const classes = useStyles()
 
@@ -26,10 +25,8 @@ const VideoDeleteConfirmModal: React.FC<ModalProps> = ({ open, handleClose, vide
         <Box className={classes.container}>
           <Typography className={classes.dialogTitle}>{t('archive_detail_screen.delete_dialog_title')}</Typography>
           <Box className={classes.wrap_message}>
-            <Typography className={classes.message}>{t('archive_detail_screen.delete_dialog_sub_title')}</Typography>
             <Box pb={4}></Box>
-            <Typography className={classes.message}>{video?.title}</Typography>
-            <Typography className={classes.deleteWarning}>{t('archive_detail_screen.delete_warning')}</Typography>
+            <Typography className={classes.message}>{t('archive_detail_screen.delete_dialog_sub_title')}</Typography>
             <Box pb={4}></Box>
             {!!deleteError && <Typography className={classes.mess_delete_card_error}>{deleteError}</Typography>}
           </Box>
@@ -75,8 +72,10 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: 'bold',
   },
   message: {
+    whiteSpace: 'pre-wrap',
     color: Colors.white_opacity[70],
     textAlign: 'center',
+    fontSize: '14px',
   },
   actionBox: {
     '& .MuiButtonBase-root.button-primary.primary-large': {
@@ -89,6 +88,7 @@ const useStyles = makeStyles((theme) => ({
       flexDirection: 'column',
       alignItems: 'center',
     },
+    marginTop: '52px',
   },
   actionBtnClose: {
     width: 220,
@@ -107,6 +107,10 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   wrap_message: {
+    marginTop: '47px',
+    minHeight: '128px',
+    alignItems: 'center',
+    justifyContent: 'center',
     fontSize: '14px',
     color: Colors.white_opacity[70],
   },
