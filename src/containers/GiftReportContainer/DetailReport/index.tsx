@@ -40,15 +40,10 @@ const DetailReport: React.FC<DetailReportProps> = ({ videoId }) => {
 
   const getTotalPage = () => Math.ceil(detailedReports.total / ITEM_PER_PAGE)
   const [page, setPage] = useState(1)
-  // TODO:
   // const { t } = useTranslation('common')
   useEffect(() => {
     const paramDeliveryReport: DetailedReportParams = { uuid: videoId, page: page, limit: ITEM_PER_PAGE }
     fetchDetailedReportList(paramDeliveryReport)
-    // console.log(
-    //   'rows.slice(page,ITEM_PER_PAGE)=>',
-    //   Array.from(Array(40).keys()).slice(ITEM_PER_PAGE * page - ITEM_PER_PAGE, ITEM_PER_PAGE * page)
-    // )
   }, [page])
 
   const renderBtnCSV = () =>
@@ -127,10 +122,10 @@ const DetailReport: React.FC<DetailReportProps> = ({ videoId }) => {
                 <TableRow key={key} className={classes.text}>
                   <TableCell align="center">{i.no}</TableCell>
                   <TableCell align="center">{DateHelper.formatDateTime(i.created_at)}</TableCell>
-                  <TableCell align="center">{i.nickname}</TableCell>
-                  <TableCell align="center">{FormatHelper.currencyFormat(i.point.toString())}</TableCell>
-                  <TableCell align="center">{i.type_report}</TableCell>
-                  <TableCell align="center">{i.gift_recipient}</TableCell>
+                  <TableCell align="left">{i.nickname}</TableCell>
+                  <TableCell align="right">{FormatHelper.currencyFormat(i.point.toString())}</TableCell>
+                  <TableCell align="left">{i.type_report}</TableCell>
+                  <TableCell align="left">{i.gift_recipient}</TableCell>
                 </TableRow>
               ))}
             </ESTable>

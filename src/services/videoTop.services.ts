@@ -195,7 +195,7 @@ export type SearchType = {
 }
 
 export type VideoDetailParams = {
-  video_id: string
+  video_id: string | string[]
   timezone?: string
   user_id?: number
 }
