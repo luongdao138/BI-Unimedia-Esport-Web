@@ -41,8 +41,9 @@ import {
   GIVER_RANK_TYPE,
   INTERVAL_AUTO_GET_MESS,
   LIMIT_FETCH_NEXT,
+  LIMIT_MAX_MESS_PREV_REWIND,
   LIMIT_MESS,
-  LIMIT_MESS_REWIND,
+  LIMIT_MIN_MESS_PREV_REWIND,
   RECEIVER_RANK_TYPE,
   SECOND_AUTO_GET_MESS_BEFORE,
   STATUS_SEND_MESS,
@@ -266,6 +267,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     const [prevToken, setPrevToken] = useState(null)
     // console.log('🚀 ~ prevToken', prevToken)
     const [isGettingMess, setIsGettingMess] = useState(false)
+    const [isGettingTipMess, setIsGettingTipMess] = useState(false)
     console.log('🚀 ~ isGettingMess', isGettingMess)
     const [isGettingPrevRewindMess, setIsGettingPrevRewindMess] = useState(false)
     const [isGettingRewindMess, setIsGettingRewindMess] = useState(false)
@@ -280,7 +282,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     const [archiveInitMess, setArchiveInitMess] = useState([])
     const [cacheDonateMess, setCacheDonateMess] = useState([])
     // const [cacheDonateMessTip, setCacheDonateMessTip] = useState([])
-    // console.log('🚀 ~ cacheDonateMess', cacheDonateMess)
+    console.log('🚀 ~ cacheDonateMess', cacheDonateMess)
     // console.log('🚀 ~ cacheMess', cacheMess)
     const [prevTime, setPrevTime] = useState(0)
     // console.log('🚀 ~ prevTime', prevTime)
@@ -356,7 +358,8 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       !liveStreamInfo.is_end_live &&
       (+streamingSecond >= 0 || streamingSecond === Infinity) &&
       successGetListMess &&
-      successGetListDonateMess
+      successGetListDonateMess &&
+      successGetListMessTip
     // const isEnabledChat = true
 
     const classes = useStyles({ isLandscape })
@@ -429,15 +432,14 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
 
       // setSuccessGetListMess(true)
 
-      const transformDonateMessAsc = transformMessAsc.filter(
-        (item) => +item.display_avatar_time >= videoPlayedSecond.current && item.is_premium && +item.point > 300
-      )
+      const transformDonateMessAsc = transformMessAsc.filter((item) => item.is_premium && +item.point > 300)
+      setCacheDonateMess([...transformDonateMessAsc])
+
       // const transformDonateMessAsc = transformDonateMess
       // const transformDonateMessAsc = sortMessages(transformDonateMess)
       // comment if no get in initial
       // setMessagesDonate([...transformDonateMessAsc])
       // save mess for use in local
-      setCacheDonateMess([...transformDonateMessAsc])
       // save mess tip forever except switch tab
       // setCacheDonateMessTip([...transformDonateMessAsc])
       // TODO (remove this line)
@@ -448,13 +450,13 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       // setSuccessGetListDonateMess(true)
       setSuccessGetListMessTip(true)
       // fetch mess by rewinded time when switch tab
-      fetchMessTipWhenRewind(videoPlayedSecond.current)
+      // fetchMessTipWhenRewind(videoPlayedSecond.current)
     }
     refTransformMessTip.current = handleTransformMessTip
 
     const fetchMessTipInitial = (nextToken = null) => {
       try {
-        setIsGettingMess(true)
+        setIsGettingTipMess(true)
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         let listQV: APIt.GetMessagesByVideoByPremiumQueryVariables = {
@@ -475,10 +477,10 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
             refTransformMessTip.current()
           }
 
-          setIsGettingMess(false)
+          setIsGettingTipMess(false)
         })
       } catch (error) {
-        setIsGettingMess(false)
+        setIsGettingTipMess(false)
         console.error(error)
       }
     }
@@ -507,8 +509,8 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
           video_id: key_video_id,
           video_time: { le: video_time - 1 },
           sortDirection: sortOrder,
-          limit: LIMIT_MESS_REWIND,
-          // limit: CommonHelper.randomIntegerInRange(LIMIT_MIN_MESS_PREV_REWIND, LIMIT_MAX_MESS_PREV_REWIND),
+          // limit: LIMIT_MESS_REWIND,
+          limit: CommonHelper.randomIntegerInRange(LIMIT_MIN_MESS_PREV_REWIND, LIMIT_MAX_MESS_PREV_REWIND),
           nextToken: null,
         }
         API.graphql(graphqlOperation(getMessagesByVideoIdWithSort, listQV)).then((messagesResults) => {
@@ -557,15 +559,16 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       setCacheMess([...transformMessAsc])
       setSuccessGetListMess(true)
 
-      const transformDonateMessAsc = transformMessAsc.filter(
-        (item) => +item.display_avatar_time >= videoPlayedSecond.current && item.is_premium && +item.point > 300
-      )
+      // const transformDonateMessAsc = transformMessAsc.filter(
+      //   (item) => +item.display_avatar_time >= videoPlayedSecond.current && item.is_premium && +item.point > 300
+      // )
       // const transformDonateMessAsc = transformDonateMess
       // const transformDonateMessAsc = sortMessages(transformDonateMess)
       // comment if no get in initial
       // setMessagesDonate([...transformDonateMessAsc])
       // save mess for use in local
-      setCacheDonateMess([...transformDonateMessAsc])
+      // comment due to split logic get tip mess to display icon separate with all mess
+      // setCacheDonateMess([...transformDonateMessAsc])
       // TODO (remove this line)
       // setMessagesDonate([...transformDonateMessAsc])
       setPrevToken(messagesInfo.nextToken)
@@ -586,9 +589,10 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         //   setIsChatInBottom(true)
         // }
 
-        setMessagesDonate([...transformDonateMessAsc])
+        // setMessagesDonate([...transformDonateMessAsc])
         setIsSwitchingTab(false)
       }
+      setIsGettingMess(false)
     }
     refTransformListMess.current = handleTransformListMess
 
@@ -604,12 +608,12 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         // save mess for use in local
         setCacheMess([...transformMessAsc])
 
-        const transformDonateMessAsc = transformMessAsc.filter(
-          (item) => +item.display_avatar_time >= videoPlayedSecond.current && item.is_premium && +item.point > 300
-        )
+        // const transformDonateMessAsc = transformMessAsc.filter(
+        //   (item) => +item.display_avatar_time >= videoPlayedSecond.current && item.is_premium && +item.point > 300
+        // )
         // comment if no get in initial
         // save mess for use in local
-        setCacheDonateMess([...transformDonateMessAsc])
+        // setCacheDonateMess([...transformDonateMessAsc])
         // set next time for auto get mess
         setNextTime(video_time + INTERVAL_AUTO_GET_MESS)
       }
@@ -639,13 +643,13 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       // cache.clearAll()
       setCacheMess((messages) => [...transformMessAsc, ...messages])
 
-      const transformDonateMessAsc = transformMessAsc.filter(
-        (item) => +item.display_avatar_time >= videoPlayedSecond.current && item.is_premium && +item.point > 300
-      )
+      // const transformDonateMessAsc = transformMessAsc.filter(
+      //   (item) => +item.display_avatar_time >= videoPlayedSecond.current && item.is_premium && +item.point > 300
+      // )
       // const transformDonateMessAsc = transformDonateMess
       // const transformDonateMessAsc = sortMessages(transformDonateMess)
-      setMessagesDonate((messages) => [...transformDonateMessAsc, ...messages])
-      setCacheDonateMess((messages) => [...transformDonateMessAsc, ...messages])
+      // setMessagesDonate((messages) => [...transformDonateMessAsc, ...messages])
+      // setCacheDonateMess((messages) => [...transformDonateMessAsc, ...messages])
 
       // save token to call api in next time
       setPrevToken(messagesInfo.nextToken)
@@ -684,7 +688,6 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
           // if (getType === GET_MESS_TYPE.FETCH_NORMAL) {
           refTransformListMess.current(messagesInfo)
           // }
-          setIsGettingMess(false)
         })
       } catch (error) {
         setIsGettingMess(false)
@@ -759,14 +762,14 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         const transformMessAsc = sortMessages([...autoGetMess])
         // setStateMessages(transformMessAsc.filter((v) => +v.video_time <= +videoPlayedSecond.current))
         setCacheMess((messages) => [...messages, ...transformMessAsc])
-        const transformDonateMessAsc = transformMessAsc.filter(
-          (item) => +item.display_avatar_time >= videoPlayedSecond.current && item.is_premium && +item.point > 300
-        )
+        // const transformDonateMessAsc = transformMessAsc.filter(
+        //   (item) => +item.display_avatar_time >= videoPlayedSecond.current && item.is_premium && +item.point > 300
+        // )
         // const transformDonateMessAsc = transformDonateMess
         // const transformDonateMessAsc = sortMessages(transformDonateMess)
         // comment if no get in initial
         // save mess for use in local
-        setCacheDonateMess((messages) => [...messages, ...transformDonateMessAsc])
+        // setCacheDonateMess((messages) => [...messages, ...transformDonateMessAsc])
         setNextTime(video_time + INTERVAL_AUTO_GET_MESS)
         setAutoGetMess([])
       }
@@ -789,14 +792,14 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         setStateMessages(transformMessAsc.filter((v) => +v.video_time <= +videoPlayedSecond.current))
         setCacheMess(transformMessAsc)
 
-        const transformDonateMessAsc = transformMessAsc.filter(
-          (item) => +item.display_avatar_time >= videoPlayedSecond.current && item.is_premium && +item.point > 300
-        )
+        // const transformDonateMessAsc = transformMessAsc.filter(
+        //   (item) => +item.display_avatar_time >= videoPlayedSecond.current && item.is_premium && +item.point > 300
+        // )
         // only get mess has time < played second
-        const newTransformMessAsc = transformDonateMessAsc.filter((v) => +v.video_time <= +videoPlayedSecond.current)
-        setMessagesDonate([...newTransformMessAsc])
+        // const newTransformMessAsc = transformDonateMessAsc.filter((v) => +v.video_time <= +videoPlayedSecond.current)
+        // setMessagesDonate([...newTransformMessAsc])
         // save mess for use in local
-        setCacheDonateMess([...transformDonateMessAsc])
+        // setCacheDonateMess([...transformDonateMessAsc])
 
         setPrevRewindMess({})
         setRewindMess({})
@@ -942,7 +945,8 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     })()
 
     const renderLoader = () => {
-      if (isGettingMess === true || isGettingPrevRewindMess === true) {
+      // loading when get mess, or rewind video, or get all tip mess
+      if (isGettingMess === true || isGettingPrevRewindMess === true || isGettingTipMess === true) {
         return (
           <Box className={classes.loaderBox}>
             <Loader />
@@ -1087,7 +1091,8 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
             if (isPremiumChat(createdMessage, false)) {
               let newMessDonate = [...cacheDonateMess]
               // newMessDonate = newMessDonate.filter((item) => +item.display_avatar_time > +streamingSecond)
-              newMessDonate = newMessDonate.filter((item) => +item.display_avatar_time > +videoPlayedSecond.current)
+              newMessDonate = filterMessDonateLocal(newMessDonate)
+              // newMessDonate.filter((item) => +item.display_avatar_time > +videoPlayedSecond.current)
               // render user donate icon by time of local
               setMessagesDonate([...newMessDonate, createdMessage])
             }
@@ -1169,7 +1174,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     }, [successGetListMess])
 
     const filterByStreaming = () => {
-      if (successGetListMess && successGetListDonateMess) {
+      if (successGetListMess && successGetListDonateMess && successGetListMessTip) {
         // fix bug streaming second is not true when access url first time
         const realStreamingSecond = videoPlayedSecond.current
         // check archive video => no use that case
@@ -1186,11 +1191,17 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
             setIsChatInBottom(true)
           }
 
-          const newMessagesDonate = cacheDonateMess.filter((item) => +item.display_avatar_time > +realStreamingSecond)
+          const newMessagesDonate = filterMessDonateLocal(cacheDonateMess, realStreamingSecond)
+          // const newMessagesDonate = cacheDonateMess.filter(
+          //   (item) => +item.video_time <= +realStreamingSecond && +item.display_avatar_time > +realStreamingSecond
+          // )
           setMessagesDonate(newMessagesDonate)
         } else {
           // only check displaying of user donate icon
-          const newMessagesDonate = cacheDonateMess.filter((item) => +item.display_avatar_time > +realStreamingSecond)
+          const newMessagesDonate = filterMessDonateLocal(cacheDonateMess, realStreamingSecond)
+          // const newMessagesDonate = cacheDonateMess.filter(
+          //   (item) => +item.video_time <= +realStreamingSecond && +item.display_avatar_time > +realStreamingSecond
+          // )
           if (!_.isEqual(messagesDonate, newMessagesDonate)) {
             setMessagesDonate(newMessagesDonate)
           }
@@ -1227,18 +1238,15 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       }
 
       let newMessDonate = [...cacheDonateMess]
-      newMessDonate = newMessDonate.filter(
-        (item) => +item.display_avatar_time > +new_played_second && +item.video_time <= +new_played_second
-      )
+      newMessDonate = filterMessDonateLocal(newMessDonate, new_played_second)
+      // newMessDonate = newMessDonate.filter(
+      //   (item) => +item.display_avatar_time > +new_played_second && +item.video_time <= +new_played_second
+      // )
       // render user donate icon by time of local
       if (!_.isEqual(messagesDonate, newMessDonate)) {
         setMessagesDonate(newMessDonate)
       }
     }
-
-    // useEffect(() => {
-    //   filterMessWhenChangeTime()
-    // }, [videoPlayedSecond.current])
 
     useEffect(() => {
       if (isChatInBottom) {
@@ -1246,6 +1254,13 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         setIsChatInBottom(false)
       }
     }, [isChatInBottom])
+
+    const filterMessDonateLocal = (allMess, currentTime = 0) => {
+      const time = currentTime ? currentTime : videoPlayedSecond.current
+      return allMess.filter(
+        (item) => +item.video_time <= +time && +item.display_avatar_time > +time && item.is_premium && +item.point > 300
+      )
+    }
 
     const refFetchPrevMessTip = useRef(null)
     const handleFetchPrevMessTip = () => {
@@ -1291,13 +1306,13 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
           setIsTokenTipBroken(true)
         }
 
-        const filterDonateMess = _.filter(
-          filterMess,
-          (v) => v.display_avatar_time >= videoPlayedSecond.current && v.is_premium && +v.point > 300
-        )
-        console.log('🚀 ~ fetchMessTipWhenRewind ~ filterDonateMess', filterDonateMess)
-        setMessagesDonate(filterDonateMess)
-        setCacheDonateMess([...newMess, ...cacheDonateMess])
+        // const filterDonateMess = _.filter(
+        //   filterMess,
+        //   (v) => v.display_avatar_time >= videoPlayedSecond.current && v.is_premium && +v.point > 300
+        // )
+        // console.log('🚀 ~ fetchMessTipWhenRewind ~ filterDonateMess', filterDonateMess)
+        // setMessagesDonate(filterDonateMess)
+        // setCacheDonateMess([...newMess, ...cacheDonateMess])
 
         setIsGettingMess(false)
       }
@@ -1313,8 +1328,8 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       let newMess = []
       // const limit = 2
       // when live stream get limit to 100 same as tab all mess
-      const limit = isStreaming ? LIMIT_MESS : LIMIT_MESS_REWIND
-      // const limit = isStreaming ? LIMIT_MESS : CommonHelper.randomIntegerInRange(LIMIT_MIN_MESS_PREV_REWIND, LIMIT_MAX_MESS_PREV_REWIND)
+      // const limit = isStreaming ? LIMIT_MESS : LIMIT_MESS_REWIND
+      const limit = isStreaming ? LIMIT_MESS : CommonHelper.randomIntegerInRange(LIMIT_MIN_MESS_PREV_REWIND, LIMIT_MAX_MESS_PREV_REWIND)
       console.log('🚀 ~ fetchMessTipWhenRewind ~ limit', limit)
 
       let startSliceIndex = 0
@@ -1348,18 +1363,18 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         setIsTokenTipBroken(true)
       }
 
-      const filterDonateMess = _.filter(
-        filterMess,
-        (v) => v.display_avatar_time >= videoPlayedSecond.current && v.is_premium && +v.point > 300
-      )
-      const filterCacheDonateMess = _.filter(newMess, (v) => v.is_premium && +v.point > 300)
-      console.log('🚀 ~ fetchMessTipWhenRewind ~ filterDonateMess', filterDonateMess)
+      // const filterDonateMess = _.filter(
+      //   cacheDonateMess,
+      //   (v) => v.display_avatar_time >= videoPlayedSecond.current && v.is_premium && +v.point > 300
+      // )
+      // const filterCacheDonateMess = _.filter(newMess, (v) => v.is_premium && +v.point > 300)
+      // console.log('🚀 ~ fetchMessTipWhenRewind ~ filterDonateMess', filterDonateMess)
 
       setIsGettingMess(false)
       setStateMessages(filterMess)
       setCacheMess(newMess)
-      setMessagesDonate(filterDonateMess)
-      setCacheDonateMess(filterCacheDonateMess)
+      // setMessagesDonate(filterDonateMess)
+      // setCacheDonateMess(filterCacheDonateMess)
     }
     refFetchMessTipWhenRewind.current = handleFetchMessTipWhenRewind
 
@@ -1374,6 +1389,12 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         setBottom(true)
         // console.log('🚀 ~ useEffect ~ setBottom--000', isBottom)
         resetMessagesWhenRewind()
+        // filter and rerender list icon tip mess
+        console.log('🚀 ~ useEffect ~ liveStreamInfo.seeked_second', liveStreamInfo.seeked_second)
+        const newMessDonate = filterMessDonateLocal(cacheDonateMess, liveStreamInfo.seeked_second)
+        console.log('🚀 ~ useEffect ~ newMessDonate', newMessDonate)
+        setMessagesDonate(newMessDonate)
+
         // filterMessByPlayedSecond(liveStreamInfo.seeked_second, 'smooth')
         if (isTipTab) {
           console.log('🚀 ~ useEffect ~ isTipTab', isTipTab)
@@ -1481,8 +1502,8 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     const resetMessagesWhenRewind = () => {
       setStateMessages([])
       setCacheMess([])
-      setCacheDonateMess([])
       setMessActiveUser(null)
+      // setCacheDonateMess([])
     }
 
     useEffect(() => {
@@ -1566,9 +1587,9 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
 
     const resetMessWhenSwitchTab = () => {
       setStateMessages([])
-      setMessagesDonate([])
       setCacheMess([])
-      setCacheDonateMess([])
+      // setMessagesDonate([])
+      // setCacheDonateMess([])
     }
 
     const handleGetMessTip = () => {
@@ -1580,9 +1601,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
           fetchMessTipWhenRewind(videoPlayedSecond.current)
         }, DEBOUNCE_SECOND)
       } else {
-        // if has not get mess tip initial yet => get mess tip initial
-        setInitTipMess([])
-        fetchMessTipInitial()
+        // handleGetMessTipInitial()
       }
     }
 
@@ -1650,23 +1669,36 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       // fetchMessInitialStreaming()
     }, [])
 
+    // get all mess tip initial and render icon tip mess separate with all mess
+    const handleGetMessTipInitial = () => {
+      // if has not get mess tip initial yet => get mess tip initial
+      setInitTipMess([])
+      fetchMessTipInitial()
+    }
+
     useEffect(() => {
       // console.log('🚀 ~ useEffect ~ isStreaming--000', isStreaming, videoType)
       // console.log('🚀 ~ useEffect ~ isStreaming', playedSecond)
       // console.log('🚀 ~ useEffect ~ isResizedScreen', isResizedScreen)
       // TODO
+      // reset mess donate when move from live stream to archive
+      setMessagesDonate([])
+      setCacheDonateMess([])
+
       if (isStreaming) {
+        handleGetMessTipInitial()
         // console.log('🚀 ~ useEffect ~ isStreaming', isStreaming)
         if (activeSubTab === SUB_TABS.MESS.ALL) {
           fetchMessInitialStreaming()
         } else if (activeSubTab === SUB_TABS.MESS.TIP) {
-          handleGetMessTip()
+          // handleGetMessTip()
         }
       } else if (!isStreaming && videoType === STATUS_VIDEO.ARCHIVE) {
+        handleGetMessTipInitial()
         if (activeSubTab === SUB_TABS.MESS.ALL) {
           fetchNextMess(GET_MESS_TYPE.FETCH_ARCHIVE_INITIAL, isResizedScreen ? playedSecond : 0)
         } else if (activeSubTab === SUB_TABS.MESS.TIP) {
-          handleGetMessTip()
+          // handleGetMessTip()
         }
       }
       // fetchMessInitialStreaming()
@@ -2665,7 +2697,9 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
                 },
               ]}
               value={activeSubTab}
-              onClick={(value) => setActiveSubTab(value)}
+              onClick={(value) => {
+                if (successGetListMessTip && successGetListMess) setActiveSubTab(value)
+              }}
             ></TabsGroup>
           )}
           {/* {displayChatContent() ? chatContent() : userDoesNotHaveViewingTicketView()} */}
