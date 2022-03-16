@@ -29,6 +29,9 @@ const AntSwitch = withStyles((theme: Theme) =>
           borderColor: theme.palette.primary.main,
         },
       },
+      '&.MuiSwitch-switchBase.Mui-disabled + .MuiSwitch-track': {
+        opacity: '0.3',
+      },
     },
     thumb: {
       width: 28,
