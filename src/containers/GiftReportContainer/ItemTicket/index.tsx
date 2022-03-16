@@ -23,7 +23,7 @@ const ItemTicket: React.FC<TicketsResponse> = (props) => {
       <TableCell align="center">
         <Typography component="span">{DateHelper.formatDateTime(created_at)}</Typography>
       </TableCell>
-      <TableCell align="center">
+      <TableCell align="right">
         <Typography component="span">{FormatHelper.currencyFormat(point.toString())}</Typography>
       </TableCell>
     </TableRow>
@@ -31,8 +31,15 @@ const ItemTicket: React.FC<TicketsResponse> = (props) => {
 }
 export default ItemTicket
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   name: {
     fontSize: 12,
+    textAlign: 'left',
+  },
+
+  [theme.breakpoints.down(419)]: {
+    name: {
+      wordBreak: 'break-all',
+    },
   },
 }))

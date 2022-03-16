@@ -24,10 +24,10 @@ const ItemGift: React.FC<GiftsResponse> = (props) => {
           </Box>
         </Box>
       </TableCell>
-      <TableCell align="center">
+      <TableCell align="right">
         <Typography component="span">{point_user_giver}</Typography>
       </TableCell>
-      <TableCell align="center">
+      <TableCell align="right">
         <Typography component="span">{FormatHelper.currencyFormat(point.toString())}</Typography>
       </TableCell>
     </TableRow>

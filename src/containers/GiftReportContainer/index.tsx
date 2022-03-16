@@ -1,9 +1,11 @@
+import FullScreenLoader from '@components/FullScreenLoader'
 import HeaderWithButtonStream from '@components/HeaderWithButtonStream'
 import ESLoader from '@components/Loader'
 import ESTab from '@components/Tab'
 import ESTable from '@components/Table'
 import ESTabs from '@components/Tabs'
 import { ESRoutes } from '@constants/route.constants'
+import useDetailVideo from '@containers/VideoLiveStreamContainer/useDetailVideo'
 import i18n from '@locales/i18n'
 import { Box, Grid, makeStyles, TableCell, TableRow, Typography } from '@material-ui/core'
 import { Colors } from '@theme/colors'
@@ -20,6 +22,12 @@ enum TABS {
   TICKET_REPORT = 1,
   DETAIL_REPORT = 2,
 }
+
+enum USE_TICKET {
+  FREE_VIDEO = 0,
+  PAY_VIDEO = 1,
+}
+
 const GiftReportContainer: React.FC<{ default_tab: any }> = ({ default_tab }) => {
   const { t } = useTranslation('common')
   const classes = useStyles()
@@ -27,6 +35,8 @@ const GiftReportContainer: React.FC<{ default_tab: any }> = ({ default_tab }) =>
   const videoID = router.query.video_id
   const [tab, setTab] = useState(default_tab)
   const { fetchTipReportList, fetchTicketReportList, tipReports, ticketReports, tipReportMeta, ticketReportMeta } = useDeliveryReport()
+
+  const { getVideoDetail, detailVideoResult, meta } = useDetailVideo()
 
   useEffect(() => {
     const paramDeliveryReport = { uuid: videoID }
@@ -46,12 +56,19 @@ const GiftReportContainer: React.FC<{ default_tab: any }> = ({ default_tab }) =>
     }
   }, [tab])
 
+  useEffect(() => {
+    const paramGetVideoDetail = { video_id: videoID }
+    getVideoDetail(paramGetVideoDetail)
+  }, [])
+
   const getTabs = () => {
     return (
       <Grid item xs={12} className={classes.tabsContainer}>
         <ESTabs value={tab} onChange={(_, v) => setTab(v)} className={classes.tabs}>
           <ESTab label={t('streaming_gift_report_screen.gift_report')} value={0} className={classes.singleTab} />
-          <ESTab label={t('streaming_gift_report_screen.ticket_report')} value={1} className={classes.singleTab} />
+          {detailVideoResult?.use_ticket === USE_TICKET.PAY_VIDEO && (
+            <ESTab label={t('streaming_gift_report_screen.ticket_report')} value={1} className={classes.singleTab} />
+          )}
           <ESTab label={t('streaming_gift_report_screen.detail_report')} value={2} className={classes.singleTab} />
         </ESTabs>
       </Grid>
@@ -147,7 +164,9 @@ const GiftReportContainer: React.FC<{ default_tab: any }> = ({ default_tab }) =>
                     ))}
                   </ESTable>
                 ) : (
-                  <></>
+                  <Box>
+                    <Typography align="center"> {t('streaming_gift_report_screen.the_ticket_was_not_purchased')}</Typography>
+                  </Box>
                 )}
               </>
             )}
@@ -168,6 +187,14 @@ const GiftReportContainer: React.FC<{ default_tab: any }> = ({ default_tab }) =>
       </Box>
     )
   }
+  if (meta.pending) {
+    return (
+      <Box textAlign="center">
+        <FullScreenLoader open={meta.pending} />
+      </Box>
+    )
+  }
+
   return (
     <>
       <HeaderWithButtonStream
