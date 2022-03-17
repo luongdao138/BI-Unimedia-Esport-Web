@@ -3,7 +3,7 @@
 import ESTab from '@components/Tab'
 import ESTabs from '@components/Tabs'
 import i18n from '@locales/i18n'
-import { Box, Grid, makeStyles, Typography } from '@material-ui/core'
+import { Box, Grid, makeStyles, Typography, useMediaQuery, useTheme } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -54,6 +54,7 @@ import VideoSubInfo from './VideoSubInfo'
 import { use100vh } from 'react-div-100vh'
 import { useRotateScreen } from '@utils/hooks/useRotateScreen'
 import * as commonActions from '@store/common/actions'
+import GoogleAd from '@components/GoogleAds'
 
 export interface videoStyleProps {
   availHeight: number
@@ -153,6 +154,8 @@ const VideoDetail: React.FC = () => {
   const [isVideoFreeToWatch, setIsVideoFreeToWatch] = useState(detailVideoResult?.use_ticket ? detailVideoResult?.use_ticket : -1)
 
   console.log('🚀 ~ isLandscape', isLandscape)
+  const theme = useTheme()
+  const screenDownSP = useMediaQuery(theme.breakpoints.down(576))
 
   const handleShowDialogLogin = () => {
     setShowDialogLogin(true)
@@ -744,6 +747,10 @@ const VideoDetail: React.FC = () => {
                 ticketPrice={detailVideoResult?.ticket_price}
                 clickButtonPurchaseTicket={handlePurchaseTicket}
                 onVideoEnd={onVideoEnd}
+              />
+              <GoogleAd
+                id={{ idPatten1: !screenDownSP && 'ad_video_detail_t', idPatten4: screenDownSP && 'ad_video_detail_b' }}
+                idTag={!screenDownSP ? 'ad_video_detail_top' : 'ad_video_detail_bottom'}
               />
             </>
           )}
