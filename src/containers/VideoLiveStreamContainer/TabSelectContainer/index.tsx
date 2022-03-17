@@ -55,7 +55,7 @@ export type TabSelectProps = {
 
 const TabSelectContainer: React.FC<TabSelectProps> = ({ sideChatContainer, infoTabsContent, renderVideoSubInfo, isLandscape }) => {
   const { liveStreamInfo, setActiveTab, setActiveSubTab } = useDetailVideo()
-  const { isEnabledMessFilter, isDisplayedRankingTab, isDisplayedRankingReceiver } = useCheckDisplayChat()
+  const { isEnabledMessFilter, isDisplayedRankingTab, isDisplayedRankingReceipt } = useCheckDisplayChat()
 
   const { activeTab, activeSubTab } = liveStreamInfo
   // const { t } = useTranslation('common')
@@ -163,7 +163,8 @@ const TabSelectContainer: React.FC<TabSelectProps> = ({ sideChatContainer, infoT
                         {item?.subTabs.map((v, key) => {
                           let isDisplayedSubTab = true
                           if (v.value === SUB_TABS.RANKING.RECEIPT) {
-                            isDisplayedSubTab = isDisplayedRankingReceiver
+                            // tab ranking receipt only displayed when isDisplayedRankingReceipt = true
+                            isDisplayedSubTab = isDisplayedRankingReceipt
                           }
                           if (v.value === SUB_TABS.MESS.TIP) {
                             isDisplayedSubTab = isEnabledMessFilter
