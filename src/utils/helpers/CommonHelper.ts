@@ -364,6 +364,10 @@ const addSttDataList = (data: any, itemPerPage: number, page: number): any => {
   return data.map((dataObj, index) => ({ ...dataObj, no: itemPerPage * page - itemPerPage + index + 1 }))
 }
 
+const insertSymbolToFirstString = (symbol: string, str: string): string => {
+  return symbol.concat(str)
+}
+
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const checkUserCode = (userCode: string | number, callback: () => void) => {
   if (userCode == 'exelab' || userCode == 'system') {
@@ -514,4 +518,5 @@ export const CommonHelper = {
   addSttDataList,
   getRankInfo,
   getBrowserInfo,
+  insertSymbolToFirstString,
 }

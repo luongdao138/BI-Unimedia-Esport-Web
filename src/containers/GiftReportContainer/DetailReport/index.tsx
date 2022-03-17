@@ -21,15 +21,35 @@ const ITEM_PER_PAGE = 30
 // const getItemPerPage = (data: DetailedResponse[], itemPerPage: number, page: number) => {
 //   return data.slice(itemPerPage * page - itemPerPage, itemPerPage * page)
 // }
+const RESPONSE_DATA_DETAIL_REPORT = {
+  NO: 'no',
+  CREATED_AT: 'created_at',
+  NICK_NAME: 'nickname',
+  POINT: 'point',
+  TYPE_REPORT: 'type_report',
+  GIFT_RECIPIENT: 'gift_recipient',
+}
 
 const headers = [
-  { label: 'No.', key: 'no' },
-  { label: '購入日時', key: 'created_at' },
-  { label: 'eXeLAB ID', key: 'nickname' },
-  { label: 'eXeポイント', key: 'point' },
-  { label: '種別', key: 'type_report' },
-  { label: 'チップ対象', key: 'gift_recipient' },
+  { label: 'No.', key: RESPONSE_DATA_DETAIL_REPORT.NO },
+  { label: '購入日時', key: RESPONSE_DATA_DETAIL_REPORT.CREATED_AT },
+  { label: 'eXeLAB ID', key: RESPONSE_DATA_DETAIL_REPORT.NICK_NAME },
+  { label: 'eXeポイント', key: RESPONSE_DATA_DETAIL_REPORT.POINT },
+  { label: '種別', key: RESPONSE_DATA_DETAIL_REPORT.TYPE_REPORT },
+  { label: 'チップ対象', key: RESPONSE_DATA_DETAIL_REPORT.GIFT_RECIPIENT },
 ]
+
+function DataReportExcel(data, property1, property2) {
+  let newData = []
+  if (property1 === RESPONSE_DATA_DETAIL_REPORT.NICK_NAME) {
+    newData = data.map((x) => ({ ...x, nickname: CommonHelper.insertSymbolToFirstString('@', x.nickname) }))
+    if (property2 === RESPONSE_DATA_DETAIL_REPORT.GIFT_RECIPIENT) {
+      const newDataProperty2 = newData.map((x) => (x.gift_recipient === null ? { ...x, gift_recipient: 'ー' } : x))
+      newData = newDataProperty2
+    }
+  }
+  return newData
+}
 
 const DetailReport: React.FC<DetailReportProps> = ({ videoId }) => {
   const theme = useTheme()
@@ -46,14 +66,19 @@ const DetailReport: React.FC<DetailReportProps> = ({ videoId }) => {
     fetchDetailedReportList(paramDeliveryReport)
   }, [page])
 
+  const dataReportExcel = DataReportExcel(
+    CommonHelper.addSttDataList(detailedReports.points, ITEM_PER_PAGE, page),
+    RESPONSE_DATA_DETAIL_REPORT.NICK_NAME,
+    RESPONSE_DATA_DETAIL_REPORT.GIFT_RECIPIENT
+  )
   const renderBtnCSV = () =>
     matches ? (
       <ESButton variant={'contained'} className={classes.btnCSV}>
         <ExportCSV
           headers={headers}
-          data={CommonHelper.addSttDataList(detailedReports.points, ITEM_PER_PAGE, page)}
+          data={dataReportExcel}
           className={classes.textBtnCSV}
-          fileName={'report-detail.csv'}
+          fileName={'reports.csv'}
           textExport={t('streaming_gift_report_screen.csv')}
         ></ExportCSV>
       </ESButton>
@@ -61,9 +86,9 @@ const DetailReport: React.FC<DetailReportProps> = ({ videoId }) => {
       <ESButton variant={'contained'} className={classes.btnCSV}>
         <ExportCSV
           headers={headers}
-          data={CommonHelper.addSttDataList(detailedReports.points, ITEM_PER_PAGE, page)}
+          data={dataReportExcel}
           className={classes.textBtnCSV}
-          fileName={'report-detail.csv'}
+          fileName={'reports.csv'}
           textExport={t('streaming_gift_report_screen.csv_download')}
         ></ExportCSV>
       </ESButton>
@@ -122,10 +147,10 @@ const DetailReport: React.FC<DetailReportProps> = ({ videoId }) => {
                 <TableRow key={key} className={classes.text}>
                   <TableCell align="center">{i.no}</TableCell>
                   <TableCell align="center">{DateHelper.formatDateTime(i.created_at)}</TableCell>
-                  <TableCell align="left">{i.nickname}</TableCell>
+                  <TableCell align="left">{CommonHelper.insertSymbolToFirstString('@', i.nickname)}</TableCell>
                   <TableCell align="right">{FormatHelper.currencyFormat(i.point.toString())}</TableCell>
                   <TableCell align="left">{i.type_report}</TableCell>
-                  <TableCell align="left">{i.gift_recipient}</TableCell>
+                  <TableCell align="left">{i.gift_recipient ? i.gift_recipient : 'ー'}</TableCell>
                 </TableRow>
               ))}
             </ESTable>
