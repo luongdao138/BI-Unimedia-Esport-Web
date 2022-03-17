@@ -383,16 +383,16 @@ const Steps: React.FC<StepsProps> = ({
       group_title: stepSettingTwo.group_title,
       ranking_flag: stepSettingTwo.ranking_flag === false ? 0 : 1,
     }
-    debouncedHandleConfirmForm(data, stepSettingTwo, step)
+    debouncedHandleConfirmForm(data, stepSettingTwo, step, stepSettingTwo?.share_sns_flag)
   }
 
   const debouncedHandleConfirmForm = useCallback(
-    _.debounce((data: SetLiveStreamParams, stepSettingTwo, step: number) => {
+    _.debounce((data: SetLiveStreamParams, stepSettingTwo, step: number, share_sns_flag: boolean) => {
       setLiveStreamConfirm(data, (process) => {
         // console.log('process===', process);
         onNext(
           step + 1,
-          stepSettingTwo.share_sns_flag,
+          share_sns_flag,
           {
             title: stepSettingTwo.title,
             content: `${baseViewingURL}${stepSettingTwo.uuid}`,
@@ -488,6 +488,18 @@ const Steps: React.FC<StepsProps> = ({
       clearInterval(interval)
     }
   })
+
+  const returnTextChip = () => {
+    if (formik?.values?.stepSettingTwo?.use_gift) {
+      if (formik?.values?.stepSettingTwo?.group_title) {
+        return formik?.values?.stepSettingTwo?.group_title
+      } else {
+        return i18n.t('common:streaming_setting_screen.unselected')
+      }
+    } else {
+      return i18n.t('common:streaming_setting_screen.ranking_flag.off')
+    }
+  }
 
   return (
     <Box py={4} className={classes.container}>
@@ -1081,7 +1093,7 @@ const Steps: React.FC<StepsProps> = ({
                             formik={formik}
                             disabled={isLive}
                             // className={getAddClassByStep(classes.input_text_number)}
-                            className={classes.input_text_number}
+                            className={classes.input_text_ticket}
                             readOnly={!formik?.values?.stepSettingTwo?.use_ticket}
                             nowrapHelperText
                             endAdornment={
@@ -1251,11 +1263,7 @@ const Steps: React.FC<StepsProps> = ({
                 <Box className={classes.newTextftDash}>
                   <Box pt={1} className={classes.nameList}>
                     <Typography className={`${classes.labelNameObject} ${classes.labelRank}`}>
-                      {`${i18n.t('common:streaming_setting_screen.list_gift_selected')} ${
-                        formik?.values?.stepSettingTwo?.group_title
-                          ? formik?.values?.stepSettingTwo?.group_title
-                          : i18n.t('common:streaming_setting_screen.unselected')
-                      }`}
+                      {`${i18n.t('common:streaming_setting_screen.list_gift_selected')} ${returnTextChip()}`}
                     </Typography>
                   </Box>
                   <Box className={`${classes.nameList} ${classes.nameListRanking}`}>
@@ -1536,6 +1544,29 @@ const useStyles = makeStyles((theme: Theme) => ({
       backgroundColor: '#000000',
       padding: '10.5px 14px',
       borderRadius: 4,
+    },
+    '& :-webkit-autofill': {
+      WebkitBoxShadow: '0 0 0 100px transparent inset',
+    },
+  },
+  input_text_ticket: {
+    '&.Mui-disabled': {
+      color: Colors.white_opacity['70'],
+      '& .MuiOutlinedInput-notchedOutline': {
+        // borderColor: 'transparent',
+        backgroundColor: 'transparent',
+      },
+      '&.MuiOutlinedInput-multiline.MuiOutlinedInput-marginDense': {
+        padding: 0,
+        display: 'flex',
+      },
+    },
+    '& .MuiInputBase-input.Mui-disabled': {
+      display: 'flex',
+      alignItems: 'center',
+      padding: '10.5px 14px 10.5px 14px',
+      color: Colors.white_opacity['70'],
+      borderColor: 'transparent',
     },
     '& :-webkit-autofill': {
       WebkitBoxShadow: '0 0 0 100px transparent inset',
