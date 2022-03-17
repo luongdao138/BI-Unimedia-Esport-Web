@@ -31,4 +31,5 @@ export const ACTION_VIDEO_TOP = {
   VIDEO_REF: 'streaming/videoRef',
   VIDEO_GIFT_MASTER: 'video/giftMaster',
   GET_RANKINGS: 'video/getRankings',
+  UPDATE_USE_GIFT_FLAG: 'video/updateUseGiftFlag',
 }

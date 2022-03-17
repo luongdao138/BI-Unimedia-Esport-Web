@@ -41,7 +41,7 @@ const TipChatDialog: React.FC<TipChatDialogProps> = ({
 }) => {
   // const dispatch = useAppDispatch()
   const { dataPurchaseTicketSuperChat } = usePurchaseTicketSuperChat()
-  const { videoGiftMaster } = useDetailVideo()
+  const { videoGiftMaster, videoGiftMasterLoading } = useDetailVideo()
 
   const { myPointsData } = usePointsManage()
   // const getPurchasePointList = () => Object.values(purchasePoints)
@@ -144,7 +144,7 @@ const TipChatDialog: React.FC<TipChatDialogProps> = ({
 
   useEffect(() => {
     // check if didn't select tip in settings then default selected streamer
-    if (videoGiftMaster?.gift_group_id === null) {
+    if (!videoGiftMasterLoading && videoGiftMaster?.gift_group_id === null) {
       setIsNoHaveListUsers(true)
       setSelectedMember({
         id: null,
@@ -153,7 +153,7 @@ const TipChatDialog: React.FC<TipChatDialogProps> = ({
       })
       setStep(2)
     }
-  }, [videoGiftMaster])
+  }, [videoGiftMasterLoading])
 
   // const handleDonate = (point, mess, master_uuid) => {
   //   console.log('🚀 ~ handleDonate ~ point, mess, master_uuid', point, mess, master_uuid)

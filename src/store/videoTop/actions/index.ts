@@ -236,3 +236,5 @@ export const getRankingList = createAsyncThunk<services.RankingsResponse, servic
     }
   }
 )
+
+export const updateUseGiftFlag = createAction<{ isUseGift: number }>(ACTION_VIDEO_TOP.UPDATE_USE_GIFT_FLAG)
