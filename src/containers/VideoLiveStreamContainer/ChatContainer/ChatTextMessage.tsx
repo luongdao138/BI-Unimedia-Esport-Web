@@ -85,6 +85,7 @@ const ChatTextMessage = React.memo<ChatContainerProps>(
 const useStyles = makeStyles(() => ({
   normalMessage: {
     wordBreak: 'break-all',
+    color: Colors.white_opacity[70],
   },
   icon: {},
   resendIcon: {

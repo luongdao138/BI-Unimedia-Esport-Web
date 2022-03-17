@@ -361,6 +361,8 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       successGetListDonateMess &&
       successGetListMessTip
     // const isEnabledChat = true
+    console.log('🚀 ~ isEnabledChat', isEnabledChat)
+    console.log('🚀 ~ successGetListMessTip', successGetListMessTip)
 
     const classes = useStyles({ isLandscape })
 
@@ -421,12 +423,6 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     const handleTransformMessTip = () => {
       const transformMess = [...initTipMess]
       const transformMessAsc = sortMessages(transformMess)
-      // TODO
-      if (streamingSecond === Infinity && videoType === STATUS_VIDEO.LIVE_STREAM) {
-        setStateMessages([...transformMessAsc])
-      }
-      // save mess for use in local
-      setCacheMess([...transformMessAsc])
       // save mess tip forever except switch tab
       setCacheMessTip([...transformMessAsc])
 

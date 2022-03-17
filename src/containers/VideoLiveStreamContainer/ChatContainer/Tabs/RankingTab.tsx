@@ -37,6 +37,7 @@ const RankingTab: React.FC<RankingTabProps> = () => {
   const { liveStreamInfo, setActiveSubTab, rankingListMeta } = useDetailVideo()
   const { activeSubTab } = liveStreamInfo
   const { giverRankInfo, receiverRankInfo } = useContext(VideoContext)
+  const { isDisplayedRankingReceipt } = useCheckDisplayChat()
 
   // eslint-disable-next-line no-console
   const { selectors } = userProfileStore
@@ -53,7 +54,9 @@ const RankingTab: React.FC<RankingTabProps> = () => {
   })
 
   useEffect(() => {
-    setActiveSubTab(SUB_TABS.RANKING.RECEIPT)
+    // set default tab is receipt (common) if rank receipt is displayed, else set to ranking send
+    const newValue = isDisplayedRankingReceipt ? SUB_TABS.RANKING.RECEIPT : SUB_TABS.RANKING.SEND
+    setActiveSubTab(newValue)
   }, [])
 
   // useEffect(() => {

@@ -7,7 +7,7 @@ export const useCheckDisplayChat = (): {
   isDisplayedRankingTab: boolean
   isEnabledRankFilter: boolean
   hasListReceiverGift: boolean
-  isDisplayedRankingReceiver: boolean
+  isDisplayedRankingReceipt: boolean
 } => {
   const { detailVideoResult } = useDetailVideo()
 
@@ -18,8 +18,8 @@ export const useCheckDisplayChat = (): {
   const isEnabledMessFilter = isEnabledGift
   const isEnabledRankFilter = isEnabledGift && isEnabledRanking && hasListReceiverGift
   const isDisplayedRankingTab = isEnabledGift && isEnabledRanking
-  // this condition is equal isEnabledRankFilter due to has isEnabledRankFilter => has isDisplayedRankingReceiver
-  const isDisplayedRankingReceiver = isEnabledGift && isEnabledRanking && hasListReceiverGift
+  // this condition is equal isEnabledRankFilter due to has isEnabledRankFilter => has isDisplayedRankingReceipt
+  const isDisplayedRankingReceipt = isEnabledGift && isEnabledRanking && hasListReceiverGift
 
   return {
     isEnabledGift,
@@ -28,6 +28,6 @@ export const useCheckDisplayChat = (): {
     isDisplayedRankingTab,
     isEnabledRankFilter,
     hasListReceiverGift,
-    isDisplayedRankingReceiver,
+    isDisplayedRankingReceipt,
   }
 }
