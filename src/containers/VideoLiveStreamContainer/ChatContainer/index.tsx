@@ -342,6 +342,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       getVideoGiftMasterList,
       rankingListMeta,
       fetchDonateRanking,
+      updateUseGiftFlag,
     } = useDetailVideo()
     const { isEnabledGift, isEnabledMessFilter, isDisplayedRankingTab } = useCheckDisplayChat()
     const { activeTab, activeSubTab } = liveStreamInfo
@@ -1803,9 +1804,22 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       // />
     )
 
+    const getVideoGiftMasterSuccessCallback = () => {
+      updateUseGiftFlag(1)
+    }
+
+    const getVideoGiftMasterErrorCallback = () => {
+      updateUseGiftFlag(0)
+      setPurchaseDialogVisible(false)
+    }
+
     const purchaseIconClick = () => {
       if (detailVideoResult) {
-        getVideoGiftMasterList({ video_id: `${detailVideoResult?.uuid}` })
+        getVideoGiftMasterList(
+          { video_id: `${detailVideoResult?.uuid}` },
+          getVideoGiftMasterSuccessCallback,
+          getVideoGiftMasterErrorCallback
+        )
       }
       setPurchaseDialogVisible(!purchaseDialogVisible)
     }

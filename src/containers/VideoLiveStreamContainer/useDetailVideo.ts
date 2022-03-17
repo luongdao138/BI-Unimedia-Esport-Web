@@ -51,12 +51,23 @@ const useDetailVideo = () => {
   const setActiveTab = (activeTab) => dispatch(actions.setActiveTab({ activeTab }))
   const setActiveSubTab = (activeSubTab) => dispatch(actions.setActiveSubTab({ activeSubTab }))
   const changeIsHoveredVideoStatus = (isHoveredVideo) => dispatch(actions.changeIsHoveredVideoStatus({ isHoveredVideo }))
-  const getVideoGiftMasterList = (params) => dispatch(actions.getVideoGiftMaster(params))
+  const getVideoGiftMasterList = async (params, successCallback = () => null, errorCallback = () => null) => {
+    const resultAction = await dispatch(actions.getVideoGiftMaster(params))
+    if (actions.getVideoGiftMaster.fulfilled.match(resultAction)) {
+      const { data } = resultAction.payload
+      if (data) {
+        successCallback()
+      } else {
+        errorCallback()
+      }
+    }
+  }
   const videoGiftMaster = useAppSelector(selectors.videoGiftMaster)
   const videoGiftMasterLoading = useAppSelector(selectors.videoGiftMasterLoading)
   const giverRankings = useAppSelector(selectors.giverRankings)
   const receiverRankings = useAppSelector(selectors.receiverRankings)
   const fetchDonateRanking = (params: RankingsParams) => dispatch(actions.getRankingList(params))
+  const updateUseGiftFlag = (isUseGift) => dispatch(actions.updateUseGiftFlag({ isUseGift }))
 
   return {
     meta,
@@ -93,6 +104,7 @@ const useDetailVideo = () => {
     rankingListMeta,
     giverRankings,
     receiverRankings,
+    updateUseGiftFlag,
   }
 }
 

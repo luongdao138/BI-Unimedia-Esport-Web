@@ -254,6 +254,7 @@ export default createReducer(initialState, (builder) => {
   })
   builder.addCase(actions.getVideoGiftMaster.pending, (state) => {
     state.videoGiftMasterLoading = true
+    state.videoGiftMaster = null
   })
   builder.addCase(actions.getVideoGiftMaster.fulfilled, (state, action) => {
     state.videoGiftMasterLoading = false
@@ -268,5 +269,12 @@ export default createReducer(initialState, (builder) => {
     state.giver_rankings = action.payload.data.giver
     state.receiver_rankings = action.payload.data.receive
     state.streamer = action.payload.data.streamer
+  })
+
+  builder.addCase(actions.updateUseGiftFlag, (state, action) => {
+    state.videoDetailData = {
+      ...state.videoDetailData,
+      use_gift: action.payload.isUseGift,
+    }
   })
 })
