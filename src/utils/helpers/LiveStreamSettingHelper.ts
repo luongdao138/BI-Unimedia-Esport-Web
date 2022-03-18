@@ -7,6 +7,14 @@ interface FormError {
   helperText: string | null
   error: boolean | null
 }
+declare global {
+  interface Document {
+    readonly pictureInPictureEnabled: boolean
+    exitPictureInPicture(): Promise<void>
+    requestPictureInPicture(): Promise<void>
+    pictureInPictureElement: HTMLVideoElement
+  }
+}
 
 const checkRequiredFields = (tab: number, errors: FormikErrors<FormLiveType>, type_rm?: string): boolean => {
   const { stepSettingOne, stepSettingTwo, stepSettingThree } = errors
@@ -363,6 +371,19 @@ const getDisplayErrorFieldArchiveEdit = (values) => {
   return archiveEditFields.find((field) => values[field])
 }
 
+// function enterPictureInPicture(videoElement: HTMLVideoElement): void {
+//   if (document.pictureInPictureEnabled && !videoElement.disablePictureInPicture) {
+//     try {
+//       if (document.pictureInPictureElement) {
+//         document.exitPictureInPicture()
+//       }
+//       videoElement.requestPictureInPicture()
+//     } catch (err) {
+//       console.error(err)
+//     }
+//   }
+// }
+
 export const LiveStreamSettingHelper = {
   checkRequiredFields,
   checkDisplayError,
@@ -372,4 +393,5 @@ export const LiveStreamSettingHelper = {
   getLiveDisplayErrorField,
   checkLiveDisplayErrorOnSubmit,
   getDisplayErrorFieldArchiveEdit,
+  // enterPictureInPicture,
 }

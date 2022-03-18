@@ -4,7 +4,7 @@
 // import ReactPlayer from 'react-player'
 import ESLoader from '@components/Loader'
 import { DELAY_SECONDS } from '@constants/common.constants'
-import { Icon, makeStyles, Theme, useMediaQuery, useTheme } from '@material-ui/core'
+import { Box, Icon, makeStyles, Theme, Typography, useMediaQuery, useTheme } from '@material-ui/core'
 import { STATUS_VIDEO } from '@services/videoTop.services'
 import useLiveStreamDetail from '../useLiveStreamDetail'
 import { Colors } from '@theme/colors'
@@ -18,6 +18,17 @@ import Hls from 'hls.js'
 import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
 import { VIDEO_RESOLUTION_HLS } from '@services/liveStreamDetail.service'
 import { VideoContext } from '@containers/VideoLiveStreamContainer/VideoContext'
+import { useTranslation } from 'react-i18next'
+
+declare global {
+  interface Document {
+    readonly pictureInPictureEnabled: boolean
+    readonly disablePictureInPicture: boolean
+    exitPictureInPicture(): Promise<void>
+    requestPictureInPicture(): Promise<void>
+    pictureInPictureElement: HTMLVideoElement
+  }
+}
 
 interface PlayerProps {
   src?: string
@@ -56,7 +67,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   // const checkStatusVideo = 1
   const classes = useStyles({ checkStatusVideo: videoType })
   const videoEl = useRef(null)
-  // const { t } = useTranslation('common')
+  const { t } = useTranslation('common')
 
   const [durationPlayer, setDurationPlayer] = useState(0)
   const [playedSeconds, setPlayedSeconds] = useState(0)
@@ -109,21 +120,35 @@ const VideoPlayer: React.FC<PlayerProps> = ({
 
   const [isPortrait, setIsPortrait] = useState<boolean>(!!isMobile)
   const [resolution, setResolution] = useState(VIDEO_RESOLUTION_HLS.AUTO)
-
   useEffect(() => {
     if (getMiniPlayerState) {
       console.log('videoEl::', videoEl)
-      if (videoEl.current !== null) {
-        videoEl.current.requestPictureInPicture()
+      if (document.pictureInPictureEnabled && !videoEl.current.disablePictureInPicture) {
+        try {
+          if (document.pictureInPictureElement) {
+            document.exitPictureInPicture()
+          }
+          videoEl.current.requestPictureInPicture()
+        } catch (err) {
+          console.error(err)
+        }
       }
-    } else {
-      // @ts-ignore
-      if (document.pictureInPictureElement) {
-        // @ts-ignore
-        document.exitPictureInPicture()
+    }
+    return () => {
+      if (getMiniPlayerState) {
+        if (document.pictureInPictureElement) {
+          document.exitPictureInPicture()
+          changeMiniPlayerState(false)
+        }
       }
     }
   }, [getMiniPlayerState])
+  function handleExitPictureInPicture() {
+    if (document.pictureInPictureElement) {
+      document.exitPictureInPicture()
+      changeMiniPlayerState(false)
+    }
+  }
 
   useEffect(() => {
     // if (!isPortrait) {
@@ -681,7 +706,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       )} */}
       {/* {(!isMobile && !androidPl && !iPhonePl)  && ( */}
       <div ref={playerContainerRef} className={classes.playerContainer}>
-        <div style={{ height: '100%' }} onClick={handlePlayPauseOut}>
+        <div style={{ height: '100%', position: 'relative' }} onClick={handlePlayPauseOut}>
           <video
             id="video"
             ref={videoEl}
@@ -696,6 +721,14 @@ const VideoPlayer: React.FC<PlayerProps> = ({
             controlsList="noplaybackrate foobar"
             // className={classes.video}
           />
+          {getMiniPlayerState && (
+            <Box id="exist-picture-in-picture" className={classes.existPictureInPicture} onClick={handleExitPictureInPicture}>
+              <Box textAlign="center">
+                <img src={'/images/ic_picture_in_picture.svg'} />
+                <Typography className={classes.textInPictureInPicture}>{t('videos_top_tab.mini_player_message')}</Typography>
+              </Box>
+            </Box>
+          )}
 
           {!isMobile && !androidPl && !iPhonePl && !mediaOverlayIsShown && loading && (
             <div className={classes.playOverView}>
@@ -720,6 +753,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
             </div>
           )}
         </div>
+
         {!isMobile && !androidPl && !iPhonePl && (
           <div className={classes.processControl}>
             {videoType !== STATUS_VIDEO.LIVE_STREAM && (
@@ -783,6 +817,23 @@ const VideoPlayer: React.FC<PlayerProps> = ({
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
+  existPictureInPicture: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 100,
+    backgroundColor: '#191919',
+    justifyContent: 'center',
+    alignItems: 'center',
+    display: 'flex',
+  },
+  textInPictureInPicture: {
+    color: Colors.white,
+    fontSize: 16,
+    marginTop: 20,
+  },
   miniPlayerContainer: {
     backgroundColor: '#191919',
     display: 'flex',
