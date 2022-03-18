@@ -486,6 +486,18 @@ const getBrowserInfo = () => {
   }
 }
 
+const checkIsSafariBrowser = (): boolean => {
+  const ua = navigator.userAgent.toLowerCase()
+  if (ua.indexOf('safari') != -1) {
+    if (ua.indexOf('chrome') > -1) {
+      return false
+    } else {
+      return true
+    }
+  }
+  return false
+}
+
 export const CommonHelper = {
   validateEmail,
   genRanHex,
@@ -519,4 +531,5 @@ export const CommonHelper = {
   getRankInfo,
   getBrowserInfo,
   insertSymbolToFirstString,
+  checkIsSafariBrowser,
 }

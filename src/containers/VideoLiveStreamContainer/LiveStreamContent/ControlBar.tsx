@@ -260,7 +260,7 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
               data-for="togglePlaySpeed"
               id={'playSpeedRef'}
             >
-              <Typography>{parseFloat(speed) ? `${speed}x` : '1.0x'}</Typography>
+              <Typography>{parseFloat(speed) ? `${+speed}x` : '1x'}</Typography>
               <PlayerTooltip
                 id={'togglePlaySpeed'}
                 title={t('videos_top_tab.tooltip_control_bar.play_speed')}

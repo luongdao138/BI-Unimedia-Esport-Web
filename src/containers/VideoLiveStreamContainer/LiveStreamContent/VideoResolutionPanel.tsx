@@ -25,7 +25,7 @@ const VideoResolutionPanel: React.FC<Props> = ({ handleOnBackClick, resolutionLi
     <Box className={classes.container}>
       <Box className={classes.header}>
         <Icon onClick={handleOnBackClick} className={`fas fa-chevron-left ${classes.backIcon}`} fontSize="small" />
-        <Typography className={classes.textHeader}>{t('videos_top_tab.resolution_select')}</Typography>
+        <Typography className={classes.textHeader}>{t('videos_top_tab.play_speed')}</Typography>
       </Box>
       {resolutionList.map((item, index) => {
         return (
