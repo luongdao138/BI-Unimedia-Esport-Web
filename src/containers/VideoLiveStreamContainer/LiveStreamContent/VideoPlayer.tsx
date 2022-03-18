@@ -16,7 +16,7 @@ import SeekBar from './ControlComponent/SeekBar'
 import useDetailVideo from '../useDetailVideo'
 import Hls from 'hls.js'
 import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
-import { VIDEO_RESOLUTION_HLS } from '@services/liveStreamDetail.service'
+import { VIDEO_RESOLUTION, VIDEO_RESOLUTION_HLS } from '@services/liveStreamDetail.service'
 import { VideoContext } from '@containers/VideoLiveStreamContainer/VideoContext'
 import { useTranslation } from 'react-i18next'
 
@@ -120,6 +120,10 @@ const VideoPlayer: React.FC<PlayerProps> = ({
 
   const [isPortrait, setIsPortrait] = useState<boolean>(!!isMobile)
   const [resolution, setResolution] = useState(VIDEO_RESOLUTION_HLS.AUTO)
+  const [srcResolution, setSrcResolution] = useState(src)
+  const [resolutionSelected, setResolutionSelected] = useState(VIDEO_RESOLUTION.AUTO)
+  const [arrayLevelsAvailable, setArrayLevelsAvailable] = useState([])
+
   useEffect(() => {
     if (getMiniPlayerState) {
       console.log('videoEl::', videoEl)
@@ -282,7 +286,6 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     const video = document.getElementById('video')
 
     const hls = new Hls()
-    console.warn('HLS=====>>>', hls.levels, hls.currentLevel)
     //function event MEDIA_ATTACHED
     const handleMedia = () => {
       console.log('video and hls.js are now bound together !')
@@ -295,7 +298,6 @@ const VideoPlayer: React.FC<PlayerProps> = ({
 
     const handleLoaded = (_, data) => {
       console.log('~~~~LEVEL_LOADED~~~~~', data)
-      console.warn('HLS=====>>>', hls.levels, hls.currentLevel)
       // setDurationPlayer(data.details.totalduration)
       setIsLive(data.details.live)
     }
@@ -331,6 +333,9 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       //@ts-ignore
       hls.attachMedia(video)
       hls.on(Hls.Events.MEDIA_ATTACHED, handleMedia)
+      hls.on(Hls.Events.MANIFEST_LOADED, (_, e) => {
+        setArrayLevelsAvailable(e.levels)
+      })
     }
     return () => {
       if (hls && src) {
@@ -349,15 +354,23 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       // initialLiveManifestSize: 1,
       // liveMaxLatencyDurationCount:10,
       startPosition: videoType === STATUS_VIDEO.LIVE_STREAM ? -1 : playedSeconds,
-      startLevel: resolution,
+      // startLevel: resolution,
     })
 
     if ((Hls.isSupported() || androidPl) && src) {
       // bind them together
-      hls.loadSource(src)
+      // hls.loadSource(srcResolution)
       //@ts-ignore
       hls.attachMedia(document.getElementById('video'))
-      // hls.on(Hls.Events.MEDIA_ATTACHED, handleMedia)
+      if (resolution !== -1) {
+        const a = arrayLevelsAvailable.find((i) => i.url.includes(`${resolutionSelected}`))
+        console.log('===MANIFEST_LOADED=====', arrayLevelsAvailable, a, resolutionSelected)
+        setSrcResolution(a.url)
+      } else {
+        setSrcResolution(src)
+      }
+      console.warn('link======>>>', srcResolution)
+      hls.loadSource(srcResolution)
     }
     return () => {
       if (hls && src) {
@@ -366,7 +379,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
         hls.stopLoad()
       }
     }
-  }, [src, resolution])
+  }, [src, resolution, resolutionSelected, srcResolution])
 
   // useEffect(() => {
   //   if(Math.floor(playedSeconds) !== liveStreamInfo.played_second) {
@@ -641,9 +654,9 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   }
 
   const changeResolution = useCallback(
-    (index, flag) => {
+    (index, flag, item) => {
       setResolution(index - 1)
-      // setResolution(index===0?-1:0)
+      setResolutionSelected(item)
       setFlagResol(flag)
     },
     [resolution]
@@ -784,7 +797,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
                 videoStatus={videoType}
                 onReloadTime={handleReloadTime}
                 handleOnRestart={handleOnRestart}
-                resultResolution={(index, flag) => changeResolution(index, flag)}
+                resultResolution={(index, flag, item) => changeResolution(index, flag, item)}
                 qualities={qualities}
               />
             </div>
