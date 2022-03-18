@@ -1,9 +1,11 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Box, Icon, makeStyles, Typography } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import ESSelect from '@components/Select'
 import ESButton from '@components/Button'
+import useDetailVideo from '@containers/VideoLiveStreamContainer/useDetailVideo'
+import Loader from '@components/Loader'
 
 type Props = {
   handleOnBackClick?: () => void
@@ -13,18 +15,27 @@ type Props = {
 const ReportPanel: React.FC<Props> = ({ handleOnBackClick }) => {
   const classes = useStyles()
   const { t } = useTranslation('common')
-  const reportItems = [
-    t('videos_top_tab.report_reason_interrupt'),
-    t('videos_top_tab.report_reason_delayed'),
-    t('videos_top_tab.report_reason_video_can_not_load'),
-    t('videos_top_tab.report_reason_video_can_not_play'),
-  ]
-  const [selectReportItem, setSelectReportItem] = useState('')
+  const { getVideoReportReason, videoReportReason, isLoadingVideoReportReason, sendVideoReport } = useDetailVideo()
+
+  const [selectReportItem, setSelectReportItem] = useState('0')
+  const [reportSuccess, setReportSuccess] = useState(false)
+
+  useEffect(() => {
+    getVideoReportReason()
+  }, [])
 
   const handleChange = (event) => {
     setSelectReportItem(event.target.value)
+    setReportSuccess(false)
   }
 
+  const sendReportSuccessCallback = () => {
+    setReportSuccess(true)
+  }
+
+  const handleOnSendReport = () => {
+    sendVideoReport(selectReportItem, sendReportSuccessCallback)
+  }
   return (
     <Box className={classes.container}>
       <Box className={classes.header}>
@@ -32,20 +43,26 @@ const ReportPanel: React.FC<Props> = ({ handleOnBackClick }) => {
         <Typography className={classes.textHeader}>{t('videos_top_tab.report_setting')}</Typography>
       </Box>
       <Box className={classes.pickerContainer}>
-        <ESSelect id="title" name="title" fullWidth value={selectReportItem} onChange={handleChange} required={false} disabled={false}>
-          <option disabled value={''}>
-            {''}
-          </option>
-          {reportItems.map((item, index) => (
-            <option key={index} value={item}>
-              {item}
+        {isLoadingVideoReportReason ? (
+          <Box height="40px" display="flex" justifyContent="center" alignItems="center">
+            <Loader />
+          </Box>
+        ) : (
+          <ESSelect id="title" name="title" fullWidth value={selectReportItem} onChange={handleChange} required={false} disabled={false}>
+            <option disabled value={'0'}>
+              {''}
             </option>
-          ))}
-        </ESSelect>
-        <ESButton className={classes.sendButton} fullWidth>
+            {videoReportReason.map(({ id, attributes }, index) => (
+              <option key={index} value={id}>
+                {attributes.reason}
+              </option>
+            ))}
+          </ESSelect>
+        )}
+        <ESButton disabled={selectReportItem === '0'} className={classes.sendButton} fullWidth onClick={handleOnSendReport}>
           <Typography className={classes.text}>{t('videos_top_tab.send')}</Typography>
         </ESButton>
-        <Typography className={classes.successMessage}>{t('videos_top_tab.success_message')}</Typography>
+        {reportSuccess && <Typography className={classes.successMessage}>{t('videos_top_tab.success_message')}</Typography>}
       </Box>
     </Box>
   )

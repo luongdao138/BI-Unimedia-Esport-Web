@@ -21,7 +21,7 @@ import ESLoader from '@components/FullScreenLoader'
 import { CookieData } from '@services/archiveList.service'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
 
-const ITEM_PER_PAGE = 25
+const ITEM_PER_PAGE = 5
 
 const ArchivedListContainer: React.FC = () => {
   const router = useRouter()

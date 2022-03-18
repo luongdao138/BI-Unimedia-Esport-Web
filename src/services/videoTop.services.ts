@@ -395,3 +395,36 @@ export const rankingList = async (params: RankingsParams): Promise<RankingsRespo
   const { data } = await api.get<RankingsResponse>(URL)
   return data
 }
+
+export type ReportReason = {
+  id?: string
+  type?: string
+  attributes?: {
+    reason?: string
+  }
+}
+
+export type ReportReasonResponse = {
+  data?: Array<ReportReason>
+}
+
+export const getReportReason = async (): Promise<ReportReasonResponse> => {
+  const { data } = await api.get<ReportReasonResponse>(URI.GET_VIDEO_REPORT_REASON)
+  return data
+}
+
+export type SendVideoReportResponse = {
+  success: string
+}
+
+export type SendVideoReportRequestBody = {
+  reason_id: number
+  report_type: number
+  user_email?: string
+  target_id?: number
+}
+
+export const sendVideoReport = async (requestBody: SendVideoReportRequestBody): Promise<SendVideoReportResponse> => {
+  const { data } = await api.post<SendVideoReportResponse>(URI.SEND_VIDEO_REPORT, requestBody)
+  return data
+}
