@@ -363,6 +363,19 @@ const getDisplayErrorFieldArchiveEdit = (values) => {
   return archiveEditFields.find((field) => values[field])
 }
 
+function enterPictureInPicture(videoElement: HTMLVideoElement): void {
+  if (document.pictureInPictureEnabled && !videoElement.disablePictureInPicture) {
+    try {
+      if (document.pictureInPictureElement) {
+        document.exitPictureInPicture()
+      }
+      videoElement.requestPictureInPicture()
+    } catch (err) {
+      console.error(err)
+    }
+  }
+}
+
 export const LiveStreamSettingHelper = {
   checkRequiredFields,
   checkDisplayError,
@@ -372,4 +385,5 @@ export const LiveStreamSettingHelper = {
   getLiveDisplayErrorField,
   checkLiveDisplayErrorOnSubmit,
   getDisplayErrorFieldArchiveEdit,
+  enterPictureInPicture,
 }

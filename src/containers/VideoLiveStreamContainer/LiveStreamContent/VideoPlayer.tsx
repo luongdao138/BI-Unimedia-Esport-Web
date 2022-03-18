@@ -19,6 +19,7 @@ import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
 import { VIDEO_RESOLUTION_HLS } from '@services/liveStreamDetail.service'
 import { VideoContext } from '@containers/VideoLiveStreamContainer/VideoContext'
 import { useTranslation } from 'react-i18next'
+import { LiveStreamSettingHelper } from '@utils/helpers/LiveStreamSettingHelper'
 
 interface PlayerProps {
   src?: string
@@ -110,21 +111,26 @@ const VideoPlayer: React.FC<PlayerProps> = ({
 
   const [isPortrait, setIsPortrait] = useState<boolean>(!!isMobile)
   const [resolution, setResolution] = useState(VIDEO_RESOLUTION_HLS.AUTO)
-
   useEffect(() => {
     if (getMiniPlayerState) {
       console.log('videoEl::', videoEl)
-      if (videoEl.current !== null) {
-        videoEl.current.requestPictureInPicture()
-      }
-    } else {
-      // @ts-ignore
-      if (document.pictureInPictureElement) {
-        // @ts-ignore
-        document.exitPictureInPicture()
+      LiveStreamSettingHelper.enterPictureInPicture(videoEl.current)
+    }
+    return () => {
+      if (getMiniPlayerState) {
+        if (document.pictureInPictureElement) {
+          document.exitPictureInPicture()
+          changeMiniPlayerState(false)
+        }
       }
     }
   }, [getMiniPlayerState])
+  function handleExitPictureInPicture() {
+    if (document.pictureInPictureElement) {
+      document.exitPictureInPicture()
+      changeMiniPlayerState(false)
+    }
+  }
 
   useEffect(() => {
     // if (!isPortrait) {
@@ -698,7 +704,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
             // className={classes.video}
           />
           {getMiniPlayerState && (
-            <Box id="exist-picture-in-picture" className={classes.existPictureInPicture}>
+            <Box id="exist-picture-in-picture" className={classes.existPictureInPicture} onClick={handleExitPictureInPicture}>
               <Box textAlign="center">
                 <img src={'/images/ic_picture_in_picture.svg'} />
                 <Typography className={classes.textInPictureInPicture}>{t('videos_top_tab.mini_player_message')}</Typography>
