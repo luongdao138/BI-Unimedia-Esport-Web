@@ -32,4 +32,6 @@ export const ACTION_VIDEO_TOP = {
   VIDEO_GIFT_MASTER: 'video/giftMaster',
   GET_RANKINGS: 'video/getRankings',
   UPDATE_USE_GIFT_FLAG: 'video/updateUseGiftFlag',
+  GET_REPORT_REASON: 'video/get_report_reason',
+  SEND_REPORT_REASON: 'video/send_video_report',
 }

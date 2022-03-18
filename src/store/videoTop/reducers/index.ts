@@ -9,6 +9,7 @@ import {
   VideoRefType,
   VideoGiftMasterData,
   RankingsItem,
+  ReportReason,
 } from '@services/videoTop.services'
 import * as actions from '../actions'
 import { VIDEO_NORMAL_VIEW_MODE, SUB_TABS, VIDEO_TABS } from '@constants/common.constants'
@@ -65,6 +66,8 @@ type StateType = {
     user_avatar?: string
     user_nickname?: string
   }
+  videoReportReasons: Array<ReportReason>
+  isLoadingVideoReportReasons: boolean
 }
 
 const initialState: StateType = {
@@ -120,6 +123,8 @@ const initialState: StateType = {
   giver_rankings: [],
   receiver_rankings: [],
   streamer: { uuid: '', user_avatar: '', user_nickname: '' },
+  videoReportReasons: [],
+  isLoadingVideoReportReasons: false,
 }
 
 export default createReducer(initialState, (builder) => {
@@ -276,5 +281,16 @@ export default createReducer(initialState, (builder) => {
       ...state.videoDetailData,
       use_gift: action.payload.isUseGift,
     }
+  })
+  builder.addCase(actions.getReportReason.fulfilled, (state, action) => {
+    state.isLoadingVideoReportReasons = false
+    state.videoReportReasons = action.payload.data
+  })
+  builder.addCase(actions.getReportReason.rejected, (state) => {
+    state.isLoadingVideoReportReasons = false
+    state.videoReportReasons = []
+  })
+  builder.addCase(actions.getReportReason.pending, (state) => {
+    state.isLoadingVideoReportReasons = true
   })
 })

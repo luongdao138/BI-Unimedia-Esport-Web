@@ -2,10 +2,13 @@ import { RankingsParams, VideoDetailParams } from '@services/videoTop.services'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
 import { createMetaSelector } from '@store/metadata/selectors'
 import videoTop from '@store/videoTop'
+import authStore from '@store/auth'
 
 const { selectors, actions } = videoTop
 const _getDetailMeta = createMetaSelector(actions.videoDetail)
 const getRankingListMeta = createMetaSelector(actions.getRankingList)
+
+const { selectors: authSelector } = authStore
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const useDetailVideo = () => {
@@ -69,6 +72,23 @@ const useDetailVideo = () => {
   const fetchDonateRanking = (params: RankingsParams) => dispatch(actions.getRankingList(params))
   const updateUseGiftFlag = (isUseGift) => dispatch(actions.updateUseGiftFlag({ isUseGift }))
 
+  const getVideoReportReason = () => dispatch(actions.getReportReason())
+  const videoReportReason = useAppSelector(selectors.videoReportReasons)
+  const isLoadingVideoReportReason = useAppSelector(selectors.isLoadingVideoReportReasons)
+  const user = useAppSelector(authSelector.getAuth)
+  const sendVideoReport = async (reasonId: string, successCallback) => {
+    const requestBody = {
+      reason_id: parseInt(reasonId, 10),
+      report_type: 8,
+      target_id: detailVideoResult.id,
+      user_email: user?.email ?? '',
+    }
+    const result = await dispatch(actions.sendVideoReport(requestBody))
+    if (actions.sendVideoReport.fulfilled.match(result) && result.payload.success === 'success') {
+      successCallback()
+    }
+  }
+
   return {
     meta,
     detailVideoResult,
@@ -105,6 +125,10 @@ const useDetailVideo = () => {
     giverRankings,
     receiverRankings,
     updateUseGiftFlag,
+    getVideoReportReason,
+    videoReportReason,
+    isLoadingVideoReportReason,
+    sendVideoReport,
   }
 }
 

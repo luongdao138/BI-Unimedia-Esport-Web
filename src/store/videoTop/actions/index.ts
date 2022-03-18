@@ -238,3 +238,32 @@ export const getRankingList = createAsyncThunk<services.RankingsResponse, servic
 )
 
 export const updateUseGiftFlag = createAction<{ isUseGift: number }>(ACTION_VIDEO_TOP.UPDATE_USE_GIFT_FLAG)
+
+export const getReportReason = createAsyncThunk<services.ReportReasonResponse>(
+  ACTION_VIDEO_TOP.GET_REPORT_REASON,
+  async (_, { rejectWithValue }) => {
+    try {
+      return await services.getReportReason()
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
+export const sendVideoReport = createAsyncThunk<services.SendVideoReportResponse, services.SendVideoReportRequestBody>(
+  ACTION_VIDEO_TOP.SEND_REPORT_REASON,
+  async (params, { rejectWithValue }) => {
+    try {
+      const res = await services.sendVideoReport(params)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)

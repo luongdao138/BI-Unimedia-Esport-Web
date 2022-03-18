@@ -201,4 +201,6 @@ export const URI = {
   GET_GIFT_GROUP_DETAIL: 'v2/gift/group_detail',
   DELETE_GIFT_GROUP: 'v2/gift/group/delete',
   GET_RANKINGS: 'v2/gift/ranking',
+  GET_VIDEO_REPORT_REASON: 'v2/video_player_reports',
+  SEND_VIDEO_REPORT: 'v2/video_player_reports',
 }
