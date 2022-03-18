@@ -54,6 +54,7 @@ import VideoSubInfo from './VideoSubInfo'
 import { use100vh } from 'react-div-100vh'
 import { useRotateScreen } from '@utils/hooks/useRotateScreen'
 import * as commonActions from '@store/common/actions'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
 
 export interface videoStyleProps {
   availHeight: number
@@ -592,7 +593,11 @@ const VideoDetail: React.FC = () => {
     const factor = isLandscape ? 0.42 : 0.3
     const chatMaxWidth = 482
     const chatMinWidth = isLandscape ? 0 : 380
-    const pageWidthWithoutMenu = pageWidth - sizeMenuWidth()
+
+    const isSafari = CommonHelper.checkIsSafariBrowser()
+    let pageWidthWithoutMenu = pageWidth - sizeMenuWidth()
+    // subtract screen width on safari (PC) with width of scroll (16px)
+    pageWidthWithoutMenu = isSafari && !isMobile ? pageWidthWithoutMenu - 16 : pageWidthWithoutMenu
     // render chat component is 30% of page width without menu
     let chatWidth = Math.round(pageWidthWithoutMenu * factor)
     // limit width of chat component
