@@ -21,6 +21,16 @@ import { VideoContext } from '@containers/VideoLiveStreamContainer/VideoContext'
 import { useTranslation } from 'react-i18next'
 import { LiveStreamSettingHelper } from '@utils/helpers/LiveStreamSettingHelper'
 
+declare global {
+  interface Document {
+    readonly pictureInPictureEnabled: boolean
+    readonly disablePictureInPicture: boolean
+    exitPictureInPicture(): Promise<void>
+    requestPictureInPicture(): Promise<void>
+    pictureInPictureElement: HTMLVideoElement
+  }
+}
+
 interface PlayerProps {
   src?: string
   thumbnail?: string
@@ -114,7 +124,16 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   useEffect(() => {
     if (getMiniPlayerState) {
       console.log('videoEl::', videoEl)
-      LiveStreamSettingHelper.enterPictureInPicture(videoEl.current)
+      if (document.pictureInPictureEnabled && !videoEl.current.disablePictureInPicture) {
+        try {
+          if (document.pictureInPictureElement) {
+            document.exitPictureInPicture()
+          }
+          videoEl.current.requestPictureInPicture()
+        } catch (err) {
+          console.error(err)
+        }
+      }
     }
     return () => {
       if (getMiniPlayerState) {
