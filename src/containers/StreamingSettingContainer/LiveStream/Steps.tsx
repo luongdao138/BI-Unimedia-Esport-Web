@@ -869,7 +869,7 @@ const Steps: React.FC<StepsProps> = ({
                 <ESLabel label={i18n.t('common:streaming_setting_screen.ticket_use')} />
               )}
               {isFirstStep() ? (
-                <ESBoxftDashColumn isSelectedGift>
+                <ESBoxftDashColumn isSelectedGift={formik?.values?.stepSettingOne?.use_ticket}>
                   {/* TODO: Apply component enter point eXeポイント */}
                   <div className={classes.boxRightTicket}>
                     <Box pb={1} className={classes.box}>
