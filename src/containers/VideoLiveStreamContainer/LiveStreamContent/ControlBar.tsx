@@ -32,7 +32,7 @@ interface ControlProps {
   videoStatus?: number
   onReloadTime?: () => void
   handleOnRestart?: () => void
-  resultResolution?: (index?: number, flag?: boolean) => void
+  resultResolution?: (index?: number, flag?: boolean, item?: string) => void
   qualities?: Array<string>
 }
 
@@ -142,7 +142,7 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
 
     const handleSelectedResolution = (item, index) => {
       setResolution(item)
-      resultResolution(index, true)
+      resultResolution(index, true, item)
     }
 
     const handleChangeSpeed = (item, index) => {
