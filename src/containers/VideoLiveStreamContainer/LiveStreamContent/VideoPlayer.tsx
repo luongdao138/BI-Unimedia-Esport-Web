@@ -19,7 +19,6 @@ import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
 import { VIDEO_RESOLUTION_HLS } from '@services/liveStreamDetail.service'
 import { VideoContext } from '@containers/VideoLiveStreamContainer/VideoContext'
 import { useTranslation } from 'react-i18next'
-import { LiveStreamSettingHelper } from '@utils/helpers/LiveStreamSettingHelper'
 
 declare global {
   interface Document {
