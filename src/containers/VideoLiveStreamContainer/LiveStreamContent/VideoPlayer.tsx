@@ -553,7 +553,6 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     }
   }
   const handlePlayPauseOut = () => {
-    console.log('handlePlayPauseOut==========================================================')
     if (!isMobile && !iPhonePl && !androidPl) {
       handlePauseAndSeekVideo()
       if (videoEl.current?.paused || videoEl.current?.ended) {
@@ -573,7 +572,6 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     }
   }
   const handlePlayPause = () => {
-    console.log('handlePlayPause==========================================================')
     handlePauseAndSeekVideo()
     //new version
     if (videoType === STATUS_VIDEO.LIVE_STREAM && videoEl.current !== null) {
@@ -591,7 +589,6 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     }
   }
   const handleReturnPlayPause = () => {
-    console.log('handleReturnPlayPause==========================================================')
     if (flagResol) {
       if (videoEl.current?.paused || videoEl.current?.ended) {
         videoEl.current?.play()
