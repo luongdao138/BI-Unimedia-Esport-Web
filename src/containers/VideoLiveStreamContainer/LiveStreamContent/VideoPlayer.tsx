@@ -253,7 +253,6 @@ const VideoPlayer: React.FC<PlayerProps> = ({
 
   const { playing, muted, volume, ended } = state
   const { loading, videoLoaded } = visible
-  console.log('=================================vbk', state.playing)
   // const hls = new Hls()
   const chatBoardWidth = () => {
     if (!isDown1100) return 482
