@@ -21,6 +21,12 @@ const ReportPanel: React.FC<Props> = ({ handleOnBackClick }) => {
   const [reportSuccess, setReportSuccess] = useState(false)
 
   useEffect(() => {
+    if (videoReportReason && !!videoReportReason.length) {
+      setSelectReportItem(videoReportReason[0]?.id || '0')
+    }
+  }, [videoReportReason])
+
+  useEffect(() => {
     getVideoReportReason()
   }, [])
 
@@ -49,9 +55,9 @@ const ReportPanel: React.FC<Props> = ({ handleOnBackClick }) => {
           </Box>
         ) : (
           <ESSelect id="title" name="title" fullWidth value={selectReportItem} onChange={handleChange} required={false} disabled={false}>
-            <option disabled value={'0'}>
+            {/* <option disabled value={'0'}>
               {''}
-            </option>
+            </option> */}
             {videoReportReason.map(({ id, attributes }, index) => (
               <option key={index} value={id}>
                 {attributes.reason}

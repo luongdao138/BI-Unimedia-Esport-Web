@@ -9,7 +9,7 @@ import { STATUS_VIDEO } from '@services/videoTop.services'
 import useLiveStreamDetail from '../useLiveStreamDetail'
 import { Colors } from '@theme/colors'
 import React, { memo, useCallback, useContext, useEffect, useRef, useState } from 'react'
-import ControlBarPlayer from './ControlBar'
+import ControlBarPlayer, { SettingPanelState } from './ControlBar'
 import SeekBar from './ControlComponent/SeekBar'
 // import { useTranslation } from 'react-i18next'
 
@@ -66,6 +66,10 @@ const VideoPlayer: React.FC<PlayerProps> = ({
 }) => {
   const { setVideoRefInfo } = useContext(VideoContext)
   // const checkStatusVideo = 1
+  const refControlBar = useRef<any>(null)
+  // check condition display setting panel to display control bar
+  const isOpenSettingPanel = refControlBar?.current && refControlBar?.current.settingPanel !== SettingPanelState.NONE ? true : false
+
   const classes = useStyles({ checkStatusVideo: videoType })
   const videoEl = useRef(null)
   const { t } = useTranslation('common')
@@ -92,7 +96,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     videoError: false,
   })
   const [flagResol, setFlagResol] = useState(false)
-  const refControlBar = useRef<any>(null)
+
   const { liveStreamInfo, changeSeekCount, detailVideoResult } = useDetailVideo()
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'), { noSsr: true })
@@ -748,7 +752,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
         </div>
 
         {!isMobile && !androidPl && !iPhonePl && (
-          <div className={classes.processControl}>
+          <div className={`${classes.processControl} ${isOpenSettingPanel && classes.showControl}`}>
             {videoType !== STATUS_VIDEO.LIVE_STREAM && (
               <SeekBar
                 videoRef={videoEl}
@@ -911,6 +915,9 @@ const useStyles = makeStyles((theme: Theme) => ({
           ? 'linear-gradient(rgb(128 128 128 / 0%) 20%, rgb(39 39 39) 100%)'
           : 'linear-gradient(rgb(128 128 128 / 0%) 0%, rgb(39 39 39) 100%)',
     }
+  },
+  showControl: {
+    opacity: '1 !important',
   },
   playerContainer: (props: { checkStatusVideo: number }) => {
     return {
