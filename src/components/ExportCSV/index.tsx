@@ -15,7 +15,7 @@ interface Props {
 
 const ExportCSV: React.FC<Props> = ({ headers, data, className, textExport, fileName }) => {
   return (
-    <CSVLink headers={headers} data={data} className={className} filename={fileName}>
+    <CSVLink headers={headers} data={data} className={className} filename={fileName} separator=";">
       {textExport}
     </CSVLink>
   )
