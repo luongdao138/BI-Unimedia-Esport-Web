@@ -19,6 +19,7 @@ import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
 import { VIDEO_RESOLUTION, VIDEO_RESOLUTION_HLS } from '@services/liveStreamDetail.service'
 import { VideoContext } from '@containers/VideoLiveStreamContainer/VideoContext'
 import { useTranslation } from 'react-i18next'
+import usePictureInPicture from '../usePictureInPicture'
 
 declare global {
   interface Document {
@@ -102,7 +103,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   const androidPl = /Android/i.test(window.navigator.userAgent)
   const iPhonePl = /iPhone/i.test(window.navigator.userAgent)
 
-  const { videoWatchTimeReportRequest, getMiniPlayerState, changeMiniPlayerState } = useLiveStreamDetail()
+  const { videoWatchTimeReportRequest, getMiniPlayerState } = useLiveStreamDetail()
   const isStreamingEnd = useRef(liveStreamInfo.is_streaming_end)
   const handlePauseAndSeekVideo = () => {
     // // seek to current live stream second if is pausing live and is not playing
@@ -123,35 +124,23 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   const [srcResolution, setSrcResolution] = useState(src)
   const [resolutionSelected, setResolutionSelected] = useState(VIDEO_RESOLUTION.AUTO)
   const [arrayLevelsAvailable, setArrayLevelsAvailable] = useState([])
+  const { requestPIP, exitPIP, isCheckShowingPIP, listenEnteredPIP, listenLeavedPIP } = usePictureInPicture()
 
   useEffect(() => {
-    if (getMiniPlayerState) {
-      console.log('videoEl::', videoEl)
-      if (document.pictureInPictureEnabled && !videoEl.current.disablePictureInPicture) {
-        try {
-          if (document.pictureInPictureElement) {
-            document.exitPictureInPicture()
-          }
-          videoEl.current.requestPictureInPicture()
-        } catch (err) {
-          console.error(err)
-        }
-      }
-    }
-    return () => {
-      if (getMiniPlayerState) {
-        if (document.pictureInPictureElement) {
-          document.exitPictureInPicture()
-          changeMiniPlayerState(false)
-        }
-      }
+    listenEnteredPIP(videoEl.current)
+    listenLeavedPIP(videoEl.current)
+  }, [])
+  useEffect(() => {
+    // IS SHOWING PIP?
+    if (isCheckShowingPIP()) {
+      exitPIP(videoEl.current)
+    } else {
+      requestPIP(videoEl.current)
     }
   }, [getMiniPlayerState])
+
   function handleExitPictureInPicture() {
-    if (document.pictureInPictureElement) {
-      document.exitPictureInPicture()
-      changeMiniPlayerState(false)
-    }
+    exitPIP(videoEl.current)
   }
 
   useEffect(() => {
@@ -264,6 +253,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
 
   const { playing, muted, volume, ended } = state
   const { loading, videoLoaded } = visible
+  console.log('=================================vbk', state.playing)
   // const hls = new Hls()
   const chatBoardWidth = () => {
     if (!isDown1100) return 482
@@ -284,7 +274,6 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   // ===================hls.js==================================
   useEffect(() => {
     const video = document.getElementById('video')
-
     const hls = new Hls()
     //function event MEDIA_ATTACHED
     const handleMedia = () => {
@@ -539,15 +528,6 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       }
       // setState({...state, playing:true})
     })
-    videoEl.current?.addEventListener(
-      'leavepictureinpicture',
-      () => {
-        console.log('leavepictureinpicture')
-        changeMiniPlayerState(false)
-      },
-      false
-    )
-
     return () => {
       //@ts-ignore
       window.onscroll = () => {
