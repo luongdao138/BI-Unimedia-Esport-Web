@@ -1,4 +1,4 @@
-import { Box, Icon, makeStyles, Slider, Typography } from '@material-ui/core'
+import { Box, ClickAwayListener, Icon, makeStyles, Slider, Typography } from '@material-ui/core'
 import { Crop54 as TheatreViewMode, Crop75 as NormalViewMode } from '@material-ui/icons'
 import { Colors } from '@theme/colors'
 import React, { forwardRef, memo, useEffect, useImperativeHandle, useState } from 'react'
@@ -36,7 +36,7 @@ interface ControlProps {
   qualities?: Array<string>
 }
 
-enum SettingPanelState {
+export enum SettingPanelState {
   NONE,
   MAIN_DISPLAY,
   VIDEO_RESOLUTION,
@@ -77,9 +77,14 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
     const [resolution, setResolution] = useState(t('videos_top_tab.auto'))
     const [speed, setSpeed] = useState(t('videos_top_tab.standard'))
 
+    const closeSettingPanel = () => {
+      setSettingPanel(SettingPanelState.NONE)
+    }
+
     useImperativeHandle(ref, () => {
       return {
         isFull: isFull,
+        settingPanel: settingPanel,
       }
     })
 
@@ -143,11 +148,15 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
     const handleSelectedResolution = (item, index) => {
       setResolution(item)
       resultResolution(index, true, item)
+
+      closeSettingPanel()
     }
 
     const handleChangeSpeed = (item, index) => {
       videoRef.current.playbackRate = parseFloat(index === 1 ? 1.0 : item)
       setSpeed(item)
+
+      closeSettingPanel()
     }
 
     return (
@@ -252,44 +261,85 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
               place={'top'}
             />
           </Box>
-          {!isLive && (
-            <Box
-              onClick={handleOnPlaySpeedButtonClick}
-              className={classes.playSpeedButton}
-              data-tip
-              data-for="togglePlaySpeed"
-              id={'playSpeedRef'}
-            >
-              <Typography>{parseFloat(speed) ? `${+speed}x` : '1x'}</Typography>
-              <PlayerTooltip
-                id={'togglePlaySpeed'}
-                title={t('videos_top_tab.tooltip_control_bar.play_speed')}
-                offset={{
-                  top: 0,
-                  left: 0,
-                }}
-                place={'top'}
-              />
-            </Box>
-          )}
-          <Box
-            className={classes.buttonNormal}
-            onClick={handleOnSettingButtonClick}
-            data-tip
-            data-for="toggleSettingPanel"
-            id={'settingRef'}
+
+          {/* setting panel area */}
+          <ClickAwayListener
+            onClickAway={() => {
+              closeSettingPanel()
+            }}
           >
-            <img src={'/images/ic_settings.svg'} />
-            <PlayerTooltip
-              id={'toggleSettingPanel'}
-              title={t('videos_top_tab.tooltip_control_bar.setting')}
-              offset={{
-                top: 0,
-                left: 0,
-              }}
-              place={'top'}
-            />
-          </Box>
+            <Box display={'flex'}>
+              {!isLive && (
+                <Box
+                  onClick={handleOnPlaySpeedButtonClick}
+                  className={classes.playSpeedButton}
+                  data-tip
+                  data-for="togglePlaySpeed"
+                  id={'playSpeedRef'}
+                >
+                  <Typography>{parseFloat(speed) ? `${+speed}x` : '1x'}</Typography>
+                  <PlayerTooltip
+                    id={'togglePlaySpeed'}
+                    title={t('videos_top_tab.tooltip_control_bar.play_speed')}
+                    offset={{
+                      top: 0,
+                      left: 0,
+                    }}
+                    place={'top'}
+                  />
+                </Box>
+              )}
+
+              <Box
+                className={classes.buttonNormal}
+                onClick={handleOnSettingButtonClick}
+                data-tip
+                data-for="toggleSettingPanel"
+                id={'settingRef'}
+              >
+                <img src={'/images/ic_settings.svg'} />
+                <PlayerTooltip
+                  id={'toggleSettingPanel'}
+                  title={t('videos_top_tab.tooltip_control_bar.setting')}
+                  offset={{
+                    top: 0,
+                    left: 0,
+                  }}
+                  place={'top'}
+                />
+              </Box>
+
+              {settingPanel === SettingPanelState.MAIN_DISPLAY && (
+                <SettingPanel
+                  handleOnQualityChangeClick={handleOnOpenResolutionPanel}
+                  handleOnReportClick={handleOnOpenReportPanel}
+                  isLive={isLive}
+                  handleOnPlaySpeedClick={handleOnOpenPlaySpeedPanel}
+                  settingResult={{ resolution, speed }}
+                />
+              )}
+              {settingPanel === SettingPanelState.VIDEO_RESOLUTION && (
+                <VideoResolutionPanel
+                  selectedResolution={resolution}
+                  resolutionList={[VIDEO_RESOLUTION.AUTO].concat(qualities)}
+                  // resolutionList={['480p']}
+                  handleOnBackClick={handleOnResolutionPanelBackClick}
+                  onSelected={handleSelectedResolution}
+                />
+              )}
+              {settingPanel === SettingPanelState.REPORT_PANEL && <ReportPanel handleOnBackClick={handleOnReportPanelBackClick} />}
+              {settingPanel === SettingPanelState.PLAY_SPEED && (
+                <VideoResolutionPanel
+                  selectedResolution={speed}
+                  resolutionList={['0.5', t('videos_top_tab.standard'), '1.5', '2.0']}
+                  handleOnBackClick={handleOnResolutionPanelBackClick}
+                  onSelected={handleChangeSpeed}
+                />
+              )}
+            </Box>
+          </ClickAwayListener>
+          {/* end setting panel area */}
+
           <Box className={classes.buttonNormal} onClick={toggleFullScreen} data-tip data-for="toggleFullScreen" id={'fullscreenRef'}>
             {!isFull ? (
               <img src={'/images/ic_full_screen.svg'} />
@@ -311,33 +361,6 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
             />
           </Box>
         </div>
-        {settingPanel === SettingPanelState.MAIN_DISPLAY && (
-          <SettingPanel
-            handleOnQualityChangeClick={handleOnOpenResolutionPanel}
-            handleOnReportClick={handleOnOpenReportPanel}
-            isLive={isLive}
-            handleOnPlaySpeedClick={handleOnOpenPlaySpeedPanel}
-            settingResult={{ resolution, speed }}
-          />
-        )}
-        {settingPanel === SettingPanelState.VIDEO_RESOLUTION && (
-          <VideoResolutionPanel
-            selectedResolution={resolution}
-            resolutionList={[VIDEO_RESOLUTION.AUTO].concat(qualities)}
-            // resolutionList={['480p']}
-            handleOnBackClick={handleOnResolutionPanelBackClick}
-            onSelected={handleSelectedResolution}
-          />
-        )}
-        {settingPanel === SettingPanelState.REPORT_PANEL && <ReportPanel handleOnBackClick={handleOnReportPanelBackClick} />}
-        {settingPanel === SettingPanelState.PLAY_SPEED && (
-          <VideoResolutionPanel
-            selectedResolution={speed}
-            resolutionList={['0.5', t('videos_top_tab.standard'), '1.5', '2.0']}
-            handleOnBackClick={handleOnResolutionPanelBackClick}
-            onSelected={handleChangeSpeed}
-          />
-        )}
       </>
       // </div>
     )
