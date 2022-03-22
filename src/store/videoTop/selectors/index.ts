@@ -29,3 +29,4 @@ export const giverRankings = createSelector(getRoot, (state) => state.giver_rank
 export const receiverRankings = createSelector(getRoot, (state) => state.receiver_rankings)
 export const videoReportReasons = createSelector(getRoot, (state) => state.videoReportReasons)
 export const isLoadingVideoReportReasons = createSelector(getRoot, (state) => state.isLoadingVideoReportReasons)
+export const tipFunctionVisibleState = createSelector(getRoot, (state) => state.videoDetailTipFunctionVisible)

@@ -396,7 +396,7 @@ const VideoDetail: React.FC = () => {
 
   useEffect(() => {
     if (video_id) {
-      getVideoDetail({ video_id: `${video_id}` })
+      getVideoDetail({ video_id: `${video_id}` }, true)
     }
   }, [video_id, isAuthenticated])
 
