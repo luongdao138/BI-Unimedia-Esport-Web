@@ -34,4 +34,5 @@ export const ACTION_VIDEO_TOP = {
   UPDATE_USE_GIFT_FLAG: 'video/updateUseGiftFlag',
   GET_REPORT_REASON: 'video/get_report_reason',
   SEND_REPORT_REASON: 'video/send_video_report',
+  UPDATE_TIP_FUNCTION_VISIBLE_STATE: 'video/tip_function_visible',
 }

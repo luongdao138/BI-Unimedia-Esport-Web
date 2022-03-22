@@ -68,6 +68,7 @@ type StateType = {
   }
   videoReportReasons: Array<ReportReason>
   isLoadingVideoReportReasons: boolean
+  videoDetailTipFunctionVisible: number
 }
 
 const initialState: StateType = {
@@ -125,6 +126,7 @@ const initialState: StateType = {
   streamer: { uuid: '', user_avatar: '', user_nickname: '' },
   videoReportReasons: [],
   isLoadingVideoReportReasons: false,
+  videoDetailTipFunctionVisible: 1,
 }
 
 export default createReducer(initialState, (builder) => {
@@ -292,5 +294,8 @@ export default createReducer(initialState, (builder) => {
   })
   builder.addCase(actions.getReportReason.pending, (state) => {
     state.isLoadingVideoReportReasons = true
+  })
+  builder.addCase(actions.updateTipFunctionVisibleState, (state, action) => {
+    state.videoDetailTipFunctionVisible = action.payload.isVisible
   })
 })

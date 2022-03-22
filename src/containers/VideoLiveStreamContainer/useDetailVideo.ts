@@ -17,7 +17,15 @@ const useDetailVideo = () => {
   const rankingListMeta = useAppSelector(getRankingListMeta)
   const detailVideoResult = useAppSelector(selectors.videoDetailResult)
   const userResult = useAppSelector(selectors.userStreamerResult)
-  const getVideoDetail = (params: VideoDetailParams) => dispatch(actions.videoDetail(params))
+  const getVideoDetail = async (params: VideoDetailParams, fetchWhenPageIsLoaded = false) => {
+    const result = await dispatch(actions.videoDetail(params))
+    if (fetchWhenPageIsLoaded && actions.videoDetail.fulfilled.match(result)) {
+      const { video } = result.payload.data
+      dispatch(actions.updateTipFunctionVisibleState({ isVisible: video?.use_gift }))
+    }
+  }
+  const tipFunctionVisibleState = useAppSelector(selectors.tipFunctionVisibleState)
+
   const resetVideoDetailData = () => dispatch(actions.resetVideoDetail())
   const meta = useAppSelector(_getDetailMeta)
   const streamingSecond = useAppSelector(selectors.streamingSecond)
@@ -129,6 +137,7 @@ const useDetailVideo = () => {
     videoReportReason,
     isLoadingVideoReportReason,
     sendVideoReport,
+    tipFunctionVisibleState,
   }
 }
 

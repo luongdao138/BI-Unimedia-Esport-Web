@@ -267,3 +267,5 @@ export const sendVideoReport = createAsyncThunk<services.SendVideoReportResponse
     }
   }
 )
+
+export const updateTipFunctionVisibleState = createAction<{ isVisible: number }>(ACTION_VIDEO_TOP.UPDATE_TIP_FUNCTION_VISIBLE_STATE)

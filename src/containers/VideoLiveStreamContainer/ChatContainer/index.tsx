@@ -343,6 +343,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       rankingListMeta,
       fetchDonateRanking,
       updateUseGiftFlag,
+      tipFunctionVisibleState,
     } = useDetailVideo()
     const { isEnabledGift, isEnabledMessFilter, isDisplayedRankingTab } = useCheckDisplayChat()
     const { activeTab, activeSubTab } = liveStreamInfo
@@ -2097,6 +2098,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     }
 
     const purchaseButton = () => {
+      if (tipFunctionVisibleState === 0) return <Box />
       return (
         <LoginRequired>
           <IconButton
