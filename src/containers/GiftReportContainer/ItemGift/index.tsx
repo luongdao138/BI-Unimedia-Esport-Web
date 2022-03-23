@@ -5,23 +5,40 @@ import { GiftsResponse } from '@services/deliveryReport.service'
 import { Colors } from '@theme/colors'
 import { FormatHelper } from '@utils/helpers/FormatHelper'
 import React from 'react'
-// import { useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
+
+enum TYPE {
+  PERSONAL = 0,
+  TEAM = 1,
+}
+enum USER {
+  VIEWER = 0,
+  STREAM = 1,
+}
 
 const ItemGift: React.FC<GiftsResponse> = (props) => {
-  // const { t } = useTranslation('common')
-  const { image, name, point, point_user_giver } = props
+  const { t } = useTranslation('common')
+  const { image, name, point, point_user_giver, type, streamer } = props
   const classes = useStyles()
+
+  const typeName = type === TYPE.PERSONAL ? t('streaming_gift_report_screen.personal') : t('streaming_gift_report_screen.team')
   return (
     <TableRow key={1}>
       <TableCell align="center">
         <Box display="flex" flexDirection="row">
           <ESAvatar src={image} alt={name} />
-          <Box ml={1} display="flex" flexDirection="column" justifyContent="space-between" className={classes.teamAndName}>
-            <Box className={classes.team}>
-              <Typography variant="caption">個人</Typography>
+          {streamer !== USER.STREAM ? (
+            <Box ml={1} display="flex" flexDirection="column" justifyContent="space-between" className={classes.teamAndName}>
+              <Box className={classes.team}>
+                <Typography variant="caption">{typeName}</Typography>
+              </Box>
+              <Typography className={classes.name}>{name}</Typography>
             </Box>
-            <Typography className={classes.name}>{name}</Typography>
-          </Box>
+          ) : (
+            <Box className={classes.wrapNameStreamer}>
+              <Typography className={classes.nameStreamer}>{name}</Typography>
+            </Box>
+          )}
         </Box>
       </TableCell>
       <TableCell align="right">
@@ -55,6 +72,15 @@ const useStyles = makeStyles((theme) => ({
   teamAndName: {
     paddingTop: 2,
     paddingBottom: 2,
+  },
+  wrapNameStreamer: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: '8px',
+  },
+  nameStreamer: {
+    fontSize: 12,
   },
   [theme.breakpoints.down('md')]: {
     team: {

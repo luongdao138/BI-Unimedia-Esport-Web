@@ -1930,6 +1930,9 @@ export default {
     registration_number: '登録数',
     choice: '選択',
     the_ticket_was_not_purchased: 'チケットは購入されませんでした。',
+    no_tip_received: '受け取ったチップはありません。',
+    personal: '個人',
+    team: 'チーム',
   },
   streaming_gift_management: {
     title: 'チップ対象者申請',
