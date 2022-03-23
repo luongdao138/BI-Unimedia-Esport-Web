@@ -124,7 +124,7 @@ const VideoDetail: React.FC = () => {
   const [isArchived, setIsArchived] = useState(false)
   const [disabled, setDisabled] = useState(false)
   const [giftMasterUuid, setGiftMasterUuid] = useState('')
-  const [isErrorDonatePoint, setIsErrorDonatePoint] = useState(false)
+  const [errorMsgDonatePoint, setErrorMsgDonatePoint] = useState('')
 
   console.log('DonatePointsConfirmModal', disabled, errorPurchase, purchaseComment)
 
@@ -142,6 +142,7 @@ const VideoDetail: React.FC = () => {
     rankingListMeta,
     giverRankings,
     receiverRankings,
+    updateUseGiftFlag,
   } = useDetailVideo()
   console.log('🚀 ~ rankingListMeta', rankingListMeta)
 
@@ -473,7 +474,7 @@ const VideoDetail: React.FC = () => {
             setShowConfirmModal(false)
             setErrorPurchase(false)
             setDisabled(false)
-            setIsErrorDonatePoint(false)
+            setErrorMsgDonatePoint('')
             dispatch(commonActions.addToast(i18n.t('common:live_stream_screen.send_gift_success')))
           } else {
             // setShowConfirmModal(false)
@@ -484,7 +485,12 @@ const VideoDetail: React.FC = () => {
           console.log('error==>', error)
           setShowConfirmModal(false)
           setErrorPurchase(true)
-          setIsErrorDonatePoint(true)
+          if (error.code === 420) {
+            updateUseGiftFlag(0)
+            setErrorMsgDonatePoint(i18n.t('common:live_stream_screen.error_tip_function_turn_off'))
+          } else if (error.code === 422) {
+            setErrorMsgDonatePoint(i18n.t('common:live_stream_screen.error_address_updated'))
+          }
         }
       )
     }, 700),
@@ -612,7 +618,7 @@ const VideoDetail: React.FC = () => {
   })()
 
   const resetErrorDonateMessage = useCallback(() => {
-    setIsErrorDonatePoint(false)
+    setErrorMsgDonatePoint('')
   }, [])
 
   const sideChatContainer = () => {
@@ -649,7 +655,7 @@ const VideoDetail: React.FC = () => {
             setPurchaseType(PURCHASE_TYPE.PURCHASE_SUPER_CHAT)
             setShowModalPurchasePoint(true)
           }}
-          isErrorDonatePoint={isErrorDonatePoint}
+          errorMsgDonatePoint={errorMsgDonatePoint}
           clearMessageDonatePoint={resetErrorDonateMessage}
         />
       </Box>

@@ -96,7 +96,7 @@ export const purchaseTicketSuperChat = createAsyncThunk<services.PurchaseTicketR
         return res
       } else {
         // throw res.message
-        return rejectWithValue(res.message)
+        return rejectWithValue(JSON.stringify({ code: res.code, message: res.message }))
       }
     } catch (error) {
       if (!error.response) {
