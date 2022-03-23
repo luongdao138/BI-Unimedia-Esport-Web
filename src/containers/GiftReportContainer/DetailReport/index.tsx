@@ -155,7 +155,39 @@ const DetailReport: React.FC<DetailReportProps> = ({ videoId }) => {
               ))}
             </ESTable>
           ) : (
-            <></>
+            <ESTable
+              classTable={classes.table}
+              tableHeader={
+                <TableRow className={classes.rowHeader}>
+                  <TableCell style={{ width: '10%' }} align="center">
+                    <Typography className={classes.textHeader}>{t('streaming_gift_report_screen.no')}</Typography>
+                  </TableCell>
+                  <TableCell style={{ width: '20%' }} align="center">
+                    <Typography className={classes.textHeader}> {t('point_management_tab.purchase_date')}</Typography>
+                  </TableCell>
+                  <TableCell style={{ width: '20%' }} align="center">
+                    <Typography className={classes.textHeader}> {t('streaming_gift_report_screen.eXeLAB_ID')}</Typography>
+                  </TableCell>
+                  <TableCell style={{ width: '15%' }} align="center">
+                    <Typography className={classes.textHeader}> {t('common.eXe_points')}</Typography>
+                  </TableCell>
+                  <TableCell style={{ width: '15%' }} align="center">
+                    <Typography className={classes.textHeader}> {t('streaming_gift_report_screen.kinds')}</Typography>
+                  </TableCell>
+                  <TableCell style={{ width: '20%' }} align="center">
+                    <Typography className={classes.textHeader}> {t('streaming_gift_report_screen.tip_target')}</Typography>
+                  </TableCell>
+                </TableRow>
+              }
+            >
+              <TableRow>
+                <TableCell colSpan={6}>
+                  <Typography align="center" className={classes.noTipReceived}>
+                    {t('streaming_gift_report_screen.no_tip_received')}
+                  </Typography>
+                </TableCell>
+              </TableRow>
+            </ESTable>
           )}
         </>
       )}
@@ -244,7 +276,6 @@ const useStyles = makeStyles((theme) => ({
     textHeader: {
       fontSize: 10,
     },
-
     text: {
       '& td': {
         fontSize: 8,
@@ -253,6 +284,9 @@ const useStyles = makeStyles((theme) => ({
     },
     btnCSV: {
       fontSize: 12,
+    },
+    noTipReceived: {
+      fontSize: 8,
     },
   },
   [theme.breakpoints.down(375)]: {
@@ -264,7 +298,7 @@ const useStyles = makeStyles((theme) => ({
   },
   [theme.breakpoints.down('xs')]: {
     table: {
-      width: '150%',
+      width: '100%',
     },
   },
 }))

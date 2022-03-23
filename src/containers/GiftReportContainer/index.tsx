@@ -61,14 +61,14 @@ const GiftReportContainer: React.FC<{ default_tab: any }> = ({ default_tab }) =>
     getVideoDetail(paramGetVideoDetail)
   }, [])
 
+  const disableTab = detailVideoResult?.use_ticket === USE_TICKET.PAY_VIDEO ? true : false
+
   const getTabs = () => {
     return (
       <Grid item xs={12} className={classes.tabsContainer}>
         <ESTabs value={tab} onChange={(_, v) => setTab(v)} className={classes.tabs}>
           <ESTab label={t('streaming_gift_report_screen.gift_report')} value={0} className={classes.singleTab} />
-          {detailVideoResult?.use_ticket === USE_TICKET.PAY_VIDEO && (
-            <ESTab label={t('streaming_gift_report_screen.ticket_report')} value={1} className={classes.singleTab} />
-          )}
+          <ESTab label={t('streaming_gift_report_screen.ticket_report')} value={1} className={classes.singleTab} disabled={disableTab} />
           <ESTab label={t('streaming_gift_report_screen.detail_report')} value={2} className={classes.singleTab} />
         </ESTabs>
       </Grid>
@@ -116,11 +116,41 @@ const GiftReportContainer: React.FC<{ default_tab: any }> = ({ default_tab }) =>
                     }
                   >
                     {tipReports.gifts.map((i, key) => (
-                      <ItemGift key={key} image={i.image} name={i.name} point_user_giver={i.user_give_count} point={i.point} />
+                      <ItemGift
+                        key={key}
+                        image={i.image}
+                        name={i.name}
+                        point_user_giver={i.user_give_count}
+                        point={i.point}
+                        type={i.type}
+                        streamer={i.streamer}
+                      />
                     ))}
                   </ESTable>
                 ) : (
-                  <></>
+                  <ESTable
+                    tableHeader={
+                      <TableRow>
+                        <TableCell style={{ width: '40%' }} align="center">
+                          {t('streaming_gift_report_screen.tip_target_person')}
+                        </TableCell>
+                        <TableCell style={{ width: '26%' }} align="center">
+                          {t('streaming_gift_report_screen.number_of_chips')}
+                        </TableCell>
+                        <TableCell style={{ width: '33%' }} align="center">
+                          {t('streaming_gift_report_screen.total_chips')}
+                        </TableCell>
+                      </TableRow>
+                    }
+                  >
+                    <TableRow key={1}>
+                      <TableCell align="center" colSpan={3}>
+                        <Typography align="center" className={classes.noTipReceived}>
+                          {t('streaming_gift_report_screen.no_tip_received')}
+                        </Typography>
+                      </TableCell>
+                    </TableRow>
+                  </ESTable>
                 )}
               </>
             )}
@@ -165,7 +195,7 @@ const GiftReportContainer: React.FC<{ default_tab: any }> = ({ default_tab }) =>
                   </ESTable>
                 ) : (
                   <Box>
-                    <Typography align="center"> {t('streaming_gift_report_screen.the_ticket_was_not_purchased')}</Typography>
+                    <Typography align="center">{t('streaming_gift_report_screen.the_ticket_was_not_purchased')}</Typography>
                   </Box>
                 )}
               </>
@@ -258,6 +288,9 @@ const useStyles = makeStyles((theme) => ({
       marginBottom: 20,
       marginLeft: 16,
       marginRight: 16,
+    },
+    noTipReceived: {
+      fontSize: 10,
     },
   },
   [theme.breakpoints.down('xs')]: {

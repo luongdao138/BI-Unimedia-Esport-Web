@@ -334,6 +334,9 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   [theme.breakpoints.down(769)]: {
+    wrapMemberListContent: {
+      width: '100%',
+    },
     tabsContainer: {
       marginLeft: 0,
     },

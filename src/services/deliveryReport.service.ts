@@ -29,6 +29,8 @@ export type GiftsResponse = {
   point: number
   point_user_giver?: number
   user_give_count?: number
+  type: number
+  streamer?: number
 }
 
 export type TipReportResponse = {
