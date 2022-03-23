@@ -1862,8 +1862,8 @@ export default {
     send_gift_success: 'チップを送信しました',
     no_ranking: 'ランキングがありません。',
     tip_message_limit: 'メッセージは%d文字までです',
-    error_address_updated_1: 'チップ送付先が変更されました',
-    error_address_updated_2: '再度チップ送付先をご確認ください',
+    error_address_updated: 'チップ送付先が変更されました\n再度チップ送付先をご確認ください',
+    error_tip_function_turn_off: 'チップ機能がOFFので、投げ銭を受け取らない',
   },
   live_stream_screen_chat: {
     receipt: '受取',

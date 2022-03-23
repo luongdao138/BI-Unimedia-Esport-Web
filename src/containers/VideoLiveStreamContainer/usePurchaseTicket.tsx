@@ -24,7 +24,7 @@ const usePurchaseTicketSuperChat = () => {
   const purchaseTicketSuperChat = async (
     params: PurchaseTicketParams,
     onResult?: (isSuccess: boolean) => void,
-    onError?: (message: string) => void
+    onError?: ({ code: number, message: string }) => void
   ) => {
     console.log('>>>>>>>>>>>>>>>> params purchaseTicketSuperChat >>>>>', params)
     const result = await dispatch(actions.purchaseTicketSuperChat(params))
@@ -48,8 +48,9 @@ const usePurchaseTicketSuperChat = () => {
           console.log('purchase ticket error')
           params?.handleError()
         } else {
-          if (result.payload === 'validation.master_valid') {
-            onError(result.payload)
+          const errorPayload: { code: number; message: string } = JSON.parse(result.payload.toString())
+          if (errorPayload.message === 'validation.master_valid') {
+            onError(errorPayload)
           }
         }
       }

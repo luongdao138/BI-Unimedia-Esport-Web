@@ -12,10 +12,10 @@ type Step3Props = {
   selectedMember?: any
   tipInfo: any
   onPressDonate?: (donatedPoint: number, purchaseComment: string, master_id?: string) => void
-  isErrorDonatePoint?: boolean
+  errorMsgDonatePoint?: string
 }
 
-const Step3: React.FC<Step3Props> = ({ tipInfo, onChangeStep, selectedMember, onPressDonate, isErrorDonatePoint }) => {
+const Step3: React.FC<Step3Props> = ({ tipInfo, onChangeStep, selectedMember, onPressDonate, errorMsgDonatePoint }) => {
   const classes = useStyles()
 
   const onCancel = () => {
@@ -56,10 +56,9 @@ const Step3: React.FC<Step3Props> = ({ tipInfo, onChangeStep, selectedMember, on
               textAgree={`${i18n.t('common:live_stream_screen_chat.send')}`}
             ></TipButtonGroup>
           </Box>
-          {isErrorDonatePoint && (
+          {!!errorMsgDonatePoint && (
             <Box className={classes.errorMessage}>
-              <Typography>{i18n.t('common:live_stream_screen.error_address_updated_1')}</Typography>
-              <Typography>{i18n.t('common:live_stream_screen.error_address_updated_2')}</Typography>
+              <Typography>{errorMsgDonatePoint}</Typography>
             </Box>
           )}
         </Box>
@@ -124,6 +123,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 12,
     marginTop: 16,
     textAlign: 'center',
+    whiteSpace: 'pre-wrap',
   },
   [theme.breakpoints.down(769)]: {
     selectedPoint: {
