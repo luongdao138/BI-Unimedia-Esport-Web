@@ -20,6 +20,7 @@ import { VIDEO_RESOLUTION, VIDEO_RESOLUTION_HLS } from '@services/liveStreamDeta
 import { VideoContext } from '@containers/VideoLiveStreamContainer/VideoContext'
 import { useTranslation } from 'react-i18next'
 import usePictureInPicture from '../usePictureInPicture'
+import { useRouter } from 'next/router'
 
 declare global {
   interface Document {
@@ -128,18 +129,40 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   const [srcResolution, setSrcResolution] = useState(src)
   const [resolutionSelected, setResolutionSelected] = useState(VIDEO_RESOLUTION.AUTO)
   const [arrayLevelsAvailable, setArrayLevelsAvailable] = useState([])
-  const { requestPIP, exitPIP, isCheckShowingPIP, listenEnteredPIP, listenLeavedPIP } = usePictureInPicture()
+  const {
+    requestPIP,
+    exitPIP,
+    isCheckShowingPIP,
+    listenEnteredPIP,
+    listenLeavedPIP,
+    isLoadedMetaData,
+    listenLoadMetaDataPIP,
+  } = usePictureInPicture()
+  const router = useRouter()
 
   useEffect(() => {
     listenEnteredPIP(videoEl.current)
     listenLeavedPIP(videoEl.current)
+    listenLoadMetaDataPIP(videoEl.current)
+
+    const handleRouteChange = () => {
+      if (isCheckShowingPIP()) {
+        document.exitPictureInPicture()
+      }
+    }
+    router.events.on('routeChangeStart', handleRouteChange)
+    return () => {
+      // router.events.off('routeChangeStart', handleRouteChange)
+    }
   }, [])
   useEffect(() => {
     // IS SHOWING PIP?
-    if (isCheckShowingPIP()) {
-      exitPIP(videoEl.current)
-    } else {
-      requestPIP(videoEl.current)
+    if (isLoadedMetaData) {
+      if (isCheckShowingPIP()) {
+        exitPIP(videoEl.current)
+      } else {
+        requestPIP(videoEl.current)
+      }
     }
   }, [getMiniPlayerState])
 
@@ -531,6 +554,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       }
       // setState({...state, playing:true})
     })
+
     return () => {
       //@ts-ignore
       window.onscroll = () => {
@@ -750,7 +774,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
           )}
         </div>
 
-        {!isMobile && !androidPl && !iPhonePl && (
+        {!isMobile && !androidPl && !iPhonePl && isLoadedMetaData && (
           <div className={`${classes.processControl} ${isOpenSettingPanel && classes.showControl}`}>
             {videoType !== STATUS_VIDEO.LIVE_STREAM && (
               <SeekBar

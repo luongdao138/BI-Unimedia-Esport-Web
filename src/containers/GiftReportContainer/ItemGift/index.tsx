@@ -18,7 +18,7 @@ enum USER {
 
 const ItemGift: React.FC<GiftsResponse> = (props) => {
   const { t } = useTranslation('common')
-  const { image, name, point, point_user_giver, type, streamer } = props
+  const { image, name, point, point_user_giver, type, streamer, user_nickname, user_avatar } = props
   const classes = useStyles()
 
   const typeName = type === TYPE.PERSONAL ? t('streaming_gift_report_screen.personal') : t('streaming_gift_report_screen.team')
@@ -26,18 +26,23 @@ const ItemGift: React.FC<GiftsResponse> = (props) => {
     <TableRow key={1}>
       <TableCell align="center">
         <Box display="flex" flexDirection="row">
-          <ESAvatar src={image} alt={name} />
           {streamer !== USER.STREAM ? (
-            <Box ml={1} display="flex" flexDirection="column" justifyContent="space-between" className={classes.teamAndName}>
-              <Box className={classes.team}>
-                <Typography variant="caption">{typeName}</Typography>
+            <>
+              <ESAvatar src={image} alt={name} />
+              <Box ml={1} display="flex" flexDirection="column" justifyContent="space-between" className={classes.teamAndName}>
+                <Box className={classes.team}>
+                  <Typography variant="caption">{typeName}</Typography>
+                </Box>
+                <Typography className={classes.name}>{name}</Typography>
               </Box>
-              <Typography className={classes.name}>{name}</Typography>
-            </Box>
+            </>
           ) : (
-            <Box className={classes.wrapNameStreamer}>
-              <Typography className={classes.nameStreamer}>{name}</Typography>
-            </Box>
+            <>
+              <ESAvatar src={user_avatar} alt={user_nickname} />
+              <Box className={classes.wrapNameStreamer}>
+                <Typography className={classes.nameStreamer}>{user_nickname}</Typography>
+              </Box>
+            </>
           )}
         </Box>
       </TableCell>

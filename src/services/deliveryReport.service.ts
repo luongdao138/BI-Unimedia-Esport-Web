@@ -31,6 +31,8 @@ export type GiftsResponse = {
   user_give_count?: number
   type: number
   streamer?: number
+  user_nickname?: string
+  user_avatar?: string
 }
 
 export type TipReportResponse = {
