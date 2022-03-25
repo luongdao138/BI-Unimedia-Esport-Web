@@ -6,10 +6,16 @@ import Dialog from '@material-ui/core/Dialog'
 interface ConfirmModalProps {
   children: React.ReactNode
   open: boolean
+  containerStyle?: React.CSSProperties
+  className?: string
 }
 
-const ConfirmModal: React.FC<ConfirmModalProps> = ({ children, open }) => {
-  const classes = useStyles()
+interface StyleProps {
+  containerStyle: React.CSSProperties
+}
+
+const ConfirmModal: React.FC<ConfirmModalProps> = ({ children, open, containerStyle = {}, className }) => {
+  const classes = useStyles({ containerStyle })
 
   useEffect(() => {
     return () => {
@@ -36,7 +42,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({ children, open }) => {
   }))(MuiDialogContent)
 
   return (
-    <Box>
+    <Box className={className}>
       <Dialog
         disableBackdropClick
         fullWidth
@@ -53,7 +59,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({ children, open }) => {
           document.body.style.width = 'unset'
           document.body.style.height = 'unset'
         }}
-        className={classes.dialog_container}
+        className={`${classes.dialog_container} ${className}`}
       >
         <DialogContent>{children}</DialogContent>
       </Dialog>
@@ -64,7 +70,8 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({ children, open }) => {
 export default ConfirmModal
 
 const useStyles = makeStyles((theme) => ({
-  dialog_container: {
+  dialog_container: (props: StyleProps) => ({
+    ...props.containerStyle,
     '& .MuiDialog-paperFullWidth': {
       borderRadius: 10,
       maxWidth: 754,
@@ -72,7 +79,7 @@ const useStyles = makeStyles((theme) => ({
     '& .MuiDialog-paperScrollPaper': {
       display: 'unset',
     },
-  },
+  }),
   [theme.breakpoints.down(321)]: {
     dialog_container: {
       '& .MuiDialog-paperFullWidth': {

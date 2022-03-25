@@ -1,11 +1,12 @@
 import { Box, Button, makeStyles, Icon } from '@material-ui/core'
 import i18n from '@locales/i18n'
-import React, { useEffect, memo } from 'react'
+import React, { useEffect, memo, useCallback } from 'react'
 import { sanitizeMess } from './index'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import ESFastInput from '@components/FastInput'
 import LoginRequired from '@containers/LoginRequired'
+import _ from 'lodash'
 
 type MessageValidationType = {
   message: string
@@ -58,11 +59,19 @@ const ChatInput: React.FC<ChatInputProps> = ({
     }
   }, [errors.message])
 
+  const handleSubmitDebounce = useCallback(
+    _.debounce((_) => {
+      handleSubmit()
+    }, 350),
+    []
+  )
+
   const handlePressEnter = (event: any) => {
     if (event.key === 'Enter') {
-      handleSubmit()
+      handleSubmitDebounce(event)
     }
   }
+
   return (
     <Box className={classes.chatBox}>
       <ESFastInput

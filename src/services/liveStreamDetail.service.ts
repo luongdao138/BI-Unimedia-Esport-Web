@@ -40,6 +40,7 @@ export type TypeVideoArchived = {
   user_avatar?: string
   category_name?: string
   type?: string
+  video_thumbnail?: string
 }
 
 export type ListArchivedVideoStreamResponse = {
@@ -74,6 +75,14 @@ export type FollowChannelResponse = {
   data?: Array<any>
 }
 
+export type TimeReportParams = {
+  video_id?: string
+}
+export type TimeReportResponse = {
+  message?: string
+  code?: number
+  data?: Array<any>
+}
 export const ListArchivedVideoStream = async (params: ListArchivedVideoStreamParams): Promise<ListArchivedVideoStreamResponse> => {
   const URL = URI.VIDEOS + `${params.video_id}/archived`
   const { data } = await api.get<ListArchivedVideoStreamResponse>(URL, { params })
@@ -98,5 +107,10 @@ export const ReactionUserVideoStream = async (params: ReactionUserParams): Promi
 
 export const FollowChannelService = async (params: FollowChannelParams): Promise<FollowChannelResponse> => {
   const { data } = await api.post<ReactionUserResponse>(URI.FOLLOW_CHANNEL, params)
+  return data
+}
+
+export const VideoWatchTimeReport = async (params: TimeReportParams): Promise<TimeReportResponse> => {
+  const { data } = await api.post<TimeReportResponse>(URI.TIME_REPORT, params)
   return data
 }

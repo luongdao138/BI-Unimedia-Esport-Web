@@ -142,9 +142,21 @@ const LiveStreamContainer: React.FC<Props> = ({ formik, validateField, handleUpd
       }
     } else {
       if (!loading) {
-        setLoading(false)
-        setShowResultDialog(true)
-        return
+        if (stateChannelMedia === EVENT_STATE_CHANNEL.STOPPING) {
+          setLoading(true)
+          setShowResultDialog(false)
+          return
+        } else {
+          setLoading(false)
+          setShowResultDialog(true)
+          return
+        }
+      } else {
+        if (stateChannelMedia === EVENT_STATE_CHANNEL.STOPPED) {
+          setLoading(false)
+          setShowResultDialog(false)
+          return
+        }
       }
       unSub = setTimeout(() => {
         setLoading(false)
@@ -179,7 +191,11 @@ const LiveStreamContainer: React.FC<Props> = ({ formik, validateField, handleUpd
           //live streaming
           setObsStatusDynamo(1)
         }
-        if (videoData?.process_status === EVENT_LIVE_STATUS.STREAM_END && videoData?.video_status === STATUS_VIDEO.ARCHIVE) {
+        if (
+          videoData?.process_status === EVENT_LIVE_STATUS.STREAM_END &&
+          videoData?.video_status === STATUS_VIDEO.ARCHIVE &&
+          stateChannelMedia === EVENT_STATE_CHANNEL.STOPPED
+        ) {
           //archived
           setObsStatusDynamo(-1)
         }
@@ -212,7 +228,11 @@ const LiveStreamContainer: React.FC<Props> = ({ formik, validateField, handleUpd
               //live
               setObsStatusDynamo(1)
             }
-            if (updateVideoData?.process_status === EVENT_LIVE_STATUS.STREAM_END && updateVideoData?.video_status == STATUS_VIDEO.ARCHIVE) {
+            if (
+              updateVideoData?.process_status === EVENT_LIVE_STATUS.STREAM_END &&
+              updateVideoData?.video_status == STATUS_VIDEO.ARCHIVE &&
+              stateChannelMedia === EVENT_STATE_CHANNEL.STOPPED
+            ) {
               //archived
               setObsStatusDynamo(-1)
             }
@@ -253,7 +273,11 @@ const LiveStreamContainer: React.FC<Props> = ({ formik, validateField, handleUpd
               //live
               setObsStatusDynamo(1)
             }
-            if (createdVideo?.process_status === EVENT_LIVE_STATUS.STREAM_END && createdVideo?.video_status == STATUS_VIDEO.ARCHIVE) {
+            if (
+              createdVideo?.process_status === EVENT_LIVE_STATUS.STREAM_END &&
+              createdVideo?.video_status == STATUS_VIDEO.ARCHIVE &&
+              stateChannelMedia === EVENT_STATE_CHANNEL.STOPPED
+            ) {
               //archived
               setObsStatusDynamo(-1)
             }
@@ -291,11 +315,11 @@ const LiveStreamContainer: React.FC<Props> = ({ formik, validateField, handleUpd
       if (step === 3) {
         dispatch(commonActions.addToast(t('common:common.deactivate_key_setting_error')))
       }
+      console.log('===3')
       setLoading(false)
       setShowResultDialog(false)
     }
   }, [obsStatusDynamo, videoStatusDynamo])
-
   return (
     <>
       <Steps
@@ -320,7 +344,14 @@ const LiveStreamContainer: React.FC<Props> = ({ formik, validateField, handleUpd
         </BlankLayout>
       </ESModal>
       <Box style={{ display: loading ? 'flex' : 'none' }}>
-        <ESLoader open={true} />
+        <ESLoader
+          open={true}
+          contentLoader={
+            stateChannelMedia === EVENT_STATE_CHANNEL.STOPPING
+              ? `${t('common:streaming_setting_screen.note_stop_channel_loading')}`
+              : `${t('common:streaming_setting_screen.note_loading')}`
+          }
+        />
       </Box>
     </>
   )

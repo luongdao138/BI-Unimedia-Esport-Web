@@ -9,6 +9,7 @@ import {
   VideoRefType,
 } from '@services/videoTop.services'
 import * as actions from '../actions'
+import { VIDEO_NORMAL_VIEW_MODE } from '@constants/common.constants'
 
 const defaultChatState = {
   seek_count: 0,
@@ -45,6 +46,8 @@ type StateType = {
   seeked_second?: number
   is_pausing_live?: boolean
   is_streaming_end?: boolean
+  video_view_mode?: string
+  is_normal_view_mode?: boolean
   videoEl?: VideoRefType
 }
 
@@ -88,6 +91,8 @@ const initialState: StateType = {
   seeked_second: 0,
   is_pausing_live: false,
   is_streaming_end: false,
+  video_view_mode: VIDEO_NORMAL_VIEW_MODE,
+  is_normal_view_mode: true,
   videoEl: {
     videoQuery: null,
     videoElement: null,
@@ -204,11 +209,14 @@ export default createReducer(initialState, (builder) => {
   builder.addCase(actions.resetState, () => {
     return { ...initialState }
   })
-  builder.addCase(actions.saveVideoRef, (state, action) => {
-    state.videoEl.videoQuery = action.payload.videoQuery
-    state.videoEl.videoElement = action.payload.videoElement
+  builder.addCase(actions.changeVideoViewMode, (state, action) => {
+    state.is_normal_view_mode = action.payload.is_normal_view_mode
   })
   builder.addCase(actions.resetChatState, (state) => {
     return { ...state, ...defaultChatState }
+  })
+  builder.addCase(actions.saveVideoRef, (state, action) => {
+    state.videoEl.videoQuery = action.payload.videoQuery
+    state.videoEl.videoElement = action.payload.videoElement
   })
 })
