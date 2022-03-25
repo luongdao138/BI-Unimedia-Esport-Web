@@ -61,7 +61,7 @@ const GiftReportContainer: React.FC<{ default_tab: any }> = ({ default_tab }) =>
     getVideoDetail(paramGetVideoDetail)
   }, [])
 
-  const disableTab = detailVideoResult?.use_ticket === USE_TICKET.PAY_VIDEO ? true : false
+  const disableTab = detailVideoResult?.use_ticket === USE_TICKET.PAY_VIDEO ? false : true
 
   const getTabs = () => {
     return (
