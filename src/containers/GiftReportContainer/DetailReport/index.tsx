@@ -16,6 +16,14 @@ import useDeliveryReport from '../useDeliveryReport'
 interface DetailReportProps {
   videoId: string | string[]
 }
+enum USERS {
+  STREAMER = 1,
+  VIEWER = 0,
+}
+const TYPE_REPORT = {
+  TICKET: 'チケット',
+  TIP: 'チップ',
+}
 
 const ITEM_PER_PAGE = 30
 // const getItemPerPage = (data: DetailedResponse[], itemPerPage: number, page: number) => {
@@ -49,6 +57,16 @@ function DataReportExcel(data, property1, property2) {
     }
   }
   return newData
+}
+const handlerRenderTipTarget = (label, typeReport, streamer) => {
+  if (typeReport === TYPE_REPORT.TICKET) {
+    return (label = 'ー')
+  } else if (typeReport === TYPE_REPORT.TIP)
+    if (streamer === USERS.VIEWER) {
+      return label
+    } else if (streamer === USERS.STREAMER) {
+      return '配信者'
+    }
 }
 
 const DetailReport: React.FC<DetailReportProps> = ({ videoId }) => {
@@ -150,7 +168,7 @@ const DetailReport: React.FC<DetailReportProps> = ({ videoId }) => {
                   <TableCell align="left">{CommonHelper.insertSymbolToFirstString('@', i.nickname)}</TableCell>
                   <TableCell align="right">{FormatHelper.currencyFormat(i.point.toString())}</TableCell>
                   <TableCell align="left">{i.type_report}</TableCell>
-                  <TableCell align="left">{i.gift_recipient ? i.gift_recipient : 'ー'}</TableCell>
+                  <TableCell align="left">{handlerRenderTipTarget(i.gift_recipient, i.type_report, i.streamer)}</TableCell>
                 </TableRow>
               ))}
             </ESTable>

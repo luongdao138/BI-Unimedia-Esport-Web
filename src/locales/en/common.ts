@@ -1933,6 +1933,7 @@ export default {
     no_tip_received: '受け取ったチップはありません。',
     personal: '個人',
     team: 'チーム',
+    distributor: '配信者',
   },
   streaming_gift_management: {
     title: 'チップ対象者申請',
