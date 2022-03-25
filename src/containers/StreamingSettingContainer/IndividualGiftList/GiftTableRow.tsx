@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import { Box, makeStyles, Typography, useMediaQuery, useTheme } from '@material-ui/core'
-import ESButton from '@components/Button'
+import { Box, makeStyles, TableCell, TableRow, Theme, Typography, useMediaQuery, useTheme } from '@material-ui/core'
+// import ESButton from '@components/Button'
 import DeleteConfirmModal from '@containers/StreamingSettingContainer/IndividualGiftList/deletemodal'
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
@@ -56,86 +56,87 @@ const GiftTableRow: React.FC<Props> = ({ item, handleGoToEditGiftGroupState, ref
   }
   const [deleteModalVisible, setDeleteModalVisible] = useState(false)
   return (
-    <Box className={classes.tableRow}>
-      <Box className={classes.indexColumn}>
-        <Typography className={classes.tableText}>{item.no}</Typography>
-      </Box>
-      <Box className={classes.nameColumn}>
-        <Typography className={classes.tableText}>{name}</Typography>
-      </Box>
-      {!isMobile && (
-        <Box className={classes.numberOfRegColumn}>
-          <Typography className={classes.tableText}>{numberOfRegistration.toString()}</Typography>
-        </Box>
-      )}
-      <Box className={classes.actionButtonColumn}>
-        <ESButton onClick={handleOnRemoveClick} className={classes.removeButton}>
-          <Typography className={classes.remove}>{t('streaming_setting_screen.individual_gift_tab.remove')}</Typography>
-        </ESButton>
-        <ESButton onClick={handleOnEditClick} className={classes.editButton}>
-          <Typography className={classes.edit}>{t('streaming_setting_screen.individual_gift_tab.edit')}</Typography>
-        </ESButton>
-      </Box>
+    <>
+      <TableRow key={item.id}>
+        <TableCell align="center">
+          <Typography component="span">{item.no}</Typography>
+        </TableCell>
+        <TableCell align="left">
+          <Typography component="span">{name}</Typography>
+        </TableCell>
+        {!isMobile && (
+          <TableCell align="right">
+            <Typography component="span">{numberOfRegistration}</Typography>
+          </TableCell>
+        )}
+        <TableCell align="center">
+          <Box className={classes.btnContainer}>
+            <Box onClick={handleOnEditClick} className={classes.btnSelect}>
+              <Typography className={classes.editText} variant="caption">
+                {t('streaming_setting_screen.individual_gift_tab.edit')}
+              </Typography>
+            </Box>
+            <Box onClick={handleOnRemoveClick} className={classes.btnSelect}>
+              <Typography className={classes.removeText} variant="caption">
+                {t('streaming_setting_screen.individual_gift_tab.remove')}
+              </Typography>
+            </Box>
+          </Box>
+        </TableCell>
+      </TableRow>
       {deleteModalVisible && (
         <DeleteConfirmModal name={name} open={deleteModalVisible} handleClose={handleCloseModal} handleDelete={handleDeleteConfirmPress} />
       )}
-    </Box>
+    </>
   )
 }
-const useStyles = makeStyles((theme) => ({
-  tableRow: {
-    display: 'flex',
-    flexDirection: 'row',
-    padding: '8px 0px',
-  },
-  indexColumn: {
-    width: '84px',
-    height: '100%',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  tableText: {},
-  nameColumn: {
-    flex: 1,
-    display: 'flex',
-    alignItems: 'center',
-  },
-  numberOfRegColumn: {
-    width: '72px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-  },
-  actionButtonColumn: {
-    width: '214px',
-    display: 'flex',
-    flexDirection: 'row-reverse',
-    alignItems: 'center',
-  },
-  removeButton: {
-    backgroundColor: Colors.white_opacity['30'],
-    height: '26px',
-    marginLeft: '10px',
-    marginRight: '18px',
-  },
-  remove: {
+
+const useStyles = makeStyles((theme: Theme) => ({
+  removeText: {
+    fontSize: 10,
+    backgroundColor: Colors.grey['400'],
+    textAlign: 'center',
+    borderRadius: 2,
     color: Colors.white,
-    fontSize: '14px',
-  },
-  editButton: {
-    border: `1px solid ${Colors.white_opacity['70']}`,
-    height: '26px',
-  },
-  edit: {
-    color: Colors.white_opacity['70'],
-    fontSize: '14px',
-  },
-  [theme.breakpoints.down('sm')]: {
-    actionButtonColumn: {
-      width: '162px',
+    paddingTop: 4,
+    paddingBottom: 4,
+    paddingLeft: 20,
+    paddingRight: 20,
+    wordBreak: 'keep-all',
+    [theme.breakpoints.down('sm')]: {
+      paddingLeft: 10,
+      paddingRight: 10,
     },
-    tableText: {},
+  },
+  editText: {
+    fontSize: 10,
+    backgroundColor: 'transparent',
+    textAlign: 'center',
+    borderRadius: 2,
+    color: Colors.white_opacity['70'],
+    paddingTop: 4,
+    paddingBottom: 4,
+    paddingLeft: 20,
+    paddingRight: 20,
+    wordBreak: 'keep-all',
+    border: `1px solid ${Colors.white_opacity['70']}`,
+    [theme.breakpoints.down('sm')]: {
+      paddingLeft: 10,
+      paddingRight: 10,
+    },
+  },
+
+  btnContainer: {
+    display: 'flex',
+    gap: '10px',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+  },
+  btnSelect: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    cursor: 'pointer',
   },
 }))
+
 export default GiftTableRow

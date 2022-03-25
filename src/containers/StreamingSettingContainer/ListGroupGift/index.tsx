@@ -12,6 +12,7 @@ import useGiftManage from '@containers/StreamingGiftManagement/useGiftTarget'
 import ESLoader from '@components/Loader'
 import { TabState } from '../GiftManageTab'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
+// import useMediaQuery from '@material-ui/core/useMediaQuery'
 
 // export interface ListGroupGiftProps {}
 
@@ -25,6 +26,9 @@ const ITEM_PER_PAGE = 10
 const ListGroupGift: React.FC<IProps> = ({ onChangeTab, handleSelectGroup, handleClose }) => {
   const { t } = useTranslation('common')
   const classes = useStyles()
+
+  // const theme = useTheme()
+  // const matchSm = useMediaQuery(theme.breakpoints.down('sm'))
 
   const { getGiftGroupList, giftGroupList, giftGroupTotal, giftGroupsMeta } = useGiftManage()
 
@@ -88,12 +92,13 @@ const ListGroupGift: React.FC<IProps> = ({ onChangeTab, handleSelectGroup, handl
                         <TableCell style={{ width: '10%' }} align="center">
                           <Typography component={'span'}>{t('streaming_gift_report_screen.no')}</Typography>
                         </TableCell>
-                        <TableCell style={{ width: '20%' }} align="center">
+                        <TableCell align="center">
                           <Typography component={'span'}>{t('streaming_gift_report_screen.list_name')}</Typography>
                         </TableCell>
-                        <TableCell style={{ width: '20%' }} align="left" colSpan={2}>
+                        <TableCell style={{ width: '10%', minWidth: 64 }} align="left">
                           <Typography component={'span'}>{t('streaming_gift_report_screen.registration_number')}</Typography>
                         </TableCell>
+                        <TableCell style={{ width: '20%' }} align="left"></TableCell>
                       </TableRow>
                     }
                   >
@@ -103,9 +108,10 @@ const ListGroupGift: React.FC<IProps> = ({ onChangeTab, handleSelectGroup, handl
                           <Typography component="span">{item.no}</Typography>
                         </TableCell>
                         <TableCell align="left">
-                          <Typography component="span">{item.title}</Typography>
+                          {/* <Typography component="span"> {matchSm ? `${item.title.slice(0, 10)}...` : item.title}</Typography> */}
+                          <Typography component="span"> {item.title}</Typography>
                         </TableCell>
-                        <TableCell align="center">
+                        <TableCell align="right">
                           <Typography component="span">{item.total_master}</Typography>
                         </TableCell>
                         <TableCell align="center">
@@ -174,6 +180,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingBottom: 4,
     paddingLeft: 20,
     paddingRight: 20,
+    wordBreak: 'keep-all',
+    [theme.breakpoints.down('sm')]: {
+      paddingLeft: 10,
+      paddingRight: 10,
+    },
   },
 
   iconButtonBg: {

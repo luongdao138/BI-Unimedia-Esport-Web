@@ -52,12 +52,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     position: 'fixed',
     bottom: 0,
-    left: 0,
+    // left: 0,
     height: '162px',
     backgroundColor: '#000000',
     width: '100%',
     paddingTop: '24px',
     zIndex: 10,
+    borderTop: '1px solid #70707070',
   },
   buttonContainer: {
     marginTop: '18px',
@@ -71,6 +72,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: '15px 38px',
     [theme.breakpoints.down('sm')]: {
       order: 0,
+    },
+  },
+  [theme.breakpoints.up(960)]: {
+    container: {
+      paddingRight: 'calc(100vh/2)',
     },
   },
   actionBtnClose: {

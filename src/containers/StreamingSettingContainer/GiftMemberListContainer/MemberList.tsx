@@ -45,7 +45,8 @@ const MemberList: React.FC = () => {
         onClick={onFilterButtonClick(option)}
         className={`${classes.filterButton} ${selected ? '' : classes.filterButtonNonSelected}`}
       >
-        <Typography className={classes.filterButtonText}>{label}</Typography>
+        {/* <Typography className={classes.filterButtonText}>{label}</Typography> */}
+        {label}
       </ESButton>
     )
   }
@@ -66,10 +67,12 @@ const MemberList: React.FC = () => {
   const filterButtonGroup = useCallback(() => {
     return (
       <Box className={classes.filterButtonGroupContainer}>
-        <FilterButton label={t('streaming_setting_screen.member_list.filter_all')} option={GiftMasterUserType.NO_FILTER} />
-        <FilterButton label={t('streaming_setting_screen.member_list.tag_team')} option={GiftMasterUserType.TEAM} />
-        <FilterButton label={t('streaming_setting_screen.member_list.filter_individual')} option={GiftMasterUserType.INDIVIDUAL} />
-        <Box display="flex" flex={1} flexDirection="row-reverse">
+        <Box className={classes.filterBtnContainer}>
+          <FilterButton label={t('streaming_setting_screen.member_list.filter_all')} option={GiftMasterUserType.NO_FILTER} />
+          <FilterButton label={t('streaming_setting_screen.member_list.tag_team')} option={GiftMasterUserType.TEAM} />
+          <FilterButton label={t('streaming_setting_screen.member_list.filter_individual')} option={GiftMasterUserType.INDIVIDUAL} />
+        </Box>
+        <Box className={classes.addBtnContainer}>
           <AddNewButton />
         </Box>
       </Box>
@@ -105,7 +108,7 @@ const MemberList: React.FC = () => {
 
   const memberList = useCallback(() => {
     return (
-      <Box>
+      <Box style={{ paddingTop: '5px' }}>
         <Box className={classes.newListHeaderContainer}>
           <Typography className={classes.newListHeader}>{t('streaming_setting_screen.member_list.new_list')}</Typography>
         </Box>
@@ -132,24 +135,28 @@ const MemberList: React.FC = () => {
 const useStyles = makeStyles((theme) => ({
   filterButton: {
     backgroundColor: '#FFFFFF',
-    marginRight: '16px',
-    height: '30px',
+    minWidth: 'unset',
+    // marginRight: '16px',
     '&:hover': {
       boxShadow: 'none',
       background: Colors.white,
     },
-    padding: '3px 4px',
+    padding: '3px 15px',
+    color: '#212121',
+    wordBreak: 'keep-all',
   },
   filterButtonNonSelected: {
     backgroundColor: '#747474',
-  },
-  filterButtonText: {
-    color: '#212121',
   },
   filterButtonGroupContainer: {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  filterBtnContainer: {
+    display: 'flex',
+    gap: '16px',
   },
   filterInputField: {
     marginTop: '16px',
@@ -222,24 +229,48 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'center',
     padding: '24px',
   },
-  [theme.breakpoints.down('sm')]: {
-    container: {
-      padding: '24px',
-    },
-    addNewButton: {
-      display: 'none',
-    },
-  },
   [theme.breakpoints.down(1344)]: {
-    filterButton: {
-      marginRight: '8px',
-      minWidth: 'unset',
+    filterBtnContainer: {
+      gap: '8px',
     },
     addNewButtonText: {
       fontSize: '12px',
     },
-    addNewButton: {
-      padding: '4px 6px',
+  },
+  [theme.breakpoints.down(1175)]: {
+    filterButtonGroupContainer: {
+      flexDirection: 'column',
+      rowGap: '18px',
+    },
+    addBtnContainer: {
+      display: 'flex',
+      justifyContent: 'center',
+    },
+    filterBtnContainer: {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(3, 1fr)',
+      width: '100%',
+      gap: '16px',
+    },
+    filterInputField: {
+      marginTop: '34px',
+    },
+    newListHeaderContainer: {
+      marginTop: '12px',
+    },
+    listContainer: {
+      height: 'calc(100vh - 516px)',
+    },
+  },
+  [theme.breakpoints.down('sm')]: {
+    container: {
+      padding: '24px',
+    },
+    addBtnContainer: {
+      display: 'none',
+    },
+    filterBtnContainer: {
+      display: 'flex',
     },
   },
 }))
