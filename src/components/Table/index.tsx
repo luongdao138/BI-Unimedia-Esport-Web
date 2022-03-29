@@ -60,6 +60,7 @@ const useStyles = makeStyles(() => ({
       '& td': {
         padding: 10,
         borderBottom: 'none',
+        wordBreak: 'break-all',
       },
     },
   },

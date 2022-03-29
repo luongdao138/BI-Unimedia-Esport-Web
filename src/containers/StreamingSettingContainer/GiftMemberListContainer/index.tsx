@@ -168,12 +168,13 @@ const GiftMemberListContainer: React.FC<Props> = ({ handleBackToListState, creat
 const useStyles = makeStyles((theme) => ({
   header: {
     marginTop: '4px',
+    paddingLeft: '20px',
   },
   container: {
     marginTop: '32px',
     display: 'flex',
     flexDirection: 'column',
-    paddingLeft: '20px',
+    // paddingLeft: '20px',
     paddingRight: '20px',
   },
   nameListLabelContainer: {
@@ -199,6 +200,7 @@ const useStyles = makeStyles((theme) => ({
   listContainer: {
     height: 'calc(100vh - 482px)',
     marginTop: '16px',
+    marginLeft: '20px',
     backgroundColor: Colors.black,
     borderRadius: '5px',
     border: `1px solid ${Colors.white_opacity['30']}`,
@@ -248,7 +250,7 @@ const useStyles = makeStyles((theme) => ({
   },
   [theme.breakpoints.down(1200)]: {
     container: {
-      marginRight: '48px',
+      // marginRight: '48px',
     },
   },
   [theme.breakpoints.down(768)]: {

@@ -288,7 +288,9 @@ const StreamingSettingContainer: React.FC<{ default_tab: any }> = ({ default_tab
 
         {tab === TABS.GIFT_MEMBERS_LIST && giftManageTabState === TabState.CREATE_NEW && (
           <Grid item xs={12} md={4}>
-            <MemberList />
+            <Box style={{ paddingTop: '15px' }}>
+              <MemberList />
+            </Box>
           </Grid>
         )}
       </Grid>
@@ -310,7 +312,9 @@ const useStyles = makeStyles((theme) => ({
     borderBottomWidth: 1,
     borderBottomStyle: 'solid',
     maxWidth: '622px',
-    marginLeft: '48px',
+    height: '68px',
+    flexBasis: 'unset',
+    // marginLeft: '48px',
   },
   tabs: {
     display: 'flex',
@@ -319,6 +323,10 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: 24,
     '& .MuiTab-root': {
       minWidth: 'unset',
+    },
+    '& .MuiTabs-scroller.MuiTabs-scrollable': {
+      display: 'flex',
+      alignItems: 'center',
     },
   },
   forbiddenMessageContainer: {

@@ -62,7 +62,9 @@ const MemberItem: React.FC<Prop> = ({ item }) => {
           <Typography className={classes.buttonText}>{buttonText()}</Typography>
         </ESButton>
       ) : (
-        <Typography className={`${classes.buttonText} block-master`}>{t('streaming_setting_screen.member_list.invalid')}</Typography>
+        <Box className={classes.span}>
+          <Typography className={`${classes.buttonText} block-master`}>{t('streaming_setting_screen.member_list.invalid')}</Typography>
+        </Box>
       )}
     </Box>
   )
@@ -81,6 +83,7 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     flexDirection: 'column',
     marginRight: '24px',
+    minWidth: '60px',
   },
   tagContainer: {
     display: 'flex',
@@ -126,10 +129,18 @@ const useStyles = makeStyles(() => ({
     fontSize: '14px',
     fontWeight: 'bold',
     '&.block-master': {
-      width: '70px',
       textAlign: 'center',
+      minWidth: '64px',
       color: Colors.white_opacity['30'],
     },
+  },
+  span: {
+    width: '70px',
+    height: '28px',
+    display: 'flex',
+    alignItems: 'center',
+    borderRadius: '5px',
+    justifyContent: 'center',
   },
 }))
 export default MemberItem
