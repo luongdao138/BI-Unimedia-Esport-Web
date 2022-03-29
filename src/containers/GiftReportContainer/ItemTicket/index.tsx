@@ -14,7 +14,7 @@ const ItemTicket: React.FC<TicketsResponse> = (props) => {
     <TableRow key={1}>
       <TableCell align="center">
         <Box display="flex" flexDirection="row">
-          <ESAvatar src={image_url} />
+          <ESAvatar src={image_url} alt={nickname} />
           <Box ml={1} display="flex" justifyContent="center" flexDirection="column">
             <Typography className={classes.name}>{nickname}</Typography>
           </Box>
