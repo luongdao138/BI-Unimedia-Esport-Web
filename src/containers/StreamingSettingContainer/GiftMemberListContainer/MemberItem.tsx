@@ -120,6 +120,9 @@ const useStyles = makeStyles(() => ({
     justifyContent: 'center',
     borderRadius: '5px',
     backgroundColor: '#575757',
+    '& span': {
+      transform: 'translateY(1.5px)',
+    },
   },
   actionButtonSelected: {
     backgroundColor: Colors.primary,

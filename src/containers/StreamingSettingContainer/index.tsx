@@ -304,6 +304,7 @@ const useStyles = makeStyles((theme) => ({
   wrapTabContent: {
     maxWidth: '622px',
     marginLeft: '120px',
+    width: '100%',
   },
   tabsContainer: {
     display: 'flex',
@@ -315,6 +316,25 @@ const useStyles = makeStyles((theme) => ({
     height: '68px',
     flexBasis: 'unset',
     // marginLeft: '48px',
+    transform: 'translateX(40px)',
+    [theme.breakpoints.down(1344)]: {
+      maxWidth: '500px',
+    },
+    [theme.breakpoints.down(1050)]: {
+      // maxWidth: '500px',
+      width: '90%',
+      transform: 'translateX(22px)',
+    },
+    [theme.breakpoints.down(790)]: {
+      // maxWidth: '500px',
+      transform: 'translateX(0px)',
+      width: '95%',
+    },
+    [theme.breakpoints.down(720)]: {
+      // maxWidth: '500px',
+      width: '100%',
+      maxWidth: 'unset',
+    },
   },
   tabs: {
     display: 'flex',

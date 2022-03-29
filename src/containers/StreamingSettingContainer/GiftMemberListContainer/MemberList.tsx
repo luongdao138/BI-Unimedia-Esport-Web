@@ -141,7 +141,7 @@ const useStyles = makeStyles((theme) => ({
       boxShadow: 'none',
       background: Colors.white,
     },
-    padding: '3px 15px',
+    padding: '4px 15px 3px 15px',
     color: '#212121',
     wordBreak: 'keep-all',
   },
@@ -192,7 +192,7 @@ const useStyles = makeStyles((theme) => ({
   },
   addNewButton: {
     alignSelf: 'end',
-    padding: '8px 12px',
+    padding: '9px 12px 8px 12px',
     borderRadius: '20px',
     border: '1px solid #FFFFFF',
     height: '35px',
@@ -253,7 +253,7 @@ const useStyles = makeStyles((theme) => ({
       gap: '16px',
     },
     filterInputField: {
-      marginTop: '34px',
+      // marginTop: '34px',
     },
     newListHeaderContainer: {
       marginTop: '12px',
