@@ -47,17 +47,6 @@ const headers = [
   { label: 'チップ対象', key: RESPONSE_DATA_DETAIL_REPORT.GIFT_RECIPIENT },
 ]
 
-function DataReportExcel(data, property1, property2) {
-  let newData = []
-  if (property1 === RESPONSE_DATA_DETAIL_REPORT.NICK_NAME) {
-    newData = data.map((x) => ({ ...x, nickname: CommonHelper.insertSymbolToFirstString('@', x.nickname) }))
-    if (property2 === RESPONSE_DATA_DETAIL_REPORT.GIFT_RECIPIENT) {
-      const newDataProperty2 = newData.map((x) => (x.gift_recipient === null ? { ...x, gift_recipient: 'ー' } : x))
-      newData = newDataProperty2
-    }
-  }
-  return newData
-}
 const handlerRenderTipTarget = (label, typeReport, streamer) => {
   if (typeReport === TYPE_REPORT.TICKET) {
     return (label = 'ー')
@@ -67,6 +56,27 @@ const handlerRenderTipTarget = (label, typeReport, streamer) => {
     } else if (streamer === USERS.STREAMER) {
       return '配信者'
     }
+}
+//x.gift_recipient === null ? { ...x, gift_recipient: 'ー' } : x
+function DataReportExcel(data, property1, property2, property3) {
+  let newData = []
+  if (property1 === RESPONSE_DATA_DETAIL_REPORT.NICK_NAME && property3 === RESPONSE_DATA_DETAIL_REPORT.POINT) {
+    newData = data.map((x) => ({
+      ...x,
+      nickname: CommonHelper.insertSymbolToFirstString('@', x.nickname),
+      point: FormatHelper.currencyFormat(x.point),
+    }))
+    if (property2 === RESPONSE_DATA_DETAIL_REPORT.GIFT_RECIPIENT) {
+      const newDataProperty2 = newData.map((x) =>
+        x.typeReport === TYPE_REPORT.TICKET
+          ? { ...x, gift_recipient: 'ー' }
+          : { ...x, gift_recipient: handlerRenderTipTarget(x.gift_recipient, x.type_report, x.streamer) }
+      )
+      newData = newDataProperty2
+    }
+  }
+
+  return newData
 }
 
 const DetailReport: React.FC<DetailReportProps> = ({ videoId }) => {
@@ -87,7 +97,8 @@ const DetailReport: React.FC<DetailReportProps> = ({ videoId }) => {
   const dataReportExcel = DataReportExcel(
     CommonHelper.addSttDataList(detailedReports.points, ITEM_PER_PAGE, page),
     RESPONSE_DATA_DETAIL_REPORT.NICK_NAME,
-    RESPONSE_DATA_DETAIL_REPORT.GIFT_RECIPIENT
+    RESPONSE_DATA_DETAIL_REPORT.GIFT_RECIPIENT,
+    RESPONSE_DATA_DETAIL_REPORT.POINT
   )
   const renderBtnCSV = () =>
     matches ? (
@@ -140,7 +151,7 @@ const DetailReport: React.FC<DetailReportProps> = ({ videoId }) => {
               classTable={classes.table}
               tableHeader={
                 <TableRow className={classes.rowHeader}>
-                  <TableCell style={{ width: '10%' }} align="center">
+                  <TableCell style={{ width: '5%' }} align="center">
                     <Typography className={classes.textHeader}>{t('streaming_gift_report_screen.no')}</Typography>
                   </TableCell>
                   <TableCell style={{ width: '20%' }} align="center">
@@ -149,7 +160,7 @@ const DetailReport: React.FC<DetailReportProps> = ({ videoId }) => {
                   <TableCell style={{ width: '20%' }} align="center">
                     <Typography className={classes.textHeader}> {t('streaming_gift_report_screen.eXeLAB_ID')}</Typography>
                   </TableCell>
-                  <TableCell style={{ width: '15%' }} align="center">
+                  <TableCell style={{ width: '20%' }} align="center">
                     <Typography className={classes.textHeader}> {t('common.eXe_points')}</Typography>
                   </TableCell>
                   <TableCell style={{ width: '15%' }} align="center">
