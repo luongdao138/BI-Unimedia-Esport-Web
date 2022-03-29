@@ -3,7 +3,7 @@ import UserSearchContainer from '@containers/Search/UserSearch'
 import TournamentSearchContainer from '@containers/Search/TournamentSearch'
 import LobbySearchContainer from '@containers/Search/LobbySearch'
 import CommunitySearchContainer from '@containers/Search/CommunitySearch'
-import { Box, makeStyles, Typography, IconButton, Icon, Theme } from '@material-ui/core'
+import { Box, makeStyles, Typography, IconButton, Icon, Theme, useTheme, useMediaQuery } from '@material-ui/core'
 import MainLayout from '@layouts/MainLayout'
 import { searchTypes } from '@constants/common.constants'
 import { useTranslation } from 'react-i18next'
@@ -11,6 +11,9 @@ import { useRouter } from 'next/router'
 import { Colors } from '@theme/colors'
 import PageWithLayoutType from '@constants/page'
 import useSearch from '@containers/Search/useSearch'
+import GoogleAd from '@components/GoogleAd'
+import { GTMHelper } from '@utils/helpers/SendGTM'
+// import { GTMHelper } from '@utils/helpers/SendGTM'
 
 const SearchPage: PageWithLayoutType = () => {
   const { t } = useTranslation(['common'])
@@ -19,6 +22,9 @@ const SearchPage: PageWithLayoutType = () => {
   const { searchType, searchKeyword } = useSearch()
   const [type, setType] = useState<number>(searchType)
   const [keyword, setKeyword] = useState<string>(searchKeyword)
+  const theme = useTheme()
+  const screenDownSP = useMediaQuery(theme.breakpoints.down(576))
+  const [slotDataLayer, setSlotDataLayer] = useState('')
 
   useEffect(() => {
     setType(searchType)
@@ -69,9 +75,24 @@ const SearchPage: PageWithLayoutType = () => {
   const handleBack = () => {
     router.back()
   }
+  useEffect(() => {
+    GTMHelper.getAdSlot()
+    setSlotDataLayer(GTMHelper.getDataSlot(window?.dataLayer, GTMHelper.SCREEN_NAME_ADS.SEARCH))
+  }, [screenDownSP])
+
   return (
     <MainLayout loginRequired={false}>
-      <Box>
+      <Box className="position_bottom">
+        <div
+          id={!screenDownSP ? 'ad_search_top' : 'ad_search_bottom'}
+          className={!screenDownSP ? 'google_ad_patten_1' : 'google_ad_patten_4'}
+        />
+        {/* GADS: search 1-4*/}
+        <GoogleAd
+          id={{ idPatten1: !screenDownSP && 'ad_search_t', idPatten4: screenDownSP && 'ad_search_b' }}
+          idTag={!screenDownSP ? 'ad_search_t' : 'ad_search_b'}
+          slot={slotDataLayer}
+        />
         <Box py={2} pl={3} display="flex" flexDirection="row" alignItems="center" borderBottom="1px solid #70707070">
           <IconButton className={classes.iconButtonBg} onClick={handleBack}>
             <Icon className={`fa fa-arrow-left ${classes.icon}`} fontSize="small" />

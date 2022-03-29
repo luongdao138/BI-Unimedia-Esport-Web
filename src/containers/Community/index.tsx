@@ -2,7 +2,7 @@ import ButtonPrimary from '@components/ButtonPrimary'
 import ESChip from '@components/Chip'
 import ESLoader from '@components/Loader'
 import LoginRequired from '@containers/LoginRequired'
-import { Box, Grid, Typography, useMediaQuery, makeStyles, Theme } from '@material-ui/core'
+import { Box, Grid, Typography, useMediaQuery, makeStyles, Theme, useTheme } from '@material-ui/core'
 import { AddRounded } from '@material-ui/icons'
 import React, { useEffect, useState, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -17,6 +17,8 @@ import InfiniteScroll from 'react-infinite-scroll-component'
 import _ from 'lodash'
 import { WindowScroller, List, CellMeasurer, AutoSizer, CellMeasurerCache } from 'react-virtualized'
 import { useLayoutEffect } from 'react'
+import GoogleAd from '@components/GoogleAd'
+import { GTMHelper } from '@utils/helpers/SendGTM'
 
 const cache = new CellMeasurerCache({
   fixedWidth: true,
@@ -39,6 +41,9 @@ const CommunityContainer: React.FC<CommunityContainerProps> = ({ filter }) => {
   const matchesLG = useMediaQuery((theme: Theme) => theme.breakpoints.up('lg'))
   const matchesSM = useMediaQuery((theme: Theme) => theme.breakpoints.up('sm'))
   const listRef = useRef<any>(null)
+  const theme = useTheme()
+  const screenDownSP = useMediaQuery(theme.breakpoints.down(576))
+  const [slotDataLayer, setSlotDataLayer] = useState('')
 
   useEffect(() => {
     if (listRef && listRef.current) listRef.current.recomputeRowHeights()
@@ -127,6 +132,8 @@ const CommunityContainer: React.FC<CommunityContainerProps> = ({ filter }) => {
     for (let i = fromIndex; i < toIndex; i++) {
       const data = communities[i]
 
+      // eslint-disable-next-line no-console
+      // console.log('communities', communities)
       items.push(
         <Grid key={i} item xs={12} lg={4} xl={3} sm={12} className={classes.card}>
           <CommunityCard community={data} />
@@ -145,8 +152,23 @@ const CommunityContainer: React.FC<CommunityContainerProps> = ({ filter }) => {
     )
   }
 
+  useEffect(() => {
+    GTMHelper.getAdSlot()
+    setSlotDataLayer(GTMHelper.getDataSlot(window?.dataLayer, GTMHelper.SCREEN_NAME_ADS.COMMUNITY))
+  }, [screenDownSP])
+
   return (
     <>
+      <div
+        id={!screenDownSP ? 'ad_community_top' : 'ad_community_bottom'}
+        className={!screenDownSP ? 'google_ad_patten_1' : 'google_ad_patten_4'}
+      />
+      {/* GADS: home community 1-4*/}
+      <GoogleAd
+        id={{ idPatten1: !screenDownSP && 'ad_community_t', idPatten4: screenDownSP && 'ad_community_b' }}
+        idTag={!screenDownSP ? 'ad_community_t' : 'ad_community_b'}
+        slot={slotDataLayer}
+      />
       <Box className={classes.header}>
         <Typography variant="h2">{t('common:home.community')}</Typography>
 
@@ -157,7 +179,7 @@ const CommunityContainer: React.FC<CommunityContainerProps> = ({ filter }) => {
           </ButtonPrimary>
         </LoginRequired>
       </Box>
-      <Box className={classes.content}>
+      <Box className={`${classes.content} position_bottom`}>
         <Box className={classes.filters}>
           {defaultFilterOptions.map((option) => (
             <ESChip

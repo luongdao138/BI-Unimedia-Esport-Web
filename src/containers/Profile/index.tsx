@@ -26,6 +26,9 @@ import { ESRoutes } from '@constants/route.constants'
 import { FOLLOW_STATES, REPORT_TYPE } from '@constants/common.constants'
 import { UPLOADER_TYPE } from '@constants/image.constants'
 import useToast from '@utils/hooks/useToast'
+import GoogleAd from '@components/GoogleAd'
+import { GTMHelper } from '@utils/helpers/SendGTM'
+// import { GTMHelper } from '@utils/helpers/SendGTM'
 interface WithRouterProps {
   router: NextRouter
 }
@@ -47,6 +50,7 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
   const { unblockUser, unblockMeta } = useUnblock()
   const [offset, setOffset] = useState(0)
   const { makeContextualHref } = useContextualRouting()
+  const [slotDataLayer, setSlotDataLayer] = useState('')
 
   const raw_code = _.isEmpty(router.query.user_code)
     ? null
@@ -68,6 +72,9 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
   } = useUserData(raw_code)
 
   useEffect(() => {
+    GTMHelper.getAdSlot()
+    setSlotDataLayer(GTMHelper.getDataSlot(window?.dataLayer, GTMHelper.SCREEN_NAME_ADS.PROFILE))
+
     const handleScroll = () => {
       setOffset(window.pageYOffset)
     }
@@ -302,6 +309,9 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
   return (
     <>
       <Grid container direction="column">
+        <div id={'ad_profile_top'} className={'google_ad_patten_1'} />
+        {/* GADS: profile */}
+        <GoogleAd id={{ idPatten1: 'ad_profile_t' }} idTag={'ad_profile_t'} slot={slotDataLayer} />
         {getHeader()}
         {getTabs()}
         {getContent()}

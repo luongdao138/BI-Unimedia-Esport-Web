@@ -1,4 +1,6 @@
-import { Grid, Box, makeStyles, Theme } from '@material-ui/core'
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* eslint-disable no-console */
+import { Grid, Box, makeStyles, Theme, useTheme } from '@material-ui/core'
 import useArenaHome from './useArenaHome'
 import TournamentCard from '@components/TournamentCard/HomeCard'
 import { TournamentFilterOption } from '@services/arena.service'
@@ -13,6 +15,8 @@ import useReturnHref from '@utils/hooks/useReturnHref'
 import ESLoader from '@components/Loader'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import HeaderArea from './HeaderArea'
+import GoogleAd from '@components/GoogleAd'
+import { GTMHelper } from '@utils/helpers/SendGTM'
 
 const cache = new CellMeasurerCache({
   fixedWidth: true,
@@ -33,6 +37,10 @@ const ArenaHome: React.FC<ArenaHomeProps> = ({ filter }) => {
   const matchesXL = useMediaQuery((theme: Theme) => theme.breakpoints.up('xl'))
   const matchesLG = useMediaQuery((theme: Theme) => theme.breakpoints.up('lg'))
   const matchesSM = useMediaQuery((theme: Theme) => theme.breakpoints.up('sm'))
+
+  const theme = useTheme()
+  const screenDownSP = useMediaQuery(theme.breakpoints.down(576))
+  const [slotDataLayer, setSlotDataLayer] = useState('')
 
   useEffect(() => {
     if (listRef && listRef.current) listRef.current.recomputeRowHeights()
@@ -97,7 +105,6 @@ const ArenaHome: React.FC<ArenaHomeProps> = ({ filter }) => {
     const items = []
     const fromIndex = index * itemsPerRow
     const toIndex = Math.min(fromIndex + itemsPerRow, arenasFiltered.length)
-
     for (let i = fromIndex; i < toIndex; i++) {
       const data = arenasFiltered[i]
 
@@ -107,7 +114,6 @@ const ArenaHome: React.FC<ArenaHomeProps> = ({ filter }) => {
         </Grid>
       )
     }
-
     return (
       <CellMeasurer cache={cache} columnIndex={0} columnCount={1} key={key} parent={parent} rowIndex={index}>
         {({ registerChild }) => (
@@ -119,10 +125,27 @@ const ArenaHome: React.FC<ArenaHomeProps> = ({ filter }) => {
     )
   }
 
+  useEffect(() => {
+    GTMHelper.getAdSlot()
+    console.log('window.dataLayer ====================>', window?.dataLayer, window.location.href)
+    setSlotDataLayer(GTMHelper.getDataSlot(window?.dataLayer, GTMHelper.SCREEN_NAME_ADS.ARENA))
+  }, [screenDownSP])
   return (
     <>
+      <div
+        id={!screenDownSP ? 'ad_arena_top' : 'ad_arena_bottom'}
+        className={!screenDownSP ? 'google_ad_patten_1' : 'google_ad_patten_4'}
+      />
+      {/* GADS: home arena */}
+      <GoogleAd
+        id={{ idPatten1: !screenDownSP && 'ad_arena_t', idPatten4: screenDownSP && 'ad_arena_b' }}
+        //@ts-ignore
+        slot={slotDataLayer}
+        idTag={!screenDownSP ? 'ad_arena_t' : 'ad_arena_b'}
+        currenPath={window.location.href}
+      />
       <HeaderArea onFilter={onFilter} toCreate={toCreate} filter={filter} />
-      <div>
+      <div className="position_bottom">
         <div className={classes.container}>
           <InfiniteScroll
             dataLength={arenasFiltered.length}

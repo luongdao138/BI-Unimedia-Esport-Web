@@ -6,6 +6,10 @@ import i18n from '@locales/i18n'
 
 import * as selectors from '@store/lobby/selectors'
 import * as actions from '@store/lobby/actions'
+import GoogleAd from '@components/GoogleAd'
+import { useMediaQuery, useTheme } from '@material-ui/core'
+import { useEffect, useState } from 'react'
+import { GTMHelper } from '@utils/helpers/SendGTM'
 
 export const getServerSideProps = storeWrapper.getServerSideProps(async ({ store, params }) => {
   const { dispatch }: { dispatch: AppDispatch } = store
@@ -22,9 +26,23 @@ export const getServerSideProps = storeWrapper.getServerSideProps(async ({ store
 })
 
 const LobbyPage: PageWithLayoutType = () => {
+  const [slotDataLayer, setSlotDataLayer] = useState('')
+  const theme = useTheme()
+  const screenDownSP = useMediaQuery(theme.breakpoints.down(576))
+  useEffect(() => {
+    GTMHelper.getAdSlot()
+    setSlotDataLayer(GTMHelper.getDataSlot(window?.dataLayer, GTMHelper.SCREEN_NAME_ADS.LOBBY_DETAIL))
+  }, [screenDownSP])
   return (
     <MainLayout loginRequired={false}>
+      {!screenDownSP && <div id={'ad_lobby_detail_top'} className={'google_ad_patten_1'} style={{ marginTop: 60 }} />}
+      {/* GADS: lobby/ID 1-3*/}
+      {!screenDownSP && (
+        <GoogleAd id={{ idPatten1: 'ad_lobby_d' }} styleContainer={{ marginTop: 60 }} idTag={'ad_lobby_d'} slot={slotDataLayer} />
+      )}
       <DetailContainer />
+      {screenDownSP && <GoogleAd id={{ idPatten3: 'ad_lobby_d_b' }} idTag={'ad_lobby_d_b'} slot={slotDataLayer} />}
+      {screenDownSP && <div id={'ad_lobby_detail_bottom'} className={'google_ad_patten_3'} />}
     </MainLayout>
   )
 }

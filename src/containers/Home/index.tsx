@@ -1,4 +1,5 @@
-import { useEffect } from 'react'
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+import { useEffect, useState } from 'react'
 import { Header } from './elements/Header'
 import { RecommendedUser } from './elements/Slider/RecommendedUser'
 // import { RecommendedEvent } from './elements/Slider/RecommendedEvent'
@@ -7,13 +8,15 @@ import { TournamentResult } from './elements/Slider/TournamentResult'
 import { TopicFollow } from './elements/Slider/TopicFollow'
 import useUserData from './useUserData'
 // import useEventData from './useEventData'
-import { Box } from '@material-ui/core'
+import { Box, useMediaQuery, useTheme } from '@material-ui/core'
 import useTournamentData from './useTournamentData'
 import useTopicData from './useTopicData'
 import { HOME_SETTINGS } from '@constants/common.constants'
 import ESLoader from '@components/FullScreenLoader'
 import { RecentLobbies } from '@containers/Home/elements/Slider/RecentLobbies'
 import { RecommendedLobbies } from './elements/Slider/RecommendedLobbies'
+import GoogleAd from '@components/GoogleAd'
+import { GTMHelper } from '@utils/helpers/SendGTM'
 
 const HomeContainer: React.FC = () => {
   const { recommendedUsers, getUserRecommendations, homeSettings, getUserProfile, metaHomeSettings } = useUserData()
@@ -27,6 +30,9 @@ const HomeContainer: React.FC = () => {
     tournamentResultsMeta,
   } = useTournamentData()
   const { followersTopicList, followersTopicListMeta, getFollowersTopicList, resetFollowersTopicList } = useTopicData()
+  const theme = useTheme()
+  const screenDownSP = useMediaQuery(theme.breakpoints.down(576))
+  const [slotDataLayer, setSlotDataLayer] = useState('')
 
   useEffect(() => {
     getUserProfile()
@@ -39,6 +45,11 @@ const HomeContainer: React.FC = () => {
       resetFollowersTopicList()
     }
   }, [])
+
+  useEffect(() => {
+    GTMHelper.getAdSlot()
+    setSlotDataLayer(GTMHelper.getDataSlot(window?.dataLayer, GTMHelper.SCREEN_NAME_ADS.HOME))
+  }, [screenDownSP])
 
   const renderItem = (value: string, index: number) => {
     switch (value) {
@@ -63,12 +74,21 @@ const HomeContainer: React.FC = () => {
 
   return (
     <>
+      {!screenDownSP && <div id="ad_home_top" className="ad_home_t google_ad_patten_1" />}
+      {/* GADS: Home */}
+      {!screenDownSP && (
+        <GoogleAd id={{ idPatten1: 'ad_home_t' }} slot={slotDataLayer} idTag={'ad_home_t'} currenPath={window.location.href} />
+      )}
       <Header />
       {homeSettings.map((value, index) => {
         return renderItem(value, index)
       })}
       {metaHomeSettings.pending && <ESLoader open={metaHomeSettings.pending} />}
       <Box marginBottom={9} />
+      {screenDownSP && (
+        <GoogleAd id={{ idPatten3: 'ad_home_b' }} idTag={'ad_home_b'} slot={slotDataLayer} currenPath={window.location.href} />
+      )}
+      {screenDownSP && <div id={'ad_home_bottom'} className="ad_home_b google_ad_patten_3" />}
     </>
   )
 }
