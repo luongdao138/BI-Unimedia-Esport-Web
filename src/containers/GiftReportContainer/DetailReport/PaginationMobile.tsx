@@ -7,9 +7,9 @@ import { useState, useEffect } from 'react'
 const PAGE_VALUES = {
   FIRST_PAGE: 1,
   SECOND_PAGE: 2,
-  THREE_DOTS_THRESHOLD: 4,
+  THREE_DOTS_THRESHOLD: 3,
   DOTS_RIGHT_THRESHOLD: 5,
-  NO_DOT_THRESHOLD: 7,
+  NO_DOT_THRESHOLD: 3,
 }
 
 type Props = {
@@ -19,8 +19,15 @@ type Props = {
   disabled?: boolean
 }
 
-const Pagination: React.FC<Props> = ({ page, pageNumber, setPage, disabled }) => {
+const PaginationMobile: React.FC<Props> = ({ page, pageNumber, setPage, disabled }) => {
   const classes = useStyles()
+  const previousPage = () => {
+    setPage(page - 1)
+  }
+
+  const nextPage = () => {
+    setPage(page + 1)
+  }
   const firstPage = () => {
     setPage(PAGE_VALUES.FIRST_PAGE)
   }
@@ -28,48 +35,13 @@ const Pagination: React.FC<Props> = ({ page, pageNumber, setPage, disabled }) =>
   const lastPage = () => {
     setPage(pageNumber)
   }
-
-  const leftSideCount = () => {
-    return page - PAGE_VALUES.FIRST_PAGE
-  }
-
-  const rightSideCount = () => {
-    return pageNumber - page
-  }
   const [buttons, setButtons] = useState([])
-
   const renderPagination = () => {
     const temp_array = []
-    const three_dots = { number: null }
-    temp_array.push({ number: PAGE_VALUES.FIRST_PAGE })
-    if (pageNumber <= PAGE_VALUES.NO_DOT_THRESHOLD) {
-      for (let i = PAGE_VALUES.SECOND_PAGE; i <= pageNumber - PAGE_VALUES.FIRST_PAGE; i++) {
-        const temp = { number: i }
-        temp_array.push(temp)
-      }
-    } else {
-      if (leftSideCount() < PAGE_VALUES.THREE_DOTS_THRESHOLD) {
-        for (let i = PAGE_VALUES.SECOND_PAGE; i <= PAGE_VALUES.DOTS_RIGHT_THRESHOLD; i++) {
-          const temp = { number: i }
-          temp_array.push(temp)
-        }
-        temp_array.push(three_dots)
-      } else if (rightSideCount() < PAGE_VALUES.THREE_DOTS_THRESHOLD) {
-        temp_array.push(three_dots)
-        for (let i = pageNumber - PAGE_VALUES.THREE_DOTS_THRESHOLD; i < pageNumber; i++) {
-          const temp = { number: i }
-          temp_array.push(temp)
-        }
-      } else {
-        temp_array.push(three_dots)
-        for (let i = page - PAGE_VALUES.FIRST_PAGE; i <= page + PAGE_VALUES.FIRST_PAGE; i++) {
-          const temp = { number: i }
-          temp_array.push(temp)
-        }
-        temp_array.push(three_dots)
-      }
+    if (page) {
+      const temp = { number: page }
+      temp_array.push(temp)
     }
-    pageNumber !== PAGE_VALUES.FIRST_PAGE && temp_array.push({ number: pageNumber })
     setButtons(temp_array)
   }
 
@@ -82,7 +54,12 @@ const Pagination: React.FC<Props> = ({ page, pageNumber, setPage, disabled }) =>
       <Box>
         <Box className={classes.pagination}>
           <ButtonBase className={classes.buttons} onClick={firstPage} disabled={page === 1 || disabled}>
-            <Icon className={`${classes.icons} fas fa-angle-double-left`} />
+            {/* <Icon className={`${classes.icons} fas fa-angle-double-left`} /> */}
+            <Icon className={`fas fa-angle-double-left ${classes.icons}`} fontSize="small" />
+          </ButtonBase>
+          <ButtonBase className={classes.buttons} onClick={previousPage} disabled={page === 1 || disabled}>
+            {/* <Icon className={`${classes.icons} fas fa-angle-double-left`} /> */}
+            <Icon className={`fa fa-angle-left ${classes.icons}`} fontSize="small" />
           </ButtonBase>
 
           {_.map(buttons, (button, i) => {
@@ -100,8 +77,13 @@ const Pagination: React.FC<Props> = ({ page, pageNumber, setPage, disabled }) =>
             )
           })}
 
+          <ButtonBase className={classes.buttons} onClick={nextPage} disabled={page === pageNumber || disabled}>
+            <Icon className={`fa fa-angle-right ${classes.icons}`} fontSize="small" />
+          </ButtonBase>
+
           <ButtonBase className={classes.buttons} onClick={lastPage} disabled={page === pageNumber || disabled}>
-            <Icon className={`${classes.icons} fas fa-angle-double-right`} />
+            {/* <Icon className={`${classes.icons} fas fa-angle-double-right`} /> */}
+            <Icon className={`fas fa-angle-double-right ${classes.icons}`} fontSize="small" />
           </ButtonBase>
         </Box>
       </Box>
@@ -155,4 +137,4 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-export default Pagination
+export default PaginationMobile

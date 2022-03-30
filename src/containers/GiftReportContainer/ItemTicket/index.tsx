@@ -8,7 +8,7 @@ import React from 'react'
 
 const ItemTicket: React.FC<TicketsResponse> = (props) => {
   // const { t } = useTranslation('common')
-  const { created_at, image_url, nickname, point } = props
+  const { created_at, image_url, nickname, point, user_code } = props
   const classes = useStyles()
   return (
     <TableRow key={1}>
@@ -17,6 +17,7 @@ const ItemTicket: React.FC<TicketsResponse> = (props) => {
           <ESAvatar src={image_url} alt={nickname} />
           <Box ml={1} display="flex" justifyContent="center" flexDirection="column">
             <Typography className={classes.name}>{nickname}</Typography>
+            <Typography className={classes.userCode}>{user_code ? user_code : '-'}</Typography>
           </Box>
         </Box>
       </TableCell>
@@ -34,6 +35,11 @@ export default ItemTicket
 const useStyles = makeStyles((theme) => ({
   name: {
     fontSize: 12,
+    textAlign: 'left',
+  },
+  userCode: {
+    color: '#FFFFFF4D',
+    fontSize: 11,
     textAlign: 'left',
   },
 

@@ -192,6 +192,7 @@ const GiftReportContainer: React.FC<{ default_tab: any }> = ({ default_tab }) =>
                         nickname={i.nickname}
                         point={i.point}
                         type={i.type}
+                        user_code={i.user_code}
                       />
                     ))}
                   </ESTable>

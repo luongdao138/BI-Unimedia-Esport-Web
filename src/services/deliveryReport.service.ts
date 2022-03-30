@@ -48,6 +48,7 @@ export type TicketsResponse = {
   image_url: string
   type: number
   created_at: string
+  user_code: string
 }
 
 export type TicketReportResponse = {
