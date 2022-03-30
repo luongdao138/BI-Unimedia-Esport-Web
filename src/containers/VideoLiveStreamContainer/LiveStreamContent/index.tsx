@@ -193,7 +193,10 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
           {renderReloadPlayer()}
         </Box>
       ) : (
-        <Box className={classes.mediaPlayerContainer} style={{ height: componentsSize.videoHeight }}>
+        <Box
+          className={classes.mediaPlayerContainer}
+          // style={{ height: componentsSize.videoHeight }}
+        >
           {mediaPlayer()}
           {showOverlayOnMediaPlayer() && mediaOverlayPurchaseTicketView()}
         </Box>

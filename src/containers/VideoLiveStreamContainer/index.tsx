@@ -941,7 +941,7 @@ const useStyles = makeStyles((theme) => ({
   },
   [theme.breakpoints.down(769)]: {
     root: {
-      minHeight: '100vh',
+      // minHeight: '100vh',
       flexDirection: 'column',
     },
     wrapChatContainer: {
