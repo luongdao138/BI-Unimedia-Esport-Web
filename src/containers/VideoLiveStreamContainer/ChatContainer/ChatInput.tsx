@@ -3,7 +3,7 @@ import i18n from '@locales/i18n'
 import { Box, Button, InputAdornment, makeStyles } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import { useFormik } from 'formik'
-import React, { memo, useEffect, useState } from 'react'
+import React, { memo, useCallback, useEffect, useState } from 'react'
 import * as Yup from 'yup'
 import { sanitizeMess } from './index'
 import ESFastInput from '@components/FastInput'
@@ -37,20 +37,34 @@ const ChatInput: React.FC<ChatInputProps> = ({
   purchaseButton,
 }) => {
   const [isFocusedInput, setIsFocusedInput] = useState(false)
-  const { handleChange, values, handleSubmit, errors, resetForm } = useFormik<MessageValidationType>({
+  const [isSubmit, setIsSubmit] = useState(false)
+  const { handleChange, values, handleSubmit, errors, resetForm, setFieldValue } = useFormik<MessageValidationType>({
     initialValues: {
       message: '',
     },
     validationSchema,
     onSubmit: (values) => {
+      // setFieldError('message', undefined)
       sendNormalMess(sanitizeMess(values.message))
     },
+    validateOnChange: false,
   })
+
+  const submitFormUpdate = useCallback((tempMessage: string) => {
+    if (tempMessage) {
+      setFieldValue('message', tempMessage).then(() => {
+        // setFieldError('message', undefined)
+        handleSubmit()
+      })
+    } else {
+      handleSubmit()
+    }
+    setIsSubmit(false)
+  }, [])
 
   const classes = useStyles()
 
   useEffect(() => {
-    values.message = ''
     resetForm()
   }, [isResetMess])
 
@@ -64,7 +78,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
 
   const handlePressEnter = (event: any) => {
     if (event.key === 'Enter') {
-      handleSubmit()
+      setIsSubmit(true)
     }
   }
   return (
@@ -73,6 +87,8 @@ const ChatInput: React.FC<ChatInputProps> = ({
       <ESFastInput
         id={'message'}
         name="message"
+        isSubmit={isSubmit}
+        submitFormUpdate={submitFormUpdate}
         onChange={handleChange}
         placeholder={i18n.t('common:live_stream_screen.message_placeholder')}
         value={values.message}
@@ -87,7 +103,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
           setIsFocusedInput(false)
         }}
         helperText={errors?.message}
-        error={!!errors?.message}
+        error={Boolean(errors.message)}
         onKeyPress={handlePressEnter}
         endAdornment={
           <LoginRequired>
@@ -95,7 +111,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
               position="end"
               className={classes.button_send_sp}
               onClick={() => {
-                handleSubmit()
+                setIsSubmit(true)
               }}
             >
               {isFocusedInput ? <img src="/images/send_icon_pink_sp.svg" /> : <img src="/images/send_icon_white_sp.svg" />}
@@ -106,7 +122,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
       <LoginRequired>
         <Button
           onClick={() => {
-            handleSubmit()
+            setIsSubmit(true)
           }}
           className={classes.iconButtonBg}
         >

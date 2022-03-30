@@ -1,5 +1,5 @@
 import { OutlinedInputProps } from '@material-ui/core'
-import { ReactElement, useCallback, useEffect, useState } from 'react'
+import { memo, ReactElement, useCallback, useEffect, useRef, useState } from 'react'
 import ESInput from '@components/Input'
 import _ from 'lodash'
 
@@ -10,16 +10,32 @@ export type InputProps = {
   required?: boolean
   nowrapHelperText?: boolean
   size?: 'big' | 'small'
+  isSubmit: boolean
+  submitFormUpdate: (message: string) => void
 }
 
 const ESFastInput: React.FC<OutlinedInputProps & InputProps> = (props) => {
-  const [value, setValue] = useState('')
+  const { isSubmit, submitFormUpdate } = props
+  const [tempMessage, setTempMessage] = useState('')
+  const inputRef = useRef<HTMLInputElement>()
 
   useEffect(() => {
     if (props.value !== null && props.value !== undefined) {
-      setValue(String(props.value))
+      setTempMessage(String(props.value))
     }
   }, [props.value])
+
+  useEffect(() => {
+    if (isSubmit) {
+      submitFormUpdate(tempMessage)
+    }
+  }, [isSubmit])
+
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus()
+    }
+  }, [isSubmit])
 
   const debouncedChangeHandler = useCallback(
     _.debounce((e) => {
@@ -30,11 +46,11 @@ const ESFastInput: React.FC<OutlinedInputProps & InputProps> = (props) => {
 
   const handleChange = (e) => {
     e.persist()
-    setValue(e.target.value)
+    setTempMessage(e.target.value)
     debouncedChangeHandler(e)
   }
 
-  return <ESInput {...props} value={value} onChange={handleChange} />
+  return <ESInput {...props} ref={inputRef} value={tempMessage} onChange={handleChange} />
 }
 
-export default ESFastInput
+export default memo(ESFastInput)
