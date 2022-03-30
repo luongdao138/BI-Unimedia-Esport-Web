@@ -253,13 +253,13 @@ const useStyles = makeStyles((theme) => ({
       gap: '16px',
     },
     filterInputField: {
-      // marginTop: '34px',
+      marginTop: '34px',
     },
     newListHeaderContainer: {
       marginTop: '12px',
     },
     listContainer: {
-      height: 'calc(100vh - 516px)',
+      height: 'calc(100vh - 520px)',
     },
   },
   [theme.breakpoints.down('sm')]: {
@@ -271,6 +271,9 @@ const useStyles = makeStyles((theme) => ({
     },
     filterBtnContainer: {
       display: 'flex',
+    },
+    filterInputField: {
+      marginTop: '16px',
     },
   },
 }))
