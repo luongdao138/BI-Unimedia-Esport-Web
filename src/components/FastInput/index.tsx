@@ -10,12 +10,13 @@ export type InputProps = {
   required?: boolean
   nowrapHelperText?: boolean
   size?: 'big' | 'small'
-  isSubmit: boolean
-  submitFormUpdate: (message: string) => void
+  isSubmit?: boolean
+  submitFormUpdate?: (message: string) => void
+  cbOnChange?: () => void
 }
 
 const ESFastInput: React.FC<OutlinedInputProps & InputProps> = (props) => {
-  const { isSubmit, submitFormUpdate } = props
+  const { isSubmit, submitFormUpdate, cbOnChange } = props
   const [tempMessage, setTempMessage] = useState('')
   const inputRef = useRef<HTMLInputElement>()
 
@@ -27,12 +28,12 @@ const ESFastInput: React.FC<OutlinedInputProps & InputProps> = (props) => {
 
   useEffect(() => {
     if (isSubmit) {
-      submitFormUpdate(tempMessage)
+      submitFormUpdate && submitFormUpdate(tempMessage)
     }
   }, [isSubmit])
 
   useEffect(() => {
-    if (inputRef.current) {
+    if (inputRef.current && isSubmit && submitFormUpdate) {
       inputRef.current.focus()
     }
   }, [isSubmit])
@@ -48,9 +49,10 @@ const ESFastInput: React.FC<OutlinedInputProps & InputProps> = (props) => {
     e.persist()
     setTempMessage(e.target.value)
     debouncedChangeHandler(e)
+    cbOnChange?.()
   }
 
-  return <ESInput {...props} ref={inputRef} value={tempMessage} onChange={handleChange} />
+  return <ESInput {...props} inputRef={inputRef} value={tempMessage} onChange={handleChange} />
 }
 
 export default memo(ESFastInput)

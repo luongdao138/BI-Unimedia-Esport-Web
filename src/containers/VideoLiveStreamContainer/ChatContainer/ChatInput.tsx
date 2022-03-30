@@ -38,13 +38,12 @@ const ChatInput: React.FC<ChatInputProps> = ({
 }) => {
   const [isFocusedInput, setIsFocusedInput] = useState(false)
   const [isSubmit, setIsSubmit] = useState(false)
-  const { handleChange, values, handleSubmit, errors, resetForm, setFieldValue } = useFormik<MessageValidationType>({
+  const { handleChange, values, handleSubmit, errors, resetForm, setFieldValue, setFieldError } = useFormik<MessageValidationType>({
     initialValues: {
       message: '',
     },
     validationSchema,
     onSubmit: (values) => {
-      // setFieldError('message', undefined)
       sendNormalMess(sanitizeMess(values.message))
     },
     validateOnChange: false,
@@ -53,13 +52,17 @@ const ChatInput: React.FC<ChatInputProps> = ({
   const submitFormUpdate = useCallback((tempMessage: string) => {
     if (tempMessage) {
       setFieldValue('message', tempMessage).then(() => {
-        // setFieldError('message', undefined)
         handleSubmit()
       })
     } else {
       handleSubmit()
     }
     setIsSubmit(false)
+  }, [])
+  const cbOnChange = useCallback(() => {
+    if (errors.message) {
+      setFieldError('message', undefined)
+    }
   }, [])
 
   const classes = useStyles()
@@ -105,6 +108,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
         helperText={errors?.message}
         error={Boolean(errors.message)}
         onKeyPress={handlePressEnter}
+        cbOnChange={cbOnChange}
         endAdornment={
           <LoginRequired>
             <InputAdornment
