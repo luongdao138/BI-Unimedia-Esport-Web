@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 // import { makeStyles } from '@material-ui/core/styles'
 import { useMediaQuery, useTheme } from '@material-ui/core'
-import { useEffect, useState } from 'react'
+import { memo, useEffect, useState } from 'react'
 
 type Patten = {
   idPatten1?: string
@@ -19,6 +19,7 @@ interface Props {
   classNamePatten?: string
   styleContainer?: any
   idTag?: string
+  currenPath?: string
 }
 declare global {
   interface Window {
@@ -28,7 +29,7 @@ declare global {
 const googleAdId = process.env.GADS_CLIENT_ID
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const GoogleAd: React.FC<Props> = ({ timeout = 2000, style, id, slot, styleContainer, idTag = 'ads' }) => {
+const GoogleAd: React.FC<Props> = ({ style, id, slot, styleContainer, idTag = 'ads', currenPath }) => {
   //timeout = 2000,
   //   const classes = useStyles()
   const theme = useTheme()
@@ -46,24 +47,31 @@ const GoogleAd: React.FC<Props> = ({ timeout = 2000, style, id, slot, styleConta
   }, [])
 
   useEffect(() => {
-    const googleInit = setTimeout(() => {
-      if (typeof window !== 'undefined') (window.adsbygoogle = window.adsbygoogle || []).push({})
-    }, timeout)
-    return () => {
-      if (googleInit) clearTimeout(googleInit)
+    console.warn('---------cccccccc------')
+    console.log('-----window-----', window)
+    console.log('-----window.adsbygoogle-----', window?.adsbygoogle)
+    // const googleInit = setTimeout(() => {
+    // if (typeof window !== 'undefined' && window?.adsbygoogle) (window.adsbygoogle = window.adsbygoogle || []).push({})
+    if (typeof window !== 'undefined' && window?.adsbygoogle) {
+      window.adsbygoogle = window.adsbygoogle || []
+      window.adsbygoogle.push({})
     }
-  }, [])
+    // }, timeout)
+    return () => {
+      // if (googleInit) clearTimeout(googleInit)
+    }
+  }, [currenPath])
   const styles = {
     display: 'block',
     height: screenDownSP ? 50 : 90,
     // background: 'red',
     width: screenDownSP ? 300 : '100%',
   }
-
-  console.log('-check log google tag: screenDownSP: ', screenDownSP, ' ---id: ', JSON.stringify(id))
+  // console.log('-check log google tag: screenDownSP: ', screenDownSP, ' ---id: ', JSON.stringify(id))
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   //@ts-ignore
-  console.log('TAG MAN======', slot, `${idTag}`)
+  // console.log('TAG MAN======', slot, `${idTag}`)
+
   return (
     // <>
     //   {isHasSlot ? (
@@ -82,12 +90,13 @@ const GoogleAd: React.FC<Props> = ({ timeout = 2000, style, id, slot, styleConta
         id.idPatten1 ? 'google_ad_patten_1' : id.idPatten3 ? 'google_ad_patten_3' : 'google_ad_patten_4'
       } ${'banner-ads'}-${windowDimensions}`}
       style={styleContainer}
+      key={currenPath}
     >
       <div
         style={{
           width: screenDownSP ? 300 : '100%',
           height: screenDownSP ? 50 : 90,
-          //   background: 'pink',
+          // background: 'pink',
           justifyContent: 'center',
           display: 'flex',
         }}
@@ -127,4 +136,11 @@ GoogleAd.defaultProps = {
   timeout: 200,
 }
 
-export default GoogleAd
+// export default memo(GoogleAd, (prev, next) => {
+//   console.warn('===rerender ads----', prev.currenPath !== next.currenPath)
+//   if (prev.currenPath !== next.currenPath) {
+//     return false
+//   }
+//   return true
+// })
+export default memo(GoogleAd)
