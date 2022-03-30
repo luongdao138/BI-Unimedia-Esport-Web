@@ -70,7 +70,7 @@ const GoogleAd: React.FC<Props> = ({ style, id, slot, styleContainer, idTag = 'a
   // console.log('-check log google tag: screenDownSP: ', screenDownSP, ' ---id: ', JSON.stringify(id))
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   //@ts-ignore
-  // console.log('TAG MAN======', slot, `${idTag}`)
+  console.log('TAG MAN======', window.innerWidth)
 
   return (
     // <>
@@ -94,7 +94,8 @@ const GoogleAd: React.FC<Props> = ({ style, id, slot, styleContainer, idTag = 'a
     >
       <div
         style={{
-          width: screenDownSP ? 300 : '100%',
+          width: screenDownSP ? window.innerWidth : '100%',
+          // width: screenDownSP ? 300 : '100%',
           height: screenDownSP ? 50 : 90,
           // background: 'pink',
           justifyContent: 'center',
@@ -108,7 +109,7 @@ const GoogleAd: React.FC<Props> = ({ style, id, slot, styleContainer, idTag = 'a
             data-ad-client={googleAdId}
             data-ad-format=""
             data-ad-slot={slot}
-            data-full-width-responsive="false"
+            data-full-width-responsive="true"
           />
         ) : (
           <ins
@@ -116,7 +117,7 @@ const GoogleAd: React.FC<Props> = ({ style, id, slot, styleContainer, idTag = 'a
             style={{ ...styles, ...style }}
             data-ad-client={googleAdId}
             data-ad-format=""
-            data-full-width-responsive="false"
+            data-full-width-responsive="true"
           />
         )}
       </div>
