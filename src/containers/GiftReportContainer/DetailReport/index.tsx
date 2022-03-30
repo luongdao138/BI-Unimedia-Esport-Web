@@ -12,6 +12,7 @@ import { FormatHelper } from '@utils/helpers/FormatHelper'
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import useDeliveryReport from '../useDeliveryReport'
+import PaginationMobile from './PaginationMobile'
 
 interface DetailReportProps {
   videoId: string | string[]
@@ -25,7 +26,7 @@ const TYPE_REPORT = {
   TIP: 'チップ',
 }
 
-const ITEM_PER_PAGE = 30
+const ITEM_PER_PAGE = 4
 // const getItemPerPage = (data: DetailedResponse[], itemPerPage: number, page: number) => {
 //   return data.slice(itemPerPage * page - itemPerPage, itemPerPage * page)
 // }
@@ -87,6 +88,7 @@ const DetailReport: React.FC<DetailReportProps> = ({ videoId }) => {
   const { fetchDetailedReportList, detailedReports, detailedReportMeta } = useDeliveryReport()
 
   const getTotalPage = () => Math.ceil(detailedReports.total / ITEM_PER_PAGE)
+
   const [page, setPage] = useState(1)
   // const { t } = useTranslation('common')
   useEffect(() => {
@@ -100,9 +102,10 @@ const DetailReport: React.FC<DetailReportProps> = ({ videoId }) => {
     RESPONSE_DATA_DETAIL_REPORT.GIFT_RECIPIENT,
     RESPONSE_DATA_DETAIL_REPORT.POINT
   )
+  const disableBtnCSV = dataReportExcel.length > 0 ? false : true
   const renderBtnCSV = () =>
     matches ? (
-      <ESButton variant={'contained'} className={classes.btnCSV}>
+      <ESButton variant={'contained'} className={classes.btnCSV} disabled={disableBtnCSV}>
         <ExportCSV
           headers={headers}
           data={dataReportExcel}
@@ -112,7 +115,7 @@ const DetailReport: React.FC<DetailReportProps> = ({ videoId }) => {
         ></ExportCSV>
       </ESButton>
     ) : (
-      <ESButton variant={'contained'} className={classes.btnCSV}>
+      <ESButton variant={'contained'} className={classes.btnCSV} disabled={disableBtnCSV}>
         <ExportCSV
           headers={headers}
           data={dataReportExcel}
@@ -122,10 +125,10 @@ const DetailReport: React.FC<DetailReportProps> = ({ videoId }) => {
         ></ExportCSV>
       </ESButton>
     )
-
   const renderPagination = () =>
     matches ? (
-      <Pagination page={page} pageNumber={getTotalPage()} setPage={setPage} />
+      // <SpPagination currentPage={page} totalPage={getTotalPage()} onChangePage={setPage} />
+      <PaginationMobile page={page} pageNumber={getTotalPage()} setPage={setPage} />
     ) : (
       <Pagination page={page} pageNumber={getTotalPage()} setPage={setPage} />
     )
@@ -133,7 +136,7 @@ const DetailReport: React.FC<DetailReportProps> = ({ videoId }) => {
   return (
     <Box mb={4}>
       <Box display="flex" justifyContent="space-between" alignItems="baseline" mb={2}>
-        <Box alignItems="center">
+        <Box alignItems="center" margin={`0 auto`}>
           <Box mb={3} display="flex" justifyContent="center">
             {renderPagination()}
           </Box>
@@ -256,6 +259,7 @@ const useStyles = makeStyles((theme) => ({
   },
   btnCSV: {
     backgroundColor: '#FF4786',
+    maxHeight: '32px',
     '&:hover': {
       '& $textBtnCSV': {
         color: '#FF4786',
