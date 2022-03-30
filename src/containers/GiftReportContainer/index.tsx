@@ -196,9 +196,33 @@ const GiftReportContainer: React.FC<{ default_tab: any }> = ({ default_tab }) =>
                     ))}
                   </ESTable>
                 ) : (
-                  <Box>
-                    <Typography align="center">{t('streaming_gift_report_screen.the_ticket_was_not_purchased')}</Typography>
-                  </Box>
+                  <ESTable
+                    classTable={classes.ticketTable}
+                    tableHeader={
+                      <TableRow>
+                        <TableCell style={{ width: '33%' }} align="center">
+                          {t('streaming_gift_report_screen.buyer')}
+                        </TableCell>
+                        <TableCell style={{ width: '33%' }} align="center">
+                          {t('point_management_tab.purchase_date')}
+                        </TableCell>
+                        <TableCell style={{ width: '33%' }} align="center">
+                          {t('streaming_gift_report_screen.payment_points')}
+                        </TableCell>
+                      </TableRow>
+                    }
+                  >
+                    <TableRow key={1}>
+                      <TableCell align="center" colSpan={3}>
+                        {/* <Typography align="center" className={classes.noTipReceived}>
+                        {t('streaming_gift_report_screen.no_tip_received')}
+                      </Typography> */}
+                        <Typography align="center" className={classes.noTipReceived}>
+                          {t('streaming_gift_report_screen.the_ticket_was_not_purchased')}
+                        </Typography>
+                      </TableCell>
+                    </TableRow>
+                  </ESTable>
                 )}
               </>
             )}

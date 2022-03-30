@@ -106,7 +106,7 @@ const LiveStreamListContainer: React.FC = () => {
               </Box>
               <Box style={{ display: 'flex', width: '100%', paddingLeft: 22, paddingRight: 22, paddingBottom: 20 }}>
                 <StreamDataItem
-                  title={t('live_stream_list_screen.total_user_chat_premium')}
+                  title={t('live_stream_list_screen.total_user_chat_tip_number')}
                   value={totalUserChatPremium}
                   containerStyle={{ width: itemWidthMobile }}
                 />
@@ -134,7 +134,7 @@ const LiveStreamListContainer: React.FC = () => {
                 <StreamDataItem title={t('live_stream_list_screen.total_user_chat')} value={totalUserChat} />
               </Grid>
               <Grid item xs={6}>
-                <StreamDataItem title={t('live_stream_list_screen.total_user_chat_premium')} value={totalUserChatPremium} />
+                <StreamDataItem title={t('live_stream_list_screen.total_user_chat_tip_number')} value={totalUserChatPremium} />
               </Grid>
               <Grid item xs={6}>
                 <StreamDataItem title={t('live_stream_list_screen.total_point')} value={totalPointBonuses} />
