@@ -150,6 +150,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   container: {
     display: 'flex',
     flexWrap: 'wrap',
+    paddingBottom: 60,
     '& > div:last-child > div': {
       marginBottom: theme.spacing(2),
     },

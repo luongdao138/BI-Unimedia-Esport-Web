@@ -1014,9 +1014,10 @@ iframe[style] {
     margin-left: 0px !important;
   }
   iframe[style] {
-    width: 100% !important;
+    // width: 100% !important;
     // border: 1px solid blue !important;
     height: 50px !important;
+    width: 300px !important;
   }
 }
 @media (max-width: 1280px) {
