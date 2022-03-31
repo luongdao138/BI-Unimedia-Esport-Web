@@ -22,7 +22,7 @@ const StreamingGiftManagement: React.FC = () => {
   const router = useRouter()
   const { t } = useTranslation('common')
   const theme = useTheme()
-  const isMobile = useMediaQuery(theme.breakpoints.down(414))
+  const isMobile = useMediaQuery(theme.breakpoints.down(576))
   const [step, setStep] = useState(1)
   const [addNewErrorMessage, setErrorMessage] = useState('')
   const [mode, setMode] = useState('')
@@ -106,10 +106,12 @@ const useStyles = makeStyles((theme) => ({
   },
   label: {
     marginTop: '200px',
+    marginLeft: '16px',
+    marginRight: '16px',
     color: Colors.white_opacity['70'],
     fontSize: '14px',
     textAlign: 'center',
-    whiteSpace: 'pre',
+    whiteSpace: 'pre-wrap',
   },
   [theme.breakpoints.down('md')]: {
     contentContainer: {

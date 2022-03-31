@@ -54,6 +54,8 @@ const ChatInputContainer: React.FC<ChatInputProps> = ({
 
   const submitForm = useCallback(() => {
     if (valueRef.current) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       setFieldValue('message', valueRef.current).then(() => {
         handleSubmit()
       })

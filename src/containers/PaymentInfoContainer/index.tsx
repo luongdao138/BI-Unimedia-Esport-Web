@@ -12,6 +12,7 @@ import { FORMAT_TIME_SAFARI, FORMAT_YEAR_MONTH } from '@constants/common.constan
 import ESLoader from '@components/FullScreenLoader'
 import { DateHelper } from '@utils/helpers/DateHelper'
 import moment from 'moment'
+import { toNumber } from 'lodash'
 
 const PaymentInfoContainer: React.FC = () => {
   const { t } = useTranslation('common')
@@ -80,7 +81,7 @@ const PaymentInfoContainer: React.FC = () => {
             //     ? FINANCIAL_STATUS_TITLE.SCHEDULE
             //     : FINANCIAL_STATUS_TITLE.CONFIRM
 
-            const displayAmount = `${FormatHelper.currencyFormat(item?.point.toString())} ${t('common.money')}`
+            const displayAmount = `${FormatHelper.currencyFormat(Math.floor(toNumber(item?.point)).toString())} ${t('common.money')}`
             return (
               <Box key={item?.date} onClick={navigateToDetail(item?.date)} style={{ backgroundColor }} className={classes.row}>
                 <Typography className={`${classes.yearMonthRow}`}>{displayDate}</Typography>
