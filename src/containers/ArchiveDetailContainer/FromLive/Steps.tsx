@@ -250,6 +250,7 @@ const Steps: React.FC<StepsProps> = ({
   return (
     <Box py={4} className={classes.container}>
       <Box className={classes.formContainer}>
+        <Typography className={classes.textTitleReup}>{i18n.t('common:archived_list_screen.title')}</Typography>
         <form onSubmit={formik.handleSubmit}>
           {/* link url */}
           <Box className={classes.wrap_input} display="flex" flexDirection="row" alignItems="flex-end">
@@ -854,6 +855,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     overflow: 'hidden',
     textOverflow: 'ellipsis',
   },
+  textTitleReup: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: Colors.white_opacity[70],
+    marginBottom: 20,
+  },
   [theme.breakpoints.down(768)]: {
     container: {
       padding: '34px 24px 32px 24px',
@@ -898,6 +905,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     labelNameObject: {
       marginLeft: 0,
       paddingTop: 8,
+    },
+    textTitleReup: {
+      marginBottom: 15,
     },
   },
   addPaddingNote: {

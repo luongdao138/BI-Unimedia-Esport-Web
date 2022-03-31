@@ -1492,7 +1492,7 @@ export default {
     distribution_data_management: '配信データ管理',
     archive_list: 'アーカイブ管理',
     live_stream_list: '配信データ管理',
-    archived_list: 'アーカイブ一覧',
+    archived_list: 'アーカイブ管理',
     payment_information: '入金情報',
     gift_management: 'チップ対象者申請',
   },
@@ -1507,7 +1507,7 @@ export default {
     current_month: '当月',
   },
   archived_list_screen: {
-    title: 'アーカイブ一覧',
+    title: 'アーカイブ管理',
     delivery_date_time: '配信日時',
     release: '公開',
     not_release: '非公開',

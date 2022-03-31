@@ -26,7 +26,7 @@ const TYPE_REPORT = {
   TIP: 'チップ',
 }
 
-const ITEM_PER_PAGE = 4
+const ITEM_PER_PAGE = 30
 // const getItemPerPage = (data: DetailedResponse[], itemPerPage: number, page: number) => {
 //   return data.slice(itemPerPage * page - itemPerPage, itemPerPage * page)
 // }
@@ -152,6 +152,7 @@ const DetailReport: React.FC<DetailReportProps> = ({ videoId }) => {
           {detailedReports.points.length > 0 ? (
             <ESTable
               classTable={classes.table}
+              classBody={classes.tableCellContent}
               tableHeader={
                 <TableRow className={classes.rowHeader}>
                   <TableCell style={{ width: '5%' }} align="center">
@@ -308,6 +309,7 @@ const useStyles = makeStyles((theme) => ({
   [theme.breakpoints.down('sm')]: {
     textHeader: {
       fontSize: 10,
+      wordBreak: 'keep-all', //landt: fix 77872
     },
     text: {
       '& td': {
@@ -320,6 +322,14 @@ const useStyles = makeStyles((theme) => ({
     },
     noTipReceived: {
       fontSize: 8,
+    },
+    //landt: fix 77872
+    tableCellContent: {
+      '& tr': {
+        '& td': {
+          wordBreak: 'break-word',
+        },
+      },
     },
   },
   [theme.breakpoints.down(375)]: {

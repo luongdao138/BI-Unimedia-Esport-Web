@@ -6,16 +6,17 @@ import React, { ReactNode } from 'react'
 interface Props {
   tableHeader?: ReactNode
   classTable?: string
+  classBody?: string
 }
 
-const ESTable: React.FC<Props> = ({ tableHeader, children, classTable }) => {
+const ESTable: React.FC<Props> = ({ tableHeader, children, classTable, classBody }) => {
   //   const { t } = useTranslation('common')
   const classes = useStyles()
   return (
     <TableContainer className={classes.tableContainer}>
       <Table className={`${classes.table} ${classTable}`}>
         <TableHead className={classes.headerTable}>{tableHeader}</TableHead>
-        <TableBody className={classes.bodyTable}>{children}</TableBody>
+        <TableBody className={`${classes.bodyTable} ${classBody}`}>{children}</TableBody>
       </Table>
     </TableContainer>
   )
