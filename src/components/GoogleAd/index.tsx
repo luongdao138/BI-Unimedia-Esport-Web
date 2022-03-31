@@ -94,8 +94,7 @@ const GoogleAd: React.FC<Props> = ({ style, id, slot, styleContainer, idTag = 'a
     >
       <div
         style={{
-          width: screenDownSP ? window.innerWidth : '100%',
-          // width: screenDownSP ? 300 : '100%',
+          width: screenDownSP ? 300 : '100%',
           height: screenDownSP ? 50 : 90,
           // background: 'pink',
           justifyContent: 'center',
