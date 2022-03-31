@@ -52,13 +52,14 @@ const ChatInputContainer: React.FC<ChatInputProps> = ({
     validateOnChange: false,
   })
 
+  const setMessageFieldValue = async (message) => {
+    await setFieldValue('message', message)
+    handleSubmit()
+  }
+
   const submitForm = useCallback(() => {
     if (valueRef.current) {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      setFieldValue('message', valueRef.current).then(() => {
-        handleSubmit()
-      })
+      setMessageFieldValue(valueRef.current)
     } else {
       handleSubmit()
     }
