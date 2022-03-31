@@ -26,7 +26,8 @@ export type AddNewGiftMasterResponse = {
   message?: string
   code?: number
   data?: {
-    url: string
+    url?: string
+    items: Array<GiftMasterType>
   }
 }
 
@@ -153,5 +154,17 @@ export type DeleteGiftGroupRequestParams = {
 
 export const deleteGiftGroup = async (params: DeleteGiftGroupRequestParams): Promise<CreateNewGiftGroupResponse> => {
   const { data } = await api.post<CreateNewGiftGroupResponse>(URI.DELETE_GIFT_GROUP, params)
+  return data
+}
+
+export type SendEmailRequestParams = {
+  gift_master_ids: number[]
+}
+export type SendEmailResponse = {
+  success: string
+}
+
+export const sendEmail = async (params: SendEmailRequestParams): Promise<SendEmailResponse> => {
+  const { data } = await api.post<SendEmailResponse>(URI.SEND_EMAIL_FINISH, params)
   return data
 }

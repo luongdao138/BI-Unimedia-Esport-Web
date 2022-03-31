@@ -16,4 +16,5 @@ export enum GIFT_MANAGE_ACTION_TYPE {
   DELETE_GIFT_GROUP = 'gift_manage/gift_group/delete',
   CREATE_NEW_GROUP_UPDATE_GIFT_MASTER = 'gift_manage/gift_group/update_master',
   RELOAD_GIFT_MASTER_LIST = 'gift_manage/gift_master/reload',
+  SEND_EMAIL = 'gift_manage/gift_master/send_email',
 }

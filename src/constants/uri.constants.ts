@@ -203,4 +203,5 @@ export const URI = {
   GET_RANKINGS: 'v2/gift/ranking',
   GET_VIDEO_REPORT_REASON: 'v2/video_player_reports',
   SEND_VIDEO_REPORT: 'v2/video_player_reports',
+  SEND_EMAIL_FINISH: 'v2/gift/sendmail_finish',
 }

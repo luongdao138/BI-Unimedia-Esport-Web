@@ -76,7 +76,14 @@ const useGiftManage = () => {
     })
     const resultAction = await dispatch(actions.addNewGiftMaster({ data, user_id: user?.id }))
     if (actions.addNewGiftMaster.fulfilled.match(resultAction)) {
-      onSuccess()
+      const idGiftMasters = resultAction.payload.data.items.map((x) => x.id)
+      const resultActionSendEmail = await dispatch(actions.sendEmail({ gift_master_ids: idGiftMasters }))
+
+      if (actions.sendEmail.fulfilled.match(resultActionSendEmail)) {
+        onSuccess()
+      } else if (actions.sendEmail.rejected.match(resultActionSendEmail)) {
+        // send email fail
+      }
     } else if (actions.addNewGiftMaster.rejected.match(resultAction)) {
       // console.log('resultAction::', resultAction)
       // // TODO: Show error
