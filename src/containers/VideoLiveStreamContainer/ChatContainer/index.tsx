@@ -63,7 +63,7 @@ import { List, CellMeasurer, AutoSizer, CellMeasurerCache } from 'react-virtuali
 // import InfiniteLoaderExample from './source/InfiniteLoader/InfiniteLoader.example'
 import Loader from '@components/Loader'
 import { useRect } from '@utils/hooks/useRect'
-import ChatInput from './ChatInput'
+import ChatInputContainer from './ChatInputContainer'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
 import ESTabs from '@components/Tabs'
 import ESTab from '@components/Tab'
@@ -234,7 +234,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       VideoContext
     )
     const videoPlayedSecond = useRef(0)
-    console.log('🚀 ~ videoPlayedSecond', videoPlayedSecond?.current)
+    // console.log('🚀 ~ videoPlayedSecond', videoPlayedSecond?.current)
     const videoStreamingSecond = useRef(0)
 
     // const [tab, setTab] = useState(VIDEO_TABS.CHAT)
@@ -254,7 +254,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     const [successFlagGetAddUSer, setSuccessFlagGetAddUSer] = useState(false)
     const [messagesDonate, setMessagesDonate] = useState([])
     const [isSwitchingTab, setIsSwitchingTab] = useState(false)
-    console.log('🚀 ~ messagesDonate', messagesDonate)
+    // console.log('🚀 ~ messagesDonate', messagesDonate)
     // const [displaySeeMore, setDisplaySeeMore] = useState(false)
     // console.log('🚀 ~ displaySeeMore', displaySeeMore)
     const [displayDialogMess, setDisplayDialogMess] = useState(false)
@@ -268,21 +268,21 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     // console.log('🚀 ~ prevToken', prevToken)
     const [isGettingMess, setIsGettingMess] = useState(false)
     const [isGettingTipMess, setIsGettingTipMess] = useState(false)
-    console.log('🚀 ~ isGettingMess', isGettingMess)
+    // console.log('🚀 ~ isGettingMess', isGettingMess)
     const [isGettingPrevRewindMess, setIsGettingPrevRewindMess] = useState(false)
     const [isGettingRewindMess, setIsGettingRewindMess] = useState(false)
     const [cacheMess, setCacheMess] = useState([])
     // save mess tip to cache, when switch tab => get mess in this cache and show
     const [cacheMessTip, setCacheMessTip] = useState([])
-    console.log('🚀 ~ cacheMessTip', cacheMessTip)
-    console.log('🚀 ~ cacheMess', cacheMess)
+    // console.log('🚀 ~ cacheMessTip', cacheMessTip)
+    // console.log('🚀 ~ cacheMess', cacheMess)
     const [rewindMess, setRewindMess] = useState<any>({})
     // console.log('🚀 ~ rewindMess---000', rewindMess)
     const [autoGetMess, setAutoGetMess] = useState<any>([])
     const [archiveInitMess, setArchiveInitMess] = useState([])
     const [cacheDonateMess, setCacheDonateMess] = useState([])
     // const [cacheDonateMessTip, setCacheDonateMessTip] = useState([])
-    console.log('🚀 ~ cacheDonateMess', cacheDonateMess)
+    // console.log('🚀 ~ cacheDonateMess', cacheDonateMess)
     // console.log('🚀 ~ cacheMess', cacheMess)
     const [prevTime, setPrevTime] = useState(0)
     // console.log('🚀 ~ prevTime', prevTime)
@@ -290,8 +290,8 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     // console.log('🚀 ~ nextTime', nextTime)
     const [isTokenBroken, setIsTokenBroken] = useState(false)
     const [isTokenTipBroken, setIsTokenTipBroken] = useState(false)
-    console.log('🚀 ~ isTokenTipBroken', isTokenTipBroken)
-    console.log('🚀 ~ isTokenBroken', isTokenBroken)
+    // console.log('🚀 ~ isTokenTipBroken', isTokenTipBroken)
+    // console.log('🚀 ~ isTokenBroken', isTokenBroken)
     const [videoTimeIsRewinding, setVideoTimeIsRewinding] = useState(0)
     // console.log('🚀 ~ videoTimeIsRewinding', videoTimeIsRewinding)
 
@@ -314,12 +314,12 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
 
     const [initTipMess, setInitTipMess] = useState([])
     const [stateMessages, setStateMessages] = useState([])
-    console.log('🚀 ~ stateMessages---000', stateMessages)
+    // console.log('🚀 ~ stateMessages---000', stateMessages)
 
     const [chatUser, setChatUser] = useState<any>({})
     const theme = useTheme()
     const isMobile = useMediaQuery(theme.breakpoints.down(769)) || isLandscape
-    console.log('🚀 ~ isMobile', isMobile)
+    // console.log('🚀 ~ isMobile', isMobile)
     const { checkVideoNgWord } = useCheckNgWord()
     // const [savedMess, setSavedMess] = useState([])
     // const [savedDonateMess, setSavedDonateMess] = useState([])
@@ -362,9 +362,8 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       successGetListMess &&
       successGetListDonateMess &&
       successGetListMessTip
-    // const isEnabledChat = true
-    console.log('🚀 ~ isEnabledChat', isEnabledChat)
-    console.log('🚀 ~ successGetListMessTip', successGetListMessTip)
+    // console.log('🚀 ~ isEnabledChat', isEnabledChat)
+    // console.log('🚀 ~ successGetListMessTip', successGetListMessTip)
 
     const classes = useStyles({ isLandscape })
 
@@ -927,9 +926,6 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     // console.log('🚀 ~ isStreaming ~ videoPlayedSecond.current', videoPlayedSecond.current)
     // console.log('🚀 ~ isStreaming ~ streamingSecond', streamingSecond)
     const isStreaming = (() => {
-      // console.log('🚀 ~ isStreaming ~ videoType', videoType, videoPlayedSecond.current, streamingSecond)
-      // console.log('🚀 ~ isStreaming ~ videoPlayedSecond.current >= streamingSecond', videoPlayedSecond.current >= streamingSecond)
-      // return true
       if (videoType === STATUS_VIDEO.LIVE_STREAM) {
         return true
         // if (streamingSecond === Infinity) {
@@ -1380,7 +1376,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     const fetchMessTipWhenRewind = (second) => {
       refFetchMessTipWhenRewind.current(second)
     }
-    console.log('🚀 ~ useEffect ~ isSeeking--222', isSeeking)
+    // console.log('🚀 ~ useEffect ~ isSeeking--222', isSeeking)
 
     useEffect(() => {
       if (liveStreamInfo.seek_count && !isStreaming) {
@@ -1539,7 +1535,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     }
     filterMessWhenChangeTime.current = handleFilterMessWhenChangeTime
 
-    console.log('🚀 ~  videoPlayedSecond.current--333', videoPlayedSecond.current)
+    // console.log('🚀 ~  videoPlayedSecond.current--333', videoPlayedSecond.current)
 
     const handleUpdateVideoTime = useRef(null)
     const onUpdateVideoTime = (videoInfo) => {
@@ -1550,7 +1546,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
 
       // update played second
       if (Math.floor(newPlayedSecondTime) !== videoPlayedSecond.current) {
-        console.log('🚀 ~  videoPlayedSecond.current--000', videoPlayedSecond.current)
+        // console.log('🚀 ~  videoPlayedSecond.current--000', videoPlayedSecond.current)
         videoPlayedSecond.current = Math.floor(newPlayedSecondTime)
         filterMessWhenChangeTime.current()
       }
@@ -1902,7 +1898,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
 
     const refCreateMessLocal = useRef(null)
     const handleCreateMessLocal = (result, local_message, error = false) => {
-      console.log('🚀 ~ handleCreateMessLocal ~ result--000', result)
+      // console.log('🚀 ~ handleCreateMessLocal ~ result--000', result)
       if (error) {
         updateOldMessData(local_message, { mess_status: STATUS_SEND_MESS.ERROR_SEND }, 'local_id')
       } else {
@@ -2125,14 +2121,14 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
             <Box className={`${classes.chatInputContainer} ${isEnabledGift ? '' : classes.hideIconGift}`}>
               {purchaseDialogVisible && !isMobile && purchaseInfoDialog()}
               {!isMobile && purchaseButton()}
-              <ChatInput
+              <ChatInputContainer
                 purchaseButton={purchaseButton}
                 isResetMess={isResetMess}
                 handleChatInputOnFocus={handleChatInputOnFocus}
                 handleChatInputOnBlur={handleChatInputOnBlur}
                 setErrorMess={setErrorMess}
                 sendNormalMess={sendNormalMess}
-              ></ChatInput>
+              ></ChatInputContainer>
             </Box>
           ) : (
             <></>

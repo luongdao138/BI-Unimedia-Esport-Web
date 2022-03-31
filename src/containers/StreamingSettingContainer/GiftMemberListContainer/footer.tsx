@@ -76,7 +76,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   [theme.breakpoints.up(960)]: {
     container: {
-      paddingRight: 'calc(100vh/2)',
+      paddingRight: 'calc(100vw/2)',
     },
   },
   actionBtnClose: {
