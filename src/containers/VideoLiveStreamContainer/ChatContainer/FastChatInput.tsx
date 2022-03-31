@@ -10,9 +10,14 @@ export type InputProps = {
   required?: boolean
   nowrapHelperText?: boolean
   size?: 'big' | 'small'
+  isSubmit?: boolean
+  resetErrorOnChange?: () => void
+  valueRef?: React.MutableRefObject<string>
+  inputRef?: React.MutableRefObject<HTMLInputElement>
 }
 
-const ESFastInput: React.FC<OutlinedInputProps & InputProps> = (props) => {
+const ESFastChatInput: React.FC<OutlinedInputProps & InputProps> = (props) => {
+  const { resetErrorOnChange, valueRef, inputRef } = props
   const [tempMessage, setTempMessage] = useState('')
 
   useEffect(() => {
@@ -31,10 +36,12 @@ const ESFastInput: React.FC<OutlinedInputProps & InputProps> = (props) => {
   const handleChange = (e) => {
     e.persist()
     setTempMessage(e.target.value)
+    valueRef.current = e.target.value
     debouncedChangeHandler(e)
+    resetErrorOnChange?.()
   }
 
-  return <ESInput {...props} value={tempMessage} onChange={handleChange} />
+  return <ESInput {...props} inputRef={inputRef} value={tempMessage} onChange={handleChange} />
 }
 
-export default memo(ESFastInput)
+export default memo(ESFastChatInput)

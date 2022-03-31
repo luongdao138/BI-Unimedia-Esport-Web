@@ -3,10 +3,10 @@ import i18n from '@locales/i18n'
 import { Box, Button, InputAdornment, makeStyles } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import { useFormik } from 'formik'
-import React, { memo, useCallback, useEffect, useState } from 'react'
+import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
 import * as Yup from 'yup'
 import { sanitizeMess } from './index'
-import ESFastInput from '@components/FastInput'
+import EsFastChatInput from './FastChatInput'
 
 type MessageValidationType = {
   message: string
@@ -28,7 +28,7 @@ const validationSchema = Yup.object().shape({
     .trim(),
 })
 
-const ChatInput: React.FC<ChatInputProps> = ({
+const ChatInputContainer: React.FC<ChatInputProps> = ({
   isResetMess,
   handleChatInputOnFocus,
   handleChatInputOnBlur,
@@ -37,7 +37,10 @@ const ChatInput: React.FC<ChatInputProps> = ({
   purchaseButton,
 }) => {
   const [isFocusedInput, setIsFocusedInput] = useState(false)
-  const [isSubmit, setIsSubmit] = useState(false)
+  const inputRef = useRef<HTMLInputElement>(null)
+  const valueRef = useRef<string>('')
+  const isMountRef = useRef<boolean>(false)
+
   const { handleChange, values, handleSubmit, errors, resetForm, setFieldValue, setFieldError } = useFormik<MessageValidationType>({
     initialValues: {
       message: '',
@@ -49,26 +52,33 @@ const ChatInput: React.FC<ChatInputProps> = ({
     validateOnChange: false,
   })
 
-  const submitFormUpdate = useCallback((tempMessage: string) => {
-    if (tempMessage) {
-      setFieldValue('message', tempMessage).then(() => {
+  const submitForm = useCallback(() => {
+    if (valueRef.current) {
+      setFieldValue('message', valueRef.current).then(() => {
         handleSubmit()
       })
     } else {
       handleSubmit()
     }
-    setIsSubmit(false)
   }, [])
-  const cbOnChange = useCallback(() => {
+
+  const resetErrorOnChange = useCallback(() => {
     if (errors.message) {
       setFieldError('message', undefined)
     }
-  }, [])
+  }, [errors.message])
 
   const classes = useStyles()
 
   useEffect(() => {
     resetForm()
+    valueRef.current = ''
+
+    if (!isMountRef.current) {
+      isMountRef.current = true
+      return
+    }
+    inputRef.current.focus()
   }, [isResetMess])
 
   useEffect(() => {
@@ -81,17 +91,17 @@ const ChatInput: React.FC<ChatInputProps> = ({
 
   const handlePressEnter = (event: any) => {
     if (event.key === 'Enter') {
-      setIsSubmit(true)
+      submitForm()
     }
   }
   return (
     <Box className={classes.chatBox}>
       <Box className={classes.spPurchaseButton}>{purchaseButton()}</Box>
-      <ESFastInput
+      <EsFastChatInput
         id={'message'}
         name="message"
-        isSubmit={isSubmit}
-        submitFormUpdate={submitFormUpdate}
+        valueRef={valueRef}
+        inputRef={inputRef}
         onChange={handleChange}
         placeholder={i18n.t('common:live_stream_screen.message_placeholder')}
         value={values.message}
@@ -108,14 +118,14 @@ const ChatInput: React.FC<ChatInputProps> = ({
         helperText={errors?.message}
         error={Boolean(errors.message)}
         onKeyPress={handlePressEnter}
-        cbOnChange={cbOnChange}
+        resetErrorOnChange={resetErrorOnChange}
         endAdornment={
           <LoginRequired>
             <InputAdornment
               position="end"
               className={classes.button_send_sp}
               onClick={() => {
-                setIsSubmit(true)
+                submitForm()
               }}
             >
               {isFocusedInput ? <img src="/images/send_icon_pink_sp.svg" /> : <img src="/images/send_icon_white_sp.svg" />}
@@ -126,7 +136,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
       <LoginRequired>
         <Button
           onClick={() => {
-            setIsSubmit(true)
+            submitForm()
           }}
           className={classes.iconButtonBg}
         >
@@ -138,7 +148,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
   )
 }
 
-export default memo(ChatInput, (prevProps, nextProps) => {
+export default memo(ChatInputContainer, (prevProps, nextProps) => {
   if (prevProps.isResetMess !== nextProps.isResetMess) {
     return false
   }

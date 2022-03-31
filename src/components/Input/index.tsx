@@ -1,7 +1,7 @@
 import { OutlinedInput, OutlinedInputProps, FormHelperText, FormControl, Box, Typography } from '@material-ui/core'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
-import { MutableRefObject, ReactElement } from 'react'
+import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
 export type InputProps = {
@@ -12,7 +12,7 @@ export type InputProps = {
   required?: boolean
   size?: 'big' | 'small'
   noValue?: boolean
-  inputRef?: MutableRefObject<HTMLInputElement>
+  inputRef?: any
 }
 
 const ESInput: React.FC<OutlinedInputProps & InputProps> = ({
@@ -28,6 +28,8 @@ const ESInput: React.FC<OutlinedInputProps & InputProps> = ({
 }) => {
   const classes = useStyles({ hasSecondary: !!labelSecondary, isBig: size === 'big', isNumber: rest.type === 'number' })
   const { t } = useTranslation(['common'])
+
+  const refProp = inputRef ? { inputRef } : {}
 
   return (
     <FormControl fullWidth={rest.fullWidth} className={nowrapHelperText ? classes.nowrapHelperText : ''}>
@@ -49,7 +51,7 @@ const ESInput: React.FC<OutlinedInputProps & InputProps> = ({
           {labelSecondary}
         </Box>
       )}
-      {!noValue && <OutlinedInput inputRef={inputRef} classes={{ root: classes.root, adornedEnd: classes.end }} margin="dense" {...rest} />}
+      {!noValue && <OutlinedInput {...refProp} classes={{ root: classes.root, adornedEnd: classes.end }} margin="dense" {...rest} />}
       {helperText && <FormHelperText error>{helperText}</FormHelperText>}
     </FormControl>
   )

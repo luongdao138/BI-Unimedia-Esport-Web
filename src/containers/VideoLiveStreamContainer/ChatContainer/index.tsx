@@ -63,7 +63,7 @@ import { List, CellMeasurer, AutoSizer, CellMeasurerCache } from 'react-virtuali
 // import InfiniteLoaderExample from './source/InfiniteLoader/InfiniteLoader.example'
 import Loader from '@components/Loader'
 import { useRect } from '@utils/hooks/useRect'
-import ChatInput from './ChatInput'
+import ChatInputContainer from './ChatInputContainer'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
 import ESTabs from '@components/Tabs'
 import ESTab from '@components/Tab'
@@ -355,14 +355,13 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     const { dataPurchaseTicketSuperChat } = usePurchaseTicketSuperChat()
     // const dispatch = useAppDispatch()
 
-    // const isEnabledChat =
-    //   videoType === STATUS_VIDEO.LIVE_STREAM &&
-    //   !liveStreamInfo.is_end_live &&
-    //   (+streamingSecond >= 0 || streamingSecond === Infinity) &&
-    //   successGetListMess &&
-    //   successGetListDonateMess &&
-    //   successGetListMessTip
-    const isEnabledChat = true
+    const isEnabledChat =
+      videoType === STATUS_VIDEO.LIVE_STREAM &&
+      !liveStreamInfo.is_end_live &&
+      (+streamingSecond >= 0 || streamingSecond === Infinity) &&
+      successGetListMess &&
+      successGetListDonateMess &&
+      successGetListMessTip
     // console.log('🚀 ~ isEnabledChat', isEnabledChat)
     // console.log('🚀 ~ successGetListMessTip', successGetListMessTip)
 
@@ -927,20 +926,16 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     // console.log('🚀 ~ isStreaming ~ videoPlayedSecond.current', videoPlayedSecond.current)
     // console.log('🚀 ~ isStreaming ~ streamingSecond', streamingSecond)
     const isStreaming = (() => {
-      return true
-      // console.log('🚀 ~ isStreaming ~ videoType', videoType, videoPlayedSecond.current, streamingSecond)
-      // console.log('🚀 ~ isStreaming ~ videoPlayedSecond.current >= streamingSecond', videoPlayedSecond.current >= streamingSecond)
-      // return true
-      // if (videoType === STATUS_VIDEO.LIVE_STREAM) {
-      // return true
-      // if (streamingSecond === Infinity) {
-      //   return true
-      // }
-      // if (videoPlayedSecond.current >= streamingSecond) {
-      //   return true
-      // }
-      // }
-      // return false
+      if (videoType === STATUS_VIDEO.LIVE_STREAM) {
+        return true
+        // if (streamingSecond === Infinity) {
+        //   return true
+        // }
+        // if (videoPlayedSecond.current >= streamingSecond) {
+        //   return true
+        // }
+      }
+      return false
     })()
 
     const renderLoader = () => {
@@ -2044,14 +2039,13 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
           }
         }
 
-        // luongcomment
-        // try {
-        //   const result = await API.graphql(graphqlOperation(createMessage, { input }))
-        //   refCreateMessLocal.current(result, local_message)
-        // } catch (errors) {
-        //   if (errors && errors.errors.length !== 0) refCreateMessLocal.current([], local_message, true)
-        //   console.error(errors)
-        // }
+        try {
+          const result = await API.graphql(graphqlOperation(createMessage, { input }))
+          refCreateMessLocal.current(result, local_message)
+        } catch (errors) {
+          if (errors && errors.errors.length !== 0) refCreateMessLocal.current([], local_message, true)
+          console.error(errors)
+        }
       }
     }
 
@@ -2127,14 +2121,14 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
             <Box className={`${classes.chatInputContainer} ${isEnabledGift ? '' : classes.hideIconGift}`}>
               {purchaseDialogVisible && !isMobile && purchaseInfoDialog()}
               {!isMobile && purchaseButton()}
-              <ChatInput
+              <ChatInputContainer
                 purchaseButton={purchaseButton}
                 isResetMess={isResetMess}
                 handleChatInputOnFocus={handleChatInputOnFocus}
                 handleChatInputOnBlur={handleChatInputOnBlur}
                 setErrorMess={setErrorMess}
                 sendNormalMess={sendNormalMess}
-              ></ChatInput>
+              ></ChatInputContainer>
             </Box>
           ) : (
             <></>
