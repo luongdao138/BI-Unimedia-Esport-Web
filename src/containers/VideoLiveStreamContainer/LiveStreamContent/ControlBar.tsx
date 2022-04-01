@@ -229,6 +229,7 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
           )}
         </div>
         <div className={classes.controlRight}>
+          {/* toggle theater mode button */}
           {!isFull && (
             <div
               ref={tooltipRef}
@@ -249,6 +250,8 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
               />
             </div>
           )}
+
+          {/* Toggle mini player button */}
           <Box className={classes.buttonNormal} onClick={handleOnMiniPlayerClick} data-tip data-for="toggleMiniPlayer" id={'miniPlayerRef'}>
             <img src={'/images/ic_mini_player.svg'} />
             <PlayerTooltip
@@ -268,7 +271,8 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
               closeSettingPanel()
             }}
           >
-            <Box display={'flex'}>
+            <Box display={'flex'} ml={isLive ? '-16px' : '0'}>
+              {/* Speed button */}
               {!isLive && (
                 <Box
                   onClick={handleOnPlaySpeedButtonClick}
@@ -290,6 +294,7 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
                 </Box>
               )}
 
+              {/* Setting button */}
               <Box
                 className={classes.buttonNormal}
                 onClick={handleOnSettingButtonClick}
