@@ -29,7 +29,7 @@ declare global {
 const googleAdId = process.env.GADS_CLIENT_ID
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const GoogleAd: React.FC<Props> = ({ style, id, slot, styleContainer, idTag = 'ads', currenPath }) => {
+const GoogleAd: React.FC<Props> = ({ id, slot, styleContainer, idTag = 'ads', currenPath }) => {
   //timeout = 2000,
   //   const classes = useStyles()
   const theme = useTheme()
@@ -61,12 +61,12 @@ const GoogleAd: React.FC<Props> = ({ style, id, slot, styleContainer, idTag = 'a
       // if (googleInit) clearTimeout(googleInit)
     }
   }, [currenPath])
-  const styles = {
-    display: 'block',
-    height: screenDownSP ? 50 : 90,
-    // background: 'red',
-    width: screenDownSP ? 300 : '100%',
-  }
+  // const styles = {
+  //   display: 'block',
+  //   height: screenDownSP ? 50 : 90,
+  //   // background: 'red',
+  //   width: screenDownSP ? 300 : '100%',
+  // }
   // console.log('-check log google tag: screenDownSP: ', screenDownSP, ' ---id: ', JSON.stringify(id))
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   //@ts-ignore
@@ -90,7 +90,7 @@ const GoogleAd: React.FC<Props> = ({ style, id, slot, styleContainer, idTag = 'a
         id.idPatten1 ? 'google_ad_patten_1' : id.idPatten3 ? 'google_ad_patten_3' : 'google_ad_patten_4'
       } ${'banner-ads'}-${windowDimensions}`}
       style={styleContainer}
-      key={currenPath}
+      key={currenPath || window.location.href}
     >
       <div
         style={{
@@ -104,7 +104,13 @@ const GoogleAd: React.FC<Props> = ({ style, id, slot, styleContainer, idTag = 'a
         {slot ? (
           <ins
             className={`adsbygoogle ${'window-ads'}-${windowDimensions}`}
-            style={{ ...styles, ...style }}
+            // style={{ ...styles, ...style }}
+            style={{
+              display: 'block',
+              height: screenDownSP ? '50px' : '90px',
+              // background: 'red',
+              width: screenDownSP ? '300px' : '100%',
+            }}
             data-ad-client={googleAdId}
             data-ad-format=""
             data-ad-slot={slot}
@@ -113,7 +119,13 @@ const GoogleAd: React.FC<Props> = ({ style, id, slot, styleContainer, idTag = 'a
         ) : (
           <ins
             className={`adsbygoogle ${'window-ads'}-${windowDimensions}`}
-            style={{ ...styles, ...style }}
+            // style={{ ...styles, ...style }}
+            style={{
+              display: 'block',
+              height: screenDownSP ? '50px' : '90px',
+              // background: 'red',
+              width: screenDownSP ? '300px' : '100%',
+            }}
             data-ad-client={googleAdId}
             data-ad-format=""
             data-full-width-responsive="true"
