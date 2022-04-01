@@ -1,5 +1,5 @@
 import { OutlinedInputProps } from '@material-ui/core'
-import { ReactElement, useCallback, useEffect, useState } from 'react'
+import { memo, ReactElement, useCallback, useEffect, useState } from 'react'
 import ESInput from '@components/Input'
 import _ from 'lodash'
 
@@ -37,4 +37,4 @@ const ESFastInput: React.FC<OutlinedInputProps & InputProps> = (props) => {
   return <ESInput {...props} value={tempMessage} onChange={handleChange} />
 }
 
-export default ESFastInput
+export default memo(ESFastInput)

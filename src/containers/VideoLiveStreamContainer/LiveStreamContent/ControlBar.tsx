@@ -345,7 +345,14 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
           </ClickAwayListener>
           {/* end setting panel area */}
 
-          <Box className={classes.buttonNormal} onClick={toggleFullScreen} data-tip data-for="toggleFullScreen" id={'fullscreenRef'}>
+          <Box
+            className={classes.buttonNormal}
+            style={{ paddingLeft: 0 }}
+            onClick={toggleFullScreen}
+            data-tip
+            data-for="toggleFullScreen"
+            id={'fullscreenRef'}
+          >
             {!isFull ? (
               <img src={'/images/ic_full_screen.svg'} />
             ) : (
