@@ -16,6 +16,8 @@ import {
   GetGiftGroupDetailRequestParams,
   GetGiftGroupDetailResponse,
   DeleteGiftGroupRequestParams,
+  SendEmailResponse,
+  SendEmailRequestParams,
 } from '@services/gift.service'
 
 export type TargetPersonType = {
@@ -76,6 +78,25 @@ export const addNewGiftMaster = createAsyncThunk<AddNewGiftMasterResponse, AddNe
         return res
       } else {
         return rejectWithValue(res.data.url)
+      }
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
+export const sendEmail = createAsyncThunk<SendEmailResponse, SendEmailRequestParams>(
+  GIFT_MANAGE_ACTION_TYPE.SEND_EMAIL,
+  async (requestParams, { rejectWithValue }) => {
+    try {
+      const res = await services.sendEmail(requestParams)
+      if (res.success === 'success') {
+        return res
+      } else {
+        return rejectWithValue(res)
       }
     } catch (error) {
       if (!error.response) {

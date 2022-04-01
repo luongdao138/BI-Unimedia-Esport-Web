@@ -1,6 +1,7 @@
 import ESAvatar from '@components/Avatar'
 import { Box, makeStyles, TableCell, TableRow, Typography } from '@material-ui/core'
 import { TicketsResponse } from '@services/deliveryReport.service'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
 import { DateHelper } from '@utils/helpers/DateHelper'
 import { FormatHelper } from '@utils/helpers/FormatHelper'
 import React from 'react'
@@ -17,7 +18,7 @@ const ItemTicket: React.FC<TicketsResponse> = (props) => {
           <ESAvatar src={image_url} alt={nickname} />
           <Box ml={1} display="flex" justifyContent="center" flexDirection="column">
             <Typography className={classes.name}>{nickname}</Typography>
-            <Typography className={classes.userCode}>{user_code ? user_code : '-'}</Typography>
+            <Typography className={classes.userCode}>{user_code ? CommonHelper.insertSymbolToFirstString('@', user_code) : '-'}</Typography>
           </Box>
         </Box>
       </TableCell>
