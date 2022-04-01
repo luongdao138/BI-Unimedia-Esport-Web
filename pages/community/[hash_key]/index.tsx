@@ -32,7 +32,7 @@ const CommunityDetailPage: PageWithLayoutType = () => {
 
   useEffect(() => {
     GTMHelper.getAdSlot()
-    setSlotDataLayer(GTMHelper.getDataSlot(window?.dataLayer, GTMHelper.SCREEN_NAME_ADS.COMMUNITY_DETAIL))
+    setSlotDataLayer(GTMHelper.getDataSlot(window?.dataLayer, GTMHelper.SCREEN_NAME_ADS.COMMUNITY_DETAIL, screenDownSP))
   }, [screenDownSP])
   return (
     <>

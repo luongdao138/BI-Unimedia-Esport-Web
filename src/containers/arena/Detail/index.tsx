@@ -23,6 +23,7 @@ import BRStatusInProgress from './Partials/BRStatusInProgress'
 import BRStatusComplete from './Partials/BRStatusComplete'
 import GoogleAd from '@components/GoogleAd'
 import { GTMHelper } from '@utils/helpers/SendGTM'
+import { useMediaQuery, useTheme } from '@material-ui/core'
 
 const TournamentDetail: React.FC = () => {
   const { tournament, meta, userProfile, handleBack } = useTournamentDetail()
@@ -30,6 +31,9 @@ const TournamentDetail: React.FC = () => {
   const { toEdit, isBattleRoyale } = useArenaHelper(tournament)
   const router = useRouter()
   const [slotDataLayer, setSlotDataLayer] = useState('')
+  const theme = useTheme()
+  const screenDownSP = useMediaQuery(theme.breakpoints.down(576))
+
   const actionComponent: Record<TournamentStatus, ReactNode> = {
     in_progress: <InProgress tournament={tournament} userProfile={userProfile} />, //headset
     cancelled: <Cancelled tournament={tournament} userProfile={userProfile} />,
@@ -51,8 +55,8 @@ const TournamentDetail: React.FC = () => {
   }
   useEffect(() => {
     GTMHelper.getAdSlot()
-    setSlotDataLayer(GTMHelper.getDataSlot(window?.dataLayer, GTMHelper.SCREEN_NAME_ADS.ARENA_DETAIL))
-  }, [])
+    setSlotDataLayer(GTMHelper.getDataSlot(window?.dataLayer, GTMHelper.SCREEN_NAME_ADS.ARENA_DETAIL, screenDownSP))
+  }, [screenDownSP])
 
   return (
     <>

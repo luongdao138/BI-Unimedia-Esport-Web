@@ -50,7 +50,7 @@ const NotificationContainer: React.FC = () => {
   }
   useEffect(() => {
     GTMHelper.getAdSlot()
-    setSlotDataLayer(GTMHelper.getDataSlot(window?.dataLayer, GTMHelper.SCREEN_NAME_ADS.NOTIFICATION))
+    setSlotDataLayer(GTMHelper.getDataSlot(window?.dataLayer, GTMHelper.SCREEN_NAME_ADS.NOTIFICATION, screenDownSP))
   }, [screenDownSP])
 
   return (

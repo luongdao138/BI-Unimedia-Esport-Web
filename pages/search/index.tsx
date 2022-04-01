@@ -77,7 +77,7 @@ const SearchPage: PageWithLayoutType = () => {
   }
   useEffect(() => {
     GTMHelper.getAdSlot()
-    setSlotDataLayer(GTMHelper.getDataSlot(window?.dataLayer, GTMHelper.SCREEN_NAME_ADS.SEARCH))
+    setSlotDataLayer(GTMHelper.getDataSlot(window?.dataLayer, GTMHelper.SCREEN_NAME_ADS.SEARCH, screenDownSP))
   }, [screenDownSP])
 
   return (

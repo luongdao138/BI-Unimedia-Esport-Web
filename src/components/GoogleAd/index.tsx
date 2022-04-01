@@ -29,7 +29,7 @@ declare global {
 const googleAdId = process.env.GADS_CLIENT_ID
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const GoogleAd: React.FC<Props> = ({ id, slot, styleContainer, idTag = 'ads', currenPath }) => {
+const GoogleAd: React.FC<Props> = ({ style, id, slot, styleContainer, idTag = 'ads', currenPath }) => {
   //timeout = 2000,
   //   const classes = useStyles()
   const theme = useTheme()
@@ -61,16 +61,16 @@ const GoogleAd: React.FC<Props> = ({ id, slot, styleContainer, idTag = 'ads', cu
       // if (googleInit) clearTimeout(googleInit)
     }
   }, [currenPath])
-  // const styles = {
-  //   display: 'block',
-  //   height: screenDownSP ? 50 : 90,
-  //   // background: 'red',
-  //   width: screenDownSP ? 300 : '100%',
-  // }
+  const styles = {
+    display: 'block',
+    height: screenDownSP ? 50 : 90,
+    // background: 'red',
+    width: screenDownSP ? 300 : '100%',
+  }
   // console.log('-check log google tag: screenDownSP: ', screenDownSP, ' ---id: ', JSON.stringify(id))
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   //@ts-ignore
-  console.log('TAG MAN======', window.innerWidth)
+  console.log('TAG MAN======', window.location.href, slot)
 
   return (
     // <>
@@ -101,26 +101,24 @@ const GoogleAd: React.FC<Props> = ({ id, slot, styleContainer, idTag = 'ads', cu
           display: 'flex',
         }}
       >
-        {/* {slot ? ( */}
-        <ins
-          className={`adsbygoogle ${'window-ads'}-${windowDimensions}`}
-          // style={{ ...styles, ...style }}
-          style={{ display: 'block', width: '300px', height: '50px', background: 'red' }}
-          data-ad-client={googleAdId}
-          data-ad-format=""
-          data-ad-slot={slot}
-          data-full-width-responsive="true"
-        />
-        {/* // ) : (
-        //   <ins */}
-        {/* //     className={`adsbygoogle ${'window-ads'}-${windowDimensions}`}
-        //     // style={{ ...styles, ...style }}
-        //     style={{display:'block',width:'300px', height:'50px', background:'red'}}
-        //     data-ad-client={googleAdId}
-        //     data-ad-format=""
-        //     data-full-width-responsive="true"
-        //   />
-        // )} */}
+        {slot ? (
+          <ins
+            className={`adsbygoogle ${'window-ads'}-${windowDimensions}`}
+            style={{ ...styles, ...style }}
+            data-ad-client={googleAdId}
+            data-ad-format=""
+            data-ad-slot={slot}
+            data-full-width-responsive="true"
+          />
+        ) : (
+          <ins
+            className={`adsbygoogle ${'window-ads'}-${windowDimensions}`}
+            style={{ ...styles, ...style }}
+            data-ad-client={googleAdId}
+            data-ad-format=""
+            data-full-width-responsive="true"
+          />
+        )}
       </div>
     </div>
   )

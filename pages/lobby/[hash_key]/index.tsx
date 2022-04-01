@@ -31,7 +31,7 @@ const LobbyPage: PageWithLayoutType = () => {
   const screenDownSP = useMediaQuery(theme.breakpoints.down(576))
   useEffect(() => {
     GTMHelper.getAdSlot()
-    setSlotDataLayer(GTMHelper.getDataSlot(window?.dataLayer, GTMHelper.SCREEN_NAME_ADS.LOBBY_DETAIL))
+    setSlotDataLayer(GTMHelper.getDataSlot(window?.dataLayer, GTMHelper.SCREEN_NAME_ADS.LOBBY_DETAIL, screenDownSP))
   }, [screenDownSP])
   return (
     <MainLayout loginRequired={false}>

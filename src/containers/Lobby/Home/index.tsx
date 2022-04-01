@@ -126,7 +126,7 @@ const LobbyHome: React.FC<LobbyHomeProps> = ({ filter }) => {
   }
   useEffect(() => {
     GTMHelper.getAdSlot()
-    setSlotDataLayer(GTMHelper.getDataSlot(window?.dataLayer, GTMHelper.SCREEN_NAME_ADS.LOBBY))
+    setSlotDataLayer(GTMHelper.getDataSlot(window?.dataLayer, GTMHelper.SCREEN_NAME_ADS.LOBBY, screenDownSP))
   }, [screenDownSP])
 
   return (

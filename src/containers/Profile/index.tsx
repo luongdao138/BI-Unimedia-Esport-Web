@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { withRouter, NextRouter } from 'next/router'
-import { Box, Grid, Typography, IconButton, Icon, Theme } from '@material-ui/core'
+import { Box, Grid, Typography, IconButton, Icon, Theme, useMediaQuery } from '@material-ui/core'
 import i18n from '@locales/i18n'
 import ProfileAvatar from '@components/ProfileAvatar'
 import ProfileCover from '@components/ProfileCover'
@@ -12,7 +12,7 @@ import ESMenuItem from '@components/Menu/MenuItem'
 import TournamentHistoryContainer from '@containers/Profile/TournamentHistory'
 import ActivityLogsContainer from '@containers/Profile/ActivityLogs'
 import ProfileMainContainer from '@containers/Profile/ProfileMain'
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles, useTheme } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
 import useUserData from './useUserData'
 import useBlock from './useBlock'
@@ -51,6 +51,8 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
   const [offset, setOffset] = useState(0)
   const { makeContextualHref } = useContextualRouting()
   const [slotDataLayer, setSlotDataLayer] = useState('')
+  const theme = useTheme()
+  const screenDownSP = useMediaQuery(theme.breakpoints.down(576))
 
   const raw_code = _.isEmpty(router.query.user_code)
     ? null
@@ -72,9 +74,6 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
   } = useUserData(raw_code)
 
   useEffect(() => {
-    GTMHelper.getAdSlot()
-    setSlotDataLayer(GTMHelper.getDataSlot(window?.dataLayer, GTMHelper.SCREEN_NAME_ADS.PROFILE))
-
     const handleScroll = () => {
       setOffset(window.pageYOffset)
     }
@@ -84,6 +83,11 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
       clearMemberProfile()
     }
   }, [])
+
+  useEffect(() => {
+    GTMHelper.getAdSlot()
+    setSlotDataLayer(GTMHelper.getDataSlot(window?.dataLayer, GTMHelper.SCREEN_NAME_ADS.PROFILE, screenDownSP))
+  }, [screenDownSP])
 
   useEffect(() => {
     if (router.isReady) {

@@ -48,7 +48,7 @@ const HomeContainer: React.FC = () => {
 
   useEffect(() => {
     GTMHelper.getAdSlot()
-    setSlotDataLayer(GTMHelper.getDataSlot(window?.dataLayer, GTMHelper.SCREEN_NAME_ADS.HOME))
+    setSlotDataLayer(GTMHelper.getDataSlot(window?.dataLayer, GTMHelper.SCREEN_NAME_ADS.HOME, screenDownSP))
   }, [screenDownSP])
 
   const renderItem = (value: string, index: number) => {

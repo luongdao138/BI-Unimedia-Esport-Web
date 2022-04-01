@@ -24,9 +24,10 @@ const TournamentHeader: React.FC<TournamentHeaderProps> = ({ title, status, chil
   const classes = useStyles()
   const [tab, setTab] = useState(4)
   const [slotDataLayer, setSlotDataLayer] = useState('')
+  const theme = useTheme()
+  const screenDownSP = useMediaQuery(theme.breakpoints.down(576))
+
   useEffect(() => {
-    GTMHelper.getAdSlot()
-    setSlotDataLayer(GTMHelper.getDataSlot(window?.dataLayer, GTMHelper.SCREEN_NAME_ADS.ARENA_DETAIL))
     switch (status) {
       case 'ready':
         setTab(0)
@@ -48,6 +49,12 @@ const TournamentHeader: React.FC<TournamentHeaderProps> = ({ title, status, chil
         setTab(5)
     }
   }, [status])
+
+  useEffect(() => {
+    GTMHelper.getAdSlot()
+    setSlotDataLayer(GTMHelper.getDataSlot(window?.dataLayer, GTMHelper.SCREEN_NAME_ADS.ARENA_DETAIL, screenDownSP))
+  }, [screenDownSP])
+
   return (
     <>
       <div id={'ad_arena_detail_top'} className={'google_ad_patten_1'} style={{ marginTop: 60 }} />

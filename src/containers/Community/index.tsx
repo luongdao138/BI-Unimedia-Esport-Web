@@ -154,7 +154,7 @@ const CommunityContainer: React.FC<CommunityContainerProps> = ({ filter }) => {
 
   useEffect(() => {
     GTMHelper.getAdSlot()
-    setSlotDataLayer(GTMHelper.getDataSlot(window?.dataLayer, GTMHelper.SCREEN_NAME_ADS.COMMUNITY))
+    setSlotDataLayer(GTMHelper.getDataSlot(window?.dataLayer, GTMHelper.SCREEN_NAME_ADS.COMMUNITY, screenDownSP))
   }, [screenDownSP])
 
   return (

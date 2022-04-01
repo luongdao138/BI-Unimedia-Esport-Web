@@ -26,7 +26,7 @@ function getAdSlot() {
   })
 }
 
-const getDataSlot = (dataLayers, screen) => {
+const getDataSlot = (dataLayers, screen, screenDownSP) => {
   const data = dataLayers.find((i) => i.get_display_status_ads)
   console.log('getDataSlot data layer===>>', dataLayers, '-----30----getDataSlot: ', JSON.stringify(data))
   if (data && data?.get_display_status_ads) {
@@ -34,8 +34,10 @@ const getDataSlot = (dataLayers, screen) => {
     console.log('filter DATA SLOT==>', data, objectStatusAds)
     const objKeys = Object.keys(objectStatusAds)
     const findData = objKeys.find((i) => i === screen)
-    const dataSlot = objectStatusAds[findData]?.googleAds?.data_ad_slot
-    console.log('====getDataSlot====', dataSlot)
+    const dataSlotPC = objectStatusAds[findData]?.googleAds?.data_ad_slot_pc
+    const dataSlotSP = objectStatusAds[findData]?.googleAds?.data_ad_slot_sp
+    const dataSlot = screenDownSP ? dataSlotSP : dataSlotPC
+    console.log('======dataSlotPC=', dataSlotPC, 'dataSlotSP=', dataSlotSP, 'dataSlot=', dataSlot)
     return dataSlot
   }
 }
