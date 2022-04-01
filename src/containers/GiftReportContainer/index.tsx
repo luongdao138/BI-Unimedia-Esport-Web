@@ -4,7 +4,6 @@ import ESLoader from '@components/Loader'
 import ESTab from '@components/Tab'
 import ESTable from '@components/Table'
 import ESTabs from '@components/Tabs'
-import { ESRoutes } from '@constants/route.constants'
 import useDetailVideo from '@containers/VideoLiveStreamContainer/useDetailVideo'
 import i18n from '@locales/i18n'
 import { Box, Grid, makeStyles, TableCell, TableRow, Typography } from '@material-ui/core'
@@ -254,10 +253,7 @@ const GiftReportContainer: React.FC<{ default_tab: any }> = ({ default_tab }) =>
 
   return (
     <>
-      <HeaderWithButtonStream
-        title={t('streaming_gift_report_screen.delivery_report')}
-        onClickBack={() => router.push(ESRoutes.VIDEO_STREAMING_MANAGEMENT)}
-      />
+      <HeaderWithButtonStream title={t('streaming_gift_report_screen.delivery_report')} onClickBack={() => router.back()} />
       <Box className={classes.giftReportContainer}>
         <Grid container direction="column" className={classes.giftReportContent}>
           {getTabs()}

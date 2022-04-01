@@ -40,7 +40,7 @@ const ArchiveDetailFromLiveContainer: React.FC<Props> = ({ isFromSchedule }) => 
 
   return (
     <div>
-      <HeaderWithButton title={t('archive_detail_screen.title')} />
+      <HeaderWithButton title={t('archived_list_screen.title')} />
       <Box className={classes.wrapper}>
         <Steps step={step} onNext={onChangeStep} category={categoryData} formik={formikArchiveDetail} isFromSchedule={isFromSchedule} />
       </Box>

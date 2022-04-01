@@ -250,7 +250,7 @@ const Steps: React.FC<StepsProps> = ({
   return (
     <Box py={4} className={classes.container}>
       <Box className={classes.formContainer}>
-        <Typography className={classes.textTitleReup}>{i18n.t('common:archived_list_screen.title')}</Typography>
+        <Typography className={classes.textTitleReup}>{i18n.t('common:archive_detail_screen.title')}</Typography>
         <form onSubmit={formik.handleSubmit}>
           {/* link url */}
           <Box className={classes.wrap_input} display="flex" flexDirection="row" alignItems="flex-end">
