@@ -108,7 +108,7 @@ const GoogleAd: React.FC<Props> = ({ style, id, slot, styleContainer, idTag = 'a
             data-ad-client={googleAdId}
             data-ad-format=""
             data-ad-slot={slot}
-            data-full-width-responsive="true"
+            // data-full-width-responsive="true"
           />
         ) : (
           <ins
