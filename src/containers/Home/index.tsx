@@ -17,6 +17,7 @@ import { RecentLobbies } from '@containers/Home/elements/Slider/RecentLobbies'
 import { RecommendedLobbies } from './elements/Slider/RecommendedLobbies'
 import GoogleAd from '@components/GoogleAd'
 import { GTMHelper } from '@utils/helpers/SendGTM'
+import GoogleAdTest from '@components/GoogleAd/GoogleAdTest'
 
 const HomeContainer: React.FC = () => {
   const { recommendedUsers, getUserRecommendations, homeSettings, getUserProfile, metaHomeSettings } = useUserData()
@@ -87,6 +88,9 @@ const HomeContainer: React.FC = () => {
       <Box marginBottom={9} />
       {screenDownSP && (
         <GoogleAd id={{ idPatten3: 'ad_home_b' }} idTag={'ad_home_b'} slot={slotDataLayer} currenPath={window.location.href} />
+      )}
+      {screenDownSP && (
+        <GoogleAdTest id={{ idPatten3: 'ad_home_b1' }} slot={slotDataLayer} idTag={'ad_home_b1'} currenPath={window.location.href} />
       )}
       {screenDownSP && <div id={'ad_home_bottom'} className="ad_home_b google_ad_patten_3" />}
     </>
