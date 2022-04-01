@@ -103,7 +103,7 @@ const GoogleAd: React.FC<Props> = ({ id, slot, styleContainer, idTag = 'ads', cu
       >
         {slot ? (
           <ins
-            className={`adsbygoogle ${'window-ads'}-${windowDimensions}`}
+            className="adsbygoogle"
             // style={{ ...styles, ...style }}
             style={{
               display: 'block',
@@ -112,13 +112,13 @@ const GoogleAd: React.FC<Props> = ({ id, slot, styleContainer, idTag = 'ads', cu
               width: screenDownSP ? '300px' : '100%',
             }}
             data-ad-client={googleAdId}
-            data-ad-format=""
+            // data-ad-format=""
             data-ad-slot={slot}
             // data-full-width-responsive="true"
           />
         ) : (
           <ins
-            className={`adsbygoogle ${'window-ads'}-${windowDimensions}`}
+            className="adsbygoogle"
             // style={{ ...styles, ...style }}
             style={{
               display: 'block',
