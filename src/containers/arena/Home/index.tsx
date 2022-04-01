@@ -127,7 +127,7 @@ const ArenaHome: React.FC<ArenaHomeProps> = ({ filter }) => {
 
   useEffect(() => {
     GTMHelper.getAdSlot()
-    console.log('window.dataLayer ====================>', window?.dataLayer, window.location.href)
+    console.log('window.dataLayer ====================>', window?.dataLayer, window.location.href, slotDataLayer)
     setSlotDataLayer(GTMHelper.getDataSlot(window?.dataLayer, GTMHelper.SCREEN_NAME_ADS.ARENA))
   }, [screenDownSP])
   return (
@@ -140,7 +140,8 @@ const ArenaHome: React.FC<ArenaHomeProps> = ({ filter }) => {
       <GoogleAd
         id={{ idPatten1: !screenDownSP && 'ad_arena_t', idPatten4: screenDownSP && 'ad_arena_b' }}
         //@ts-ignore
-        slot={slotDataLayer}
+        // slot={slotDataLayer}
+        slot={'7781714101'}
         idTag={!screenDownSP ? 'ad_arena_t' : 'ad_arena_b'}
         currenPath={window.location.href}
       />

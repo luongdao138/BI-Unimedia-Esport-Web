@@ -28,6 +28,7 @@ const GoogleAdsPatten2: React.FC<Props> = ({ timeout = 2000, style, idTag, slot 
     const googleInit = setTimeout(() => {
       if (typeof window !== 'undefined') {
         if (document.getElementById('ad_message_r').innerHTML) {
+          // eslint-disable-next-line @typescript-eslint/no-extra-semi
           ;(window.adsbygoogle = window.adsbygoogle || []).push({})
         }
       }
