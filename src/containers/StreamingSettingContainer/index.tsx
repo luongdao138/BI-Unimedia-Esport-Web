@@ -247,11 +247,15 @@ const StreamingSettingContainer: React.FC<{ default_tab: any }> = ({ default_tab
       case TABS.LIVE_STREAM:
         formikLive?.setFieldValue('stepSettingOne.group_title', value.title)
         formikLive?.setFieldValue('stepSettingOne.gift_group_id', value.id)
+        //clear error when selected again another group
+        formikLive?.setFieldValue('stepSettingOne.has_group_list', false)
         break
 
       case TABS.STREAMING_RESERVATION:
         formikSchedule?.setFieldValue('stepSettingTwo.group_title', value.title)
         formikSchedule?.setFieldValue('stepSettingTwo.gift_group_id', value.id)
+        //clear error when selected again another group
+        formikLive?.setFieldValue('stepSettingTwo.has_group_list', false)
         break
 
       default:

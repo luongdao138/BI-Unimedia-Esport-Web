@@ -1673,6 +1673,7 @@ export default {
       off: '無',
     },
     title_count_time: '配信時間',
+    group_list_does_not_exist: 'チップ対象リストが存在しません。',
   },
   delivery_reservation_tab: {
     category: 'カテゴリー',

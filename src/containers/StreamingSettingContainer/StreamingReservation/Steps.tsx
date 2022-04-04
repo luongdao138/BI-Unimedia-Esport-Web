@@ -21,6 +21,7 @@ import { LiveStreamSettingHelper } from '@utils/helpers/LiveStreamSettingHelper'
 import useLiveSetting from '../useLiveSetting'
 import {
   baseViewingURL,
+  CODE_ERROR_RENEW_SPECIAL,
   GetCategoryResponse,
   SetLiveStreamParams,
   StreamUrlAndKeyParams,
@@ -388,29 +389,39 @@ const Steps: React.FC<StepsProps> = ({
 
   const debouncedHandleConfirmForm = useCallback(
     _.debounce((data: SetLiveStreamParams, stepSettingTwo, step: number, share_sns_flag: boolean) => {
-      setLiveStreamConfirm(data, (process) => {
-        // console.log('process===', process);
-        onNext(
-          step + 1,
-          share_sns_flag,
-          {
-            title: stepSettingTwo.title,
-            content: `${baseViewingURL}${stepSettingTwo.uuid}`,
-          },
-          process
-        )
-        formik.setFieldValue('stepSettingTwo.step_setting', step + 1)
-        const { left, top } = getBoxPositionOnWindowCenter(550, 400)
-        if (isShare) {
-          window
-            .open(
-              getTwitterShareUrl(),
-              '',
-              `width=550,height=400,location=no,toolbar=no,status=no,directories=no,menubar=no,scrollbars=yes,resizable=no,centerscreen=yes,chrome=yes,left=${left},top=${top}`
-            )
-            ?.focus()
+      setLiveStreamConfirm(
+        data,
+        (process) => {
+          // console.log('process===', process);
+          onNext(
+            step + 1,
+            share_sns_flag,
+            {
+              title: stepSettingTwo.title,
+              content: `${baseViewingURL}${stepSettingTwo.uuid}`,
+            },
+            process
+          )
+          formik.setFieldValue('stepSettingTwo.step_setting', step + 1)
+          const { left, top } = getBoxPositionOnWindowCenter(550, 400)
+          if (isShare) {
+            window
+              .open(
+                getTwitterShareUrl(),
+                '',
+                `width=550,height=400,location=no,toolbar=no,status=no,directories=no,menubar=no,scrollbars=yes,resizable=no,centerscreen=yes,chrome=yes,left=${left},top=${top}`
+              )
+              ?.focus()
+          }
+        },
+        (codeError) => {
+          if (codeError === CODE_ERROR_RENEW_SPECIAL.GROUP_LIST_DOES_NOT_EXIST) {
+            formik.setFieldValue('stepSettingTwo.step_setting', 1)
+            formik.setFieldValue('stepSettingTwo.has_group_list', true)
+            window.scrollTo({ behavior: 'smooth', top: document.body.scrollHeight })
+          }
         }
-      })
+      )
     }, 700),
     []
   )
@@ -465,6 +476,7 @@ const Steps: React.FC<StepsProps> = ({
   const onClearNameListChip = () => {
     formik.setFieldValue('stepSettingTwo.group_title', '')
     formik.setFieldValue('stepSettingTwo.gift_group_id', null)
+    formik.setFieldValue('stepSettingTwo.has_group_list', false)
   }
 
   const openGroupList = () => {
@@ -1470,6 +1482,12 @@ const Steps: React.FC<StepsProps> = ({
                   {i18n.t('common:streaming_setting_screen.check_submit')}
                 </ButtonPrimary>
               </Box>
+              <Typography
+                className={classes.textErrorGroupDelete}
+                style={{ display: formik?.values?.stepSettingTwo?.has_group_list ? 'flex' : 'none' }}
+              >
+                {i18n.t('common:streaming_setting_screen.group_list_does_not_exist')}
+              </Typography>
             </Grid>
           ) : (
             <Grid item xs={12}>
@@ -1792,6 +1810,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: 'row',
     display: 'flex',
     marginLeft: 24,
+  },
+  textErrorGroupDelete: {
+    color: '#F7F735',
+    fontSize: 12,
+    fontWeight: 400,
+    lineHeight: 1.66,
+    display: 'flex',
+    alignItems: 'center',
+    marginTop: 20,
+    justifyContent: 'center',
   },
   [theme.breakpoints.down(768)]: {
     container: {

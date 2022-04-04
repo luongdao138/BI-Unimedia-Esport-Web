@@ -33,6 +33,8 @@ export const getInitialLiveSettingValues = (data?: LiveStreamSetting): FormLiveT
     group_title: data && data.group_title ? data.group_title : '',
     gift_group_id: data && data.gift_group_id ? data.gift_group_id : null,
     ranking_flag: data && data.ranking_flag ? (data.ranking_flag == 1 ? true : false) : false,
+    //check group list does not exist
+    has_group_list: false,
   },
 })
 
@@ -80,6 +82,8 @@ export const getInitialScheduleValues = (data?: LiveStreamSetting): FormLiveType
     group_title: data && data.group_title ? data.group_title : '',
     gift_group_id: data && data.gift_group_id ? data.gift_group_id : null,
     ranking_flag: data && data.ranking_flag ? (data.ranking_flag == 1 ? true : false) : false,
+    //check group list does not exist
+    has_group_list: false,
   },
 })
 

@@ -20,6 +20,7 @@ import { FormLiveType } from '@containers/arena/UpsertForm/FormLiveSettingsModel
 import useLiveSetting from '../useLiveSetting'
 import {
   baseViewingURL,
+  CODE_ERROR_RENEW_SPECIAL,
   GetCategoryResponse,
   SetLiveStreamParams,
   StreamUrlAndKeyParams,
@@ -308,28 +309,38 @@ const Steps: React.FC<StepsProps> = ({
       ranking_flag: ranking_flag === false ? 0 : 1,
     }
     setClickShowText(true)
-    debouncedHandleConfirmForm(data, share_sns_flag, step)
+    debouncedHandleConfirmForm(data, share_sns_flag, step, isShare)
   }
 
   const debouncedHandleConfirmForm = useCallback(
-    _.debounce((data: SetLiveStreamParams, share_sns_flag: boolean, step: number) => {
-      setLiveStreamConfirm(data, () => {
-        onNext(step + 1, share_sns_flag, {
-          title: formik.values.stepSettingOne.title,
-          content: `${baseViewingURL}${formik.values.stepSettingOne.linkUrl}`,
-        })
-        formik.setFieldValue('stepSettingOne.step_setting', step + 1)
-        const { left, top } = getBoxPositionOnWindowCenter(550, 400)
-        if (isShare) {
-          window
-            .open(
-              getTwitterShareUrl(),
-              '',
-              `width=550,height=400,location=no,toolbar=no,status=no,directories=no,menubar=no,scrollbars=yes,resizable=no,centerscreen=yes,chrome=yes,left=${left},top=${top}`
-            )
-            ?.focus()
+    _.debounce((data: SetLiveStreamParams, share_sns_flag: boolean, step: number, isShare: boolean) => {
+      setLiveStreamConfirm(
+        data,
+        () => {
+          onNext(step + 1, share_sns_flag, {
+            title: formik.values.stepSettingOne.title,
+            content: `${baseViewingURL}${formik.values.stepSettingOne.linkUrl}`,
+          })
+          formik.setFieldValue('stepSettingOne.step_setting', step + 1)
+          const { left, top } = getBoxPositionOnWindowCenter(550, 400)
+          if (isShare) {
+            window
+              .open(
+                getTwitterShareUrl(),
+                '',
+                `width=550,height=400,location=no,toolbar=no,status=no,directories=no,menubar=no,scrollbars=yes,resizable=no,centerscreen=yes,chrome=yes,left=${left},top=${top}`
+              )
+              ?.focus()
+          }
+        },
+        (codeError) => {
+          if (codeError === CODE_ERROR_RENEW_SPECIAL.GROUP_LIST_DOES_NOT_EXIST) {
+            formik.setFieldValue('stepSettingOne.step_setting', 1)
+            formik.setFieldValue('stepSettingOne.has_group_list', true)
+            window.scrollTo({ behavior: 'smooth', top: document.body.scrollHeight })
+          }
         }
-      })
+      )
     }, 700),
     []
   )
@@ -434,6 +445,7 @@ const Steps: React.FC<StepsProps> = ({
   const onClearNameListChip = () => {
     formik.setFieldValue('stepSettingOne.group_title', '')
     formik.setFieldValue('stepSettingOne.gift_group_id', null)
+    formik.setFieldValue('stepSettingOne.has_group_list', false)
   }
 
   const openGroupList = () => {
@@ -1182,6 +1194,12 @@ const Steps: React.FC<StepsProps> = ({
                   {i18n.t('common:streaming_setting_screen.check_submit')}
                 </ButtonPrimary>
               </Box>
+              <Typography
+                className={classes.textErrorGroupDelete}
+                style={{ display: formik?.values?.stepSettingOne?.has_group_list ? 'flex' : 'none' }}
+              >
+                {i18n.t('common:streaming_setting_screen.group_list_does_not_exist')}
+              </Typography>
             </Grid>
           ) : (
             <Grid item xs={12}>
@@ -1453,6 +1471,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: 'row',
     display: 'flex',
     marginLeft: 24,
+  },
+  textErrorGroupDelete: {
+    color: '#F7F735',
+    fontSize: 12,
+    fontWeight: 400,
+    lineHeight: 1.66,
+    display: 'flex',
+    alignItems: 'center',
+    marginTop: 20,
+    justifyContent: 'center',
   },
   [theme.breakpoints.down(768)]: {
     container: {
