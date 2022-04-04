@@ -47,7 +47,7 @@ const RankingTab: React.FC<RankingTabProps> = () => {
   const classes = useStyles()
   // const [activeSubTab, setActiveSubTab] = useState(SUB_TABS.RANKING.RECEIPT)
   const theme = useTheme()
-  const isMobile = useMediaQuery(theme.breakpoints.down(768))
+  const isMobile = useMediaQuery(theme.breakpoints.down(769))
 
   const mineGiveInfo: RankingsItem = _.find(giverRankInfo, (v) => {
     return user_uuid && v?.uuid === user_uuid
