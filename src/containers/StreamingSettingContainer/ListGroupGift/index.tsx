@@ -129,7 +129,7 @@ const ListGroupGift: React.FC<IProps> = ({ onChangeTab, handleSelectGroup, handl
                 )}
               </>
             )}
-            <Box display="flex" justifyContent="center" mt={4}>
+            <Box display="flex" justifyContent="center" mt={4} pb={2}>
               <Pagination page={page} pageNumber={getTotalPage()} setPage={setPage} />
             </Box>
           </Box>
