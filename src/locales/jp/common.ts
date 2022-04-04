@@ -1934,6 +1934,7 @@ export default {
     txt_footer_button_success: '配信管理メニューへ戻る',
     record_error_no: '対象者No.XXに入力不備があります。',
     toast_delete_group_success: 'チップ対象リストを削除しました',
+    close: '閉じる',
   },
   archive_detail_screen: {
     title: 'アーカイブ詳細',
