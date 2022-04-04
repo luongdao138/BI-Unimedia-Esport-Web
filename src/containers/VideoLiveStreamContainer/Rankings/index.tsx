@@ -97,6 +97,11 @@ const useStyles = makeStyles((theme) => ({
         },
       },
     },
+    table: {
+      '& .MuiTableCell-root': {
+        backgroundColor: '#212121',
+      },
+    },
   },
   [`@media (orientation: landscape)`]: {
     contentContainer: (props: videoStyleProps) => {

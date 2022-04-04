@@ -365,7 +365,7 @@ const useStyles = makeStyles((theme) => ({
       marginLeft: 48,
     },
   },
-  [theme.breakpoints.down(769)]: {
+  [theme.breakpoints.down(700)]: {
     wrapMemberListContent: {
       width: '100%',
     },
