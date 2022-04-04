@@ -70,13 +70,13 @@ const GoogleAdTest: React.FC<Props> = ({ slot, currenPath }) => {
   // console.log('-check log google tag: screenDownSP: ', screenDownSP, ' ---id: ', JSON.stringify(id))
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   //@ts-ignore
-  console.log('TAG MAN=GoogleAdTest=====', window.location.href, slot)
+  console.log('TAG MAN=GoogleAdTest=====', window.location.href, slot, googleAdId)
 
   return (
     <ins
       className="adsbygoogle"
       style={{ display: 'inline-block', width: '300px', height: '50px', background: 'red' }}
-      data-ad-client={googleAdId}
+      data-ad-client={'ca-pub-4381765375081809'}
       data-ad-slot={slot}
     ></ins>
     // <>
