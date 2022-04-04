@@ -92,12 +92,14 @@ const StreamingGiftManagement: React.FC = () => {
     <>
       <HeaderWithButton title={t('streaming_gift_management.title')} />
       {renderContent()}
-      <Footer
-        step={step}
-        onCancel={handleOnNavigateBackToStreamSettingScreen}
-        onConfirm={handleFooterConfirmClick}
-        errorMessage={addNewErrorMessage}
-      />
+      {giftTargetData.length > 0 && (
+        <Footer
+          step={step}
+          onCancel={handleOnNavigateBackToStreamSettingScreen}
+          onConfirm={handleFooterConfirmClick}
+          errorMessage={addNewErrorMessage}
+        />
+      )}
     </>
   )
 }
