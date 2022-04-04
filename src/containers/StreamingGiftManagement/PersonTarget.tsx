@@ -17,9 +17,10 @@ interface PersonTargetProps {
   handleSuccess: () => void
   mode: string
   idTargetPerson: string
+  handleClose: () => void
 }
 
-const PersonTarget: FC<PersonTargetProps> = ({ handleSuccess, mode, idTargetPerson }): JSX.Element => {
+const PersonTarget: FC<PersonTargetProps> = ({ handleSuccess, mode, idTargetPerson, handleClose }): JSX.Element => {
   const classes = useStyles()
   const { t } = useTranslation('common')
   const theme = useTheme()
@@ -174,9 +175,14 @@ const PersonTarget: FC<PersonTargetProps> = ({ handleSuccess, mode, idTargetPers
           />
         </Box>
       </Box>
-      <ButtonPrimary type="submit" size="small" className={classes.buttonContainer} gradient={false} disabled={disabledBtn}>
-        {t('streaming_gift_management.txt_save_button')}
-      </ButtonPrimary>
+      <Box className={classes.buttonContainer}>
+        <ButtonPrimary size="small" className={classes.closeButton} gradient={false} onClick={handleClose}>
+          {t('streaming_gift_management.close')}
+        </ButtonPrimary>
+        <ButtonPrimary type="submit" size="small" className={classes.saveButton} gradient={false} disabled={disabledBtn}>
+          {t('streaming_gift_management.txt_save_button')}
+        </ButtonPrimary>
+      </Box>
     </form>
   )
 }
@@ -206,10 +212,24 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: 24,
     paddingRight: 56,
   },
-  buttonContainer: {
+  saveButton: {
     width: '160px !important',
     height: '38px !important',
     borderRadius: '5px !important',
+    marginLeft: '8px',
+    marginRight: '8px',
+  },
+  closeButton: {
+    width: '160px !important',
+    height: '38px !important',
+    borderRadius: '5px !important',
+    marginLeft: '8px',
+    marginRight: '8px',
+  },
+  buttonContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    flexDirection: 'row',
     marginTop: '46px',
     marginBottom: '46px',
   },
@@ -287,6 +307,10 @@ const useStyles = makeStyles((theme) => ({
     },
     buttonContainer: {
       marginTop: '32px',
+      flexDirection: 'column',
+    },
+    closeButton: {
+      marginBottom: '16px',
     },
   },
 }))
