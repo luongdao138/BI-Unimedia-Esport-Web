@@ -379,13 +379,18 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       hls.attachMedia(document.getElementById('video'))
       if (resolution !== -1) {
         const a = arrayLevelsAvailable.find((i) => i.url.includes(`${resolutionSelected}`))
-        console.log('===MANIFEST_LOADED=====', arrayLevelsAvailable, a, resolutionSelected)
-        setSrcResolution(a.url)
+        if (a) {
+          console.log('===MANIFEST_LOADED=====', arrayLevelsAvailable, a, resolutionSelected)
+          setSrcResolution(a?.url)
+        }
       } else {
         setSrcResolution(src)
       }
+
       console.warn('link======>>>', srcResolution)
-      hls.loadSource(srcResolution)
+      if (srcResolution) {
+        hls.loadSource(srcResolution)
+      }
     }
     return () => {
       if (hls && src) {
