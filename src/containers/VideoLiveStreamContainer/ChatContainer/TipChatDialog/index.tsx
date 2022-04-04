@@ -331,6 +331,8 @@ const useStyles = makeStyles((theme) => ({
       margin: '0 8px',
       zIndex: 30,
       paddingBottom: 8,
+      maxWidth: '400px',
+      left: '10px',
     },
     titleDialog: {
       fontSize: '13px',

@@ -52,14 +52,10 @@ const ChatInputContainer: React.FC<ChatInputProps> = ({
     validateOnChange: false,
   })
 
-  const setMessageFieldValue = async (message) => {
-    await setFieldValue('message', message)
-    handleSubmit()
-  }
-
-  const submitForm = useCallback(() => {
+  const submitForm = useCallback(async () => {
     if (valueRef.current) {
-      setMessageFieldValue(valueRef.current)
+      await setFieldValue('message', valueRef.current)
+      handleSubmit()
     } else {
       handleSubmit()
     }
@@ -124,25 +120,14 @@ const ChatInputContainer: React.FC<ChatInputProps> = ({
         resetErrorOnChange={resetErrorOnChange}
         endAdornment={
           <LoginRequired>
-            <InputAdornment
-              position="end"
-              className={classes.button_send_sp}
-              onClick={() => {
-                submitForm()
-              }}
-            >
+            <InputAdornment position="end" className={classes.button_send_sp} onClick={submitForm}>
               {isFocusedInput ? <img src="/images/send_icon_pink_sp.svg" /> : <img src="/images/send_icon_white_sp.svg" />}
             </InputAdornment>
           </LoginRequired>
         }
       />
       <LoginRequired>
-        <Button
-          onClick={() => {
-            submitForm()
-          }}
-          className={classes.iconButtonBg}
-        >
+        <Button onClick={submitForm} className={classes.iconButtonBg}>
           <img src="/images/send_icon.svg" />
           {/* <Icon className={`fa fa-paper-plane ${classes.sendIcon}`} fontSize="small" /> */}
         </Button>
