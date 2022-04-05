@@ -129,6 +129,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   const [srcResolution, setSrcResolution] = useState(src)
   const [resolutionSelected, setResolutionSelected] = useState(VIDEO_RESOLUTION.AUTO)
   const [arrayLevelsAvailable, setArrayLevelsAvailable] = useState([])
+  const [playRateReturn, setPlayRateReturn] = useState(1)
   const {
     requestPIP,
     exitPIP,
@@ -386,8 +387,8 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       } else {
         setSrcResolution(src)
       }
-
       console.warn('link======>>>', srcResolution)
+      videoEl.current.playbackRate = playRateReturn
       if (srcResolution) {
         hls.loadSource(srcResolution)
       }
@@ -667,9 +668,11 @@ const VideoPlayer: React.FC<PlayerProps> = ({
 
   const changeResolution = useCallback(
     (index, flag, item) => {
+      console.warn('playbackRate======>>>', videoEl.current.playbackRate)
       setResolution(index - 1)
       setResolutionSelected(item)
       setFlagResol(flag)
+      setPlayRateReturn(videoEl.current.playbackRate)
     },
     [resolution]
   )
