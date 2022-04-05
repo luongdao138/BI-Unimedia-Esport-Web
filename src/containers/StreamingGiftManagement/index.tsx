@@ -8,6 +8,7 @@ import { Colors } from '@theme/colors'
 import Footer from './footer'
 import useGiftManage from '@containers/StreamingGiftManagement/useGiftTarget'
 import { useRouter } from 'next/router'
+import { ESRoutes } from '@constants/route.constants'
 import useToast from '@utils/hooks/useToast'
 import i18n from '@locales/i18n'
 
@@ -60,8 +61,7 @@ const StreamingGiftManagement: React.FC = () => {
   }
 
   const handleOnNavigateBackToStreamSettingScreen = () => {
-    // router.push(ESRoutes.VIDEO_STREAMING_MANAGEMENT)
-    router.back()
+    router.push(ESRoutes.VIDEO_STREAMING_MANAGEMENT)
   }
 
   const handleCloseAddGiftMaster = () => {
@@ -92,14 +92,12 @@ const StreamingGiftManagement: React.FC = () => {
     <>
       <HeaderWithButton title={t('streaming_gift_management.title')} />
       {renderContent()}
-      {giftTargetData.length > 0 && (
-        <Footer
-          step={step}
-          onCancel={handleOnNavigateBackToStreamSettingScreen}
-          onConfirm={handleFooterConfirmClick}
-          errorMessage={addNewErrorMessage}
-        />
-      )}
+      <Footer
+        step={step}
+        onCancel={handleOnNavigateBackToStreamSettingScreen}
+        onConfirm={handleFooterConfirmClick}
+        errorMessage={addNewErrorMessage}
+      />
     </>
   )
 }
