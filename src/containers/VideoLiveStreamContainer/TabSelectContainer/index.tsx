@@ -300,7 +300,7 @@ const useStyles = makeStyles((theme) => ({
   },
   active: {},
 
-  [theme.breakpoints.down(376)]: {
+  [theme.breakpoints.down(769)]: {
     textTabVideo: {
       fontSize: 10,
     },

@@ -513,7 +513,7 @@ const useStyles = makeStyles((theme) => ({
       padding: '0px !important',
     },
     chatInputContainer: {
-      padding: '0 6px 0 0',
+      padding: '8px 6px 8px 6px',
     },
     hideIconGift: {
       padding: '6px',
@@ -555,6 +555,20 @@ const useStyles = makeStyles((theme) => ({
         return {
           width: 'calc(100% - 32px)',
           bottom: 0,
+        }
+    },
+
+    // chat input landscape
+    chatInputContainer: (props: ChatStyleProps) => {
+      if (props.isLandscape)
+        return {
+          padding: '8px 6px 8px 6px',
+        }
+    },
+    iconPurchase: (props: ChatStyleProps) => {
+      if (props.isLandscape)
+        return {
+          margin: '0 3px 0 0',
         }
     },
   },

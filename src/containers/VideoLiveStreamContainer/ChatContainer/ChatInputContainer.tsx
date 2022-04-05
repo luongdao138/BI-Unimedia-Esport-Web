@@ -7,6 +7,7 @@ import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
 import * as Yup from 'yup'
 import { sanitizeMess } from './index'
 import EsFastChatInput from './FastChatInput'
+import { useRotateScreen } from '@utils/hooks/useRotateScreen'
 
 type MessageValidationType = {
   message: string
@@ -40,6 +41,7 @@ const ChatInputContainer: React.FC<ChatInputProps> = ({
   const inputRef = useRef<HTMLInputElement>(null)
   const valueRef = useRef<string>('')
   const isMountRef = useRef<boolean>(false)
+  const { isLandscape } = useRotateScreen()
 
   const { handleChange, values, handleSubmit, errors, resetForm, setFieldValue, setFieldError } = useFormik<MessageValidationType>({
     initialValues: {
@@ -53,10 +55,15 @@ const ChatInputContainer: React.FC<ChatInputProps> = ({
   })
 
   const submitForm = useCallback(async () => {
+    // if (!valueRef.current) {
+    //   await setFieldValue('message', '')
+    //   return
+    // }
     if (valueRef.current) {
       await setFieldValue('message', valueRef.current)
       handleSubmit()
     } else {
+      await setFieldValue('message', '')
       handleSubmit()
     }
   }, [])
@@ -67,7 +74,7 @@ const ChatInputContainer: React.FC<ChatInputProps> = ({
     }
   }, [errors.message])
 
-  const classes = useStyles()
+  const classes = useStyles({ isLandscape })
 
   useEffect(() => {
     resetForm()
@@ -143,11 +150,17 @@ export default memo(ChatInputContainer, (prevProps, nextProps) => {
   return true
 })
 
+interface StyleProps {
+  isLandscape: boolean
+}
+
 const useStyles = makeStyles((theme) => ({
   button_send_sp: {
     display: 'none',
   },
   spPurchaseButton: { display: 'none' },
+
+  // chat box container
   chatBox: {
     display: 'flex',
     flexDirection: 'row',
@@ -186,6 +199,7 @@ const useStyles = makeStyles((theme) => ({
       opacity: 1,
     },
   },
+
   iconButtonBg: {
     height: 42,
     backgroundColor: '#FF4786',
@@ -219,6 +233,49 @@ const useStyles = makeStyles((theme) => ({
     },
     button_send_sp: {
       display: 'inline-flex',
+    },
+  },
+  [`@media (orientation: landscape)`]: {
+    chatTextInput: (props: StyleProps) => {
+      if (props.isLandscape) {
+        return {
+          height: '17px',
+          padding: '3.5px 14px',
+          fontSize: '12px',
+          lineHeight: '17px',
+        }
+      }
+    },
+    iconButtonBg: (props: StyleProps) => {
+      if (props.isLandscape)
+        return {
+          display: 'none',
+        }
+    },
+    input: (props: StyleProps) => {
+      if (props.isLandscape)
+        return {
+          height: 'auto',
+          borderRadius: '12px',
+        }
+    },
+    chatBox: (props: StyleProps) => {
+      if (props.isLandscape)
+        return {
+          alignItems: 'center',
+        }
+    },
+    spPurchaseButton: (props: StyleProps) => {
+      if (props.isLandscape)
+        return {
+          display: 'block',
+        }
+    },
+    button_send_sp: (props: StyleProps) => {
+      if (props.isLandscape)
+        return {
+          display: 'inline-flex',
+        }
     },
   },
 }))
