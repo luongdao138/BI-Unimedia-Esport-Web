@@ -571,6 +571,13 @@ const useStyles = makeStyles((theme) => ({
           margin: '0 3px 0 0',
         }
     },
+    blurInputChat: (props: ChatStyleProps) => {
+      if (props.isLandscape) {
+        return {
+          display: 'none',
+        }
+      }
+    },
   },
 }))
 

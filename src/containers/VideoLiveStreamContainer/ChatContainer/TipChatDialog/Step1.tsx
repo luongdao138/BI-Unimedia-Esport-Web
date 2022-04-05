@@ -6,6 +6,7 @@ import { Colors } from '@theme/colors'
 import React from 'react'
 import useDetailVideo from '@containers/VideoLiveStreamContainer/useDetailVideo'
 import Loader from '@components/Loader'
+import { useRotateScreen } from '@utils/hooks/useRotateScreen'
 
 type Step1Props = {
   onChangeStep?: (newStep: number) => void
@@ -13,7 +14,8 @@ type Step1Props = {
 }
 
 const Step1: React.FC<Step1Props> = ({ onChangeStep, onChangeSelectedMember }) => {
-  const classes = useStyles()
+  const { isLandscape } = useRotateScreen()
+  const classes = useStyles({ isLandscape })
   const { videoGiftMaster, videoGiftMasterLoading } = useDetailVideo()
 
   const renderMember = (item, isStreamer = false) => {
@@ -72,6 +74,10 @@ const Step1: React.FC<Step1Props> = ({ onChangeStep, onChangeSelectedMember }) =
   )
 }
 
+interface StyleProps {
+  isLandscape: boolean
+}
+
 const useStyles = makeStyles((theme) => ({
   giftMemberList: {
     maxHeight: '362px',
@@ -110,8 +116,36 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
+  [theme.breakpoints.down(1024)]: {
+    [`@media (orientation: landscape)`]: {
+      giftMemberList: (props: StyleProps) => {
+        if (props.isLandscape) {
+          return {
+            maxHeight: '92px',
+          }
+        } else {
+          return {
+            maxHeight: '362px',
+          }
+        }
+      },
+    },
+  },
   [theme.breakpoints.down(769)]: {
-    giftMemberList: { maxHeight: 323 },
+    [`@media (orientation: landscape)`]: {
+      giftMemberList: (props: StyleProps) => {
+        if (props.isLandscape) {
+          return {
+            maxHeight: '92px',
+          }
+        } else {
+          return {
+            maxHeight: '323px',
+          }
+        }
+      },
+    },
+
     stepInfo: { marginTop: 8 },
     streamerTitle: {
       fontSize: '9px',
