@@ -94,7 +94,7 @@ const GoogleAd: React.FC<Props> = ({ id, slot, styleContainer, idTag = 'ads', cu
     >
       <div
         style={{
-          width: screenDownSP ? 300 : '100%',
+          width: screenDownSP ? window.innerWidth : '100%',
           height: screenDownSP ? 50 : 90,
           // background: 'pink',
           justifyContent: 'center',
@@ -109,12 +109,12 @@ const GoogleAd: React.FC<Props> = ({ id, slot, styleContainer, idTag = 'ads', cu
               display: 'block',
               height: screenDownSP ? '50px' : '90px',
               // background: 'red',
-              width: screenDownSP ? '300px' : '100%',
+              width: screenDownSP ? window.innerWidth : '100%',
             }}
             data-ad-client={googleAdId}
-            // data-ad-format=""
+            data-ad-format=""
             data-ad-slot={slot}
-            // data-full-width-responsive="true"
+            data-full-width-responsive="true"
           />
         ) : (
           <ins
@@ -124,7 +124,7 @@ const GoogleAd: React.FC<Props> = ({ id, slot, styleContainer, idTag = 'ads', cu
               display: 'block',
               height: screenDownSP ? '50px' : '90px',
               // background: 'red',
-              width: screenDownSP ? '300px' : '100%',
+              width: screenDownSP ? window.innerWidth : '100%',
             }}
             data-ad-client={googleAdId}
             data-ad-format=""

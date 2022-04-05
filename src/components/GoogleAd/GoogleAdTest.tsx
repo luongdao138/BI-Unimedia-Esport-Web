@@ -75,9 +75,10 @@ const GoogleAdTest: React.FC<Props> = ({ slot, currenPath }) => {
   return (
     <ins
       className="adsbygoogle"
-      style={{ display: 'inline-block', width: '300px', height: '50px', background: 'red' }}
+      style={{ display: 'block', height: '50px' }}
       data-ad-client={'ca-pub-4381765375081809'}
       data-ad-slot={slot}
+      data-full-width-responsive="true"
     ></ins>
     // <>
     //   {isHasSlot ? (
