@@ -258,7 +258,11 @@ const useStyles = makeStyles((theme) => ({
     zIndex: 99,
     display: 'none',
     '&$active': {
-      display: 'block',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '12px',
+      paddingTop: '12px',
+      paddingBottom: '8px',
     },
   },
   textTabVideoProgramInfo: {
@@ -292,7 +296,7 @@ const useStyles = makeStyles((theme) => ({
   },
   selectSubTab: {
     textAlign: 'center',
-    padding: 10,
+    // padding: 10,
     color: Colors.white_opacity[30],
     '&$active': {
       color: Colors.white,
@@ -352,13 +356,13 @@ const useStyles = makeStyles((theme) => ({
       if (props.isLandscape) {
         return {
           textAlign: 'center',
-          padding: 5,
+          // padding: 5,
           fontSize: 7,
         }
       } else {
         return {
           textAlign: 'center',
-          padding: 5,
+          // padding: 5,
           fontSize: 10,
         }
       }

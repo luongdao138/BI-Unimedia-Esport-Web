@@ -68,7 +68,7 @@ const useStyles = makeStyles((theme) => ({
     tableLayout: 'fixed',
     '& .MuiTableCell-root': {
       borderColor: '#707070',
-      backgroundColor: '#3d3d3c',
+      backgroundColor: '#383838',
     },
   },
   headerTable: {
@@ -104,6 +104,11 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   [theme.breakpoints.down(769)]: {
+    table: {
+      '& .MuiTableCell-root': {
+        backgroundColor: '#212121',
+      },
+    },
     headerTable: {
       '& tr': {
         '& th': {
