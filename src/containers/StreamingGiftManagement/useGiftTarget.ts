@@ -16,6 +16,7 @@ import { getReloadGiftMasterFlag } from '@store/giftManage/selectors'
 const { selectors, actions } = giftManage
 const _addGiftTargetData = createMetaSelector(actions.addTargetPerson)
 const getGiftGroupListMeta = createMetaSelector(actions.getGiftGroupList)
+const getAllGiftMasterMeta = createMetaSelector(actions.getAllGiftMaster)
 const {
   selectors: { getAuth },
 } = authStore
@@ -130,6 +131,7 @@ const useGiftManage = () => {
   const giftGroupList = useAppSelector(selectors.getListGiftGroup)
   const giftGroupTotal = useAppSelector(selectors.getGiftGroupTotal)
   const giftGroupsMeta = useAppSelector(getGiftGroupListMeta)
+  const metaGetAllGiftMaster = useAppSelector(getAllGiftMasterMeta)
 
   const deleteGiftMasterFromLocalList = (data) => dispatch(actions.deleteGiftMasterFromLocalList({ data }))
 
@@ -188,6 +190,7 @@ const useGiftManage = () => {
     deleteGiftGroup,
     reloadGiftMasterFlag,
     setReloadGiftMasterFlag,
+    metaGetAllGiftMaster,
   }
 }
 
