@@ -2146,6 +2146,9 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       setDisplayDialogMess(false)
     }
 
+    const matchSm = useMediaQuery(theme.breakpoints.down(769))
+    const getMarginBottom = () => (matchSm && isLandscape ? 45 : 0)
+
     const getMarginTopOfComponents = (componentType = 'chatBoard') => {
       let marginTop = 0
       let transformedMess = stateMessages
@@ -2364,6 +2367,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         className={`${classes.chatBoardContainer}`}
         style={{
           marginTop: getMarginTopOfComponents('chatBoard'),
+          marginBottom: getMarginBottom(),
         }}
       >
         {/* <div onClick={() => debouncedHandleLoadMore()} style={{ flexGrow: 0 }}>

@@ -260,7 +260,7 @@ const useStyles = makeStyles((theme) => ({
     '&$active': {
       display: 'flex',
       flexDirection: 'column',
-      gap: '12px',
+      gap: '8px',
       paddingTop: '12px',
       paddingBottom: '8px',
     },
@@ -328,6 +328,13 @@ const useStyles = makeStyles((theme) => ({
           flex: '1 1 0',
         }
     },
+    selectSubTab: (props: { isLandscape?: boolean }) => {
+      if (props.isLandscape) {
+        return {
+          fontSize: props.isLandscape ? 10 : 12,
+        }
+      }
+    },
   },
   [theme.breakpoints.down(769)]: {
     textTabVideo: (props: { isLandscape?: boolean }) => {
@@ -355,14 +362,10 @@ const useStyles = makeStyles((theme) => ({
     selectSubTab: (props: { isLandscape?: boolean }) => {
       if (props.isLandscape) {
         return {
-          textAlign: 'center',
-          // padding: 5,
           fontSize: 7,
         }
       } else {
         return {
-          textAlign: 'center',
-          // padding: 5,
           fontSize: 10,
         }
       }

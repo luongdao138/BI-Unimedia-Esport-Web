@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
+import useIsomorphicLayoutEffect from './useIsomorphicLayoutEffect'
 
 type IProps = { isLandscape: boolean }
 
@@ -27,7 +28,7 @@ export const useRotateScreen = (): IProps => {
     return androidPl || iPhonePl || ipadPl
   }
 
-  useEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     // console.log('🚀 ~ useEffect ~ isOnDeviceSp()', isOnDeviceSp())
 
     // handle check rotate screen on sp

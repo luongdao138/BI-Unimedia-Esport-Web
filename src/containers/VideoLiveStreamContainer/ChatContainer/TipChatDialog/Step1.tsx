@@ -136,7 +136,7 @@ const useStyles = makeStyles((theme) => ({
       giftMemberList: (props: StyleProps) => {
         if (props.isLandscape) {
           return {
-            maxHeight: '92px',
+            maxHeight: '115px',
           }
         } else {
           return {
