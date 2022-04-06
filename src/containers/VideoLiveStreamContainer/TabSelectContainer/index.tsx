@@ -300,20 +300,6 @@ const useStyles = makeStyles((theme) => ({
   },
   active: {},
 
-  [theme.breakpoints.down(769)]: {
-    textTabVideo: {
-      fontSize: 10,
-    },
-    textTabVideoProgramInfo: {
-      fontSize: 10,
-    },
-    selectSubTab: {
-      textAlign: 'center',
-      padding: 5,
-      fontSize: 10,
-    },
-  },
-
   [`@media (orientation: landscape)`]: {
     textTabVideoProgramInfo: (props: { isLandscape?: boolean }) => {
       if (props.isLandscape)
@@ -337,6 +323,45 @@ const useStyles = makeStyles((theme) => ({
           overflow: 'auto',
           flex: '1 1 0',
         }
+    },
+  },
+  [theme.breakpoints.down(769)]: {
+    textTabVideo: (props: { isLandscape?: boolean }) => {
+      if (props.isLandscape) {
+        return {
+          fontSize: 7,
+        }
+      } else {
+        return {
+          fontSize: 10,
+        }
+      }
+    },
+    textTabVideoProgramInfo: (props: { isLandscape?: boolean }) => {
+      if (props.isLandscape) {
+        return {
+          fontSize: 7,
+        }
+      } else {
+        return {
+          fontSize: 10,
+        }
+      }
+    },
+    selectSubTab: (props: { isLandscape?: boolean }) => {
+      if (props.isLandscape) {
+        return {
+          textAlign: 'center',
+          padding: 5,
+          fontSize: 7,
+        }
+      } else {
+        return {
+          textAlign: 'center',
+          padding: 5,
+          fontSize: 10,
+        }
+      }
     },
   },
 }))

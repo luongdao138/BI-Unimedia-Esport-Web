@@ -3,6 +3,7 @@ import { SUB_TABS } from '@constants/common.constants'
 import { Box, makeStyles, TableCell, TableRow, Typography } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import { FormatHelper } from '@utils/helpers/FormatHelper'
+import { useRotateScreen } from '@utils/hooks/useRotateScreen'
 
 interface Props {
   position: number | string
@@ -16,7 +17,8 @@ interface Props {
 }
 
 const RankingItem: React.FC<Props> = ({ isStreamer, position, avatar, type, tab, name, total }) => {
-  const classes = useStyles()
+  const { isLandscape } = useRotateScreen()
+  const classes = useStyles({ isLandscape })
   // const { t } = useTranslation('common')
 
   return (
@@ -60,6 +62,10 @@ const RankingItem: React.FC<Props> = ({ isStreamer, position, avatar, type, tab,
       </TableCell>
     </TableRow>
   )
+}
+
+interface StyleProps {
+  isLandscape: boolean
 }
 
 export default RankingItem
@@ -106,54 +112,49 @@ const useStyles = makeStyles((theme) => ({
     '& span': {
       fontSize: '0.5em',
     },
-    '&$first': {
-      fontFamily: 'Futura Hv BT',
-      fontWeight: 'normal',
-      fontSize: 30,
-      fontStyle: 'italic',
-      background: 'linear-gradient(55deg, rgba(247,247,53,1) 0%, rgba(195,247,53,1) 100%)',
-      WebkitBackgroundClip: 'text',
-      WebkitTextFillColor: 'transparent',
-      WebkitTextStroke: '1px #FFFF65',
-      '& span': {
-        marginLeft: -4,
-      },
-    },
-    '&$second': {
-      fontFamily: 'Futura Hv BT',
-      fontWeight: 'normal',
-      fontSize: 30,
-      fontStyle: 'italic',
-      background: 'linear-gradient(55deg, rgba(198,198,198,1) 0%, rgba(109,157,234,1) 100%)',
-      WebkitBackgroundClip: 'text',
-      WebkitTextFillColor: 'transparent',
-      WebkitTextStroke: '1px #C3D0E3',
-    },
-    '&$third': {
-      fontFamily: 'Futura Hv BT',
-      fontWeight: 'normal',
-      fontSize: 30,
-      fontStyle: 'italic',
-      background: 'linear-gradient(55deg, rgba(255,182,65,1) 0%, rgba(227,111,60,1) 100%)',
-      WebkitBackgroundClip: 'text',
-      WebkitTextFillColor: 'transparent',
-      WebkitTextStroke: '1px #FFC962',
-    },
-    '&$other': {
-      textAlign: 'center',
-      fontStyle: 'italic',
-    },
-    '&$self': {
-      textAlign: 'center',
-      fontSize: 30,
-      fontWeight: 'bold',
+  },
+  first: {
+    fontFamily: 'Futura Hv BT',
+    fontWeight: 'normal',
+    fontSize: 30,
+    fontStyle: 'italic',
+    background: 'linear-gradient(55deg, rgba(247,247,53,1) 0%, rgba(195,247,53,1) 100%)',
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent',
+    WebkitTextStroke: '1px #FFFF65',
+    '& span': {
+      marginLeft: -4,
     },
   },
-  first: {},
-  second: {},
-  third: {},
-  other: {},
-  self: {},
+  second: {
+    fontFamily: 'Futura Hv BT',
+    fontWeight: 'normal',
+    fontSize: 30,
+    fontStyle: 'italic',
+    background: 'linear-gradient(55deg, rgba(198,198,198,1) 0%, rgba(109,157,234,1) 100%)',
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent',
+    WebkitTextStroke: '1px #C3D0E3',
+  },
+  third: {
+    fontFamily: 'Futura Hv BT',
+    fontWeight: 'normal',
+    fontSize: 30,
+    fontStyle: 'italic',
+    background: 'linear-gradient(55deg, rgba(255,182,65,1) 0%, rgba(227,111,60,1) 100%)',
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent',
+    WebkitTextStroke: '1px #FFC962',
+  },
+  other: {
+    textAlign: 'center',
+    fontStyle: 'italic',
+  },
+  self: {
+    textAlign: 'center',
+    fontSize: 30,
+    fontWeight: 'bold',
+  },
   nameWrapper: {
     overflow: 'hidden',
     color: Colors.white,
@@ -200,6 +201,59 @@ const useStyles = makeStyles((theme) => ({
     },
     user_code: {
       maxWidth: '80px',
+    },
+  },
+  [theme.breakpoints.down(769)]: {
+    [`@media (orientation: landscape)`]: {
+      text: (props: StyleProps) => {
+        if (props.isLandscape) {
+          return {
+            fontSize: 20,
+          }
+        }
+      },
+      first: (props: StyleProps) => {
+        if (props.isLandscape) {
+          return {
+            fontSize: 20,
+          }
+        }
+      },
+      second: (props: StyleProps) => {
+        if (props.isLandscape) {
+          return {
+            fontSize: 20,
+          }
+        }
+      },
+      tip: (props: StyleProps) => {
+        if (props.isLandscape) {
+          return {
+            fontSize: 12,
+          }
+        }
+      },
+      third: (props: StyleProps) => {
+        if (props.isLandscape) {
+          return {
+            fontSize: 20,
+          }
+        }
+      },
+      other: (props: StyleProps) => {
+        if (props.isLandscape) {
+          return {
+            fontSize: 20,
+          }
+        }
+      },
+      nameWrapper: (props: StyleProps) => {
+        if (props.isLandscape) {
+          return {
+            paddingLeft: 8,
+          }
+        }
+      },
     },
   },
   [theme.breakpoints.down('xs')]: {

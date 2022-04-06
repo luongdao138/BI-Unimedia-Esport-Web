@@ -1,5 +1,17 @@
 import { useTranslation } from 'react-i18next'
-import { makeStyles, Box, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, TableFooter } from '@material-ui/core'
+import {
+  makeStyles,
+  useTheme,
+  Box,
+  TableContainer,
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
+  TableFooter,
+  useMediaQuery,
+} from '@material-ui/core'
 import { memo, ReactNode } from 'react'
 import { useRotateScreen } from '@utils/hooks/useRotateScreen'
 import { videoStyleProps } from '..'
@@ -10,6 +22,8 @@ interface Props {
 
 const Rankings: React.FC<Props> = ({ children }) => {
   const { isLandscape } = useRotateScreen()
+  const theme = useTheme()
+  const isMobile = useMediaQuery(theme.breakpoints.down(769))
   const classes = useStyles({ availHeight: 1, availWidth: 1, isLandscape })
   const { t } = useTranslation('common')
 
@@ -18,8 +32,8 @@ const Rankings: React.FC<Props> = ({ children }) => {
       <TableContainer className={classes.container}>
         <Table className={classes.table} stickyHeader aria-label="sticky table">
           <colgroup>
-            <col style={{ width: isLandscape ? 56 : 68 }} />
-            <col style={{ width: isLandscape ? 140 : 165 }} />
+            <col style={{ width: isLandscape ? (isMobile ? 46 : 56) : 68 }} />
+            <col style={{ width: isLandscape ? (isMobile ? 115 : 140) : 165 }} />
             <col style={{ width: 'auto' }} />
           </colgroup>
           <TableHead className={classes.headerTable}>
@@ -92,38 +106,30 @@ const useStyles = makeStyles((theme) => ({
   [theme.breakpoints.down(769)]: {
     headerTable: {
       '& tr': {
+        '& th': {
+          padding: 8,
+          fontSize: 10,
+        },
         '& th:first-child': {
           textAlign: 'center',
         },
       },
     },
-    table: {
-      '& .MuiTableCell-root': {
-        backgroundColor: '#212121',
-      },
-    },
-  },
-  [`@media (orientation: landscape)`]: {
-    contentContainer: (props: videoStyleProps) => {
-      if (props.isLandscape)
-        return {
-          headerTable: {
-            '& tr': {
-              '& th': {
-                padding: '8px 8px 6px 8px',
-              },
-            },
-          },
-          bodyTable: {
-            '& tr': {
-              '& td': {
-                '&:first-child': {
-                  padding: '0px',
+    [`@media (orientation: landscape)`]: {
+      contentContainer: (props: videoStyleProps) => {
+        if (props.isLandscape)
+          return {
+            bodyTable: {
+              '& tr': {
+                '& td': {
+                  '&:first-child': {
+                    padding: '0px',
+                  },
                 },
               },
             },
-          },
-        }
+          }
+      },
     },
   },
 }))

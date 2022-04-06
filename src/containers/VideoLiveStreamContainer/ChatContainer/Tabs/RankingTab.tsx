@@ -18,6 +18,7 @@ import _ from 'lodash'
 import { RankingsItem } from '@services/videoTop.services'
 import userProfileStore from '@store/userProfile'
 import { UserProfile } from '@services/user.service'
+import { useRotateScreen } from '@utils/hooks/useRotateScreen'
 
 type RankingTabProps = { type?: string }
 
@@ -48,6 +49,7 @@ const RankingTab: React.FC<RankingTabProps> = () => {
   // const [activeSubTab, setActiveSubTab] = useState(SUB_TABS.RANKING.RECEIPT)
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down(769))
+  const { isLandscape } = useRotateScreen()
 
   const mineGiveInfo: RankingsItem = _.find(giverRankInfo, (v) => {
     return user_uuid && v?.uuid === user_uuid
@@ -116,7 +118,13 @@ const RankingTab: React.FC<RankingTabProps> = () => {
                     <RankingItem
                       key={k}
                       position={k + 1}
-                      avatar={<ESAvatar src={v?.master_uuid ? v?.master_avatar : v?.user_avatar} alt={name} size={40} />}
+                      avatar={
+                        <ESAvatar
+                          src={v?.master_uuid ? v?.master_avatar : v?.user_avatar}
+                          alt={name}
+                          size={isMobile && isLandscape ? 27 : 40}
+                        />
+                      }
                       type={v?.type}
                       tab={SUB_TABS.RANKING.RECEIPT}
                       name={name}
