@@ -1,8 +1,6 @@
 import ESAvatar from '@components/Avatar'
 import { Box, makeStyles, TableCell, TableRow, Typography } from '@material-ui/core'
 import { GiftsResponse } from '@services/deliveryReport.service'
-
-import { Colors } from '@theme/colors'
 import { FormatHelper } from '@utils/helpers/FormatHelper'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
@@ -65,11 +63,12 @@ const useStyles = makeStyles((theme) => ({
   },
   team: {
     fontSize: 10,
-    backgroundColor: Colors.grey['200'],
+    backgroundColor: '#767676',
     textAlign: 'center',
     borderRadius: 4,
     color: theme.palette.text.primary,
     maxWidth: 51,
+    minWidth: 51,
     display: 'flex',
     justifyContent: 'center',
     alignContent: 'center',
