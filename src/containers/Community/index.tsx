@@ -164,11 +164,12 @@ const CommunityContainer: React.FC<CommunityContainerProps> = ({ filter }) => {
         className={!screenDownSP ? 'google_ad_patten_1' : 'google_ad_patten_4'}
       />
       {/* GADS: home community 1-4*/}
-      <GoogleAd
+      {/* <GoogleAd
         id={{ idPatten1: !screenDownSP && 'ad_community_t', idPatten4: screenDownSP && 'ad_community_b' }}
         idTag={!screenDownSP ? 'ad_community_t' : 'ad_community_b'}
         slot={slotDataLayer}
-      />
+      /> */}
+      <GoogleAd id={{ idPatten1: 'ad_community_t' }} idTag={'ad_community_t'} slot={slotDataLayer} />
       <Box className={classes.header}>
         <Typography variant="h2">{t('common:home.community')}</Typography>
 

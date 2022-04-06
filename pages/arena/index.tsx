@@ -11,7 +11,7 @@ import { getIsAuthenticated } from '@store/auth/selectors'
 import { ESRoutes } from '@constants/route.constants'
 
 import { useEffect, useState } from 'react'
-import { useMediaQuery, useTheme } from '@material-ui/core'
+import { makeStyles, useMediaQuery, useTheme } from '@material-ui/core'
 import GoogleAd from '@components/GoogleAd'
 import { GTMHelper } from '@utils/helpers/SendGTM'
 
@@ -24,6 +24,7 @@ const TournamentPage: PageWithLayoutType = () => {
   const theme = useTheme()
   const screenDownSP = useMediaQuery(theme.breakpoints.down(576))
   const [slotDataLayer, setSlotDataLayer] = useState('')
+  const classes = useStyles()
 
   useEffect(() => {
     if (!isAuth && ['joined', 'organized'].includes(filter)) {
@@ -45,6 +46,7 @@ const TournamentPage: PageWithLayoutType = () => {
     <MainLayout
       loginRequired={false}
       adsOption={true}
+      styleContentMainLayout={classes.contentMainLayout}
       childrenAds={
         <>
           {screenDownSP && (
@@ -69,6 +71,13 @@ const TournamentPage: PageWithLayoutType = () => {
     </MainLayout>
   )
 }
+const useStyles = makeStyles(() => ({
+  contentMainLayout: {
+    minHeight: 'auto',
+    height: 'calc(100vh - 110px)', //60px(header)+50px(ads)
+    overflow: 'auto',
+  },
+}))
 
 function formatFilter(filterText: string) {
   if (!_.isString(filterText)) return TournamentFilterOption.all

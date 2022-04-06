@@ -136,11 +136,12 @@ const LobbyHome: React.FC<LobbyHomeProps> = ({ filter }) => {
         className={!screenDownSP ? 'google_ad_patten_1' : 'google_ad_patten_4'}
       />
       {/* GADS: home lobby 1-4*/}
-      <GoogleAd
+      <GoogleAd id={{ idPatten1: 'ad_lobby_t' }} idTag={'ad_lobby_t'} slot={slotDataLayer} />
+      {/* <GoogleAd
         id={{ idPatten1: !screenDownSP && 'ad_lobby_t', idPatten4: screenDownSP && 'ad_lobby_b' }}
         idTag={!screenDownSP ? 'ad_lobby_t' : 'ad_lobby_b'}
         slot={slotDataLayer}
-      />
+      /> */}
       <Header onFilter={onFilter} toCreate={toCreate} filter={filter} />
       <div className={`${classes.container} position_bottom`}>
         <InfiniteScroll

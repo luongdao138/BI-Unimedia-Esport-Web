@@ -81,18 +81,24 @@ const SearchPage: PageWithLayoutType = () => {
   }, [screenDownSP])
 
   return (
-    <MainLayout loginRequired={false}>
+    <MainLayout
+      loginRequired={false}
+      adsOption={true}
+      styleContentMainLayout={classes.contentMainLayout}
+      childrenAds={<>{screenDownSP && <GoogleAd id={{ idPatten3: 'ad_search_b' }} idTag={'ad_search_b'} slot={slotDataLayer} />}</>}
+    >
       <Box className="position_bottom">
         <div
           id={!screenDownSP ? 'ad_search_top' : 'ad_search_bottom'}
           className={!screenDownSP ? 'google_ad_patten_1' : 'google_ad_patten_4'}
         />
         {/* GADS: search 1-4*/}
-        <GoogleAd
+        <GoogleAd id={{ idPatten1: 'ad_search_t' }} idTag={'ad_search_t'} slot={slotDataLayer} />
+        {/* <GoogleAd
           id={{ idPatten1: !screenDownSP && 'ad_search_t', idPatten4: screenDownSP && 'ad_search_b' }}
           idTag={!screenDownSP ? 'ad_search_t' : 'ad_search_b'}
           slot={slotDataLayer}
-        />
+        /> */}
         <Box py={2} pl={3} display="flex" flexDirection="row" alignItems="center" borderBottom="1px solid #70707070">
           <IconButton className={classes.iconButtonBg} onClick={handleBack}>
             <Icon className={`fa fa-arrow-left ${classes.icon}`} fontSize="small" />
@@ -122,6 +128,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   label: {
     wordBreak: 'break-all',
     fontWeight: 'bold',
+  },
+  contentMainLayout: {
+    minHeight: 'auto',
+    height: 'calc(100vh - 110px)', //60px(header)+50px(ads)
+    overflow: 'auto',
   },
 }))
 

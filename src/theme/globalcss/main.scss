@@ -719,10 +719,10 @@ body.has-sticky-div .sticky-div {
     }
   }
   .content {
-    // min-height: calc(100vh - 264px);
+    min-height: calc(100vh - 264px);
     // background-color: #ff7ef6;
-    height: calc(100vh - 110px); //60px(header)+50px(ads)
-    overflow: auto;
+    // height: calc(100vh - 110px); //60px(header)+50px(ads)
+    // overflow: auto;
   }
 
   @media (max-width: 414px) {

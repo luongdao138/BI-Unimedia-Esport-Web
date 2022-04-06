@@ -60,11 +60,12 @@ const NotificationContainer: React.FC = () => {
         className={!screenDownSP ? 'google_ad_patten_1' : 'google_ad_patten_4'}
       />
       {/* GADS: notifications 1-4*/}
-      <GoogleAd
+      <GoogleAd id={{ idPatten1: 'ad_notifications_t' }} idTag={'ad_notifications_t'} slot={slotDataLayer} />
+      {/* <GoogleAd
         id={{ idPatten1: !screenDownSP && 'ad_notifications_t', idPatten4: screenDownSP && 'ad_notifications_b' }}
         idTag={!screenDownSP ? 'ad_notifications_t' : 'ad_notifications_b'}
         slot={slotDataLayer}
-      />
+      /> */}
       <HeaderWithButton title={t('common:notification.title')} />
       <InfiniteScroll
         className={classes.container}
