@@ -35,10 +35,19 @@ const MemberList: React.FC = () => {
   const [filterByName, setFilterByName] = useState('')
   const [listKey, setListKey] = useState(0)
   const [giftMasterList, setGiftMasterList] = useState(giftMasterData)
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     getAllGiftMaster(filterByName, filterByType)
   }, [])
+
+  useEffect(() => {
+    if (metaGetAllGiftMaster?.pending) {
+      setIsLoading(true)
+    } else {
+      setIsLoading(false)
+    }
+  }, [metaGetAllGiftMaster])
 
   useEffect(() => {
     if (reloadGiftMasterFlag) {
@@ -122,9 +131,9 @@ const MemberList: React.FC = () => {
   }, [])
 
   useEffect(() => {
-    setListKey((v) => v + 1)
     cache.clearAll()
     setGiftMasterList(giftMasterData)
+    setListKey((v) => v + 1)
   }, [giftMasterData])
 
   useEffect(() => {
@@ -170,7 +179,6 @@ const MemberList: React.FC = () => {
       </div>
     )
   }
-  const isLoading = metaGetAllGiftMaster?.pending
 
   const memberList = useMemo(() => {
     return (
