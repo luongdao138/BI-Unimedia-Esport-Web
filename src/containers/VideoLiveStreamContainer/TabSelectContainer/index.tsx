@@ -324,7 +324,8 @@ const useStyles = makeStyles((theme) => ({
     programInfoPanel: (props: { isLandscape?: boolean }) => {
       if (props.isLandscape)
         return {
-          overflow: 'auto',
+          overflowX: 'hidden',
+          overflowY: 'auto',
           flex: '1 1 0',
         }
     },
