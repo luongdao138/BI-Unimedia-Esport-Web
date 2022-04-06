@@ -111,6 +111,7 @@ const useStyles = makeStyles(() => ({
     color: Colors.white_opacity['70'],
     marginBottom: '4px',
     marginTop: '8px',
+    wordBreak: 'break-all',
   },
   actionButton: {
     width: '70px',
