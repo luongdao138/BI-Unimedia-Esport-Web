@@ -11,12 +11,19 @@ import { getIsAuthenticated } from '@store/auth/selectors'
 import { ESRoutes } from '@constants/route.constants'
 
 import { useEffect, useState } from 'react'
+import { useMediaQuery, useTheme } from '@material-ui/core'
+import GoogleAd from '@components/GoogleAd'
+import { GTMHelper } from '@utils/helpers/SendGTM'
 
 const TournamentPage: PageWithLayoutType = () => {
   const router = useRouter()
   const filter = _.get(router, 'query.filter', '') as string
   const isAuth = useAppSelector(getIsAuthenticated)
   const [render, setRender] = useState(false)
+
+  const theme = useTheme()
+  const screenDownSP = useMediaQuery(theme.breakpoints.down(576))
+  const [slotDataLayer, setSlotDataLayer] = useState('')
 
   useEffect(() => {
     if (!isAuth && ['joined', 'organized'].includes(filter)) {
@@ -25,12 +32,39 @@ const TournamentPage: PageWithLayoutType = () => {
       setRender(true)
     }
   }, [isAuth, router.query])
+  useEffect(() => {
+    GTMHelper.getAdSlot()
+    setSlotDataLayer(GTMHelper.getDataSlot(window?.dataLayer, GTMHelper.SCREEN_NAME_ADS.ARENA, screenDownSP))
+  }, [screenDownSP])
 
   if (!render) {
     return <></>
   }
+
   return (
-    <MainLayout loginRequired={false}>
+    <MainLayout
+      loginRequired={false}
+      adsOption={true}
+      childrenAds={
+        <>
+          {screenDownSP && (
+            <GoogleAd id={{ idPatten3: 'ad_arena_b' }} idTag={'ad_arena_b'} slot={slotDataLayer} currenPath={window.location.href} />
+          )}
+        </>
+      }
+    >
+      <div
+        id={!screenDownSP ? 'ad_arena_top' : 'ad_arena_bottom'}
+        className={!screenDownSP ? 'google_ad_patten_1' : 'google_ad_patten_4'}
+      />
+      {!screenDownSP && (
+        <GoogleAd
+          id={{ idPatten1: !screenDownSP && 'ad_arena_t' }}
+          slot={slotDataLayer}
+          idTag={'ad_arena_t'}
+          currenPath={window.location.href}
+        />
+      )}
       <ArenaHomeContainer filter={formatFilter(filter)} />
     </MainLayout>
   )

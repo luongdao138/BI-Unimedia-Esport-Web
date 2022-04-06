@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable no-console */
-import { Grid, Box, makeStyles, Theme, useTheme } from '@material-ui/core'
+import { Grid, Box, makeStyles, Theme } from '@material-ui/core'
 import useArenaHome from './useArenaHome'
 import TournamentCard from '@components/TournamentCard/HomeCard'
 import { TournamentFilterOption } from '@services/arena.service'
@@ -15,8 +15,8 @@ import useReturnHref from '@utils/hooks/useReturnHref'
 import ESLoader from '@components/Loader'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import HeaderArea from './HeaderArea'
-import GoogleAd from '@components/GoogleAd'
-import { GTMHelper } from '@utils/helpers/SendGTM'
+// import GoogleAd from '@components/GoogleAd'
+// import { GTMHelper } from '@utils/helpers/SendGTM'
 
 const cache = new CellMeasurerCache({
   fixedWidth: true,
@@ -38,9 +38,9 @@ const ArenaHome: React.FC<ArenaHomeProps> = ({ filter }) => {
   const matchesLG = useMediaQuery((theme: Theme) => theme.breakpoints.up('lg'))
   const matchesSM = useMediaQuery((theme: Theme) => theme.breakpoints.up('sm'))
 
-  const theme = useTheme()
-  const screenDownSP = useMediaQuery(theme.breakpoints.down(576))
-  const [slotDataLayer, setSlotDataLayer] = useState('')
+  // const theme = useTheme()
+  // const screenDownSP = useMediaQuery(theme.breakpoints.down(576))
+  // const [slotDataLayer, setSlotDataLayer] = useState('')
 
   useEffect(() => {
     if (listRef && listRef.current) listRef.current.recomputeRowHeights()
@@ -125,25 +125,33 @@ const ArenaHome: React.FC<ArenaHomeProps> = ({ filter }) => {
     )
   }
 
-  useEffect(() => {
-    GTMHelper.getAdSlot()
-    console.log('window.dataLayer ====================>', window?.dataLayer, window.location.href, slotDataLayer)
-    setSlotDataLayer(GTMHelper.getDataSlot(window?.dataLayer, GTMHelper.SCREEN_NAME_ADS.ARENA, screenDownSP))
-  }, [screenDownSP])
+  // useEffect(() => {
+  //   GTMHelper.getAdSlot()
+  //   console.log('window.dataLayer ====================>', window?.dataLayer, window.location.href, slotDataLayer)
+  //   setSlotDataLayer(GTMHelper.getDataSlot(window?.dataLayer, GTMHelper.SCREEN_NAME_ADS.ARENA, screenDownSP))
+  // }, [screenDownSP])
   return (
     <>
-      <div
+      {/* <div
         id={!screenDownSP ? 'ad_arena_top' : 'ad_arena_bottom'}
         className={!screenDownSP ? 'google_ad_patten_1' : 'google_ad_patten_4'}
-      />
+      /> */}
       {/* GADS: home arena */}
-      <GoogleAd
+      {/* <GoogleAd
         id={{ idPatten1: !screenDownSP && 'ad_arena_t', idPatten4: screenDownSP && 'ad_arena_b' }}
         //@ts-ignore
         slot={slotDataLayer}
         idTag={!screenDownSP ? 'ad_arena_t' : 'ad_arena_b'}
         currenPath={window.location.href}
-      />
+      /> */}
+      {/* {!screenDownSP &&
+        <GoogleAd
+          id={{ idPatten1: !screenDownSP && 'ad_arena_t' }}
+          //@ts-ignore
+          slot={slotDataLayer}
+          idTag={'ad_arena_t'}
+          currenPath={window.location.href}
+        />} */}
       <HeaderArea onFilter={onFilter} toCreate={toCreate} filter={filter} />
       <div className="position_bottom">
         <div className={classes.container}>
