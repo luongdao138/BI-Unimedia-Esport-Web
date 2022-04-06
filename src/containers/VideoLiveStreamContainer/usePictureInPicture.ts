@@ -24,7 +24,7 @@ const usePictureInPicture = () => {
     try {
       if (isCheckEnablePIP(videoElement) && getMiniPlayerState) {
         await videoElement.requestPictureInPicture()
-        videoElement.play()
+        // videoElement.play()
       }
     } catch (error) {
       console.log('error pictureInPicture-----------', error)

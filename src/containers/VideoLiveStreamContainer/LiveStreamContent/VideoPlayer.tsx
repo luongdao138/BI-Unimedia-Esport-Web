@@ -151,9 +151,10 @@ const VideoPlayer: React.FC<PlayerProps> = ({
         document.exitPictureInPicture()
       }
     }
+
     router.events.on('routeChangeStart', handleRouteChange)
     return () => {
-      // router.events.off('routeChangeStart', handleRouteChange)
+      router.events.off('routeChangeStart', handleRouteChange)
     }
   }, [])
   useEffect(() => {
@@ -167,9 +168,9 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     }
   }, [getMiniPlayerState])
 
-  function handleExitPictureInPicture() {
-    exitPIP(videoEl.current)
-  }
+  // function handleExitPictureInPicture() {
+  //   exitPIP(videoEl.current)
+  // }
 
   useEffect(() => {
     // if (!isPortrait) {
@@ -750,7 +751,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
             // className={classes.video}
           />
           {getMiniPlayerState && (
-            <Box id="exist-picture-in-picture" className={classes.existPictureInPicture} onClick={handleExitPictureInPicture}>
+            <Box id="exist-picture-in-picture" className={classes.existPictureInPicture}>
               <Box textAlign="center">
                 <img src={'/images/ic_picture_in_picture.svg'} />
                 <Typography className={classes.textInPictureInPicture}>{t('videos_top_tab.mini_player_message')}</Typography>
