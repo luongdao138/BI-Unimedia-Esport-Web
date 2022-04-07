@@ -192,7 +192,7 @@ const DetailReport: React.FC<DetailReportProps> = ({ videoId }) => {
               classTable={classes.table}
               tableHeader={
                 <TableRow className={classes.rowHeader}>
-                  <TableCell style={{ width: '10%' }} align="center">
+                  <TableCell style={{ width: '5%' }} align="center">
                     <Typography className={classes.textHeader}>{t('streaming_gift_report_screen.no')}</Typography>
                   </TableCell>
                   <TableCell style={{ width: '20%' }} align="center">
@@ -201,7 +201,7 @@ const DetailReport: React.FC<DetailReportProps> = ({ videoId }) => {
                   <TableCell style={{ width: '20%' }} align="center">
                     <Typography className={classes.textHeader}> {t('streaming_gift_report_screen.eXeLAB_ID')}</Typography>
                   </TableCell>
-                  <TableCell style={{ width: '15%' }} align="center">
+                  <TableCell style={{ width: '20%' }} align="center">
                     <Typography className={classes.textHeader}> {t('common.eXe_points')}</Typography>
                   </TableCell>
                   <TableCell style={{ width: '15%' }} align="center">
