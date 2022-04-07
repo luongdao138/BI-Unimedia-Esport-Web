@@ -258,7 +258,11 @@ const useStyles = makeStyles((theme) => ({
     zIndex: 99,
     display: 'none',
     '&$active': {
-      display: 'block',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '8px',
+      paddingTop: '12px',
+      paddingBottom: '8px',
     },
   },
   textTabVideoProgramInfo: {
@@ -292,27 +296,13 @@ const useStyles = makeStyles((theme) => ({
   },
   selectSubTab: {
     textAlign: 'center',
-    padding: 10,
+    // padding: 10,
     color: Colors.white_opacity[30],
     '&$active': {
       color: Colors.white,
     },
   },
   active: {},
-
-  [theme.breakpoints.down(376)]: {
-    textTabVideo: {
-      fontSize: 10,
-    },
-    textTabVideoProgramInfo: {
-      fontSize: 10,
-    },
-    selectSubTab: {
-      textAlign: 'center',
-      padding: 5,
-      fontSize: 10,
-    },
-  },
 
   [`@media (orientation: landscape)`]: {
     textTabVideoProgramInfo: (props: { isLandscape?: boolean }) => {
@@ -337,6 +327,48 @@ const useStyles = makeStyles((theme) => ({
           overflow: 'auto',
           flex: '1 1 0',
         }
+    },
+    selectSubTab: (props: { isLandscape?: boolean }) => {
+      if (props.isLandscape) {
+        return {
+          fontSize: props.isLandscape ? 10 : 12,
+        }
+      }
+    },
+  },
+  [theme.breakpoints.down(769)]: {
+    textTabVideo: (props: { isLandscape?: boolean }) => {
+      if (props.isLandscape) {
+        return {
+          fontSize: 7,
+        }
+      } else {
+        return {
+          fontSize: 10,
+        }
+      }
+    },
+    textTabVideoProgramInfo: (props: { isLandscape?: boolean }) => {
+      if (props.isLandscape) {
+        return {
+          fontSize: 7,
+        }
+      } else {
+        return {
+          fontSize: 10,
+        }
+      }
+    },
+    selectSubTab: (props: { isLandscape?: boolean }) => {
+      if (props.isLandscape) {
+        return {
+          fontSize: 7,
+        }
+      } else {
+        return {
+          fontSize: 10,
+        }
+      }
     },
   },
 }))

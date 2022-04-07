@@ -6,6 +6,7 @@ import { FormatHelper } from '@utils/helpers/FormatHelper'
 import React from 'react'
 import TipButtonGroup from './TipButtonGroup'
 import { sanitizeMess } from '../index'
+import { useRotateScreen } from '@utils/hooks/useRotateScreen'
 
 type Step3Props = {
   onChangeStep?: (newStep: number) => void
@@ -16,7 +17,8 @@ type Step3Props = {
 }
 
 const Step3: React.FC<Step3Props> = ({ tipInfo, onChangeStep, selectedMember, onPressDonate, errorMsgDonatePoint }) => {
-  const classes = useStyles()
+  const { isLandscape } = useRotateScreen()
+  const classes = useStyles({ isLandscape })
 
   const onCancel = () => {
     onChangeStep(2)
@@ -65,6 +67,10 @@ const Step3: React.FC<Step3Props> = ({ tipInfo, onChangeStep, selectedMember, on
       </Box>
     </Box>
   )
+}
+
+interface StyleProps {
+  isLandscape: boolean
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -131,6 +137,16 @@ const useStyles = makeStyles((theme) => ({
     },
     message: {
       fontSize: '10px',
+    },
+    [`@media (orientation: landscape)`]: {
+      container: (props: StyleProps) => {
+        if (props.isLandscape) {
+          return {
+            maxHeight: 160,
+            overflow: 'auto',
+          }
+        }
+      },
     },
   },
 }))

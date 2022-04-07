@@ -997,6 +997,7 @@ const useStyles = makeStyles((theme) => ({
       // },
     },
   },
+
   [`@media (orientation: landscape)`]: {
     root: (props: videoStyleProps) => {
       if (props.isLandscape)
@@ -1030,6 +1031,16 @@ const useStyles = makeStyles((theme) => ({
           flexWrap: 'nowrap',
           flexDirection: 'column',
         }
+    },
+    [`@media (orientation: landscape)`]: {
+      [theme.breakpoints.down(769)]: {
+        wrapChatContainer: (props: videoStyleProps) => {
+          if (props.isLandscape)
+            return {
+              overflow: 'unset',
+            }
+        },
+      },
     },
   },
 }))
