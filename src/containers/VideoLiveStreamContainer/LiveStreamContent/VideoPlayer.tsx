@@ -5,7 +5,7 @@
 import ESLoader from '@components/Loader'
 import { DELAY_SECONDS } from '@constants/common.constants'
 import { Box, Icon, makeStyles, Theme, Typography, useMediaQuery, useTheme } from '@material-ui/core'
-import { STATUS_VIDEO } from '@services/videoTop.services'
+import { QualitiesType, STATUS_VIDEO } from '@services/videoTop.services'
 import useLiveStreamDetail from '../useLiveStreamDetail'
 import { Colors } from '@theme/colors'
 import React, { memo, useCallback, useContext, useEffect, useRef, useState } from 'react'
@@ -48,7 +48,7 @@ interface PlayerProps {
     videoWidth: number
     videoHeight: number
   }
-  qualities?: Array<string>
+  qualities?: Array<QualitiesType>
 }
 
 const VideoPlayer: React.FC<PlayerProps> = ({
