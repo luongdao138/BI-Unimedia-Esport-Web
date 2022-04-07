@@ -6,6 +6,7 @@ import {
   REGEX_DETECT_BRANCH,
   FORMAT_YEAR_MONTH,
   RECEIVER_RANK_TYPE,
+  FORMAT_TIME_SAFARI,
 } from '@constants/common.constants'
 import { StoreType } from '@store/store'
 import _ from 'lodash'
@@ -262,7 +263,7 @@ const formatDateTimeJP = (date: string): string => {
   return dateResult
 }
 const formatDateYearMonth = (date: string): string => {
-  const dateResult = moment(date).format(FORMAT_YEAR_MONTH)
+  const dateResult = moment(date, FORMAT_TIME_SAFARI).format(FORMAT_YEAR_MONTH)
   return dateResult
 }
 
