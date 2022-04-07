@@ -79,12 +79,13 @@ const ListGroupGift: React.FC<IProps> = ({ onChangeTab, handleSelectGroup, handl
             <Box mt={3} mb={3}>
               <Typography className={classes.tipTargetToSet}>{t('streaming_gift_report_screen.select_tip_target_list')}</Typography>
             </Box>
-            {giftGroupsMeta.pending ? (
-              <Box display="flex" justifyContent="center">
-                <ESLoader />
-              </Box>
-            ) : (
-              <>
+            {
+              <Box className={classes.container}>
+                {giftGroupsMeta.pending ? (
+                  <Box className={classes.loaderContainer}>
+                    <ESLoader />
+                  </Box>
+                ) : null}
                 {giftGroupTotal > 0 ? (
                   <ESTable
                     tableHeader={
@@ -127,8 +128,8 @@ const ListGroupGift: React.FC<IProps> = ({ onChangeTab, handleSelectGroup, handl
                 ) : (
                   <Typography align="center">{t('streaming_setting_screen.no_one_has_been_created_yet')}</Typography>
                 )}
-              </>
-            )}
+              </Box>
+            }
             <Box display="flex" justifyContent="center" mt={4} pb={2}>
               <Pagination page={page} pageNumber={getTotalPage()} setPage={setPage} />
             </Box>
@@ -155,6 +156,23 @@ export const ParticipantsButton: React.FC<ParticipantsButtonProps> = ({ onClick,
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
+  container: {
+    width: '100%',
+    height: '100%',
+    position: 'relative',
+  },
+  loaderContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 5,
+  },
   buttonBack: {
     borderBottomColor: '#FFFFFF4D',
     borderBottomStyle: 'solid',
