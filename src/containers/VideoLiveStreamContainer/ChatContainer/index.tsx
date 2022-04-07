@@ -355,14 +355,14 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     const { dataPurchaseTicketSuperChat } = usePurchaseTicketSuperChat()
     // const dispatch = useAppDispatch()
 
-    // const isEnabledChat =
-    //   videoType === STATUS_VIDEO.LIVE_STREAM &&
-    //   !liveStreamInfo.is_end_live &&
-    //   (+streamingSecond >= 0 || streamingSecond === Infinity) &&
-    //   successGetListMess &&
-    //   successGetListDonateMess &&
-    //   successGetListMessTip
-    const isEnabledChat = true
+    const isEnabledChat =
+      videoType === STATUS_VIDEO.LIVE_STREAM &&
+      !liveStreamInfo.is_end_live &&
+      (+streamingSecond >= 0 || streamingSecond === Infinity) &&
+      successGetListMess &&
+      successGetListDonateMess &&
+      successGetListMessTip
+    // const isEnabledChat = true
     // console.log('🚀 ~ isEnabledChat', isEnabledChat)
     // console.log('🚀 ~ successGetListMessTip', successGetListMessTip)
 
@@ -927,16 +927,19 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     // console.log('🚀 ~ isStreaming ~ videoPlayedSecond.current', videoPlayedSecond.current)
     // console.log('🚀 ~ isStreaming ~ streamingSecond', streamingSecond)
     const isStreaming = (() => {
-      // if (videoType === STATUS_VIDEO.LIVE_STREAM) {
-      return true
-      // if (streamingSecond === Infinity) {
-      //   return true
-      // }
-      // if (videoPlayedSecond.current >= streamingSecond) {
-      //   return true
-      // }
-      // }
-      // return false
+      // console.log('🚀 ~ isStreaming ~ videoType', videoType, videoPlayedSecond.current, streamingSecond)
+      // console.log('🚀 ~ isStreaming ~ videoPlayedSecond.current >= streamingSecond', videoPlayedSecond.current >= streamingSecond)
+      // return true
+      if (videoType === STATUS_VIDEO.LIVE_STREAM) {
+        return true
+        // if (streamingSecond === Infinity) {
+        //   return true
+        // }
+        // if (videoPlayedSecond.current >= streamingSecond) {
+        //   return true
+        // }
+      }
+      return false
     })()
 
     const renderLoader = () => {
@@ -2040,13 +2043,13 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
           }
         }
 
-        // try {
-        //   const result = await API.graphql(graphqlOperation(createMessage, { input }))
-        //   refCreateMessLocal.current(result, local_message)
-        // } catch (errors) {
-        //   if (errors && errors.errors.length !== 0) refCreateMessLocal.current([], local_message, true)
-        //   console.error(errors)
-        // }
+        try {
+          const result = await API.graphql(graphqlOperation(createMessage, { input }))
+          refCreateMessLocal.current(result, local_message)
+        } catch (errors) {
+          if (errors && errors.errors.length !== 0) refCreateMessLocal.current([], local_message, true)
+          console.error(errors)
+        }
       }
     }
 
