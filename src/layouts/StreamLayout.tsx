@@ -137,7 +137,7 @@ const StreamLayout: React.FC<StreamLayoutProps> = ({
 
 StreamLayout.defaultProps = {
   patternBg: true,
-  footer: true,
+  footer: false,
   loginRequired: true,
   minimizeLayout: false,
   isFullLayout: false,

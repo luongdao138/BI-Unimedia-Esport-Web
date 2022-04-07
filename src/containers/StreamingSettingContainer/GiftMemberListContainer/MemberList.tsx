@@ -240,6 +240,7 @@ const useStyles = makeStyles((theme) => ({
   },
   container: {
     marginRight: '6px',
+    marginBottom: '156px',
   },
   newListHeader: {
     fontSize: '12px',
