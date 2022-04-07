@@ -12,6 +12,7 @@ import Step3 from './Step3'
 import Icon from '@material-ui/core/Icon'
 import usePurchaseTicketSuperChat from '@containers/VideoLiveStreamContainer/usePurchaseTicket'
 import useDetailVideo from '@containers/VideoLiveStreamContainer/useDetailVideo'
+import { useRotateScreen } from '@utils/hooks/useRotateScreen'
 // import * as commonActions from '@store/common/actions'
 // import { useAppDispatch } from '@store/hooks'
 export type TipMessProps = {
@@ -42,6 +43,7 @@ const TipChatDialog: React.FC<TipChatDialogProps> = ({
   // const dispatch = useAppDispatch()
   const { dataPurchaseTicketSuperChat } = usePurchaseTicketSuperChat()
   const { videoGiftMaster, videoGiftMasterLoading } = useDetailVideo()
+  const { isLandscape } = useRotateScreen()
 
   const { myPointsData } = usePointsManage()
   // const getPurchasePointList = () => Object.values(purchasePoints)
@@ -85,7 +87,7 @@ const TipChatDialog: React.FC<TipChatDialogProps> = ({
 
   const ref = useRef<any>()
 
-  const classes = useStyles()
+  const classes = useStyles({ isLandscape })
 
   useEffect(() => {
     if (onClickOutside) {
@@ -168,6 +170,18 @@ const TipChatDialog: React.FC<TipChatDialogProps> = ({
     setPurchaseValueSelected(id)
   }
 
+  const getTipDialogBottom = () => {
+    if (isLandscape) {
+      return 0
+    }
+
+    if (isMobile) {
+      return 80
+    } else {
+      return normalMessHasError ? 116 : 105
+    }
+  }
+
   const commonStepProps = {
     onChangeStep,
     selectedMember,
@@ -243,7 +257,7 @@ const TipChatDialog: React.FC<TipChatDialogProps> = ({
   }, [totalSteps])
 
   return (
-    <div className={classes.tipChatDialogContainer} ref={ref} style={{ bottom: isMobile ? 80 : normalMessHasError ? 116 : 105 }}>
+    <div className={classes.tipChatDialogContainer} ref={ref} style={{ bottom: getTipDialogBottom() }}>
       <Box className={classes.wrapTitle}>
         <Box className={classes.closeButton} onClick={onClickOutside}>
           <Icon className={`fa fa-times`} fontSize="small" />
@@ -274,6 +288,10 @@ const TipChatDialog: React.FC<TipChatDialogProps> = ({
       </Box>
     </div>
   )
+}
+
+interface StyleProps {
+  isLandscape: boolean
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -312,7 +330,7 @@ const useStyles = makeStyles((theme) => ({
     position: 'absolute',
     left: '0',
     right: '0',
-    zIndex: 4,
+    zIndex: 30,
     margin: '0 8px 13px 16px',
     padding: '13px 8px 13px',
     background: '#161616',
@@ -326,13 +344,21 @@ const useStyles = makeStyles((theme) => ({
   currentStep: { fontSize: '14px', color: '#fff' },
   totalSteps: { fontSize: '10px', color: Colors.white_opacity[70] },
   [theme.breakpoints.down(769)]: {
-    tipChatDialogContainer: {
-      position: 'fixed',
-      margin: '0 8px',
-      zIndex: 30,
-      paddingBottom: 8,
-      maxWidth: '400px',
-      left: '10px',
+    tipChatDialogContainer: (props: StyleProps) => {
+      if (!props.isLandscape) {
+        return {
+          position: 'fixed',
+          margin: '0 8px',
+          zIndex: 30,
+          paddingBottom: 8,
+          maxWidth: '400px',
+          left: '10px',
+        }
+      } else {
+        return {
+          left: '-90px',
+        }
+      }
     },
     titleDialog: {
       fontSize: '13px',
@@ -345,6 +371,13 @@ const useStyles = makeStyles((theme) => ({
     textMyPoint: { fontSize: '9px', lineHeight: '13px' },
     purchasePointText: { fontSize: '9px', lineHeight: '13px', marginBottom: 8 },
   },
+  // [`@media (orientation: landscape)`]: {
+  //   tipChatDialogContainer: (props: StyleProps) => {
+  //      if(props.isLandscape) {
+  //        return
+  //      }
+  //   },
+  // },
 }))
 
 export default TipChatDialog

@@ -18,6 +18,7 @@ import _ from 'lodash'
 import { RankingsItem } from '@services/videoTop.services'
 import userProfileStore from '@store/userProfile'
 import { UserProfile } from '@services/user.service'
+import { useRotateScreen } from '@utils/hooks/useRotateScreen'
 
 type RankingTabProps = { type?: string }
 
@@ -44,10 +45,11 @@ const RankingTab: React.FC<RankingTabProps> = () => {
   const userProfile = useAppSelector<UserProfile>(selectors.getUserProfile)
   const user_uuid = userProfile?.attributes?.uuid
   const { t } = useTranslation('common')
-  const classes = useStyles()
   // const [activeSubTab, setActiveSubTab] = useState(SUB_TABS.RANKING.RECEIPT)
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down(769))
+  const { isLandscape } = useRotateScreen()
+  const classes = useStyles({ isLandscape })
 
   const mineGiveInfo: RankingsItem = _.find(giverRankInfo, (v) => {
     return user_uuid && v?.uuid === user_uuid
@@ -116,7 +118,13 @@ const RankingTab: React.FC<RankingTabProps> = () => {
                     <RankingItem
                       key={k}
                       position={k + 1}
-                      avatar={<ESAvatar src={v?.master_uuid ? v?.master_avatar : v?.user_avatar} alt={name} size={40} />}
+                      avatar={
+                        <ESAvatar
+                          src={v?.master_uuid ? v?.master_avatar : v?.user_avatar}
+                          alt={name}
+                          size={isMobile && isLandscape ? 27 : 40}
+                        />
+                      }
                       type={v?.type}
                       tab={SUB_TABS.RANKING.RECEIPT}
                       name={name}
@@ -164,6 +172,10 @@ const RankingTab: React.FC<RankingTabProps> = () => {
   )
 }
 
+interface StyleProps {
+  isLandscape: boolean
+}
+
 const useStyles = makeStyles((theme) => ({
   loaderBox: {
     flexGrow: 0,
@@ -192,12 +204,14 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
   },
   [theme.breakpoints.down(769)]: {
-    rankingContainer: {
-      marginLeft: 10,
-      marginRight: 10,
-      background: '#212121',
-      padding: '0 8px',
-      height: 440,
+    [`@media (orientation: landscape)`]: {
+      rankingContainer: (props: StyleProps) => ({
+        marginLeft: 10,
+        marginRight: 10,
+        background: '#212121',
+        padding: '0 8px',
+        height: props.isLandscape ? 'auto' : 440,
+      }),
     },
   },
 }))

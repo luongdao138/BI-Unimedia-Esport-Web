@@ -4,6 +4,7 @@ import i18n from '@locales/i18n'
 import { Box, InputAdornment, makeStyles, Typography } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import { FormatHelper } from '@utils/helpers/FormatHelper'
+import { useRotateScreen } from '@utils/hooks/useRotateScreen'
 import { useFormik } from 'formik'
 import React, { useEffect, useRef } from 'react'
 // import * as Yup from 'yup'
@@ -29,7 +30,8 @@ const Step2: React.FC<Step2Props> = ({
   onChangePurchaseValueSelected,
   isNoHaveListUsers,
 }) => {
-  const classes = useStyles()
+  const { isLandscape } = useRotateScreen()
+  const classes = useStyles({ isLandscape })
   const getPurchasePointList = () => Object.values(purchasePoints)
   // const [purchaseValueSelected, setPurchaseValueSelected] = useState<string>('p_100')
 
@@ -166,6 +168,9 @@ const Step2: React.FC<Step2Props> = ({
     </Box>
   )
 }
+interface StyleProps {
+  isLandscape: boolean
+}
 
 const useStyles = makeStyles((theme) => ({
   dialogPanel: { background: `${Colors.white_opacity[10]}`, borderRadius: '5px', padding: '8px 20px 20px 30px' },
@@ -296,8 +301,20 @@ const useStyles = makeStyles((theme) => ({
       fontSize: '10px',
       lineHeight: '13px',
     },
-    dialogPanel: {
-      padding: 16,
+    [`@media (orientation: landscape)`]: {
+      dialogPanel: (props: StyleProps) => {
+        if (props.isLandscape) {
+          return {
+            padding: 16,
+            maxHeight: 160,
+            overflow: 'auto',
+          }
+        } else {
+          return {
+            padding: 16,
+          }
+        }
+      },
     },
   },
 }))
