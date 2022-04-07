@@ -200,6 +200,11 @@ export type VideoDetailParams = {
   user_id?: number
 }
 
+export type QualitiesType = {
+  output_name?: string
+  url?: string
+}
+
 export type VideoDetailData = {
   uuid?: string
   archived_url?: string
@@ -239,7 +244,7 @@ export type VideoDetailData = {
   ranking_flag?: number
   use_gift?: number
   group_items?: any
-  qualities?: Array<string>
+  qualities?: Array<QualitiesType>
 }
 
 export type DetailUserData = {

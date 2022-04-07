@@ -14,6 +14,7 @@ import VideoResolutionPanel from '@containers/VideoLiveStreamContainer/LiveStrea
 import ReportPanel from '@containers/VideoLiveStreamContainer/LiveStreamContent/ReportPanel'
 import useLiveStreamDetail from '@containers/VideoLiveStreamContainer/useLiveStreamDetail'
 import { VIDEO_RESOLUTION } from '@services/liveStreamDetail.service'
+import { QualitiesType } from '@services/videoTop.services'
 
 interface ControlProps {
   ref: any
@@ -33,7 +34,7 @@ interface ControlProps {
   onReloadTime?: () => void
   handleOnRestart?: () => void
   resultResolution?: (index?: number, flag?: boolean, item?: string) => void
-  qualities?: Array<string>
+  qualities?: Array<QualitiesType>
 }
 
 export enum SettingPanelState {
@@ -157,6 +158,12 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
       setSpeed(item)
 
       closeSettingPanel()
+    }
+
+    const handleQualitiesArray = () => {
+      const result = []
+      qualities.map((i) => result.push(i.output_name))
+      return result
     }
 
     return (
@@ -326,7 +333,7 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
               {settingPanel === SettingPanelState.VIDEO_RESOLUTION && (
                 <VideoResolutionPanel
                   selectedResolution={resolution}
-                  resolutionList={[VIDEO_RESOLUTION.AUTO].concat(qualities)}
+                  resolutionList={[VIDEO_RESOLUTION.AUTO].concat(handleQualitiesArray())}
                   // resolutionList={['480p']}
                   handleOnBackClick={handleOnResolutionPanelBackClick}
                   onSelected={handleSelectedResolution}
