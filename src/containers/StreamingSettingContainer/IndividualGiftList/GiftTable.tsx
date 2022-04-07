@@ -1,4 +1,4 @@
-import { Box, TableCell, TableRow, Typography, useMediaQuery, useTheme } from '@material-ui/core'
+import { Box, makeStyles, TableCell, TableRow, Typography, useMediaQuery, useTheme } from '@material-ui/core'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import GiftTableRow from '@containers/StreamingSettingContainer/IndividualGiftList/GiftTableRow'
@@ -20,6 +20,7 @@ const GiftTable: React.FC<Props> = ({ data, handleGoToEditGiftGroupState, refres
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
   const { t } = useTranslation('common')
+  const classes = useStyles()
 
   const header = () => {
     return (
@@ -58,15 +59,46 @@ const GiftTable: React.FC<Props> = ({ data, handleGoToEditGiftGroupState, refres
       )
     })
   }
-  return isLoading ? (
-    <Box display="flex" justifyContent="center">
-      <ESLoader />
-    </Box>
-  ) : (
-    <>
+  return (
+    <Box className={classes.container}>
+      {isLoading ? (
+        <Box className={classes.loaderContainer}>
+          <ESLoader />
+        </Box>
+      ) : null}
       <ESTable tableHeader={header()}>{tableContent()}</ESTable>
-    </>
+    </Box>
   )
+
+  // return isLoading ? (
+  //   <Box display="flex" justifyContent="center">
+  //     <ESLoader />
+  //   </Box>
+  // ) : (
+  //   <>
+  //     <ESTable tableHeader={header()}>{tableContent()}</ESTable>
+  //   </>
+  // )
 }
+
+const useStyles = makeStyles(() => ({
+  container: {
+    width: '100%',
+    height: '100%',
+    position: 'relative',
+  },
+  loaderContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 5,
+  },
+}))
 
 export default GiftTable
