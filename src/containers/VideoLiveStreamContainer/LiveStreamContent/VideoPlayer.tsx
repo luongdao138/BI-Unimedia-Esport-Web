@@ -128,7 +128,6 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   const [resolution, setResolution] = useState(VIDEO_RESOLUTION_HLS.AUTO)
   const [srcResolution, setSrcResolution] = useState(src)
   const [resolutionSelected, setResolutionSelected] = useState(VIDEO_RESOLUTION.AUTO)
-  const [arrayLevelsAvailable, setArrayLevelsAvailable] = useState([])
   const [playRateReturn, setPlayRateReturn] = useState(1)
   const {
     requestPIP,
@@ -349,9 +348,6 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       //@ts-ignore
       hls.attachMedia(video)
       hls.on(Hls.Events.MEDIA_ATTACHED, handleMedia)
-      hls.on(Hls.Events.MANIFEST_LOADED, (_, e) => {
-        setArrayLevelsAvailable(e.levels)
-      })
     }
     return () => {
       if (hls && src) {
@@ -379,9 +375,9 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       //@ts-ignore
       hls.attachMedia(document.getElementById('video'))
       if (resolution !== -1) {
-        const a = arrayLevelsAvailable.find((i) => i.url.includes(`${resolutionSelected}`))
+        const a = qualities.find((i) => i.url.includes(`${resolutionSelected}`))
         if (a) {
-          console.log('===MANIFEST_LOADED=====', arrayLevelsAvailable, a, resolutionSelected)
+          console.log('===MANIFEST_LOADED=====', qualities, a, resolutionSelected)
           setSrcResolution(a?.url)
         }
       } else {
