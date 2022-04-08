@@ -181,6 +181,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   }, [liveStreamInfo.is_streaming_end])
 
   useEffect(() => {
+    console.log('=====xxxxx======')
     if (isArchived) {
       if (videoEl.current !== null) {
         videoEl.current.currentTime = 0
@@ -349,6 +350,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       hls.attachMedia(video)
       hls.on(Hls.Events.MEDIA_ATTACHED, handleMedia)
     }
+    console.log('======xxxxxxxx=====>>>>>')
     return () => {
       if (hls && src) {
         hls.detachMedia()
@@ -388,7 +390,20 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       if (srcResolution) {
         hls.loadSource(srcResolution)
       }
+    } else {
+      if (resolution !== -1) {
+        const a = qualities.find((i) => i.url.includes(`${resolutionSelected}`))
+        if (a) {
+          console.log('===IOS=====', qualities, a, resolutionSelected)
+          setSrcResolution(a?.url)
+        }
+      } else {
+        setSrcResolution(src)
+      }
+      console.warn('link====IOS==>>>', srcResolution, playedSeconds)
+      videoEl.current.playbackRate = playRateReturn
     }
+    document.createElement('video').currentTime = 40
     return () => {
       if (hls && src) {
         hls.detachMedia()
@@ -737,13 +752,14 @@ const VideoPlayer: React.FC<PlayerProps> = ({
             muted={muted}
             style={{ width: '100%', height: '100%' }}
             autoPlay={autoPlay}
-            src={src}
-            controls={iPhonePl || androidPl || isMobile}
+            src={srcResolution}
+            // controls={iPhonePl || androidPl || isMobile}
             //@ts-ignore
             playsInline={iPhonePl || androidPl}
             preload={'auto'}
             controlsList="noplaybackrate foobar"
             // className={classes.video}
+            controls={false}
           />
           {getMiniPlayerState && (
             <Box id="exist-picture-in-picture" className={classes.existPictureInPicture} onClick={handleExitPictureInPicture}>
@@ -778,42 +794,42 @@ const VideoPlayer: React.FC<PlayerProps> = ({
           )}
         </div>
 
-        {!isMobile && !androidPl && !iPhonePl && isLoadedMetaData && (
-          <div className={`${classes.processControl} ${isOpenSettingPanel && classes.showControl}`}>
-            {videoType !== STATUS_VIDEO.LIVE_STREAM && (
-              <SeekBar
-                videoRef={videoEl}
-                durationsPlayer={durationPlayer}
-                currentTime={playedSeconds}
-                changeStatusStreaming={(status) => {
-                  setIsStreaming(status)
-                }}
-              />
-            )}
-            <div className={classes.controlOut}>
-              <ControlBarPlayer
-                ref={refControlBar}
-                videoRef={videoEl}
-                onPlayPause={handlePlayPause}
-                playing={playing}
-                muted={muted}
-                durationsPlayer={durationPlayer}
-                currentTime={playedSeconds}
-                handleFullScreen={toggleFullScreen1}
-                onMute={handleMute}
-                onChangeVol={handleChangeVol}
-                onChangeVolDrag={handleChangeVolDrag}
-                volume={volume}
-                isLive={isLive}
-                videoStatus={videoType}
-                onReloadTime={handleReloadTime}
-                handleOnRestart={handleOnRestart}
-                resultResolution={(index, flag, item) => changeResolution(index, flag, item)}
-                qualities={qualities}
-              />
-            </div>
+        {/* {!isMobile && !androidPl && !iPhonePl && isLoadedMetaData && ( */}
+        <div className={`${classes.processControl} ${isOpenSettingPanel && classes.showControl}`}>
+          {videoType !== STATUS_VIDEO.LIVE_STREAM && (
+            <SeekBar
+              videoRef={videoEl}
+              durationsPlayer={durationPlayer}
+              currentTime={playedSeconds}
+              changeStatusStreaming={(status) => {
+                setIsStreaming(status)
+              }}
+            />
+          )}
+          <div className={classes.controlOut}>
+            <ControlBarPlayer
+              ref={refControlBar}
+              videoRef={videoEl}
+              onPlayPause={handlePlayPause}
+              playing={playing}
+              muted={muted}
+              durationsPlayer={durationPlayer}
+              currentTime={playedSeconds}
+              handleFullScreen={toggleFullScreen1}
+              onMute={handleMute}
+              onChangeVol={handleChangeVol}
+              onChangeVolDrag={handleChangeVolDrag}
+              volume={volume}
+              isLive={isLive}
+              videoStatus={videoType}
+              onReloadTime={handleReloadTime}
+              handleOnRestart={handleOnRestart}
+              resultResolution={(index, flag, item) => changeResolution(index, flag, item)}
+              qualities={qualities}
+            />
           </div>
-        )}
+        </div>
+        {/* )} */}
         {/*errorVideo && <div className={classes.loading} />} */}
         {/* {visible.videoError && (
           <div className={classes.overViewError}>
