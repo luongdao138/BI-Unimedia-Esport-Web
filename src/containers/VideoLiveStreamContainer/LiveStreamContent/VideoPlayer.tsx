@@ -131,7 +131,6 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   const [playRateReturn, setPlayRateReturn] = useState(1)
   const {
     requestPIP,
-    exitPIP,
     isCheckShowingPIP,
     listenEnteredPIP,
     listenLeavedPIP,
@@ -155,26 +154,27 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       // router.events.off('routeChangeStart', handleRouteChange)
     }
   }, [])
-  useEffect(() => {
-    // IS SHOWING PIP?
-    if (isLoadedMetaData) {
-      if (isCheckShowingPIP()) {
-        exitPIP(videoEl.current)
-      } else {
-        requestPIP(videoEl.current)
-      }
-    }
-  }, [getMiniPlayerState])
-
-  function handleExitPictureInPicture() {
-    exitPIP(videoEl.current)
-  }
 
   useEffect(() => {
     // if (!isPortrait) {
     //   toggleFullScreen1()
     // }
   }, [isPortrait])
+
+  useEffect(() => {
+    // IS SHOWING PIP?
+    if (getMiniPlayerState) {
+      if (isLoadedMetaData) {
+        videoEl.current.muted = false
+        requestPIP(videoEl.current)
+      }
+    } else {
+      videoEl.current.onpause = function () {
+        setState({ ...state, playing: false })
+        setVisible({ ...visible, loading: true, videoLoaded: false })
+      }
+    }
+  }, [getMiniPlayerState])
 
   useEffect(() => {
     isStreamingEnd.current = liveStreamInfo.is_streaming_end
@@ -746,7 +746,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
             // className={classes.video}
           />
           {getMiniPlayerState && (
-            <Box id="exist-picture-in-picture" className={classes.existPictureInPicture} onClick={handleExitPictureInPicture}>
+            <Box id="exist-picture-in-picture" className={classes.existPictureInPicture}>
               <Box textAlign="center">
                 <img src={'/images/ic_picture_in_picture.svg'} />
                 <Typography className={classes.textInPictureInPicture}>{t('videos_top_tab.mini_player_message')}</Typography>
