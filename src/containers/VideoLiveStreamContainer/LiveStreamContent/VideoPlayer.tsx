@@ -154,6 +154,13 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       // router.events.off('routeChangeStart', handleRouteChange)
     }
   }, [])
+
+  useEffect(() => {
+    // if (!isPortrait) {
+    //   toggleFullScreen1()
+    // }
+  }, [isPortrait])
+
   useEffect(() => {
     // IS SHOWING PIP?
     if (getMiniPlayerState) {
@@ -168,12 +175,6 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       }
     }
   }, [getMiniPlayerState])
-
-  useEffect(() => {
-    // if (!isPortrait) {
-    //   toggleFullScreen1()
-    // }
-  }, [isPortrait])
 
   useEffect(() => {
     isStreamingEnd.current = liveStreamInfo.is_streaming_end
