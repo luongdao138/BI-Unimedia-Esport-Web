@@ -486,7 +486,8 @@ const Steps: React.FC<StepsProps> = ({
   //V3.0 count time
   useEffect(() => {
     const updTime = () => {
-      const diff = (Date.now() - new Date(liveStartTime).getTime()) / 1000
+      const diff = (moment.now() - moment(liveStartTime).valueOf()) / 1000
+      // const diff = (Date.now() - new Date(liveStartTime).getTime()) / 1000
       hhmmss(diff)
       setCountTime(hhmmss(diff))
     }
