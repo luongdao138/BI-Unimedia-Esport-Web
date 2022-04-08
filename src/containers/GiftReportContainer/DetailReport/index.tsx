@@ -4,7 +4,7 @@ import ESLoader from '@components/Loader'
 import ESTable from '@components/Table'
 import Pagination from '@containers/Community/Partials/Pagination'
 import { Box, makeStyles, TableCell, TableRow, Typography, useMediaQuery, useTheme } from '@material-ui/core'
-import { DetailedReportParams } from '@services/deliveryReport.service'
+import { DetailedReportParams, DetailedResponse } from '@services/deliveryReport.service'
 import { Colors } from '@theme/colors'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
 import { DateHelper } from '@utils/helpers/DateHelper'
@@ -33,7 +33,7 @@ const ITEM_PER_PAGE = 30
 const RESPONSE_DATA_DETAIL_REPORT = {
   NO: 'no',
   CREATED_AT: 'created_at',
-  NICK_NAME: 'nickname',
+  USER_CODE: 'user_code',
   POINT: 'point',
   TYPE_REPORT: 'type_report',
   GIFT_RECIPIENT: 'gift_recipient',
@@ -42,7 +42,7 @@ const RESPONSE_DATA_DETAIL_REPORT = {
 const headers = [
   { label: 'No.', key: RESPONSE_DATA_DETAIL_REPORT.NO },
   { label: '購入日時', key: RESPONSE_DATA_DETAIL_REPORT.CREATED_AT },
-  { label: 'eXeLAB ID', key: RESPONSE_DATA_DETAIL_REPORT.NICK_NAME },
+  { label: 'eXeLAB ID', key: RESPONSE_DATA_DETAIL_REPORT.USER_CODE },
   { label: 'eXeポイント', key: RESPONSE_DATA_DETAIL_REPORT.POINT },
   { label: '種別', key: RESPONSE_DATA_DETAIL_REPORT.TYPE_REPORT },
   { label: 'チップ対象', key: RESPONSE_DATA_DETAIL_REPORT.GIFT_RECIPIENT },
@@ -59,12 +59,12 @@ const handlerRenderTipTarget = (label, typeReport, streamer) => {
     }
 }
 //x.gift_recipient === null ? { ...x, gift_recipient: 'ー' } : x
-function DataReportExcel(data, property1, property2, property3) {
+function DataReportExcel(data: DetailedResponse[], property1: string, property2: string, property3: string) {
   let newData = []
-  if (property1 === RESPONSE_DATA_DETAIL_REPORT.NICK_NAME && property3 === RESPONSE_DATA_DETAIL_REPORT.POINT) {
+  if (property1 === RESPONSE_DATA_DETAIL_REPORT.USER_CODE && property3 === RESPONSE_DATA_DETAIL_REPORT.POINT) {
     newData = data.map((x) => ({
       ...x,
-      nickname: CommonHelper.insertSymbolToFirstString('@', x.nickname),
+      user_code: CommonHelper.insertSymbolToFirstString('@', x.user_code),
       point: FormatHelper.currencyFormat(x.point),
     }))
     if (property2 === RESPONSE_DATA_DETAIL_REPORT.GIFT_RECIPIENT) {
@@ -96,9 +96,9 @@ const DetailReport: React.FC<DetailReportProps> = ({ videoId }) => {
     fetchDetailedReportList(paramDeliveryReport)
   }, [page])
 
-  const dataReportExcel = DataReportExcel(
+  const dataReportExcel: DetailedResponse[] = DataReportExcel(
     CommonHelper.addSttDataList(detailedReports.points, ITEM_PER_PAGE, page),
-    RESPONSE_DATA_DETAIL_REPORT.NICK_NAME,
+    RESPONSE_DATA_DETAIL_REPORT.USER_CODE,
     RESPONSE_DATA_DETAIL_REPORT.GIFT_RECIPIENT,
     RESPONSE_DATA_DETAIL_REPORT.POINT
   )
@@ -176,13 +176,13 @@ const DetailReport: React.FC<DetailReportProps> = ({ videoId }) => {
                 </TableRow>
               }
             >
-              {CommonHelper.addSttDataList(detailedReports.points, ITEM_PER_PAGE, page).map((i, key) => (
+              {CommonHelper.addSttDataList(detailedReports.points, ITEM_PER_PAGE, page).map((i: DetailedResponse, key) => (
                 <TableRow key={key} className={classes.text}>
                   <TableCell align="center">{i.no}</TableCell>
                   <TableCell align="center">{DateHelper.formatDateTime(i.created_at)}</TableCell>
-                  <TableCell align="left">{CommonHelper.insertSymbolToFirstString('@', i.nickname)}</TableCell>
-                  <TableCell align="right">{FormatHelper.currencyFormat(i.point.toString())}</TableCell>
-                  <TableCell align="left">{i.type_report}</TableCell>
+                  <TableCell align="left">{CommonHelper.insertSymbolToFirstString('@', i.user_code)}</TableCell>
+                  <TableCell align="right">{FormatHelper.currencyFormat(i.point)}</TableCell>
+                  <TableCell align="center">{i.type_report}</TableCell>
                   <TableCell align="left">{handlerRenderTipTarget(i.gift_recipient, i.type_report, i.streamer)}</TableCell>
                 </TableRow>
               ))}

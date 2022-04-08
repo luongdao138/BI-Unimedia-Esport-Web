@@ -59,11 +59,14 @@ export type TicketReportResponse = {
 }
 
 export type DetailedResponse = {
+  no: number
   created_at: string
   nickname: string
-  point: number
+  point: string
   type_report: string
   gift_recipient: string
+  streamer: number
+  user_code: string
 }
 
 export type DetailedReportResponse = {
