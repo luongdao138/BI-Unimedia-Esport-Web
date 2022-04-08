@@ -1854,7 +1854,7 @@ export default {
     send_gift_success: 'チップを送信しました',
     tip_message_limit: 'メッセージは%d文字までです',
     error_address_updated: 'チップ送付先が変更されました\n再度チップ送付先をご確認ください',
-    error_tip_function_turn_off: 'チップ機能がOFFので、投げ銭を受け取らない',
+    error_tip_function_turn_off: 'チップ設定がOFFのため、チップを送信することができませんでした。',
   },
   video_search: {
     video_results: '動画「:key」 の検索結果',

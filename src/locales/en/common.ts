@@ -1864,7 +1864,7 @@ export default {
     no_ranking: 'ランキングがありません。',
     tip_message_limit: 'メッセージは%d文字までです',
     error_address_updated: 'チップ送付先が変更されました\n再度チップ送付先をご確認ください',
-    error_tip_function_turn_off: 'チップ機能がOFFので、投げ銭を受け取らない',
+    error_tip_function_turn_off: 'チップ設定がOFFのため、チップを送信することができませんでした。',
   },
   live_stream_screen_chat: {
     receipt: '受取',
