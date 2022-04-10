@@ -39,12 +39,16 @@ const useStyles = makeStyles(() => ({
   wrapStreamerInfo: {
     display: 'flex',
     gap: 8,
+    overflow: 'hidden',
     alignItems: 'center',
+    flexGrow: 1,
   },
   wrapStreamerName: {
     display: 'flex',
     flexDirection: 'column',
     gap: 14,
+    minWidth: '0',
+    paddingRight: '15px',
     justifyContent: 'space-between',
   },
   receiverType: {
@@ -63,7 +67,6 @@ const useStyles = makeStyles(() => ({
     lineHeight: '16px',
   },
   streamerNameWrapText: {
-    maxWidth: 100,
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis',

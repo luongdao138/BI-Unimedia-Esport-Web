@@ -29,7 +29,7 @@ const ButtonSelectMember: React.FC<IButtonSelectMember> = ({
 
 const useStyles = makeStyles((theme) => ({
   btnChoiceMember: {
-    width: '70px',
+    minWidth: '70px',
     height: '28px',
     borderRadius: '3px',
     background: '#767676',
@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
       fontSize: '11px',
       lineHeight: '16px',
       fontWeight: 'bold',
-      width: 57,
+      minWidth: 57,
       height: 22,
     },
   },
