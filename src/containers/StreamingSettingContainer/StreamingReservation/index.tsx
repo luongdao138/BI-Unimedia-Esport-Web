@@ -214,7 +214,11 @@ const StreamingReservationContainer: React.FC<Props> = ({
           //live streaming
           setObsStatusDynamo(1)
         }
-        if (videoData?.process_status === EVENT_LIVE_STATUS.STREAM_END && videoData?.video_status === STATUS_VIDEO.ARCHIVE) {
+        if (
+          videoData?.process_status === EVENT_LIVE_STATUS.STREAM_END &&
+          videoData?.video_status === STATUS_VIDEO.ARCHIVE &&
+          stateChannelMedia === EVENT_STATE_CHANNEL.STOPPED
+        ) {
           //archived
           setObsStatusDynamo(-1)
         }
@@ -249,7 +253,11 @@ const StreamingReservationContainer: React.FC<Props> = ({
               //live
               setObsStatusDynamo(1)
             }
-            if (updateVideoData?.process_status === EVENT_LIVE_STATUS.STREAM_END && updateVideoData?.video_status == STATUS_VIDEO.ARCHIVE) {
+            if (
+              updateVideoData?.process_status === EVENT_LIVE_STATUS.STREAM_END &&
+              updateVideoData?.video_status == STATUS_VIDEO.ARCHIVE &&
+              stateChannelMedia === EVENT_STATE_CHANNEL.STOPPED
+            ) {
               //archived
               setObsStatusDynamo(-1)
             }
@@ -292,7 +300,11 @@ const StreamingReservationContainer: React.FC<Props> = ({
               //live
               setObsStatusDynamo(1)
             }
-            if (createdVideo?.process_status === EVENT_LIVE_STATUS.STREAM_END && createdVideo?.video_status == STATUS_VIDEO.ARCHIVE) {
+            if (
+              createdVideo?.process_status === EVENT_LIVE_STATUS.STREAM_END &&
+              createdVideo?.video_status == STATUS_VIDEO.ARCHIVE &&
+              stateChannelMedia === EVENT_STATE_CHANNEL.STOPPED
+            ) {
               //archived
               setObsStatusDynamo(-1)
             }

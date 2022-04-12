@@ -1,22 +1,27 @@
-import { Box, Grid, Theme } from '@material-ui/core'
-import React, { useEffect } from 'react'
+import { Box, Grid, Theme, useMediaQuery } from '@material-ui/core'
+import React, { useEffect, useState } from 'react'
 import useNotificationList from './useNotificationList'
 import NotificationListItem from './notificationItem'
 import ESLoader from '@components/Loader'
 import { useTranslation } from 'react-i18next'
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles, useTheme } from '@material-ui/core/styles'
 import { useRouter } from 'next/router'
 import NOTIFICATION_ACTION_TYPES from '@store/notification/actions/types'
 import HeaderWithButton from '@components/HeaderWithButton'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { ESRoutes } from '@constants/route.constants'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
+import GoogleAd from '@components/GoogleAd'
+import { GTMHelper } from '@utils/helpers/SendGTM'
 
 const NotificationContainer: React.FC = () => {
   const classes = useStyles()
   const { notifications, fetchNotifications, clearNotificationBadge, resetMeta, meta, pages, seenNotificationBadge } = useNotificationList()
   const { t } = useTranslation(['common'])
   const router = useRouter()
+  const theme = useTheme()
+  const screenDownSP = useMediaQuery(theme.breakpoints.down(576))
+  const [slotDataLayer, setSlotDataLayer] = useState('')
 
   useEffect(() => {
     return () => resetMeta()
@@ -43,9 +48,24 @@ const NotificationContainer: React.FC = () => {
       })
     }
   }
+  useEffect(() => {
+    GTMHelper.getAdSlot()
+    setSlotDataLayer(GTMHelper.getDataSlot(window?.dataLayer, GTMHelper.SCREEN_NAME_ADS.NOTIFICATION, screenDownSP))
+  }, [screenDownSP])
 
   return (
     <div>
+      <div
+        id={!screenDownSP ? 'ad_notifications_top' : 'ad_notifications_bottom'}
+        className={!screenDownSP ? 'google_ad_patten_1' : 'google_ad_patten_4'}
+      />
+      {/* GADS: notifications 1-4*/}
+      <GoogleAd id={{ idPatten1: 'ad_notifications_t' }} idTag={'ad_notifications_t'} slot={slotDataLayer} />
+      {/* <GoogleAd
+        id={{ idPatten1: !screenDownSP && 'ad_notifications_t', idPatten4: screenDownSP && 'ad_notifications_b' }}
+        idTag={!screenDownSP ? 'ad_notifications_t' : 'ad_notifications_b'}
+        slot={slotDataLayer}
+      /> */}
       <HeaderWithButton title={t('common:notification.title')} />
       <InfiniteScroll
         className={classes.container}
@@ -131,6 +151,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   container: {
     display: 'flex',
     flexWrap: 'wrap',
+    paddingBottom: 60,
     '& > div:last-child > div': {
       marginBottom: theme.spacing(2),
     },

@@ -3,7 +3,7 @@ import { Header } from '@layouts/Header'
 import { ESDrawer } from '@layouts/Drawer'
 import SideMenu from '@containers/SideMenu'
 import { ESRoutes } from '@constants/route.constants'
-import { Box } from '@material-ui/core'
+import { Box, useMediaQuery, useTheme } from '@material-ui/core'
 import ChatRoomList from '@containers/ChatRoomList'
 import { IconButton, Icon, makeStyles, Typography } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
@@ -14,6 +14,8 @@ import Button from '@components/Button'
 import { useRouter } from 'next/router'
 import { RouteContext } from 'pages/_app'
 import { use100vh } from 'react-div-100vh'
+import GoogleAdsPatten2 from '@components/GoogleAd/GoogleAdsPatten2'
+import { GTMHelper } from '@utils/helpers/SendGTM'
 
 interface LayoutProps {
   defaultListState?: boolean
@@ -29,6 +31,9 @@ const MessageLayout: React.FC<LayoutProps> = ({ children, defaultListState, crea
   const { previousRoute } = useContext(RouteContext)
   const isAuthenticated = useAppSelector(getIsAuthenticated)
   const height = use100vh()
+  const [slotDataLayer, setSlotDataLayer] = useState('')
+  const theme = useTheme()
+  const screenDownSP = useMediaQuery(theme.breakpoints.down(576))
 
   const toggleDrawer = (open: boolean) => {
     setOpen(open)
@@ -64,9 +69,22 @@ const MessageLayout: React.FC<LayoutProps> = ({ children, defaultListState, crea
       setShowList(true)
     }
   }, [router])
+  useEffect(() => {
+    GTMHelper.getAdSlot()
+    setSlotDataLayer(GTMHelper.getDataSlot(window?.dataLayer, GTMHelper.SCREEN_NAME_ADS.MESSAGE, screenDownSP))
+  }, [screenDownSP])
 
   return (
     <div className="main-wrapper">
+      <div id={'ad_message_right'} className="google_ad_patten_2" style={{ flexDirection: 'column' }}>
+        <div id={'ad_message_right_above'} className={`ad_message_r ${classes.adMessage}`} style={{ marginBottom: 40 }} />
+        <div id={'ad_message_right_below'} className={`ad_message_r ${classes.adMessage}`} />
+      </div>
+
+      <div id={'ad_message_r'} className="ad_message_r google_ad_patten_2">
+        <GoogleAdsPatten2 id={'ad_message_r'} idTag={'ad_message_r1'} slot={slotDataLayer} />
+        <GoogleAdsPatten2 id={'ad_message_r'} idTag={'ad_message_r_be1'} slot={slotDataLayer} />
+      </div>
       <Header open={open} toggleDrawer={toggleDrawer} />
       <aside className="aside-left mui-fixed">
         <SideMenu />
