@@ -2119,7 +2119,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     }
 
     const chatInputComponent = () => (
-      <Box
+      <div
         ref={chatMobileContainerRef}
         className={`${classes.chatInputMobileContainer}`}
         // style={{ bottom: isMobile ? '0px' : errorMess ? '-132.5px' : '-116.5px' }}
@@ -2145,7 +2145,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
             <></>
           ))}
         {purchaseDialogVisible && renderBlurInput()}
-      </Box>
+      </div>
     )
 
     const closeDialogActiveUser = () => {
