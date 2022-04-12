@@ -1683,6 +1683,8 @@ export default {
     ticket_sales_start_datetime: 'チケット販売開始日時',
     complete_delivery_settings: '配信データが保存できました',
     delivery_data_save: '配信データを保存する',
+    ticket_use: '利用する (%d eXeポイント)',
+    ticket_not_use: '利用しない',
   },
   point_management_tab: {
     point_management: 'ポイント管理',
