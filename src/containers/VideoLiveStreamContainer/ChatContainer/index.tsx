@@ -233,6 +233,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     const { videoRefInfo, giverRankInfo, setGiverRankInfo, receiverRankInfo, setReceiverRankInfo, isMobile: isMobileParent } = useContext(
       VideoContext
     )
+    const chatMobileContainerRef = useRef<HTMLDivElement>(null)
     const videoPlayedSecond = useRef(0)
     // console.log('🚀 ~ videoPlayedSecond', videoPlayedSecond?.current)
     const videoStreamingSecond = useRef(0)
@@ -366,7 +367,9 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     // console.log('🚀 ~ isEnabledChat', isEnabledChat)
     // console.log('🚀 ~ successGetListMessTip', successGetListMessTip)
 
+    const { height: chatInputHeight } = useRect(chatMobileContainerRef)
     const classes = useStyles({ isLandscape })
+    console.log({ chatInputHeight })
 
     const resetStates = () => {
       setStateMessages([])
@@ -926,21 +929,23 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     }
     // console.log('🚀 ~ isStreaming ~ videoPlayedSecond.current', videoPlayedSecond.current)
     // console.log('🚀 ~ isStreaming ~ streamingSecond', streamingSecond)
-    const isStreaming = (() => {
-      // console.log('🚀 ~ isStreaming ~ videoType', videoType, videoPlayedSecond.current, streamingSecond)
-      // console.log('🚀 ~ isStreaming ~ videoPlayedSecond.current >= streamingSecond', videoPlayedSecond.current >= streamingSecond)
-      // return true
-      if (videoType === STATUS_VIDEO.LIVE_STREAM) {
-        return true
-        // if (streamingSecond === Infinity) {
-        //   return true
-        // }
-        // if (videoPlayedSecond.current >= streamingSecond) {
-        //   return true
-        // }
-      }
-      return false
-    })()
+    // const isStreaming = (() => {
+    //   // console.log('🚀 ~ isStreaming ~ videoType', videoType, videoPlayedSecond.current, streamingSecond)
+    //   // console.log('🚀 ~ isStreaming ~ videoPlayedSecond.current >= streamingSecond', videoPlayedSecond.current >= streamingSecond)
+    //   // return true
+    //   if (videoType === STATUS_VIDEO.LIVE_STREAM) {
+    //     return true
+    //     // if (streamingSecond === Infinity) {
+    //     //   return true
+    //     // }
+    //     // if (videoPlayedSecond.current >= streamingSecond) {
+    //     //   return true
+    //     // }
+    //   }
+    //   return false
+    // })()
+    const isStreaming = videoType === STATUS_VIDEO.LIVE_STREAM
+    // const isStreaming = true
 
     const renderLoader = () => {
       // loading when get mess, or rewind video, or get all tip mess
@@ -2115,6 +2120,8 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
 
     const chatInputComponent = () => (
       <Box
+        /* ts-ignore */
+        ref={chatMobileContainerRef}
         className={`${classes.chatInputMobileContainer}`}
         // style={{ bottom: isMobile ? '0px' : errorMess ? '-132.5px' : '-116.5px' }}
         // style={{ bottom: isMobile ? '0px' : errors?.message ? '-132.5px' : '-110.5px' }}
@@ -2133,6 +2140,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
                 setErrorMess={setErrorMess}
                 sendNormalMess={sendNormalMess}
               ></ChatInputContainer>
+              {/* <Box style={{ height: chatInputHeight }} /> */}
             </Box>
           ) : (
             <></>
@@ -2150,6 +2158,8 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     }
 
     const matchSm = useMediaQuery(theme.breakpoints.down(769))
+    const matchMd = useMediaQuery(theme.breakpoints.down(1025))
+
     const getMarginBottom = () => (matchSm && isLandscape ? 45 : 0)
 
     const getMarginTopOfComponents = (componentType = 'chatBoard') => {
@@ -2435,14 +2445,13 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
           // ref={(ref) => {
           //   setScrollChatRef(ref)
           // }}
-          style={
-            {
-              // flexDirection: 'column-reverse',
-              // height: 600,
-              // marginTop: getMarginTopOfComponents('chatBoard'),
-              // height: isMobile ? '253px' : chatHeight,
-            }
-          }
+          style={{
+            marginBottom: (matchSm && !isLandscape) || (!matchSm && matchMd && isLandscape) ? chatInputHeight : 0,
+            // flexDirection: 'column-reverse',
+            // height: 600,
+            // marginTop: getMarginTopOfComponents('chatBoard'),
+            // height: isMobile ? '253px' : chatHeight,
+          }}
         >
           <AutoSizer
             style={{ flex: 1 }}
