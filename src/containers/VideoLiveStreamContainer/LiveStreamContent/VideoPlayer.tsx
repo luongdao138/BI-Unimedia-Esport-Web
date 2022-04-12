@@ -22,7 +22,6 @@ import { useTranslation } from 'react-i18next'
 import usePictureInPicture from '../usePictureInPicture'
 import { useRouter } from 'next/router'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
-import { useRotateScreen } from '@utils/hooks/useRotateScreen'
 
 declare global {
   interface Document {
@@ -132,8 +131,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   const [resolutionSelected, setResolutionSelected] = useState(VIDEO_RESOLUTION.AUTO)
   const [playRateReturn, setPlayRateReturn] = useState(1)
   const isSafari = CommonHelper.checkIsSafariBrowser()
-  const { isLandscape, forceLandscapeIosSafari } = useRotateScreen()
-  
+
   const {
     requestPIP,
     exitPIP,
@@ -186,7 +184,6 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   }, [liveStreamInfo.is_streaming_end])
 
   useEffect(() => {
-    console.log('=====xxxxx======')
     if (isArchived) {
       if (videoEl.current !== null) {
         videoEl.current.currentTime = 0
@@ -542,7 +539,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       }
     })
     videoEl.current?.addEventListener('loadeddata', () => {
-      console.log('=================loadeddata===================',videoEl.current)
+      console.log('=================loadeddata===================', videoEl.current)
       // setVisible({ ...visible, loading: true, videoLoaded: true })
       // videoEl.current.currentTime = 40
     })
@@ -554,13 +551,13 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       }
     })
     videoEl.current?.addEventListener('canplay', (event) => {
-      console.log('=================canplay===================',videoEl.current)
+      console.log('=================canplay===================', videoEl.current)
       console.log(event)
       if (!isStreamingEnd.current) {
         setVisible({ ...visible, loading: videoEl.current?.paused })
       }
-      //in safari IOS: when change quality video archived + speed
-      if(videoEl.current && iPhonePl && isSafari){
+      //in safari IOS: when change quality video archived + speed + hls not support
+      if (videoEl.current && iPhonePl && isSafari && !Hls.isSupported()) {
         videoEl.current.currentTime = playedSeconds
       }
     })
@@ -569,12 +566,12 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       console.log(event)
     })
     videoEl.current?.addEventListener('play', (event) => {
-      console.log('=================play===================',videoEl.current)
+      console.log('=================play===================', videoEl.current)
       console.log(event)
       setVisible({ ...visible, loading: true, videoLoaded: true })
     })
     videoEl.current?.addEventListener('playing', (event) => {
-      console.log('=================playing===================', playing,videoEl.current)
+      console.log('=================playing===================', playing, videoEl.current)
       console.log(event)
       if (!isStreamingEnd.current) {
         setVisible({ ...visible, loading: false, videoLoaded: false })
@@ -590,9 +587,6 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     }
   }, [resolution])
   const toggleFullScreen1 = () => {
-    
-      forceLandscapeIosSafari()
-      console.log('====!document.fullscreenElement====', isLandscape)
     if (!document.fullscreenElement) {
       if (playerContainerRef.current.requestFullscreen) {
         playerContainerRef.current.requestFullscreen()
@@ -609,10 +603,6 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       }
     }
   }
-  useEffect(()=>{
-    console.warn('====useEffect forceLandscapeIosSafari videoPlayer====',isLandscape)
-    
-  },[isLandscape])
 
   const handlePlayPauseOut = () => {
     if (!isMobile && !iPhonePl && !androidPl) {

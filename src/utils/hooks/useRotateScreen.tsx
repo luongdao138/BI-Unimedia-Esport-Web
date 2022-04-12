@@ -1,14 +1,14 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import useIsomorphicLayoutEffect from './useIsomorphicLayoutEffect'
 
-type IProps = { isLandscape: boolean, forceLandscapeIosSafari?:()=>void }
+type IProps = { isLandscape: boolean; forceLandscapeIosSafari?: () => void }
 
 export const useRotateScreen = (): IProps => {
   const [isLandscape, setIsLandscape] = useState(false)
 
   //detect auto rotate screen mobile
   const checkRotateScreenSP = (e) => {
-    console.log('🚀 ~ cle ~ window.---111 ', window.innerWidth, window.innerHeight)
+    // console.log('🚀 ~ cle ~ window.---111 ', window.innerWidth, window.innerHeight)
     // console.log('🚀 ~ window.addEventListener ~ e.target.orientation', e.target.orientation)
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -34,7 +34,7 @@ export const useRotateScreen = (): IProps => {
     // handle check rotate screen on sp
     if (isOnDeviceSp()) {
       window.addEventListener('orientationchange', checkRotateScreenSP)
-      console.log('🚀 ~  ~ window---000 ', window)
+      // console.log('🚀 ~  ~ window---000 ', window)
       // console.log('🚀 ~  ~ window---000', window.innerWidth, window.innerHeight)
       if (window.innerWidth > window.innerHeight) {
         setIsLandscape(true)
@@ -49,11 +49,5 @@ export const useRotateScreen = (): IProps => {
     return () => window.removeEventListener('orientationchange', checkRotateScreenSP)
   }, [])
 
-  const forceLandscapeIosSafari=()=>{
-    setIsLandscape(true)
-    console.log('====forceLandscapeIosSafari====',isLandscape)
-  }
-  
-
-  return { isLandscape, forceLandscapeIosSafari }
+  return { isLandscape }
 }
