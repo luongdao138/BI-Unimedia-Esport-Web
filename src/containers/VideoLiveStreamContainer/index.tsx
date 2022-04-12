@@ -160,6 +160,11 @@ const VideoDetail: React.FC = () => {
   // const screenDownSP = useMediaQuery(theme.breakpoints.down(576))
   const androidPl = /Android/i.test(window.navigator.userAgent)
   const iPhonePl = /iPhone/i.test(window.navigator.userAgent)
+  
+  useEffect(()=>{
+    console.warn('====useEffect forceLandscapeIosSafari====',isLandscape)
+    
+  },[isLandscape])
 
   const handleShowDialogLogin = () => {
     setShowDialogLogin(true)

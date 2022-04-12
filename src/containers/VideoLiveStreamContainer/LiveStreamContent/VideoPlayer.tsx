@@ -21,6 +21,8 @@ import { VideoContext } from '@containers/VideoLiveStreamContainer/VideoContext'
 import { useTranslation } from 'react-i18next'
 import usePictureInPicture from '../usePictureInPicture'
 import { useRouter } from 'next/router'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
+import { useRotateScreen } from '@utils/hooks/useRotateScreen'
 
 declare global {
   interface Document {
@@ -129,6 +131,9 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   const [srcResolution, setSrcResolution] = useState(src)
   const [resolutionSelected, setResolutionSelected] = useState(VIDEO_RESOLUTION.AUTO)
   const [playRateReturn, setPlayRateReturn] = useState(1)
+  const isSafari = CommonHelper.checkIsSafariBrowser()
+  const { isLandscape, forceLandscapeIosSafari } = useRotateScreen()
+  
   const {
     requestPIP,
     exitPIP,
@@ -391,6 +396,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
         hls.loadSource(srcResolution)
       }
     } else {
+      //not support hls
       if (resolution !== -1) {
         const a = qualities.find((i) => i.url.includes(`${resolutionSelected}`))
         if (a) {
@@ -403,7 +409,6 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       console.warn('link====IOS==>>>', srcResolution, playedSeconds)
       videoEl.current.playbackRate = playRateReturn
     }
-    document.createElement('video').currentTime = 40
     return () => {
       if (hls && src) {
         hls.detachMedia()
@@ -537,8 +542,9 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       }
     })
     videoEl.current?.addEventListener('loadeddata', () => {
-      console.log('=================loadeddata===================')
+      console.log('=================loadeddata===================',videoEl.current)
       // setVisible({ ...visible, loading: true, videoLoaded: true })
+      // videoEl.current.currentTime = 40
     })
     videoEl.current?.addEventListener('emptied', (event) => {
       console.log('=================emptied===================')
@@ -548,10 +554,14 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       }
     })
     videoEl.current?.addEventListener('canplay', (event) => {
-      console.log('=================canplay===================')
+      console.log('=================canplay===================',videoEl.current)
       console.log(event)
       if (!isStreamingEnd.current) {
         setVisible({ ...visible, loading: videoEl.current?.paused })
+      }
+      //in safari IOS: when change quality video archived + speed
+      if(videoEl.current && iPhonePl && isSafari){
+        videoEl.current.currentTime = playedSeconds
       }
     })
     videoEl.current?.addEventListener('error', (event) => {
@@ -559,12 +569,12 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       console.log(event)
     })
     videoEl.current?.addEventListener('play', (event) => {
-      console.log('=================play===================')
+      console.log('=================play===================',videoEl.current)
       console.log(event)
       setVisible({ ...visible, loading: true, videoLoaded: true })
     })
     videoEl.current?.addEventListener('playing', (event) => {
-      console.log('=================playing===================', playing)
+      console.log('=================playing===================', playing,videoEl.current)
       console.log(event)
       if (!isStreamingEnd.current) {
         setVisible({ ...visible, loading: false, videoLoaded: false })
@@ -580,6 +590,9 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     }
   }, [resolution])
   const toggleFullScreen1 = () => {
+    
+      forceLandscapeIosSafari()
+      console.log('====!document.fullscreenElement====', isLandscape)
     if (!document.fullscreenElement) {
       if (playerContainerRef.current.requestFullscreen) {
         playerContainerRef.current.requestFullscreen()
@@ -596,6 +609,11 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       }
     }
   }
+  useEffect(()=>{
+    console.warn('====useEffect forceLandscapeIosSafari videoPlayer====',isLandscape)
+    
+  },[isLandscape])
+
   const handlePlayPauseOut = () => {
     if (!isMobile && !iPhonePl && !androidPl) {
       handlePauseAndSeekVideo()
