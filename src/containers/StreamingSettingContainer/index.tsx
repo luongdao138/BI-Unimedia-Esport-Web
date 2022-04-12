@@ -33,6 +33,7 @@ import GiftManageTab, { TabState } from '@containers/StreamingSettingContainer/G
 import { GiftGroupType } from '@services/gift.service'
 import _ from 'lodash'
 import useGiftTarget from '@containers/StreamingGiftManagement/useGiftTarget'
+import StreamSettingProvider from './StreamSettingContext'
 // import ESButton from '@components/Button'
 // import useListGroupGift from './ListGroupGift/useListGroupGift'
 
@@ -271,7 +272,7 @@ const StreamingSettingContainer: React.FC<{ default_tab: any }> = ({ default_tab
   }, [])
 
   return (
-    <>
+    <StreamSettingProvider>
       <Box className="header_streaming_setting">
         <HeaderWithButtonStream
           title={t('streaming_setting_screen.title')}
@@ -298,7 +299,7 @@ const StreamingSettingContainer: React.FC<{ default_tab: any }> = ({ default_tab
           </Grid>
         )}
       </Grid>
-    </>
+    </StreamSettingProvider>
   )
 }
 export default StreamingSettingContainer
