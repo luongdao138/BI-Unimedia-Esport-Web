@@ -479,10 +479,21 @@ const Steps: React.FC<StepsProps> = ({
               <Box className={classes.newTextftDash}>
                 <Box className={classes.dateTime} pt={1} pb={3 / 4} height="34px">
                   {videoArchivedDetail && videoArchivedDetail?.ticket_price
-                    ? `${FormatHelper.currencyFormat(videoArchivedDetail?.ticket_price.toString())} ${i18n.t('common:common.money')}`
-                    : ''}
+                    ? i18n
+                        .t('common:delivery_reservation_tab.ticket_use')
+                        .replace('%d', FormatHelper.currencyFormat(videoArchivedDetail?.ticket_price.toString()))
+                    : i18n.t('common:delivery_reservation_tab.ticket_not_use')}
                 </Box>
-                {isFromSchedule && (
+                {isFromSchedule ? (
+                  <Box className={` ${classes.pdLabelDate}`}>
+                    <Box className={classes.label}>{i18n.t('common:delivery_reservation_tab.ticket_sales_start_datetime')}</Box>
+                    <Box className={classes.dateTime} pt={1}>
+                      {videoArchivedDetail?.stream_schedule_start_time !== null
+                        ? CommonHelper.formatDateTimeJP(videoArchivedDetail?.stream_schedule_start_time)
+                        : i18n.t('common:delivery_reservation_tab.ticket_sales_start_datetime')}
+                    </Box>
+                  </Box>
+                ) : (
                   <Box className={` ${classes.pdLabelDate}`}>
                     <Box className={classes.label}>{i18n.t('common:archive_detail_screen.delivery_date_time')}</Box>
                     <Box className={classes.dateTime} pt={1}>
