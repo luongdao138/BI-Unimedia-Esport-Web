@@ -33,8 +33,8 @@ const Rankings: React.FC<Props> = ({ children }) => {
         <Table className={classes.table} stickyHeader aria-label="sticky table">
           <colgroup>
             <col style={{ width: isLandscape ? (isMobile ? 46 : 56) : 68 }} />
-            <col style={{ width: isLandscape ? (isMobile ? 115 : 140) : 165 }} />
             <col style={{ width: 'auto' }} />
+            <col style={{ width: isLandscape ? (isMobile ? '25%' : '25%') : '28%' }} />
           </colgroup>
           <TableHead className={classes.headerTable}>
             <TableRow>

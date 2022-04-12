@@ -184,7 +184,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 12,
     overflow: 'hidden',
     textOverflow: 'ellipsis',
-    maxWidth: '100px',
+    maxWidth: '100%',
     fontFamily: "'Noto Sans JP', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
   },
   tip: {
@@ -198,9 +198,6 @@ const useStyles = makeStyles((theme) => ({
   [theme.breakpoints.down('sm')]: {
     contentWrapper: {
       paddingLeft: 0,
-    },
-    user_code: {
-      maxWidth: '80px',
     },
   },
   [theme.breakpoints.down(769)]: {
