@@ -247,6 +247,18 @@ const Steps: React.FC<StepsProps> = ({
     router.push({ pathname: ESRoutes.STREAMING_GIFT_REPORT, query: { video_id: uuid } })
   }
 
+  const returnTextChip = () => {
+    if (formik?.values?.use_gift) {
+      if (formik?.values?.group_title) {
+        return formik?.values?.group_title
+      } else {
+        return i18n.t('common:streaming_setting_screen.unselected')
+      }
+    } else {
+      return i18n.t('common:streaming_setting_screen.ranking_flag.off')
+    }
+  }
+
   return (
     <Box py={4} className={classes.container}>
       <Box className={classes.formContainer}>
@@ -497,7 +509,9 @@ const Steps: React.FC<StepsProps> = ({
                   <Box className={` ${classes.pdLabelDate}`}>
                     <Box className={classes.label}>{i18n.t('common:archive_detail_screen.delivery_date_time')}</Box>
                     <Box className={classes.dateTime} pt={1}>
-                      {CommonHelper.formatDateTimeJP(videoArchivedDetail?.stream_schedule_start_time)}
+                      {videoArchivedDetail?.stream_schedule_start_time !== null
+                        ? CommonHelper.formatDateTimeJP(videoArchivedDetail?.stream_schedule_start_time)
+                        : ''}
                     </Box>
                   </Box>
                 )}
@@ -512,9 +526,7 @@ const Steps: React.FC<StepsProps> = ({
               <Box className={classes.newTextftDash}>
                 <Box pt={1} className={classes.nameList}>
                   <Typography className={`${classes.labelNameObject} ${classes.labelRank}`}>
-                    {`${i18n.t('common:streaming_setting_screen.list_gift_selected')} ${
-                      formik?.values?.group_title ? formik?.values?.group_title : i18n.t('common:streaming_setting_screen.unselected')
-                    }`}
+                    {`${i18n.t('common:streaming_setting_screen.list_gift_selected')} ${returnTextChip()}`}
                   </Typography>
                 </Box>
                 <Box className={`${classes.nameList} ${classes.nameListRanking}`}>
