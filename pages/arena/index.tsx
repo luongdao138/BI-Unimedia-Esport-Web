@@ -50,7 +50,7 @@ const TournamentPage: PageWithLayoutType = () => {
       childrenAds={
         <>
           {screenDownSP && (
-            <GoogleAd id={{ idPatten3: 'ad_arena_b' }} idTag={'ad_arena_b'} slot={slotDataLayer} currenPath={window.location.href} />
+            <GoogleAd id={{ idPatten4: 'ad_arena_b' }} idTag={'ad_arena_b'} slot={slotDataLayer} currenPath={window.location.href} />
           )}
         </>
       }
