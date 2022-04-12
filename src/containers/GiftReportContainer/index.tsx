@@ -98,7 +98,7 @@ const GiftReportContainer: React.FC<{ default_tab: any }> = ({ default_tab }) =>
               </Box>
             ) : (
               <>
-                {tipReports.gifts.length > 0 ? (
+                {tipReports?.gifts.length > 0 ? (
                   <ESTable
                     tableHeader={
                       <TableRow>
@@ -114,7 +114,7 @@ const GiftReportContainer: React.FC<{ default_tab: any }> = ({ default_tab }) =>
                       </TableRow>
                     }
                   >
-                    {tipReports.gifts.map((i, key) => (
+                    {tipReports?.gifts.map((i, key) => (
                       <ItemGift
                         key={key}
                         image={i.image}

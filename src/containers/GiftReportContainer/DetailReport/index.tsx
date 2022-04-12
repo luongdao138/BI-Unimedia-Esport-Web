@@ -87,7 +87,7 @@ const DetailReport: React.FC<DetailReportProps> = ({ videoId }) => {
   const { t } = useTranslation('common')
   const { fetchDetailedReportList, detailedReports, detailedReportMeta } = useDeliveryReport()
 
-  const getTotalPage = () => Math.ceil(detailedReports.total / ITEM_PER_PAGE)
+  const getTotalPage = () => Math.ceil(detailedReports?.total / ITEM_PER_PAGE)
 
   const [page, setPage] = useState(1)
   // const { t } = useTranslation('common')
@@ -96,12 +96,15 @@ const DetailReport: React.FC<DetailReportProps> = ({ videoId }) => {
     fetchDetailedReportList(paramDeliveryReport)
   }, [page])
 
-  const dataReportExcel: DetailedResponse[] = DataReportExcel(
-    CommonHelper.addSttDataList(detailedReports.points, ITEM_PER_PAGE, page),
-    RESPONSE_DATA_DETAIL_REPORT.USER_CODE,
-    RESPONSE_DATA_DETAIL_REPORT.GIFT_RECIPIENT,
-    RESPONSE_DATA_DETAIL_REPORT.POINT
-  )
+  const dataReportExcel: DetailedResponse[] =
+    detailedReports !== null
+      ? DataReportExcel(
+          CommonHelper.addSttDataList(detailedReports.points, ITEM_PER_PAGE, page),
+          RESPONSE_DATA_DETAIL_REPORT.USER_CODE,
+          RESPONSE_DATA_DETAIL_REPORT.GIFT_RECIPIENT,
+          RESPONSE_DATA_DETAIL_REPORT.POINT
+        )
+      : []
   const disableBtnCSV = dataReportExcel.length > 0 ? false : true
   const renderBtnCSV = () =>
     matches ? (
@@ -149,7 +152,7 @@ const DetailReport: React.FC<DetailReportProps> = ({ videoId }) => {
         </Box>
       ) : (
         <>
-          {detailedReports.points.length > 0 ? (
+          {detailedReports?.points?.length > 0 ? (
             <ESTable
               classTable={classes.table}
               classBody={classes.tableCellContent}
