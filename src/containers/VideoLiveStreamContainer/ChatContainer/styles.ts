@@ -495,8 +495,10 @@ const useStyles = makeStyles((theme) => ({
       width: 318,
     },
     chatInputMobileContainer: {
-      position: 'absolute',
-      bottom: 120,
+      // position: 'absolute',
+      // bottom: 120,
+      bottom: 0,
+      position: 'fixed',
       zIndex: 10,
       width: 'calc(100vw - 32px)',
       borderRadius: '4px',
@@ -555,6 +557,7 @@ const useStyles = makeStyles((theme) => ({
         return {
           width: 'calc(100% - 32px)',
           bottom: 0,
+          position: 'absolute',
         }
     },
 
