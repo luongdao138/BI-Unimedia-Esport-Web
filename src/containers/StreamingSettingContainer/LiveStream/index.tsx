@@ -57,6 +57,8 @@ const LiveStreamContainer: React.FC<Props> = ({ formik, validateField, handleUpd
   const [obsStatusDynamo, setObsStatusDynamo] = useState(null)
   const [videoStatusDynamo, setVideoStatusDynamo] = useState(null)
   const [liveStartTime, setLiveStartTime] = useState('')
+  const { liveSettingInformation } = useLiveSetting()
+  const status = !!(liveSettingInformation?.data?.status === 1 && liveSettingInformation?.data?.live_stream_start_time)
 
   const onChangeStep = (step: number, isShare?: boolean, post?: { title: string; content: string }): void => {
     console.log('click next step', step, stateChannelMedia)
@@ -304,7 +306,6 @@ const LiveStreamContainer: React.FC<Props> = ({ formik, validateField, handleUpd
       setShowResultDialog(false)
     }
   }, [obsStatusDynamo, videoStatusDynamo])
-
   return (
     <>
       <Steps
@@ -327,7 +328,16 @@ const LiveStreamContainer: React.FC<Props> = ({ formik, validateField, handleUpd
       />
       <ESModal open={modal && showResultDialog} handleClose={handleClose}>
         <BlankLayout>
-          <SettingsCompleted onClose={onClose} onComplete={onComplete} />
+          <SettingsCompleted
+            onClose={onClose}
+            onComplete={onComplete}
+            messageNotification={status ? '' : t('common:streaming_setting_screen.step3_delivery_settings_content')}
+            titleNotification={
+              status
+                ? t('common:streaming_setting_screen.step3_delivery_settings_content_update')
+                : t('common:streaming_setting_screen.complete_delivery_settings')
+            }
+          />
         </BlankLayout>
       </ESModal>
       <Box style={{ display: loading ? 'flex' : 'none' }}>
