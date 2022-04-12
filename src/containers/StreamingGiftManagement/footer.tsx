@@ -24,6 +24,7 @@ const Footer: React.FC<Props> = ({ onConfirm, onCancel, errorMessage, step }) =>
   const disableBtnConfirm = step === 2 || giftTargetData.length === 0 ? true : false
   return (
     <>
+      {/* ts-ignore */}
       <Box className={classes.container} ref={containerRef}>
         {errorMessage && <Typography className={classes.errorMessage}>{errorMessage}</Typography>}
         <Box className={classes.buttonContainer}>
