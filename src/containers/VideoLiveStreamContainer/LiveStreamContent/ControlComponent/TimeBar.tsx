@@ -1,4 +1,4 @@
-import { Typography } from '@material-ui/core'
+import { Theme, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
 import { STATUS_VIDEO } from '@services/videoTop.services'
 import { Colors } from '@theme/colors'
@@ -24,10 +24,15 @@ const TimeBar: React.FC<Props> = ({ statusVideo, currentTime, durationsPlayer })
   )
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   textTime: {
     fontSize: 15,
     color: Colors.white,
+  },
+  [theme.breakpoints.down(576)]: {
+    textTime: {
+      fontSize: 10,
+    },
   },
 }))
 

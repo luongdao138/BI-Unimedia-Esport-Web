@@ -21,6 +21,7 @@ import { VideoContext } from '@containers/VideoLiveStreamContainer/VideoContext'
 import { useTranslation } from 'react-i18next'
 import usePictureInPicture from '../usePictureInPicture'
 import { useRouter } from 'next/router'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
 
 declare global {
   interface Document {
@@ -129,6 +130,8 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   const [srcResolution, setSrcResolution] = useState(src)
   const [resolutionSelected, setResolutionSelected] = useState(VIDEO_RESOLUTION.AUTO)
   const [playRateReturn, setPlayRateReturn] = useState(1)
+  const isSafari = CommonHelper.checkIsSafariBrowser()
+
   const {
     requestPIP,
     isCheckShowingPIP,
@@ -349,6 +352,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       hls.attachMedia(video)
       hls.on(Hls.Events.MEDIA_ATTACHED, handleMedia)
     }
+    console.log('======xxxxxxxx=====>>>>>')
     return () => {
       if (hls && src) {
         hls.detachMedia()
@@ -388,6 +392,19 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       if (srcResolution) {
         hls.loadSource(srcResolution)
       }
+    } else {
+      //not support hls
+      if (resolution !== -1) {
+        const a = qualities.find((i) => i.url.includes(`${resolutionSelected}`))
+        if (a) {
+          console.log('===IOS=====', qualities, a, resolutionSelected)
+          setSrcResolution(a?.url)
+        }
+      } else {
+        setSrcResolution(src)
+      }
+      console.warn('link====IOS==>>>', srcResolution, playedSeconds)
+      videoEl.current.playbackRate = playRateReturn
     }
     return () => {
       if (hls && src) {
@@ -522,8 +539,9 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       }
     })
     videoEl.current?.addEventListener('loadeddata', () => {
-      console.log('=================loadeddata===================')
+      console.log('=================loadeddata===================', videoEl.current)
       // setVisible({ ...visible, loading: true, videoLoaded: true })
+      // videoEl.current.currentTime = 40
     })
     videoEl.current?.addEventListener('emptied', (event) => {
       console.log('=================emptied===================')
@@ -533,10 +551,14 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       }
     })
     videoEl.current?.addEventListener('canplay', (event) => {
-      console.log('=================canplay===================')
+      console.log('=================canplay===================', videoEl.current)
       console.log(event)
       if (!isStreamingEnd.current) {
         setVisible({ ...visible, loading: videoEl.current?.paused })
+      }
+      //in safari IOS: when change quality video archived + speed + hls not support
+      if (videoEl.current && iPhonePl && isSafari && !Hls.isSupported()) {
+        videoEl.current.currentTime = playedSeconds
       }
     })
     videoEl.current?.addEventListener('error', (event) => {
@@ -544,12 +566,12 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       console.log(event)
     })
     videoEl.current?.addEventListener('play', (event) => {
-      console.log('=================play===================')
+      console.log('=================play===================', videoEl.current)
       console.log(event)
       setVisible({ ...visible, loading: true, videoLoaded: true })
     })
     videoEl.current?.addEventListener('playing', (event) => {
-      console.log('=================playing===================', playing)
+      console.log('=================playing===================', playing, videoEl.current)
       console.log(event)
       if (!isStreamingEnd.current) {
         setVisible({ ...visible, loading: false, videoLoaded: false })
@@ -581,6 +603,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       }
     }
   }
+
   const handlePlayPauseOut = () => {
     if (!isMobile && !iPhonePl && !androidPl) {
       handlePauseAndSeekVideo()
@@ -737,13 +760,14 @@ const VideoPlayer: React.FC<PlayerProps> = ({
             muted={muted}
             style={{ width: '100%', height: '100%' }}
             autoPlay={autoPlay}
-            src={src}
-            controls={iPhonePl || androidPl || isMobile}
+            src={srcResolution}
+            // controls={iPhonePl || androidPl || isMobile}
             //@ts-ignore
             playsInline={iPhonePl || androidPl}
             preload={'auto'}
             controlsList="noplaybackrate foobar"
             // className={classes.video}
+            controls={false}
           />
           {getMiniPlayerState && (
             <Box id="exist-picture-in-picture" className={classes.existPictureInPicture}>
@@ -778,7 +802,8 @@ const VideoPlayer: React.FC<PlayerProps> = ({
           )}
         </div>
 
-        {!isMobile && !androidPl && !iPhonePl && isLoadedMetaData && (
+        {/* {!isMobile && !androidPl && !iPhonePl && isLoadedMetaData && ( */}
+        {isLoadedMetaData && (
           <div className={`${classes.processControl} ${isOpenSettingPanel && classes.showControl}`}>
             {videoType !== STATUS_VIDEO.LIVE_STREAM && (
               <SeekBar

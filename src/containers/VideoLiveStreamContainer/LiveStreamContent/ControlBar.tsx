@@ -1,4 +1,4 @@
-import { Box, ClickAwayListener, Icon, makeStyles, Slider, Typography } from '@material-ui/core'
+import { Box, ClickAwayListener, Icon, makeStyles, Slider, Typography, useMediaQuery, useTheme } from '@material-ui/core'
 import { Crop54 as TheatreViewMode, Crop75 as NormalViewMode } from '@material-ui/icons'
 import { Colors } from '@theme/colors'
 import React, { forwardRef, memo, useEffect, useImperativeHandle, useState } from 'react'
@@ -78,6 +78,9 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
     const [resolution, setResolution] = useState(t('videos_top_tab.auto'))
     const [speed, setSpeed] = useState(t('videos_top_tab.standard'))
 
+    const theme = useTheme()
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'), { noSsr: true })
+
     const closeSettingPanel = () => {
       setSettingPanel(SettingPanelState.NONE)
     }
@@ -116,6 +119,7 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
 
     const handleOnSettingButtonClick = () => {
       setSettingPanel(settingPanel === SettingPanelState.MAIN_DISPLAY ? SettingPanelState.NONE : SettingPanelState.MAIN_DISPLAY)
+      // changeIsHoveredVideoStatus(false)
     }
 
     const handleOnPlaySpeedButtonClick = () => {
@@ -191,23 +195,25 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
               title={!muted ? t('videos_top_tab.mute') : t('videos_top_tab.unmute')}
               offset={{ top: -5, left: 0 }}
             />
-            <div className={classes.slider}>
-              <Slider
-                max={1}
-                min={0}
-                value={volume}
-                step={0.1}
-                className={classes.volumeBar}
-                onChange={onChangeVol}
-                onChangeCommitted={onChangeVolDrag}
-              />
-            </div>
+            {!isMobile && (
+              <div className={classes.slider}>
+                <Slider
+                  max={1}
+                  min={0}
+                  value={volume}
+                  step={0.1}
+                  className={classes.volumeBar}
+                  onChange={onChangeVol}
+                  onChangeCommitted={onChangeVolDrag}
+                />
+              </div>
+            )}
           </Box>
 
           <div className={classes.time}>
             <TimeBar statusVideo={videoStatus} currentTime={currentTime} durationsPlayer={durationsPlayer} />
           </div>
-          {!isLive && isLive !== null && (
+          {!isLive && isLive !== null && !isMobile && (
             <>
               <Reload
                 videoRef={videoRef}
@@ -237,7 +243,7 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
         </div>
         <div className={classes.controlRight}>
           {/* toggle theater mode button */}
-          {!isFull && (
+          {!isFull && !isMobile && (
             <div
               ref={tooltipRef}
               className={classes.wrapViewMode}

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import useIsomorphicLayoutEffect from './useIsomorphicLayoutEffect'
 
-type IProps = { isLandscape: boolean }
+type IProps = { isLandscape: boolean; forceLandscapeIosSafari?: () => void }
 
 export const useRotateScreen = (): IProps => {
   const [isLandscape, setIsLandscape] = useState(false)
