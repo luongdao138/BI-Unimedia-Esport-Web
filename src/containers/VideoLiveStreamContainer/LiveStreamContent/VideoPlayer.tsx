@@ -20,7 +20,7 @@ import { VIDEO_RESOLUTION, VIDEO_RESOLUTION_HLS } from '@services/liveStreamDeta
 import { VideoContext } from '@containers/VideoLiveStreamContainer/VideoContext'
 import { useTranslation } from 'react-i18next'
 import usePictureInPicture from '../usePictureInPicture'
-import { useRouter } from 'next/router'
+// import { useRouter } from 'next/router'
 
 declare global {
   interface Document {
@@ -139,23 +139,23 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     isLoadedMetaData,
     listenLoadMetaDataPIP,
   } = usePictureInPicture()
-  const router = useRouter()
+  // const router = useRouter()
 
   useEffect(() => {
     listenEnteredPIP(videoEl.current)
     listenLeavedPIP(videoEl.current)
     listenLoadMetaDataPIP(videoEl.current)
 
-    const handleRouteChange = () => {
-      if (isCheckShowingPIP()) {
-        document.exitPictureInPicture()
-      }
-    }
+    // const handleRouteChange = () => {
+    //   if (isCheckShowingPIP()) {
+    //     document.exitPictureInPicture()
+    //   }
+    // }
 
-    router.events.on('routeChangeStart', handleRouteChange)
-    return () => {
-      router.events.off('routeChangeStart', handleRouteChange)
-    }
+    // router.events.on('routeChangeStart', handleRouteChange)
+    // return () => {
+    //   router.events.off('routeChangeStart', handleRouteChange)
+    // }
   }, [])
   useEffect(() => {
     // IS SHOWING PIP?
