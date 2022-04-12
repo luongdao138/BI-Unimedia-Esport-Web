@@ -803,41 +803,42 @@ const VideoPlayer: React.FC<PlayerProps> = ({
         </div>
 
         {/* {!isMobile && !androidPl && !iPhonePl && isLoadedMetaData && ( */}
-        <div className={`${classes.processControl} ${isOpenSettingPanel && classes.showControl}`}>
-          {videoType !== STATUS_VIDEO.LIVE_STREAM && (
-            <SeekBar
-              videoRef={videoEl}
-              durationsPlayer={durationPlayer}
-              currentTime={playedSeconds}
-              changeStatusStreaming={(status) => {
-                setIsStreaming(status)
-              }}
-            />
-          )}
-          <div className={classes.controlOut}>
-            <ControlBarPlayer
-              ref={refControlBar}
-              videoRef={videoEl}
-              onPlayPause={handlePlayPause}
-              playing={playing}
-              muted={muted}
-              durationsPlayer={durationPlayer}
-              currentTime={playedSeconds}
-              handleFullScreen={toggleFullScreen1}
-              onMute={handleMute}
-              onChangeVol={handleChangeVol}
-              onChangeVolDrag={handleChangeVolDrag}
-              volume={volume}
-              isLive={isLive}
-              videoStatus={videoType}
-              onReloadTime={handleReloadTime}
-              handleOnRestart={handleOnRestart}
-              resultResolution={(index, flag, item) => changeResolution(index, flag, item)}
-              qualities={qualities}
-            />
+        {isLoadedMetaData && (
+          <div className={`${classes.processControl} ${isOpenSettingPanel && classes.showControl}`}>
+            {videoType !== STATUS_VIDEO.LIVE_STREAM && (
+              <SeekBar
+                videoRef={videoEl}
+                durationsPlayer={durationPlayer}
+                currentTime={playedSeconds}
+                changeStatusStreaming={(status) => {
+                  setIsStreaming(status)
+                }}
+              />
+            )}
+            <div className={classes.controlOut}>
+              <ControlBarPlayer
+                ref={refControlBar}
+                videoRef={videoEl}
+                onPlayPause={handlePlayPause}
+                playing={playing}
+                muted={muted}
+                durationsPlayer={durationPlayer}
+                currentTime={playedSeconds}
+                handleFullScreen={toggleFullScreen1}
+                onMute={handleMute}
+                onChangeVol={handleChangeVol}
+                onChangeVolDrag={handleChangeVolDrag}
+                volume={volume}
+                isLive={isLive}
+                videoStatus={videoType}
+                onReloadTime={handleReloadTime}
+                handleOnRestart={handleOnRestart}
+                resultResolution={(index, flag, item) => changeResolution(index, flag, item)}
+                qualities={qualities}
+              />
+            </div>
           </div>
-        </div>
-        {/* )} */}
+        )}
         {/*errorVideo && <div className={classes.loading} />} */}
         {/* {visible.videoError && (
           <div className={classes.overViewError}>

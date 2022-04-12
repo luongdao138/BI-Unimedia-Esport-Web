@@ -1,7 +1,8 @@
-import React, { memo } from 'react'
+import React, { memo, useEffect } from 'react'
 import { Box, Icon, makeStyles, Typography } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
+import useDetailVideo from '../useDetailVideo'
 
 type Props = {
   handleOnBackClick?: () => void
@@ -13,6 +14,10 @@ type Props = {
 const VideoResolutionPanel: React.FC<Props> = ({ handleOnBackClick, resolutionList, selectedResolution = '1080p', onSelected }) => {
   const classes = useStyles()
   const { t } = useTranslation('common')
+  const { changeIsHoveredVideoStatus } = useDetailVideo()
+  useEffect(() => {
+    changeIsHoveredVideoStatus(false)
+  })
   const RadioButton = ({ title, selected, onClick }) => {
     return (
       <Box className={classes.radioContainer} onClick={onClick}>

@@ -119,6 +119,7 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
 
     const handleOnSettingButtonClick = () => {
       setSettingPanel(settingPanel === SettingPanelState.MAIN_DISPLAY ? SettingPanelState.NONE : SettingPanelState.MAIN_DISPLAY)
+      // changeIsHoveredVideoStatus(false)
     }
 
     const handleOnPlaySpeedButtonClick = () => {
