@@ -1,3 +1,4 @@
+import { useMediaQuery, useTheme } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
 import React, { memo } from 'react'
 import ReactTooltip from 'react-tooltip'
@@ -11,7 +12,9 @@ interface Props {
 
 const PlayerTooltip: React.FC<Props> = ({ id, title, offset, place = 'top' }) => {
   const classes = useStyles()
-  return (
+  const theme = useTheme()
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'), { noSsr: true })
+  return isMobile ? null : (
     <ReactTooltip
       id={id}
       type="dark"

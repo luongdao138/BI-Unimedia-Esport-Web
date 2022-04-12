@@ -1,7 +1,8 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Box, Icon, makeStyles, Typography } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
+import useDetailVideo from '../useDetailVideo'
 
 export type SettingResult = {
   resolution?: string
@@ -25,6 +26,10 @@ const SettingPanel: React.FC<Props> = ({
 }) => {
   const classes = useStyles()
   const { t } = useTranslation('common')
+  const { changeIsHoveredVideoStatus } = useDetailVideo()
+  useEffect(() => {
+    changeIsHoveredVideoStatus(false)
+  })
   return (
     <Box className={classes.container}>
       {!isLive && (
