@@ -1,18 +1,18 @@
-import ESButton from '@components/Button'
-import ExportCSV from '@components/ExportCSV'
-import ESLoader from '@components/Loader'
-import ESTable from '@components/Table'
-import Pagination from '@containers/Community/Partials/Pagination'
 import { Box, makeStyles, TableCell, TableRow, Typography, useMediaQuery, useTheme } from '@material-ui/core'
+import ExcelJS from 'exceljs'
+import React, { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import useDeliveryReport from '../useDeliveryReport'
+import PaginationMobile from './PaginationMobile'
 import { DetailedReportParams, DetailedResponse } from '@services/deliveryReport.service'
 import { Colors } from '@theme/colors'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
 import { DateHelper } from '@utils/helpers/DateHelper'
 import { FormatHelper } from '@utils/helpers/FormatHelper'
-import React, { useEffect, useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import useDeliveryReport from '../useDeliveryReport'
-import PaginationMobile from './PaginationMobile'
+import ExportCSV from '@components/ExportCSV'
+import ESLoader from '@components/Loader'
+import ESTable from '@components/Table'
+import Pagination from '@containers/Community/Partials/Pagination'
 
 interface DetailReportProps {
   videoId: string | string[]
@@ -38,15 +38,14 @@ const RESPONSE_DATA_DETAIL_REPORT = {
   TYPE_REPORT: 'type_report',
   GIFT_RECIPIENT: 'gift_recipient',
 }
-
 const headers = [
-  { label: 'No.', key: RESPONSE_DATA_DETAIL_REPORT.NO },
-  { label: '購入日時', key: RESPONSE_DATA_DETAIL_REPORT.CREATED_AT },
-  { label: 'eXeLAB ID', key: RESPONSE_DATA_DETAIL_REPORT.USER_CODE },
-  { label: 'eXeポイント', key: RESPONSE_DATA_DETAIL_REPORT.POINT },
-  { label: '種別', key: RESPONSE_DATA_DETAIL_REPORT.TYPE_REPORT },
-  { label: 'チップ対象', key: RESPONSE_DATA_DETAIL_REPORT.GIFT_RECIPIENT },
-]
+  { header: 'No.', key: RESPONSE_DATA_DETAIL_REPORT.NO },
+  { header: '購入日時', key: RESPONSE_DATA_DETAIL_REPORT.CREATED_AT },
+  { header: 'eXeLAB ID', key: RESPONSE_DATA_DETAIL_REPORT.USER_CODE },
+  { header: 'eXeポイント', key: RESPONSE_DATA_DETAIL_REPORT.POINT },
+  { header: '種別', key: RESPONSE_DATA_DETAIL_REPORT.TYPE_REPORT },
+  { header: 'チップ対象', key: RESPONSE_DATA_DETAIL_REPORT.GIFT_RECIPIENT },
+] as ExcelJS.Column[]
 
 const handlerRenderTipTarget = (label, typeReport, streamer) => {
   if (typeReport === TYPE_REPORT.TICKET) {
@@ -106,27 +105,45 @@ const DetailReport: React.FC<DetailReportProps> = ({ videoId }) => {
         )
       : []
   const disableBtnCSV = dataReportExcel.length > 0 ? false : true
+  // const renderBtnCSV = () =>
+  //   matches ? (
+  //     <ESButton variant={'contained'} className={classes.btnCSV} disabled={disableBtnCSV}>
+  //       <ExportCSV
+  //         headers={headers}
+  //         data={dataReportExcel}
+  //         className={classes.textBtnCSV}
+  //         fileName={'reports.csv'}
+  //         textExport={t('streaming_gift_report_screen.csv')}
+  //       ></ExportCSV>
+  //     </ESButton>
+  //   ) : (
+  //     <ESButton variant={'contained'} className={classes.btnCSV} disabled={disableBtnCSV}>
+  //       <ExportCSV
+  //         headers={headers}
+  //         data={dataReportExcel}
+  //         className={classes.textBtnCSV}
+  //         fileName={'reports.csv'}
+  //         textExport={t('streaming_gift_report_screen.csv_download')}
+  //       ></ExportCSV>
+  //     </ESButton>
+  //   )
   const renderBtnCSV = () =>
     matches ? (
-      <ESButton variant={'contained'} className={classes.btnCSV} disabled={disableBtnCSV}>
-        <ExportCSV
-          headers={headers}
-          data={dataReportExcel}
-          className={classes.textBtnCSV}
-          fileName={'reports.csv'}
-          textExport={t('streaming_gift_report_screen.csv')}
-        ></ExportCSV>
-      </ESButton>
+      <ExportCSV
+        headers={headers}
+        data={dataReportExcel}
+        fileName="reports"
+        textExport={t('streaming_gift_report_screen.csv')}
+        disableBtnCSV={disableBtnCSV}
+      ></ExportCSV>
     ) : (
-      <ESButton variant={'contained'} className={classes.btnCSV} disabled={disableBtnCSV}>
-        <ExportCSV
-          headers={headers}
-          data={dataReportExcel}
-          className={classes.textBtnCSV}
-          fileName={'reports.csv'}
-          textExport={t('streaming_gift_report_screen.csv_download')}
-        ></ExportCSV>
-      </ESButton>
+      <ExportCSV
+        headers={headers}
+        data={dataReportExcel}
+        fileName="reports"
+        textExport={t('streaming_gift_report_screen.csv_download')}
+        disableBtnCSV={disableBtnCSV}
+      ></ExportCSV>
     )
   const renderPagination = () =>
     matches ? (
