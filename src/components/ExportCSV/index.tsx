@@ -43,14 +43,9 @@ const ExportCSV: React.FC<Props> = ({ headers, disableBtnCSV, data, fileName, te
     aElement.remove()
   }
   return (
-    <>
-      {/* <CSVLink headers={headers} data={data} className={className} filename={fileName}>
-    {textExport}
-    </CSVLink> */}
-      <ESButton variant={'contained'} className={classes.btnCSV} disabled={disableBtnCSV} onClick={handClickExportCSV}>
-        <Typography className={classes.textBtnCSV}>{textExport}</Typography>
-      </ESButton>
-    </>
+    <ESButton variant={'contained'} className={classes.btnCSV} disabled={disableBtnCSV} onClick={handClickExportCSV}>
+      <Typography className={classes.textBtnCSV}>{textExport}</Typography>
+    </ESButton>
   )
 }
 

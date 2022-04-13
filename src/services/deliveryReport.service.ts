@@ -7,6 +7,7 @@ export type TipReportParams = {
 
 export type TicketReportParams = {
   uuid: string | string[]
+  timezone: string
 }
 
 export type DetailedReportParams = {
