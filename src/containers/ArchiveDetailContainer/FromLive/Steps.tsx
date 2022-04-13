@@ -487,7 +487,7 @@ const Steps: React.FC<StepsProps> = ({
           {/* V3: ticket */}
           <Box className={classes.label}>{i18n.t('common:streaming_setting_screen.ticket_use')}</Box>
           <Box pb={2} pt={2}>
-            <ESBoxftDashColumn colorLine="#767676" isSelectedGift={!!(videoArchivedDetail && videoArchivedDetail?.ticket_price)}>
+            <ESBoxftDashColumn colorLine="#767676" isSelectedGift>
               <Box className={classes.newTextftDash}>
                 <Box className={classes.dateTime} pt={1} pb={3 / 4} height="34px">
                   {videoArchivedDetail && videoArchivedDetail?.ticket_price
