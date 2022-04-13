@@ -588,7 +588,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     }
   }, [resolution])
   const toggleFullScreen1 = () => {
-    if (iPhonePl && androidPl) {
+    if (iPhonePl || androidPl) {
       setIsFull(!isFull)
     } else {
       if (!document.fullscreenElement) {
