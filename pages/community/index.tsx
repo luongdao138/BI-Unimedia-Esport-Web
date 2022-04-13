@@ -51,7 +51,7 @@ const CommunityPage: PageWithLayoutType = () => {
         <>
           {screenDownSP && (
             <GoogleAd
-              id={{ idPatten3: 'ad_community_b' }}
+              id={{ idPatten4: 'ad_community_b' }}
               idTag={'ad_community_b'}
               slot={slotDataLayer}
               currenPath={window.location.href}

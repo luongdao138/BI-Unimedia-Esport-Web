@@ -24,7 +24,7 @@ const NotificationsPage: PageWithLayoutType = () => {
         <>
           {screenDownSP && (
             <GoogleAd
-              id={{ idPatten3: 'ad_notifications_b' }}
+              id={{ idPatten4: 'ad_notifications_b' }}
               idTag={'ad_notifications_b'}
               slot={slotDataLayer}
               currenPath={window.location.href}

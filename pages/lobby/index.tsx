@@ -49,7 +49,7 @@ const LobbyPage: PageWithLayoutType = () => {
       childrenAds={
         <>
           {screenDownSP && (
-            <GoogleAd id={{ idPatten3: 'ad_lobby_b' }} idTag={'ad_lobby_b'} slot={slotDataLayer} currenPath={window.location.href} />
+            <GoogleAd id={{ idPatten4: 'ad_lobby_b' }} idTag={'ad_lobby_b'} slot={slotDataLayer} currenPath={window.location.href} />
           )}
         </>
       }
