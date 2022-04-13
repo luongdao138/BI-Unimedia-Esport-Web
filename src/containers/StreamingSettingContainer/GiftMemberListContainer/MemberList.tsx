@@ -1,4 +1,4 @@
-import { Box, Icon, makeStyles, Typography } from '@material-ui/core'
+import { Box, Icon, makeStyles, Typography, useMediaQuery, useTheme } from '@material-ui/core'
 import ESButton from '@components/Button'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -13,6 +13,7 @@ import _ from 'lodash'
 import { CellMeasurer, CellMeasurerCache, List, AutoSizer } from 'react-virtualized'
 import { useRect } from '@utils/hooks/useRect'
 import ESLoader from '@components/Loader/SmallLoader'
+import { useStreamSettingContext } from '../StreamSettingContext'
 
 const cache = new CellMeasurerCache({
   fixedWidth: true,
@@ -24,12 +25,15 @@ const contentRef = React.createRef<HTMLDivElement>()
 const MemberList: React.FC = () => {
   const giftListRef = useRef<any>(null)
   const contentRect = useRect(contentRef)
+  const theme = useTheme()
+  const isMobile = useMediaQuery(theme.breakpoints.down(769))
 
   const router = useRouter()
   const { t } = useTranslation('common')
   const classes = useStyles()
 
   const { getAllGiftMaster, giftMasterList: giftMasterData, reloadGiftMasterFlag, metaGetAllGiftMaster } = useGiftTarget()
+  const { changeIsHideFooter } = useStreamSettingContext()
 
   const [filterByType, setFilterByType] = useState(GiftMasterUserType.NO_FILTER)
   const [filterByName, setFilterByName] = useState('')
@@ -118,7 +122,19 @@ const MemberList: React.FC = () => {
 
   const filterInputField = () => {
     return (
-      <ESInput className={classes.filterInputField} fullWidth placeholder="キーワード検索" value={filterByName} onChange={handleChange} />
+      <ESInput
+        className={classes.filterInputField}
+        fullWidth
+        placeholder="キーワード検索"
+        value={filterByName}
+        onChange={handleChange}
+        onFocus={() => {
+          if (isMobile) {
+            changeIsHideFooter(true)
+          }
+        }}
+        onBlur={() => changeIsHideFooter(false)}
+      />
     )
   }
 

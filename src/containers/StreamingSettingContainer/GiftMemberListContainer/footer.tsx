@@ -1,9 +1,10 @@
-import { Box, makeStyles, Theme, Typography } from '@material-ui/core'
 import ButtonPrimary from '@components/ButtonPrimary'
+import useGiftTarget from '@containers/StreamingGiftManagement/useGiftTarget'
+import { Box, makeStyles, Theme, Typography } from '@material-ui/core'
+import { Colors } from '@theme/colors'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { Colors } from '@theme/colors'
-import useGiftTarget from '@containers/StreamingGiftManagement/useGiftTarget'
+import { useStreamSettingContext } from '../StreamSettingContext'
 
 /**
  * TODO: Raise bottom margin of side menu
@@ -22,9 +23,10 @@ const Footer: React.FC<Props> = ({ onConfirm = () => null, onCancel = () => null
   const getNumberItemSelected = () => {
     return newGiftGroupGiftMasterList.length
   }
+  const { isHideFooter } = useStreamSettingContext()
 
   return (
-    <Box className={classes.container}>
+    <Box className={classes.container} style={isHideFooter ? { position: 'absolute' } : { position: 'fixed' }}>
       {errorMessage && <Typography className={classes.errorMessage}>{errorMessage}</Typography>}
       <Typography className={classes.confirmMessage}>
         {`${getNumberItemSelected()}${t('streaming_setting_screen.member_list.confirm_message')}`}

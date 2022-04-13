@@ -1,4 +1,4 @@
-import { Box, makeStyles, Typography } from '@material-ui/core'
+import { Box, makeStyles, Typography, useMediaQuery, useTheme } from '@material-ui/core'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import ESInput from '@components/Input'
@@ -13,6 +13,7 @@ import { useAppDispatch } from '@store/hooks'
 import * as commonActions from '@store/common/actions'
 import * as Yup from 'yup'
 import { CreateMode } from '@containers/StreamingSettingContainer/GiftManageTab'
+import { useStreamSettingContext } from '../StreamSettingContext'
 
 const validationFormScheme = () => {
   const { t } = useTranslation('common')
@@ -35,17 +36,21 @@ const GiftMemberListContainer: React.FC<Props> = ({ handleBackToListState, creat
   const { t } = useTranslation('common')
   const dispatch = useAppDispatch()
   const classes = useStyles()
+
+  const theme = useTheme()
+  const isMobile = useMediaQuery(theme.breakpoints.down(769))
   const { newGiftGroupGiftMasterList, createNewGiftGroup, resetNewGroupMasterList, giftGroupDetail } = useGiftTarget()
   const getNumberItemSelected = () => {
     return newGiftGroupGiftMasterList.length
   }
-
   // const dispatch = useAppDispatch()
   const initialValues = () => {
     return {
       title: '',
     }
   }
+
+  const { changeIsHideFooter } = useStreamSettingContext()
 
   const handleOnSuccessCallback = () => {
     if (createMode === CreateMode.CREATE) {
@@ -95,6 +100,12 @@ const GiftMemberListContainer: React.FC<Props> = ({ handleBackToListState, creat
     setFieldValue('title', event.target.value.slice(0, 60))
   }
 
+  const handleFocus = () => {
+    if (isMobile) {
+      changeIsHideFooter(true)
+    }
+  }
+
   const header = () => {
     return (
       <Box className={classes.header}>
@@ -111,9 +122,13 @@ const GiftMemberListContainer: React.FC<Props> = ({ handleBackToListState, creat
           endAdornment={<CharacterLimited value={values.title} limit={60} />}
           value={values.title}
           onChange={handleTitleChange}
-          onBlur={handleBlur}
+          onBlur={(e) => {
+            changeIsHideFooter(false)
+            handleBlur(e)
+          }}
           helperText={touched.title && errors.title}
           error={touched.title && !!errors.title}
+          onFocus={handleFocus}
         />
       </Box>
     )
