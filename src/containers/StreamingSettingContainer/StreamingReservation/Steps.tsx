@@ -1199,9 +1199,9 @@ const Steps: React.FC<StepsProps> = ({
                           required={formik?.values?.stepSettingTwo?.use_ticket}
                         />
                         <Typography className={`${classes.date} ${classes.pd8}`}>
-                          {formik?.values?.stepSettingTwo?.sell_ticket_start_time !== null
+                          {formik.values.stepSettingTwo.use_ticket
                             ? moment(formik?.values?.stepSettingTwo?.sell_ticket_start_time).format('YYYY年MM月DD日 HH:mm')
-                            : i18n.t('common:delivery_reservation_tab.ticket_sales_start_datetime')}
+                            : ''}
                         </Typography>
                       </Box>
                     </Box>
