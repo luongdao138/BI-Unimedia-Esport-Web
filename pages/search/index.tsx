@@ -85,7 +85,7 @@ const SearchPage: PageWithLayoutType = () => {
       loginRequired={false}
       adsOption={true}
       // styleContentMainLayout={classes.contentMainLayout}
-      childrenAds={<>{screenDownSP && <GoogleAd id={{ idPatten3: 'ad_search_b' }} idTag={'ad_search_b'} slot={slotDataLayer} />}</>}
+      childrenAds={<>{screenDownSP && <GoogleAd id={{ idPatten4: 'ad_search_b' }} idTag={'ad_search_b'} slot={slotDataLayer} />}</>}
     >
       <Box className="position_bottom">
         <div
