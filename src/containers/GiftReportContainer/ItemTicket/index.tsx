@@ -8,7 +8,6 @@ import React from 'react'
 // import { useTranslation } from 'react-i18next'
 
 const ItemTicket: React.FC<TicketsResponse> = (props) => {
-  // const { t } = useTranslation('common')
   const { created_at, image_url, nickname, point, user_code } = props
   const classes = useStyles()
   return (
