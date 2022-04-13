@@ -42,6 +42,8 @@
     "aws-sdk": "^2.953.0",
     "axios": "0.21.1",
     "cookie": "^0.4.1",
+    "encoding-japanese": "^2.0.0",
+    "exceljs": "^4.3.0",
     "formik": "2.2.6",
     "hls.js": "^1.0.11",
     "i18next": "^20.2.2",

@@ -47,7 +47,8 @@ const StreamingReservationContainer: React.FC<Props> = ({
 }) => {
   const [step, setStep] = useState(1)
   const router = useRouter()
-  const { categoryData } = useLiveSetting()
+  const { categoryData, scheduleInformation } = useLiveSetting()
+  const status = scheduleInformation?.data?.status === 1
 
   const [modal, setModal] = useState(false)
   const { t } = useTranslation(['common'])
@@ -370,10 +371,14 @@ const StreamingReservationContainer: React.FC<Props> = ({
       <ESModal open={modal && (showResultDialog || channelProgress)} handleClose={handleClose}>
         <BlankLayout>
           <SettingsCompleted
-            titleNotification={t('common:streaming_setting_screen.tab2_notification_title')}
-            messageNotification={t('common:streaming_setting_screen.tab2_notification_mess')}
             onClose={onClose}
             onComplete={onComplete}
+            messageNotification={status ? '' : t('common:streaming_setting_screen.tab2_notification_mess')}
+            titleNotification={
+              status
+                ? t('common:streaming_setting_screen.tab2_notification_mess_update')
+                : t('common:streaming_setting_screen.complete_delivery_settings')
+            }
           />
         </BlankLayout>
       </ESModal>
