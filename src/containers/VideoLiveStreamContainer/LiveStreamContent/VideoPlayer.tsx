@@ -72,7 +72,6 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   // check condition display setting panel to display control bar
   const isOpenSettingPanel = refControlBar?.current && refControlBar?.current.settingPanel !== SettingPanelState.NONE ? true : false
 
-  const classes = useStyles({ checkStatusVideo: videoType })
   const videoEl = useRef(null)
   const { t } = useTranslation('common')
 
@@ -131,6 +130,8 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   const [resolutionSelected, setResolutionSelected] = useState(VIDEO_RESOLUTION.AUTO)
   const [playRateReturn, setPlayRateReturn] = useState(1)
   const isSafari = CommonHelper.checkIsSafariBrowser()
+  const [isFull, setIsFull] = useState<boolean>(false)
+  const classes = useStyles({ checkStatusVideo: videoType, isFull })
 
   const {
     requestPIP,
@@ -587,19 +588,23 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     }
   }, [resolution])
   const toggleFullScreen1 = () => {
-    if (!document.fullscreenElement) {
-      if (playerContainerRef.current.requestFullscreen) {
-        playerContainerRef.current.requestFullscreen()
-      } else if (playerContainerRef.current.mozRequestFullScreen) {
-        playerContainerRef.current.mozRequestFullScreen()
-      } else if (playerContainerRef.current.webkitRequestFullscreen) {
-        playerContainerRef.current.webkitRequestFullscreen()
-      } else if (playerContainerRef.current.msRequestFullscreen) {
-        playerContainerRef.current.msRequestFullscreen()
-      }
+    if (iPhonePl && androidPl) {
+      setIsFull(!isFull)
     } else {
-      if (document.exitFullscreen) {
-        document.exitFullscreen()
+      if (!document.fullscreenElement) {
+        if (playerContainerRef.current.requestFullscreen) {
+          playerContainerRef.current.requestFullscreen()
+        } else if (playerContainerRef.current.mozRequestFullScreen) {
+          playerContainerRef.current.mozRequestFullScreen()
+        } else if (playerContainerRef.current.webkitRequestFullscreen) {
+          playerContainerRef.current.webkitRequestFullscreen()
+        } else if (playerContainerRef.current.msRequestFullscreen) {
+          playerContainerRef.current.msRequestFullscreen()
+        }
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen()
+        }
       }
     }
   }
@@ -752,7 +757,10 @@ const VideoPlayer: React.FC<PlayerProps> = ({
         </div>
       )} */}
       {/* {(!isMobile && !androidPl && !iPhonePl)  && ( */}
-      <div ref={playerContainerRef} className={classes.playerContainer}>
+      <div
+        ref={playerContainerRef}
+        className={`${classes.playerContainer} ${isFull === true ? classes.forceFullscreenIosSafariPlayer : ''}`}
+      >
         <div style={{ height: '100%', position: 'relative' }} onClick={handlePlayPauseOut}>
           <video
             id="video"
@@ -946,10 +954,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 40,
   },
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  processControl: (props: { checkStatusVideo: number }) => {
+  processControl: (props: { checkStatusVideo: number; isFull?: boolean }) => {
     return {
       width: '100%',
-      position: 'absolute',
+      position: props.isFull ? 'fixed' : 'absolute',
       bottom: 0,
       left: 0,
       // visibility:'hidden',
@@ -961,7 +969,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       // justifyContent: 'space-between',
       zIndex: 99,
       transition: 'opacity 0.1s ease-in',
-      opacity: 0, //always show controlBar by status video
+      opacity: 1, //always show controlBar by status video
       background:
         props.checkStatusVideo !== STATUS_VIDEO.LIVE_STREAM
           ? 'linear-gradient(rgb(128 128 128 / 0%) 20%, rgb(39 39 39) 100%)'
@@ -971,7 +979,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   showControl: {
     opacity: '1 !important',
   },
-  playerContainer: (props: { checkStatusVideo: number }) => {
+  playerContainer: (props: { checkStatusVideo: number; isFull?: boolean }) => {
     return {
       height: '100%',
       '&:hover $processControl': {
@@ -983,6 +991,11 @@ const useStyles = makeStyles((theme: Theme) => ({
         transition: 'opacity 0.1s ease-in',
       },
     }
+  },
+  forceFullscreenIosSafariPlayer: {
+    position: 'fixed',
+    background: 'black',
+    zIndex: 2,
   },
   [theme.breakpoints.down('xs')]: {
     fontSizeLarge: {
