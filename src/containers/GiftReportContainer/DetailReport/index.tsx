@@ -105,28 +105,6 @@ const DetailReport: React.FC<DetailReportProps> = ({ videoId }) => {
         )
       : []
   const disableBtnCSV = dataReportExcel.length > 0 ? false : true
-  // const renderBtnCSV = () =>
-  //   matches ? (
-  //     <ESButton variant={'contained'} className={classes.btnCSV} disabled={disableBtnCSV}>
-  //       <ExportCSV
-  //         headers={headers}
-  //         data={dataReportExcel}
-  //         className={classes.textBtnCSV}
-  //         fileName={'reports.csv'}
-  //         textExport={t('streaming_gift_report_screen.csv')}
-  //       ></ExportCSV>
-  //     </ESButton>
-  //   ) : (
-  //     <ESButton variant={'contained'} className={classes.btnCSV} disabled={disableBtnCSV}>
-  //       <ExportCSV
-  //         headers={headers}
-  //         data={dataReportExcel}
-  //         className={classes.textBtnCSV}
-  //         fileName={'reports.csv'}
-  //         textExport={t('streaming_gift_report_screen.csv_download')}
-  //       ></ExportCSV>
-  //     </ESButton>
-  //   )
   const renderBtnCSV = () =>
     matches ? (
       <ExportCSV
