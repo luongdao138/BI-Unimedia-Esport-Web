@@ -1786,12 +1786,12 @@ export default {
     send: '送信',
     success_message: '送信が完了しました',
     standard: '標準',
-    play_speed: '視聴速度',
+    play_speed: '画質選択',
     mini_player_message: 'ホップアウト機能で動画を表示しています',
     tooltip_control_bar: {
       mini_player: 'ポップアウト',
       setting: '設定',
-      play_speed: '視聴速度',
+      play_speed: '画質選択',
     },
   },
   live_stream_screen: {
