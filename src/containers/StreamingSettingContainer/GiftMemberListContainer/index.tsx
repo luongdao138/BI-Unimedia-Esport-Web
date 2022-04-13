@@ -262,6 +262,9 @@ const useStyles = makeStyles((theme) => ({
     listWithDataContainer: {
       padding: '0 8px',
     },
+    listContainer: {
+      minHeight: '307px',
+    },
   },
   [theme.breakpoints.down(1200)]: {
     container: {
