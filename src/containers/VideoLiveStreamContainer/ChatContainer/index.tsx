@@ -234,6 +234,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       VideoContext
     )
     const chatMobileContainerRef = useRef<HTMLDivElement>(null)
+    const refProps = { ref: chatMobileContainerRef }
     const videoPlayedSecond = useRef(0)
     // console.log('🚀 ~ videoPlayedSecond', videoPlayedSecond?.current)
     const videoStreamingSecond = useRef(0)
@@ -2119,8 +2120,8 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     }
 
     const chatInputComponent = () => (
-      <div
-        ref={chatMobileContainerRef}
+      <Box
+        {...refProps}
         className={`${classes.chatInputMobileContainer}`}
         // style={{ bottom: isMobile ? '0px' : errorMess ? '-132.5px' : '-116.5px' }}
         // style={{ bottom: isMobile ? '0px' : errors?.message ? '-132.5px' : '-110.5px' }}
@@ -2145,7 +2146,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
             <></>
           ))}
         {purchaseDialogVisible && renderBlurInput()}
-      </div>
+      </Box>
     )
 
     const closeDialogActiveUser = () => {

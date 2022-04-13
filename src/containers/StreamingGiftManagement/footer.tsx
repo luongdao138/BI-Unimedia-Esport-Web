@@ -4,6 +4,7 @@ import React, { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import useGiftManage from './useGiftTarget'
 import { useRect } from '@utils/hooks/useRect'
+import styled from 'styled-components'
 
 /**
  * TODO: Raise bottom margin of side menu
@@ -15,6 +16,8 @@ interface Props {
   step?: number
 }
 
+const StyledBox = styled(Box)``
+
 const Footer: React.FC<Props> = ({ onConfirm, onCancel, errorMessage, step }) => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
@@ -22,9 +25,11 @@ const Footer: React.FC<Props> = ({ onConfirm, onCancel, errorMessage, step }) =>
   const containerRef = useRef<HTMLDivElement>(null)
   const { height } = useRect(containerRef)
   const disableBtnConfirm = step === 2 || giftTargetData.length === 0 ? true : false
+  const refProps = { ref: containerRef }
+
   return (
     <>
-      <div className={classes.container} ref={containerRef}>
+      <StyledBox className={classes.container} {...refProps}>
         {errorMessage && <Typography className={classes.errorMessage}>{errorMessage}</Typography>}
         <Box className={classes.buttonContainer}>
           {step !== 3 && (
@@ -43,7 +48,7 @@ const Footer: React.FC<Props> = ({ onConfirm, onCancel, errorMessage, step }) =>
             </ButtonPrimary>
           )}
         </Box>
-      </div>
+      </StyledBox>
       <Box style={{ height }} className={classes.clear}></Box>
     </>
   )
