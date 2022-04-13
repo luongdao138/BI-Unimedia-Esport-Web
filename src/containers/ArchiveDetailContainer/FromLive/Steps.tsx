@@ -248,9 +248,9 @@ const Steps: React.FC<StepsProps> = ({
   }
 
   const returnTextChip = () => {
-    if (formik?.values?.use_gift) {
-      if (formik?.values?.group_title) {
-        return formik?.values?.group_title
+    if (videoArchivedDetail?.use_gift) {
+      if (videoArchivedDetail?.group_title) {
+        return videoArchivedDetail?.group_title
       } else {
         return i18n.t('common:streaming_setting_screen.unselected')
       }
@@ -496,27 +496,18 @@ const Steps: React.FC<StepsProps> = ({
                         .replace('%d', FormatHelper.currencyFormat(videoArchivedDetail?.ticket_price.toString()))
                     : i18n.t('common:delivery_reservation_tab.ticket_not_use')}
                 </Box>
-                {isFromSchedule ? (
-                  <Box className={` ${classes.pdLabelDate}`}>
-                    <Box className={classes.label}>{i18n.t('common:delivery_reservation_tab.ticket_sales_start_datetime')}</Box>
-                    <Box className={classes.dateTime} pt={1}>
-                      {videoArchivedDetail?.stream_schedule_start_time !== null
-                        ? CommonHelper.formatDateTimeJP(videoArchivedDetail?.stream_schedule_start_time)
-                        : i18n.t('common:delivery_reservation_tab.ticket_sales_start_datetime')}
-                    </Box>
-                  </Box>
-                ) : (
-                  <Box className={` ${classes.pdLabelDate}`}>
-                    <Box className={classes.label}>{i18n.t('common:archive_detail_screen.delivery_date_time')}</Box>
-                    <Box className={classes.dateTime} pt={1}>
-                      {videoArchivedDetail?.stream_schedule_start_time !== null
-                        ? CommonHelper.formatDateTimeJP(videoArchivedDetail?.stream_schedule_start_time)
-                        : ''}
-                    </Box>
-                  </Box>
-                )}
               </Box>
             </ESBoxftDashColumn>
+          </Box>
+
+          {/* sale date time */}
+          <Box pb={2}>
+            <Box className={classes.label}>{i18n.t('common:archive_detail_screen.ticket_sale_date_time')}</Box>
+            <Box className={classes.dateTime} pt={1} pl={1} height="28px">
+              {videoArchivedDetail && videoArchivedDetail?.sell_ticket_start_time
+                ? CommonHelper.formatDateTimeJP(videoArchivedDetail?.sell_ticket_start_time)
+                : ''}
+            </Box>
           </Box>
 
           {/* V3: gift */}
@@ -540,15 +531,6 @@ const Steps: React.FC<StepsProps> = ({
                 </Box>
               </Box>
             </ESBoxftDashColumn>
-          </Box>
-          {/* sale date time */}
-          <Box pb={2}>
-            <Box className={classes.label}>{i18n.t('common:archive_detail_screen.ticket_sale_date_time')}</Box>
-            <Box className={classes.dateTime} pt={1} pl={1} height="28px">
-              {videoArchivedDetail && videoArchivedDetail?.sell_ticket_start_time
-                ? CommonHelper.formatDateTimeJP(videoArchivedDetail?.sell_ticket_start_time)
-                : ''}
-            </Box>
           </Box>
 
           {/* Archive delivery end date and time */}
