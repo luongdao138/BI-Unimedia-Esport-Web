@@ -531,7 +531,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
 
     //load data
     videoEl.current?.addEventListener('loadedmetadata', (event) => {
-      console.log('=================loadedmetadata===================')
+      console.log('=================loadedmetadata===================', videoEl.current)
       console.log(event)
       setFlagResol(false)
       if (!isStreamingEnd.current) {
@@ -557,7 +557,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
         setVisible({ ...visible, loading: videoEl.current?.paused })
       }
       //in safari IOS: when change quality video archived + speed + hls not support
-      if (videoEl.current && iPhonePl && isSafari && !Hls.isSupported()) {
+      if (videoEl.current && iPhonePl && isSafari && !Hls.isSupported() && resolution !== -1) {
         videoEl.current.currentTime = playedSeconds
       }
     })
