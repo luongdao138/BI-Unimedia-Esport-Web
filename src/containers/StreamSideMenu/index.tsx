@@ -16,8 +16,6 @@ import LoginRequired from '@containers/LoginRequired'
 import userProfileStore from '@store/userProfile'
 import ESAvatar from '@components/Avatar'
 import { useTranslation } from 'react-i18next'
-import useMediaQuery from '@material-ui/core/useMediaQuery'
-import { useTheme } from '@material-ui/core/styles'
 import SideFooter from '@containers/SideMenu/SideFooter'
 import AppDialog from '@containers/SideMenu/AppDialog'
 import usePointsManage from '@containers/PointManage/usePointsManage'
@@ -54,8 +52,6 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({
   const { getUserProfile } = useUserData()
 
   const totalMyPoints = myPointsData?.total_point
-  const theme = useTheme()
-  const downSm = useMediaQuery(theme.breakpoints.down('sm'))
   // const isSelected = (routeName: string): boolean => {
   //   return router.pathname && router.pathname.startsWith(routeName)
   // }
@@ -273,7 +269,7 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({
               {!minimizeLayout && <ListItemText className={classes.listText} primary={t('common:logout')} />}
             </ListItem>
           )}
-          {!downSm && !minimizeLayout && (
+          {!minimizeLayout && (
             <Box className={classes.wrap_footer}>
               <SideFooter handleAppModal={handleAppModal} />
             </Box>
