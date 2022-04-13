@@ -8,6 +8,7 @@ import useDetailVideo from '@containers/VideoLiveStreamContainer/useDetailVideo'
 import i18n from '@locales/i18n'
 import { Box, Grid, makeStyles, TableCell, TableRow, Typography } from '@material-ui/core'
 import { Colors } from '@theme/colors'
+import { getTimeZone } from '@utils/helpers/CommonHelper'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -46,7 +47,7 @@ const GiftReportContainer: React.FC<{ default_tab: any }> = ({ default_tab }) =>
 
           break
         case TABS.TICKET_REPORT:
-          fetchTicketReportList(paramDeliveryReport)
+          fetchTicketReportList({ uuid: videoID, timezone: getTimeZone() })
 
           break
         default:
