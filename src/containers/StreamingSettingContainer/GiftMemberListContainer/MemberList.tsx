@@ -405,6 +405,9 @@ const useStyles = makeStyles((theme) => ({
     filterInputField: {
       marginTop: '16px',
     },
+    listContainer: {
+      minHeight: '307px',
+    },
   },
 }))
 export default MemberList
