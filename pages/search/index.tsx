@@ -84,7 +84,7 @@ const SearchPage: PageWithLayoutType = () => {
     <MainLayout
       loginRequired={false}
       adsOption={true}
-      styleContentMainLayout={classes.contentMainLayout}
+      // styleContentMainLayout={classes.contentMainLayout}
       childrenAds={<>{screenDownSP && <GoogleAd id={{ idPatten3: 'ad_search_b' }} idTag={'ad_search_b'} slot={slotDataLayer} />}</>}
     >
       <Box className="position_bottom">
@@ -129,11 +129,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     wordBreak: 'break-all',
     fontWeight: 'bold',
   },
-  contentMainLayout: {
-    minHeight: 'auto',
-    height: 'calc(100vh - 110px)', //60px(header)+50px(ads)
-    overflow: 'auto',
-  },
+  // contentMainLayout: {
+  //   minHeight: 'auto',
+  //   height: 'calc(100vh - 110px)', //60px(header)+50px(ads)
+  //   overflow: 'auto',
+  // },
 }))
 
 export default SearchPage

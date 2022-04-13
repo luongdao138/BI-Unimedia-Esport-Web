@@ -17,10 +17,9 @@ interface MainLayoutProps {
   loginRequired?: boolean
   adsOption?: boolean
   childrenAds?: ReactNode
-  styleContentMainLayout?: string
 }
 
-const MainLayout: React.FC<MainLayoutProps> = ({ children, patternBg, loginRequired, adsOption, childrenAds, styleContentMainLayout }) => {
+const MainLayout: React.FC<MainLayoutProps> = ({ children, patternBg, loginRequired, adsOption, childrenAds }) => {
   const [open, setOpen] = useState<boolean>(false)
   const [expand, setExpand] = useState<boolean>(false)
   const isAuthenticated = useAppSelector(getIsAuthenticated)
@@ -67,7 +66,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, patternBg, loginRequi
       </aside>
       <main role="main" className={patternBg ? 'main' : 'main no-pattern'} style={{ minHeight: height }}>
         <div className="content-wrapper" id="content-main">
-          <div className={`content ${styleContentMainLayout}`}>{renderContent()}</div>
+          <div className={'content'}>{renderContent()}</div>
           {adsOption && childrenAds}
         </div>
         <aside className="aside-right">{isAuthenticated ? <ChatSideBar expand={expand} toggleChatBar={toggleChatBar} /> : null}</aside>

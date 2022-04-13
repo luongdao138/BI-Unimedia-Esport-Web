@@ -10,7 +10,7 @@ import { ESRoutes } from '@constants/route.constants'
 import { GetStaticProps } from 'next'
 import i18n from '@locales/i18n'
 import _ from 'lodash'
-import { makeStyles, useMediaQuery, useTheme } from '@material-ui/core'
+import { useMediaQuery, useTheme } from '@material-ui/core'
 import { GTMHelper } from '@utils/helpers/SendGTM'
 import GoogleAd from '@components/GoogleAd'
 
@@ -23,7 +23,7 @@ const LobbyPage: PageWithLayoutType = () => {
   const theme = useTheme()
   const screenDownSP = useMediaQuery(theme.breakpoints.down(576))
   const [slotDataLayer, setSlotDataLayer] = useState('')
-  const classes = useStyles()
+  // const classes = useStyles()
 
   useEffect(() => {
     if (!isAuth && ['joined', 'organized'].includes(filter)) {
@@ -45,7 +45,7 @@ const LobbyPage: PageWithLayoutType = () => {
     <MainLayout
       loginRequired={false}
       adsOption={true}
-      styleContentMainLayout={classes.contentMainLayout}
+      // styleContentMainLayout={classes.contentMainLayout}
       childrenAds={
         <>
           {screenDownSP && (
@@ -58,13 +58,13 @@ const LobbyPage: PageWithLayoutType = () => {
     </MainLayout>
   )
 }
-const useStyles = makeStyles(() => ({
-  contentMainLayout: {
-    minHeight: 'auto',
-    height: 'calc(100vh - 110px)', //60px(header)+50px(ads)
-    overflow: 'auto',
-  },
-}))
+// const useStyles = makeStyles(() => ({
+//   contentMainLayout: {
+//     minHeight: 'auto',
+//     height: 'calc(100vh - 110px)', //60px(header)+50px(ads)
+//     overflow: 'auto',
+//   },
+// }))
 const formatFilter = (filterText: string) => {
   if (!_.isString(filterText)) return LobbyFilterOption.all
 

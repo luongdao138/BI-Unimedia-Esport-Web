@@ -10,7 +10,7 @@ import { useEffect, useState } from 'react'
 import { ESRoutes } from '@constants/route.constants'
 import { GetStaticProps } from 'next'
 import i18n from '@locales/i18n'
-import { makeStyles, useMediaQuery, useTheme } from '@material-ui/core'
+import { useMediaQuery, useTheme } from '@material-ui/core'
 import { GTMHelper } from '@utils/helpers/SendGTM'
 import GoogleAd from '@components/GoogleAd'
 
@@ -23,7 +23,7 @@ const CommunityPage: PageWithLayoutType = () => {
   const theme = useTheme()
   const screenDownSP = useMediaQuery(theme.breakpoints.down(576))
   const [slotDataLayer, setSlotDataLayer] = useState('')
-  const classes = useStyles()
+  // const classes = useStyles()
 
   useEffect(() => {
     if (!isAuth && ['joined', 'organized'].includes(filter)) {
@@ -46,7 +46,7 @@ const CommunityPage: PageWithLayoutType = () => {
       loginRequired={false}
       patternBg={true}
       adsOption={true}
-      styleContentMainLayout={classes.contentMainLayout}
+      // styleContentMainLayout={classes.contentMainLayout}
       childrenAds={
         <>
           {screenDownSP && (
@@ -65,13 +65,13 @@ const CommunityPage: PageWithLayoutType = () => {
   )
 }
 
-const useStyles = makeStyles(() => ({
-  contentMainLayout: {
-    minHeight: 'auto',
-    height: 'calc(100vh - 110px)', //60px(header)+50px(ads)
-    overflow: 'auto',
-  },
-}))
+// const useStyles = makeStyles(() => ({
+//   contentMainLayout: {
+//     minHeight: 'auto',
+//     height: 'calc(100vh - 110px)', //60px(header)+50px(ads)
+//     overflow: 'auto',
+//   },
+// }))
 
 function formatFilter(filterText: string) {
   if (!_.isString(filterText)) return CommunityFilterOption.all
