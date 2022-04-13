@@ -7,7 +7,6 @@ import { useEffect, useState } from 'react'
 import { useAppSelector } from '@store/hooks'
 import { getIsAuthenticated } from '@store/auth/selectors'
 import userProfileStore from '@store/userProfile'
-import { useMediaQuery, useTheme } from '@material-ui/core'
 
 const StreamingManagePage: PageWithLayoutType = () => {
   const router = useRouter()
@@ -15,8 +14,6 @@ const StreamingManagePage: PageWithLayoutType = () => {
   const { selectors } = userProfileStore
   const isAuthenticated = useAppSelector(getIsAuthenticated)
   const userProfile = useAppSelector(selectors.getUserProfile)
-  const theme = useTheme()
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
 
   useEffect(() => {
     if (userProfile) {
@@ -26,11 +23,7 @@ const StreamingManagePage: PageWithLayoutType = () => {
     }
   }, [userProfile])
 
-  return (
-    <StreamLayout loginRequired footer={isMobile}>
-      {isStreamer && <StreamingManageContainer />}
-    </StreamLayout>
-  )
+  return <StreamLayout loginRequired>{isStreamer && <StreamingManageContainer />}</StreamLayout>
 }
 
 export default StreamingManagePage

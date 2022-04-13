@@ -6,7 +6,6 @@ import userProfileStore from '@store/userProfile'
 import { useEffect, useState } from 'react'
 import { ESRoutes } from '@constants/route.constants'
 import { getIsAuthenticated } from '@store/auth/selectors'
-import { useMediaQuery, useTheme } from '@material-ui/core'
 import GiftReportContainer from '@containers/GiftReportContainer'
 
 const StreamingSettingPage: PageWithLayoutType = () => {
@@ -17,8 +16,6 @@ const StreamingSettingPage: PageWithLayoutType = () => {
   const { selectors } = userProfileStore
   const isAuthenticated = useAppSelector(getIsAuthenticated)
   const userProfile = useAppSelector(selectors.getUserProfile)
-  const theme = useTheme()
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
 
   useEffect(() => {
     if (userProfile) {
@@ -28,11 +25,7 @@ const StreamingSettingPage: PageWithLayoutType = () => {
     }
   }, [userProfile])
 
-  return (
-    <StreamLayout loginRequired footer={isMobile}>
-      {isStreamer && <GiftReportContainer default_tab={Number(default_tab)} />}
-    </StreamLayout>
-  )
+  return <StreamLayout loginRequired>{isStreamer && <GiftReportContainer default_tab={Number(default_tab)} />}</StreamLayout>
 }
 
 export default StreamingSettingPage
