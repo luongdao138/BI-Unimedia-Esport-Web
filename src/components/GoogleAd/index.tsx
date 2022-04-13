@@ -64,7 +64,7 @@ const GoogleAd: React.FC<Props> = ({ style, id, slot, styleContainer, idTag = 'a
   const styles = {
     display: 'block',
     height: screenDownSP ? 50 : 90,
-    background: 'red',
+    // background: 'red',
     width: screenDownSP ? 300 : '100%',
   }
   // console.log('-check log google tag: screenDownSP: ', screenDownSP, ' ---id: ', JSON.stringify(id))
