@@ -856,7 +856,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
           </div>
         )}
         {/* previous and next only in mobile */}
-        {(isMobile || androidPl || iPhonePl) && (
+        {(isMobile || androidPl || iPhonePl) && videoType !== STATUS_VIDEO.LIVE_STREAM && (
           <div className={classes.playOverViewSP}>
             <div className={classes.nextPreSP}>
               <Box
