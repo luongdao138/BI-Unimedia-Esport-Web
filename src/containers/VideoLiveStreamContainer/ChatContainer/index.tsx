@@ -4,7 +4,7 @@
 import { Box, Typography, Icon, IconButton, useTheme, useMediaQuery, ButtonBase, ClickAwayListener } from '@material-ui/core'
 // import { useTranslation } from 'react-i18next'
 // import i18n from '@locales/i18n'
-import React, { useState, useEffect, useRef, forwardRef, useImperativeHandle, useCallback, useContext } from 'react'
+import React, { useState, useEffect, useRef, forwardRef, useImperativeHandle, useCallback, useContext, useMemo } from 'react'
 import sanitizeHtml from 'sanitize-html'
 import i18n from '@locales/i18n'
 import useStyles from './styles'
@@ -295,6 +295,9 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     // console.log('🚀 ~ isTokenTipBroken', isTokenTipBroken)
     // console.log('🚀 ~ isTokenBroken', isTokenBroken)
     const [videoTimeIsRewinding, setVideoTimeIsRewinding] = useState(0)
+
+    const [tempActiveTab, setTempActiveTab] = useState<number>(VIDEO_TABS.CHAT)
+    const timeoutRef = useRef<NodeJS.Timeout>(null)
     // console.log('🚀 ~ videoTimeIsRewinding', videoTimeIsRewinding)
 
     // const getChatData = () =>
@@ -303,8 +306,8 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     //     .map((_, i) => ({
     //       id: i,
     //       user: 'Account Name',
-    //       content: 'チャットのコメントははここに表示されます。チャットのコメントははここに表示されます。',
-    //     }))
+    //       content: 'チャットのコメントははここに表示されます。チャッßトのコメントははここに表示されます。',
+    //     }))ß
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     //@ts-ignore
@@ -424,6 +427,16 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         handleLoadMore()
       }
     }, [scrolling])
+
+    useEffect(() => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current)
+      }
+
+      timeoutRef.current = setTimeout(() => {
+        setActiveTab(tempActiveTab)
+      }, 350)
+    }, [tempActiveTab])
 
     const refTransformMessTip = useRef(null)
     const handleTransformMessTip = () => {
@@ -2733,7 +2746,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       )
     }
 
-    const getTabsContent = () => {
+    const getTabsContent = useMemo(() => {
       switch (activeTab) {
         case VIDEO_TABS.CHAT:
           return renderMessageTab()
@@ -2742,11 +2755,34 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         default:
           return ''
       }
-    }
+    }, [activeTab])
 
     const renderContent = () => {
       return displayChatContent() ? chatContent() : userDoesNotHaveViewingTicketView()
     }
+
+    const renderTabs = useMemo(() => {
+      return (
+        <Box className={classes.tabsContainer}>
+          <ESTabs
+            value={tempActiveTab}
+            onChange={(_, v) => setTempActiveTab(v)}
+            className={classes.tabs}
+            scrollButtons="off"
+            variant="scrollable"
+          >
+            <ESTab className={classes.singleTab} label={i18n.t('common:live_stream_screen.chat_header')} value={VIDEO_TABS.CHAT} />
+            {isDisplayedRankingTab && (
+              <ESTab
+                className={classes.singleTab}
+                label={i18n.t('common:live_stream_screen.ranking_tab_title')}
+                value={VIDEO_TABS.RANKING}
+              />
+            )}
+          </ESTabs>
+        </Box>
+      )
+    }, [tempActiveTab, isDisplayedRankingTab])
 
     return (
       <Box
@@ -2759,21 +2795,10 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
             : {}
         }
       >
-        <Box className={classes.tabsContainer}>
-          <ESTabs value={activeTab} onChange={(_, v) => setActiveTab(v)} className={classes.tabs} scrollButtons="off" variant="scrollable">
-            <ESTab className={classes.singleTab} label={i18n.t('common:live_stream_screen.chat_header')} value={VIDEO_TABS.CHAT} />
-            {isDisplayedRankingTab && (
-              <ESTab
-                className={classes.singleTab}
-                label={i18n.t('common:live_stream_screen.ranking_tab_title')}
-                value={VIDEO_TABS.RANKING}
-              />
-            )}
-          </ESTabs>
-        </Box>
+        {renderTabs}
         {activeTab === VIDEO_TABS.CHAT && (
           <Box className={classes.tabsContent} style={{ display: isMobile && activeTab === VIDEO_TABS.CHAT ? 'none' : 'block' }}>
-            {getTabsContent()}
+            {getTabsContent}
           </Box>
         )}
 

@@ -1,5 +1,5 @@
 import { OutlinedInputProps } from '@material-ui/core'
-import { memo, ReactElement, useCallback, useEffect, useState } from 'react'
+import React, { memo, ReactElement, useCallback, useEffect, useState } from 'react'
 import ESInput from '@components/Input'
 import _ from 'lodash'
 
@@ -14,10 +14,16 @@ export type InputProps = {
   resetErrorOnChange?: () => void
   valueRef?: React.MutableRefObject<string>
   inputRef?: React.MutableRefObject<HTMLInputElement>
+  formatValue?: (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    isValid: boolean
+    formattedValue: string
+  }
 }
 
 const ESFastChatInput: React.FC<OutlinedInputProps & InputProps> = (props) => {
-  const { resetErrorOnChange, valueRef, inputRef } = props
+  const { resetErrorOnChange, valueRef, inputRef, formatValue } = props
   const [tempMessage, setTempMessage] = useState('')
 
   useEffect(() => {
@@ -29,14 +35,26 @@ const ESFastChatInput: React.FC<OutlinedInputProps & InputProps> = (props) => {
   const debouncedChangeHandler = useCallback(
     _.debounce((e) => {
       props.onChange(e)
-    }, 300),
+    }, 350),
     []
   )
 
   const handleChange = (e) => {
     e.persist()
-    setTempMessage(e.target.value)
-    valueRef.current = e.target.value
+    if (formatValue) {
+      const { isValid, formattedValue } = formatValue(e)
+      if (isValid) {
+        setTempMessage(formattedValue)
+        if (valueRef) {
+          valueRef.current = formattedValue
+        }
+      }
+    } else {
+      setTempMessage(e.target.value)
+      if (valueRef) {
+        valueRef.current = e.target.value
+      }
+    }
     debouncedChangeHandler(e)
     resetErrorOnChange?.()
   }
