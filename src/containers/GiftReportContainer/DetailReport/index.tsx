@@ -162,10 +162,10 @@ const DetailReport: React.FC<DetailReportProps> = ({ videoId }) => {
                   <TableCell style={{ width: '20%' }} align="center">
                     <Typography className={classes.textHeader}> {t('streaming_gift_report_screen.eXeLAB_ID')}</Typography>
                   </TableCell>
-                  <TableCell style={{ width: '20%' }} align="center">
+                  <TableCell style={{ width: '15%' }} align="center">
                     <Typography className={classes.textHeader}> {t('common.eXe_points')}</Typography>
                   </TableCell>
-                  <TableCell style={{ width: '15%' }} align="center">
+                  <TableCell style={{ width: '20%' }} align="center">
                     <Typography className={classes.textHeader}> {t('streaming_gift_report_screen.kinds')}</Typography>
                   </TableCell>
                   <TableCell style={{ width: '20%' }} align="center">
@@ -179,7 +179,7 @@ const DetailReport: React.FC<DetailReportProps> = ({ videoId }) => {
                   <TableCell align="center">{i.no}</TableCell>
                   <TableCell align="center">{DateHelper.formatDateTime(i.created_at)}</TableCell>
                   <TableCell align="left">{CommonHelper.insertSymbolToFirstString('@', i.user_code)}</TableCell>
-                  <TableCell align="center">{FormatHelper.currencyFormat(i.point)}</TableCell>
+                  <TableCell align="right">{FormatHelper.currencyFormat(i.point)}</TableCell>
                   <TableCell align="center">{i.type_report}</TableCell>
                   <TableCell align="left">{handlerRenderTipTarget(i.gift_recipient, i.type_report, i.streamer)}</TableCell>
                 </TableRow>
@@ -199,10 +199,10 @@ const DetailReport: React.FC<DetailReportProps> = ({ videoId }) => {
                   <TableCell style={{ width: '20%' }} align="center">
                     <Typography className={classes.textHeader}> {t('streaming_gift_report_screen.eXeLAB_ID')}</Typography>
                   </TableCell>
-                  <TableCell style={{ width: '20%' }} align="center">
+                  <TableCell style={{ width: '15%' }} align="center">
                     <Typography className={classes.textHeader}> {t('common.eXe_points')}</Typography>
                   </TableCell>
-                  <TableCell style={{ width: '15%' }} align="center">
+                  <TableCell style={{ width: '20%' }} align="center">
                     <Typography className={classes.textHeader}> {t('streaming_gift_report_screen.kinds')}</Typography>
                   </TableCell>
                   <TableCell style={{ width: '20%' }} align="center">
@@ -249,6 +249,9 @@ const useStyles = makeStyles((theme) => ({
         color: Colors.white,
       },
     },
+  },
+  textHeader: {
+    wordBreak: 'keep-all',
   },
   loaderCenter: {
     textAlign: 'center',
