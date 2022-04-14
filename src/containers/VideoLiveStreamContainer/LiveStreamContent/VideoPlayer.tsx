@@ -131,7 +131,8 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   const [playRateReturn, setPlayRateReturn] = useState(1)
   const isSafari = CommonHelper.checkIsSafariBrowser()
   const [isFull, setIsFull] = useState<boolean>(false)
-  const classes = useStyles({ checkStatusVideo: videoType, isFull })
+  const [isShowNextPre, setIsShowNextPre] = useState(false)
+  const classes = useStyles({ checkStatusVideo: videoType, isFull, isShowNextPre })
 
   const {
     requestPIP,
@@ -727,7 +728,12 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   //     }
   //   }
   // }, [playing, playedSeconds])
-
+  const showNextPreSP = () => {
+    setIsShowNextPre(!isShowNextPre)
+  }
+  const onChangeTime = (time: number) => {
+    videoEl.current.currentTime = playedSeconds + time
+  }
   return (
     <div className={classes.videoPlayer}>
       {/* {(iPhonePl || androidPl || (!iPadPl && isDownMd)) && (
@@ -760,6 +766,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       <div
         ref={playerContainerRef}
         className={`${classes.playerContainer} ${isFull === true ? classes.forceFullscreenIosSafariPlayer : ''}`}
+        onClick={showNextPreSP}
       >
         <div style={{ height: '100%', position: 'relative' }} onClick={handlePlayPauseOut}>
           <video
@@ -844,6 +851,33 @@ const VideoPlayer: React.FC<PlayerProps> = ({
                 resultResolution={(index, flag, item) => changeResolution(index, flag, item)}
                 qualities={qualities}
               />
+            </div>
+          </div>
+        )}
+        {/* previous and next only in mobile */}
+        {(isMobile || androidPl || iPhonePl) && (
+          <div className={classes.playOverViewSP}>
+            <div className={classes.nextPreSP}>
+              <Box
+                className={classes.buttonNormal}
+                data-tip
+                data-for="previous"
+                onClick={() => {
+                  onChangeTime(-10)
+                }}
+              >
+                <img src={'/images/ic_previous.svg'} className={classes.image} />
+              </Box>
+              <Box
+                className={classes.buttonNormal}
+                data-tip
+                data-for="next"
+                onClick={() => {
+                  onChangeTime(+10)
+                }}
+              >
+                <img src={'/images/ic_next.svg'} className={classes.image} />
+              </Box>
             </div>
           </div>
         )}
@@ -946,6 +980,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   videoPlayer: {
     height: '100%',
+    minHeight: 230,
   },
   controlOut: {
     // backgroundColor: 'rgba(0,0,0,0.3)',
@@ -954,7 +989,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 40,
   },
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  processControl: (props: { checkStatusVideo: number; isFull?: boolean }) => {
+  processControl: (props: { checkStatusVideo: number; isFull?: boolean; isShowNextPre?: boolean }) => {
     return {
       width: '100%',
       position: props.isFull ? 'fixed' : 'absolute',
@@ -979,7 +1014,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   showControl: {
     opacity: '1 !important',
   },
-  playerContainer: (props: { checkStatusVideo: number; isFull?: boolean }) => {
+
+  playerContainer: (props: { checkStatusVideo: number; isFull?: boolean; isShowNextPre?: boolean }) => {
     return {
       height: '100%',
       '&:hover $processControl': {
@@ -990,6 +1026,12 @@ const useStyles = makeStyles((theme: Theme) => ({
             : 'linear-gradient(rgb(128 128 128 / 0%) 0%, rgb(39 39 39) 100%)',
         transition: 'opacity 0.1s ease-in',
       },
+      // [theme.breakpoints.down('xs')]: {
+      '&:hover $playOverViewSP': {
+        opacity: 1,
+        display: 'flex',
+      },
+      // }
     }
   },
   forceFullscreenIosSafariPlayer: {
@@ -1000,6 +1042,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   [theme.breakpoints.down('xs')]: {
     fontSizeLarge: {
       fontSize: '50px',
+    },
+    controlOut: {
+      height: 26,
     },
   },
   thumbBegin: {
@@ -1056,6 +1101,32 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   showLoader: {
     zIndex: 2,
+  },
+  [theme.breakpoints.down('xs')]: {
+    playOverViewSP: (props: { checkStatusVideo: number; isFull?: boolean; isShowNextPre?: boolean }) => ({
+      backgroundColor: 'rgba(0,0,0,0.3)',
+      height: '100%',
+      width: '100%',
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      zIndex: 1,
+      transition: 'opacity 0.1s ease-in',
+      opacity: props.isShowNextPre ? 1 : 0,
+    }),
+    nextPreSP: {
+      display: 'flex',
+      flexDirection: 'row',
+      width: '44%',
+      justifyContent: 'space-between',
+    },
+    image: {
+      width: 24.61,
+      height: 26,
+    },
   },
 }))
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Box, Icon, makeStyles, Typography } from '@material-ui/core'
+import { Box, Icon, makeStyles, Theme, Typography } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import ESSelect from '@components/Select'
 import ESButton from '@components/Button'
@@ -15,7 +15,13 @@ type Props = {
 const ReportPanel: React.FC<Props> = ({ handleOnBackClick }) => {
   const classes = useStyles()
   const { t } = useTranslation('common')
-  const { getVideoReportReason, videoReportReason, isLoadingVideoReportReason, sendVideoReport } = useDetailVideo()
+  const {
+    getVideoReportReason,
+    videoReportReason,
+    isLoadingVideoReportReason,
+    sendVideoReport,
+    changeIsHoveredVideoStatus,
+  } = useDetailVideo()
 
   const [selectReportItem, setSelectReportItem] = useState('0')
   const [reportSuccess, setReportSuccess] = useState(false)
@@ -28,6 +34,7 @@ const ReportPanel: React.FC<Props> = ({ handleOnBackClick }) => {
 
   useEffect(() => {
     getVideoReportReason()
+    changeIsHoveredVideoStatus(false)
   }, [])
 
   useEffect(() => {
@@ -85,7 +92,7 @@ const ReportPanel: React.FC<Props> = ({ handleOnBackClick }) => {
     </Box>
   )
 }
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   successMessage: {
     width: '100%',
     textAlign: 'center',
@@ -139,6 +146,11 @@ const useStyles = makeStyles(() => ({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: '10px',
+  },
+  [theme.breakpoints.down('xs')]: {
+    container: {
+      bottom: '40px',
+    },
   },
 }))
 
