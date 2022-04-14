@@ -66,7 +66,7 @@ const Step2: React.FC<Step2Props> = ({
   //     )
   //     .trim(),
   // })
-  const { handleChange, values, handleSubmit, errors, touched, setValues } = useFormik({
+  const { handleChange, values, handleSubmit, errors, touched, setValues, setFieldValue } = useFormik({
     initialValues: {
       message: '',
     },
@@ -84,13 +84,14 @@ const Step2: React.FC<Step2Props> = ({
 
   const formHasError = values.message.length > purchasePoints[purchaseValueSelected].maxLengthInput
 
-  const handlePremiumChatClick = () => {
+  const handlePremiumChatClick = async () => {
     // if (!purchaseValueSelected) {
     //   setPremiumChatValidationError(i18n.t('common:live_stream_screen.chat_premium_text_validate_no_donate_selected'))
     //   return
     // }
     // // Submit chat message
     // setPremiumChatValidationError(null)
+    await setFieldValue('message', commentRef.current)
     handleSubmit()
   }
 

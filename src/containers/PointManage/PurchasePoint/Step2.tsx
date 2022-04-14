@@ -281,6 +281,9 @@ const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
                   formatValue={(e) => {
                     const card_number = e.target.value.replace(/\s/g, '')
                     const isValid = (/^[0-9]+$/g.test(card_number) || !e.target.value) && card_number.length <= 16
+                    if (/^[0-9]+$/g.test(card_number) || !e.target.value) {
+                      setSelectedCardId('')
+                    }
                     // replace space and check is numeric
                     return {
                       isValid,
@@ -306,6 +309,9 @@ const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
                   formatValue={(e) => {
                     const card_expire_date = e.target.value.replace(/[\s/]/g, '')
                     const isValid = (/^[0-9]+$/g.test(card_expire_date) || !e.target.value) && card_expire_date.length <= 4
+                    if (/^[0-9]+$/g.test(card_expire_date) || !e.target.value) {
+                      setSelectedCardId('')
+                    }
                     let formattedValue = card_expire_date
                     if (card_expire_date.length >= 3) formattedValue = card_expire_date.match(new RegExp('.{1,2}', 'g')).join(' / ')
                     return {
@@ -333,6 +339,9 @@ const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
                     const card_cvc = e.target.value
                     // check is numeric
                     const isValid = (/^[0-9]+$/g.test(card_cvc) || !card_cvc) && card_cvc.length <= 4
+                    if (/^[0-9]+$/g.test(card_cvc) || !card_cvc) {
+                      setSelectedCardId('')
+                    }
                     return {
                       isValid,
                       formattedValue: card_cvc,
