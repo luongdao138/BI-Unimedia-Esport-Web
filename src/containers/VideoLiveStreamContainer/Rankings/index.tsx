@@ -12,7 +12,7 @@ import {
   TableFooter,
   useMediaQuery,
 } from '@material-ui/core'
-import { memo, ReactNode } from 'react'
+import { memo, ReactNode, useMemo } from 'react'
 import { useRotateScreen } from '@utils/hooks/useRotateScreen'
 import { videoStyleProps } from '..'
 
@@ -24,8 +24,23 @@ const Rankings: React.FC<Props> = ({ children }) => {
   const { isLandscape } = useRotateScreen()
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down(769))
+  const matchSpSE = useMediaQuery(theme.breakpoints.down(321))
   const classes = useStyles({ availHeight: 1, availWidth: 1, isLandscape })
   const { t } = useTranslation('common')
+
+  const widthColumn = useMemo(() => {
+    let defaultWidth = '28%'
+    if (isLandscape) {
+      defaultWidth = '25%'
+    } else {
+      if (matchSpSE) {
+        defaultWidth = '23%'
+      } else {
+        defaultWidth = '28%'
+      }
+    }
+    return defaultWidth
+  }, [isLandscape, isMobile, matchSpSE])
 
   return (
     <Box display={'flex'}>
@@ -34,7 +49,7 @@ const Rankings: React.FC<Props> = ({ children }) => {
           <colgroup>
             <col style={{ width: isLandscape ? (isMobile ? 46 : 56) : 68 }} />
             <col style={{ width: 'auto' }} />
-            <col style={{ width: isLandscape ? (isMobile ? '25%' : '25%') : '28%' }} />
+            <col style={{ width: widthColumn }} />
           </colgroup>
           <TableHead className={classes.headerTable}>
             <TableRow>

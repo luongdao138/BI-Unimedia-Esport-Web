@@ -276,4 +276,9 @@ const useStyles = makeStyles((theme) => ({
       fontSize: 14,
     },
   },
+  [theme.breakpoints.down(321)]: {
+    nameWrapper: {
+      paddingRight: 0,
+    },
+  },
 }))
