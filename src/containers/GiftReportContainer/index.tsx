@@ -269,7 +269,7 @@ export default GiftReportContainer
 const useStyles = makeStyles((theme) => ({
   tabsContainer: {
     display: 'flex',
-    width: '100%',
+    width: '87%',
     borderBottomColor: Colors.text[300],
     borderBottomWidth: 1,
     borderBottomStyle: 'solid',
@@ -293,8 +293,8 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: 0,
   },
   giftReportContainer: {
-    marginLeft: 70,
-    marginRight: 70,
+    marginLeft: 20,
+    marginRight: 20,
   },
 
   [theme.breakpoints.down('md')]: {
@@ -304,6 +304,9 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   [theme.breakpoints.down('sm')]: {
+    tabsContainer: {
+      width: '100%',
+    },
     tabs: {
       paddingLeft: 16,
       paddingRight: 16,
