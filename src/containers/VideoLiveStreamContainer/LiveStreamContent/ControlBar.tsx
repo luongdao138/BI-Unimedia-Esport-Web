@@ -74,7 +74,7 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
     const { changeVideoViewMode, liveStreamInfo } = useDetailVideo()
     const { is_normal_view_mode } = liveStreamInfo
     const [settingPanel, setSettingPanel] = useState(SettingPanelState.NONE)
-    const { changeMiniPlayerState, getMiniPlayerState } = useLiveStreamDetail()
+    const { changeMiniPlayerState } = useLiveStreamDetail()
     const [resolution, setResolution] = useState(t('videos_top_tab.auto'))
     const [speed, setSpeed] = useState(t('videos_top_tab.standard'))
 
@@ -147,7 +147,7 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
     }
 
     const handleOnMiniPlayerClick = () => {
-      changeMiniPlayerState(!getMiniPlayerState)
+      changeMiniPlayerState(true)
     }
 
     const handleSelectedResolution = (item, index) => {
