@@ -78,8 +78,10 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
     const [resolution, setResolution] = useState(t('videos_top_tab.auto'))
     const [speed, setSpeed] = useState(t('videos_top_tab.standard'))
 
+    const androidPl = /Android/i.test(window.navigator.userAgent)
+    const iPhonePl = /iPhone/i.test(window.navigator.userAgent)
     const theme = useTheme()
-    const isMobile = useMediaQuery(theme.breakpoints.down('sm'), { noSsr: true })
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'), { noSsr: true }) || androidPl || iPhonePl
 
     const closeSettingPanel = () => {
       setSettingPanel(SettingPanelState.NONE)
