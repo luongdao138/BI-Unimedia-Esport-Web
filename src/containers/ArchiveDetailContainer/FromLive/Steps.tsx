@@ -499,11 +499,11 @@ const Steps: React.FC<StepsProps> = ({
                 {isFromSchedule && (
                   <Box className={` ${classes.pdLabelDate}`}>
                     <Box className={classes.label}>{i18n.t('common:delivery_reservation_tab.ticket_sales_start_datetime')}</Box>
-                    <Box className={classes.dateTime} pt={1}>
-                      {videoArchivedDetail?.stream_schedule_start_time !== null
-                        ? CommonHelper.formatDateTimeJP(videoArchivedDetail?.sell_ticket_start_time)
-                        : i18n.t('common:delivery_reservation_tab.ticket_sales_start_datetime')}
-                    </Box>
+                    {videoArchivedDetail?.sell_ticket_start_time && (
+                      <Box className={classes.dateTime} pt={1}>
+                        {CommonHelper.formatDateTimeJP(videoArchivedDetail?.sell_ticket_start_time)}
+                      </Box>
+                    )}
                   </Box>
                 )}
               </Box>
@@ -855,7 +855,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   labelNameObject: {
     fontWeight: 'normal',
     fontSize: 14,
-    color: '#ffffff50',
+    color: '#FFFFFF50',
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
