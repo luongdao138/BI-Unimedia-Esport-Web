@@ -1102,31 +1102,29 @@ const useStyles = makeStyles((theme: Theme) => ({
   showLoader: {
     zIndex: 2,
   },
-  [theme.breakpoints.down('xs')]: {
-    playOverViewSP: (props: { checkStatusVideo: number; isFull?: boolean; isShowNextPre?: boolean }) => ({
-      backgroundColor: 'rgba(0,0,0,0.3)',
-      height: '100%',
-      width: '100%',
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      zIndex: 1,
-      transition: 'opacity 0.1s ease-in',
-      opacity: props.isShowNextPre ? 1 : 0,
-    }),
-    nextPreSP: {
-      display: 'flex',
-      flexDirection: 'row',
-      width: '44%',
-      justifyContent: 'space-between',
-    },
-    image: {
-      width: 24.61,
-      height: 26,
-    },
+  playOverViewSP: (props: { checkStatusVideo: number; isFull?: boolean; isShowNextPre?: boolean }) => ({
+    backgroundColor: 'rgba(0,0,0,0.3)',
+    height: '100%',
+    width: '100%',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 1,
+    transition: 'opacity 0.1s ease-in',
+    opacity: props.isShowNextPre ? 1 : 0,
+  }),
+  nextPreSP: {
+    display: 'flex',
+    flexDirection: 'row',
+    width: '44%',
+    justifyContent: 'space-between',
+  },
+  image: {
+    width: 24.61,
+    height: 26,
   },
 }))
 
