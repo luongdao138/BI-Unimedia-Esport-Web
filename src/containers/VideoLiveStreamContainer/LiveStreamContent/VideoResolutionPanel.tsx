@@ -1,5 +1,5 @@
 import React, { memo, useEffect } from 'react'
-import { Box, Icon, makeStyles, Typography } from '@material-ui/core'
+import { Box, Icon, makeStyles, Theme, Typography } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
 import useDetailVideo from '../useDetailVideo'
@@ -48,7 +48,7 @@ const VideoResolutionPanel: React.FC<Props> = ({ handleOnBackClick, resolutionLi
   )
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   radioTitle: {
     marginLeft: '16px',
     fontSize: '10px',
@@ -103,6 +103,11 @@ const useStyles = makeStyles(() => ({
   },
   backIcon: {
     cursor: 'pointer',
+  },
+  [theme.breakpoints.down('xs')]: {
+    container: {
+      bottom: '40px',
+    },
   },
 }))
 export default memo(VideoResolutionPanel, (prev, next) => {

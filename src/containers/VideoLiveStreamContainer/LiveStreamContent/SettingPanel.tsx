@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Box, Icon, makeStyles, Typography } from '@material-ui/core'
+import { Box, Icon, makeStyles, Theme, Typography } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
 import useDetailVideo from '../useDetailVideo'
@@ -56,7 +56,7 @@ const SettingPanel: React.FC<Props> = ({
   )
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   container: {
     backgroundColor: Colors.black_opacity[70],
     borderRadius: '10px',
@@ -85,6 +85,11 @@ const useStyles = makeStyles(() => ({
   },
   icon: {
     marginLeft: '8px',
+  },
+  [theme.breakpoints.down('xs')]: {
+    container: {
+      bottom: '40px',
+    },
   },
 }))
 export default SettingPanel
