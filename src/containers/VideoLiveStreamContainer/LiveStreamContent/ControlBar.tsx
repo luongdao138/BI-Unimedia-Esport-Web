@@ -343,6 +343,7 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
                   // resolutionList={['480p']}
                   handleOnBackClick={handleOnResolutionPanelBackClick}
                   onSelected={handleSelectedResolution}
+                  typeSetting={settingPanel}
                 />
               )}
               {settingPanel === SettingPanelState.REPORT_PANEL && <ReportPanel handleOnBackClick={handleOnReportPanelBackClick} />}
@@ -352,6 +353,7 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
                   resolutionList={['0.5', t('videos_top_tab.standard'), '1.5', '2.0']}
                   handleOnBackClick={handleOnResolutionPanelBackClick}
                   onSelected={handleChangeSpeed}
+                  typeSetting={settingPanel}
                 />
               )}
             </Box>

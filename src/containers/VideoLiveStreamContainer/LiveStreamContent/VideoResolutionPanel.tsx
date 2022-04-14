@@ -3,15 +3,23 @@ import { Box, Icon, makeStyles, Typography } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
 import useDetailVideo from '../useDetailVideo'
+import { SettingPanelState } from './ControlBar'
 
 type Props = {
   handleOnBackClick?: () => void
   resolutionList: Array<any>
   selectedResolution?: string
   onSelected?: (item: string, index?: number) => void
+  typeSetting?: any
 }
 
-const VideoResolutionPanel: React.FC<Props> = ({ handleOnBackClick, resolutionList, selectedResolution = '1080p', onSelected }) => {
+const VideoResolutionPanel: React.FC<Props> = ({
+  handleOnBackClick,
+  resolutionList,
+  selectedResolution = '1080p',
+  onSelected,
+  typeSetting,
+}) => {
   const classes = useStyles()
   const { t } = useTranslation('common')
   const { changeIsHoveredVideoStatus } = useDetailVideo()
@@ -30,7 +38,11 @@ const VideoResolutionPanel: React.FC<Props> = ({ handleOnBackClick, resolutionLi
     <Box className={classes.container}>
       <Box className={classes.header}>
         <Icon onClick={handleOnBackClick} className={`fas fa-chevron-left ${classes.backIcon}`} fontSize="small" />
-        <Typography className={classes.textHeader}>{t('videos_top_tab.play_speed')}</Typography>
+        <Typography className={classes.textHeader}>
+          {typeSetting === SettingPanelState.VIDEO_RESOLUTION
+            ? t('videos_top_tab.resolution_select')
+            : typeSetting === SettingPanelState.PLAY_SPEED && t('videos_top_tab.play_speed')}
+        </Typography>
       </Box>
       {resolutionList.map((item, index) => {
         return (
