@@ -499,6 +499,16 @@ const checkIsSafariBrowser = (): boolean => {
   return false
 }
 
+const isDeviceAndroid = () => {
+  let isAndroid = false
+  const userAgent = navigator.userAgent.toLowerCase()
+  const Android = userAgent.indexOf('android') > -1
+  if (Android) {
+    isAndroid = true
+  }
+  return isAndroid
+}
+
 export const CommonHelper = {
   validateEmail,
   genRanHex,
@@ -533,4 +543,5 @@ export const CommonHelper = {
   getBrowserInfo,
   insertSymbolToFirstString,
   checkIsSafariBrowser,
+  isDeviceAndroid,
 }

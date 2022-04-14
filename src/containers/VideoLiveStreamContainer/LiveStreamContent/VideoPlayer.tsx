@@ -169,15 +169,17 @@ const VideoPlayer: React.FC<PlayerProps> = ({
 
   useEffect(() => {
     // IS SHOWING PIP?
-    if (getMiniPlayerState) {
-      if (isLoadedMetaData) {
-        videoEl.current.muted = false
-        requestPIP(videoEl.current)
-      }
-    } else {
-      videoEl.current.onpause = function () {
-        setState({ ...state, playing: false })
-        setVisible({ ...visible, loading: true, videoLoaded: false })
+    if (!CommonHelper.isDeviceAndroid()) {
+      if (getMiniPlayerState) {
+        if (isLoadedMetaData) {
+          videoEl.current.muted = false
+          requestPIP(videoEl.current)
+        }
+      } else {
+        videoEl.current.onpause = function () {
+          setState({ ...state, playing: false })
+          setVisible({ ...visible, loading: true, videoLoaded: false })
+        }
       }
     }
   }, [getMiniPlayerState])

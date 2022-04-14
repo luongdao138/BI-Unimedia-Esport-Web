@@ -15,6 +15,7 @@ import ReportPanel from '@containers/VideoLiveStreamContainer/LiveStreamContent/
 import useLiveStreamDetail from '@containers/VideoLiveStreamContainer/useLiveStreamDetail'
 import { VIDEO_RESOLUTION } from '@services/liveStreamDetail.service'
 import { QualitiesType } from '@services/videoTop.services'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
 
 interface ControlProps {
   ref: any
@@ -147,7 +148,9 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
     }
 
     const handleOnMiniPlayerClick = () => {
-      changeMiniPlayerState(true)
+      if (!CommonHelper.isDeviceAndroid()) {
+        changeMiniPlayerState(true)
+      }
     }
 
     const handleSelectedResolution = (item, index) => {
@@ -277,7 +280,6 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
               place={'top'}
             />
           </Box>
-
           {/* setting panel area */}
           <ClickAwayListener
             onClickAway={() => {
