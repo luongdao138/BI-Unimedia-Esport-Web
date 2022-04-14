@@ -13,7 +13,9 @@ interface Props {
 const PlayerTooltip: React.FC<Props> = ({ id, title, offset, place = 'top' }) => {
   const classes = useStyles()
   const theme = useTheme()
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'), { noSsr: true })
+  const androidPl = /Android/i.test(window.navigator.userAgent)
+  const iPhonePl = /iPhone/i.test(window.navigator.userAgent)
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'), { noSsr: true }) || androidPl || iPhonePl
   return isMobile ? null : (
     <ReactTooltip
       id={id}
