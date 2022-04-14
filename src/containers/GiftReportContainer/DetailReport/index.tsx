@@ -201,7 +201,7 @@ const DetailReport: React.FC<DetailReportProps> = ({ videoId }) => {
                   <TableCell align="center">{i.no}</TableCell>
                   <TableCell align="center">{DateHelper.formatDateTime(i.created_at)}</TableCell>
                   <TableCell align="left">{CommonHelper.insertSymbolToFirstString('@', i.user_code)}</TableCell>
-                  <TableCell align="right">{FormatHelper.currencyFormat(i.point)}</TableCell>
+                  <TableCell align="center">{FormatHelper.currencyFormat(i.point)}</TableCell>
                   <TableCell align="center">{i.type_report}</TableCell>
                   <TableCell align="left">{handlerRenderTipTarget(i.gift_recipient, i.type_report, i.streamer)}</TableCell>
                 </TableRow>
