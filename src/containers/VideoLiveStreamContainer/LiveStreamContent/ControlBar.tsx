@@ -1,4 +1,4 @@
-import { Box, ClickAwayListener, Icon, makeStyles, Slider, Typography, useMediaQuery, useTheme } from '@material-ui/core'
+import { Box, ClickAwayListener, Icon, makeStyles, Slider, Theme, Typography, useMediaQuery, useTheme } from '@material-ui/core'
 import { Crop54 as TheatreViewMode, Crop75 as NormalViewMode } from '@material-ui/icons'
 import { Colors } from '@theme/colors'
 import React, { forwardRef, memo, useEffect, useImperativeHandle, useState } from 'react'
@@ -185,7 +185,7 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
           <Box className={classes.buttonVolume}>
             <Box className={classes.boxIconVolume} onClick={onMute} data-tip data-for="mute">
               {!muted ? (
-                <img src={'/images/ic_volume.svg'} />
+                <img src={'/images/ic_volume.svg'} className={classes.sizeVolumeUp} />
               ) : (
                 <Icon fontSize={'small'} className={`fas fa-volume-mute ${classes.mutedIcon}`} />
               )}
@@ -266,7 +266,7 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
 
           {/* Toggle mini player button */}
           <Box className={classes.buttonNormal} onClick={handleOnMiniPlayerClick} data-tip data-for="toggleMiniPlayer" id={'miniPlayerRef'}>
-            <img src={'/images/ic_mini_player.svg'} />
+            <img src={'/images/ic_mini_player.svg'} className={classes.sizeMiniPlayer} />
             <PlayerTooltip
               id={'toggleMiniPlayer'}
               title={t('videos_top_tab.tooltip_control_bar.mini_player')}
@@ -294,7 +294,7 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
                   data-for="togglePlaySpeed"
                   id={'playSpeedRef'}
                 >
-                  <Typography>{parseFloat(speed) ? `${+speed}x` : '1x'}</Typography>
+                  <Typography className={classes.textSpeed}>{parseFloat(speed) ? `${+speed}x` : '1x'}</Typography>
                   <PlayerTooltip
                     id={'togglePlaySpeed'}
                     title={t('videos_top_tab.tooltip_control_bar.play_speed')}
@@ -315,7 +315,7 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
                 data-for="toggleSettingPanel"
                 id={'settingRef'}
               >
-                <img src={'/images/ic_settings.svg'} />
+                <img src={'/images/ic_settings.svg'} className={classes.sizeSetting} />
                 <PlayerTooltip
                   id={'toggleSettingPanel'}
                   title={t('videos_top_tab.tooltip_control_bar.setting')}
@@ -369,7 +369,7 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
             id={'fullscreenRef'}
           >
             {!isFull ? (
-              <img src={'/images/ic_full_screen.svg'} />
+              <img src={'/images/ic_full_screen.svg'} className={classes.sizeFullscreen} />
             ) : (
               <Icon fontSize={'small'} className={`fas fa-compress ${classes.pauseSmall}`} />
             )}
@@ -394,7 +394,7 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
   }
 )
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   controlRight: {
     display: 'flex',
     alignItems: 'center',
@@ -569,6 +569,34 @@ const useStyles = makeStyles(() => ({
     justifyContent: 'center',
     display: 'flex',
     cursor: 'pointer',
+  },
+  [theme.breakpoints.down('xs')]: {
+    sizeVolumeUp: {
+      width: 19.4,
+      height: 13.15,
+    },
+    mutedIcon: {
+      fontSize: 16,
+    },
+    sizeMiniPlayer: {
+      width: 15,
+      height: 15,
+    },
+    textSpeed: {
+      fontSize: 8,
+    },
+    playSpeedButton: {
+      width: '22.82px',
+      height: '15px',
+    },
+    sizeSetting: {
+      width: '14px',
+      height: '15px',
+    },
+    sizeFullscreen: {
+      width: 12.34,
+      height: 12.34,
+    },
   },
 }))
 

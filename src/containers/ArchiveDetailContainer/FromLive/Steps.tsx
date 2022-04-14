@@ -501,7 +501,7 @@ const Steps: React.FC<StepsProps> = ({
                     <Box className={classes.label}>{i18n.t('common:delivery_reservation_tab.ticket_sales_start_datetime')}</Box>
                     <Box className={classes.dateTime} pt={1}>
                       {videoArchivedDetail?.stream_schedule_start_time !== null
-                        ? CommonHelper.formatDateTimeJP(videoArchivedDetail?.stream_schedule_start_time)
+                        ? CommonHelper.formatDateTimeJP(videoArchivedDetail?.sell_ticket_start_time)
                         : i18n.t('common:delivery_reservation_tab.ticket_sales_start_datetime')}
                     </Box>
                   </Box>

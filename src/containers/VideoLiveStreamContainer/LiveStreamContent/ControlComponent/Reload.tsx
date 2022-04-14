@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { Box } from '@material-ui/core'
+import { Box, Theme } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
 import React, { memo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -67,7 +67,7 @@ const ReloadButton: React.FC<Props> = ({ videoRef, typeButton, currentTime, isLi
     )
   }
 }
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   buttonNormal: (props: { isLive: boolean }) => {
     return {
       alignItems: 'center',
@@ -89,6 +89,12 @@ const useStyles = makeStyles(() => ({
   },
   imageReload: {
     filter: 'none',
+  },
+  [theme.breakpoints.down('xs')]: {
+    imageReload: {
+      width: 11.39,
+      height: 11.85,
+    },
   },
 }))
 
