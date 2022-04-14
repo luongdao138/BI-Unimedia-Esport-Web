@@ -496,18 +496,18 @@ const Steps: React.FC<StepsProps> = ({
                         .replace('%d', FormatHelper.currencyFormat(videoArchivedDetail?.ticket_price.toString()))
                     : i18n.t('common:delivery_reservation_tab.ticket_not_use')}
                 </Box>
+                {isFromSchedule && (
+                  <Box className={` ${classes.pdLabelDate}`}>
+                    <Box className={classes.label}>{i18n.t('common:delivery_reservation_tab.ticket_sales_start_datetime')}</Box>
+                    <Box className={classes.dateTime} pt={1}>
+                      {videoArchivedDetail?.stream_schedule_start_time !== null
+                        ? CommonHelper.formatDateTimeJP(videoArchivedDetail?.stream_schedule_start_time)
+                        : i18n.t('common:delivery_reservation_tab.ticket_sales_start_datetime')}
+                    </Box>
+                  </Box>
+                )}
               </Box>
             </ESBoxftDashColumn>
-          </Box>
-
-          {/* sale date time */}
-          <Box pb={2}>
-            <Box className={classes.label}>{i18n.t('common:archive_detail_screen.ticket_sale_date_time')}</Box>
-            <Box className={classes.dateTime} pt={1} pl={1} height="28px">
-              {videoArchivedDetail && videoArchivedDetail?.sell_ticket_start_time
-                ? CommonHelper.formatDateTimeJP(videoArchivedDetail?.sell_ticket_start_time)
-                : ''}
-            </Box>
           </Box>
 
           {/* V3: gift */}
