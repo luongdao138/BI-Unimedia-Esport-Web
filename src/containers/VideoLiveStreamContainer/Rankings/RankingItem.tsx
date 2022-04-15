@@ -201,6 +201,10 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   [theme.breakpoints.down(769)]: {
+    tip: {
+      fontSize: 14,
+    },
+    nameWrapper: { paddingRight: 0 },
     [`@media (orientation: landscape)`]: {
       text: (props: StyleProps) => {
         if (props.isLandscape) {
@@ -248,6 +252,7 @@ const useStyles = makeStyles((theme) => ({
         if (props.isLandscape) {
           return {
             paddingLeft: 8,
+            paddingRight: 0,
           }
         }
       },
@@ -271,9 +276,6 @@ const useStyles = makeStyles((theme) => ({
     nameWrapper: {
       paddingLeft: theme.spacing(1),
       overflow: 'hidden',
-    },
-    tip: {
-      fontSize: 14,
     },
   },
   [theme.breakpoints.down(321)]: {
