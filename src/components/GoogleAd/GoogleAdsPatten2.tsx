@@ -10,6 +10,7 @@ interface Props {
   isHasSlot?: boolean
   classNamePatten?: string
   idTag?: string
+  classExtension?: string
 }
 declare global {
   interface Window {
@@ -19,7 +20,7 @@ declare global {
 const googleAdId = process.env.GADS_CLIENT_ID
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const GoogleAdsPatten2: React.FC<Props> = ({ style, idTag, slot }) => {
+const GoogleAdsPatten2: React.FC<Props> = ({ style, idTag, slot, classExtension }) => {
   //   const classes = useStyles()
 
   useEffect(() => {
@@ -52,7 +53,7 @@ const GoogleAdsPatten2: React.FC<Props> = ({ style, idTag, slot }) => {
     <div id={`${idTag}`} className="layout_ads_div" key={window.location.href}>
       {slot ? (
         <ins
-          className="adsbygoogle"
+          className={`adsbygoogle ${classExtension}`}
           style={{ ...styles, ...style }}
           data-ad-client={googleAdId}
           data-ad-slot={slot}
@@ -61,7 +62,7 @@ const GoogleAdsPatten2: React.FC<Props> = ({ style, idTag, slot }) => {
         ></ins>
       ) : (
         <ins
-          className="adsbygoogle"
+          className={`adsbygoogle ${classExtension}`}
           style={{ ...styles, ...style }}
           data-ad-client={googleAdId}
           data-ad-format=""
