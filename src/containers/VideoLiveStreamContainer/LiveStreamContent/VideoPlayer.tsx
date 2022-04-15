@@ -8,7 +8,7 @@ import { Box, Icon, makeStyles, Theme, Typography, useMediaQuery, useTheme } fro
 import { QualitiesType, STATUS_VIDEO } from '@services/videoTop.services'
 import useLiveStreamDetail from '../useLiveStreamDetail'
 import { Colors } from '@theme/colors'
-import React, { memo, useCallback, useContext, useEffect, useRef, useState } from 'react'
+import React, { memo, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import ControlBarPlayer, { SettingPanelState } from './ControlBar'
 import SeekBar from './ControlComponent/SeekBar'
 // import { useTranslation } from 'react-i18next'
@@ -22,6 +22,7 @@ import { useTranslation } from 'react-i18next'
 import usePictureInPicture from '../usePictureInPicture'
 import { useRouter } from 'next/router'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
+import _ from 'lodash'
 
 declare global {
   interface Document {
@@ -73,10 +74,11 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   const isOpenSettingPanel = refControlBar?.current && refControlBar?.current.settingPanel !== SettingPanelState.NONE ? true : false
 
   const videoEl = useRef(null)
-  const { t } = useTranslation('common')
-
   const [durationPlayer, setDurationPlayer] = useState(0)
   const [playedSeconds, setPlayedSeconds] = useState(0)
+  // const { videoEl } = useContext(VideoContext)
+
+  const { t } = useTranslation('common')
   const [autoPlay, setAutoPlay] = useState(true)
   const [isStreaming, setIsStreaming] = useState(true)
   // const reactPlayerRef = useRef(null)
@@ -470,14 +472,8 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   }
   handleUpdateVideoDuration.current = onUpdateVideoduration
 
-  //archived
-  useEffect(() => {
-    console.log('videoEl.current?.paused==', videoEl.current?.paused, playing)
-    setVideoRefInfo(videoEl)
-    handleReturnPlayPause()
-    //console.log('🚀 ~ useEffect ~ videoEl---0000', videoEl)
-    // onSaveVideoRef(document.querySelector('video'), document.createElement('video'))
-    videoEl.current?.addEventListener('timeupdate', (event) => {
+  const throttleUpdateTime = useCallback(
+    _.throttle((event) => {
       const videoInfo = event.target
       // console.log(
       //   '->current->duration-> range',
@@ -487,15 +483,30 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       //   videoInfo.duration - DELAY_SECONDS
       // )
       videoInfo ? handleUpdateVideoTime.current(videoInfo) : ''
-    })
+    }, 1000),
+    []
+  )
 
-    videoEl.current.addEventListener('durationchange', (event) => {
+  const throttleUpdateDurationChange = useCallback(
+    _.throttle((event) => {
       console.log('------->>durationchange<<<-----', event.target.duration, state.playing)
       if (isStreamingEnd.current) {
         onVideoEnd()
       }
       handleUpdateVideoDuration.current(event.target.duration)
-    })
+    }, 1000),
+    []
+  )
+  //archived
+  useEffect(() => {
+    console.log('videoEl.current?.paused==', videoEl.current?.paused, playing)
+    setVideoRefInfo(videoEl)
+    handleReturnPlayPause()
+    //console.log('🚀 ~ useEffect ~ videoEl---0000', videoEl)
+    // onSaveVideoRef(document.querySelector('video'), document.createElement('video'))
+    videoEl.current?.addEventListener('timeupdate', throttleUpdateTime)
+
+    videoEl.current.addEventListener('durationchange', throttleUpdateDurationChange)
 
     videoEl.current?.addEventListener('volumechange', () => {
       setState({
@@ -735,6 +746,30 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   const onChangeTime = (time: number) => {
     videoEl.current.currentTime = playedSeconds + time
   }
+
+  console.log('Video Player Component re-render')
+
+  const Video = useMemo(() => {
+    console.log('------------- Video element rerender -----------')
+    return (
+      <video
+        id="video"
+        ref={videoEl}
+        muted={muted}
+        style={{ width: '100%', height: '100%' }}
+        autoPlay={autoPlay}
+        src={srcResolution}
+        // controls={iPhonePl || androidPl || isMobile}
+        //@ts-ignore
+        playsInline={iPhonePl || androidPl}
+        preload={'auto'}
+        controlsList="noplaybackrate foobar"
+        // className={classes.video}
+        controls={false}
+      />
+    )
+  }, [muted, autoPlay, srcResolution])
+
   return (
     <div className={classes.videoPlayer}>
       {/* {(iPhonePl || androidPl || (!iPadPl && isDownMd)) && (
@@ -770,21 +805,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
         onClick={showNextPreSP}
       >
         <div style={{ height: '100%', position: 'relative' }} onClick={handlePlayPauseOut}>
-          <video
-            id="video"
-            ref={videoEl}
-            muted={muted}
-            style={{ width: '100%', height: '100%' }}
-            autoPlay={autoPlay}
-            src={srcResolution}
-            // controls={iPhonePl || androidPl || isMobile}
-            //@ts-ignore
-            playsInline={iPhonePl || androidPl}
-            preload={'auto'}
-            controlsList="noplaybackrate foobar"
-            // className={classes.video}
-            controls={false}
-          />
+          {Video}
           {getMiniPlayerState && (
             <Box id="exist-picture-in-picture" className={classes.existPictureInPicture}>
               <Box textAlign="center">
