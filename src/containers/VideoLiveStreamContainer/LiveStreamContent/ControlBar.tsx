@@ -78,9 +78,27 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
     const { changeMiniPlayerState } = useLiveStreamDetail()
     const [resolution, setResolution] = useState(t('videos_top_tab.auto'))
     const [speed, setSpeed] = useState(t('videos_top_tab.standard'))
-
     const theme = useTheme()
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'), { noSsr: true })
+
+    function isEnableBtnPIP() {
+      if (isMobile) {
+        if (!CommonHelper.isDeviceAndroid()) {
+          if (CommonHelper.isCheckVersionIOSAllowPIP()) {
+            return true
+          } else {
+            return false
+          }
+        } else {
+          return false
+        }
+      }
+      return true
+    }
+    // console.log('isMobile=>', isMobile)
+    // console.log('CommonHelper.versionIOS()=>', CommonHelper.isCheckVersionIOSAllowPIP())
+    // console.log('CommonHelper.isDeviceAndroid()=>', CommonHelper.isDeviceAndroid())
+    // console.log('isEnablePI=>', isEnableBtnPIP())
 
     const closeSettingPanel = () => {
       setSettingPanel(SettingPanelState.NONE)
@@ -148,9 +166,7 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
     }
 
     const handleOnMiniPlayerClick = () => {
-      if (!CommonHelper.isDeviceAndroid()) {
-        changeMiniPlayerState(true)
-      }
+      changeMiniPlayerState(true)
     }
 
     const handleSelectedResolution = (item, index) => {
@@ -268,18 +284,27 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
           )}
 
           {/* Toggle mini player button */}
-          <Box className={classes.buttonNormal} onClick={handleOnMiniPlayerClick} data-tip data-for="toggleMiniPlayer" id={'miniPlayerRef'}>
-            <img src={'/images/ic_mini_player.svg'} className={classes.sizeMiniPlayer} />
-            <PlayerTooltip
-              id={'toggleMiniPlayer'}
-              title={t('videos_top_tab.tooltip_control_bar.mini_player')}
-              offset={{
-                top: 0,
-                left: 0,
-              }}
-              place={'top'}
-            />
-          </Box>
+          {isEnableBtnPIP() && (
+            <Box
+              className={classes.buttonNormal}
+              onClick={handleOnMiniPlayerClick}
+              data-tip
+              data-for="toggleMiniPlayer"
+              id={'miniPlayerRef'}
+            >
+              <img src={'/images/ic_mini_player.svg'} className={classes.sizeMiniPlayer} />
+              <PlayerTooltip
+                id={'toggleMiniPlayer'}
+                title={t('videos_top_tab.tooltip_control_bar.mini_player')}
+                offset={{
+                  top: 0,
+                  left: 0,
+                }}
+                place={'top'}
+              />
+            </Box>
+          )}
+
           {/* setting panel area */}
           <ClickAwayListener
             onClickAway={() => {

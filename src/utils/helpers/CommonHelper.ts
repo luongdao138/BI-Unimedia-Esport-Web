@@ -508,6 +508,19 @@ const isDeviceAndroid = () => {
   }
   return isAndroid
 }
+const isCheckVersionIOSAllowPIP = () => {
+  const isIOS = navigator.userAgent.match(/ipad|iphone|ipod/i)
+  let versionIOS
+  if (isIOS) {
+    versionIOS = +navigator.userAgent
+      .match(/OS (\d)?\d_\d(_\d)?/i)[0]
+      .replace('_', '.')
+      .replace('_', '')
+      .replace('OS ', '')
+    return versionIOS >= 13.4
+  }
+  return false
+}
 
 export const CommonHelper = {
   validateEmail,
@@ -544,4 +557,5 @@ export const CommonHelper = {
   insertSymbolToFirstString,
   checkIsSafariBrowser,
   isDeviceAndroid,
+  isCheckVersionIOSAllowPIP,
 }
