@@ -21,6 +21,7 @@ const ReloadButton: React.FC<Props> = ({ videoRef, typeButton, currentTime, isLi
   const { t } = useTranslation('common')
   const { changeSeekCount } = useDetailVideo()
 
+  console.log('reload component render.')
   const onChangeTime = () => {
     let newSecond = 0
     // if (!isLive) {
