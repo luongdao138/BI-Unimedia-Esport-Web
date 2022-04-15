@@ -19,22 +19,22 @@ declare global {
 const googleAdId = process.env.GADS_CLIENT_ID
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const GoogleAdsPatten2: React.FC<Props> = ({ timeout = 2000, style, idTag, slot }) => {
+const GoogleAdsPatten2: React.FC<Props> = ({ style, idTag, slot }) => {
   //   const classes = useStyles()
 
   useEffect(() => {
     // eslint-disable-next-line no-console
-    console.log('=====check lai=========')
-    const googleInit = setTimeout(() => {
-      if (typeof window !== 'undefined') {
-        if (document.getElementById('ad_message_r').innerHTML) {
-          // eslint-disable-next-line @typescript-eslint/no-extra-semi
-          ;(window.adsbygoogle = window.adsbygoogle || []).push({})
-        }
+    console.log('=====check lai===mess======')
+    // const googleInit = setTimeout(() => {
+    if (typeof window !== 'undefined') {
+      if (document.getElementById('ad_message_r').innerHTML) {
+        // eslint-disable-next-line @typescript-eslint/no-extra-semi
+        ;(window.adsbygoogle = window.adsbygoogle || []).push({})
       }
-    }, timeout)
+    }
+    // }, timeout)
     return () => {
-      if (googleInit) clearTimeout(googleInit)
+      // if (googleInit) clearTimeout(googleInit)
     }
   }, [])
   const styles = {
@@ -49,7 +49,7 @@ const GoogleAdsPatten2: React.FC<Props> = ({ timeout = 2000, style, idTag, slot 
   return (
     // <>mes
     // <div className={`${id} google_ad_patten_2`}>
-    <div id={`${idTag}`} className="layout_ads_div">
+    <div id={`${idTag}`} className="layout_ads_div" key={window.location.href}>
       {slot ? (
         <ins
           className="adsbygoogle"
