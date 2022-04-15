@@ -346,15 +346,18 @@ const useStyles = makeStyles((theme) => ({
     position: 'relative',
     flexDirection: 'row',
     alignItems: 'center',
-    marginRight: 24,
+    // marginRight: 24,
   },
   movie_title: {
-    paddingRight: '64px',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
+    // paddingRight: '64px',
     fontSize: '20px',
     fontWeight: 'bold',
     color: '#FFFFFF',
+    // overflow: 'hidden',
+    // 'text-overflow': 'ellipsis',
+    // display: '-webkit-box',
+    // '-webkit-line-clamp': 2,
+    // '-webkit-box-orient': 'vertical',
   },
   device_name: {
     fontSize: '15px',
@@ -366,6 +369,8 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: Colors.primary,
     borderRadius: 2,
     minWidth: '84px',
+    flexShrink: 0,
+    marginLeft: 24,
   },
   txtVideoStatus: {
     fontSize: '12px',
@@ -423,7 +428,8 @@ const useStyles = makeStyles((theme) => ({
     color: props?.isSubscribed === 1 ? Colors.white : Colors.primary,
   }),
   wrap_streamer_info: {
-    height: '112px',
+    // height: '112px',
+    padding: '20px 0',
     display: 'flex',
     borderTop: '1px solid #212121',
     width: '100%',
@@ -446,6 +452,11 @@ const useStyles = makeStyles((theme) => ({
   streamer_name: {
     fontSize: '18px',
     fontWeight: 'bold',
+    // overflow: 'hidden',
+    // 'text-overflow': 'ellipsis',
+    // display: '-webkit-box',
+    // '-webkit-line-clamp': 2,
+    // '-webkit-box-orient': 'vertical',
   },
   registration: {
     display: 'flex',
@@ -470,6 +481,8 @@ const useStyles = makeStyles((theme) => ({
     marginRight: '16px',
     alignItems: 'center',
     display: 'flex',
+    flexShrink: 0,
+    marginLeft: 30,
   }),
   [theme.breakpoints.down(769)]: {
     wrap_info: { padding: '12px 8px 18px 8px' },
@@ -570,6 +583,8 @@ const useStyles = makeStyles((theme) => ({
     },
     register_channel_btn: () => ({
       padding: '4px 10px',
+      marginLeft: 10,
+      marginRight: 8,
     }),
   },
   [theme.breakpoints.down(376)]: {

@@ -1597,6 +1597,7 @@ export default {
     scroll_to_new_mess: '最新のコメント',
     clear: 'クリア',
     note_loading: 'チャンネル作成中です。こちらの作業には最大5分程度かかる場合があります。',
+    note_stop_channel_loading: '前回の配信を終了中です。こちらの作業には最大5分程度かかる場合があります。',
     archived_end_time_pl: 'アーカイブ配信終了日時',
     status_tag_created: '未設定',
     status_tag_updated: '設定済み',

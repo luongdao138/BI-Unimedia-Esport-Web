@@ -10,12 +10,20 @@ import { useEffect, useState } from 'react'
 import { ESRoutes } from '@constants/route.constants'
 import { GetStaticProps } from 'next'
 import i18n from '@locales/i18n'
+import { useMediaQuery, useTheme } from '@material-ui/core'
+import { GTMHelper } from '@utils/helpers/SendGTM'
+import GoogleAd from '@components/GoogleAd'
 
 const CommunityPage: PageWithLayoutType = () => {
   const router = useRouter()
   const filter = _.get(router, 'query.filter', '') as string
   const isAuth = useAppSelector(getIsAuthenticated)
   const [render, setRender] = useState(false)
+
+  const theme = useTheme()
+  const screenDownSP = useMediaQuery(theme.breakpoints.down(576))
+  const [slotDataLayer, setSlotDataLayer] = useState('')
+  // const classes = useStyles()
 
   useEffect(() => {
     if (!isAuth && ['joined', 'organized'].includes(filter)) {
@@ -24,17 +32,46 @@ const CommunityPage: PageWithLayoutType = () => {
       setRender(true)
     }
   }, [isAuth, router.query])
+  useEffect(() => {
+    GTMHelper.getAdSlot()
+    setSlotDataLayer(GTMHelper.getDataSlot(window?.dataLayer, GTMHelper.SCREEN_NAME_ADS.COMMUNITY, screenDownSP))
+  }, [screenDownSP])
 
   if (!render) {
     return <></>
   }
 
   return (
-    <MainLayout loginRequired={false} patternBg={true}>
+    <MainLayout
+      loginRequired={false}
+      patternBg={true}
+      adsOption={true}
+      // styleContentMainLayout={classes.contentMainLayout}
+      childrenAds={
+        <>
+          {screenDownSP && (
+            <GoogleAd
+              id={{ idPatten4: 'ad_community_b' }}
+              idTag={'ad_community_b'}
+              slot={slotDataLayer}
+              currenPath={window.location.href}
+            />
+          )}
+        </>
+      }
+    >
       <CommunityContainer filter={formatFilter(filter)} />
     </MainLayout>
   )
 }
+
+// const useStyles = makeStyles(() => ({
+//   contentMainLayout: {
+//     minHeight: 'auto',
+//     height: 'calc(100vh - 110px)', //60px(header)+50px(ads)
+//     overflow: 'auto',
+//   },
+// }))
 
 function formatFilter(filterText: string) {
   if (!_.isString(filterText)) return CommunityFilterOption.all
