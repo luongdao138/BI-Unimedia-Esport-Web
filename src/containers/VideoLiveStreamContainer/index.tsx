@@ -424,7 +424,7 @@ const VideoDetail: React.FC = () => {
     }
   }, [videoDetailError])
 
-  const confirmDonatePoint = (donated_point, comment, master_id = '') => {
+  const confirmDonatePoint = useCallback((donated_point, comment, master_id = '') => {
     console.log('master_id', master_id)
     // reset donate point
     setGiftMasterUuid(master_id)
@@ -441,7 +441,7 @@ const VideoDetail: React.FC = () => {
       dispatch(addToast(i18n.t('common:donate_points.lack_point_mess')))
       setShowModalPurchasePoint(true)
     }
-  }
+  }, [])
   useEffect(() => {
     if (showConfirmModal) {
       handleConfirmPurchaseSuperChat()
@@ -638,10 +638,10 @@ const VideoDetail: React.FC = () => {
       >
         <ChatContainer
           ref={refChatContainer}
-          isResizedScreen={isResizedScreen}
-          myPoint={myPoint}
+          isResizedScreen={isResizedScreen} // no over rerender
+          myPoint={myPoint} // no over rerender
           chatWidth={componentsSize.chatWidth}
-          key_video_id={detailVideoResult?.key_video_id}
+          key_video_id={detailVideoResult?.key_video_id} // no rerender
           onPressDonate={confirmDonatePoint}
           userHasViewingTicket={userHasViewingTicket()}
           videoType={videoStatus}

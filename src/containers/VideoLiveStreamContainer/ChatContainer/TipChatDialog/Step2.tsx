@@ -1,5 +1,4 @@
 import GiftMember from '@components/GiftMember'
-import ESInput from '@components/Input'
 import i18n from '@locales/i18n'
 import { Box, InputAdornment, makeStyles, Typography } from '@material-ui/core'
 import { Colors } from '@theme/colors'
@@ -9,6 +8,7 @@ import { useFormik } from 'formik'
 import React, { useEffect, useRef } from 'react'
 // import * as Yup from 'yup'
 import { purchasePoints, sanitizeMess } from '..'
+import FastChatInput from '../FastChatInput'
 import TipButtonGroup from './TipButtonGroup'
 
 type Step2Props = {
@@ -33,6 +33,7 @@ const Step2: React.FC<Step2Props> = ({
   const { isLandscape } = useRotateScreen()
   const classes = useStyles({ isLandscape })
   const getPurchasePointList = () => Object.values(purchasePoints)
+  const commentRef = useRef<string>('')
   // const [purchaseValueSelected, setPurchaseValueSelected] = useState<string>('p_100')
 
   const premiumMessageRef = useRef<any>()
@@ -65,7 +66,7 @@ const Step2: React.FC<Step2Props> = ({
   //     )
   //     .trim(),
   // })
-  const { handleChange, values, handleSubmit, errors, touched, setValues } = useFormik({
+  const { handleChange, values, handleSubmit, errors, touched, setValues, setFieldValue } = useFormik({
     initialValues: {
       message: '',
     },
@@ -83,13 +84,14 @@ const Step2: React.FC<Step2Props> = ({
 
   const formHasError = values.message.length > purchasePoints[purchaseValueSelected].maxLengthInput
 
-  const handlePremiumChatClick = () => {
+  const handlePremiumChatClick = async () => {
     // if (!purchaseValueSelected) {
     //   setPremiumChatValidationError(i18n.t('common:live_stream_screen.chat_premium_text_validate_no_donate_selected'))
     //   return
     // }
     // // Submit chat message
     // setPremiumChatValidationError(null)
+    await setFieldValue('message', commentRef.current)
     handleSubmit()
   }
 
@@ -128,7 +130,7 @@ const Step2: React.FC<Step2Props> = ({
               ))}
           </Box>
           <Box className={classes.purchaseCommentInputContainer}>
-            <ESInput
+            <FastChatInput
               ref={premiumMessageRef}
               id="premium_message"
               name="message"
@@ -136,8 +138,6 @@ const Step2: React.FC<Step2Props> = ({
               rows={5}
               placeholder={i18n.t('common:live_stream_screen.place_holder_tip')}
               fullWidth
-              value={values.message}
-              onChange={handleChange}
               classes={{
                 root: classes.purchaseCommentRoot,
                 input: classes.purchaseCommentInput,
@@ -152,6 +152,8 @@ const Step2: React.FC<Step2Props> = ({
                   </Typography>
                 </InputAdornment>
               }
+              onChange={handleChange}
+              valueRef={commentRef}
             />
           </Box>
           <Box mt={2} display="flex" flexDirection="column">

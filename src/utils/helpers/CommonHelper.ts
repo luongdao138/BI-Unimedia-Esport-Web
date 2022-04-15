@@ -499,6 +499,29 @@ const checkIsSafariBrowser = (): boolean => {
   return false
 }
 
+const isDeviceAndroid = () => {
+  let isAndroid = false
+  const userAgent = navigator.userAgent.toLowerCase()
+  const Android = userAgent.indexOf('android') > -1
+  if (Android) {
+    isAndroid = true
+  }
+  return isAndroid
+}
+const isCheckVersionIOSAllowPIP = () => {
+  const isIOS = navigator.userAgent.match(/ipad|iphone|ipod/i)
+  let versionIOS
+  if (isIOS) {
+    versionIOS = +navigator.userAgent
+      .match(/OS (\d)?\d_\d(_\d)?/i)[0]
+      .replace('_', '.')
+      .replace('_', '')
+      .replace('OS ', '')
+    return versionIOS >= 13.4
+  }
+  return false
+}
+
 export const CommonHelper = {
   validateEmail,
   genRanHex,
@@ -533,4 +556,6 @@ export const CommonHelper = {
   getBrowserInfo,
   insertSymbolToFirstString,
   checkIsSafariBrowser,
+  isDeviceAndroid,
+  isCheckVersionIOSAllowPIP,
 }
