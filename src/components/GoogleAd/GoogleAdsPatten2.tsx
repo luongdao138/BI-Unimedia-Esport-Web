@@ -19,7 +19,7 @@ declare global {
 const googleAdId = process.env.GADS_CLIENT_ID
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const GoogleAdsPatten2: React.FC<Props> = ({ timeout = 2000, style, idTag, slot }) => {
+const GoogleAdsPatten2: React.FC<Props> = ({ style, idTag, slot }) => {
   //   const classes = useStyles()
 
   useEffect(() => {
