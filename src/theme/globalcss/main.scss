@@ -1036,6 +1036,8 @@ iframe[style] {
   justify-content: right;
   display: flex;
   margin-bottom: 40px;
+  display: flex;
+  flex-direction: column;
 }
 #adContainer {
   position: absolute;

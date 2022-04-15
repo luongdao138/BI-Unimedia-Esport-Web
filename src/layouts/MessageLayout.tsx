@@ -82,8 +82,8 @@ const MessageLayout: React.FC<LayoutProps> = ({ children, defaultListState, crea
       </div>
 
       <div id={'ad_message_r'} className="ad_message_r google_ad_patten_2">
-        <GoogleAdsPatten2 id={'ad_message_r'} idTag={'ad_message_r1'} slot={slotDataLayer} />
-        <GoogleAdsPatten2 id={'ad_message_r'} idTag={'ad_message_r_be1'} slot={slotDataLayer} />
+        <GoogleAdsPatten2 id={'ad_message_r'} idTag={'ad_message_r1'} slot={slotDataLayer} classExtension={'ads_message_top_ex'} />
+        {/* <GoogleAdsPatten2 id={'ad_message_r'} idTag={'ad_message_r_be1'} slot={slotDataLayer} /> */}
       </div>
       <Header open={open} toggleDrawer={toggleDrawer} />
       <aside className="aside-left mui-fixed">
