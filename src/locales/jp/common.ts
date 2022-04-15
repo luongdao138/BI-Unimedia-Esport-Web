@@ -1557,7 +1557,7 @@ export default {
     thumbnail: 'サムネイル',
     complete_delivery_settings: '配信設定が完了しました',
     step3_delivery_settings_content: 'StreamURLを利用して配信を開始してださい。',
-    step3_delivery_settings_content_update: '配信設定を変更しました。',
+    step3_delivery_settings_content_update: '配信設定を変更しました',
     step3_close_btn: '閉じる',
     start_live_stream: '配信開始する',
     save_channel_live_info: '配信者情報を保存する',
@@ -1584,7 +1584,7 @@ export default {
     tab3_notification_mess: '配信画面にてご確認ください。',
     tab2_notification_title: '配信データが保存できました',
     tab2_notification_mess: 'StreamURLを利用して配信を開始してださい。',
-    tab2_notification_mess_update: '配信設定を変更しました。',
+    tab2_notification_mess_update: '配信設定を変更しました',
     update: '保存する',
     message_copy: 'クリップボードにコピーしました。',
     dialog: {

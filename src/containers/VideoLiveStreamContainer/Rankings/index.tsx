@@ -31,10 +31,10 @@ const Rankings: React.FC<Props> = ({ children }) => {
   const widthColumn = useMemo(() => {
     let defaultWidth = '28%'
     if (isLandscape) {
-      defaultWidth = '25%'
+      defaultWidth = '54px'
     } else {
-      if (matchSpSE) {
-        defaultWidth = '23%'
+      if (isMobile) {
+        defaultWidth = '60px'
       } else {
         defaultWidth = '28%'
       }
@@ -119,6 +119,18 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   [theme.breakpoints.down(769)]: {
+    bodyTable: {
+      '& tr': {
+        '& td': {
+          '&:nth-child(2)': {
+            paddingRight: '0px',
+          },
+          '&:nth-child(3)': {
+            paddingLeft: '3px',
+          },
+        },
+      },
+    },
     table: {
       '& .MuiTableCell-root': {
         backgroundColor: '#212121',

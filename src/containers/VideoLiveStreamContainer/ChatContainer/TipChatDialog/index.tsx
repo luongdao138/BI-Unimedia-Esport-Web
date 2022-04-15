@@ -4,7 +4,7 @@ import { Box, makeStyles, Tooltip, Typography, useMediaQuery, useTheme } from '@
 import { withStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
 import { FormatHelper } from '@utils/helpers/FormatHelper'
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import React, { memo, useEffect, useMemo, useRef, useState } from 'react'
 // import { purchasePoints } from './index'
 import Step1 from './Step1'
 import Step2 from './Step2'
@@ -349,7 +349,7 @@ const useStyles = makeStyles((theme) => ({
         return {
           position: 'fixed',
           margin: '0 8px',
-          zIndex: 30,
+          zIndex: 100,
           paddingBottom: 8,
           maxWidth: '400px',
           left: '10px',
@@ -380,4 +380,4 @@ const useStyles = makeStyles((theme) => ({
   // },
 }))
 
-export default TipChatDialog
+export default memo(TipChatDialog)
