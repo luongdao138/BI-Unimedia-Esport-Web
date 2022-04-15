@@ -349,7 +349,7 @@ const useStyles = makeStyles((theme) => ({
         return {
           position: 'fixed',
           margin: '0 8px',
-          zIndex: 30,
+          zIndex: 100,
           paddingBottom: 8,
           maxWidth: '400px',
           left: '10px',
