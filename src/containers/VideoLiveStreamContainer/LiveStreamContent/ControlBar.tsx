@@ -212,12 +212,16 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
       })
     }, [])
 
-    const handleOnSettingButtonClick = () => {
+    const handleOnSettingButtonClick = (e) => {
+      // e.stopPropagation()
+      CommonHelper.disableOnClickEvent(e)
       setSettingPanel(settingPanel === SettingPanelState.MAIN_DISPLAY ? SettingPanelState.NONE : SettingPanelState.MAIN_DISPLAY)
       // changeIsHoveredVideoStatus(false)
     }
 
-    const handleOnPlaySpeedButtonClick = () => {
+    const handleOnPlaySpeedButtonClick = (e) => {
+      CommonHelper.disableOnClickEvent(e)
+      // e.stopPropagation()
       setSettingPanel(settingPanel === SettingPanelState.PLAY_SPEED ? SettingPanelState.NONE : SettingPanelState.PLAY_SPEED)
     }
 
@@ -282,8 +286,23 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
             isStreamingEnd={isStreamingEnd}
             // durationsPlayer={durationsPlayer}
           />
-          <Box className={classes.buttonVolume}>
-            <Box className={classes.boxIconVolume} onClick={onMute} data-tip data-for="mute">
+          <Box
+            className={classes.buttonVolume}
+            onClick={(e) => {
+              // e.preventDefault()
+              CommonHelper.disableOnClickEvent(e)
+            }}
+          >
+            <Box
+              className={classes.boxIconVolume}
+              onClick={(e) => {
+                CommonHelper.disableOnClickEvent(e)
+                // e.stopPropagation()
+                onMute()
+              }}
+              data-tip
+              data-for="mute"
+            >
               {!muted ? (
                 <img src={'/images/ic_volume.svg'} className={classes.sizeVolumeUp} />
               ) : (

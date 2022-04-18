@@ -102,7 +102,8 @@ const ReloadButton: React.FC<Props> = ({
   }, [])
 
   console.log('reload component render.')
-  const onChangeTime = () => {
+  const onChangeTime = (e) => {
+    e.stopPropagation()
     let newSecond = 0
     // if (!isLive) {
     switch (typeButton) {

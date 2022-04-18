@@ -285,6 +285,8 @@ const useStyles = makeStyles((theme) => ({
   logo: {},
   videoPageHeader: {
     background: Colors.black_opacity[50],
+    //landt: cho setting panel len tren header video detail
+    zIndex: 99,
   },
   hideHeader: {
     display: 'none',
