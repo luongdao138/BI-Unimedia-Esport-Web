@@ -74,8 +74,10 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   const isOpenSettingPanel = refControlBar?.current && refControlBar?.current.settingPanel !== SettingPanelState.NONE ? true : false
 
   const videoEl = useRef(null)
-  const [durationPlayer, setDurationPlayer] = useState(0)
-  const [playedSeconds, setPlayedSeconds] = useState(0)
+  // const [durationPlayer, setDurationPlayer] = useState(0)
+  // const [playedSeconds, setPlayedSeconds] = useState(0)
+  const durationPlayerRef = useRef<number>(0)
+  const playerSecondsRef = useRef<number>(0)
   // const { videoEl } = useContext(VideoContext)
 
   const { t } = useTranslation('common')
@@ -374,7 +376,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       // liveSyncDurationCount: 1,
       // initialLiveManifestSize: 1,
       // liveMaxLatencyDurationCount:10,
-      startPosition: videoType === STATUS_VIDEO.LIVE_STREAM ? -1 : playedSeconds,
+      startPosition: videoType === STATUS_VIDEO.LIVE_STREAM ? -1 : playerSecondsRef.current,
       // startLevel: resolution,
     })
 
@@ -408,7 +410,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       } else {
         setSrcResolution(src)
       }
-      console.warn('link====IOS==>>>', srcResolution, playedSeconds)
+      console.warn('link====IOS==>>>', srcResolution, playerSecondsRef.current)
       videoEl.current.playbackRate = playRateReturn
     }
     return () => {
@@ -450,8 +452,10 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     }
     const newDurationTime = durationTime
     // const newDurationTime = videoInfo.duration
-    setPlayedSeconds(newPlayedSecondTime)
-    setDurationPlayer(newDurationTime)
+    // setPlayedSeconds(newPlayedSecondTime)
+    // setDurationPlayer(newDurationTime)
+    playerSecondsRef.current = newPlayedSecondTime
+    durationPlayerRef.current = newDurationTime
     if (
       Math.floor(newPlayedSecondTime) !== liveStreamInfo.played_second ||
       Math.floor(newDurationTime) !== liveStreamInfo.streaming_second
@@ -467,13 +471,45 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       if (Math.floor(duration) !== liveStreamInfo.played_second) {
         // changeVideoTime(Math.floor(duration), Math.floor(duration))
       }
-      setDurationPlayer(duration)
+      // setDurationPlayer(duration)
+      durationPlayerRef.current = duration
     }
   }
   handleUpdateVideoDuration.current = onUpdateVideoduration
 
-  const throttleUpdateTime = useCallback(
-    _.throttle((event) => {
+  // const throttleUpdateTime = useCallback(
+  //   _.throttle((event) => {
+  //     const videoInfo = event.target
+  //     // console.log(
+  //     //   '->current->duration-> range',
+  //     //   videoInfo.currentTime,
+  //     //   videoInfo.duration,
+  //     //   videoInfo.duration - videoInfo.currentTime,
+  //     //   videoInfo.duration - DELAY_SECONDS
+  //     // )
+  //     videoInfo ? handleUpdateVideoTime.current(videoInfo) : ''
+  //   }, 1000),
+  //   []
+  // )
+
+  // const throttleUpdateDurationChange = useCallback(
+  //   _.throttle((event) => {
+  //     console.log('------->>durationchange<<<-----', event.target.duration, state.playing)
+  //     if (isStreamingEnd.current) {
+  //       onVideoEnd()
+  //     }
+  //     handleUpdateVideoDuration.current(event.target.duration)
+  //   }, 1000),
+  //   []
+  // )
+  //archived
+  useEffect(() => {
+    console.log('videoEl.current?.paused==', videoEl.current?.paused, playing)
+    setVideoRefInfo(videoEl)
+    handleReturnPlayPause()
+    //console.log('🚀 ~ useEffect ~ videoEl---0000', videoEl)
+    // onSaveVideoRef(document.querySelector('video'), document.createElement('video'))
+    videoEl.current?.addEventListener('timeupdate', (event) => {
       const videoInfo = event.target
       // console.log(
       //   '->current->duration-> range',
@@ -483,30 +519,15 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       //   videoInfo.duration - DELAY_SECONDS
       // )
       videoInfo ? handleUpdateVideoTime.current(videoInfo) : ''
-    }, 1000),
-    []
-  )
+    })
 
-  const throttleUpdateDurationChange = useCallback(
-    _.throttle((event) => {
+    videoEl.current.addEventListener('durationchange', (event) => {
       console.log('------->>durationchange<<<-----', event.target.duration, state.playing)
       if (isStreamingEnd.current) {
         onVideoEnd()
       }
       handleUpdateVideoDuration.current(event.target.duration)
-    }, 1000),
-    []
-  )
-  //archived
-  useEffect(() => {
-    console.log('videoEl.current?.paused==', videoEl.current?.paused, playing)
-    setVideoRefInfo(videoEl)
-    handleReturnPlayPause()
-    //console.log('🚀 ~ useEffect ~ videoEl---0000', videoEl)
-    // onSaveVideoRef(document.querySelector('video'), document.createElement('video'))
-    videoEl.current?.addEventListener('timeupdate', throttleUpdateTime)
-
-    videoEl.current.addEventListener('durationchange', throttleUpdateDurationChange)
+    })
 
     videoEl.current?.addEventListener('volumechange', () => {
       setState({
@@ -572,7 +593,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       }
       //in safari IOS: when change quality video archived + speed + hls not support
       if (videoEl.current && iPhonePl && isSafari && !Hls.isSupported() && resolution !== -1) {
-        videoEl.current.currentTime = playedSeconds
+        videoEl.current.currentTime = playerSecondsRef.current
       }
     })
     videoEl.current?.addEventListener('error', (event) => {
@@ -629,7 +650,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
         videoEl.current?.play()
         //new version
         if (videoType === STATUS_VIDEO.LIVE_STREAM && videoEl.current !== null) {
-          videoEl.current.currentTime = durationPlayer
+          videoEl.current.currentTime = durationPlayerRef.current
         }
         setState({ ...state, playing: true })
         setVisible({ ...visible, loading: false, videoLoaded: false })
@@ -645,7 +666,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     handlePauseAndSeekVideo()
     //new version
     if (videoType === STATUS_VIDEO.LIVE_STREAM && videoEl.current !== null) {
-      videoEl.current.currentTime = durationPlayer
+      videoEl.current.currentTime = durationPlayerRef.current
     }
     if (videoEl.current?.paused || videoEl.current?.ended) {
       videoEl.current?.play()
@@ -684,10 +705,11 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   const handleReloadTime = () => {
     // document.querySelector("video").load()
     if (videoEl.current !== null) {
-      videoEl.current.currentTime = durationPlayer
+      videoEl.current.currentTime = durationPlayerRef.current
     }
-    setPlayedSeconds(durationPlayer)
-    const newDurationPlayer = Math.floor(durationPlayer)
+    playerSecondsRef.current = durationPlayerRef.current
+    // setPlayedSeconds(durationPlayer)
+    const newDurationPlayer = Math.floor(durationPlayerRef.current)
     // changeVideoTime(newDurationPlayer, newDurationPlayer)
     changeSeekCount(newDurationPlayer)
     setIsStreaming(true)
@@ -744,13 +766,10 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     setIsShowNextPre(!isShowNextPre)
   }
   const onChangeTime = (time: number) => {
-    videoEl.current.currentTime = playedSeconds + time
+    videoEl.current.currentTime = playerSecondsRef.current + time
   }
 
-  console.log('Video Player Component re-render')
-
   const Video = useMemo(() => {
-    console.log('------------- Video element rerender -----------')
     return (
       <video
         id="video"
@@ -845,11 +864,14 @@ const VideoPlayer: React.FC<PlayerProps> = ({
             {videoType !== STATUS_VIDEO.LIVE_STREAM && (
               <SeekBar
                 videoRef={videoEl}
-                durationsPlayer={durationPlayer}
-                currentTime={playedSeconds}
                 changeStatusStreaming={(status) => {
                   setIsStreaming(status)
                 }}
+                videoType={videoType}
+                isStreaming={isStreaming}
+                state={state}
+                onVideoEnd={onVideoEnd}
+                isStreamingEnd={isStreamingEnd}
               />
             )}
             <div className={classes.controlOut}>
@@ -859,8 +881,6 @@ const VideoPlayer: React.FC<PlayerProps> = ({
                 onPlayPause={handlePlayPause}
                 playing={playing}
                 muted={muted}
-                durationsPlayer={durationPlayer}
-                currentTime={playedSeconds}
                 handleFullScreen={toggleFullScreen1}
                 onMute={handleMute}
                 onChangeVol={handleChangeVol}
@@ -872,6 +892,11 @@ const VideoPlayer: React.FC<PlayerProps> = ({
                 handleOnRestart={handleOnRestart}
                 resultResolution={(index, flag, item) => changeResolution(index, flag, item)}
                 qualities={qualities}
+                videoType={videoType}
+                isStreaming={isStreaming}
+                state={state}
+                onVideoEnd={onVideoEnd}
+                isStreamingEnd={isStreamingEnd}
               />
             </div>
           </div>

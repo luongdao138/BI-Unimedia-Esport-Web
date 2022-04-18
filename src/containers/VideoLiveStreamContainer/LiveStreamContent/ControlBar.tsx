@@ -1,10 +1,10 @@
 import { Box, ClickAwayListener, Icon, makeStyles, Slider, Theme, Typography, useMediaQuery, useTheme } from '@material-ui/core'
 import { Crop54 as TheatreViewMode, Crop75 as NormalViewMode } from '@material-ui/icons'
 import { Colors } from '@theme/colors'
-import React, { forwardRef, memo, useEffect, useImperativeHandle, useState } from 'react'
+import React, { forwardRef, memo, useEffect, useImperativeHandle, useState, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import ReactTooltip from 'react-tooltip'
-import useDetailVideo from '../useDetailVideo'
+import useDetailVideo from '@containers/VideoLiveStreamContainer/useDetailVideo'
 import Play from './ControlComponent/Play'
 import PlayerTooltip from './ControlComponent/PlayerTooltip'
 import Reload from './ControlComponent/Reload'
@@ -22,8 +22,6 @@ interface ControlProps {
   videoRef?: any
   onPlayPause?: () => void
   playing?: boolean
-  currentTime?: number
-  durationsPlayer?: number
   handleFullScreen?: () => void
   muted?: boolean
   onMute?: () => void
@@ -36,6 +34,16 @@ interface ControlProps {
   handleOnRestart?: () => void
   resultResolution?: (index?: number, flag?: boolean, item?: string) => void
   qualities?: Array<QualitiesType>
+  videoType?: any
+  isStreaming: boolean
+  isStreamingEnd: React.MutableRefObject<boolean>
+  onVideoEnd?: () => void
+  state: {
+    playing: boolean
+    muted: boolean
+    volume: number
+    ended: boolean
+  }
 }
 
 export enum SettingPanelState {
@@ -52,8 +60,6 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
       videoRef,
       onPlayPause,
       playing = false,
-      currentTime,
-      durationsPlayer,
       handleFullScreen,
       muted,
       onMute,
@@ -66,10 +72,19 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
       handleOnRestart,
       resultResolution,
       qualities,
+      onVideoEnd,
+      videoType,
+      state,
+      isStreaming,
+      isStreamingEnd,
     },
     ref
   ) => {
-    const classes = useStyles({ liveStreaming: durationsPlayer === currentTime ? true : false })
+    // duration and timeupdate state
+    //  const [durationPlayer, setDurationPlayer] = useState(0)
+    //  const [playedSeconds, setPlayedSeconds] = useState(0)
+
+    // const classes = useStyles({ liveStreaming: durationPlayer === playedSeconds ? true : false })
     const { t } = useTranslation('common')
     const [isFull, setFull] = useState<boolean>(false)
     const { changeVideoViewMode, liveStreamInfo } = useDetailVideo()
@@ -83,6 +98,64 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
     const iPhonePl = /iPhone/i.test(window.navigator.userAgent)
     const theme = useTheme()
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'), { noSsr: true }) || androidPl || iPhonePl
+    const durationPlayerRef = useRef<number>(0)
+    const playerSecondsRef = useRef<number>(0)
+    const classes = useStyles({ liveStreaming: durationPlayerRef.current === playerSecondsRef.current ? true : false })
+    // console.log('------------- Controlbar rerender -------------');
+
+    // const throttleUpdateTime = useCallback(
+    //   _.throttle((event) => {
+    //     const videoInfo = event.target
+    //     const newPlayedSecondTime = videoInfo.currentTime
+    //   let durationTime = videoType === STATUS_VIDEO.LIVE_STREAM ? videoInfo.duration - DELAY_SECONDS : videoInfo.duration
+    //   // handle delayed time when is living
+    //   if (isStreaming && videoType === STATUS_VIDEO.LIVE_STREAM) {
+    //     const isDelayedTime = newPlayedSecondTime < durationTime || newPlayedSecondTime > durationTime
+    //     // reset duration time to equal played time when live is delayed
+    //     if (isDelayedTime) {
+    //       durationTime = newPlayedSecondTime
+    //     }
+    //   }
+    //   // if(!isStreaming && durationTime < newPlayedSecondTime && videoType === STATUS_VIDEO.LIVE_STREAM){
+    //   if (!isStreaming && videoType === STATUS_VIDEO.LIVE_STREAM) {
+    //     durationTime = videoInfo.duration
+    //   }
+    //   const newDurationTime = durationTime
+    //   // const newDurationTime = videoInfo.duration
+    //   setPlayedSeconds(newPlayedSecondTime)
+    //   setDurationPlayer(newDurationTime)
+    //   if (
+    //     Math.floor(newPlayedSecondTime) !== liveStreamInfo.played_second ||
+    //     Math.floor(newDurationTime) !== liveStreamInfo.streaming_second
+    //   ) {
+    //     // changeVideoTime(Math.floor(newDurationTime), Math.floor(newPlayedSecondTime))
+    //   }
+    //   }, 1000),
+    //   []
+    // )
+
+    // const throttleUpdateDurationChange = useCallback(
+    //   _.throttle((event) => {
+    //     if (isStreamingEnd.current) {
+    //       onVideoEnd()
+    //     }
+    //     const duration = event.target.duration
+
+    //     if (!state.playing) {
+    //       if (Math.floor(duration) !== liveStreamInfo.played_second) {
+    //         // changeVideoTime(Math.floor(duration), Math.floor(duration))
+    //       }
+    //       setDurationPlayer(duration)
+    //     }
+    //   }, 1000),
+    //   []
+    // )
+
+    //   useEffect(() => {
+    //     videoRef.current.addEventListener('timeupdate', throttleUpdateTime)
+
+    //     videoRef.current.addEventListener('durationchange', throttleUpdateDurationChange)
+    //  }, [])
 
     function isEnableBtnPIP() {
       if (isMobile) {
@@ -202,7 +275,7 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
             typeButton={'reload'}
             onPressCallback={handleOnRestart}
             videoStatus={videoStatus}
-            durationsPlayer={durationsPlayer}
+            // durationsPlayer={durationsPlayer}
           />
           <Box className={classes.buttonVolume}>
             <Box className={classes.boxIconVolume} onClick={onMute} data-tip data-for="mute">
@@ -233,18 +306,32 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
           </Box>
 
           <div className={classes.time}>
-            <TimeBar statusVideo={videoStatus} currentTime={currentTime} durationsPlayer={durationsPlayer} />
+            <TimeBar
+              statusVideo={videoStatus}
+              videoRef={videoRef}
+              videoType={videoType}
+              isStreaming={isStreaming}
+              state={state}
+              onVideoEnd={onVideoEnd}
+              isStreamingEnd={isStreamingEnd}
+            />
           </div>
           {!isLive && isLive !== null && !isMobile && (
             <>
               <Reload
                 videoRef={videoRef}
                 typeButton={'previous'}
-                currentTime={currentTime}
-                durationsPlayer={durationsPlayer}
+                currentTime={playerSecondsRef.current}
+                durationsPlayer={durationPlayerRef.current}
                 isLive={isLive}
               />
-              <Reload videoRef={videoRef} typeButton={'next'} currentTime={currentTime} durationsPlayer={durationsPlayer} isLive={isLive} />
+              <Reload
+                videoRef={videoRef}
+                typeButton={'next'}
+                currentTime={playerSecondsRef.current}
+                durationsPlayer={durationPlayerRef.current}
+                isLive={isLive}
+              />
             </>
           )}
           {/* dot live streaming */}

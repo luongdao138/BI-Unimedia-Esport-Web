@@ -1,13 +1,24 @@
 /* eslint-disable no-console */
 import { Slider, SliderProps } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
-import React, { memo, useEffect, useState } from 'react'
-import useDetailVideo from '../../useDetailVideo'
+import React, { memo, useCallback, useEffect, useState } from 'react'
+import useDetailVideo from '@containers/VideoLiveStreamContainer/useDetailVideo'
+import { DELAY_SECONDS } from '@constants/common.constants'
+import { STATUS_VIDEO } from '@services/videoTop.services'
+import _ from 'lodash'
 interface Props {
-  currentTime?: number
-  durationsPlayer?: number
-  videoRef: any
+  videoRef?: any
   changeStatusStreaming?: (status: boolean) => void
+  videoType?: any
+  isStreaming: boolean
+  isStreamingEnd: React.MutableRefObject<boolean>
+  onVideoEnd?: () => void
+  state: {
+    playing: boolean
+    muted: boolean
+    volume: number
+    ended: boolean
+  }
 }
 
 {
@@ -15,19 +26,88 @@ interface Props {
 timePlayed: time by 100*/
 }
 
-const SeekBar: React.FC<Props & SliderProps> = ({ currentTime, durationsPlayer, videoRef, changeStatusStreaming, ...rest }) => {
+const SeekBar: React.FC<Props & SliderProps> = ({
+  videoRef,
+  changeStatusStreaming,
+  videoType,
+  isStreaming,
+  isStreamingEnd,
+  onVideoEnd,
+  state,
+  ...rest
+}) => {
   const classes = useStyles()
   // const [currentTimeState, setCurrentTime] = useState(0);
   // const [duration, setDuration] = useState(0)
   const [timePlayed, setTimePlayed] = useState(0)
-  const { changeSeekCount } = useDetailVideo()
+  const { changeSeekCount, liveStreamInfo } = useDetailVideo()
+
+  // duration and timeupdate state
+  const [durationPlayer, setDurationPlayer] = useState(0)
+  const [playedSeconds, setPlayedSeconds] = useState(0)
+
+  const throttleUpdateTime = useCallback(
+    _.throttle((event) => {
+      const videoInfo = event.target
+      const newPlayedSecondTime = videoInfo.currentTime
+      let durationTime = videoType === STATUS_VIDEO.LIVE_STREAM ? videoInfo.duration - DELAY_SECONDS : videoInfo.duration
+      // handle delayed time when is living
+      if (isStreaming && videoType === STATUS_VIDEO.LIVE_STREAM) {
+        const isDelayedTime = newPlayedSecondTime < durationTime || newPlayedSecondTime > durationTime
+        // reset duration time to equal played time when live is delayed
+        if (isDelayedTime) {
+          durationTime = newPlayedSecondTime
+        }
+      }
+      // if(!isStreaming && durationTime < newPlayedSecondTime && videoType === STATUS_VIDEO.LIVE_STREAM){
+      if (!isStreaming && videoType === STATUS_VIDEO.LIVE_STREAM) {
+        durationTime = videoInfo.duration
+      }
+      const newDurationTime = durationTime
+      // const newDurationTime = videoInfo.duration
+      setPlayedSeconds(newPlayedSecondTime)
+      setDurationPlayer(newDurationTime)
+      if (
+        Math.floor(newPlayedSecondTime) !== liveStreamInfo.played_second ||
+        Math.floor(newDurationTime) !== liveStreamInfo.streaming_second
+      ) {
+        // changeVideoTime(Math.floor(newDurationTime), Math.floor(newPlayedSecondTime))
+      }
+    }, 1000),
+    []
+  )
+
+  const throttleUpdateDurationChange = useCallback(
+    _.throttle((event) => {
+      if (isStreamingEnd.current) {
+        onVideoEnd()
+      }
+      const duration = event.target.duration
+
+      if (!state.playing) {
+        if (Math.floor(duration) !== liveStreamInfo.played_second) {
+          // changeVideoTime(Math.floor(duration), Math.floor(duration))
+        }
+        setDurationPlayer(duration)
+      }
+    }, 1000),
+    []
+  )
 
   useEffect(() => {
-    setTimePlayed((currentTime / durationsPlayer) * 100)
-  }, [currentTime, durationsPlayer])
+    console.log(videoRef)
+
+    videoRef.current.addEventListener('timeupdate', throttleUpdateTime)
+
+    videoRef.current.addEventListener('durationchange', throttleUpdateDurationChange)
+  }, [])
+
+  useEffect(() => {
+    setTimePlayed((playedSeconds / durationPlayer) * 100)
+  }, [playedSeconds, durationPlayer])
 
   const handleChange = (_, value) => {
-    const newSecond = (value * durationsPlayer) / 100
+    const newSecond = (value * durationPlayer) / 100
     setTimePlayed(value)
     if (value === 100) {
       changeStatusStreaming(true)
@@ -38,9 +118,9 @@ const SeekBar: React.FC<Props & SliderProps> = ({ currentTime, durationsPlayer, 
   }
 
   const handleCommit = (_, value) => {
-    console.log('~~~VALUE SEEK TO ~~~~~', value, (value * durationsPlayer) / 100)
+    console.log('~~~VALUE SEEK TO ~~~~~', value, (value * durationPlayer) / 100)
     setTimePlayed(value)
-    const newSecond = (value * durationsPlayer) / 100
+    const newSecond = (value * durationPlayer) / 100
     videoRef.current.currentTime = newSecond
     changeSeekCount(Math.floor(newSecond))
   }
