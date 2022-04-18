@@ -1,12 +1,13 @@
 import ButtonSelectMember from '@components/ButtonSelectMember'
 import GiftMember from '@components/GiftMember'
 import i18n from '@locales/i18n'
-import { Box, makeStyles } from '@material-ui/core'
+import { Box, ButtonBase, makeStyles } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import React from 'react'
 import useDetailVideo from '@containers/VideoLiveStreamContainer/useDetailVideo'
-import Loader from '@components/Loader'
+// import Loader from '@components/Loader'
 import { useRotateScreen } from '@utils/hooks/useRotateScreen'
+import { PreloadDonationInfo } from '@containers/VideoLiveStreamContainer/PreloadContainer/PreloadDonationInfo'
 
 type Step1Props = {
   onChangeStep?: (newStep: number) => void
@@ -59,8 +60,15 @@ const Step1: React.FC<Step1Props> = ({ onChangeStep, onChangeSelectedMember }) =
           )}
           <Box display={'flex'} style={{ gap: '16px' }} flexDirection={'column'}>
             {videoGiftMasterLoading ? (
-              <Box height="100px" display="flex" justifyContent="center" alignItems="center">
-                <Loader />
+              //  true
+              // <Box height="100px" display="flex" justifyContent="center" alignItems="center">
+              //   <Loader />
+              // </Box>
+              <Box className={`${classes.loadingContainer}`}>
+                <PreloadDonationInfo />
+                <Box>
+                  <ButtonBase className={`${classes.btnChoiceMember}`}>{i18n.t('common:live_stream_screen.text_select_member')}</ButtonBase>
+                </Box>
               </Box>
             ) : (
               giftMasterData().map((item) => {
@@ -86,6 +94,28 @@ const useStyles = makeStyles((theme) => ({
     gap: '8px',
     display: 'flex',
     flexDirection: 'column',
+  },
+  loadingContainer: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  btnChoiceMember: {
+    minWidth: '70px',
+    height: '28px',
+    borderRadius: '3px',
+    background: '#767676',
+    fontSize: '14px',
+    color: '#FFFFFF',
+    fontWeight: 600,
+  },
+  [theme.breakpoints.down(769)]: {
+    btnChoiceMember: {
+      fontSize: '11px',
+      lineHeight: '16px',
+      fontWeight: 'bold',
+      minWidth: 57,
+      height: 22,
+    },
   },
   wrapGiftMemberList: {
     background: Colors.white_opacity[10],
