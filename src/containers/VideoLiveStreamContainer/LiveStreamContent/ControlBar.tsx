@@ -275,6 +275,11 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
             typeButton={'reload'}
             onPressCallback={handleOnRestart}
             videoStatus={videoStatus}
+            videoType={videoType}
+            isStreaming={isStreaming}
+            state={state}
+            onVideoEnd={onVideoEnd}
+            isStreamingEnd={isStreamingEnd}
             // durationsPlayer={durationsPlayer}
           />
           <Box className={classes.buttonVolume}>
@@ -321,15 +326,25 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
               <Reload
                 videoRef={videoRef}
                 typeButton={'previous'}
-                currentTime={playerSecondsRef.current}
-                durationsPlayer={durationPlayerRef.current}
+                videoType={videoType}
+                isStreaming={isStreaming}
+                state={state}
+                onVideoEnd={onVideoEnd}
+                isStreamingEnd={isStreamingEnd}
+                // currentTime={playerSecondsRef}
+                // durationsPlayer={durationPlayerRef}
                 isLive={isLive}
               />
               <Reload
                 videoRef={videoRef}
                 typeButton={'next'}
-                currentTime={playerSecondsRef.current}
-                durationsPlayer={durationPlayerRef.current}
+                videoType={videoType}
+                isStreaming={isStreaming}
+                state={state}
+                onVideoEnd={onVideoEnd}
+                isStreamingEnd={isStreamingEnd}
+                // currentTime={playerSecondsRef}
+                // durationsPlayer={durationPlayerRef}
                 isLive={isLive}
               />
             </>

@@ -71,7 +71,7 @@ import TabsGroup from '@components/TabsGroup'
 // import ChatTab from './Tabs/ChatTab'
 import RankingTab from './Tabs/RankingTab'
 import { Colors } from '@theme/colors'
-import TipChatDialog from './TipChatDialog'
+import TipChatDialog from '@containers/VideoLiveStreamContainer/ChatContainer/TipChatDialog'
 import { useRotateScreen } from '@utils/hooks/useRotateScreen'
 
 export type ChatStyleProps = {
