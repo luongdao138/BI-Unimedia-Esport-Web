@@ -69,6 +69,7 @@ type StateType = {
   videoReportReasons: Array<ReportReason>
   isLoadingVideoReportReasons: boolean
   videoDetailTipFunctionVisible: number
+  isFullScreen: boolean
 }
 
 const initialState: StateType = {
@@ -127,6 +128,7 @@ const initialState: StateType = {
   videoReportReasons: [],
   isLoadingVideoReportReasons: false,
   videoDetailTipFunctionVisible: 1,
+  isFullScreen: false,
 }
 
 export default createReducer(initialState, (builder) => {
@@ -297,5 +299,8 @@ export default createReducer(initialState, (builder) => {
   })
   builder.addCase(actions.updateTipFunctionVisibleState, (state, action) => {
     state.videoDetailTipFunctionVisible = action.payload.isVisible
+  })
+  builder.addCase(actions.changeIsFullScreen, (state, action) => {
+    state.isFullScreen = action.payload.is_full_screen
   })
 })

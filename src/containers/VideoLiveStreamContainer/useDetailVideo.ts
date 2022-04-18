@@ -96,7 +96,8 @@ const useDetailVideo = () => {
       successCallback()
     }
   }
-
+  const changeIsFullScreenMode = (is_full_screen) => dispatch(actions.changeIsFullScreen({ is_full_screen }))
+  const isFullScreen = useAppSelector(selectors.isFullScreenSelector)
   return {
     meta,
     detailVideoResult,
@@ -138,6 +139,8 @@ const useDetailVideo = () => {
     isLoadingVideoReportReason,
     sendVideoReport,
     tipFunctionVisibleState,
+    changeIsFullScreenMode,
+    isFullScreen,
   }
 }
 

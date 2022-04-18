@@ -30,3 +30,4 @@ export const receiverRankings = createSelector(getRoot, (state) => state.receive
 export const videoReportReasons = createSelector(getRoot, (state) => state.videoReportReasons)
 export const isLoadingVideoReportReasons = createSelector(getRoot, (state) => state.isLoadingVideoReportReasons)
 export const tipFunctionVisibleState = createSelector(getRoot, (state) => state.videoDetailTipFunctionVisible)
+export const isFullScreenSelector = createSelector(getRoot, (state) => state.isFullScreen)

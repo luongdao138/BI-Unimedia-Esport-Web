@@ -102,7 +102,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   })
   const [flagResol, setFlagResol] = useState(false)
 
-  const { liveStreamInfo, changeSeekCount, detailVideoResult } = useDetailVideo()
+  const { liveStreamInfo, changeSeekCount, detailVideoResult, changeIsFullScreenMode } = useDetailVideo()
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'), { noSsr: true })
   const isDownMd = useMediaQuery(theme.breakpoints.down(769), { noSsr: true })
@@ -621,6 +621,10 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       }
     }
   }, [resolution])
+  useEffect(() => {
+    changeIsFullScreenMode(isFull)
+  }, [isFull])
+
   const toggleFullScreen1 = () => {
     if (iPhonePl || androidPl) {
       setIsFull(!isFull)
