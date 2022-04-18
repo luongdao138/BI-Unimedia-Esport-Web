@@ -138,6 +138,8 @@ const Steps: React.FC<StepsProps> = ({
       overrideVideoArchive(data)
       // Back to prev screen
       if (isSuccess) {
+        // eslint-disable-next-line no-console
+        console.log('backToTopVideo::back::6')
         router.back()
       }
     })
@@ -156,6 +158,8 @@ const Steps: React.FC<StepsProps> = ({
       overrideDeleteVideo(uuid)
       // Back to prev screen
       if (isSuccess) {
+        // eslint-disable-next-line no-console
+        console.log('backToTopVideo::back::7')
         router.back()
       } else {
         setDeleteMsg(message)

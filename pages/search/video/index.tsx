@@ -45,6 +45,8 @@ const SearchVideoPage: PageWithLayoutType = () => {
     }
   }
   const handleBackHeader = () => {
+    // eslint-disable-next-line no-console
+    console.log('backToTopVideo::back::1')
     router.back()
   }
   return (

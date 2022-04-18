@@ -254,7 +254,14 @@ const GiftReportContainer: React.FC<{ default_tab: any }> = ({ default_tab }) =>
 
   return (
     <>
-      <HeaderWithButtonStream title={t('streaming_gift_report_screen.delivery_report')} onClickBack={() => router.back()} />
+      <HeaderWithButtonStream
+        title={t('streaming_gift_report_screen.delivery_report')}
+        onClickBack={() => {
+          // eslint-disable-next-line no-console
+          console.log('backToTopVideo::back::9')
+          router.back()
+        }}
+      />
       <Box className={classes.giftReportContainer}>
         <Grid container direction="column" className={classes.giftReportContent}>
           {getTabs()}

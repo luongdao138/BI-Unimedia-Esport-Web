@@ -61,7 +61,11 @@ const useWinners = (isImmediately = true) => {
     }
   }
 
-  const handleBack = () => router.back()
+  const handleBack = () => {
+    // eslint-disable-next-line no-console
+    console.log('backToTopVideo::back::17')
+    router.back()
+  }
 
   const hasWinners = useMemo(() => hasWinnersData(arenaWinners), [arenaWinners])
   const resetMeta = () => {

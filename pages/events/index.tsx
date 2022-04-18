@@ -43,6 +43,8 @@ export async function getStaticProps(): Promise<{
 const EventsPage: React.FC<IProps> = (props) => {
   const router = useRouter()
   useEffect(() => {
+    // eslint-disable-next-line no-console
+    console.log('backToTopVideo::direct::2')
     router.replace(ESRoutes.VIDEO_TOP)
   }, [])
 

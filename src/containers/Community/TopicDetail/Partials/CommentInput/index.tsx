@@ -49,6 +49,8 @@ const Comment: React.FC<CommunityHeaderProps> = ({ reply_param, setPage, setComm
       setCommentCount(commentCount + 1)
     } else if (!createCommentMeta.pending && createCommentMeta.error) {
       dispatch(commonActions.addToast(t('common:topic.topic_not_found')))
+      // eslint-disable-next-line no-console
+      console.log('backToTopVideo::back::8')
       router.back()
     }
     resetCommentCreateMeta()

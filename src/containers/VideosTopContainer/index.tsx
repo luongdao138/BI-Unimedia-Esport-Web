@@ -76,6 +76,8 @@ const VideosTop: React.FC = () => {
           })
     } else {
       // setTab(tab)
+      // eslint-disable-next-line no-console
+      console.log('backToTopVideo::direct::3')
       _router.replace({ pathname: ESRoutes.VIDEO_TOP, query: { default_tab: tab } }, ESRoutes.VIDEO_TOP)
     }
   }

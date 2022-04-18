@@ -73,6 +73,8 @@ const SearchPage: PageWithLayoutType = () => {
     }
   }
   const handleBack = () => {
+    // eslint-disable-next-line no-console
+    console.log('backToTopVideo::back::2')
     router.back()
   }
   useEffect(() => {
