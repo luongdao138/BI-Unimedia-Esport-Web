@@ -622,13 +622,11 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     }
   }, [resolution])
   useEffect(() => {
-    console.log('isFull=>', isFull)
     changeIsFullScreenMode(isFull)
   }, [isFull])
 
   const toggleFullScreen1 = () => {
     if (iPhonePl || androidPl) {
-      console.log('adadadadadadadad')
       setIsFull(!isFull)
     } else {
       if (!document.fullscreenElement) {
