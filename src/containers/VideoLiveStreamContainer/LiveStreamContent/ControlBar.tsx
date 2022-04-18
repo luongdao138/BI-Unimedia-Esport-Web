@@ -4,7 +4,7 @@ import { Colors } from '@theme/colors'
 import React, { forwardRef, memo, useEffect, useImperativeHandle, useState, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import ReactTooltip from 'react-tooltip'
-import useDetailVideo from '../useDetailVideo'
+import useDetailVideo from '@containers/VideoLiveStreamContainer/useDetailVideo'
 import Play from './ControlComponent/Play'
 import PlayerTooltip from './ControlComponent/PlayerTooltip'
 import Reload from './ControlComponent/Reload'
@@ -275,6 +275,11 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
             typeButton={'reload'}
             onPressCallback={handleOnRestart}
             videoStatus={videoStatus}
+            videoType={videoType}
+            isStreaming={isStreaming}
+            state={state}
+            onVideoEnd={onVideoEnd}
+            isStreamingEnd={isStreamingEnd}
             // durationsPlayer={durationsPlayer}
           />
           <Box className={classes.buttonVolume}>
@@ -321,15 +326,25 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
               <Reload
                 videoRef={videoRef}
                 typeButton={'previous'}
-                currentTime={playerSecondsRef.current}
-                durationsPlayer={durationPlayerRef.current}
+                videoType={videoType}
+                isStreaming={isStreaming}
+                state={state}
+                onVideoEnd={onVideoEnd}
+                isStreamingEnd={isStreamingEnd}
+                // currentTime={playerSecondsRef}
+                // durationsPlayer={durationPlayerRef}
                 isLive={isLive}
               />
               <Reload
                 videoRef={videoRef}
                 typeButton={'next'}
-                currentTime={playerSecondsRef.current}
-                durationsPlayer={durationPlayerRef.current}
+                videoType={videoType}
+                isStreaming={isStreaming}
+                state={state}
+                onVideoEnd={onVideoEnd}
+                isStreamingEnd={isStreamingEnd}
+                // currentTime={playerSecondsRef}
+                // durationsPlayer={durationPlayerRef}
                 isLive={isLive}
               />
             </>

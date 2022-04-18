@@ -2,7 +2,7 @@
 import { Slider, SliderProps } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
 import React, { memo, useCallback, useEffect, useState } from 'react'
-import useDetailVideo from '../../useDetailVideo'
+import useDetailVideo from '@containers/VideoLiveStreamContainer/useDetailVideo'
 import { DELAY_SECONDS } from '@constants/common.constants'
 import { STATUS_VIDEO } from '@services/videoTop.services'
 import _ from 'lodash'
@@ -45,10 +45,6 @@ const SeekBar: React.FC<Props & SliderProps> = ({
   // duration and timeupdate state
   const [durationPlayer, setDurationPlayer] = useState(0)
   const [playedSeconds, setPlayedSeconds] = useState(0)
-
-  console.log('------------- Seekbar rerender -------------')
-
-  console.log(isStreaming)
 
   const throttleUpdateTime = useCallback(
     _.throttle((event) => {
