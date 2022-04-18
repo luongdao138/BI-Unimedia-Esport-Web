@@ -1,9 +1,9 @@
-import React, { memo, useEffect } from 'react'
+import React, { memo } from 'react'
 import { Box, Icon, makeStyles, Theme, Typography } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
-import useDetailVideo from '../useDetailVideo'
 import { SettingPanelState } from './ControlBar'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
 
 type Props = {
   handleOnBackClick?: () => void
@@ -22,22 +22,40 @@ const VideoResolutionPanel: React.FC<Props> = ({
 }) => {
   const classes = useStyles()
   const { t } = useTranslation('common')
-  const { changeIsHoveredVideoStatus } = useDetailVideo()
-  useEffect(() => {
-    changeIsHoveredVideoStatus(false)
-  })
+
   const RadioButton = ({ title, selected, onClick }) => {
     return (
-      <Box className={classes.radioContainer} onClick={onClick}>
+      <Box
+        className={classes.radioContainer}
+        onClick={(e) => {
+          // e.preventDefault()
+          CommonHelper.disableOnClickEvent(e)
+          onClick()
+        }}
+      >
         <Box className={`${classes.radio} ${selected ? classes.radioSelected : classes.radioUnselected}`} />
         <Typography className={classes.radioTitle}>{title}</Typography>
       </Box>
     )
   }
   return (
-    <Box className={classes.container}>
+    <Box
+      className={classes.container}
+      onClick={(e) => {
+        CommonHelper.disableOnClickEvent(e)
+        // e.stopPropagation()
+      }}
+    >
       <Box className={classes.header}>
-        <Icon onClick={handleOnBackClick} className={`fas fa-chevron-left ${classes.backIcon}`} fontSize="small" />
+        <Icon
+          onClick={(e) => {
+            CommonHelper.disableOnClickEvent(e)
+            // e.stopPropagation()
+            handleOnBackClick()
+          }}
+          className={`fas fa-chevron-left ${classes.backIcon}`}
+          fontSize="small"
+        />
         <Typography className={classes.textHeader}>
           {typeSetting === SettingPanelState.VIDEO_RESOLUTION
             ? t('videos_top_tab.resolution_select')

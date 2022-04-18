@@ -114,6 +114,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
 
   const { videoWatchTimeReportRequest, getMiniPlayerState } = useLiveStreamDetail()
   const isStreamingEnd = useRef(liveStreamInfo.is_streaming_end)
+  const { isHoveredVideo } = liveStreamInfo
   const handlePauseAndSeekVideo = () => {
     // // seek to current live stream second if is pausing live and is not playing
     // if (!state.playing && liveStreamInfo.is_pausing_live) {
@@ -135,8 +136,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   const [playRateReturn, setPlayRateReturn] = useState(1)
   const isSafari = CommonHelper.checkIsSafariBrowser()
   const [isFull, setIsFull] = useState<boolean>(false)
-  const [isShowNextPre, setIsShowNextPre] = useState(false)
-  const classes = useStyles({ checkStatusVideo: videoType, isFull, isShowNextPre })
+  const classes = useStyles({ checkStatusVideo: videoType, isFull })
 
   const {
     requestPIP,
@@ -766,10 +766,9 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   //     }
   //   }
   // }, [playing, playedSeconds])
-  const showNextPreSP = () => {
-    setIsShowNextPre(!isShowNextPre)
-  }
-  const onChangeTime = (time: number) => {
+  const onChangeTime = (e, time: number) => {
+    CommonHelper.disableOnClickEvent(e)
+    // e.stopPropagation()
     videoEl.current.currentTime = playerSecondsRef.current + time
   }
 
@@ -825,7 +824,6 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       <div
         ref={playerContainerRef}
         className={`${classes.playerContainer} ${isFull === true ? classes.forceFullscreenIosSafariPlayer : ''}`}
-        onClick={showNextPreSP}
       >
         <div style={{ height: '100%', position: 'relative' }} onClick={handlePlayPauseOut}>
           {Video}
@@ -864,7 +862,10 @@ const VideoPlayer: React.FC<PlayerProps> = ({
 
         {/* {!isMobile && !androidPl && !iPhonePl && isLoadedMetaData && ( */}
         {isLoadedMetaData && (
-          <div className={`${classes.processControl} ${isOpenSettingPanel && classes.showControl}`}>
+          <div
+            className={`${classes.processControl} ${isOpenSettingPanel && classes.showControl}`}
+            style={{ display: isHoveredVideo ? 'block' : 'none', opacity: 1 }}
+          >
             {videoType !== STATUS_VIDEO.LIVE_STREAM && (
               <SeekBar
                 videoRef={videoEl}
@@ -907,14 +908,14 @@ const VideoPlayer: React.FC<PlayerProps> = ({
         )}
         {/* previous and next only in mobile */}
         {(isMobile || androidPl || iPhonePl) && videoType !== STATUS_VIDEO.LIVE_STREAM && (
-          <div className={classes.playOverViewSP}>
+          <div className={classes.playOverViewSP} style={{ opacity: isHoveredVideo && (isMobile || androidPl || iPhonePl) ? 1 : 0 }}>
             <div className={classes.nextPreSP}>
               <Box
                 className={classes.buttonNormal}
                 data-tip
                 data-for="previous"
-                onClick={() => {
-                  onChangeTime(-10)
+                onClick={(e) => {
+                  onChangeTime(e, -10)
                 }}
               >
                 <img src={'/images/ic_previous.svg'} className={classes.image} />
@@ -923,8 +924,8 @@ const VideoPlayer: React.FC<PlayerProps> = ({
                 className={classes.buttonNormal}
                 data-tip
                 data-for="next"
-                onClick={() => {
-                  onChangeTime(+10)
+                onClick={(e) => {
+                  onChangeTime(e, +10)
                 }}
               >
                 <img src={'/images/ic_next.svg'} className={classes.image} />
@@ -1055,7 +1056,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       // justifyContent: 'space-between',
       zIndex: 99,
       transition: 'opacity 0.1s ease-in',
-      opacity: 1, //always show controlBar by status video
+      opacity: 0, //always show controlBar by status video
       background:
         props.checkStatusVideo !== STATUS_VIDEO.LIVE_STREAM
           ? 'linear-gradient(rgb(128 128 128 / 0%) 20%, rgb(39 39 39) 100%)'
@@ -1066,24 +1067,24 @@ const useStyles = makeStyles((theme: Theme) => ({
     opacity: '1 !important',
   },
 
-  playerContainer: (props: { checkStatusVideo: number; isFull?: boolean; isShowNextPre?: boolean }) => {
-    return {
-      height: '100%',
-      '&:hover $processControl': {
-        opacity: 1,
-        background:
-          props.checkStatusVideo !== STATUS_VIDEO.LIVE_STREAM
-            ? 'linear-gradient(rgb(128 128 128 / 0%) 20%, rgb(39 39 39) 100%)'
-            : 'linear-gradient(rgb(128 128 128 / 0%) 0%, rgb(39 39 39) 100%)',
-        transition: 'opacity 0.1s ease-in',
-      },
-      // [theme.breakpoints.down('xs')]: {
-      '&:hover $playOverViewSP': {
-        opacity: 1,
-        display: 'flex',
-      },
-      // }
-    }
+  // playerContainer: (props: { checkStatusVideo: number; isFull?: boolean; isShowNextPre?: boolean }) => {
+  //   return {
+  //     height: '100%',
+  //     '&:hover $processControl': {
+  //       opacity: 1,
+  //       background:
+  //         props.checkStatusVideo !== STATUS_VIDEO.LIVE_STREAM
+  //           ? 'linear-gradient(rgb(128 128 128 / 0%) 20%, rgb(39 39 39) 100%)'
+  //           : 'linear-gradient(rgb(128 128 128 / 0%) 0%, rgb(39 39 39) 100%)',
+  //       transition: 'opacity 0.1s ease-in',
+  //     },
+  //     '&:hover $playOverViewSP': {
+  //       display: 'flex'
+  //     },
+  //   }
+  // },
+  playerContainer: {
+    height: '100%',
   },
   forceFullscreenIosSafariPlayer: {
     position: 'fixed',
@@ -1153,7 +1154,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   showLoader: {
     zIndex: 2,
   },
-  playOverViewSP: (props: { checkStatusVideo: number; isFull?: boolean; isShowNextPre?: boolean }) => ({
+  playOverViewSP: {
     backgroundColor: 'rgba(0,0,0,0.3)',
     height: '100%',
     width: '100%',
@@ -1165,8 +1166,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     zIndex: 1,
     transition: 'opacity 0.1s ease-in',
-    opacity: props.isShowNextPre ? 1 : 0,
-  }),
+    opacity: 0,
+  },
   nextPreSP: {
     display: 'flex',
     flexDirection: 'row',

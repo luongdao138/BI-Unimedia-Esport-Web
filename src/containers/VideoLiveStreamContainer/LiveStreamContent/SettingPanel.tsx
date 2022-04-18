@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Box, Icon, makeStyles, Theme, Typography } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
-import useDetailVideo from '../useDetailVideo'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
 
 export type SettingResult = {
   resolution?: string
@@ -26,14 +26,18 @@ const SettingPanel: React.FC<Props> = ({
 }) => {
   const classes = useStyles()
   const { t } = useTranslation('common')
-  const { changeIsHoveredVideoStatus } = useDetailVideo()
-  useEffect(() => {
-    changeIsHoveredVideoStatus(false)
-  })
+
   return (
     <Box className={classes.container}>
       {!isLive && (
-        <Box onClick={handleOnPlaySpeedClick} className={classes.row}>
+        <Box
+          onClick={(e) => {
+            CommonHelper.disableOnClickEvent(e)
+            e.stopPropagation()
+            handleOnPlaySpeedClick()
+          }}
+          className={classes.row}
+        >
           <Typography className={classes.text}>{t('videos_top_tab.play_speed')}</Typography>
           <Box className={classes.iconContainer}>
             <Typography>{parseFloat(settingResult.speed) ? `${settingResult.speed}x` : settingResult.speed}</Typography>
@@ -41,14 +45,28 @@ const SettingPanel: React.FC<Props> = ({
           </Box>
         </Box>
       )}
-      <Box onClick={handleOnQualityChangeClick} className={classes.row}>
+      <Box
+        onClick={(e) => {
+          CommonHelper.disableOnClickEvent(e)
+          // e.stopPropagation()
+          handleOnQualityChangeClick()
+        }}
+        className={classes.row}
+      >
         <Typography className={classes.text}>{t('videos_top_tab.resolution_select')}</Typography>
         <Box className={classes.iconContainer}>
           <Typography>{settingResult.resolution}</Typography>
           <Icon className={`fa fa-chevron-right ${classes.icon}`} fontSize="small" />
         </Box>
       </Box>
-      <Box onClick={handleOnReportClick} className={classes.row}>
+      <Box
+        onClick={(e) => {
+          CommonHelper.disableOnClickEvent(e)
+          // e.stopPropagation()
+          handleOnReportClick()
+        }}
+        className={classes.row}
+      >
         <Typography className={classes.text}>{t('videos_top_tab.report_setting')}</Typography>
         <Icon className={`fa fa-chevron-right ${classes.icon}`} fontSize="small" />
       </Box>
@@ -66,6 +84,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingTop: '8px',
     paddingBottom: '8px',
     width: '260px',
+    zIndex: 110,
   },
   row: {
     padding: '8px 16px',

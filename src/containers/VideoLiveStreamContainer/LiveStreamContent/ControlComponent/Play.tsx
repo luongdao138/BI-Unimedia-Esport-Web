@@ -1,5 +1,6 @@
 import { Box, Icon, makeStyles, Theme } from '@material-ui/core'
 import { Colors } from '@theme/colors'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
 import React, { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import PlayerTooltip from './PlayerTooltip'
@@ -14,7 +15,17 @@ const Play: React.FC<Props> = ({ onPlayPause, playing = false }) => {
   const { t } = useTranslation('common')
 
   return (
-    <Box pr={2} className={classes.buttonNormal} onClick={onPlayPause} data-tip data-for="togglePlay">
+    <Box
+      pr={2}
+      className={classes.buttonNormal}
+      onClick={(e) => {
+        onPlayPause()
+        CommonHelper.disableOnClickEvent(e)
+        // e.stopPropagation()
+      }}
+      data-tip
+      data-for="togglePlay"
+    >
       {!playing ? (
         <img src={'/images/ic_play_small.svg'} className={classes.sizeImagePlay} />
       ) : (

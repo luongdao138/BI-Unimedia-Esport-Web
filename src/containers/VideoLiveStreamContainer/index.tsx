@@ -789,6 +789,9 @@ const VideoDetail: React.FC = () => {
           <Box
             className={classes.allTabsContainer}
             style={{ width: isLandscape ? componentsSize.chatWidth : isMobile ? '100%' : componentsSize.videoWidth }}
+            onClick={() => {
+              changeIsHoveredVideoStatus(false)
+            }}
           >
             {!isMobile && renderVideoSubInfo()}
             <Grid container direction="row" className={classes.contentContainer}>

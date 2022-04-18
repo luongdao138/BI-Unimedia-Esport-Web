@@ -6,6 +6,7 @@ import ESSelect from '@components/Select'
 import ESButton from '@components/Button'
 import useDetailVideo from '@containers/VideoLiveStreamContainer/useDetailVideo'
 import Loader from '@components/Loader'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
 
 type Props = {
   handleOnBackClick?: () => void
@@ -15,13 +16,7 @@ type Props = {
 const ReportPanel: React.FC<Props> = ({ handleOnBackClick }) => {
   const classes = useStyles()
   const { t } = useTranslation('common')
-  const {
-    getVideoReportReason,
-    videoReportReason,
-    isLoadingVideoReportReason,
-    sendVideoReport,
-    changeIsHoveredVideoStatus,
-  } = useDetailVideo()
+  const { getVideoReportReason, videoReportReason, isLoadingVideoReportReason, sendVideoReport } = useDetailVideo()
 
   const [selectReportItem, setSelectReportItem] = useState('0')
   const [reportSuccess, setReportSuccess] = useState(false)
@@ -34,7 +29,6 @@ const ReportPanel: React.FC<Props> = ({ handleOnBackClick }) => {
 
   useEffect(() => {
     getVideoReportReason()
-    changeIsHoveredVideoStatus(false)
   }, [])
 
   useEffect(() => {
@@ -44,6 +38,8 @@ const ReportPanel: React.FC<Props> = ({ handleOnBackClick }) => {
   }, [videoReportReason, setSelectReportItem])
 
   const handleChange = (event) => {
+    // event.preventDefault()
+    CommonHelper.disableOnClickEvent(event)
     setSelectReportItem(event.target.value)
     setReportSuccess(false)
   }
@@ -58,10 +54,18 @@ const ReportPanel: React.FC<Props> = ({ handleOnBackClick }) => {
   return (
     <Box className={classes.container}>
       <Box className={classes.header}>
-        <Icon onClick={handleOnBackClick} className={`fas fa-chevron-left ${classes.backIcon}`} fontSize="small" />
+        <Icon
+          onClick={(e) => {
+            CommonHelper.disableOnClickEvent(e)
+            // e.stopPropagation()
+            handleOnBackClick()
+          }}
+          className={`fas fa-chevron-left ${classes.backIcon}`}
+          fontSize="small"
+        />
         <Typography className={classes.textHeader}>{t('videos_top_tab.report_setting')}</Typography>
       </Box>
-      <Box className={classes.pickerContainer}>
+      <Box className={classes.pickerContainer} onClick={(e) => CommonHelper.disableOnClickEvent(e)}>
         {isLoadingVideoReportReason ? (
           <Box height="40px" display="flex" justifyContent="center" alignItems="center">
             <Loader />

@@ -522,6 +522,17 @@ const isCheckVersionIOSAllowPIP = () => {
   return false
 }
 
+const disableOnClickEvent = (e) => {
+  const androidPl = /Android/i.test(window.navigator.userAgent)
+  const iPhonePl = /iPhone/i.test(window.navigator.userAgent)
+  const isMobile = window.innerWidth <= 576 || androidPl || iPhonePl
+
+  if (isMobile) {
+    e.stopPropagation()
+    e.preventDefault()
+  }
+}
+
 export const CommonHelper = {
   validateEmail,
   genRanHex,
@@ -558,4 +569,5 @@ export const CommonHelper = {
   checkIsSafariBrowser,
   isDeviceAndroid,
   isCheckVersionIOSAllowPIP,
+  disableOnClickEvent,
 }
