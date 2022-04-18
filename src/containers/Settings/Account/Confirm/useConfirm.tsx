@@ -43,6 +43,8 @@ const useChangeEmailConfirm = (confirmationCode: string) => {
 
   useEffect(() => {
     if (!changeEmailSteps.step_change) {
+      // eslint-disable-next-line no-console
+      console.log('backToTopVideo::back::15')
       router.back()
     }
   }, [changeEmailSteps.step_change])

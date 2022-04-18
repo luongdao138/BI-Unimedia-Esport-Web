@@ -13,7 +13,11 @@ const useReturnHref = () => {
   const { returnHref, makeContextualHref } = useContextualRouting()
   const { previousRoute } = useContext(RouteContext)
 
-  const handleReturn = () => router.back()
+  const handleReturn = () => {
+    // eslint-disable-next-line no-console
+    console.log('backToTopVideo::back::18')
+    router.back()
+  }
   const navigateScreen = (pathName: string) => {
     return router.query._UCR_return_href
       ? router.push(makeContextualHref({ pathName }), pathName, { shallow: true })
@@ -28,6 +32,8 @@ const useReturnHref = () => {
     } else if (previousRoute === ESRoutes.VIDEO_TOP) {
       // [CW] Active tab favorite when user click on favorite tab then login successfully from video top screen.
       const { favoriteTabClick } = router.query
+      // eslint-disable-next-line no-console
+      console.log('backToTopVideo::direct::4')
       router.push(
         {
           pathname: returnHref,

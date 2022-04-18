@@ -53,7 +53,15 @@ const AccountSettingsPasswordContainer: React.FC = () => {
   return (
     <ESStickyFooter title={t('common.next')} disabled={!buttonActive()} onClick={() => handleSubmit()} noScroll={true}>
       <Box className={classes.header}>
-        <IconButton className={classes.iconButton} disableRipple onClick={() => router.back()}>
+        <IconButton
+          className={classes.iconButton}
+          disableRipple
+          onClick={() => {
+            // eslint-disable-next-line no-console
+            console.log('backToTopVideo::back::16')
+            router.back()
+          }}
+        >
           <Icon className={`fa fa-arrow-left ${classes.icon}`} />
         </IconButton>
         <Typography variant="body1" className={classes.headerTitle}>

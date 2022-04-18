@@ -37,6 +37,8 @@ const useChangeEmail = () => {
 
   useEffect(() => {
     if (!changeEmailSteps.step_check) {
+      // eslint-disable-next-line no-console
+      console.log('backToTopVideo::back::12')
       router.back()
     }
   }, [changeEmailSteps.step_check])
