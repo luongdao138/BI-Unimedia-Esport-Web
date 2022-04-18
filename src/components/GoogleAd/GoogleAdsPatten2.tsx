@@ -1,5 +1,5 @@
 // import { makeStyles } from '@material-ui/core/styles'
-import { useEffect } from 'react'
+import { memo, useEffect } from 'react'
 
 interface Props {
   id: string
@@ -105,4 +105,11 @@ GoogleAdsPatten2.defaultProps = {
   timeout: 200,
 }
 
-export default GoogleAdsPatten2
+export default memo(GoogleAdsPatten2, () => {
+  if (window.location.href.includes('message/')) {
+    // eslint-disable-next-line no-console
+    console.log('window.location.href====>', window.location.href)
+    return true
+  }
+  return false
+})
