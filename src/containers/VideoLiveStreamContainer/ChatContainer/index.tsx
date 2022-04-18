@@ -360,14 +360,14 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     const { dataPurchaseTicketSuperChat } = usePurchaseTicketSuperChat()
     // const dispatch = useAppDispatch()
 
-    // const isEnabledChat =
-    //   videoType === STATUS_VIDEO.LIVE_STREAM &&
-    //   !liveStreamInfo.is_end_live &&
-    //   (+streamingSecond >= 0 || streamingSecond === Infinity) &&
-    //   successGetListMess &&
-    //   successGetListDonateMess &&
-    //   successGetListMessTip
-    const isEnabledChat = true
+    const isEnabledChat =
+      videoType === STATUS_VIDEO.LIVE_STREAM &&
+      !liveStreamInfo.is_end_live &&
+      (+streamingSecond >= 0 || streamingSecond === Infinity) &&
+      successGetListMess &&
+      successGetListDonateMess &&
+      successGetListMessTip
+    // const isEnabledChat = true
     // console.log('🚀 ~ isEnabledChat', isEnabledChat)
     // console.log('🚀 ~ successGetListMessTip', successGetListMessTip)
 
@@ -958,8 +958,8 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     //   }
     //   return false
     // })()
-    // const isStreaming = videoType === STATUS_VIDEO.LIVE_STREAM
-    const isStreaming = true
+    const isStreaming = videoType === STATUS_VIDEO.LIVE_STREAM
+    // const isStreaming = true
 
     const renderLoader = () => {
       // loading when get mess, or rewind video, or get all tip mess
@@ -2062,13 +2062,13 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
           }
         }
 
-        // try {
-        //   const result = await API.graphql(graphqlOperation(createMessage, { input }))
-        //   refCreateMessLocal.current(result, local_message)
-        // } catch (errors) {
-        //   if (errors && errors.errors.length !== 0) refCreateMessLocal.current([], local_message, true)
-        //   console.error(errors)
-        // }
+        try {
+          const result = await API.graphql(graphqlOperation(createMessage, { input }))
+          refCreateMessLocal.current(result, local_message)
+        } catch (errors) {
+          if (errors && errors.errors.length !== 0) refCreateMessLocal.current([], local_message, true)
+          console.error(errors)
+        }
       }
     }
 
