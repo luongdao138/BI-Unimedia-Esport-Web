@@ -2755,7 +2755,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         default:
           return ''
       }
-    }, [activeTab, isEnabledMessFilter, activeSubTab])
+    }, [activeTab, isEnabledMessFilter, activeSubTab, successGetListMessTip, successGetListMess])
 
     const renderContent = () => {
       return displayChatContent() ? chatContent() : userDoesNotHaveViewingTicketView()
