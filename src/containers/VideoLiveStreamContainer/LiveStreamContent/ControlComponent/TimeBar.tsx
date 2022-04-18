@@ -80,8 +80,6 @@ const TimeBar: React.FC<Props> = ({ statusVideo, videoType, isStreaming, isStrea
     []
   )
 
-  // console.log('time bar render.')
-
   useEffect(() => {
     videoRef.current.addEventListener('timeupdate', throttleUpdateTime)
 

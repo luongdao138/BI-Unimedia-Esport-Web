@@ -769,10 +769,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     videoEl.current.currentTime = playerSecondsRef.current + time
   }
 
-  console.log('Video Player Component re-render')
-
   const Video = useMemo(() => {
-    console.log('------------- Video element rerender -----------')
     return (
       <video
         id="video"
