@@ -424,24 +424,27 @@ const VideoDetail: React.FC = () => {
     }
   }, [videoDetailError])
 
-  const confirmDonatePoint = useCallback((donated_point, comment, master_id = '') => {
-    console.log('master_id', master_id)
-    // reset donate point
-    setGiftMasterUuid(master_id)
-    setDonatedPoints(0)
-    setDonatedPoints(donated_point)
-    // reset lack point
-    setLackedPoint(0)
-    setLackedPoint(donated_point - myPoint)
-    setPurchaseComment(comment)
-    setPurchaseType(PURCHASE_TYPE.PURCHASE_SUPER_CHAT)
-    if (myPoint >= donated_point) {
-      setShowConfirmModal(true)
-    } else {
-      dispatch(addToast(i18n.t('common:donate_points.lack_point_mess')))
-      setShowModalPurchasePoint(true)
-    }
-  }, [])
+  const confirmDonatePoint = useCallback(
+    (donated_point, comment, master_id = '') => {
+      console.log('master_id', master_id)
+      // reset donate point
+      setGiftMasterUuid(master_id)
+      setDonatedPoints(0)
+      setDonatedPoints(donated_point)
+      // reset lack point
+      setLackedPoint(0)
+      setLackedPoint(donated_point - myPoint)
+      setPurchaseComment(comment)
+      setPurchaseType(PURCHASE_TYPE.PURCHASE_SUPER_CHAT)
+      if (myPoint >= donated_point) {
+        setShowConfirmModal(true)
+      } else {
+        dispatch(addToast(i18n.t('common:donate_points.lack_point_mess')))
+        setShowModalPurchasePoint(true)
+      }
+    },
+    [myPoint]
+  )
   useEffect(() => {
     if (showConfirmModal) {
       handleConfirmPurchaseSuperChat()
