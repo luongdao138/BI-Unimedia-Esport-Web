@@ -349,6 +349,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       fetchDonateRanking,
       updateUseGiftFlag,
       tipFunctionVisibleState,
+      isFullScreen,
     } = useDetailVideo()
     const { isEnabledGift, isEnabledMessFilter, isDisplayedRankingTab } = useCheckDisplayChat()
     const { activeTab, activeSubTab } = liveStreamInfo
@@ -384,7 +385,6 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         resetStates: resetStates,
       }
     })
-
     useEffect(() => {
       cache.clearAll()
     }, [contentRect?.width])
@@ -2674,8 +2674,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
             {chatBoardComponent()}
           </>
         )}
-
-        {isMobile ? chatComponentMobile() : chatInputComponent()}
+        {isMobile ? !isFullScreen && chatComponentMobile() : chatInputComponent()}
         {isEnabledChat && !isStreaming ? (
           <Box className={classes.chatInputContainer} style={{ width: '100%', height: 81 }}>
             <ButtonBase onClick={() => scrollToCurrentMess('smooth')} className={`${classes.btn_scroll_mess}`}>

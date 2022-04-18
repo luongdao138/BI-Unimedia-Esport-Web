@@ -181,6 +181,7 @@ export const setActiveTab = createAction<{ activeTab: number }>(ACTION_VIDEO_TOP
 export const setActiveSubTab = createAction<{ activeSubTab: number }>(ACTION_VIDEO_TOP.SET_ACTIVE_SUB_TAB)
 export const changeIsHoveredVideoStatus = createAction<{ isHoveredVideo: boolean }>(ACTION_VIDEO_TOP.CHANGE__HOVERED_VIDEO_STATUS)
 export const saveVideoRef = createAction<services.VideoRefType>(ACTION_VIDEO_TOP.VIDEO_REF)
+export const changeIsFullScreen = createAction<{ is_full_screen: boolean }>(ACTION_VIDEO_TOP.CHANG_IS_FULL_SCREEN)
 
 export const videoDetail = createAsyncThunk<services.VideoDetailResponse, services.VideoDetailParams>(
   ACTION_VIDEO_TOP.VIDEO_DETAIL,
