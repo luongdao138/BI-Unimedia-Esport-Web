@@ -279,6 +279,7 @@ const useStyles = makeStyles((theme) => ({
     },
     buttonContainer: {
       marginTop: '32px',
+      marginBottom: '184px',
     },
   },
   [theme.breakpoints.down(414)]: {
