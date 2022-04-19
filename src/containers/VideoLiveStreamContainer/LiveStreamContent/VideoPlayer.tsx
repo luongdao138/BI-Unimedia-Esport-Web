@@ -137,6 +137,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   const isSafari = CommonHelper.checkIsSafariBrowser()
   const [isFull, setIsFull] = useState<boolean>(false)
   const classes = useStyles({ checkStatusVideo: videoType, isFull })
+  const isPC = !isMobile || !androidPl || !iPhonePl
 
   const {
     requestPIP,
@@ -359,7 +360,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       hls.attachMedia(video)
       hls.on(Hls.Events.MEDIA_ATTACHED, handleMedia)
     }
-    console.log('======xxxxxxxx=====>>>>>')
+    console.log('======xxxxxxxx=====>>>>>', isPC)
     return () => {
       if (hls && src) {
         hls.detachMedia()
@@ -823,7 +824,9 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       {/* {(!isMobile && !androidPl && !iPhonePl)  && ( */}
       <div
         ref={playerContainerRef}
-        className={`${classes.playerContainer} ${isFull === true ? classes.forceFullscreenIosSafariPlayer : ''}`}
+        className={`${isPC ? classes.playerContainerPC : classes.playerContainer} ${
+          isFull === true ? classes.forceFullscreenIosSafariPlayer : ''
+        }`}
       >
         <div style={{ height: '100%', position: 'relative' }} onClick={handlePlayPauseOut}>
           {Video}
@@ -864,7 +867,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
         {isLoadedMetaData && (
           <div
             className={`${classes.processControl} ${isOpenSettingPanel && classes.showControl}`}
-            style={{ display: isHoveredVideo ? 'block' : 'none', opacity: 1 }}
+            style={!isPC ? { display: isHoveredVideo ? 'block' : 'none', opacity: 1 } : {}}
           >
             {videoType !== STATUS_VIDEO.LIVE_STREAM && (
               <SeekBar
@@ -1067,22 +1070,22 @@ const useStyles = makeStyles((theme: Theme) => ({
     opacity: '1 !important',
   },
 
-  // playerContainer: (props: { checkStatusVideo: number; isFull?: boolean; isShowNextPre?: boolean }) => {
-  //   return {
-  //     height: '100%',
-  //     '&:hover $processControl': {
-  //       opacity: 1,
-  //       background:
-  //         props.checkStatusVideo !== STATUS_VIDEO.LIVE_STREAM
-  //           ? 'linear-gradient(rgb(128 128 128 / 0%) 20%, rgb(39 39 39) 100%)'
-  //           : 'linear-gradient(rgb(128 128 128 / 0%) 0%, rgb(39 39 39) 100%)',
-  //       transition: 'opacity 0.1s ease-in',
-  //     },
-  //     '&:hover $playOverViewSP': {
-  //       display: 'flex'
-  //     },
-  //   }
-  // },
+  playerContainerPC: (props: { checkStatusVideo: number; isFull?: boolean; isShowNextPre?: boolean }) => {
+    return {
+      height: '100%',
+      '&:hover $processControl': {
+        opacity: 1,
+        background:
+          props.checkStatusVideo !== STATUS_VIDEO.LIVE_STREAM
+            ? 'linear-gradient(rgb(128 128 128 / 0%) 20%, rgb(39 39 39) 100%)'
+            : 'linear-gradient(rgb(128 128 128 / 0%) 0%, rgb(39 39 39) 100%)',
+        transition: 'opacity 0.1s ease-in',
+      },
+      '&:hover $playOverViewSP': {
+        display: 'flex',
+      },
+    }
+  },
   playerContainer: {
     height: '100%',
   },
