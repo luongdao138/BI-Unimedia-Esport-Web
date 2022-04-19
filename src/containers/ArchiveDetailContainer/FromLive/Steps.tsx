@@ -470,14 +470,14 @@ const Steps: React.FC<StepsProps> = ({
             </Box>
           )}
 
-          {/* {isFromSchedule && (
+          {!isFromSchedule && (
             <Box pb={2}>
               <Box className={classes.label}>{i18n.t('common:archive_detail_screen.delivery_date_time')}</Box>
               <Box className={classes.dateTime} pt={1} pl={1}>
-                {CommonHelper.formatDateTimeJP(videoArchivedDetail?.stream_schedule_start_time)}
+                {CommonHelper.formatDateTimeJP(videoArchivedDetail?.live_stream_start_time)}
               </Box>
             </Box>
-          )} */}
+          )}
 
           {/* <Box pb={2}>
             <Box className={classes.label}>{i18n.t('common:archive_detail_screen.ticket_amount')}</Box>
