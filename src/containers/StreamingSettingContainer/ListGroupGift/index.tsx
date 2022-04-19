@@ -45,6 +45,7 @@ const ListGroupGift: React.FC<IProps> = ({ onChangeTab, handleSelectGroup, handl
   const handleCreateTip = () => {
     handleReturn()
     onChangeTab(TabState.CREATE_NEW)
+    window.scrollTo({ top: 0 })
   }
 
   const onSelectGroupComplete = (item) => {

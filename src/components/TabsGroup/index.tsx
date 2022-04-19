@@ -49,6 +49,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: '12px',
     lineHeight: '21px',
     borderRadius: '5px',
+    userSelect: 'none',
   },
   [theme.breakpoints.down(769)]: {
     container: {
