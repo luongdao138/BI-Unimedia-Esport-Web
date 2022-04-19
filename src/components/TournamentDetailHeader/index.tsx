@@ -6,6 +6,8 @@ import { Colors } from '@theme/colors'
 import { ReactNode, useEffect, useState } from 'react'
 import Tabs from '@components/Tabs'
 import Tab from '@components/Tab'
+import GoogleAd from '@components/GoogleAd'
+import { GTMHelper } from '@utils/helpers/SendGTM'
 
 type TournamentHeaderProps = {
   title: string
@@ -21,6 +23,10 @@ const TournamentHeader: React.FC<TournamentHeaderProps> = ({ title, status, chil
   const isMobile = useMediaQuery(_theme.breakpoints.down('sm'))
   const classes = useStyles()
   const [tab, setTab] = useState(4)
+  const [slotDataLayer, setSlotDataLayer] = useState('')
+  const theme = useTheme()
+  const screenDownSP = useMediaQuery(theme.breakpoints.down(576))
+
   useEffect(() => {
     switch (status) {
       case 'ready':
@@ -43,60 +49,75 @@ const TournamentHeader: React.FC<TournamentHeaderProps> = ({ title, status, chil
         setTab(5)
     }
   }, [status])
+
+  useEffect(() => {
+    GTMHelper.getAdSlot()
+    setSlotDataLayer(GTMHelper.getDataSlot(window?.dataLayer, GTMHelper.SCREEN_NAME_ADS.ARENA_DETAIL, screenDownSP))
+  }, [screenDownSP])
+
   return (
     <>
-      <Box className={classes.backContainer}>
-        <IconButton onClick={onHandleBack} className={classes.iconButtonBg2}>
-          <Icon className="fa fa-arrow-left" fontSize="small" />
-        </IconButton>
-        <div style={{ overflow: 'hidden' }}>
-          {!isMobile && (
-            <Typography variant="h2" className={classes.wrapOne}>
-              {title}
-            </Typography>
+      <div id={'ad_arena_detail_top'} className={'google_ad_patten_1'} style={{ marginTop: 60 }} />
+      {/* GADS: detail arena/**** */}
+      <GoogleAd id={{ idPatten1: 'ad_arena_d' }} styleContainer={{ marginTop: 60 }} idTag={'ad_arena_d'} slot={slotDataLayer} />
+      <Box>
+        <Box className={classes.backContainer}>
+          <IconButton onClick={onHandleBack} className={classes.iconButtonBg2}>
+            <Icon className="fa fa-arrow-left" fontSize="small" />
+          </IconButton>
+          <div style={{ overflow: 'hidden' }}>
+            {!isMobile && (
+              <Typography variant="h2" className={classes.wrapOne}>
+                {title}
+              </Typography>
+            )}
+          </div>
+        </Box>
+        <Box
+          style={{
+            background: `url(${cover})`,
+            paddingTop: '30.21756647864625%',
+            backgroundSize: 'cover',
+            backgroundRepeat: 'no-repeat',
+            backgroundPosition: 'center center',
+          }}
+          className={classes.coverWrapper}
+        ></Box>
+        <div className={classes.root}>
+          {showTab && (
+            <Tabs
+              value={tab}
+              // eslint-disable-next-line @typescript-eslint/no-empty-function
+              onChange={() => {}}
+              classes={{ indicator: classes.tabIndicator, flexContainer: classes.flexContainer, fixed: classes.tabsFixed }}
+            >
+              <Tab label={t('common:arena.status.ready')} icon={<Icon className="fa fa-desktop" />} classes={{ root: classes.tabRoot }} />
+              <Tab
+                label={t('common:arena.status.recruiting')}
+                icon={<Icon className="fa fa-door-open" />}
+                classes={{ root: classes.tabRoot }}
+              />
+              <Tab
+                label={t('common:arena.status.recruitment_closed')}
+                icon={<Icon className="fa fa-hourglass-start" />}
+                classes={{ root: classes.tabRoot }}
+              />
+              <Tab
+                label={t('common:arena.status.in_progress')}
+                icon={<Icon className="fa fa-headset" />}
+                classes={{ root: classes.tabRoot }}
+              />
+              <Tab
+                label={t('common:arena.status.completed')}
+                icon={<Icon className="fa fa-trophy" />}
+                classes={{ root: classes.tabRoot }}
+              />
+              <Tab style={{ display: 'none' }} />
+            </Tabs>
           )}
+          <Box>{children}</Box>
         </div>
       </Box>
-      <Box
-        style={{
-          background: `url(${cover})`,
-          paddingTop: '30.21756647864625%',
-          backgroundSize: 'cover',
-          backgroundRepeat: 'no-repeat',
-          backgroundPosition: 'center center',
-        }}
-        className={classes.coverWrapper}
-      ></Box>
-      <div className={classes.root}>
-        {showTab && (
-          <Tabs
-            value={tab}
-            // eslint-disable-next-line @typescript-eslint/no-empty-function
-            onChange={() => {}}
-            classes={{ indicator: classes.tabIndicator, flexContainer: classes.flexContainer, fixed: classes.tabsFixed }}
-          >
-            <Tab label={t('common:arena.status.ready')} icon={<Icon className="fa fa-desktop" />} classes={{ root: classes.tabRoot }} />
-            <Tab
-              label={t('common:arena.status.recruiting')}
-              icon={<Icon className="fa fa-door-open" />}
-              classes={{ root: classes.tabRoot }}
-            />
-            <Tab
-              label={t('common:arena.status.recruitment_closed')}
-              icon={<Icon className="fa fa-hourglass-start" />}
-              classes={{ root: classes.tabRoot }}
-            />
-            <Tab
-              label={t('common:arena.status.in_progress')}
-              icon={<Icon className="fa fa-headset" />}
-              classes={{ root: classes.tabRoot }}
-            />
-            <Tab label={t('common:arena.status.completed')} icon={<Icon className="fa fa-trophy" />} classes={{ root: classes.tabRoot }} />
-            <Tab style={{ display: 'none' }} />
-          </Tabs>
-        )}
-        <Box>{children}</Box>
-      </div>
     </>
   )
 }

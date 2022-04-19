@@ -22,6 +22,8 @@ import Participants from '@containers/Lobby/Participants'
 import ConfirmParticipants from '../ConfirmParticipants'
 import { useConfirm } from '@components/Confirm'
 import { LOBBY_DIALOGS, LOBBY_STATUS } from '@constants/lobby.constants'
+// import GoogleAd from '@components/GoogleAd'
+// import { GTMHelper } from '@utils/helpers/SendGTM'
 
 const LobbyDetailBody: React.FC = () => {
   const [openList, setList] = useState<boolean>(false)
@@ -43,6 +45,9 @@ const LobbyDetailBody: React.FC = () => {
 
   const { toEdit } = useLobbyHelper(lobby)
   const router = useRouter()
+  // const theme = useTheme()
+  // const screenDownSP = useMediaQuery(theme.breakpoints.down(576))
+  // const [slotDataLayer, setSlotDataLayer] = useState('')
 
   const openChat = () => {
     const chatRoomId = _.get(lobby, 'attributes.chatroom_id', null)
@@ -75,6 +80,10 @@ const LobbyDetailBody: React.FC = () => {
   const onMemberConfirm = () => {
     setConfirmList(true)
   }
+  // useEffect(() => {
+  //   GTMHelper.getAdSlot()
+  //   setSlotDataLayer(GTMHelper.getDataSlot(window?.dataLayer, GTMHelper.SCREEN_NAME_ADS.LOBBY_DETAIL))
+  // }, [screenDownSP])
 
   const renderBody = () => {
     return (
@@ -90,6 +99,7 @@ const LobbyDetailBody: React.FC = () => {
           <MainActionButtons memberConfirm={onMemberConfirm} lobby={lobby} entry={onEntry} decline={onDecline} />
         </Box>
         <DetailInfo toEdit={toEdit} detail={lobby} extended />
+
         <Participants open={openList} data={lobby} handleClose={() => setList(false)} />
         {isConfirmable && <ConfirmParticipants open={openConfirmList} lobby={lobby} handleClose={() => setConfirmList(false)} />}
       </>

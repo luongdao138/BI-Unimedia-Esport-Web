@@ -13,6 +13,8 @@ import { Box, Grid } from '@material-ui/core'
 import _ from 'lodash'
 import { ESRoutes } from '@constants/route.constants'
 import { ROUTE_FROM } from '@constants/community.constants'
+// import GoogleAd from '@components/GoogleAd'
+// import { GTMHelper } from '@utils/helpers/SendGTM'
 
 const CommunityContainer: React.FC = () => {
   const router = useRouter()
@@ -23,6 +25,9 @@ const CommunityContainer: React.FC = () => {
   const [showTopicListAndSearchTab, setShowTopicListAndSearchTab] = useState<boolean>(true)
   const { handleBack, communityDetail, getCommunityDetail, topicList, meta } = useCommunityDetail()
   const { isAutomatic, isNotMember } = useCommunityHelper(communityDetail)
+  // const theme = useTheme()
+  // const screenDownSP = useMediaQuery(theme.breakpoints.down(576))
+  // const [slotDataLayer, setSlotDataLayer] = useState('')
 
   useEffect(() => {
     if (hash_key) {
@@ -51,6 +56,11 @@ const CommunityContainer: React.FC = () => {
   const goToHomeTopic = () => {
     router.push(ESRoutes.HOME)
   }
+
+  // useEffect(() => {
+  //   GTMHelper.getAdSlot()
+  //   setSlotDataLayer(GTMHelper.getDataSlot(window?.dataLayer, GTMHelper.SCREEN_NAME_ADS.COMMUNITY_DETAIL))
+  // }, [screenDownSP])
 
   const renderBody = () => {
     return (

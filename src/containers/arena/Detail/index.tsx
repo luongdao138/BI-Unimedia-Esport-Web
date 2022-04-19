@@ -1,4 +1,4 @@
-import { ReactNode } from 'react'
+import { ReactNode, useEffect, useState } from 'react'
 import useTournamentDetail, { useArenaClearResults } from '../hooks/useTournamentDetail'
 import TournamentDetailHeader from '@components/TournamentDetailHeader'
 import { TournamentStatus } from '@services/arena.service'
@@ -21,12 +21,18 @@ import BRStatusRecruiting from './Partials/BRStatusRecruiting'
 import BRStatusRecruitmentClosed from './Partials/BRStatusRecruitmentClosed'
 import BRStatusInProgress from './Partials/BRStatusInProgress'
 import BRStatusComplete from './Partials/BRStatusComplete'
+import GoogleAd from '@components/GoogleAd'
+import { GTMHelper } from '@utils/helpers/SendGTM'
+import { useMediaQuery, useTheme } from '@material-ui/core'
 
 const TournamentDetail: React.FC = () => {
   const { tournament, meta, userProfile, handleBack } = useTournamentDetail()
   useArenaClearResults(tournament)
   const { toEdit, isBattleRoyale } = useArenaHelper(tournament)
   const router = useRouter()
+  const [slotDataLayer, setSlotDataLayer] = useState('')
+  const theme = useTheme()
+  const screenDownSP = useMediaQuery(theme.breakpoints.down(576))
 
   const actionComponent: Record<TournamentStatus, ReactNode> = {
     in_progress: <InProgress tournament={tournament} userProfile={userProfile} />, //headset
@@ -47,33 +53,42 @@ const TournamentDetail: React.FC = () => {
     completed: <BRStatusComplete arena={tournament} />,
     cancelled: <Cancelled tournament={tournament} userProfile={userProfile} />,
   }
+  useEffect(() => {
+    GTMHelper.getAdSlot()
+    setSlotDataLayer(GTMHelper.getDataSlot(window?.dataLayer, GTMHelper.SCREEN_NAME_ADS.ARENA_DETAIL, screenDownSP))
+  }, [screenDownSP])
 
   return (
-    <div>
-      <ESLoader open={meta.pending} />
-      {tournament && meta.loaded && (
-        <>
-          <TournamentDetailHeader
-            title={tournament?.attributes?.title}
-            status={tournament?.attributes?.status || 'ready'}
-            cover={tournament?.attributes?.cover_image || '/images/default_card.png'}
-            onHandleBack={handleBack}
-          >
-            {isBattleRoyale ? brActionComponent[tournament.attributes.status] : actionComponent[tournament.attributes.status]}
-            {/* {actionComponent[tournament.attributes.status]} */}
-          </TournamentDetailHeader>
-          <DetailInfo toEdit={toEdit} detail={tournament} extended />
-          <ESModal open={router.query.modalName === 'participants'}>
-            <Participants detail={tournament} />
-          </ESModal>
-        </>
-      )}
-      <RegularModal open={router.asPath.endsWith('/edit')}>
-        <BlankLayout>
-          <UpsertForm />
-        </BlankLayout>
-      </RegularModal>
-    </div>
+    <>
+      <div>
+        <ESLoader open={meta.pending} />
+        {tournament && meta.loaded && (
+          <>
+            <TournamentDetailHeader
+              title={tournament?.attributes?.title}
+              status={tournament?.attributes?.status || 'ready'}
+              cover={tournament?.attributes?.cover_image || '/images/default_card.png'}
+              onHandleBack={handleBack}
+            >
+              {isBattleRoyale ? brActionComponent[tournament.attributes.status] : actionComponent[tournament.attributes.status]}
+              {/* {actionComponent[tournament.attributes.status]} */}
+            </TournamentDetailHeader>
+            <DetailInfo toEdit={toEdit} detail={tournament} extended />
+            <ESModal open={router.query.modalName === 'participants'}>
+              <Participants detail={tournament} />
+            </ESModal>
+          </>
+        )}
+        <RegularModal open={router.asPath.endsWith('/edit')}>
+          <BlankLayout>
+            <UpsertForm />
+          </BlankLayout>
+        </RegularModal>
+      </div>
+      <div id={'ad_arena_detail_bottom'} className="ad_arena_d google_ad_patten_3" />
+      {/* GADS: SP 3 detail arena/**** */}
+      <GoogleAd id={{ idPatten3: 'ad_arena_d_b' }} idTag={'ad_arena_d_b'} slot={slotDataLayer} />
+    </>
   )
 }
 
