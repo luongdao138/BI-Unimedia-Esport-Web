@@ -1,5 +1,5 @@
 import { MouseEventHandler, useEffect, useState } from 'react'
-import { Box, Typography, IconButton, Icon, Theme, TableRow, TableCell } from '@material-ui/core'
+import { Box, Typography, IconButton, Icon, Theme, TableRow, TableCell, useTheme } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
@@ -12,7 +12,8 @@ import useGiftManage from '@containers/StreamingGiftManagement/useGiftTarget'
 import ESLoader from '@components/Loader'
 import { TabState } from '../GiftManageTab'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
-// import useMediaQuery from '@material-ui/core/useMediaQuery'
+import useMediaQuery from '@material-ui/core/useMediaQuery'
+import PaginationMobile from '@containers/GiftReportContainer/DetailReport/PaginationMobile'
 
 // export interface ListGroupGiftProps {}
 
@@ -26,10 +27,8 @@ const ITEM_PER_PAGE = 10
 const ListGroupGift: React.FC<IProps> = ({ onChangeTab, handleSelectGroup, handleClose }) => {
   const { t } = useTranslation('common')
   const classes = useStyles()
-
-  // const theme = useTheme()
-  // const matchSm = useMediaQuery(theme.breakpoints.down('sm'))
-
+  const theme = useTheme()
+  const matches = useMediaQuery(theme.breakpoints.down('sm'))
   const { getGiftGroupList, giftGroupList, giftGroupTotal, giftGroupsMeta } = useGiftManage()
 
   const handleReturn = () => {
@@ -132,7 +131,11 @@ const ListGroupGift: React.FC<IProps> = ({ onChangeTab, handleSelectGroup, handl
               </Box>
             }
             <Box display="flex" justifyContent="center" mt={4} pb={2}>
-              <Pagination page={page} pageNumber={getTotalPage()} setPage={setPage} />
+              {matches ? (
+                <PaginationMobile page={page} pageNumber={getTotalPage()} setPage={setPage} />
+              ) : (
+                <Pagination page={page} pageNumber={getTotalPage()} setPage={setPage} />
+              )}
             </Box>
           </Box>
         </Box>
