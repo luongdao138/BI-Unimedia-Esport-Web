@@ -1,4 +1,4 @@
-import { Grid, Box, makeStyles, useMediaQuery, Theme, Typography } from '@material-ui/core'
+import { Grid, Box, makeStyles, useMediaQuery, Theme, Typography, useTheme } from '@material-ui/core'
 import { LobbyFilterOption } from '@services/lobby.service'
 import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
@@ -13,6 +13,8 @@ import { AutoSizer, WindowScroller, List, CellMeasurer, CellMeasurerCache } from
 import useReturnHref from '@utils/hooks/useReturnHref'
 import _ from 'lodash'
 import i18n from '@locales/i18n'
+import GoogleAd from '@components/GoogleAd'
+import { GTMHelper } from '@utils/helpers/SendGTM'
 
 const cache = new CellMeasurerCache({
   fixedWidth: true,
@@ -37,6 +39,10 @@ const LobbyHome: React.FC<LobbyHomeProps> = ({ filter }) => {
   const matchesXL = useMediaQuery((theme: Theme) => theme.breakpoints.up('xl'))
   const matchesLG = useMediaQuery((theme: Theme) => theme.breakpoints.up('lg'))
   const matchesSM = useMediaQuery((theme: Theme) => theme.breakpoints.up('sm'))
+
+  const theme = useTheme()
+  const screenDownSP = useMediaQuery(theme.breakpoints.down(576))
+  const [slotDataLayer, setSlotDataLayer] = useState('')
 
   useEffect(() => {
     if (listRef && listRef.current) listRef.current.recomputeRowHeights()
@@ -98,6 +104,8 @@ const LobbyHome: React.FC<LobbyHomeProps> = ({ filter }) => {
 
     for (let i = fromIndex; i < toIndex; i++) {
       const data = lobbies[i]
+      // eslint-disable-next-line no-console
+      // console.log('lobbies', lobbies)
 
       items.push(
         <Grid key={i} item sm={12} lg={4} xl={3} xs={12}>
@@ -116,11 +124,26 @@ const LobbyHome: React.FC<LobbyHomeProps> = ({ filter }) => {
       </CellMeasurer>
     )
   }
+  useEffect(() => {
+    GTMHelper.getAdSlot()
+    setSlotDataLayer(GTMHelper.getDataSlot(window?.dataLayer, GTMHelper.SCREEN_NAME_ADS.LOBBY, screenDownSP))
+  }, [screenDownSP])
 
   return (
     <>
+      <div
+        id={!screenDownSP ? 'ad_lobby_top' : 'ad_lobby_bottom'}
+        className={!screenDownSP ? 'google_ad_patten_1' : 'google_ad_patten_4'}
+      />
+      {/* GADS: home lobby 1-4*/}
+      <GoogleAd id={{ idPatten1: 'ad_lobby_t' }} idTag={'ad_lobby_t'} slot={slotDataLayer} />
+      {/* <GoogleAd
+        id={{ idPatten1: !screenDownSP && 'ad_lobby_t', idPatten4: screenDownSP && 'ad_lobby_b' }}
+        idTag={!screenDownSP ? 'ad_lobby_t' : 'ad_lobby_b'}
+        slot={slotDataLayer}
+      /> */}
       <Header onFilter={onFilter} toCreate={toCreate} filter={filter} />
-      <div className={classes.container}>
+      <div className={`${classes.container} position_bottom`}>
         <InfiniteScroll
           dataLength={lobbies.length}
           next={!meta.pending && loadMore}
