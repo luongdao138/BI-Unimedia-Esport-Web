@@ -1,4 +1,4 @@
-import { useState } from 'react'
+// import { useState } from 'react'
 import { makeStyles, Theme, Box } from '@material-ui/core'
 import { IconButton } from '@material-ui/core'
 import Icon from '@material-ui/core/Icon'
@@ -20,7 +20,7 @@ import LoginForm from './LoginForm'
 import LoginSocialError from './LoginSocialError'
 import LoginError from './LoginError'
 import { URI } from '@constants/uri.constants'
-import LoginAgreementBox from './LoginAgreementBox'
+// import LoginAgreementBox from './LoginAgreementBox'
 
 const LoginContainer: React.FC = () => {
   const social = useSocialLogin('login')
@@ -29,7 +29,7 @@ const LoginContainer: React.FC = () => {
   const classes = useStyles()
 
   const { handleLink } = useReturnHref()
-  const [isAgreementChecked, setAgreementChecked] = useState(false)
+  // const [isAgreementChecked, setAgreementChecked] = useState(false)
 
   const { loginByEmail, meta, resetMeta, handleClick } = useLoginByEmail()
 
@@ -78,14 +78,14 @@ const LoginContainer: React.FC = () => {
           </Box>
 
           <Box pt={4} maxWidth={280} className={classes.buttonContainer}>
-            <Box pb={2}>
+            {/* <Box pb={2}>
               <LoginAgreementBox onAgreementChange={setAgreementChecked} />
-            </Box>
-            <ESButtonTwitter fullWidth disabled={!isAgreementChecked} twitterButtonType="login" redirectTo={social.redirectTo} />
-            <ESButtonGoogle onSuccess={handleSocialLogin} fullWidth disabled={!isAgreementChecked} />
-            <ESButtonLine fullWidth disabled={!isAgreementChecked} lineButtonType="login" redirectTo={social.redirectTo} />
-            <ESButtonFacebook onSuccess={handleSocialLogin} fullWidth disabled={!isAgreementChecked} />
-            <ESButtonApple onSuccess={handleSocialLogin} fullWidth disabled={!isAgreementChecked} />
+            </Box> */}
+            <ESButtonTwitter fullWidth twitterButtonType="login" redirectTo={social.redirectTo} />
+            <ESButtonGoogle onSuccess={handleSocialLogin} fullWidth />
+            <ESButtonLine fullWidth lineButtonType="login" redirectTo={social.redirectTo} />
+            <ESButtonFacebook onSuccess={handleSocialLogin} fullWidth />
+            <ESButtonApple onSuccess={handleSocialLogin} fullWidth />
           </Box>
           <Box pb={4} pt={4} className={classes.linkContainer}>
             <a href={URI.ZENDESK_SUPPORT} target="_blank" rel="noopener noreferrer">
