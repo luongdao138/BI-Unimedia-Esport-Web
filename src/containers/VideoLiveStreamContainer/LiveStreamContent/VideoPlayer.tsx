@@ -137,7 +137,6 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   const isSafari = CommonHelper.checkIsSafariBrowser()
   const [isFull, setIsFull] = useState<boolean>(false)
   const classes = useStyles({ checkStatusVideo: videoType, isFull })
-  const isPC = !isMobile || !androidPl || !iPhonePl
 
   const {
     requestPIP,
@@ -360,7 +359,6 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       hls.attachMedia(video)
       hls.on(Hls.Events.MEDIA_ATTACHED, handleMedia)
     }
-    console.log('======xxxxxxxx=====>>>>>', isPC)
     return () => {
       if (hls && src) {
         hls.detachMedia()
@@ -824,7 +822,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       {/* {(!isMobile && !androidPl && !iPhonePl)  && ( */}
       <div
         ref={playerContainerRef}
-        className={`${isPC ? classes.playerContainerPC : classes.playerContainer} ${
+        className={`${isMobile || iPhonePl || androidPl ? classes.playerContainer : classes.playerContainerPC} ${
           isFull === true ? classes.forceFullscreenIosSafariPlayer : ''
         }`}
       >
@@ -867,7 +865,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
         {isLoadedMetaData && (
           <div
             className={`${classes.processControl} ${isOpenSettingPanel && classes.showControl}`}
-            style={!isPC ? { display: isHoveredVideo ? 'block' : 'none', opacity: 1 } : {}}
+            style={isMobile || iPhonePl || androidPl ? { display: isHoveredVideo ? 'block' : 'none', opacity: 1 } : {}}
           >
             {videoType !== STATUS_VIDEO.LIVE_STREAM && (
               <SeekBar
