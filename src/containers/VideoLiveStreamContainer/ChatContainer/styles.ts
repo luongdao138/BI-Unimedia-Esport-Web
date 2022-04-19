@@ -271,7 +271,7 @@ const useStyles = makeStyles((theme) => ({
   },
   blurInputChat: {
     background: 'rgb(0 0 0 / 80%)',
-    backdropFilter: 'blur(8px)',
+    backdropFilter: 'blur(4px)',
     height: '100%',
     width: '100%',
     position: 'absolute',
