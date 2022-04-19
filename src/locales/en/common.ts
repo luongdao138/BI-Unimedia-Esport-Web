@@ -1989,7 +1989,7 @@ export default {
   },
   archive_detail_screen: {
     title: 'アーカイブ詳細',
-    label_input_url: '配信 URL',
+    label_input_url: '視聴 URL',
     placeholder_input_title: '配信後なのでなにかしらタイトルが入っています',
     placeholder_input_description: '配信後なのでなにかしら概要が入っています',
     please_select: '選択済み',
