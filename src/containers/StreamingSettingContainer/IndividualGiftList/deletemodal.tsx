@@ -61,6 +61,9 @@ const useStyles = makeStyles((theme) => ({
     textAlign: 'center',
     paddingBottom: 51,
     fontSize: 24,
+    [theme.breakpoints.up(320)]: {
+      minWidth: '265px',
+    },
     fontWeight: 'bold',
   },
   name: {
@@ -84,6 +87,9 @@ const useStyles = makeStyles((theme) => ({
       flexDirection: 'column',
       alignItems: 'center',
     },
+    [theme.breakpoints.down(375)]: {
+      marginLeft: '11px',
+    },
   },
   actionBtnClose: {
     width: 220,
@@ -104,6 +110,9 @@ const useStyles = makeStyles((theme) => ({
   wrap_message: {
     fontSize: '14px',
     color: Colors.white_opacity[70],
+    [theme.breakpoints.down(375)]: {
+      marginLeft: '11px',
+    },
   },
   note_purchase_point: {
     fontSize: '10px',
