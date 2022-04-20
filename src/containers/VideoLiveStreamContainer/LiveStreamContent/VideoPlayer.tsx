@@ -1091,6 +1091,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     position: 'fixed',
     background: 'black',
     zIndex: 2,
+    width: '100%',
   },
   [theme.breakpoints.down('xs')]: {
     fontSizeLarge: {
