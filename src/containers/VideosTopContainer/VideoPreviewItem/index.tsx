@@ -33,7 +33,10 @@ const VideoPreviewItem: React.FC<VideoPreviewItemProps> = ({ data, containerStyl
         pathname: ESRoutes.TOP,
         query: { vid: vid },
       },
-      `${ESRoutes.TOP}?vid=${vid}`
+      `${ESRoutes.TOP}?vid=${vid}`,
+      {
+        shallow: true,
+      }
     )
     // eslint-disable-next-line no-console
     console.log('onNavigateLive')
