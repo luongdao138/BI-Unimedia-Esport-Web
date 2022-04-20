@@ -388,7 +388,7 @@ const useStyles = makeStyles((theme) => ({
       // minWidth: 'unset',
     },
   },
-  [theme.breakpoints.down(321)]: {
+  [theme.breakpoints.down(320)]: {
     tabs: {
       display: 'flex',
       width: '100%',
