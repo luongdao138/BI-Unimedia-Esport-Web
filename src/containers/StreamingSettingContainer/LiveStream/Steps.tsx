@@ -342,7 +342,7 @@ const Steps: React.FC<StepsProps> = ({
         }
       )
     }, 700),
-    []
+    [titlePost, contentPost]
   )
 
   const getBoxPositionOnWindowCenter = function (width, height) {
