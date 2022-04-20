@@ -197,6 +197,8 @@ const VideoDetail: React.FC = () => {
     if (refChatContainer && refChatContainer.current) {
       refChatContainer.current.resetStates()
     }
+    // eslint-disable-next-line no-console
+    console.log('backToTopVideo::direct::3')
     router.replace(
       {
         pathname: ESRoutes.TOP,

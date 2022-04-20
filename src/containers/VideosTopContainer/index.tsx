@@ -69,6 +69,10 @@ const VideosTop: React.FC = () => {
 
   const handleFocusTab = (_, tab) => {
     if (tab === TabsVideo.FAVORITE_VIDEOS) {
+      // eslint-disable-next-line no-console
+      console.log('backToTopVideo::direct::3')
+      // eslint-disable-next-line no-console
+      console.log('isAuthenticated', isAuthenticated)
       isAuthenticated
         ? _router.replace({ pathname: ESRoutes.VIDEO_TOP, query: { default_tab: tab } }, ESRoutes.VIDEO_TOP)
         : router.push(makeContextualHref({ pathName: ESRoutes.LOGIN, favoriteTabClick: true }), ESRoutes.LOGIN, {
