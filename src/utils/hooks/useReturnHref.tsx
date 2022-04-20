@@ -27,6 +27,12 @@ const useReturnHref = () => {
     return router.query._UCR_return_href ? makeContextualHref({ pathName: pathName }) : pathName
   }
   const handleLogin = () => {
+    // eslint-disable-next-line no-console
+    console.log('backToTopVideo::handleLogin')
+    // eslint-disable-next-line no-console
+    console.log('backToTopVideo::returnHref', returnHref)
+    // eslint-disable-next-line no-console
+    console.log('router.query', router.query)
     if (previousRoute === ESRoutes.TOP) {
       router.push(ESRoutes.HOME)
     } else if (previousRoute === ESRoutes.VIDEO_TOP) {
@@ -34,14 +40,16 @@ const useReturnHref = () => {
       const { favoriteTabClick } = router.query
       // eslint-disable-next-line no-console
       console.log('backToTopVideo::direct::4')
-      router.push(
-        {
-          pathname: returnHref,
-          search: favoriteTabClick ? '?default_tab=4' : '',
-        },
-        ESRoutes.VIDEO_TOP,
-        { shallow: true }
-      )
+      if (favoriteTabClick) {
+        router.push(
+          {
+            pathname: returnHref,
+            search: favoriteTabClick ? '?default_tab=4' : '',
+          },
+          ESRoutes.VIDEO_TOP,
+          { shallow: true }
+        )
+      }
     } else if (!isRegistered) {
       router.push(ESRoutes.REGISTER_PROFILE)
     } else {
