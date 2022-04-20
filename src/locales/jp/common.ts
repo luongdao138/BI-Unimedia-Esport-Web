@@ -1928,7 +1928,7 @@ export default {
       input_maximum: '文字数は50文字までです。',
       url_incorrect: '正しいURLを入力してください。',
     },
-    delete_dialog_title: 'チップ対象リストを削除します',
+    delete_dialog_title: 'チップ対象リストを削除',
     delete_dialog_deleted_name: 'リスト名',
     delete_dialog_warning_1: '削除したチップ対象リストを復元させることはできません。\n。',
     delete_dialog_warning_2: '削除してよろしいですか？',
