@@ -6,9 +6,10 @@ import { useState } from 'react'
 import { SUB_TABS, VIDEO_INFO_TABS, VIDEO_TABS } from '@constants/common.constants'
 
 import i18n from '@locales/i18n'
-import useDetailVideo from '../useDetailVideo'
+// import useDetailVideo from '../useDetailVideo'
 import TabsGroup from '@components/TabsGroup'
 import { useCheckDisplayChat } from '@utils/hooks/useCheckDisplayChat'
+import { useVideoTabContext } from '../VideoContext/VideTabContext'
 const DEFAULT_SELECT_TAB = -1
 
 export const videoTabs = [
@@ -54,10 +55,11 @@ export type TabSelectProps = {
 }
 
 const TabSelectContainer: React.FC<TabSelectProps> = ({ sideChatContainer, infoTabsContent, renderVideoSubInfo, isLandscape }) => {
-  const { liveStreamInfo, setActiveTab, setActiveSubTab } = useDetailVideo()
+  // const { liveStreamInfo } = useDetailVideo()
+  const { setActiveSubTab, setActiveTab, activeSubTab, activeTab } = useVideoTabContext()
   const { isEnabledMessFilter, isDisplayedRankingTab, isDisplayedRankingReceipt } = useCheckDisplayChat()
 
-  const { activeTab, activeSubTab } = liveStreamInfo
+  // const { activeTab, activeSubTab } = liveStreamInfo
   // const { t } = useTranslation('common')
   const classes = useStyles({ isLandscape })
   // const [activeTab, setActiveTab] = useState(VIDEO_TABS.CHAT)

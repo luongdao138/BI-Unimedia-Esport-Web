@@ -12,7 +12,7 @@ import {
   ReportReason,
 } from '@services/videoTop.services'
 import * as actions from '../actions'
-import { VIDEO_NORMAL_VIEW_MODE, SUB_TABS, VIDEO_TABS } from '@constants/common.constants'
+import { VIDEO_NORMAL_VIEW_MODE } from '@constants/common.constants'
 
 const defaultChatState = {
   seek_count: 0,
@@ -53,8 +53,8 @@ type StateType = {
   is_streaming_end?: boolean
   video_view_mode?: string
   is_normal_view_mode?: boolean
-  activeTab?: number
-  activeSubTab?: number
+  // activeTab?: number
+  // activeSubTab?: number
   isHoveredVideo?: boolean
   videoEl?: VideoRefType
   videoGiftMaster?: VideoGiftMasterData
@@ -113,8 +113,8 @@ const initialState: StateType = {
   is_streaming_end: false,
   video_view_mode: VIDEO_NORMAL_VIEW_MODE,
   is_normal_view_mode: true,
-  activeTab: VIDEO_TABS.CHAT,
-  activeSubTab: SUB_TABS.MESS.ALL,
+  // activeTab: VIDEO_TABS.CHAT,
+  // activeSubTab: SUB_TABS.MESS.ALL,
   isHoveredVideo: false,
   videoEl: {
     videoQuery: null,
@@ -248,12 +248,12 @@ export default createReducer(initialState, (builder) => {
     state.is_normal_view_mode = action.payload.is_normal_view_mode
   })
 
-  builder.addCase(actions.setActiveTab, (state, action) => {
-    state.activeTab = action.payload.activeTab
-  })
-  builder.addCase(actions.setActiveSubTab, (state, action) => {
-    state.activeSubTab = action.payload.activeSubTab
-  })
+  // builder.addCase(actions.setActiveTab, (state, action) => {
+  //   state.activeTab = action.payload.activeTab
+  // })
+  // builder.addCase(actions.setActiveSubTab, (state, action) => {
+  //   state.activeSubTab = action.payload.activeSubTab
+  // })
   builder.addCase(actions.changeIsHoveredVideoStatus, (state, action) => {
     state.isHoveredVideo = action.payload.isHoveredVideo
   })

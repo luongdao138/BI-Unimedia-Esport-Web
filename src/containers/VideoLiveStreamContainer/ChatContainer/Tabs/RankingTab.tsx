@@ -7,7 +7,7 @@ import RankingItemSelf from '@containers/VideoLiveStreamContainer/Rankings/Ranki
 import useDetailVideo from '@containers/VideoLiveStreamContainer/useDetailVideo'
 import { Box, makeStyles, Typography, useMediaQuery, useTheme } from '@material-ui/core'
 import { useCheckDisplayChat } from '@utils/hooks/useCheckDisplayChat'
-import { useContext, useEffect } from 'react'
+import { memo, useContext, useEffect } from 'react'
 import Loader from '@components/Loader'
 
 import { useAppSelector } from '@store/hooks'
@@ -20,7 +20,7 @@ import userProfileStore from '@store/userProfile'
 import { UserProfile } from '@services/user.service'
 import { useRotateScreen } from '@utils/hooks/useRotateScreen'
 
-type RankingTabProps = { type?: string }
+type RankingTabProps = { type?: string; activeSubTab: number; setActiveSubTab: React.Dispatch<React.SetStateAction<number>> }
 
 export enum RECEIPT_SEND_TABS {
   RECEIPT = 0,
@@ -33,10 +33,9 @@ export enum ROLE_USER {
 
 const LIMIT_RANK = 10
 
-const RankingTab: React.FC<RankingTabProps> = () => {
+const RankingTab: React.FC<RankingTabProps> = ({ activeSubTab, setActiveSubTab }) => {
   const { isEnabledRankFilter } = useCheckDisplayChat()
-  const { liveStreamInfo, setActiveSubTab, rankingListMeta } = useDetailVideo()
-  const { activeSubTab } = liveStreamInfo
+  const { rankingListMeta } = useDetailVideo()
   const { giverRankInfo, receiverRankInfo } = useContext(VideoContext)
   const { isDisplayedRankingReceipt } = useCheckDisplayChat()
 
@@ -60,13 +59,6 @@ const RankingTab: React.FC<RankingTabProps> = () => {
     const newValue = isDisplayedRankingReceipt ? SUB_TABS.RANKING.RECEIPT : SUB_TABS.RANKING.SEND
     setActiveSubTab(newValue)
   }, [])
-
-  // useEffect(() => {
-  //   if (videoId) {
-  //     console.log('🚀 ~ useEffect ~ videoId', videoId)
-  //     // fetchDonateRanking({ video_id: videoId })
-  //   }
-  // }, [videoId])
 
   const giver: Array<RankingsItem> = _.slice(giverRankInfo, 0, LIMIT_RANK)
   const isUserInTopRank = _.findIndex(giver, (v) => v?.uuid === user_uuid) !== -1
@@ -216,4 +208,4 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-export default RankingTab
+export default memo(RankingTab)

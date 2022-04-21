@@ -59,8 +59,8 @@ const useDetailVideo = () => {
   const resetState = () => dispatch(actions.resetState())
   const resetChatState = () => dispatch(actions.resetChatState())
   const changeVideoViewMode = (is_normal_view_mode) => dispatch(actions.changeVideoViewMode({ is_normal_view_mode }))
-  const setActiveTab = (activeTab) => dispatch(actions.setActiveTab({ activeTab }))
-  const setActiveSubTab = (activeSubTab) => dispatch(actions.setActiveSubTab({ activeSubTab }))
+  // const setActiveTab = (activeTab) => dispatch(actions.setActiveTab({ activeTab }))
+  // const setActiveSubTab = (activeSubTab) => dispatch(actions.setActiveSubTab({ activeSubTab }))
   const changeIsHoveredVideoStatus = (isHoveredVideo) => dispatch(actions.changeIsHoveredVideoStatus({ isHoveredVideo }))
   const getVideoGiftMasterList = async (params, successCallback = () => null, errorCallback = () => null) => {
     const resultAction = await dispatch(actions.getVideoGiftMaster(params))
@@ -120,8 +120,8 @@ const useDetailVideo = () => {
     changeIsStreamingEnd,
     resetState,
     changeVideoViewMode,
-    setActiveTab,
-    setActiveSubTab,
+    // setActiveTab,
+    // setActiveSubTab,
     resetChatState,
     changeIsHoveredVideoStatus,
     onSaveVideoRef,

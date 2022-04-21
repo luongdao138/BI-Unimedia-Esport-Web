@@ -26,7 +26,7 @@ const { onCreateMessage, onUpdateMessage } = require(`src/graphql.${process.env.
 const { createMessage, createUser, updateMessage, updateUser } = require(`src/graphql.${process.env.NEXT_PUBLIC_AWS_ENV}/mutations`)
 import useDetailVideo from '../useDetailVideo'
 import usePurchaseTicketSuperChat from '../usePurchaseTicket'
-import ChatTextMessage from '@containers/VideoLiveStreamContainer/ChatContainer/ChatTextMessage'
+// import ChatTextMessage from '@containers/VideoLiveStreamContainer/ChatContainer/ChatTextMessage'
 // import PremiumChatDialog from '@containers/VideoLiveStreamContainer/ChatContainer/PremiumChatDialog'
 // import * as Yup from 'yup'
 // import { useFormik } from 'formik'
@@ -58,14 +58,10 @@ const APIt: any = useGraphqlAPI()
 // import { DELAY_SECONDS } from '@constants/common.constants'
 // import InfiniteScroll from 'react-infinite-scroll-component'
 // import { WindowScroller, List, AutoSizer } from 'react-virtualized'
-import { List, CellMeasurer, AutoSizer, CellMeasurerCache } from 'react-virtualized'
+// import { CellMeasurer } from 'react-virtualized'
 // import InfiniteLoaderExample from './source/InfiniteLoader/InfiniteLoader.example'
-import Loader from '@components/Loader'
-import { useRect } from '@utils/hooks/useRect'
 import ChatInputContainer from './ChatInputContainer'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
-import ESTabs from '@components/Tabs'
-import ESTab from '@components/Tab'
 import TabsGroup from '@components/TabsGroup'
 // import ChatTab from './Tabs/ChatTab'
 import RankingTab from './Tabs/RankingTab'
@@ -78,6 +74,11 @@ export type ChatStyleProps = {
 }
 import { useCheckDisplayChat } from '@utils/hooks/useCheckDisplayChat'
 import { VideoContext } from '../VideoContext'
+import TabsContainer from './components/TabsContainer'
+import ChatLoader from './components/ChatLoader'
+import { useVideoTabContext } from '../VideoContext/VideTabContext'
+import ChatMessages from './components/ChatMessages'
+import { useRect } from '@utils/useRect'
 
 export type ChatContainerProps = {
   onPressDonate?: (donatedPoint: number, purchaseComment: string, master_id?: string) => void
@@ -201,13 +202,7 @@ export const sanitizeMess = (content: string): string =>
     allowedTags: [],
     allowedAttributes: {},
   })
-
-const cache = new CellMeasurerCache({
-  fixedWidth: true,
-  defaultHeight: 25,
-})
-
-const contentRef = React.createRef<HTMLDivElement>()
+// const contentRef = React.createRef<HTMLDivElement>()
 
 const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
   (
@@ -295,22 +290,8 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     // console.log('🚀 ~ isTokenBroken', isTokenBroken)
     const [videoTimeIsRewinding, setVideoTimeIsRewinding] = useState(0)
 
-    const [tempActiveTab, setTempActiveTab] = useState<number>(VIDEO_TABS.CHAT)
-    const timeoutRef = useRef<NodeJS.Timeout>(null)
-    // console.log('🚀 ~ videoTimeIsRewinding', videoTimeIsRewinding)
-
-    // const getChatData = () =>
-    //   Array(30)
-    //     .fill('')
-    //     .map((_, i) => ({
-    //       id: i,
-    //       user: 'Account Name',
-    //       content: 'チャットのコメントははここに表示されます。チャッßトのコメントははここに表示されます。',
-    //     }))ß
-
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    //@ts-ignore
-    // const [chartDataFake, setChartDataFake] = useState(getChatData())
+    const isSwitchingTabRef = useRef(false)
+    const { activeSubTab, activeTab, setActiveTab, setActiveSubTab } = useVideoTabContext()
 
     const { selectors } = userProfileStore
 
@@ -330,7 +311,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     const [isChatInBottom, setIsChatInBottom] = useState(false)
     const [isSeeking, setIsSeeking] = useState(false)
 
-    const contentRect = useRect(contentRef)
+    // const contentRect = useRect(contentRef)
 
     // const { width: pageWidth } = useWindowDimensions(0)
     // const isDesktopDown1280 = pageWidth > 768 && pageWidth <= 1280
@@ -339,8 +320,6 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       streamingSecond,
       liveStreamInfo,
       resetChatState,
-      setActiveTab,
-      setActiveSubTab,
       playedSecond,
       detailVideoResult,
       getVideoGiftMasterList,
@@ -351,7 +330,6 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       isFullScreen,
     } = useDetailVideo()
     const { isEnabledGift, isEnabledMessFilter, isDisplayedRankingTab } = useCheckDisplayChat()
-    const { activeTab, activeSubTab } = liveStreamInfo
 
     const isTipTab = activeSubTab === SUB_TABS.MESS.TIP
 
@@ -375,6 +353,8 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     const classes = useStyles({ isLandscape })
     console.log({ chatInputHeight })
 
+    console.log('------------------- Chat component rerender ----------------------')
+
     const resetStates = () => {
       setStateMessages([])
     }
@@ -384,9 +364,9 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         resetStates: resetStates,
       }
     })
-    useEffect(() => {
-      cache.clearAll()
-    }, [contentRect?.width])
+    // useEffect(() => {
+    //   cache.clearAll()
+    // }, [contentRect?.width])
 
     const debouncedHandleLoadMore = useCallback(
       debounce(() => {
@@ -426,16 +406,6 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         handleLoadMore()
       }
     }, [scrolling])
-
-    useEffect(() => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current)
-      }
-
-      timeoutRef.current = setTimeout(() => {
-        setActiveTab(tempActiveTab)
-      }, 350)
-    }, [tempActiveTab])
 
     const refTransformMessTip = useRef(null)
     const handleTransformMessTip = () => {
@@ -501,6 +471,9 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
 
     const refFetchPrevMessWhenRewind = useRef(null)
     const handleFetchPrevMessWhenRewind = (messagesInfo, video_time) => {
+      if (isSwitchingTabRef.current) {
+        return
+      }
       const transformMessAsc = sortMessages(messagesInfo.items)
       setPrevRewindMess({ [video_time]: [...transformMessAsc] })
 
@@ -509,12 +482,18 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       // console.log('🚀 ~ handleFetchPrevMessWhenRewind ~ messagesInfo', messagesInfo)
       // prevent scroll when has no messages
       if (!messagesInfo.nextToken) setIsTokenBroken(false)
-      fetchNextMess(GET_MESS_TYPE.FETCH_NEXT, video_time)
+
+      if (!isSwitchingTabRef.current) {
+        fetchNextMess(GET_MESS_TYPE.FETCH_NEXT, video_time)
+      }
     }
     refFetchPrevMessWhenRewind.current = handleFetchPrevMessWhenRewind
 
     // fetch messages prev when rewind to video time
     const fetchPrevMessWhenRewind = (video_time, sortOrder = APIt.ModelSortDirection.DESC) => {
+      if (isSwitchingTabRef.current) {
+        return
+      }
       try {
         setIsGettingPrevRewindMess(true)
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -528,6 +507,9 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
           nextToken: null,
         }
         API.graphql(graphqlOperation(getMessagesByVideoIdWithSort, listQV)).then((messagesResults) => {
+          if (isSwitchingTabRef.current) {
+            return
+          }
           const messagesInfo = messagesResults.data.getMessagesByVideoIdWithSort
           refFetchPrevMessWhenRewind.current(messagesInfo, video_time)
           setIsGettingPrevRewindMess(false)
@@ -838,6 +820,9 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       sortOrder = APIt.ModelSortDirection.ASC,
       nextToken = null
     ) => {
+      if (isSwitchingTabRef.current) {
+        return
+      }
       try {
         let limitMess = LIMIT_MESS
         // console.log('🚀 ~ loadMoreMess ~ fetchNextMess--0000', getType)
@@ -891,7 +876,13 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         //   }
         // }
         // console.log('🚀 ~ abc ~ 222')
+        if (isSwitchingTabRef.current) {
+          return
+        }
         API.graphql(graphqlOperation(getMessagesByVideoIdWithSort, listQV)).then((messagesResults) => {
+          if (isSwitchingTabRef.current) {
+            return
+          }
           const messagesInfo = messagesResults.data.getMessagesByVideoIdWithSort
           // && !_.isEmpty(messagesInfo.items)
           if (getType === GET_MESS_TYPE.FETCH_NEXT) {
@@ -959,18 +950,6 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     // })()
     const isStreaming = videoType === STATUS_VIDEO.LIVE_STREAM
     // const isStreaming = true
-
-    const renderLoader = () => {
-      // loading when get mess, or rewind video, or get all tip mess
-      if (isGettingMess === true || isGettingPrevRewindMess === true || isGettingTipMess === true) {
-        return (
-          <Box className={classes.loaderBox}>
-            <Loader />
-          </Box>
-        )
-      }
-      return null
-    }
 
     const messContainer = document.getElementById('list_mess')
     // const messContainer = document.getElementById('messList')
@@ -1747,7 +1726,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     }
     refUpdateMessBeforeCallApi.current = handleUpdateMessBeforeCallApi
 
-    async function deleteMsg(message: any) {
+    const deleteMsg = useCallback(async (message: any) => {
       const input = {
         id: message.id,
         delete_flag: true,
@@ -1765,9 +1744,9 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
           refUpdateMessLocal.current([], { ...message, delete_flag: true }, true)
         }
       }
-    }
+    }, [])
 
-    const reDeleteMess = async (message: any) => {
+    const reDeleteMess = useCallback(async (message: any) => {
       const input = {
         id: message.id,
         delete_flag: true,
@@ -1782,7 +1761,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       } catch (errors) {
         if (errors && errors.errors.length !== 0) refUpdateMessLocal.current([], newMess, true)
       }
-    }
+    }, [])
 
     const sortMessages = (messages, isSortAsc = true) => {
       const new_mess = [...messages]
@@ -1932,7 +1911,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     }
     refCreateMessLocal.current = handleCreateMessLocal
 
-    const resendMess = async (message: any) => {
+    const resendMess = useCallback(async (message: any) => {
       if (isStreaming) {
         const videoTime = videoPlayedSecond.current
         let newMess = { ...message, video_time: videoTime }
@@ -1949,7 +1928,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
           if (errors && errors.errors.length !== 0) refCreateMessLocal.current([], newMess, true)
         }
       }
-    }
+    }, [])
 
     const createMess = async (
       message: string,
@@ -2170,7 +2149,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     }
 
     const matchSm = useMediaQuery(theme.breakpoints.down(769))
-    const matchMd = useMediaQuery(theme.breakpoints.down(1025))
+    // const matchMd = useMediaQuery(theme.breakpoints.down(1025))
 
     const getMarginBottom = () => (matchSm && isLandscape ? 45 : 0)
 
@@ -2264,55 +2243,6 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     //   //   />
     //   // )
     // }
-
-    const rowRenderer = ({ index, key, style, parent }) => {
-      const msg = stateMessages[index]
-      return (
-        <CellMeasurer cache={cache} columnIndex={0} columnCount={1} key={key} parent={parent} rowIndex={index}>
-          {({ registerChild }) => (
-            <div key={key} style={style} ref={registerChild}>
-              {!msg.delete_flag || userResult.streamer ? (
-                msg.is_premium ? (
-                  <DonateMessage
-                    key={index}
-                    message={msg}
-                    videoType={videoType}
-                    deleteMess={deleteMsg}
-                    getMessageWithoutNgWords={getMessageWithoutNgWords}
-                    is_streamer={userResult?.streamer}
-                    resendMess={resendMess}
-                    reDeleteMess={reDeleteMess}
-                  />
-                ) : isTipTab ? null : (
-                  // no display normal mess on tab tip
-                  <ChatTextMessage
-                    key={index}
-                    message={msg}
-                    videoType={videoType}
-                    getMessageWithoutNgWords={getMessageWithoutNgWords}
-                    deleteMess={deleteMsg}
-                    is_streamer={userResult?.streamer}
-                    resendMess={resendMess}
-                    reDeleteMess={reDeleteMess}
-                  />
-                )
-              ) : null}
-              {/* <ChatTextMessage
-                key={index}
-                message={msg}
-                videoType={videoType}
-                getMessageWithoutNgWords={getMessageWithoutNgWords}
-                deleteMess={deleteMsg}
-                is_streamer={userResult?.streamer}
-                resendMess={resendMess}
-                reDeleteMess={reDeleteMess}
-              /> */}
-            </div>
-          )}
-        </CellMeasurer>
-      )
-    }
-
     const _scrollToBottom = (position: number) => {
       //https://github.com/bvaughn/react-virtualized/issues/995
       if (messagesEndRef.current != null && messagesEndRef) {
@@ -2324,68 +2254,46 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       }
     }
 
-    const _onScroll = (e) => {
-      const scrollPos = e.scrollTop + e.clientHeight
-      // console.log('🚀 ~ test--scrollTop', e.scrollTop)
-      // console.log('🚀 ~ test--clientHeight', e.clientHeight)
-      // console.log('🚀 ~ test--scrollHeight', e.scrollHeight)
-      // console.log('🚀 ~ test--333', isGettingRewindMess)
-      const height = e.scrollHeight
-      const offset = Math.abs(height - scrollPos)
-      // console.log('🚀 ~ checkMessIsInBottom ~ offset', offset)
-      const bottomThreshold = 150
-      // only fetch prev mess when no rewind
-      if (!isGettingRewindMess && e.scrollTop <= 0) {
-        // console.log('🚀 ~ checkMessIsInBottom ~ e.scrollTop <= 0', e.scrollTop <= 0)
-        // handle this later
-        setScrolling(scrolling + 1)
-      }
-      if (offset < bottomThreshold) {
-        // console.log('🚀 ~ useEffect ~ setBottom', 222)
-        setBottom(true)
-      } else if (offset > bottomThreshold) {
-        // console.log('🚀 ~ useEffect ~ setBottom', 333)
-        if (stateMessages.length) {
-          // console.log('🚀 ~ checkMessIsInBottom ~ stateMessages.length', stateMessages.length)
-          setBottom(false)
+    const _onScroll = useCallback(
+      (e) => {
+        const scrollPos = e.scrollTop + e.clientHeight
+        // console.log('🚀 ~ test--scrollTop', e.scrollTop)
+        // console.log('🚀 ~ test--clientHeight', e.clientHeight)
+        // console.log('🚀 ~ test--scrollHeight', e.scrollHeight)
+        // console.log('🚀 ~ test--333', isGettingRewindMess)
+        const height = e.scrollHeight
+        const offset = Math.abs(height - scrollPos)
+        // console.log('🚀 ~ checkMessIsInBottom ~ offset', offset)
+        const bottomThreshold = 150
+        // only fetch prev mess when no rewind
+        if (!isGettingRewindMess && e.scrollTop <= 0) {
+          // console.log('🚀 ~ checkMessIsInBottom ~ e.scrollTop <= 0', e.scrollTop <= 0)
+          // handle this later
+          setScrolling(scrolling + 1)
         }
-      }
-    }
-
-    // const testAbc = () => {
-    //   console.log('🚀 ~ testAbc ~ testAbc', 123)
-
-    //   cache.clearAll()
-    // }
-
-    useEffect(() => {
-      // console.log('🚀 ~ setTimeout ~ isBottom--2222', cache)
-      console.log('🚀 ~ setTimeout ~ isGettingMess--1111', isGettingMess)
-
-      setTimeout(() => {
-        // console.log('🚀 ~ setTimeout ~ isGettingMess--2222', isGettingMess)
-        if (isBottom && !isGettingMess) {
-          // if (isBottom) {
-          _scrollToBottom(stateMessages.length)
-          // console.log('🚀 ~ useEffect ~ setBottom', 4444)
+        if (offset < bottomThreshold) {
+          // console.log('🚀 ~ useEffect ~ setBottom', 222)
           setBottom(true)
+        } else if (offset > bottomThreshold) {
+          // console.log('🚀 ~ useEffect ~ setBottom', 333)
+          if (stateMessages.length) {
+            // console.log('🚀 ~ checkMessIsInBottom ~ stateMessages.length', stateMessages.length)
+            setBottom(false)
+          }
         }
-      }, 10)
-      cache.clearAll()
-      // console.log('🚀 ~ useEffect ~ cache---000', cache)
-    }, [stateMessages])
+      },
+      [isGettingRewindMess, stateMessages]
+    )
 
-    // const _isRowLoaded = ({ index }) => {
-    //   console.log('🚀 ~ Example ~ index', index)
-    //   console.log('🚀 ~ Example ~ allMess[index]', stateMessages[index])
-    //   return index >= 0 // STATUS_LOADING or STATUS_LOADED
-    // }
+    const handleScrollToBottom = useCallback(() => {
+      if (isBottom && !isGettingMess) {
+        // if (isBottom) {
+        _scrollToBottom(stateMessages.length)
+        // console.log('🚀 ~ useEffect ~ setBottom', 4444)
+        setBottom(true)
+      }
+    }, [isBottom, isGettingMess, stateMessages])
 
-    // const rowCount = stateMessages.length
-    // const cache = new CellMeasurerCache({
-    //   fixedWidth: true,
-    //   defaultHeight: 25,
-    // })
     const chatBoardComponent = () => (
       <Box
         id="chatContentMain"
@@ -2395,22 +2303,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
           marginBottom: getMarginBottom(),
         }}
       >
-        {/* <div onClick={() => debouncedHandleLoadMore()} style={{ flexGrow: 0 }}>
-          Load more
-        </div> */}
-        {renderLoader()}
-        {/* <ButtonBase
-          onClick={() => scrollToCurrentMess('smooth')}
-          className={`${classes.btn_show_more} ${displaySeeMore ? classes.displaySeeMore : ''}`}
-        >
-          {i18n.t('common:live_stream_screen.show_more_mess')}
-        </ButtonBase> */}
-        {/* <ButtonBase
-          onClick={() => testAbc()}
-          // className={`${classes.btn_show_more} ${displaySeeMore ? classes.displaySeeMore : ''}`}
-        >
-          dgsds
-        </ButtonBase> */}
+        <ChatLoader open={isGettingMess || isGettingPrevRewindMess || isGettingTipMess} />
         <IconButton
           disableRipple
           style={{
@@ -2450,138 +2343,19 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
             ></Box>
           </Box>
         </ClickAwayListener>
-        <div
-          className={classes.chatBoard}
-          id="chatBoard"
-          ref={contentRef}
-          // ref={(ref) => {
-          //   setScrollChatRef(ref)
-          // }}
-          style={{
-            marginBottom: (matchSm && !isLandscape) || (!matchSm && matchMd && isLandscape) ? chatInputHeight : 0,
-            // flexDirection: 'column-reverse',
-            // height: 600,
-            // marginTop: getMarginTopOfComponents('chatBoard'),
-            // height: isMobile ? '253px' : chatHeight,
-          }}
-        >
-          <AutoSizer
-            style={{ flex: 1 }}
-            onResize={() => {
-              cache.clearAll()
-            }}
-          >
-            {({ height, width }) => {
-              // console.log('🚀 ~ MessageList ~ height', height)
-              return (
-                <List
-                  ref={messagesEndRef}
-                  onScroll={(e) => _onScroll(e)}
-                  overscanRowsCount={10}
-                  deferredMeasurementCache={cache}
-                  rowHeight={cache.rowHeight}
-                  // rowHeight={25}
-                  rowRenderer={rowRenderer}
-                  rowCount={stateMessages.length}
-                  className={classes.listContainer}
-                  id="list_mess"
-                  // style={{
-                  //   outline: 0,
-                  //   marginRight: 10,
-                  // }}
-                  height={height}
-                  width={width}
-                />
-              )
-            }}
-          </AutoSizer>
-          {/* <InfiniteLoader thresold={1} isRowLoaded={_isRowLoaded} loadMoreRows={_loadMoreRows} rowCount={rowCount}>
-            {({ onRowsRendered, registerChild }) => (
-              <AutoSizer disableHeight>
-                {({ width }) => (
-                  <List
-                    id="messList"
-                    ref={registerChild}
-                    // className={classes.List}
-                    height={600}
-                    onRowsRendered={onRowsRendered}
-                    rowCount={rowCount}
-                    rowHeight={30}
-                    rowRenderer={_rowRenderer}
-                    width={width}
-                  />
-                )}
-              </AutoSizer>
-            )}
-          </InfiniteLoader> */}
-          {/* <InfiniteScroll
-            scrollableTarget={'chatBoard'}
-            dataLength={stateMessages.length}
-            next={loadMoreMess}
-            hasMore={true}
-            loader={<h4>...Loading</h4>}
-            scrollThreshold={'1px'}
-            inverse={true}
-            style={{ display: 'flex', flexDirection: 'column-reverse' }}
-          >
-            {stateMessages.map((msg: any, i: number) => {
-              // only display message is not deleted or display all mess if user is streamer
-              return !msg.delete_flag || userResult.streamer ? (
-                msg.is_premium ? (
-                  <DonateMessage
-                    key={i}
-                    message={msg}
-                    videoType={videoType}
-                    deleteMess={deleteMsg}
-                    getMessageWithoutNgWords={getMessageWithoutNgWords}
-                    is_streamer={userResult?.streamer}
-                    resendMess={resendMess}
-                    reDeleteMess={reDeleteMess}
-                  />
-                ) : (
-                  <ChatTextMessage
-                    key={i}
-                    message={msg}
-                    videoType={videoType}
-                    getMessageWithoutNgWords={getMessageWithoutNgWords}
-                    deleteMess={deleteMsg}
-                    is_streamer={userResult?.streamer}
-                    resendMess={resendMess}
-                    reDeleteMess={reDeleteMess}
-                  />
-                )
-              ) : null
-            })}
-          </InfiniteScroll> */}
-          {/* {stateMessages.slice(0, 10).map((msg: any, i: number) => {
-            // only display message is not deleted or display all mess if user is streamer
-            return !msg.delete_flag || userResult.streamer ? (
-              msg.is_premium ? (
-                <DonateMessage
-                  key={i}
-                  message={msg}
-                  videoType={videoType}
-                  deleteMess={deleteMsg}
-                  getMessageWithoutNgWords={getMessageWithoutNgWords}
-                  is_streamer={userResult?.streamer}
-                  resendMess={resendMess}
-                  reDeleteMess={reDeleteMess}
-                />
-              ) : (
-                <ChatTextMessage
-                  key={i}
-                  message={msg}
-                  videoType={videoType}
-                  getMessageWithoutNgWords={getMessageWithoutNgWords}
-                  deleteMess={deleteMsg}
-                  is_streamer={userResult?.streamer}
-                  resendMess={resendMess}
-                  reDeleteMess={reDeleteMess}
-                />
-              )
-            ) : null
-          })} */}
-        </div>
+        <ChatMessages
+          chatInputHeight={chatInputHeight}
+          messagesEndRef={messagesEndRef}
+          stateMessages={stateMessages}
+          _onScroll={_onScroll}
+          isStreamer={userResult.streamer}
+          isTipTab={isTipTab}
+          videoType={videoType}
+          deleteMsg={deleteMsg}
+          reDeleteMess={reDeleteMess}
+          resendMess={resendMess}
+          handleScrollToBottom={handleScrollToBottom}
+        />
         {/* {isMobile ? chatComponentMobile() : chatInputComponent()} */}
       </Box>
     )
@@ -2622,15 +2396,6 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         )
       )
     }
-
-    // const chatContentPaddingBottom = () => {
-    //   if (purchaseDialogVisible) {
-    //     return 325
-    //   } else if (!isEnabledChat) {
-    //     return 16
-    //   }
-    //   return 0
-    // }
 
     const chatContent = () => (
       <>
@@ -2692,31 +2457,6 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       // return true
     }
 
-    // const chatBoxPaddingBottom = () => {
-    //   if (!isEnabledChat || !isStreaming) {
-    //     return '0px'
-    //   }
-    //   return errorMess ? '133px' : '110.5px'
-    // }
-
-    // const chatHeight = (() => {
-    //   // 35 is chat header,
-    //   let newChatHeight = (chatWidth * 250) / 153 - 35
-    //   if (messagesDonate.filter((item) => !item.delete_flag).length !== 0) {
-    //     // 56 is height of message donate
-    //     newChatHeight = newChatHeight - (isDesktopDown1280 ? 34 : 56) - getMarginTopOfComponents('chatBoard')
-    //   } else {
-    //     // 16 is margin top of message donate when it is empty
-    //     newChatHeight = newChatHeight - getMarginTopOfComponents('userIcon')
-    //   }
-    //   // height of chat when display chat content
-    //   if (displayChatContent()) {
-    //     // 116.5 is input chat when video is streaming
-    //     newChatHeight = newChatHeight - (isDesktopDown1280 ? 77 : 116.5)
-    //   }
-    //   return Math.round((newChatHeight + Number.EPSILON) * 100) / 100
-    // })()
-
     const renderMessageTab = () => {
       return (
         <Box>
@@ -2759,56 +2499,24 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       return displayChatContent() ? chatContent() : userDoesNotHaveViewingTicketView()
     }
 
-    const renderTabs = useMemo(() => {
-      return (
-        <Box className={classes.tabsContainer}>
-          <ESTabs
-            value={tempActiveTab}
-            onChange={(_, v) => setTempActiveTab(v)}
-            className={classes.tabs}
-            scrollButtons="off"
-            variant="scrollable"
-          >
-            <ESTab className={classes.singleTab} label={i18n.t('common:live_stream_screen.chat_header')} value={VIDEO_TABS.CHAT} />
-            {isDisplayedRankingTab && (
-              <ESTab
-                className={classes.singleTab}
-                label={i18n.t('common:live_stream_screen.ranking_tab_title')}
-                value={VIDEO_TABS.RANKING}
-              />
-            )}
-          </ESTabs>
-        </Box>
-      )
-    }, [tempActiveTab, isDisplayedRankingTab])
+    const handleChangeTab = useCallback((v) => {
+      console.log('🚀 ~ handleChangeTab ~ v', v)
+
+      isSwitchingTabRef.current = v === VIDEO_TABS.RANKING ? true : false
+      setActiveTab(v)
+    }, [])
 
     return (
-      <Box
-        className={classes.chatArea}
-        style={
-          displayChatContent() && isMobile
-            ? {
-                // paddingBottom: chatBoxPaddingBottom(),
-              }
-            : {}
-        }
-      >
-        {renderTabs}
+      <Box className={classes.chatArea}>
+        <TabsContainer isSwitchingTabRef={isSwitchingTabRef} onChange={handleChangeTab} isDisplayedRankingTab={isDisplayedRankingTab} />
         {activeTab === VIDEO_TABS.CHAT && (
           <Box className={classes.tabsContent} style={{ display: isMobile && activeTab === VIDEO_TABS.CHAT ? 'none' : 'block' }}>
             {getTabsContent}
           </Box>
         )}
 
-        {activeTab === VIDEO_TABS.RANKING && <RankingTab />}
+        {activeTab === VIDEO_TABS.RANKING && <RankingTab activeSubTab={activeSubTab} setActiveSubTab={setActiveSubTab} />}
         {renderContent()}
-
-        {/* {!isMobile && (
-          <Box className={classes.chatHeader}>
-            <Typography className={classes.headerTitle}>{i18n.t('common:live_stream_screen.chat_header')}</Typography>
-          </Box>
-        )} */}
-        {/* {activeTab === VIDEO_TABS.CHAT ? renderContent() : ''} */}
       </Box>
     )
   }
