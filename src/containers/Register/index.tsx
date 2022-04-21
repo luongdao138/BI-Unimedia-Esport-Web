@@ -1,4 +1,4 @@
-import { useState } from 'react'
+// import { useState } from 'react'
 import { makeStyles, Theme, Typography, Box } from '@material-ui/core'
 import { IconButton } from '@material-ui/core'
 import Icon from '@material-ui/core/Icon'
@@ -16,14 +16,14 @@ import { ESRoutes } from '@constants/route.constants'
 import useReturnHref from '@utils/hooks/useReturnHref'
 import i18n from '@locales/i18n'
 import AuthenticationLayout from '@layouts/AuthenticationLayout'
-import RegisterAgreementBox from './RegisterAgreementBox'
+// import RegisterAgreementBox from './RegisterAgreementBox'
 
 const RegisterContainer: React.FC = () => {
   const social = useSocialLogin('register')
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const { handleLink, navigateScreen, handleReturn } = useReturnHref()
-  const [isAgreementChecked, setAgreementChecked] = useState(false)
+  // const [isAgreementChecked, setAgreementChecked] = useState(false)
 
   const handleSocialLogin = (params) => {
     social.resetMeta()
@@ -74,10 +74,10 @@ const RegisterContainer: React.FC = () => {
               </Typography>
             </Box>
           </Box>
-
+          {/* 
           <Box pb={2}>
             <RegisterAgreementBox onAgreementChange={setAgreementChecked} />
-          </Box>
+          </Box> */}
 
           <Box pt={2} maxWidth={280} className={classes.buttonContainer}>
             <ButtonPrimary
@@ -87,18 +87,18 @@ const RegisterContainer: React.FC = () => {
                 social.resetMeta()
                 navigateScreen(ESRoutes.REGISTER_BY_EMAIL)
               }}
-              disabled={!isAgreementChecked}
+              // disabled={!isAgreementChecked}
             >
               {t('common:register.button')}
             </ButtonPrimary>
           </Box>
 
           <Box pt={4} maxWidth={280} className={classes.buttonContainer}>
-            <ESButtonTwitter fullWidth disabled={!isAgreementChecked} twitterButtonType="register" redirectTo={social.redirectTo} />
-            <ESButtonGoogle fullWidth onSuccess={handleSocialLogin} disabled={!isAgreementChecked} />
-            <ESButtonLine fullWidth disabled={!isAgreementChecked} lineButtonType="register" redirectTo={social.redirectTo} />
-            <ESButtonFacebook fullWidth onSuccess={handleSocialLogin} disabled={!isAgreementChecked} />
-            <ESButtonApple fullWidth onSuccess={handleSocialLogin} disabled={!isAgreementChecked} />
+            <ESButtonTwitter fullWidth twitterButtonType="register" redirectTo={social.redirectTo} />
+            <ESButtonGoogle fullWidth onSuccess={handleSocialLogin} />
+            <ESButtonLine fullWidth lineButtonType="register" redirectTo={social.redirectTo} />
+            <ESButtonFacebook fullWidth onSuccess={handleSocialLogin} />
+            <ESButtonApple fullWidth onSuccess={handleSocialLogin} />
           </Box>
 
           <Box pt={4} className={classes.linkContainer}>
