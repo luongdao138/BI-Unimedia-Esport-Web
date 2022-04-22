@@ -76,6 +76,7 @@ import { useCheckDisplayChat } from '@utils/hooks/useCheckDisplayChat'
 import { VideoContext } from '../VideoContext'
 import TabsContainer from './components/TabsContainer'
 import ChatLoader from './components/ChatLoader'
+import { useVideoTabContext } from '../VideoContext/VideTabContext'
 import ChatMessages from './components/ChatMessages'
 import { useRect } from '@utils/useRect'
 
@@ -290,8 +291,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     const [videoTimeIsRewinding, setVideoTimeIsRewinding] = useState(0)
 
     const isSwitchingTabRef = useRef(false)
-    const [activeTab, setActiveTab] = useState<number>(VIDEO_TABS.CHAT)
-    const [activeSubTab, setActiveSubTab] = useState<number>(SUB_TABS.MESS.ALL)
+    const { activeSubTab, activeTab, setActiveTab, setActiveSubTab } = useVideoTabContext()
 
     const { selectors } = userProfileStore
 
