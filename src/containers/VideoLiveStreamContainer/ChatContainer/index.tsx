@@ -62,7 +62,6 @@ const APIt: any = useGraphqlAPI()
 // import InfiniteLoaderExample from './source/InfiniteLoader/InfiniteLoader.example'
 import ChatInputContainer from './ChatInputContainer'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
-import TabsGroup from '@components/TabsGroup'
 // import ChatTab from './Tabs/ChatTab'
 import RankingTab from './Tabs/RankingTab'
 import { Colors } from '@theme/colors'
@@ -79,6 +78,7 @@ import ChatLoader from './components/ChatLoader'
 import { useVideoTabContext } from '../VideoContext/VideTabContext'
 import ChatMessages from './components/ChatMessages'
 import { useRect } from '@utils/useRect'
+import SubTabGroups from './components/SubTabGroups'
 
 export type ChatContainerProps = {
   onPressDonate?: (donatedPoint: number, purchaseComment: string, master_id?: string) => void
@@ -291,6 +291,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     const [videoTimeIsRewinding, setVideoTimeIsRewinding] = useState(0)
 
     const isSwitchingTabRef = useRef(false)
+    const isSwitchingSubTabRef = useRef(false)
     const { activeSubTab, activeTab, setActiveTab, setActiveSubTab } = useVideoTabContext()
 
     const { selectors } = userProfileStore
@@ -491,7 +492,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
 
     // fetch messages prev when rewind to video time
     const fetchPrevMessWhenRewind = (video_time, sortOrder = APIt.ModelSortDirection.DESC) => {
-      if (isSwitchingTabRef.current) {
+      if (isSwitchingTabRef.current || isSwitchingSubTabRef.current) {
         return
       }
       try {
@@ -507,7 +508,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
           nextToken: null,
         }
         API.graphql(graphqlOperation(getMessagesByVideoIdWithSort, listQV)).then((messagesResults) => {
-          if (isSwitchingTabRef.current) {
+          if (isSwitchingTabRef.current || isSwitchingSubTabRef.current) {
             return
           }
           const messagesInfo = messagesResults.data.getMessagesByVideoIdWithSort
@@ -1604,6 +1605,9 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       if (!isFirstVisitPage) {
         switch (activeSubTab) {
           case SUB_TABS.MESS.TIP:
+            if (!isSwitchingSubTabRef.current) {
+              return
+            }
             setBottom(true)
             resetMessWhenSwitchTab()
             handleGetMessTip()
@@ -1612,6 +1616,9 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
           case SUB_TABS.MESS.ALL:
             setBottom(true)
             resetMessWhenSwitchTab()
+            if (isSwitchingSubTabRef.current) {
+              return
+            }
             if (isStreaming) {
               // console.log('🚀 ~ useEffect ~ isStreaming', isStreaming)
               setIsSwitchingTab(true)
@@ -1634,7 +1641,10 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       if (isFirstVisitPage) {
         setIsFirstVisitPage(false)
       }
+
+      // if(!isSwitchingSubTabRef.current) {
       getMessWhenSwitchTab()
+      // }
     }, [activeSubTab])
 
     useEffect(() => {
@@ -2461,22 +2471,11 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       return (
         <Box>
           {isEnabledMessFilter && (
-            <TabsGroup
-              data={[
-                {
-                  value: SUB_TABS.MESS.ALL,
-                  label: i18n.t('common:live_stream_screen.all_mess_tab_title'),
-                },
-                {
-                  value: SUB_TABS.MESS.TIP,
-                  label: i18n.t('common:live_stream_screen.tip_mess_tab_title'),
-                },
-              ]}
-              value={activeSubTab}
-              onClick={(value) => {
-                if (successGetListMessTip && successGetListMess) setActiveSubTab(value)
-              }}
-            ></TabsGroup>
+            <SubTabGroups
+              isSwitchingSubTabRef={isSwitchingSubTabRef}
+              successGetListMessTip={successGetListMessTip}
+              successGetListMess={successGetListMess}
+            />
           )}
           {/* {displayChatContent() ? chatContent() : userDoesNotHaveViewingTicketView()} */}
           {/* <ChatTab activeTab={messageTab} /> */}
