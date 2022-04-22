@@ -31,7 +31,6 @@ import { ESRoutes } from '@constants/route.constants'
 
 const { getVideoByUuid } = require(`src/graphql.${process.env.NEXT_PUBLIC_AWS_ENV}/queries`)
 const { onUpdateVideo, onUpdateChannel } = require(`src/graphql.${process.env.NEXT_PUBLIC_AWS_ENV}/subscriptions`)
-// import * as APIt from 'src/types/graphqlAPI'
 import API, { GraphQLResult, graphqlOperation } from '@aws-amplify/api'
 import { EVENT_LIVE_STATUS, LIVE_VIDEO_TYPE, VIDEO_INFO_TABS } from '@constants/common.constants'
 import DialogLoginContainer from '@containers/DialogLogin'

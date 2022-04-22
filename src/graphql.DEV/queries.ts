@@ -290,6 +290,29 @@ export const listCowellRealtimeStatusConnectionss = /* GraphQL */ `
     }
   }
 `
+export const getPaymentResult = /* GraphQL */ `
+  query GetPaymentResult($id: ID!) {
+    getPaymentResult(id: $id) {
+      id
+      status
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const listPaymentResults = /* GraphQL */ `
+  query ListPaymentResults($filter: ModelPaymentResultFilterInput, $limit: Int, $nextToken: String) {
+    listPaymentResults(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        status
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`
 export const getUsersByUuid = /* GraphQL */ `
   query GetUsersByUuid($uuid: String, $sortDirection: ModelSortDirection, $filter: ModelUserFilterInput, $limit: Int, $nextToken: String) {
     getUsersByUuid(uuid: $uuid, sortDirection: $sortDirection, filter: $filter, limit: $limit, nextToken: $nextToken) {

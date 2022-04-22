@@ -21,7 +21,6 @@ import * as commonActions from '@store/common/actions'
 
 const { getChannelByArn, getVideoByUuid } = require(`src/graphql.${process.env.NEXT_PUBLIC_AWS_ENV}/queries`)
 const { onCreateVideo, onUpdateChannel, onUpdateVideo } = require(`src/graphql.${process.env.NEXT_PUBLIC_AWS_ENV}/subscriptions`)
-// import * as APIt from 'src/types/graphqlAPI'
 import useGraphqlAPI from 'src/types/useGraphqlAPI'
 import { getTimeZone } from '@utils/helpers/CommonHelper'
 import moment from 'moment'

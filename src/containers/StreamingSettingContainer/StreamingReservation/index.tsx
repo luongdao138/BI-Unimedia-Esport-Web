@@ -12,7 +12,6 @@ import { useTranslation } from 'react-i18next'
 import { FormikProps } from 'formik'
 import { FormLiveType } from '@containers/arena/UpsertForm/FormLiveSettingsModel/FormLiveSettingsType'
 import API, { GraphQLResult, graphqlOperation } from '@aws-amplify/api'
-// import * as APIt from 'src/types/graphqlAPI'
 import useGraphqlAPI from 'src/types/useGraphqlAPI'
 /* eslint-disable @typescript-eslint/no-unused-vars */
 // @ts-ignore

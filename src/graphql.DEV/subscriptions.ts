@@ -476,3 +476,33 @@ export const onDeleteCowellRealtimeStatusConnections = /* GraphQL */ `
     }
   }
 `
+export const onCreatePaymentResult = /* GraphQL */ `
+  subscription OnCreatePaymentResult {
+    onCreatePaymentResult {
+      id
+      status
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const onUpdatePaymentResult = /* GraphQL */ `
+  subscription OnUpdatePaymentResult {
+    onUpdatePaymentResult {
+      id
+      status
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const onDeletePaymentResult = /* GraphQL */ `
+  subscription OnDeletePaymentResult {
+    onDeletePaymentResult {
+      id
+      status
+      createdAt
+      updatedAt
+    }
+  }
+`

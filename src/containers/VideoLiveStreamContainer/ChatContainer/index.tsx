@@ -24,7 +24,6 @@ const {
 } = require(`src/graphql.${process.env.NEXT_PUBLIC_AWS_ENV}/queries`)
 const { onCreateMessage, onUpdateMessage } = require(`src/graphql.${process.env.NEXT_PUBLIC_AWS_ENV}/subscriptions`)
 const { createMessage, createUser, updateMessage, updateUser } = require(`src/graphql.${process.env.NEXT_PUBLIC_AWS_ENV}/mutations`)
-// import * as APIt from 'src/types/graphqlAPI'
 import useDetailVideo from '../useDetailVideo'
 import usePurchaseTicketSuperChat from '../usePurchaseTicket'
 import ChatTextMessage from '@containers/VideoLiveStreamContainer/ChatContainer/ChatTextMessage'

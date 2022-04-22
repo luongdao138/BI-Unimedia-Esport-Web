@@ -80,7 +80,7 @@ export type User = {
 
 export type ModelMessageConnection = {
   __typename: 'ModelMessageConnection'
-  items?: Array<Message | null>
+  items?: Array<Message>
   nextToken?: string | null
 }
 
@@ -88,7 +88,7 @@ export type Message = {
   __typename: 'Message'
   id?: string
   owner?: string
-  text?: string
+  text?: string | null
   uuid?: string | null
   video_id?: string
   delete_flag?: boolean | null
@@ -175,7 +175,7 @@ export type DeleteGiftMasterInput = {
 export type CreateMessageInput = {
   id?: string | null
   owner: string
-  text: string
+  text?: string | null
   uuid?: string | null
   video_id: string
   delete_flag?: boolean | null
@@ -380,6 +380,35 @@ export type DeleteCowellRealtimeStatusConnectionsInput = {
   id: string
 }
 
+export type CreatePaymentResultInput = {
+  id?: string | null
+  status: string
+}
+
+export type ModelPaymentResultConditionInput = {
+  status?: ModelStringInput | null
+  and?: Array<ModelPaymentResultConditionInput | null> | null
+  or?: Array<ModelPaymentResultConditionInput | null> | null
+  not?: ModelPaymentResultConditionInput | null
+}
+
+export type PaymentResult = {
+  __typename: 'PaymentResult'
+  id?: string
+  status?: string
+  createdAt?: string
+  updatedAt?: string
+}
+
+export type UpdatePaymentResultInput = {
+  id: string
+  status?: string | null
+}
+
+export type DeletePaymentResultInput = {
+  id: string
+}
+
 export type ModelUserFilterInput = {
   id?: ModelIDInput | null
   uuid?: ModelStringInput | null
@@ -393,7 +422,7 @@ export type ModelUserFilterInput = {
 
 export type ModelUserConnection = {
   __typename: 'ModelUserConnection'
-  items?: Array<User | null>
+  items?: Array<User>
   nextToken?: string | null
 }
 
@@ -413,7 +442,7 @@ export type ModelGiftMasterFilterInput = {
 
 export type ModelGiftMasterConnection = {
   __typename: 'ModelGiftMasterConnection'
-  items?: Array<GiftMaster | null>
+  items?: Array<GiftMaster>
   nextToken?: string | null
 }
 
@@ -455,7 +484,7 @@ export type ModelVideoFilterInput = {
 
 export type ModelVideoConnection = {
   __typename: 'ModelVideoConnection'
-  items?: Array<Video | null>
+  items?: Array<Video>
   nextToken?: string | null
 }
 
@@ -471,7 +500,7 @@ export type ModelChannelFilterInput = {
 
 export type ModelChannelConnection = {
   __typename: 'ModelChannelConnection'
-  items?: Array<Channel | null>
+  items?: Array<Channel>
   nextToken?: string | null
 }
 
@@ -485,7 +514,21 @@ export type ModelCowellRealtimeStatusConnectionsFilterInput = {
 
 export type ModelCowellRealtimeStatusConnectionsConnection = {
   __typename: 'ModelCowellRealtimeStatusConnectionsConnection'
-  items?: Array<CowellRealtimeStatusConnections | null>
+  items?: Array<CowellRealtimeStatusConnections>
+  nextToken?: string | null
+}
+
+export type ModelPaymentResultFilterInput = {
+  id?: ModelIDInput | null
+  status?: ModelStringInput | null
+  and?: Array<ModelPaymentResultFilterInput | null> | null
+  or?: Array<ModelPaymentResultFilterInput | null> | null
+  not?: ModelPaymentResultFilterInput | null
+}
+
+export type ModelPaymentResultConnection = {
+  __typename: 'ModelPaymentResultConnection'
+  items?: Array<PaymentResult>
   nextToken?: string | null
 }
 
@@ -532,7 +575,7 @@ export type CreateUserMutation = {
         __typename: 'Message'
         id: string
         owner: string
-        text: string
+        text?: string | null
         uuid?: string | null
         video_id: string
         delete_flag?: boolean | null
@@ -548,7 +591,7 @@ export type CreateUserMutation = {
         created_time?: string | null
         createdAt: string
         updatedAt: string
-      } | null>
+      }>
       nextToken?: string | null
     } | null
     createdAt: string
@@ -575,7 +618,7 @@ export type UpdateUserMutation = {
         __typename: 'Message'
         id: string
         owner: string
-        text: string
+        text?: string | null
         uuid?: string | null
         video_id: string
         delete_flag?: boolean | null
@@ -591,7 +634,7 @@ export type UpdateUserMutation = {
         created_time?: string | null
         createdAt: string
         updatedAt: string
-      } | null>
+      }>
       nextToken?: string | null
     } | null
     createdAt: string
@@ -618,7 +661,7 @@ export type DeleteUserMutation = {
         __typename: 'Message'
         id: string
         owner: string
-        text: string
+        text?: string | null
         uuid?: string | null
         video_id: string
         delete_flag?: boolean | null
@@ -634,7 +677,7 @@ export type DeleteUserMutation = {
         created_time?: string | null
         createdAt: string
         updatedAt: string
-      } | null>
+      }>
       nextToken?: string | null
     } | null
     createdAt: string
@@ -662,7 +705,7 @@ export type CreateGiftMasterMutation = {
         __typename: 'Message'
         id: string
         owner: string
-        text: string
+        text?: string | null
         uuid?: string | null
         video_id: string
         delete_flag?: boolean | null
@@ -678,7 +721,7 @@ export type CreateGiftMasterMutation = {
         created_time?: string | null
         createdAt: string
         updatedAt: string
-      } | null>
+      }>
       nextToken?: string | null
     } | null
     createdAt: string
@@ -706,7 +749,7 @@ export type UpdateGiftMasterMutation = {
         __typename: 'Message'
         id: string
         owner: string
-        text: string
+        text?: string | null
         uuid?: string | null
         video_id: string
         delete_flag?: boolean | null
@@ -722,7 +765,7 @@ export type UpdateGiftMasterMutation = {
         created_time?: string | null
         createdAt: string
         updatedAt: string
-      } | null>
+      }>
       nextToken?: string | null
     } | null
     createdAt: string
@@ -750,7 +793,7 @@ export type DeleteGiftMasterMutation = {
         __typename: 'Message'
         id: string
         owner: string
-        text: string
+        text?: string | null
         uuid?: string | null
         video_id: string
         delete_flag?: boolean | null
@@ -766,7 +809,7 @@ export type DeleteGiftMasterMutation = {
         created_time?: string | null
         createdAt: string
         updatedAt: string
-      } | null>
+      }>
       nextToken?: string | null
     } | null
     createdAt: string
@@ -784,7 +827,7 @@ export type CreateMessageMutation = {
     __typename: 'Message'
     id: string
     owner: string
-    text: string
+    text?: string | null
     uuid?: string | null
     video_id: string
     delete_flag?: boolean | null
@@ -842,7 +885,7 @@ export type UpdateMessageMutation = {
     __typename: 'Message'
     id: string
     owner: string
-    text: string
+    text?: string | null
     uuid?: string | null
     video_id: string
     delete_flag?: boolean | null
@@ -900,7 +943,7 @@ export type DeleteMessageMutation = {
     __typename: 'Message'
     id: string
     owner: string
-    text: string
+    text?: string | null
     uuid?: string | null
     video_id: string
     delete_flag?: boolean | null
@@ -1101,6 +1144,51 @@ export type DeleteCowellRealtimeStatusConnectionsMutation = {
   } | null
 }
 
+export type CreatePaymentResultMutationVariables = {
+  input?: CreatePaymentResultInput
+  condition?: ModelPaymentResultConditionInput | null
+}
+
+export type CreatePaymentResultMutation = {
+  createPaymentResult?: {
+    __typename: 'PaymentResult'
+    id: string
+    status: string
+    createdAt: string
+    updatedAt: string
+  } | null
+}
+
+export type UpdatePaymentResultMutationVariables = {
+  input?: UpdatePaymentResultInput
+  condition?: ModelPaymentResultConditionInput | null
+}
+
+export type UpdatePaymentResultMutation = {
+  updatePaymentResult?: {
+    __typename: 'PaymentResult'
+    id: string
+    status: string
+    createdAt: string
+    updatedAt: string
+  } | null
+}
+
+export type DeletePaymentResultMutationVariables = {
+  input?: DeletePaymentResultInput
+  condition?: ModelPaymentResultConditionInput | null
+}
+
+export type DeletePaymentResultMutation = {
+  deletePaymentResult?: {
+    __typename: 'PaymentResult'
+    id: string
+    status: string
+    createdAt: string
+    updatedAt: string
+  } | null
+}
+
 export type GetUserQueryVariables = {
   id?: string
 }
@@ -1119,7 +1207,7 @@ export type GetUserQuery = {
         __typename: 'Message'
         id: string
         owner: string
-        text: string
+        text?: string | null
         uuid?: string | null
         video_id: string
         delete_flag?: boolean | null
@@ -1135,7 +1223,7 @@ export type GetUserQuery = {
         created_time?: string | null
         createdAt: string
         updatedAt: string
-      } | null>
+      }>
       nextToken?: string | null
     } | null
     createdAt: string
@@ -1165,7 +1253,7 @@ export type ListUsersQuery = {
       } | null
       createdAt: string
       updatedAt: string
-    } | null>
+    }>
     nextToken?: string | null
   } | null
 }
@@ -1189,7 +1277,7 @@ export type GetGiftMasterQuery = {
         __typename: 'Message'
         id: string
         owner: string
-        text: string
+        text?: string | null
         uuid?: string | null
         video_id: string
         delete_flag?: boolean | null
@@ -1205,7 +1293,7 @@ export type GetGiftMasterQuery = {
         created_time?: string | null
         createdAt: string
         updatedAt: string
-      } | null>
+      }>
       nextToken?: string | null
     } | null
     createdAt: string
@@ -1236,7 +1324,7 @@ export type ListGiftMastersQuery = {
       } | null
       createdAt: string
       updatedAt: string
-    } | null>
+    }>
     nextToken?: string | null
   } | null
 }
@@ -1250,7 +1338,7 @@ export type GetMessageQuery = {
     __typename: 'Message'
     id: string
     owner: string
-    text: string
+    text?: string | null
     uuid?: string | null
     video_id: string
     delete_flag?: boolean | null
@@ -1311,7 +1399,7 @@ export type ListMessagesQuery = {
       __typename: 'Message'
       id: string
       owner: string
-      text: string
+      text?: string | null
       uuid?: string | null
       video_id: string
       delete_flag?: boolean | null
@@ -1348,7 +1436,7 @@ export type ListMessagesQuery = {
       } | null
       createdAt: string
       updatedAt: string
-    } | null>
+    }>
     nextToken?: string | null
   } | null
 }
@@ -1390,7 +1478,7 @@ export type ListVideosQuery = {
       live_start_time?: string | null
       createdAt: string
       updatedAt: string
-    } | null>
+    }>
     nextToken?: string | null
   } | null
 }
@@ -1428,7 +1516,7 @@ export type ListChannelsQuery = {
       alarm_state?: string | null
       createdAt: string
       updatedAt: string
-    } | null>
+    }>
     nextToken?: string | null
   } | null
 }
@@ -1462,7 +1550,41 @@ export type ListCowellRealtimeStatusConnectionssQuery = {
       connectionId: string
       createdAt: string
       updatedAt: string
-    } | null>
+    }>
+    nextToken?: string | null
+  } | null
+}
+
+export type GetPaymentResultQueryVariables = {
+  id?: string
+}
+
+export type GetPaymentResultQuery = {
+  getPaymentResult?: {
+    __typename: 'PaymentResult'
+    id: string
+    status: string
+    createdAt: string
+    updatedAt: string
+  } | null
+}
+
+export type ListPaymentResultsQueryVariables = {
+  filter?: ModelPaymentResultFilterInput | null
+  limit?: number | null
+  nextToken?: string | null
+}
+
+export type ListPaymentResultsQuery = {
+  listPaymentResults?: {
+    __typename: 'ModelPaymentResultConnection'
+    items: Array<{
+      __typename: 'PaymentResult'
+      id: string
+      status: string
+      createdAt: string
+      updatedAt: string
+    }>
     nextToken?: string | null
   } | null
 }
@@ -1491,7 +1613,7 @@ export type GetUsersByUuidQuery = {
       } | null
       createdAt: string
       updatedAt: string
-    } | null>
+    }>
     nextToken?: string | null
   } | null
 }
@@ -1521,7 +1643,7 @@ export type GetReceiverByUuidQuery = {
       } | null
       createdAt: string
       updatedAt: string
-    } | null>
+    }>
     nextToken?: string | null
   } | null
 }
@@ -1542,7 +1664,7 @@ export type GetMessagesByVideoIdQuery = {
       __typename: 'Message'
       id: string
       owner: string
-      text: string
+      text?: string | null
       uuid?: string | null
       video_id: string
       delete_flag?: boolean | null
@@ -1579,7 +1701,7 @@ export type GetMessagesByVideoIdQuery = {
       } | null
       createdAt: string
       updatedAt: string
-    } | null>
+    }>
     nextToken?: string | null
   } | null
 }
@@ -1600,7 +1722,7 @@ export type GetMessagesByVideoIdWithSortQuery = {
       __typename: 'Message'
       id: string
       owner: string
-      text: string
+      text?: string | null
       uuid?: string | null
       video_id: string
       delete_flag?: boolean | null
@@ -1637,7 +1759,7 @@ export type GetMessagesByVideoIdWithSortQuery = {
       } | null
       createdAt: string
       updatedAt: string
-    } | null>
+    }>
     nextToken?: string | null
   } | null
 }
@@ -1658,7 +1780,7 @@ export type GetMessagesByVideoByPremiumQuery = {
       __typename: 'Message'
       id: string
       owner: string
-      text: string
+      text?: string | null
       uuid?: string | null
       video_id: string
       delete_flag?: boolean | null
@@ -1695,7 +1817,7 @@ export type GetMessagesByVideoByPremiumQuery = {
       } | null
       createdAt: string
       updatedAt: string
-    } | null>
+    }>
     nextToken?: string | null
   } | null
 }
@@ -1721,7 +1843,7 @@ export type GetVideosByUuidQuery = {
       live_start_time?: string | null
       createdAt: string
       updatedAt: string
-    } | null>
+    }>
     nextToken?: string | null
   } | null
 }
@@ -1747,7 +1869,7 @@ export type GetVideoByUuidQuery = {
       live_start_time?: string | null
       createdAt: string
       updatedAt: string
-    } | null>
+    }>
     nextToken?: string | null
   } | null
 }
@@ -1771,7 +1893,7 @@ export type GetChannelByArnQuery = {
       alarm_state?: string | null
       createdAt: string
       updatedAt: string
-    } | null>
+    }>
     nextToken?: string | null
   } | null
 }
@@ -1790,7 +1912,7 @@ export type OnCreateUserSubscription = {
         __typename: 'Message'
         id: string
         owner: string
-        text: string
+        text?: string | null
         uuid?: string | null
         video_id: string
         delete_flag?: boolean | null
@@ -1806,7 +1928,7 @@ export type OnCreateUserSubscription = {
         created_time?: string | null
         createdAt: string
         updatedAt: string
-      } | null>
+      }>
       nextToken?: string | null
     } | null
     createdAt: string
@@ -1828,7 +1950,7 @@ export type OnUpdateUserSubscription = {
         __typename: 'Message'
         id: string
         owner: string
-        text: string
+        text?: string | null
         uuid?: string | null
         video_id: string
         delete_flag?: boolean | null
@@ -1844,7 +1966,7 @@ export type OnUpdateUserSubscription = {
         created_time?: string | null
         createdAt: string
         updatedAt: string
-      } | null>
+      }>
       nextToken?: string | null
     } | null
     createdAt: string
@@ -1866,7 +1988,7 @@ export type OnDeleteUserSubscription = {
         __typename: 'Message'
         id: string
         owner: string
-        text: string
+        text?: string | null
         uuid?: string | null
         video_id: string
         delete_flag?: boolean | null
@@ -1882,7 +2004,7 @@ export type OnDeleteUserSubscription = {
         created_time?: string | null
         createdAt: string
         updatedAt: string
-      } | null>
+      }>
       nextToken?: string | null
     } | null
     createdAt: string
@@ -1905,7 +2027,7 @@ export type OnCreateGiftMasterSubscription = {
         __typename: 'Message'
         id: string
         owner: string
-        text: string
+        text?: string | null
         uuid?: string | null
         video_id: string
         delete_flag?: boolean | null
@@ -1921,7 +2043,7 @@ export type OnCreateGiftMasterSubscription = {
         created_time?: string | null
         createdAt: string
         updatedAt: string
-      } | null>
+      }>
       nextToken?: string | null
     } | null
     createdAt: string
@@ -1944,7 +2066,7 @@ export type OnUpdateGiftMasterSubscription = {
         __typename: 'Message'
         id: string
         owner: string
-        text: string
+        text?: string | null
         uuid?: string | null
         video_id: string
         delete_flag?: boolean | null
@@ -1960,7 +2082,7 @@ export type OnUpdateGiftMasterSubscription = {
         created_time?: string | null
         createdAt: string
         updatedAt: string
-      } | null>
+      }>
       nextToken?: string | null
     } | null
     createdAt: string
@@ -1983,7 +2105,7 @@ export type OnDeleteGiftMasterSubscription = {
         __typename: 'Message'
         id: string
         owner: string
-        text: string
+        text?: string | null
         uuid?: string | null
         video_id: string
         delete_flag?: boolean | null
@@ -1999,7 +2121,7 @@ export type OnDeleteGiftMasterSubscription = {
         created_time?: string | null
         createdAt: string
         updatedAt: string
-      } | null>
+      }>
       nextToken?: string | null
     } | null
     createdAt: string
@@ -2012,7 +2134,7 @@ export type OnCreateMessageSubscription = {
     __typename: 'Message'
     id: string
     owner: string
-    text: string
+    text?: string | null
     uuid?: string | null
     video_id: string
     delete_flag?: boolean | null
@@ -2065,7 +2187,7 @@ export type OnUpdateMessageSubscription = {
     __typename: 'Message'
     id: string
     owner: string
-    text: string
+    text?: string | null
     uuid?: string | null
     video_id: string
     delete_flag?: boolean | null
@@ -2118,7 +2240,7 @@ export type OnDeleteMessageSubscription = {
     __typename: 'Message'
     id: string
     owner: string
-    text: string
+    text?: string | null
     uuid?: string | null
     video_id: string
     delete_flag?: boolean | null
@@ -2269,6 +2391,36 @@ export type OnDeleteCowellRealtimeStatusConnectionsSubscription = {
     __typename: 'CowellRealtimeStatusConnections'
     id: string
     connectionId: string
+    createdAt: string
+    updatedAt: string
+  } | null
+}
+
+export type OnCreatePaymentResultSubscription = {
+  onCreatePaymentResult?: {
+    __typename: 'PaymentResult'
+    id: string
+    status: string
+    createdAt: string
+    updatedAt: string
+  } | null
+}
+
+export type OnUpdatePaymentResultSubscription = {
+  onUpdatePaymentResult?: {
+    __typename: 'PaymentResult'
+    id: string
+    status: string
+    createdAt: string
+    updatedAt: string
+  } | null
+}
+
+export type OnDeletePaymentResultSubscription = {
+  onDeletePaymentResult?: {
+    __typename: 'PaymentResult'
+    id: string
+    status: string
     createdAt: string
     updatedAt: string
   } | null
