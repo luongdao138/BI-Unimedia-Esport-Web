@@ -8,6 +8,7 @@ import * as Yup from 'yup'
 import { sanitizeMess } from './index'
 import EsFastChatInput from './FastChatInput'
 import { useRotateScreen } from '@utils/hooks/useRotateScreen'
+// import TipChatDialog from './TipChatDialog'
 
 type MessageValidationType = {
   message: string
@@ -42,6 +43,9 @@ const ChatInputContainer: React.FC<ChatInputProps> = ({
   const valueRef = useRef<string>('')
   const isMountRef = useRef<boolean>(false)
   const { isLandscape } = useRotateScreen()
+
+  // console.log('Chat input container rerender')
+  // const [visible, setVisible] = useState<boolean>(false)
 
   const { handleChange, values, handleSubmit, errors, resetForm, setFieldValue, setFieldError } = useFormik<MessageValidationType>({
     initialValues: {
@@ -139,16 +143,13 @@ const ChatInputContainer: React.FC<ChatInputProps> = ({
           {/* <Icon className={`fa fa-paper-plane ${classes.sendIcon}`} fontSize="small" /> */}
         </Button>
       </LoginRequired>
+      {/* {visible && <TipChatDialog />}
+      <button onClick={() => setVisible((prev) => !prev)}>Toggle</button> */}
     </Box>
   )
 }
 
-export default memo(ChatInputContainer, (prevProps, nextProps) => {
-  if (prevProps.isResetMess !== nextProps.isResetMess) {
-    return false
-  }
-  return true
-})
+export default memo(ChatInputContainer)
 
 interface StyleProps {
   isLandscape: boolean

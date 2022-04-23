@@ -632,6 +632,23 @@ const VideoDetail: React.FC = () => {
     setErrorMsgDonatePoint('')
   }, [])
 
+  const openPurchasePointModal = useCallback(
+    (donate_point) => {
+      // reset donate point
+      setDonatedPoints(0)
+      setDonatedPoints(donate_point)
+      // no lack point if my point larger than donate point
+      if (+donate_point < +myPoint) {
+        setLackedPoint(0)
+      } else {
+        setLackedPoint(donate_point - myPoint)
+      }
+      setPurchaseType(PURCHASE_TYPE.PURCHASE_SUPER_CHAT)
+      setShowModalPurchasePoint(true)
+    },
+    [myPoint]
+  )
+
   const sideChatContainer = () => {
     return (
       <Box
@@ -651,21 +668,9 @@ const VideoDetail: React.FC = () => {
           userHasViewingTicket={userHasViewingTicket()}
           videoType={videoStatus}
           freeToWatch={isVideoFreeToWatch}
-          handleKeyboardVisibleState={changeSoftKeyboardVisibleState}
+          handleKeyboardVisibleState={setSoftKeyboardIsShown}
           donateConfirmModalIsShown={modalIsShown}
-          openPurchasePointModal={(donate_point) => {
-            // reset donate point
-            setDonatedPoints(0)
-            setDonatedPoints(donate_point)
-            // no lack point if my point larger than donate point
-            if (+donate_point < +myPoint) {
-              setLackedPoint(0)
-            } else {
-              setLackedPoint(donate_point - myPoint)
-            }
-            setPurchaseType(PURCHASE_TYPE.PURCHASE_SUPER_CHAT)
-            setShowModalPurchasePoint(true)
-          }}
+          openPurchasePointModal={openPurchasePointModal}
           errorMsgDonatePoint={errorMsgDonatePoint}
           clearMessageDonatePoint={resetErrorDonateMessage}
         />
@@ -683,10 +688,6 @@ const VideoDetail: React.FC = () => {
   }
   const userHasViewingTicket = () => (userResult ? userResult?.buy_ticket : 0)
   const isScheduleAndNotHaveTicket = () => videoStatus === STATUS_VIDEO.SCHEDULE && userResult?.buy_ticket === 0
-
-  const changeSoftKeyboardVisibleState = (visible: boolean) => {
-    setSoftKeyboardIsShown(visible)
-  }
 
   const onVideoEnd = () => {
     if (videoStatus !== STATUS_VIDEO.ARCHIVE) {

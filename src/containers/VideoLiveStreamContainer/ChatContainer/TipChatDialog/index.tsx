@@ -26,7 +26,7 @@ type TipChatDialogProps = {
   onClickOutside?: () => void
   onPressDonate?: (donatedPoint: number, purchaseComment: string, master_id?: string) => void
   normalMessHasError?: boolean
-  createMess: (message: string, point?: number, tip_mess?: TipMessProps) => Promise<void>
+  createMess?: (message: string, point?: number, tip_mess?: TipMessProps) => Promise<void>
   errorMsgDonatePoint?: string
   clearMessageDonatePoint?: () => void
 }
@@ -60,7 +60,7 @@ const TipChatDialog: React.FC<TipChatDialogProps> = ({
   //   setStep(new_step)
   // }
   useEffect(() => {
-    clearMessageDonatePoint()
+    clearMessageDonatePoint?.()
   }, [step])
 
   const onChangeStep = (newStep): void => {
