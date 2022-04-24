@@ -12,9 +12,10 @@ import { PreloadDonationInfo } from '@containers/VideoLiveStreamContainer/Preloa
 type Step1Props = {
   onChangeStep?: (newStep: number) => void
   onChangeSelectedMember?: (selectedMember: any) => void
+  preLoading?: boolean
 }
 
-const Step1: React.FC<Step1Props> = ({ onChangeStep, onChangeSelectedMember }) => {
+const Step1: React.FC<Step1Props> = ({ onChangeStep, onChangeSelectedMember, preLoading }) => {
   const { isLandscape } = useRotateScreen()
   const classes = useStyles({ isLandscape })
   const { videoGiftMaster, videoGiftMasterLoading } = useDetailVideo()
@@ -53,13 +54,18 @@ const Step1: React.FC<Step1Props> = ({ onChangeStep, onChangeSelectedMember }) =
     <Box>
       <Box className={classes.wrapGiftMemberList}>
         <Box className={`scroll_common ${classes.giftMemberList}`}>
-          <Box className={classes.streamerTitle}>{`${i18n.t('common:live_stream_screen.streamer_title')}`}</Box>
-          {renderMember(streamerGiftData(), true)}
-          {giftMasterData().length > 0 && (
+          {!preLoading ? (
+            <>
+              <Box className={classes.streamerTitle}>{`${i18n.t('common:live_stream_screen.streamer_title')}`}</Box>
+              {renderMember(streamerGiftData(), true)}
+            </>
+          ) : null}
+
+          {giftMasterData().length > 0 && !preLoading ? (
             <Box className={classes.streamerTitle}>{`${i18n.t('common:live_stream_screen.receiver_title')}`}</Box>
-          )}
+          ) : null}
           <Box display={'flex'} style={{ gap: '16px' }} flexDirection={'column'}>
-            {videoGiftMasterLoading ? (
+            {videoGiftMasterLoading || preLoading ? (
               //  true
               // <Box height="100px" display="flex" justifyContent="center" alignItems="center">
               //   <Loader />

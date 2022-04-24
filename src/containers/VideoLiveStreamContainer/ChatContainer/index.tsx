@@ -328,14 +328,14 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     // const userResult = {streamer: 1}
     // const dispatch = useAppDispatch()
 
-    // const isEnabledChat =
-    //   videoType === STATUS_VIDEO.LIVE_STREAM &&
-    //   !liveStreamInfo.is_end_live &&
-    //   (+streamingSecond >= 0 || streamingSecond === Infinity) &&
-    //   successGetListMess &&
-    //   successGetListDonateMess &&
-    //   successGetListMessTip
-    const isEnabledChat = true
+    const isEnabledChat =
+      videoType === STATUS_VIDEO.LIVE_STREAM &&
+      !liveStreamInfo.is_end_live &&
+      (+streamingSecond >= 0 || streamingSecond === Infinity) &&
+      successGetListMess &&
+      successGetListDonateMess &&
+      successGetListMessTip
+    // const isEnabledChat = true
     // console.log('🚀 ~ isEnabledChat', isEnabledChat)
     // console.log('🚀 ~ successGetListMessTip', successGetListMessTip)
 
@@ -938,8 +938,8 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     //   }
     //   return false
     // })()
-    // const isStreaming = videoType === STATUS_VIDEO.LIVE_STREAM
-    const isStreaming = true
+    const isStreaming = videoType === STATUS_VIDEO.LIVE_STREAM
+    // const isStreaming = true
 
     const messContainer = document.getElementById('list_mess')
     // const messContainer = document.getElementById('messList')
@@ -1846,9 +1846,14 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       }
     }, [])
 
-    const handleCreateMess = useCallback(async (local_message: any, input, point: any, resetMess: any) => {
+    const handleCreateMess = useCallback(async (local_message: any, input: any, point: any, resetMess: any) => {
       console.log('handleCreateMess', local_message, point)
       const is_premium_local_message = isPremiumChat(local_message, false)
+      if (isStreaming) {
+        setStateMessages((prev) => [...prev, local_message])
+      }
+      1
+
       // save mess for local
       setCacheMess((messages) => [...messages, local_message])
       // setSavedMess((messages) => [...messages, local_message])
@@ -1871,7 +1876,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
           // values.message = ''
           resetMess((value) => !value)
         }
-        setStateMessages((prev) => [...prev, local_message])
+        // setStateMessages((prev) => [...prev, local_message])
 
         if (isMessageInBottom) {
           if (point) {
@@ -1892,13 +1897,13 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         }
       }
 
-      // try {
-      //   const result = await API.graphql(graphqlOperation(createMessage, { input }))
-      //   refCreateMessLocal.current(result, local_message)
-      // } catch (errors) {
-      //   if (errors && errors.errors.length !== 0) refCreateMessLocal.current([], local_message, true)
-      //   console.error(errors)
-      // }
+      try {
+        const result = await API.graphql(graphqlOperation(createMessage, { input }))
+        refCreateMessLocal.current(result, local_message)
+      } catch (errors) {
+        if (errors && errors.errors.length !== 0) refCreateMessLocal.current([], local_message, true)
+        console.error(errors)
+      }
     }, [])
 
     const checkMessIsInBottom = () => {

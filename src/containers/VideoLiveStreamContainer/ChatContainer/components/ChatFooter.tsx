@@ -1,12 +1,12 @@
 import { useMediaQuery, useTheme, Box, IconButton } from '@material-ui/core'
 import { useRotateScreen } from '@utils/hooks/useRotateScreen'
 import React, { memo, useCallback, useEffect, useState } from 'react'
-import ChatInputContainer from '../ChatInputContainer'
-import useStyles from '../styles'
-import TipChatDialog from '../TipChatDialog'
+import ChatInputContainer from '@containers/VideoLiveStreamContainer/ChatContainer/ChatInputContainer'
+import useStyles from '@containers/VideoLiveStreamContainer/ChatContainer/styles'
+import TipChatDialog from '@containers/VideoLiveStreamContainer/ChatContainer/TipChatDialog/index'
 import { v4 as uuidv4 } from 'uuid'
 import moment from 'moment'
-import { purchasePoints, sanitizeMess } from '..'
+import { purchasePoints, sanitizeMess } from '@containers/VideoLiveStreamContainer/ChatContainer/index'
 import { STATUS_SEND_MESS } from '@constants/common.constants'
 import { useAppSelector } from '@store/hooks'
 import { UserProfile } from '@services/user.service'
@@ -87,6 +87,8 @@ const ChatFooter: React.FC<Props> = ({
   const { dataPurchaseTicketSuperChat } = usePurchaseTicketSuperChat()
   const [isResetMess, setIsResetMess] = useState<boolean>(false)
 
+  const [preLoading, setPreLoading] = useState<boolean>(false)
+
   const handlePremiumChatBoxClickOutside = () => {
     setPurchaseDialogVisible(false)
   }
@@ -162,21 +164,24 @@ const ChatFooter: React.FC<Props> = ({
   }
 
   const purchaseIconClick = () => {
-    setPurchaseDialogVisible(!purchaseDialogVisible)
+    setPreLoading(true)
     setTimeout(() => {
       if (detailVideoResult) {
         getVideoGiftMasterList(
           { video_id: `${detailVideoResult?.uuid}` },
           () => {
+            setPreLoading(false)
             updateUseGiftFlag(1)
           },
           () => {
+            setPreLoading(false)
             updateUseGiftFlag(0)
             setPurchaseDialogVisible(false)
           }
         )
       }
     }, 100)
+    setPurchaseDialogVisible(!purchaseDialogVisible)
   }
 
   useEffect(() => {
@@ -196,6 +201,7 @@ const ChatFooter: React.FC<Props> = ({
       openPurchasePointModal={openPurchasePointModal}
       errorMsgDonatePoint={errorMsgDonatePoint}
       clearMessageDonatePoint={clearMessageDonatePoint}
+      preLoading={preLoading}
     />
   )
 

@@ -29,6 +29,7 @@ type TipChatDialogProps = {
   createMess?: (message: string, point?: number, tip_mess?: TipMessProps) => Promise<void>
   errorMsgDonatePoint?: string
   clearMessageDonatePoint?: () => void
+  preLoading?: boolean
 }
 
 const TipChatDialog: React.FC<TipChatDialogProps> = ({
@@ -39,6 +40,7 @@ const TipChatDialog: React.FC<TipChatDialogProps> = ({
   openPurchasePointModal,
   errorMsgDonatePoint,
   clearMessageDonatePoint,
+  preLoading,
 }) => {
   // const dispatch = useAppDispatch()
   const { dataPurchaseTicketSuperChat } = usePurchaseTicketSuperChat()
@@ -191,7 +193,7 @@ const TipChatDialog: React.FC<TipChatDialogProps> = ({
   const renderSteps = () => {
     switch (step) {
       case 1:
-        return <Step1 {...commonStepProps} onChangeSelectedMember={onChangeSelectedMember} />
+        return <Step1 {...commonStepProps} preLoading={preLoading} onChangeSelectedMember={onChangeSelectedMember} />
       case 2:
         return (
           <Step2

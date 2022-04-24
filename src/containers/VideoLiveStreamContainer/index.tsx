@@ -128,6 +128,8 @@ const VideoDetail: React.FC = () => {
   const [giftMasterUuid, setGiftMasterUuid] = useState('')
   const [errorMsgDonatePoint, setErrorMsgDonatePoint] = useState('')
 
+  // const [loadingPurchasePoint, setLoadingPurchasePoint] = useState<boolean>(false)
+
   console.log('DonatePointsConfirmModal', disabled, errorPurchase, purchaseComment)
 
   const {
@@ -426,6 +428,36 @@ const VideoDetail: React.FC = () => {
     }
   }, [videoDetailError])
 
+  // const confirmDonatePoint = useCallback(
+  //   (donated_point, comment, master_id = '') => {
+  //     // if (loadingPurchasePoint) return
+  //     setLoadingPurchasePoint(true)
+  //     // reset donate point
+  //     setTimeout(() => {
+  //       setGiftMasterUuid(master_id)
+  //       setDonatedPoints(0)
+  //       setDonatedPoints(donated_point)
+  //       // reset lack point
+  //       setLackedPoint(0)
+  //       setLackedPoint(donated_point - myPoint)
+  //       setPurchaseComment(comment)
+  //       setPurchaseType(PURCHASE_TYPE.PURCHASE_SUPER_CHAT)
+  //       if (myPoint >= donated_point) {
+  //         setShowConfirmModal(true)
+  //       } else {
+  //         dispatch(addToast(i18n.t('common:donate_points.lack_point_mess')))
+  //         setShowModalPurchasePoint(true)
+  //         setLoadingPurchasePoint(false)
+  //       }
+  //     }, 100)
+  //   },
+  //   [myPoint]
+  // )
+  // useEffect(() => {
+  //   if (showConfirmModal) {
+  //     handleConfirmPurchaseSuperChat()
+  //   }
+  // }, [showConfirmModal])
   const confirmDonatePoint = useCallback(
     (donated_point, comment, master_id = '') => {
       console.log('master_id', master_id)
@@ -461,6 +493,7 @@ const VideoDetail: React.FC = () => {
   const handleConfirmPurchaseSuperChat = async () => {
     setPurchaseType(PURCHASE_TYPE.PURCHASE_SUPER_CHAT)
     setDisabled(true)
+    // if (!loadingPurchasePoint) {
     debounceDonatePoint(
       donatedPoints,
       giftMasterUuid === '' ? PURCHASE_TYPE.PURCHASE_SUPER_CHAT : PURCHASE_TYPE.GIVE_GIFT_TO_MASTER,
@@ -468,8 +501,45 @@ const VideoDetail: React.FC = () => {
       giftMasterUuid,
       handleCloseConfirmModal
     )
+    // }
   }
 
+  // const debounceDonatePoint = useCallback((donatedPoints, type, video_id, masterUuid, handleSuccess: () => void) => {
+  //   purchaseTicketSuperChat(
+  //     {
+  //       point: donatedPoints,
+  //       type: type,
+  //       video_id: video_id,
+  //       handleSuccess: handleSuccess,
+  //       ...(type === PURCHASE_TYPE.GIVE_GIFT_TO_MASTER && { master_id: masterUuid }),
+  //     },
+  //     (isSuccess) => {
+  //       if (isSuccess) {
+  //         setShowConfirmModal(false)
+  //         setErrorPurchase(false)
+  //         setDisabled(false)
+  //         setLoadingPurchasePoint(false)
+  //         setErrorMsgDonatePoint('')
+  //         dispatch(commonActions.addToast(i18n.t('common:live_stream_screen.send_gift_success')))
+  //       } else {
+  //         // setShowConfirmModal(false)
+  //         setDisabled(false)
+  //       }
+  //     },
+  //     (error) => {
+  //       console.log('error==>', error)
+  //       setShowConfirmModal(false)
+  //       setErrorPurchase(true)
+  //       setLoadingPurchasePoint(false)
+  //       if (error.code === 420) {
+  //         updateUseGiftFlag(0)
+  //         setErrorMsgDonatePoint(i18n.t('common:live_stream_screen.error_tip_function_turn_off'))
+  //       } else if (error.code === 422) {
+  //         setErrorMsgDonatePoint(i18n.t('common:live_stream_screen.error_address_updated'))
+  //       }
+  //     }
+  //   )
+  // }, [])
   const debounceDonatePoint = useCallback(
     _.debounce(async (donatedPoints, type, video_id, masterUuid, handleSuccess: () => void) => {
       await purchaseTicketSuperChat(
@@ -737,9 +807,13 @@ const VideoDetail: React.FC = () => {
     >
       <VideoTabContextProvider>
         <Box className={classes.root}>
-          {isPendingPurchaseTicket && <ESLoader />}
+          {' '}
           {isPendingPurchaseSuperChat && <FullESLoader open={isPendingPurchaseSuperChat} />}
-
+          {isPendingPurchaseTicket && <ESLoader />}
+          {/* {isPendingPurchaseSuperChat || loadingPurchasePoint ? (
+            <FullESLoader open={isPendingPurchaseSuperChat || loadingPurchasePoint} />
+          ) : null} */}
+          {isPendingPurchaseSuperChat && <FullESLoader open={isPendingPurchaseSuperChat} />}
           {/* render video */}
           <Box
             className={classes.videoContainer}
@@ -790,7 +864,6 @@ const VideoDetail: React.FC = () => {
               </>
             )}
           </Box>
-
           {/* render tabs and content tabs */}
           {!isLoadingVideo && (
             <Box
@@ -822,7 +895,6 @@ const VideoDetail: React.FC = () => {
               </Grid>
             </Box>
           )}
-
           {/* render chat loading and chat container on PC */}
           {!isMobile &&
             (_.isEmpty(detailVideoResult) ? (
