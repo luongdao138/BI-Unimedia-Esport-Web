@@ -489,6 +489,7 @@ export const createPaymentResult = /* GraphQL */ `
   mutation CreatePaymentResult($input: CreatePaymentResultInput!, $condition: ModelPaymentResultConditionInput) {
     createPaymentResult(input: $input, condition: $condition) {
       id
+      userId
       status
       createdAt
       updatedAt
@@ -499,6 +500,7 @@ export const updatePaymentResult = /* GraphQL */ `
   mutation UpdatePaymentResult($input: UpdatePaymentResultInput!, $condition: ModelPaymentResultConditionInput) {
     updatePaymentResult(input: $input, condition: $condition) {
       id
+      userId
       status
       createdAt
       updatedAt
@@ -509,6 +511,7 @@ export const deletePaymentResult = /* GraphQL */ `
   mutation DeletePaymentResult($input: DeletePaymentResultInput!, $condition: ModelPaymentResultConditionInput) {
     deletePaymentResult(input: $input, condition: $condition) {
       id
+      userId
       status
       createdAt
       updatedAt
