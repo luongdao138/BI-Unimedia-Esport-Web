@@ -382,10 +382,12 @@ export type DeleteCowellRealtimeStatusConnectionsInput = {
 
 export type CreatePaymentResultInput = {
   id?: string | null
+  userId: string
   status: string
 }
 
 export type ModelPaymentResultConditionInput = {
+  userId?: ModelStringInput | null
   status?: ModelStringInput | null
   and?: Array<ModelPaymentResultConditionInput | null> | null
   or?: Array<ModelPaymentResultConditionInput | null> | null
@@ -395,6 +397,7 @@ export type ModelPaymentResultConditionInput = {
 export type PaymentResult = {
   __typename: 'PaymentResult'
   id?: string
+  userId?: string
   status?: string
   createdAt?: string
   updatedAt?: string
@@ -402,6 +405,7 @@ export type PaymentResult = {
 
 export type UpdatePaymentResultInput = {
   id: string
+  userId?: string | null
   status?: string | null
 }
 
@@ -520,6 +524,7 @@ export type ModelCowellRealtimeStatusConnectionsConnection = {
 
 export type ModelPaymentResultFilterInput = {
   id?: ModelIDInput | null
+  userId?: ModelStringInput | null
   status?: ModelStringInput | null
   and?: Array<ModelPaymentResultFilterInput | null> | null
   or?: Array<ModelPaymentResultFilterInput | null> | null
@@ -1153,6 +1158,7 @@ export type CreatePaymentResultMutation = {
   createPaymentResult?: {
     __typename: 'PaymentResult'
     id: string
+    userId: string
     status: string
     createdAt: string
     updatedAt: string
@@ -1168,6 +1174,7 @@ export type UpdatePaymentResultMutation = {
   updatePaymentResult?: {
     __typename: 'PaymentResult'
     id: string
+    userId: string
     status: string
     createdAt: string
     updatedAt: string
@@ -1183,6 +1190,7 @@ export type DeletePaymentResultMutation = {
   deletePaymentResult?: {
     __typename: 'PaymentResult'
     id: string
+    userId: string
     status: string
     createdAt: string
     updatedAt: string
@@ -1563,6 +1571,7 @@ export type GetPaymentResultQuery = {
   getPaymentResult?: {
     __typename: 'PaymentResult'
     id: string
+    userId: string
     status: string
     createdAt: string
     updatedAt: string
@@ -1581,6 +1590,7 @@ export type ListPaymentResultsQuery = {
     items: Array<{
       __typename: 'PaymentResult'
       id: string
+      userId: string
       status: string
       createdAt: string
       updatedAt: string
@@ -2400,6 +2410,7 @@ export type OnCreatePaymentResultSubscription = {
   onCreatePaymentResult?: {
     __typename: 'PaymentResult'
     id: string
+    userId: string
     status: string
     createdAt: string
     updatedAt: string
@@ -2410,6 +2421,7 @@ export type OnUpdatePaymentResultSubscription = {
   onUpdatePaymentResult?: {
     __typename: 'PaymentResult'
     id: string
+    userId: string
     status: string
     createdAt: string
     updatedAt: string
@@ -2420,6 +2432,7 @@ export type OnDeletePaymentResultSubscription = {
   onDeletePaymentResult?: {
     __typename: 'PaymentResult'
     id: string
+    userId: string
     status: string
     createdAt: string
     updatedAt: string

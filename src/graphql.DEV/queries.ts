@@ -294,6 +294,7 @@ export const getPaymentResult = /* GraphQL */ `
   query GetPaymentResult($id: ID!) {
     getPaymentResult(id: $id) {
       id
+      userId
       status
       createdAt
       updatedAt
@@ -305,6 +306,7 @@ export const listPaymentResults = /* GraphQL */ `
     listPaymentResults(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
+        userId
         status
         createdAt
         updatedAt
