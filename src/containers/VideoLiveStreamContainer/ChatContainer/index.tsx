@@ -1846,7 +1846,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       }
     }, [])
 
-    const handleCreateMess = useCallback(async (local_message: any, input: any, point: any, resetMess: any) => {
+    const handleCreateMess = async (local_message: any, input: any, point: any, resetMess: any) => {
       console.log('handleCreateMess', local_message, point)
       const is_premium_local_message = isPremiumChat(local_message, false)
       if (isStreaming) {
@@ -1903,7 +1903,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         if (errors && errors.errors.length !== 0) refCreateMessLocal.current([], local_message, true)
         console.error(errors)
       }
-    }, [isStreaming])
+    }
 
     const checkMessIsInBottom = () => {
       // if scrollbar is not in container bottom
@@ -1921,7 +1921,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       }
     }
 
-    const scrollToCurrentMess = (behavior = '') => {
+    const scrollToCurrentMess = (behavior = 'smooth') => {
       // console.log('🚀 ~ scrollToCurrentMess ~ isEnabledChat--000', isEnabledChat)
       if (!behavior) {
         if (isEnabledChat && isStreaming) {
@@ -1930,7 +1930,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       }
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       //@ts-ignore
-      messContainer.scrollTo({ top: messContainer.scrollHeight, behavior: behavior })
+      messContainer?.scrollTo({ top: messContainer.scrollHeight, behavior: behavior })
       // if (messagesEndRef.current != null && messagesEndRef) {
       //   messagesEndRef.current?.scrollToRow(stateMessages.length - 1)
       //   setTimeout(() => {

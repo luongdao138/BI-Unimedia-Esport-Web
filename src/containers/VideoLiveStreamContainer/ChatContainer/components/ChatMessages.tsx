@@ -1,4 +1,4 @@
-import React, { memo, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { useMediaQuery, useTheme } from '@material-ui/core'
 import { AutoSizer, CellMeasurer, List, CellMeasurerCache } from 'react-virtualized'
 import useStyles from '../styles'
@@ -175,4 +175,4 @@ const ChatMessages: React.FC<Props> = ({
   )
 }
 
-export default memo(ChatMessages)
+export default ChatMessages

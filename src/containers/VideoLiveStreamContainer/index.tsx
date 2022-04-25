@@ -433,6 +433,9 @@ const VideoDetail: React.FC = () => {
   const confirmDonatePoint = useCallback(
     (donated_point, comment, master_id = '') => {
       console.log('master_id', master_id)
+
+      console.log('============= On donate point ==============')
+
       // reset donate point
       setGiftMasterUuid(master_id)
       setDonatedPoints(0)
