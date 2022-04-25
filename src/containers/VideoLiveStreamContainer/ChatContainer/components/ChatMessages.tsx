@@ -12,7 +12,6 @@ interface Props {
   //   cache: CellMeasurerCache
   chatInputHeight: number
   messagesEndRef: React.MutableRefObject<any>
-  _onScroll: (e) => void // re-render
   stateMessages: any[]
   isStreamer?: number
   isTipTab: boolean
@@ -21,6 +20,9 @@ interface Props {
   resendMess: (message: any) => void
   reDeleteMess: (message: any) => void
   handleScrollToBottom: () => void
+  isGettingRewindMess: boolean
+  setScrolling: any
+  setBottom: any
 }
 
 const cache = new CellMeasurerCache({
@@ -33,7 +35,7 @@ const ChatMessages: React.FC<Props> = ({
   chatInputHeight,
   messagesEndRef,
   stateMessages,
-  _onScroll,
+  // _onScroll,
   isStreamer,
   videoType,
   isTipTab,
@@ -41,6 +43,9 @@ const ChatMessages: React.FC<Props> = ({
   resendMess,
   reDeleteMess,
   handleScrollToBottom,
+  setBottom,
+  setScrolling,
+  isGettingRewindMess,
 }) => {
   const { isLandscape } = useRotateScreen()
   const classes = useStyles({ isLandscape })
@@ -52,6 +57,34 @@ const ChatMessages: React.FC<Props> = ({
 
   const contentRect = useRect(contentRef)
 
+  const _onScroll = (e) => {
+    const scrollPos = e.scrollTop + e.clientHeight
+    // console.log('🚀 ~ test--scrollTop', e.scrollTop)
+    // console.log('🚀 ~ test--clientHeight', e.clientHeight)
+    // console.log('🚀 ~ test--scrollHeight', e.scrollHeight)
+    // console.log('🚀 ~ test--333', isGettingRewindMess)
+    const height = e.scrollHeight
+    const offset = Math.abs(height - scrollPos)
+    // console.log('🚀 ~ checkMessIsInBottom ~ offset', offset)
+    const bottomThreshold = 150
+    // only fetch prev mess when no rewind
+    if (!isGettingRewindMess && e.scrollTop <= 0) {
+      // console.log('🚀 ~ checkMessIsInBottom ~ e.scrollTop <= 0', e.scrollTop <= 0)
+      // handle this later
+      setScrolling((prev) => prev + 1)
+    }
+    if (offset < bottomThreshold) {
+      // console.log('🚀 ~ useEffect ~ setBottom', 222)
+      setBottom(true)
+    } else if (offset > bottomThreshold) {
+      // console.log('🚀 ~ useEffect ~ setBottom', 333)
+      if (stateMessages.length) {
+        // console.log('🚀 ~ checkMessIsInBottom ~ stateMessages.length', stateMessages.length)
+        setBottom(false)
+      }
+    }
+  }
+
   useEffect(() => {
     cache.clearAll()
   }, [contentRect?.width])
@@ -62,7 +95,7 @@ const ChatMessages: React.FC<Props> = ({
     // console.log('🚀 ~ useEffect ~ cache---000', cache)
   }, [stateMessages])
 
-  //   console.log('-------------- Chat component rerender message list-----------------')
+  // console.log('-------------- Chat component rerender message list-----------------')
 
   const rowRenderer = ({ index, key, style, parent }) => {
     const msg = stateMessages[index]

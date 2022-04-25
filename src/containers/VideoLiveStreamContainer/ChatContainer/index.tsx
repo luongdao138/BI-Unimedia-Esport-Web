@@ -1,20 +1,21 @@
 /* eslint-disable prefer-const */
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Box, Typography, Icon, IconButton, useTheme, useMediaQuery, ButtonBase, ClickAwayListener } from '@material-ui/core'
+import { Box, ButtonBase, ClickAwayListener, Icon, IconButton, Typography, useMediaQuery, useTheme } from '@material-ui/core'
 // import { useTranslation } from 'react-i18next'
 // import i18n from '@locales/i18n'
-import React, { useState, useEffect, useRef, forwardRef, useImperativeHandle, useCallback, useContext, useMemo } from 'react'
-import sanitizeHtml from 'sanitize-html'
 import i18n from '@locales/i18n'
-import useStyles from './styles'
+import { useAppDispatch, useAppSelector } from '@store/hooks'
 import useCheckNgWord from '@utils/hooks/useCheckNgWord'
 import _, { debounce } from 'lodash'
-import { useAppDispatch, useAppSelector } from '@store/hooks'
+import React, { forwardRef, memo, useCallback, useContext, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react'
+import sanitizeHtml from 'sanitize-html'
+import useStyles from './styles'
 // import { useAppDispatch, useAppSelector } from '@store/hooks'
-import userProfileStore from '@store/userProfile'
+import API, { graphqlOperation, GraphQLResult } from '@aws-amplify/api'
 import { UserProfile } from '@services/user.service'
-import API, { GraphQLResult, graphqlOperation } from '@aws-amplify/api'
+import userProfileStore from '@store/userProfile'
+import useDetailVideo from '../useDetailVideo'
 // import { createMessage, deleteMessage } from "src/graphql/mutations";
 const {
   getUsersByUuid,
@@ -24,18 +25,13 @@ const {
 } = require(`src/graphql.${process.env.NEXT_PUBLIC_AWS_ENV}/queries`)
 const { onCreateMessage, onUpdateMessage } = require(`src/graphql.${process.env.NEXT_PUBLIC_AWS_ENV}/subscriptions`)
 const { createMessage, createUser, updateMessage, updateUser } = require(`src/graphql.${process.env.NEXT_PUBLIC_AWS_ENV}/mutations`)
-import useDetailVideo from '../useDetailVideo'
-import usePurchaseTicketSuperChat from '../usePurchaseTicket'
 // import ChatTextMessage from '@containers/VideoLiveStreamContainer/ChatContainer/ChatTextMessage'
 // import PremiumChatDialog from '@containers/VideoLiveStreamContainer/ChatContainer/PremiumChatDialog'
 // import * as Yup from 'yup'
 // import { useFormik } from 'formik'
-import DonateMessage from './DonateMessage'
 import ESAvatar from '@components/Avatar'
+import DonateMessage from './DonateMessage'
 // import ESInput from '@components/Input'
-import { RankingsItem, STATUS_VIDEO } from '@services/videoTop.services'
-import LoginRequired from '@containers/LoginRequired'
-import moment from 'moment'
 import {
   GIVER_RANK_TYPE,
   INTERVAL_AUTO_GET_MESS,
@@ -49,7 +45,8 @@ import {
   SUB_TABS,
   VIDEO_TABS,
 } from '@constants/common.constants'
-import { v4 as uuidv4 } from 'uuid'
+import { RankingsItem, STATUS_VIDEO } from '@services/videoTop.services'
+import moment from 'moment'
 // import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
 import useGraphqlAPI from 'src/types/useGraphqlAPI'
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -60,25 +57,25 @@ const APIt: any = useGraphqlAPI()
 // import { WindowScroller, List, AutoSizer } from 'react-virtualized'
 // import { CellMeasurer } from 'react-virtualized'
 // import InfiniteLoaderExample from './source/InfiniteLoader/InfiniteLoader.example'
-import ChatInputContainer from './ChatInputContainer'
+// import ChatInputContainer from './ChatInputContainer'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
 // import ChatTab from './Tabs/ChatTab'
-import RankingTab from './Tabs/RankingTab'
 import { Colors } from '@theme/colors'
-import TipChatDialog from '@containers/VideoLiveStreamContainer/ChatContainer/TipChatDialog'
+import { useCheckDisplayChat } from '@utils/hooks/useCheckDisplayChat'
 import { useRotateScreen } from '@utils/hooks/useRotateScreen'
+import { useRect } from '@utils/useRect'
+import { VideoContext } from '../VideoContext'
+import { useVideoTabContext } from '../VideoContext/VideTabContext'
+import ChatFooter from './components/ChatFooter'
+import ChatLoader from './components/ChatLoader'
+import ChatMessages from './components/ChatMessages'
+import SubTabGroups from './components/SubTabGroups'
+import TabsContainer from './components/TabsContainer'
+import RankingTab from './Tabs/RankingTab'
 
 export type ChatStyleProps = {
   isLandscape: boolean
 }
-import { useCheckDisplayChat } from '@utils/hooks/useCheckDisplayChat'
-import { VideoContext } from '../VideoContext'
-import TabsContainer from './components/TabsContainer'
-import ChatLoader from './components/ChatLoader'
-import { useVideoTabContext } from '../VideoContext/VideTabContext'
-import ChatMessages from './components/ChatMessages'
-import { useRect } from '@utils/useRect'
-import SubTabGroups from './components/SubTabGroups'
 
 export type ChatContainerProps = {
   onPressDonate?: (donatedPoint: number, purchaseComment: string, master_id?: string) => void
@@ -228,21 +225,18 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       VideoContext
     )
     const chatMobileContainerRef = useRef<HTMLDivElement>(null)
-    const refProps = { ref: chatMobileContainerRef }
     const videoPlayedSecond = useRef(0)
     // console.log('🚀 ~ videoPlayedSecond', videoPlayedSecond?.current)
     const videoStreamingSecond = useRef(0)
 
     // const [tab, setTab] = useState(VIDEO_TABS.CHAT)
-    // const [messageTab, setMessageTab] = useState(SUB_TABS.MESS.ALL)
-    const [errorMess, setErrorMess] = useState<string>('')
-    const [isResetMess, setIsResetMess] = useState<boolean>(false)
+    // const [messageTab, setMessageTab] = useState(SUB_TABS.MESS.ALL
     // console.log('🚀 ~ isResetMess', isResetMess)
     const [isBottom, setBottom] = useState<boolean>(true)
     // console.log('🚀 ~ isBottom--000', isBottom)
     const [scrolling, setScrolling] = useState<number>(0)
     const messagesEndRef = useRef<any>(null)
-    const [purchaseDialogVisible, setPurchaseDialogVisible] = useState<boolean>(false)
+    // const [purchaseDialogVisible, setPurchaseDialogVisible] = useState<boolean>(false)
     const [messActiveUser, setMessActiveUser] = useState<any>(null)
     const [successGetListMess, setSuccessGetListMess] = useState(false)
     const [successGetListDonateMess, setSuccessGetListDonateMess] = useState(false)
@@ -323,12 +317,8 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       resetChatState,
       playedSecond,
       detailVideoResult,
-      getVideoGiftMasterList,
       rankingListMeta,
       fetchDonateRanking,
-      updateUseGiftFlag,
-      tipFunctionVisibleState,
-      isFullScreen,
     } = useDetailVideo()
     const { isEnabledGift, isEnabledMessFilter, isDisplayedRankingTab } = useCheckDisplayChat()
 
@@ -336,7 +326,6 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
 
     // const { streamingSecond, playedSecond, isViewingStream, liveStreamInfo } = useDetailVideo()
     // const userResult = {streamer: 1}
-    const { dataPurchaseTicketSuperChat } = usePurchaseTicketSuperChat()
     // const dispatch = useAppDispatch()
 
     const isEnabledChat =
@@ -1709,12 +1698,6 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       // fetchMessInitialStreaming()
     }, [videoType])
 
-    useEffect(() => {
-      if (dataPurchaseTicketSuperChat?.code === 200) {
-        setPurchaseDialogVisible(false)
-      }
-    }, [dataPurchaseTicketSuperChat])
-
     const refUpdateMessLocal = useRef(null)
     const handleUpdateMessLocal = (result, local_message, error = false) => {
       if (error) {
@@ -1779,59 +1762,6 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       return new_mess.sort((a: any, b: any) => sortFactor * (+a.video_time - +b.video_time || a.created_time.localeCompare(b.created_time)))
     }
 
-    const handleChatInputOnFocus = () => {
-      handleKeyboardVisibleState(true)
-    }
-
-    const handleChatInputOnBlur = () => {
-      handleKeyboardVisibleState(false)
-    }
-
-    const handlePremiumChatBoxClickOutside = () => {
-      setPurchaseDialogVisible(false)
-    }
-
-    const purchaseInfoDialog = () => (
-      <TipChatDialog
-        normalMessHasError={errorMess ? true : false}
-        createMess={createMess}
-        onClickOutside={donateConfirmModalIsShown() ? null : handlePremiumChatBoxClickOutside}
-        onPressDonate={onPressDonate}
-        openPurchasePointModal={openPurchasePointModal}
-        errorMsgDonatePoint={errorMsgDonatePoint}
-        clearMessageDonatePoint={clearMessageDonatePoint}
-      />
-      // <PremiumChatDialog
-      //   normalMessHasError={errorMess ? true : false}
-      //   createMess={createMess}
-      //   onClickOutside={donateConfirmModalIsShown() ? null : handlePremiumChatBoxClickOutside}
-      //   onPressDonate={onPressDonate}
-      //   myPoint={myPoint}
-      //   openPurchasePointModal={openPurchasePointModal}
-      //   isEnabledChat={isEnabledChat}
-      // />
-    )
-
-    const getVideoGiftMasterSuccessCallback = () => {
-      updateUseGiftFlag(1)
-    }
-
-    const getVideoGiftMasterErrorCallback = () => {
-      updateUseGiftFlag(0)
-      setPurchaseDialogVisible(false)
-    }
-
-    const purchaseIconClick = () => {
-      if (detailVideoResult) {
-        getVideoGiftMasterList(
-          { video_id: `${detailVideoResult?.uuid}` },
-          getVideoGiftMasterSuccessCallback,
-          getVideoGiftMasterErrorCallback
-        )
-      }
-      setPurchaseDialogVisible(!purchaseDialogVisible)
-    }
-
     const getMessageWithoutNgWords = (chatMessContent) => {
       const ngWords = checkVideoNgWord(chatMessContent)
       if (ngWords.length !== 0) {
@@ -1844,30 +1774,6 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         })
       }
       return chatMessContent
-    }
-
-    type MessInput = {
-      id?: string
-      owner?: string
-      text?: string
-      uuid?: string | null
-      video_id?: string
-      delete_flag?: boolean | null
-      video_time?: number
-      display_avatar_time?: string | null
-      point?: string | null
-      use_point_id?: string | null
-      is_premium?: boolean | null
-      is_premium_number?: number | null
-      userId?: string
-      local_id?: string | null
-      created_time?: string | null
-      parent?: {
-        avatar?: string
-        user_name?: string
-      }
-      giftMasterId?: string
-      receiver?: { name: string; image: string }
     }
 
     const updateOldMessData = (updatedMessage, objWithNewProps, compareProp = 'id') => {
@@ -1940,134 +1846,65 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       }
     }, [])
 
-    const createMess = async (
-      message: string,
-      point = 0,
-      tip_mess = {
-        master_uuid: null,
-        name: null,
-        image: null,
+    const handleCreateMess = useCallback(async (local_message: any, input: any, point: any, resetMess: any) => {
+      console.log('handleCreateMess', local_message, point)
+      const is_premium_local_message = isPremiumChat(local_message, false)
+      if (isStreaming) {
+        setStateMessages((prev) => [...prev, local_message])
       }
-    ): Promise<void> => {
-      const { master_uuid, name, image } = tip_mess
-      if (!point && !message) {
-        return
+      1
+
+      // save mess for local
+      setCacheMess((messages) => [...messages, local_message])
+      // setSavedMess((messages) => [...messages, local_message])
+      // save donated messages for local (not check display time)
+      if (is_premium_local_message) {
+        // setSavedDonateMess((messages) => [...messages, local_message])
+        setCacheDonateMess((messages) => [...messages, local_message])
       }
-      if (successFlagGetAddUSer && Object.keys(chatUser).length > 0 && isEnabledChat && isStreaming) {
-        const videoTime = videoPlayedSecond.current
-        let input: MessInput = {
-          // id is auto populated by AWS Amplify
-          owner: chatUser.user_name,
-          text: sanitizeMess(message),
-          uuid: chatUser.uuid,
-          video_id: key_video_id,
-          video_time: videoTime,
-          // point: 500,//optional : show when Post is use pOint
-          is_premium: false,
-          is_premium_number: 0,
-          userId: chatUser.id,
-          delete_flag: false,
-          local_id: uuidv4(),
-          created_time: moment().toISOString(),
+      // only save mess tip when has point
+      if (point) {
+        setCacheMessTip((messages) => [...messages, local_message])
+      }
+
+      // save message to local
+      if (isStreaming) {
+        const isMessageInBottom = checkMessIsInBottom()
+        // render new messages with savedMess
+        if (!point) {
+          // reset input chat
+          // values.message = ''
+          resetMess((value) => !value)
         }
-        if (point) {
-          input = {
-            ...input,
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            //@ts-ignore
-            point: point.toString(),
-            is_premium: true,
-            is_premium_number: 1,
-            display_avatar_time: videoTime + purchasePoints[`p_${point}`].displayTime,
-          }
-          if (master_uuid) {
-            input = {
-              ...input,
-              giftMasterId: master_uuid,
-            }
+        // setStateMessages((prev) => [...prev, local_message])
+
+        if (isMessageInBottom) {
+          if (point) {
+            setScrollBehavior('instant')
+            setIsChatInBottom(true)
+          } else {
+            // console.log('🚀 ~ createMess ~ scrollToCurrentMess---000', scrollToCurrentMess)
+            scrollToCurrentMess()
           }
         }
 
-        let local_message = {
-          ...input,
-          mess_status: STATUS_SEND_MESS.PENDING,
-        }
-        if (point) {
-          const { nickname, avatar_url } = userProfile.attributes
-          local_message = {
-            ...local_message,
-            parent: { avatar: avatar_url, user_name: nickname },
-          }
-          if (master_uuid) {
-            local_message = {
-              ...local_message,
-              receiver: { name, image },
-            }
-          }
-        }
-
-        const is_premium_local_message = isPremiumChat(local_message, false)
-        // save mess for local
-        setCacheMess((messages) => [...messages, local_message])
-        // setSavedMess((messages) => [...messages, local_message])
-        // save donated messages for local (not check display time)
+        // render new users donate
         if (is_premium_local_message) {
-          // setSavedDonateMess((messages) => [...messages, local_message])
-          setCacheDonateMess((messages) => [...messages, local_message])
-        }
-        // only save mess tip when has point
-        if (point) {
-          setCacheMessTip((messages) => [...messages, local_message])
-        }
-
-        // save message to local
-        if (isStreaming) {
-          const isMessageInBottom = checkMessIsInBottom()
-          // render new messages with savedMess
-          if (!point) {
-            // reset input chat
-            // values.message = ''
-            setIsResetMess((value) => !value)
-          }
-          setStateMessages([...stateMessages, local_message])
-
-          if (isMessageInBottom) {
-            if (point) {
-              setScrollBehavior('instant')
-              setIsChatInBottom(true)
-            } else {
-              // console.log('🚀 ~ createMess ~ scrollToCurrentMess---000', scrollToCurrentMess)
-              scrollToCurrentMess()
-            }
-          }
-
-          // render new users donate
-          if (is_premium_local_message) {
-            // let newMessDonate = [...savedDonateMess]
-            // newMessDonate = newMessDonate.filter((item) => +item.display_avatar_time > +videoPlayedSecond.current)
-            // render user donate icon by time of local
-            setMessagesDonate([...messagesDonate, local_message])
-          }
-        }
-
-        try {
-          const result = await API.graphql(graphqlOperation(createMessage, { input }))
-          refCreateMessLocal.current(result, local_message)
-        } catch (errors) {
-          if (errors && errors.errors.length !== 0) refCreateMessLocal.current([], local_message, true)
-          console.error(errors)
+          // let newMessDonate = [...savedDonateMess]
+          // newMessDonate = newMessDonate.filter((item) => +item.display_avatar_time > +videoPlayedSecond.current)
+          // render user donate icon by time of local
+          setMessagesDonate((prev) => [...prev, local_message])
         }
       }
-    }
 
-    const refCreateNewMessLocal = useRef(null)
-    const handleCreateNewMessLocal = (mess) => {
-      createMess(mess)
-    }
-    refCreateNewMessLocal.current = handleCreateNewMessLocal
-    const sendNormalMess = (mess: string) => {
-      refCreateNewMessLocal.current(mess)
-    }
+      try {
+        const result = await API.graphql(graphqlOperation(createMessage, { input }))
+        refCreateMessLocal.current(result, local_message)
+      } catch (errors) {
+        if (errors && errors.errors.length !== 0) refCreateMessLocal.current([], local_message, true)
+        console.error(errors)
+      }
+    }, [])
 
     const checkMessIsInBottom = () => {
       // if scrollbar is not in container bottom
@@ -2103,52 +1940,6 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       //   }, 100)
       // }
     }
-
-    const purchaseButton = () => {
-      if (tipFunctionVisibleState === 0) return <Box />
-      return (
-        <LoginRequired>
-          <IconButton
-            disabled={!isEnabledGift}
-            onClick={purchaseIconClick}
-            id="btnOpenPremiumChatDialog"
-            className={`${classes.iconPurchase} ${isEnabledGift ? '' : 'giftDisabled'}`}
-          >
-            <img id="btnOpenPremiumChatDialogImage" src="/images/tip_icon.svg" />
-          </IconButton>
-        </LoginRequired>
-      )
-    }
-
-    const chatInputComponent = () => (
-      <Box
-        {...refProps}
-        className={`${classes.chatInputMobileContainer}`}
-        // style={{ bottom: isMobile ? '0px' : errorMess ? '-132.5px' : '-116.5px' }}
-        // style={{ bottom: isMobile ? '0px' : errors?.message ? '-132.5px' : '-110.5px' }}
-      >
-        {purchaseDialogVisible && isMobile && purchaseInfoDialog()}
-        {isEnabledChat &&
-          (isStreaming ? (
-            <Box className={`${classes.chatInputContainer} ${isEnabledGift ? '' : classes.hideIconGift}`}>
-              {purchaseDialogVisible && !isMobile && purchaseInfoDialog()}
-              {!isMobile && purchaseButton()}
-              <ChatInputContainer
-                purchaseButton={purchaseButton}
-                isResetMess={isResetMess}
-                handleChatInputOnFocus={handleChatInputOnFocus}
-                handleChatInputOnBlur={handleChatInputOnBlur}
-                setErrorMess={setErrorMess}
-                sendNormalMess={sendNormalMess}
-              ></ChatInputContainer>
-              {/* <Box style={{ height: chatInputHeight }} /> */}
-            </Box>
-          ) : (
-            <></>
-          ))}
-        {purchaseDialogVisible && renderBlurInput()}
-      </Box>
-    )
 
     const closeDialogActiveUser = () => {
       // prevent close modal when click user icon first time
@@ -2203,56 +1994,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       }
       return marginTop
     }
-    // console.log('🚀 ~ checkMessIsInBottom ~ isGettingMess', isGettingMess)
-    // const rowCount = filteredMessages.length + 1
-    // const _rowRenderer = ({ index, key, style }) => {
-    //   console.log('🚀 ~ checkMessIsInBottom ~ key', key)
-    //   console.log('🚀 ~ Example1 ~ index', index)
-    //   console.log('🚀 ~ Example1 ~ index > 0', +index > 0)
-    //   console.log('🚀 ~ Example1 ~ stateMessages', stateMessages[index])
-    //   // let content
-    //   // stateMessages[index] && (
-    //   console.log('🚀 ~ checkMessIsInBottom ~ isGettingMess', isGettingMess)
-    //   // if (index === 0 && isGettingMess) {
-    //   //   return (
-    //   //     <div key={key} style={style}>
-    //   //       ....Loading
-    //   //     </div>
-    //   //   )
-    //   // } else {
-    //   // const newMess = isGettingMess ? stateMessages[index - 1] : stateMessages[index]
-    //   const newMess = stateMessages[index]
-    //   return (
-    //     newMess && (
-    //       <div key={key} style={style}>
-    //         <ChatTextMessage
-    //           key={index}
-    //           message={newMess}
-    //           videoType={videoType}
-    //           getMessageWithoutNgWords={getMessageWithoutNgWords}
-    //           deleteMess={deleteMsg}
-    //           is_streamer={userResult?.streamer}
-    //           resendMess={resendMess}
-    //           reDeleteMess={reDeleteMess}
-    //         />
-    //       </div>
-    //     )
-    //   )
-    //   // }
 
-    //   // return (
-    //   //   <ChatTextMessage
-    //   //     key={index}
-    //   //     message={msg}
-    //   //     videoType={videoType}
-    //   //     getMessageWithoutNgWords={getMessageWithoutNgWords}
-    //   //     deleteMess={deleteMsg}
-    //   //     is_streamer={userResult?.streamer}
-    //   //     resendMess={resendMess}
-    //   //     reDeleteMess={reDeleteMess}
-    //   //   />
-    //   // )
-    // }
     const _scrollToBottom = (position: number) => {
       //https://github.com/bvaughn/react-virtualized/issues/995
       if (messagesEndRef.current != null && messagesEndRef) {
@@ -2263,37 +2005,6 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         }, 100)
       }
     }
-
-    const _onScroll = useCallback(
-      (e) => {
-        const scrollPos = e.scrollTop + e.clientHeight
-        // console.log('🚀 ~ test--scrollTop', e.scrollTop)
-        // console.log('🚀 ~ test--clientHeight', e.clientHeight)
-        // console.log('🚀 ~ test--scrollHeight', e.scrollHeight)
-        // console.log('🚀 ~ test--333', isGettingRewindMess)
-        const height = e.scrollHeight
-        const offset = Math.abs(height - scrollPos)
-        // console.log('🚀 ~ checkMessIsInBottom ~ offset', offset)
-        const bottomThreshold = 150
-        // only fetch prev mess when no rewind
-        if (!isGettingRewindMess && e.scrollTop <= 0) {
-          // console.log('🚀 ~ checkMessIsInBottom ~ e.scrollTop <= 0', e.scrollTop <= 0)
-          // handle this later
-          setScrolling(scrolling + 1)
-        }
-        if (offset < bottomThreshold) {
-          // console.log('🚀 ~ useEffect ~ setBottom', 222)
-          setBottom(true)
-        } else if (offset > bottomThreshold) {
-          // console.log('🚀 ~ useEffect ~ setBottom', 333)
-          if (stateMessages.length) {
-            // console.log('🚀 ~ checkMessIsInBottom ~ stateMessages.length', stateMessages.length)
-            setBottom(false)
-          }
-        }
-      },
-      [isGettingRewindMess, stateMessages]
-    )
 
     const handleScrollToBottom = useCallback(() => {
       if (isBottom && !isGettingMess) {
@@ -2357,7 +2068,10 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
           chatInputHeight={chatInputHeight}
           messagesEndRef={messagesEndRef}
           stateMessages={stateMessages}
-          _onScroll={_onScroll}
+          // _onScroll={_onScroll}
+          isGettingRewindMess={isGettingRewindMess}
+          setBottom={setBottom}
+          setScrolling={setScrolling}
           isStreamer={userResult.streamer}
           isTipTab={isTipTab}
           videoType={videoType}
@@ -2369,21 +2083,6 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         {/* {isMobile ? chatComponentMobile() : chatInputComponent()} */}
       </Box>
     )
-
-    const renderBlurInput = () => {
-      return <Box className={`${classes.blurInputChat}`}></Box>
-    }
-
-    const chatComponentMobile = () => {
-      return purchaseDialogVisible ? (
-        <>
-          {purchaseInfoDialog()}
-          {renderBlurInput()}
-        </>
-      ) : (
-        chatInputComponent()
-      )
-    }
 
     const chatNotAvailableMessage = () => {
       if (videoType === STATUS_VIDEO.SCHEDULE && (isVideoFreeToWatch || userHasViewingTicket)) {
@@ -2448,7 +2147,23 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
             {chatBoardComponent()}
           </>
         )}
-        {isMobile ? !isFullScreen && chatComponentMobile() : chatInputComponent()}
+        <ChatFooter
+          chatContainerRef={chatMobileContainerRef}
+          clearMessageDonatePoint={clearMessageDonatePoint}
+          donateConfirmModalIsShown={donateConfirmModalIsShown}
+          errorMsgDonatePoint={errorMsgDonatePoint}
+          handleKeyboardVisibleState={handleKeyboardVisibleState}
+          isEnabledChat={isEnabledChat}
+          isEnabledGift={isEnabledGift}
+          isStreaming={isStreaming}
+          onPressDonate={onPressDonate}
+          openPurchasePointModal={openPurchasePointModal}
+          handleCreateMess={handleCreateMess}
+          chatUser={chatUser}
+          key_video_id={key_video_id}
+          successFlagGetAddUSer={successFlagGetAddUSer}
+          videoPlayedSecond={videoPlayedSecond}
+        />
         {isEnabledChat && !isStreaming ? (
           <Box className={classes.chatInputContainer} style={{ width: '100%', height: 81 }}>
             <ButtonBase onClick={() => scrollToCurrentMess('smooth')} className={`${classes.btn_scroll_mess}`}>
@@ -2521,4 +2236,4 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
   }
 )
 
-export default ChatContainer
+export default memo(ChatContainer)
