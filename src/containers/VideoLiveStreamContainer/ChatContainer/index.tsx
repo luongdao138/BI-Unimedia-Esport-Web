@@ -1852,7 +1852,6 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       if (isStreaming) {
         setStateMessages((prev) => [...prev, local_message])
       }
-      1
 
       // save mess for local
       setCacheMess((messages) => [...messages, local_message])
@@ -1904,7 +1903,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         if (errors && errors.errors.length !== 0) refCreateMessLocal.current([], local_message, true)
         console.error(errors)
       }
-    }, [])
+    }, [isStreaming])
 
     const checkMessIsInBottom = () => {
       // if scrollbar is not in container bottom
