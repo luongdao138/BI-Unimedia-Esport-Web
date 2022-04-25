@@ -1903,7 +1903,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         if (errors && errors.errors.length !== 0) refCreateMessLocal.current([], local_message, true)
         console.error(errors)
       }
-    }, [])
+    }, [isStreaming])
 
     const checkMessIsInBottom = () => {
       // if scrollbar is not in container bottom
