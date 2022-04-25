@@ -1,6 +1,6 @@
 import { useMediaQuery, useTheme, Box, IconButton } from '@material-ui/core'
 import { useRotateScreen } from '@utils/hooks/useRotateScreen'
-import React, { memo, useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import ChatInputContainer from '@containers/VideoLiveStreamContainer/ChatContainer/ChatInputContainer'
 import useStyles from '@containers/VideoLiveStreamContainer/ChatContainer/styles'
 import TipChatDialog from '@containers/VideoLiveStreamContainer/ChatContainer/TipChatDialog/index'
@@ -266,4 +266,4 @@ const ChatFooter: React.FC<Props> = ({
   return isMobile ? !isFullScreen && chatComponentMobile() : chatInputComponent()
 }
 
-export default memo(ChatFooter)
+export default ChatFooter
