@@ -83,7 +83,8 @@ const useStyles = makeStyles((theme) => ({
     tableLayout: 'fixed',
     '& .MuiTableCell-root': {
       borderColor: '#707070',
-      backgroundColor: '#383838',
+      // backgroundColor: '#383838',
+      backgroundColor: 'transparent',
     },
   },
   headerTable: {
