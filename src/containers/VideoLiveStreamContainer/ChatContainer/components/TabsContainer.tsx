@@ -16,10 +16,14 @@ interface Props {
 
 const TabsContainer: React.FC<Props> = ({ isDisplayedRankingTab, onChange, isSwitchingTabRef, isSwitchingSubTabRef }) => {
   const { isLandscape } = useRotateScreen()
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(window.navigator.userAgent)
   const classes = useStyles({ isLandscape })
   const [value, setValue] = useState<number>(VIDEO_TABS.CHAT)
 
   useEffect(() => {
+    if (isMobile) {
+      return
+    }
     const timeoutId = setTimeout(() => {
       onChange(value)
     }, 500)
