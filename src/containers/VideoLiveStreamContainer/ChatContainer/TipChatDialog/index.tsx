@@ -43,7 +43,7 @@ const TipChatDialog: React.FC<TipChatDialogProps> = ({
   preLoading,
 }) => {
   // const dispatch = useAppDispatch()
-  const { dataPurchaseTicketSuperChat } = usePurchaseTicketSuperChat()
+  const { clearPurchaseTicket, getPurchaseTicket } = usePurchaseTicketSuperChat()
   const { videoGiftMaster, videoGiftMasterLoading } = useDetailVideo()
   const { isLandscape } = useRotateScreen()
 
@@ -71,6 +71,7 @@ const TipChatDialog: React.FC<TipChatDialogProps> = ({
   }
 
   const onChangeTipInfo = (tipInfo): void => {
+    // console.log('Donate message ', tipInfo)
     setTipInfo(tipInfo)
     // openPurchasePointModal(tipInfo?.donatedPoint)
   }
@@ -123,7 +124,10 @@ const TipChatDialog: React.FC<TipChatDialogProps> = ({
   }, [])
 
   useEffect(() => {
-    if (dataPurchaseTicketSuperChat?.code === 200 && !isFirstRender) {
+    // console.log('Send message graphql', isFirstRender, dataPurchaseTicketSuperChat?.code)
+    // if (dataPurchaseTicketSuperChat?.code === 200 && !isFirstRender) {
+    if (getPurchaseTicket()?.code === 200 && tipInfo) {
+      // console.log('Send message graphql fire')
       const { message, donatedPoint } = tipInfo
       // eslint-disable-next-line no-console
       console.log('🚀 ~ useEffect ~ message, donatedPoint', message, donatedPoint, selectedMember)
@@ -144,7 +148,9 @@ const TipChatDialog: React.FC<TipChatDialogProps> = ({
       }
       // values.message = ''
     }
-  }, [dataPurchaseTicketSuperChat])
+
+    return clearPurchaseTicket
+  }, [getPurchaseTicket, selectedMember])
 
   useEffect(() => {
     // check if didn't select tip in settings then default selected streamer
@@ -200,10 +206,12 @@ const TipChatDialog: React.FC<TipChatDialogProps> = ({
             {...commonStepProps}
             onChangeTipInfo={onChangeTipInfo}
             tipInfo={tipInfo}
+            preLoading={preLoading}
             purchaseValueSelected={purchaseValueSelected}
             onChangePurchaseValueSelected={changePurchaseValueSelected}
             isNoHaveListUsers={isNoHaveListUsers}
           />
+          // <Step1 {...commonStepProps} preLoading={preLoading} onChangeSelectedMember={onChangeSelectedMember} />
         )
       case 3:
         return <Step3 {...commonStepProps} tipInfo={tipInfo} errorMsgDonatePoint={errorMsgDonatePoint} />

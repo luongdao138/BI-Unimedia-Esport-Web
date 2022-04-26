@@ -9,4 +9,6 @@ export enum POINT_MANAGE_ACTION_TYPE {
   RESET_POINTS_HISTORY = 'points/reset_points_history',
   RESET_USAGE_POINTS = 'points/reset_usage_points',
   RESET_DETAIL_USAGE_POINTS_HISTORY = 'points/reset_detail',
+
+  CLEAR_PURCHASE_TICKET = 'points/clear_purchase_ticket',
 }

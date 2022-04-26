@@ -55,10 +55,20 @@ const usePurchaseTicketSuperChat = () => {
     }
   }
 
+  const clearPurchaseTicket = () => {
+    dispatch(actions.clearPurchaseTicket())
+  }
+
+  const getPurchaseTicket = () => {
+    return dataPurchaseTicketSuperChat
+  }
+
   return {
     dataPurchaseTicketSuperChat,
     meta_purchase_ticket_super_chat,
     purchaseTicketSuperChat,
+    clearPurchaseTicket,
+    getPurchaseTicket,
   }
 }
 

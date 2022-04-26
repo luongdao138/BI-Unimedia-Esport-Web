@@ -5,7 +5,7 @@ import { Colors } from '@theme/colors'
 import { FormatHelper } from '@utils/helpers/FormatHelper'
 import { useRotateScreen } from '@utils/hooks/useRotateScreen'
 import { useFormik } from 'formik'
-import React, { useEffect, useRef } from 'react'
+import React, { useRef, useEffect } from 'react'
 // import * as Yup from 'yup'
 import { purchasePoints, sanitizeMess } from '..'
 import FastChatInput from '../FastChatInput'
@@ -19,6 +19,7 @@ type Step2Props = {
   purchaseValueSelected: string
   onChangePurchaseValueSelected: (id: string) => void
   isNoHaveListUsers?: boolean
+  preLoading?: boolean
 }
 
 const Step2: React.FC<Step2Props> = ({
@@ -29,11 +30,12 @@ const Step2: React.FC<Step2Props> = ({
   purchaseValueSelected,
   onChangePurchaseValueSelected,
   isNoHaveListUsers,
+  preLoading,
 }) => {
   const { isLandscape } = useRotateScreen()
   const classes = useStyles({ isLandscape })
   const getPurchasePointList = () => Object.values(purchasePoints)
-  const commentRef = useRef<string>('')
+  const commentRef = useRef<string>(tipInfo?.message || '')
   // const [purchaseValueSelected, setPurchaseValueSelected] = useState<string>('p_100')
 
   const premiumMessageRef = useRef<any>()
@@ -68,7 +70,7 @@ const Step2: React.FC<Step2Props> = ({
   // })
   const { handleChange, values, handleSubmit, errors, touched, setValues, setFieldValue } = useFormik({
     initialValues: {
-      message: '',
+      message: tipInfo?.message || '',
     },
     // validationSchema,
     onSubmit: (values) => {
@@ -76,12 +78,12 @@ const Step2: React.FC<Step2Props> = ({
         const donatedPoint = purchasePoints[purchaseValueSelected].value
 
         // onPressDonate(donatedPoint, sanitizeMess(values.message))
-        onChangeTipInfo({ donatedPoint, message: sanitizeMess(values.message) })
+        onChangeTipInfo({ donatedPoint, message: sanitizeMess(values.message || commentRef.current) })
         onChangeStep(3)
       }
     },
   })
-
+  564
   const formHasError = values.message.length > purchasePoints[purchaseValueSelected].maxLengthInput
 
   const handlePremiumChatClick = async () => {
@@ -107,6 +109,10 @@ const Step2: React.FC<Step2Props> = ({
   useEffect(() => {
     setValues({ message: tipInfo?.message || '' })
   }, [])
+
+  if (preLoading) {
+    return <p>Loading...</p>
+  }
 
   return (
     <Box>
@@ -143,6 +149,7 @@ const Step2: React.FC<Step2Props> = ({
                 input: classes.purchaseCommentInput,
                 adornedEnd: classes.end,
               }}
+              initialValue={tipInfo?.message || values.message}
               error={touched.message && !!errors?.message}
               size="big"
               endAdornment={

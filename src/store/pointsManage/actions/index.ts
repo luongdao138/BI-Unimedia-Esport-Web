@@ -106,3 +106,5 @@ export const purchaseTicketSuperChat = createAsyncThunk<services.PurchaseTicketR
     }
   }
 )
+
+export const clearPurchaseTicket = createAction<void>(POINT_MANAGE_ACTION_TYPE.CLEAR_PURCHASE_TICKET)

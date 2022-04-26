@@ -90,4 +90,7 @@ export default createReducer(initialState, (builder) => {
       state.list_history_points = null
       state.detail_usage_points_history = null
     })
+    .addCase(actions.clearPurchaseTicket, (state) => {
+      state.purchase_ticket_super_chat = null
+    })
 })
