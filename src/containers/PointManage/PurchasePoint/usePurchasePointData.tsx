@@ -66,7 +66,7 @@ const usePurchasePointData = () => {
     }
     const resultAction = await dispatch(actionsPointManage.requestMultiPaymentPurchase(requestParams))
     if (actionsPointManage.requestMultiPaymentPurchase.fulfilled.match(resultAction)) {
-      successCallback()
+      successCallback(resultAction.payload)
     }
   }
 

@@ -62,7 +62,7 @@ const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
   const [deletedCard, setDeletedCard] = useState({})
   // const [deletedCard, setDeletedCard] = useState({card_number: '1234'})
   const [hasError, setHasError] = useState(false)
-  const [paymentMethod, setPaymentMethod] = useState({ id: '1', label: t('purchase_point_tab.payment_method.credit_card'), value: '' })
+  const [paymentMethod, setPaymentMethod] = useState(0)
 
   const cardNameRef = useRef<string>('')
   const cardNumberRef = useRef<string>('')
@@ -196,8 +196,8 @@ const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
     }
   }
 
-  const openPurchaseWindow = () => {
-    const { access_id, start_url, token } = multiPaymentPurchaseData
+  const openPurchaseWindow = (payload) => {
+    const { access_id, start_url, token } = payload
     window
       .open(
         `${start_url}?AccessID=${access_id}&Token=${token}`,
@@ -207,19 +207,19 @@ const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
       ?.focus()
   }
 
-  const handleRequestGMOPaymentSuccess = () => {
+  const handleRequestGMOPaymentSuccess = (payload) => {
     // console.log('multiPaymentPurchaseData', multiPaymentPurchaseData);
     closeModalPurchasePoint()
-    openPurchaseWindow()
+    openPurchaseWindow(payload)
   }
 
   const handlePurchaseGMO = () => {
-    requestMultiPaymentPurchase(selectedPoint, paymentMethod.value, handleRequestGMOPaymentSuccess)
+    requestMultiPaymentPurchase(selectedPoint, paymentMethodList()[paymentMethod].value, handleRequestGMOPaymentSuccess)
   }
 
   const handlePurchaseConfirm = useCallback(() => {
-    return paymentMethod?.id === '1' ? handlePurchasePointCreditCard() : handlePurchaseGMO()
-  }, [paymentMethod.id, multiPaymentPurchaseData])
+    return paymentMethod === 0 ? handlePurchasePointCreditCard() : handlePurchaseGMO()
+  }, [paymentMethod, multiPaymentPurchaseData])
 
   const handleChangeCardNumber = (e) => {
     const card_number = e.target.value.replace(/\s/g, '')
@@ -290,7 +290,7 @@ const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
           name="category"
           value={paymentMethod}
           onChange={(e) => {
-            setPaymentMethod(paymentMethodList()[parseInt(e.target.value.toString()) - 1])
+            setPaymentMethod(parseInt(e.target.value.toString()))
           }}
           label={t('purchase_history.payment_method')}
           required={true}
@@ -299,16 +299,16 @@ const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
           <option disabled value={-1}>
             {i18n.t('common:archive_detail_screen.please_select')}
           </option>
-          {(paymentMethodList() || []).map((value) => {
+          {(paymentMethodList() || []).map((value, index) => {
             const { id, label } = value
             return (
-              <option key={id} value={id}>
+              <option key={id} value={index}>
                 {label}
               </option>
             )
           })}
         </ESSelect>
-        {paymentMethod?.id === '1' && (
+        {paymentMethod === 0 && (
           <Box className={classes.card_info_wrap}>
             <Box className={classes.card_wrap + ' ' + classes.first_card_wrap}>
               <Box className={classes.card_info_title}>{t('purchase_point_tab.card_info_title')}</Box>
@@ -495,7 +495,7 @@ const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
       <Box pb={3} pt={2} justifyContent="center" display="flex" className={classes.actionButton}>
         <ButtonPrimary
           // disable button if has error when use new card and no use old card
-          disabled={paymentMethod?.id !== '1' ? false : (!_.isEmpty(errors) && selectedCardId === '') || isExceedCard}
+          disabled={paymentMethod !== 0 ? false : (!_.isEmpty(errors) && selectedCardId === '') || isExceedCard}
           type="submit"
           round
           fullWidth
