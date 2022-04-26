@@ -11,9 +11,10 @@ interface Props {
   onChange?: (tab: number) => void
   isDisplayedRankingTab: boolean
   isSwitchingTabRef: any
+  isSwitchingSubTabRef: any
 }
 
-const TabsContainer: React.FC<Props> = ({ isDisplayedRankingTab, onChange, isSwitchingTabRef }) => {
+const TabsContainer: React.FC<Props> = ({ isDisplayedRankingTab, onChange, isSwitchingTabRef, isSwitchingSubTabRef }) => {
   const { isLandscape } = useRotateScreen()
   const classes = useStyles({ isLandscape })
   const [value, setValue] = useState<number>(VIDEO_TABS.CHAT)
@@ -35,6 +36,7 @@ const TabsContainer: React.FC<Props> = ({ isDisplayedRankingTab, onChange, isSwi
         onChange={(_, v) => {
           if (isSwitchingTabRef) {
             isSwitchingTabRef.current = v === VIDEO_TABS.RANKING ? true : false
+            isSwitchingSubTabRef.current = v === VIDEO_TABS.RANKING ? true : false
           }
           setValue(v)
         }}

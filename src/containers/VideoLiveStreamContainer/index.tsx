@@ -1089,7 +1089,7 @@ const useStyles = makeStyles((theme) => ({
         wrapChatContainer: (props: videoStyleProps) => {
           if (props.isLandscape)
             return {
-              overflow: 'unset',
+              overflow: 'auto',
             }
         },
       },

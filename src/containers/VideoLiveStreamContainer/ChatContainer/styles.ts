@@ -536,7 +536,7 @@ const useStyles = makeStyles((theme) => ({
           paddingBottom: 'unset',
           marginRight: 'unset',
           marginLeft: 'unset',
-          height: 'auto',
+          height: '100%',
         }
     },
     chatBoardContainer: (props: ChatStyleProps) => {
