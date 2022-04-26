@@ -1753,6 +1753,12 @@ export default {
       required: '必須情報が入力されていません',
       wrong_format: '書式が間違っています',
     },
+    payment_method: {
+      credit_card: 'クレジットカード決済',
+      d_haira: 'd払い',
+      pay_pay: 'ペイペイ',
+      rakuten: '楽天ペイ',
+    },
   },
   videos_top_tab: {
     video_list: '動画一覧',

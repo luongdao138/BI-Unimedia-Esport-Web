@@ -204,4 +204,5 @@ export const URI = {
   GET_VIDEO_REPORT_REASON: 'v2/video_player_reports',
   SEND_VIDEO_REPORT: 'v2/video_player_reports',
   SEND_EMAIL_FINISH: 'v2/gift/sendmail_finish',
+  MULTI_PAYMENT_PURCHASE: 'v2/multi_payments_purchase',
 }

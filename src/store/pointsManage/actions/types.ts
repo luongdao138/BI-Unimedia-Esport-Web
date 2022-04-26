@@ -11,4 +11,5 @@ export enum POINT_MANAGE_ACTION_TYPE {
   RESET_DETAIL_USAGE_POINTS_HISTORY = 'points/reset_detail',
 
   CLEAR_PURCHASE_TICKET = 'points/clear_purchase_ticket',
+  MULTI_PAYMENT_PURCHASE = 'points/request_multi_payment',
 }
