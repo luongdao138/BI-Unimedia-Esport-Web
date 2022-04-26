@@ -1600,6 +1600,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
               return
             }
             console.log('Switch to sub tab chat mess fire')
+
             setBottom(true)
             resetMessWhenSwitchTab()
             handleGetMessTip()
@@ -1635,7 +1636,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       if (isFirstVisitPage) {
         setIsFirstVisitPage(false)
       }
-
+      isSwitchingSubTabRef.current = activeSubTab === SUB_TABS.MESS.TIP
       // if(!isSwitchingSubTabRef.current) {
       console.log('Switch sub tab')
       getMessWhenSwitchTab()
@@ -2224,7 +2225,10 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     }, [])
 
     return (
-      <Box className={classes.chatArea}>
+      <Box
+        className={classes.chatArea}
+        style={{ paddingBottom: isStreaming && isLandscape && activeTab === VIDEO_TABS.RANKING ? '56px' : 0 }}
+      >
         <TabsContainer
           isSwitchingSubTabRef={isSwitchingSubTabRef}
           isSwitchingTabRef={isSwitchingTabRef}
