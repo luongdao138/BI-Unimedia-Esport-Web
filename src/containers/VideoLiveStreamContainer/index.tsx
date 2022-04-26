@@ -234,7 +234,8 @@ const VideoDetail: React.FC = () => {
     // }
     const isNotStreamingVideo =
       (video_status === EVENT_LIVE_STATUS.RECORDING_ARCHIVED && process_status === EVENT_LIVE_STATUS.RECORDING_END) ||
-      (+video_status === STATUS_VIDEO.ARCHIVE && process_status === EVENT_LIVE_STATUS.STREAM_END)
+      (+video_status === STATUS_VIDEO.ARCHIVE && process_status === EVENT_LIVE_STATUS.STREAM_END) ||
+      (+video_status === STATUS_VIDEO.OVER_LOAD && process_status === EVENT_LIVE_STATUS.STREAM_OFF)
 
     const isScheduleVideo = +video_status === STATUS_VIDEO.SCHEDULE && +videoStatus !== STATUS_VIDEO.LIVE_STREAM
     const isLiveStreamVideo = +video_status === STATUS_VIDEO.LIVE_STREAM && process_status === EVENT_LIVE_STATUS.STREAM_START
