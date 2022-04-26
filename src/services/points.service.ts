@@ -133,3 +133,26 @@ export const PurchaseTicketSuperChat = async (params: PurchaseTicketParams): Pro
   const { data } = await api.post<PurchaseTicketResponse>(URI.PURCHASE_TICKET_SUPER_CHAT, params)
   return data
 }
+
+export type MultiPaymentPurchaseRequestParams = {
+  point?: number
+  payment_type: string
+}
+
+export type MultiPaymentPurchaseResponse = {
+  access_id?: string
+  token?: string
+  start_url?: string
+  start_limit_date: string
+}
+
+export const GMO_PAYMENT_TYPE = {
+  PAY_PAY: 'paypay',
+  D_BARAI: 'docomo',
+  RAKUTEN: 'rakutenpay',
+}
+
+export const MultiPaymentPurchase = async (params: MultiPaymentPurchaseRequestParams): Promise<MultiPaymentPurchaseResponse> => {
+  const { data } = await api.post<MultiPaymentPurchaseResponse>(URI.MULTI_PAYMENT_PURCHASE, params)
+  return data
+}

@@ -108,3 +108,16 @@ export const purchaseTicketSuperChat = createAsyncThunk<services.PurchaseTicketR
 )
 
 export const clearPurchaseTicket = createAction<void>(POINT_MANAGE_ACTION_TYPE.CLEAR_PURCHASE_TICKET)
+export const requestMultiPaymentPurchase = createAsyncThunk<
+  services.MultiPaymentPurchaseResponse,
+  services.MultiPaymentPurchaseRequestParams
+>(POINT_MANAGE_ACTION_TYPE.MULTI_PAYMENT_PURCHASE, async (purchaseParams, { rejectWithValue }) => {
+  try {
+    return await services.MultiPaymentPurchase(purchaseParams)
+  } catch (error) {
+    if (!error.response) {
+      throw error
+    }
+    return rejectWithValue(error.response.data)
+  }
+})
