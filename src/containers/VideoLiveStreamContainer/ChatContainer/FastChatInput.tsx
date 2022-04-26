@@ -20,11 +20,12 @@ export type InputProps = {
     isValid: boolean
     formattedValue: string
   }
+  initialValue?: string
 }
 
 const ESFastChatInput: React.FC<OutlinedInputProps & InputProps> = (props) => {
   const { resetErrorOnChange, valueRef, inputRef, formatValue } = props
-  const [tempMessage, setTempMessage] = useState('')
+  const [tempMessage, setTempMessage] = useState(props.initialValue || '')
 
   useEffect(() => {
     if (props.value !== null && props.value !== undefined) {

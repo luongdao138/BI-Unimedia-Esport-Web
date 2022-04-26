@@ -165,6 +165,7 @@ const ChatFooter: React.FC<Props> = ({
 
   const purchaseIconClick = () => {
     setPreLoading(true)
+    setPurchaseDialogVisible(!purchaseDialogVisible)
     setTimeout(() => {
       if (detailVideoResult) {
         getVideoGiftMasterList(
@@ -181,7 +182,6 @@ const ChatFooter: React.FC<Props> = ({
         )
       }
     }, 100)
-    setPurchaseDialogVisible(!purchaseDialogVisible)
   }
 
   useEffect(() => {
