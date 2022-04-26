@@ -52,7 +52,6 @@ const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
     metaPurchaseUseOldCardMeta,
     resetErrorMess,
     requestMultiPaymentPurchase,
-    multiPaymentPurchaseData,
   } = usePurchasePointData()
 
   const [selectedCardId, setSelectedCardId] = React.useState<any>('')
@@ -217,9 +216,9 @@ const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
     requestMultiPaymentPurchase(selectedPoint, paymentMethodList()[paymentMethod].value, handleRequestGMOPaymentSuccess)
   }
 
-  const handlePurchaseConfirm = useCallback(() => {
+  const handlePurchaseConfirm = () => {
     return paymentMethod === 0 ? handlePurchasePointCreditCard() : handlePurchaseGMO()
-  }, [paymentMethod, multiPaymentPurchaseData])
+  }
 
   const handleChangeCardNumber = (e) => {
     const card_number = e.target.value.replace(/\s/g, '')
