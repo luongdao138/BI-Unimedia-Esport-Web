@@ -1594,20 +1594,24 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       if (!isFirstVisitPage) {
         switch (activeSubTab) {
           case SUB_TABS.MESS.TIP:
+            console.log('Switch to sub tab chat mess')
             if (!isSwitchingSubTabRef.current) {
               return
             }
+            console.log('Switch to sub tab chat mess fire')
             setBottom(true)
             resetMessWhenSwitchTab()
             handleGetMessTip()
             break
 
           case SUB_TABS.MESS.ALL:
+            console.log('Switch to sub tab chat all')
             setBottom(true)
             resetMessWhenSwitchTab()
             if (isSwitchingSubTabRef.current) {
               return
             }
+            console.log('Switch to sub tab chat all fire')
             if (isStreaming) {
               // console.log('🚀 ~ useEffect ~ isStreaming', isStreaming)
               setIsSwitchingTab(true)
@@ -1632,28 +1636,26 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       }
 
       // if(!isSwitchingSubTabRef.current) {
+      console.log('Switch sub tab')
       getMessWhenSwitchTab()
       // }
     }, [activeSubTab])
 
     useEffect(() => {
-      console.log('🚀 ~ onCreateMess ~ firstRender--111', isFirstVisitPage)
-      // if (!isMobile) {
-      // getMessWhenSwitchTab()
-      // }
-      console.log('🚀 ~ onCreateMess ~ activeSubTab--000', activeSubTab)
-      console.log('🚀 ~ onCreateMess ~ activeTab---000', activeTab)
       if (!isFirstVisitPage && activeTab === VIDEO_TABS.CHAT) {
         if (activeSubTab === SUB_TABS.MESS.ALL || activeSubTab === SUB_TABS.MESS.TIP) {
-          console.log('🚀 ~ useEffect ~ else--111')
+          console.log('Change tab fire chat')
           getMessWhenSwitchTab()
         } else {
-          console.log('🚀 ~ useEffect ~ else--000')
-          setActiveSubTab(SUB_TABS.MESS.ALL)
+          console.log('Change tab fire not chat')
+          setActiveSubTab(SUB_TABS.MESS.ALL) 
         }
+      } else {
+        isSwitchingSubTabRef.current = false;
       }
       // get list ranking if has not get
       if (activeTab === VIDEO_TABS.RANKING && !rankingListMeta.pending && !rankingListMeta.loaded) {
+        console.log('Change tab fire ranking')
         fetchDonateRanking({ video_id: detailVideoResult.uuid })
       }
     }, [activeTab])

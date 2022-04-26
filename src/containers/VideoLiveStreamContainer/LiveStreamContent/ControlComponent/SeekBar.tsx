@@ -49,7 +49,7 @@ const SeekBar: React.FC<Props & SliderProps> = ({
   const throttleUpdateTime = useCallback(
     _.throttle((event) => {
       const videoInfo = event.target
-      const newPlayedSecondTime = videoInfo.currentTime
+      const newPlayedSecondTime = videoInfo?.currentTime
       let durationTime = videoType === STATUS_VIDEO.LIVE_STREAM ? videoInfo.duration - DELAY_SECONDS : videoInfo.duration
       // handle delayed time when is living
       if (isStreaming && videoType === STATUS_VIDEO.LIVE_STREAM) {
@@ -61,7 +61,7 @@ const SeekBar: React.FC<Props & SliderProps> = ({
       }
       // if(!isStreaming && durationTime < newPlayedSecondTime && videoType === STATUS_VIDEO.LIVE_STREAM){
       if (!isStreaming && videoType === STATUS_VIDEO.LIVE_STREAM) {
-        durationTime = videoInfo.duration
+        durationTime = videoInfo?.duration
       }
       const newDurationTime = durationTime
       // const newDurationTime = videoInfo.duration
