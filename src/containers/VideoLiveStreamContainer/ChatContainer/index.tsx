@@ -319,6 +319,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       detailVideoResult,
       rankingListMeta,
       fetchDonateRanking,
+      isFullScreen,
     } = useDetailVideo()
     const { isEnabledGift, isEnabledMessFilter, isDisplayedRankingTab } = useCheckDisplayChat()
 
@@ -1648,10 +1649,10 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
           getMessWhenSwitchTab()
         } else {
           console.log('Change tab fire not chat')
-          setActiveSubTab(SUB_TABS.MESS.ALL) 
+          setActiveSubTab(SUB_TABS.MESS.ALL)
         }
       } else {
-        isSwitchingSubTabRef.current = false;
+        isSwitchingSubTabRef.current = false
       }
       // get list ranking if has not get
       if (activeTab === VIDEO_TABS.RANKING && !rankingListMeta.pending && !rankingListMeta.loaded) {
@@ -2029,7 +2030,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         <IconButton
           disableRipple
           style={{
-            display: !isBottom ? 'flex' : 'none',
+            display: !isBottom && !isFullScreen ? 'flex' : 'none',
             bottom: isMobile && isStreaming ? (isLandscape ? 66 : 180) : 30,
           }}
           className={classes.bottomArrow}
