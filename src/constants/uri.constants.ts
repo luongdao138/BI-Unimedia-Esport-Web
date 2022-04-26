@@ -187,4 +187,21 @@ export const URI = {
   UPDATE_ARCHIVE_VIDEO: '/v2/report/archived-save-detail',
   DELETE_ARCHIVE_VIDEO: '/v2/report/archived-delete',
   GET_COOKIE_TO_DOWNLOAD: '/v2/report/get-url-download',
+  //delivery report
+  TIP_REPORT: '/v2/gift/list-user-give-gift',
+  TICKET_REPORT: '/v2/report/list-user-sell-ticket',
+  DETAILED_REPORT: '/v2/gift/gift-report-detail',
+  // Gift
+  VERIFY_SNS_URL: '/v2/gift/master/sns_url',
+  ADD_NEW_GIFT_MASTER: '/v2/gift/master',
+  GET_ALL_GIFT_MASTER: '/v2/gift/master',
+  ADD_NEW_GIFT_GROUP: 'v2/gift/group',
+  GET_ALL_GIFT_GROUP: 'v2/gift/group',
+  GET_GIFT_GROUP_DETAIL: 'v2/gift/group_detail',
+  DELETE_GIFT_GROUP: 'v2/gift/group/delete',
+  GET_RANKINGS: 'v2/gift/ranking',
+  GET_VIDEO_REPORT_REASON: 'v2/video_player_reports',
+  SEND_VIDEO_REPORT: 'v2/video_player_reports',
+  SEND_EMAIL_FINISH: 'v2/gift/sendmail_finish',
+  MULTI_PAYMENT_PURCHASE: 'v2/multi_payments_purchase',
 }

@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import Step1 from './Step1'
-import Step2 from './Step2'
+import Step1 from '@containers/PointManage/PurchasePoint/Step1'
+import Step2 from '@containers/PointManage/PurchasePoint/Step2'
 import { Box, makeStyles } from '@material-ui/core'
-import usePurchasePointData from './usePurchasePointData'
+import usePurchasePointData from '@containers/PointManage/PurchasePoint/usePurchasePointData'
+import usePointsManage from '@containers/PointManage/usePointsManage'
 
 declare global {
   interface Window {
@@ -15,9 +16,21 @@ const PurchasePoint: React.FC = () => {
   const [selectedPoint, setSelectedPoint] = useState(0)
 
   const { getSavedCards } = usePurchasePointData()
+  const { getMyPointData } = usePointsManage()
 
   useEffect(() => {
     getSavedCards()
+  }, [])
+
+  useEffect(() => {
+    addEventListener('storage', (event) => {
+      if (event?.key === 'reload_point') {
+        getMyPointData({ page: 1, limit: 10 })
+      }
+    })
+    return () => {
+      removeEventListener('storage', () => null)
+    }
   }, [])
 
   const classes = useStyles()
