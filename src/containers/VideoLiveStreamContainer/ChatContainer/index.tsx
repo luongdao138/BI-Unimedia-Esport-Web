@@ -2219,12 +2219,18 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       console.log('🚀 ~ handleChangeTab ~ v', v)
 
       isSwitchingTabRef.current = v === VIDEO_TABS.RANKING ? true : false
+      isSwitchingSubTabRef.current = v === VIDEO_TABS.RANKING ? true : false
       setActiveTab(v)
     }, [])
 
     return (
       <Box className={classes.chatArea}>
-        <TabsContainer isSwitchingTabRef={isSwitchingTabRef} onChange={handleChangeTab} isDisplayedRankingTab={isDisplayedRankingTab} />
+        <TabsContainer
+          isSwitchingSubTabRef={isSwitchingSubTabRef}
+          isSwitchingTabRef={isSwitchingTabRef}
+          onChange={handleChangeTab}
+          isDisplayedRankingTab={isDisplayedRankingTab}
+        />
         {activeTab === VIDEO_TABS.CHAT && (
           <Box className={classes.tabsContent} style={{ display: isMobile && activeTab === VIDEO_TABS.CHAT ? 'none' : 'block' }}>
             {getTabsContent}
