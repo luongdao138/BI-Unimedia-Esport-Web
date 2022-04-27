@@ -380,39 +380,6 @@ export type DeleteCowellRealtimeStatusConnectionsInput = {
   id: string
 }
 
-export type CreatePaymentResultInput = {
-  id?: string | null
-  userId: string
-  status: string
-}
-
-export type ModelPaymentResultConditionInput = {
-  userId?: ModelStringInput | null
-  status?: ModelStringInput | null
-  and?: Array<ModelPaymentResultConditionInput | null> | null
-  or?: Array<ModelPaymentResultConditionInput | null> | null
-  not?: ModelPaymentResultConditionInput | null
-}
-
-export type PaymentResult = {
-  __typename: 'PaymentResult'
-  id?: string
-  userId?: string
-  status?: string
-  createdAt?: string
-  updatedAt?: string
-}
-
-export type UpdatePaymentResultInput = {
-  id: string
-  userId?: string | null
-  status?: string | null
-}
-
-export type DeletePaymentResultInput = {
-  id: string
-}
-
 export type ModelUserFilterInput = {
   id?: ModelIDInput | null
   uuid?: ModelStringInput | null
@@ -519,21 +486,6 @@ export type ModelCowellRealtimeStatusConnectionsFilterInput = {
 export type ModelCowellRealtimeStatusConnectionsConnection = {
   __typename: 'ModelCowellRealtimeStatusConnectionsConnection'
   items?: Array<CowellRealtimeStatusConnections>
-  nextToken?: string | null
-}
-
-export type ModelPaymentResultFilterInput = {
-  id?: ModelIDInput | null
-  userId?: ModelStringInput | null
-  status?: ModelStringInput | null
-  and?: Array<ModelPaymentResultFilterInput | null> | null
-  or?: Array<ModelPaymentResultFilterInput | null> | null
-  not?: ModelPaymentResultFilterInput | null
-}
-
-export type ModelPaymentResultConnection = {
-  __typename: 'ModelPaymentResultConnection'
-  items?: Array<PaymentResult>
   nextToken?: string | null
 }
 
@@ -1149,54 +1101,6 @@ export type DeleteCowellRealtimeStatusConnectionsMutation = {
   } | null
 }
 
-export type CreatePaymentResultMutationVariables = {
-  input?: CreatePaymentResultInput
-  condition?: ModelPaymentResultConditionInput | null
-}
-
-export type CreatePaymentResultMutation = {
-  createPaymentResult?: {
-    __typename: 'PaymentResult'
-    id: string
-    userId: string
-    status: string
-    createdAt: string
-    updatedAt: string
-  } | null
-}
-
-export type UpdatePaymentResultMutationVariables = {
-  input?: UpdatePaymentResultInput
-  condition?: ModelPaymentResultConditionInput | null
-}
-
-export type UpdatePaymentResultMutation = {
-  updatePaymentResult?: {
-    __typename: 'PaymentResult'
-    id: string
-    userId: string
-    status: string
-    createdAt: string
-    updatedAt: string
-  } | null
-}
-
-export type DeletePaymentResultMutationVariables = {
-  input?: DeletePaymentResultInput
-  condition?: ModelPaymentResultConditionInput | null
-}
-
-export type DeletePaymentResultMutation = {
-  deletePaymentResult?: {
-    __typename: 'PaymentResult'
-    id: string
-    userId: string
-    status: string
-    createdAt: string
-    updatedAt: string
-  } | null
-}
-
 export type GetUserQueryVariables = {
   id?: string
 }
@@ -1556,42 +1460,6 @@ export type ListCowellRealtimeStatusConnectionssQuery = {
       __typename: 'CowellRealtimeStatusConnections'
       id: string
       connectionId: string
-      createdAt: string
-      updatedAt: string
-    }>
-    nextToken?: string | null
-  } | null
-}
-
-export type GetPaymentResultQueryVariables = {
-  id?: string
-}
-
-export type GetPaymentResultQuery = {
-  getPaymentResult?: {
-    __typename: 'PaymentResult'
-    id: string
-    userId: string
-    status: string
-    createdAt: string
-    updatedAt: string
-  } | null
-}
-
-export type ListPaymentResultsQueryVariables = {
-  filter?: ModelPaymentResultFilterInput | null
-  limit?: number | null
-  nextToken?: string | null
-}
-
-export type ListPaymentResultsQuery = {
-  listPaymentResults?: {
-    __typename: 'ModelPaymentResultConnection'
-    items: Array<{
-      __typename: 'PaymentResult'
-      id: string
-      userId: string
-      status: string
       createdAt: string
       updatedAt: string
     }>
@@ -2401,39 +2269,6 @@ export type OnDeleteCowellRealtimeStatusConnectionsSubscription = {
     __typename: 'CowellRealtimeStatusConnections'
     id: string
     connectionId: string
-    createdAt: string
-    updatedAt: string
-  } | null
-}
-
-export type OnCreatePaymentResultSubscription = {
-  onCreatePaymentResult?: {
-    __typename: 'PaymentResult'
-    id: string
-    userId: string
-    status: string
-    createdAt: string
-    updatedAt: string
-  } | null
-}
-
-export type OnUpdatePaymentResultSubscription = {
-  onUpdatePaymentResult?: {
-    __typename: 'PaymentResult'
-    id: string
-    userId: string
-    status: string
-    createdAt: string
-    updatedAt: string
-  } | null
-}
-
-export type OnDeletePaymentResultSubscription = {
-  onDeletePaymentResult?: {
-    __typename: 'PaymentResult'
-    id: string
-    userId: string
-    status: string
     createdAt: string
     updatedAt: string
   } | null
