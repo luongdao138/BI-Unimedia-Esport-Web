@@ -70,6 +70,8 @@ const usePurchasePointData = () => {
     }
   }
 
+  const updateNewPurchaseMethodSuccessState = (success) => dispatch(actions.newPaymentMethodSuccessState({ success }))
+
   return {
     metaSavedCardsMeta,
     getSavedCards,
@@ -83,6 +85,7 @@ const usePurchasePointData = () => {
     resetErrorMess,
     requestMultiPaymentPurchase,
     multiPaymentPurchaseData,
+    updateNewPurchaseMethodSuccessState,
   }
 }
 

@@ -144,6 +144,8 @@ export type MultiPaymentPurchaseResponse = {
   token?: string
   start_url?: string
   start_limit_date: string
+  point?: number
+  payment_type: string
 }
 
 export const GMO_PAYMENT_TYPE = {

@@ -113,7 +113,8 @@ export const requestMultiPaymentPurchase = createAsyncThunk<
   services.MultiPaymentPurchaseRequestParams
 >(POINT_MANAGE_ACTION_TYPE.MULTI_PAYMENT_PURCHASE, async (purchaseParams, { rejectWithValue }) => {
   try {
-    return await services.MultiPaymentPurchase(purchaseParams)
+    const result = await services.MultiPaymentPurchase(purchaseParams)
+    return { ...result, ...purchaseParams }
   } catch (error) {
     if (!error.response) {
       throw error
