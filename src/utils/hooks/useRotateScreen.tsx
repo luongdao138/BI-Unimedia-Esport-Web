@@ -34,8 +34,13 @@ export const useRotateScreen = (): IProps => {
     // handle check rotate screen on sp
     if (isOnDeviceSp()) {
       window.addEventListener('orientationchange', checkRotateScreenSP)
+      const isVerticalOrientationScreen = window.orientation === 0
       if (window.outerWidth > window.outerHeight) {
-        setIsLandscape(true)
+        if (isVerticalOrientationScreen && /Android/i.test(window.navigator.userAgent)) {
+          setIsLandscape(false)
+        } else {
+          setIsLandscape(true)
+        }
       } else {
         setIsLandscape(false)
       }
