@@ -2,7 +2,7 @@ import ESTab from '@components/Tab'
 import ESTabs from '@components/Tabs'
 import { VIDEO_TABS } from '@constants/common.constants'
 import i18n from '@locales/i18n'
-import { Box } from '@material-ui/core'
+import { Box, useMediaQuery, useTheme } from '@material-ui/core'
 import { useRotateScreen } from '@utils/hooks/useRotateScreen'
 import React, { memo, useEffect, useState } from 'react'
 import useStyles from '../styles'
@@ -16,7 +16,8 @@ interface Props {
 
 const TabsContainer: React.FC<Props> = ({ isDisplayedRankingTab, onChange, isSwitchingTabRef, isSwitchingSubTabRef }) => {
   const { isLandscape } = useRotateScreen()
-  const isMobile = /iPhone|iPad|iPod|Android/i.test(window.navigator.userAgent)
+  const theme = useTheme();
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(window.navigator.userAgent) || useMediaQuery(theme.breakpoints.down(769))
   const classes = useStyles({ isLandscape })
   const [value, setValue] = useState<number>(VIDEO_TABS.CHAT)
 
@@ -31,7 +32,7 @@ const TabsContainer: React.FC<Props> = ({ isDisplayedRankingTab, onChange, isSwi
     return () => {
       clearTimeout(timeoutId)
     }
-  }, [value])
+  }, [value, isMobile])
 
   return (
     <Box className={classes.tabsContainer}>
