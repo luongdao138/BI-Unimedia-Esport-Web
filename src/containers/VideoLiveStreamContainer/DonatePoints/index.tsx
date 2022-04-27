@@ -1,11 +1,13 @@
 import { Box, Typography, makeStyles, Theme, Icon } from '@material-ui/core'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import ESModal from '@components/Modal'
 import i18n from '@locales/i18n'
 import Stage1 from './Stage1'
 import Stage2 from './Stage2'
 import Stage3 from './Stage3'
 import Head from 'next/head'
+import usePointsManage from '@containers/PointManage/usePointsManage'
+import usePurchasePointData from '@containers/PointManage/PurchasePoint/usePurchasePointData'
 interface DonatePointsProps {
   myPoint: number
   lackedPoint: number
@@ -17,6 +19,21 @@ const DonatePoints: React.FC<DonatePointsProps> = ({ showModalPurchasePoint, set
   const classes = useStyles()
   const [stage, setStage] = useState(1)
   const [isBuyNewPoint, setIsBuyNewPoint] = useState(false)
+  const { getMyPointData } = usePointsManage()
+  const { updateNewPurchaseMethodSuccessState } = usePurchasePointData()
+
+  useEffect(() => {
+    addEventListener('storage', (event) => {
+      if (event?.key === 'reload_point') {
+        getMyPointData({ page: 1, limit: 10 })
+        updateNewPurchaseMethodSuccessState(true)
+      }
+    })
+    return () => {
+      removeEventListener('storage', () => null)
+    }
+  }, [])
+
   const stages = [
     {
       value: 1,

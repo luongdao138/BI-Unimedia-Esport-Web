@@ -4,4 +4,5 @@ export enum POINT_PURCHASE_ACTION_TYPE {
   PURCHASE_POINT_USE_NEW_CARD = 'points/purchasePointUseNewCard',
   PURCHASE_POINT_USE_OLD_CARD = 'points/purchasePointUseOldCard',
   RESET_ERROR_MESS_PURCHASE_POINT = 'points/resetErrorMess',
+  NEW_PAYMENT_METHOD_PURCHASE_SUCCESS = 'points/newPaymentMethodSuccess',
 }

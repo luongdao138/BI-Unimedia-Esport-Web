@@ -57,3 +57,6 @@ export const purchasePointUseOldCard = createAsyncThunk(
 )
 
 export const resetErrorMess = createAction(POINT_PURCHASE_ACTION_TYPE.RESET_ERROR_MESS_PURCHASE_POINT)
+export const newPaymentMethodSuccessState = createAction<{ success: boolean }>(
+  POINT_PURCHASE_ACTION_TYPE.NEW_PAYMENT_METHOD_PURCHASE_SUCCESS
+)
