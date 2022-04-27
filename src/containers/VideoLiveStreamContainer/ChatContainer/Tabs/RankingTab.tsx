@@ -191,7 +191,7 @@ const useStyles = makeStyles((theme) => ({
   rankingContainer: {
     width: '100%',
     height: '100%',
-    padding: '16px 160x 70px 16px',
+    padding: '16px 16px 70px 16px',
     overflow: 'hidden',
     display: 'flex',
     flexDirection: 'column',
