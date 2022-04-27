@@ -34,9 +34,7 @@ export const useRotateScreen = (): IProps => {
     // handle check rotate screen on sp
     if (isOnDeviceSp()) {
       window.addEventListener('orientationchange', checkRotateScreenSP)
-      // console.log('🚀 ~  ~ window---000 ', window)
-      // console.log('🚀 ~  ~ window---000', window.innerWidth, window.innerHeight)
-      if (window.innerWidth > window.innerHeight) {
+      if (window.outerWidth > window.outerHeight) {
         setIsLandscape(true)
       } else {
         setIsLandscape(false)
