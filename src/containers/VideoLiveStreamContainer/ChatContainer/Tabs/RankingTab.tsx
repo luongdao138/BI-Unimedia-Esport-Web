@@ -38,7 +38,6 @@ const RankingTab: React.FC<RankingTabProps> = ({ activeSubTab, setActiveSubTab }
   const { rankingListMeta } = useDetailVideo()
   const { giverRankInfo, receiverRankInfo } = useContext(VideoContext)
   const { isDisplayedRankingReceipt } = useCheckDisplayChat()
-
   // eslint-disable-next-line no-console
   const { selectors } = userProfileStore
   const userProfile = useAppSelector<UserProfile>(selectors.getUserProfile)
@@ -55,9 +54,11 @@ const RankingTab: React.FC<RankingTabProps> = ({ activeSubTab, setActiveSubTab }
   })
 
   useEffect(() => {
+   if (activeSubTab !== SUB_TABS.RANKING.RECEIPT && activeSubTab !== SUB_TABS.RANKING.SEND) {
     // set default tab is receipt (common) if rank receipt is displayed, else set to ranking send
     const newValue = isDisplayedRankingReceipt ? SUB_TABS.RANKING.RECEIPT : SUB_TABS.RANKING.SEND
     setActiveSubTab(newValue)
+  }
   }, [])
 
   const giver: Array<RankingsItem> = _.slice(giverRankInfo, 0, LIMIT_RANK)
@@ -193,6 +194,7 @@ const useStyles = makeStyles((theme) => ({
     padding: '16px',
     overflow: 'hidden',
     display: 'flex',
+    paddingBottom: '70px',
     flexDirection: 'column',
   },
   [theme.breakpoints.down(769)]: {
