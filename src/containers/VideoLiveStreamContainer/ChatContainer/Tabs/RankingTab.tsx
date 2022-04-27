@@ -193,6 +193,7 @@ const useStyles = makeStyles((theme) => ({
     padding: '16px',
     overflow: 'hidden',
     display: 'flex',
+    paddingBottom: '70px',
     flexDirection: 'column',
   },
   [theme.breakpoints.down(769)]: {

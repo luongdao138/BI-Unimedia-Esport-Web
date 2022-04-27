@@ -488,9 +488,9 @@ const useStyles = makeStyles((theme) => ({
       height: 'auto',
       background: '#212121',
     },
-    chatBoard: {
-      height: 389,
-    },
+    // chatBoard: {
+    //   height: 'calc(100vh - 300px)',
+    // },
     purchaseDialogContainer: {
       width: 318,
     },

@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react'
 import { useMediaQuery, useTheme } from '@material-ui/core'
 import { AutoSizer, CellMeasurer, List, CellMeasurerCache } from 'react-virtualized'
-import useStyles from '../styles'
+import useStyles from '@containers/VideoLiveStreamContainer/ChatContainer/styles'
 import { useRotateScreen } from '@utils/hooks/useRotateScreen'
-import DonateMessage from '../DonateMessage'
-import ChatTextMessage from '../ChatTextMessage'
-import useChatHelper from '../useChatHelper'
+import DonateMessage from '@containers/VideoLiveStreamContainer/ChatContainer/DonateMessage'
+import ChatTextMessage from '@containers/VideoLiveStreamContainer/ChatContainer/ChatTextMessage'
+import useChatHelper from '@containers/VideoLiveStreamContainer/ChatContainer/useChatHelper'
+import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
 import { useRect } from '@utils/useRect'
 
 interface Props {
@@ -51,9 +52,27 @@ const ChatMessages: React.FC<Props> = ({
   const classes = useStyles({ isLandscape })
   const theme = useTheme()
   const contentRef = React.createRef<HTMLDivElement>()
+  const { width: videoDisplayWidth } = useWindowDimensions(0)
   const matchSm = useMediaQuery(theme.breakpoints.down(769))
+  const isDown1100 = useMediaQuery(theme.breakpoints.down(1100), { noSsr: true })
+  const isDown960 = useMediaQuery(theme.breakpoints.down(960), { noSsr: true })
   const matchMd = useMediaQuery(theme.breakpoints.down(1025))
   const { getMessageWithoutNgWords } = useChatHelper()
+
+  const chatBoardWidth = () => {
+    if (!isDown1100) return 482
+    if (!matchSm) return 350
+    return 0
+  }
+  const sizeMenuWidth = () => {
+    if (!isDown960) return 98
+    return 0
+  }
+
+  const calculateVideoHeight = () => {
+    const videoWidth = videoDisplayWidth - (chatBoardWidth() + sizeMenuWidth())
+    return (videoWidth * 9) / 16 + 80
+  }
 
   const contentRect = useRect(contentRef)
 
@@ -142,6 +161,7 @@ const ChatMessages: React.FC<Props> = ({
       ref={contentRef}
       style={{
         marginBottom: (matchSm && !isLandscape) || (!matchSm && matchMd && isLandscape) ? chatInputHeight : 0,
+        height: matchSm ? `calc(100vh -  ${calculateVideoHeight()}px)` : '100%',
       }}
     >
       <AutoSizer
