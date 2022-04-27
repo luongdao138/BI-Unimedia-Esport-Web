@@ -32,7 +32,7 @@ const PaymentResult: React.FC = () => {
     <Box className={classes.container}>
       <Typography className={classes.title}>{status}</Typography>
       <ESButton variant="contained" color="primary" size="medium" round className={classes.button} onClick={handleCloseClick}>
-        {t('common:tournament.close_recruitment.button_text')}
+        {t('common:tournament_create.close')}
       </ESButton>
     </Box>
   )

@@ -16,7 +16,7 @@ interface Props {
 
 const TabsContainer: React.FC<Props> = ({ isDisplayedRankingTab, onChange, isSwitchingTabRef, isSwitchingSubTabRef }) => {
   const { isLandscape } = useRotateScreen()
-  const theme = useTheme();
+  const theme = useTheme()
   const isMobile = /iPhone|iPad|iPod|Android/i.test(window.navigator.userAgent) || useMediaQuery(theme.breakpoints.down(769))
   const classes = useStyles({ isLandscape })
   const [value, setValue] = useState<number>(VIDEO_TABS.CHAT)

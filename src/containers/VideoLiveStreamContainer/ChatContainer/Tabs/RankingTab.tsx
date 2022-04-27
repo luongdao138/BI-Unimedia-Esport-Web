@@ -54,11 +54,11 @@ const RankingTab: React.FC<RankingTabProps> = ({ activeSubTab, setActiveSubTab }
   })
 
   useEffect(() => {
-   if (activeSubTab !== SUB_TABS.RANKING.RECEIPT && activeSubTab !== SUB_TABS.RANKING.SEND) {
-    // set default tab is receipt (common) if rank receipt is displayed, else set to ranking send
-    const newValue = isDisplayedRankingReceipt ? SUB_TABS.RANKING.RECEIPT : SUB_TABS.RANKING.SEND
-    setActiveSubTab(newValue)
-  }
+    if (activeSubTab !== SUB_TABS.RANKING.RECEIPT && activeSubTab !== SUB_TABS.RANKING.SEND) {
+      // set default tab is receipt (common) if rank receipt is displayed, else set to ranking send
+      const newValue = isDisplayedRankingReceipt ? SUB_TABS.RANKING.RECEIPT : SUB_TABS.RANKING.SEND
+      setActiveSubTab(newValue)
+    }
   }, [])
 
   const giver: Array<RankingsItem> = _.slice(giverRankInfo, 0, LIMIT_RANK)

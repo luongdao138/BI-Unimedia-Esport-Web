@@ -30,6 +30,7 @@ interface Step2Props {
 const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
   const { t } = useTranslation('common')
   const classes = useStyles()
+  const formRef = useRef<any>(null)
 
   const paymentMethodList = useCallback(
     () => [
@@ -199,11 +200,15 @@ const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
     const { access_id, start_url, token } = payload
     window
       .open(
-        `${start_url}?AccessID=${access_id}&Token=${token}`,
+        `../payment_process?url=${encodeURIComponent(start_url)}&AccessID=${encodeURIComponent(access_id)}&Token=${encodeURIComponent(
+          token
+        )}`,
         '',
         `width=550,height=400,location=no,toolbar=no,status=no,directories=no,menubar=no,scrollbars=yes,resizable=no,centerscreen=yes,chrome=yes`
       )
       ?.focus()
+    // formRef.current.submit()
+    // console.log('ref::', formRef)
   }
 
   const handleRequestGMOPaymentSuccess = (payload) => {
@@ -529,6 +534,10 @@ const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
         />
       )}
       {metaSavedCardsMeta.pending && <ESLoader open={metaSavedCardsMeta.pending} />}
+      <form ref={formRef} id="TheForm" method="POST" action="https://pt01.mul-pay.jp/payment/DocomoStart.idPass">
+        <input type="hidden" name="Token" value="qA0iEWYgpl+P0IqF0deXbEmdKQlHRc8cL8qDHpGkUCiwBS7yYvxSiC0zeMVH+O4F" />
+        <input type="hidden" name="AccessID" value="0fd183bcdd74bdd8f38c242db4face37" />
+      </form>
     </Box>
   )
 }

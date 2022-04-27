@@ -1,7 +1,7 @@
 import { Box, makeStyles, Typography, ClickAwayListener } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 
-import {  useState } from 'react'
+import { useState } from 'react'
 // import { useTranslation } from 'react-i18next'
 import { SUB_TABS, VIDEO_INFO_TABS, VIDEO_TABS } from '@constants/common.constants'
 
