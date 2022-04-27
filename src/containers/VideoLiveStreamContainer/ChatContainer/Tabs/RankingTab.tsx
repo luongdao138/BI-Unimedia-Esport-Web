@@ -191,10 +191,9 @@ const useStyles = makeStyles((theme) => ({
   rankingContainer: {
     width: '100%',
     height: '100%',
-    padding: '16px',
+    padding: '16px 160x 70px 16px',
     overflow: 'hidden',
     display: 'flex',
-    paddingBottom: '70px',
     flexDirection: 'column',
   },
   [theme.breakpoints.down(769)]: {

@@ -197,6 +197,11 @@ const useStyles = makeStyles((theme) => ({
       fontWeight: 'bold',
     },
   },
+  [theme.breakpoints.between(960, 1280)]: {
+    giftMemberList: {
+      maxHeight: '262px',
+    },
+  },
 }))
 
 export default Step1
