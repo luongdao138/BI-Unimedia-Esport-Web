@@ -2,7 +2,7 @@ import TabsGroup from '@components/TabsGroup'
 import { SUB_TABS } from '@constants/common.constants'
 import { useVideoTabContext } from '@containers/VideoLiveStreamContainer/VideoContext/VideTabContext'
 import i18n from '@locales/i18n'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 interface Props {
   successGetListMessTip: boolean
@@ -13,8 +13,14 @@ interface Props {
 const SubTabGroups: React.FC<Props> = ({ successGetListMess, successGetListMessTip, isSwitchingSubTabRef }) => {
   const { setActiveSubTab } = useVideoTabContext()
   const [value, setValue] = useState(SUB_TABS.MESS.ALL)
+  const isFirstRun = useRef(true)
 
   useEffect(() => {
+    if (isFirstRun.current) {
+      isFirstRun.current = false
+      return
+    }
+
     const timeoutId = setTimeout(() => {
       isSwitchingSubTabRef.current = value === SUB_TABS.MESS.TIP
       setActiveSubTab(value)
