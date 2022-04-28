@@ -1663,7 +1663,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       if (!isFirstVisitPage && activeTab === VIDEO_TABS.CHAT) {
         if (activeSubTab === SUB_TABS.MESS.ALL || activeSubTab === SUB_TABS.MESS.TIP) {
           console.log('Change tab fire chat')
-          getMessWhenSwitchTab()
+          if (!isMobile) getMessWhenSwitchTab()
         } else {
           console.log('Change tab fire not chat')
           setActiveSubTab(SUB_TABS.MESS.ALL)
