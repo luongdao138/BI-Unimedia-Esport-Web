@@ -25,7 +25,8 @@ const Rankings: React.FC<Props> = ({ children }) => {
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down(769))
   const matchSpSE = useMediaQuery(theme.breakpoints.down(321))
-  const classes = useStyles({ availHeight: 1, availWidth: 1, isLandscape })
+  const iPhonePl = /iPhone/i.test(window.navigator.userAgent)
+  const classes = useStyles({ availHeight: 1, availWidth: 1, isLandscape, isIphone: iPhonePl || isMobile })
   const { t } = useTranslation('common')
 
   const widthColumn = useMemo(() => {
@@ -78,13 +79,19 @@ const useStyles = makeStyles((theme) => ({
     borderCollapse: 'inherit',
     overflowX: 'auto',
   },
-  table: {
-    borderCollapse: 'collapse',
-    tableLayout: 'fixed',
-    '& .MuiTableCell-root': {
-      borderColor: '#707070',
-      backgroundColor: '#3D3D3D',
-    },
+  table: (props: videoStyleProps) => {
+    return {
+      borderCollapse: 'collapse',
+      tableLayout: 'fixed',
+      '& .MuiTableCell-root': {
+        borderColor: '#707070',
+        // backgroundColor: props.isIphone && props.isLandscape ? '#383838' : '#3D3D3D',
+        // backgroundColor: '#212121',
+      },
+      '& .MuiTableCell-stickyHeader': {
+        backgroundColor: props.isIphone && props.isLandscape ? '#383838' : props.isIphone && !props.isLandscape ? '#212121' : '#3c3c3c',
+      },
+    }
   },
   headerTable: {
     borderBottom: 0,
@@ -132,8 +139,8 @@ const useStyles = makeStyles((theme) => ({
       },
     },
     table: {
-      '& .MuiTableCell-root': {
-        backgroundColor: '#212121',
+      '& .MuiTableCell-stickyHeader': {
+        backgroundColor: 'rgb(33 33 33) !important',
       },
     },
     headerTable: {
