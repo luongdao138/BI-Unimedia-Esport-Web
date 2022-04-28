@@ -45,9 +45,9 @@ const RankingTab: React.FC<RankingTabProps> = ({ activeSubTab, setActiveSubTab }
   const { t } = useTranslation('common')
   // const [activeSubTab, setActiveSubTab] = useState(SUB_TABS.RANKING.RECEIPT)
   const theme = useTheme()
-  const isMobile = useMediaQuery(theme.breakpoints.down(769))
+  const isMobile = useMediaQuery(theme.breakpoints.down(769)) || /iPhone|iPad|iPod|Android/i.test(window.navigator.userAgent)
   const { isLandscape } = useRotateScreen()
-  const classes = useStyles({ isLandscape })
+  const classes = useStyles({ isLandscape, isMobile })
 
   const mineGiveInfo: RankingsItem = _.find(giverRankInfo, (v) => {
     return user_uuid && v?.uuid === user_uuid
@@ -167,6 +167,7 @@ const RankingTab: React.FC<RankingTabProps> = ({ activeSubTab, setActiveSubTab }
 
 interface StyleProps {
   isLandscape: boolean
+  isMobile: boolean
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -188,14 +189,14 @@ const useStyles = makeStyles((theme) => ({
     marginTop: 20,
     textAlign: 'center',
   },
-  rankingContainer: {
+  rankingContainer: (props: StyleProps) => ({
     width: '100%',
     height: '100%',
-    padding: '16px 16px 70px 16px',
+    padding: props.isMobile && !props.isLandscape ? '16px 16px 70px 16px' : '16px',
     overflow: 'hidden',
     display: 'flex',
     flexDirection: 'column',
-  },
+  }),
   [theme.breakpoints.down(769)]: {
     [`@media (orientation: landscape)`]: {
       rankingContainer: (props: StyleProps) => ({

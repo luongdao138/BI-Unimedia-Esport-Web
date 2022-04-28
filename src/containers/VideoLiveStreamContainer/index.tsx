@@ -62,6 +62,7 @@ export interface videoStyleProps {
   availHeight: number
   availWidth: number
   isLandscape: boolean
+  isIphone: boolean
 }
 
 export enum VIDEO_TYPE {
@@ -86,7 +87,7 @@ const VideoDetail: React.FC = () => {
   console.log('🚀 ~ heighta', height)
   console.log('🚀 ~ innerHeight', window.innerHeight)
   const { isLandscape } = useRotateScreen()
-  const classes = useStyles({ availHeight: height, availWidth: window.innerWidth, isLandscape })
+  // const classes = useStyles({ availHeight: height, availWidth: window.innerWidth, isLandscape })
   const { t } = useTranslation('common')
   const { isResizedScreen, setIsResizedScreen } = useResizeScreen()
   const { width: pageWidth } = useWindowDimensions(0)
@@ -165,6 +166,7 @@ const VideoDetail: React.FC = () => {
   const iPhonePl = /iPhone/i.test(window.navigator.userAgent)
 
   // const handleDonatePointRef = useRef<any>(null)
+  const classes = useStyles({ availHeight: height, availWidth: window.innerWidth, isLandscape, isIphone: iPhonePl })
 
   const handleShowDialogLogin = () => {
     setShowDialogLogin(true)
