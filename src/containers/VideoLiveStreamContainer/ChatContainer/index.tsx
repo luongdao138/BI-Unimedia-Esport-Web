@@ -213,7 +213,6 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       openPurchasePointModal,
       videoType,
       freeToWatch,
-      isResizedScreen,
       errorMsgDonatePoint,
       clearMessageDonatePoint,
     },
@@ -251,6 +250,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     const [firstRender, setFirstRender] = useState(false)
     const [isFirstVisitPage, setIsFirstVisitPage] = useState(true)
     const [prevRewindMess, setPrevRewindMess] = useState({})
+    // console.log('🚀 ~ prevRewindMess', prevRewindMess)
     const [scrollBehavior, setScrollBehavior] = useState('smooth')
     const isVideoFreeToWatch = freeToWatch === 0 ? true : false
     // const [nextToken, setNextToken] = useState(null)
@@ -315,7 +315,6 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       streamingSecond,
       liveStreamInfo,
       resetChatState,
-      playedSecond,
       detailVideoResult,
       rankingListMeta,
       fetchDonateRanking,
@@ -425,7 +424,10 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       // setSuccessGetListDonateMess(true)
       setSuccessGetListMessTip(true)
       // fetch mess by rewinded time when switch tab
-      // fetchMessTipWhenRewind(videoPlayedSecond.current)
+      if (activeSubTab === SUB_TABS.MESS.TIP) {
+        // console.log('🚀 ~ handleTransformMessTip ~ activeSubTab', activeSubTab)
+        fetchMessTipWhenRewind(videoPlayedSecond.current)
+      }
     }
     refTransformMessTip.current = handleTransformMessTip
 
@@ -466,6 +468,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         return
       }
       const transformMessAsc = sortMessages(messagesInfo.items)
+      console.log('🚀 ~ handleFetchPrevMessWhenRewind ~ transformMessAsc', transformMessAsc)
       setPrevRewindMess({ [video_time]: [...transformMessAsc] })
 
       // save token to call api in next time
@@ -475,6 +478,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       if (!messagesInfo.nextToken) setIsTokenBroken(false)
 
       if (!isSwitchingTabRef.current) {
+        console.log('🚀 ~ handleFetchPrevMessWhenRewind ~ video_time', video_time)
         fetchNextMess(GET_MESS_TYPE.FETCH_NEXT, video_time)
       }
     }
@@ -482,6 +486,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
 
     // fetch messages prev when rewind to video time
     const fetchPrevMessWhenRewind = (video_time, sortOrder = APIt.ModelSortDirection.DESC) => {
+      console.log('🚀 ~ fetchPrevMessWhenRewind ~ video_time', video_time)
       if (isSwitchingTabRef.current || isSwitchingSubTabRef.current) {
         return
       }
@@ -774,6 +779,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         const newRewindMess = rewindMess?.[video_time] ? [...oldPrevRewindMess, ...rewindMess[video_time]] : [...oldPrevRewindMess]
         // console.log('🚀 ~ handleFetchRewindMess ~ newRewindMess', newRewindMess)
         const transformMessAsc = sortMessages([...newRewindMess])
+        // console.log('🚀 ~ handleFetchRewindMess ~ transformMessAsc', transformMessAsc)
 
         setIsGettingMess(false)
         setStateMessages(transformMessAsc.filter((v) => +v.video_time <= +videoPlayedSecond.current))
@@ -800,6 +806,10 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         setIsTokenBroken(true)
         // reset prev token to get mess is not error
         // setPrevToken(null)
+
+        // set get list mess when fetch prev and rewind when remount chat container
+        setSuccessGetListMess(true)
+        setSuccessGetListDonateMess(true)
       }
     }
     refFetchRewindMess.current = handleFetchRewindMess
@@ -811,6 +821,8 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       sortOrder = APIt.ModelSortDirection.ASC,
       nextToken = null
     ) => {
+      // console.log('🚀 ~ video_time--00', video_time)
+
       if (isSwitchingTabRef.current) {
         return
       }
@@ -1557,6 +1569,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
 
     useEffect(() => {
       console.log('🚀 ~ useEffect ~ videoRefInfo---999', videoRefInfo)
+      // console.log('🚀 ~ useEffect ~ videoRefInfo---555', videoRefInfo?.current?.currentTime)
       if (videoRefInfo && videoRefInfo?.current) {
         videoRefInfo?.current?.addEventListener('seeking', () => {
           console.log('=================SEEKING--000===================')
@@ -1669,10 +1682,13 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
 
     // get all mess tip initial and render icon tip mess separate with all mess
     const handleGetMessTipInitial = () => {
+      // console.log('🚀 ~ handleGetMessTipInitial ~ 111', 11)
+
       // if has not get mess tip initial yet => get mess tip initial
       setInitTipMess([])
       fetchMessTipInitial()
     }
+    // console.log('🚀 ~ useEffect ~ videoPlayedSecond.1111', videoPlayedSecond.current)
 
     useEffect(() => {
       // console.log('🚀 ~ useEffect ~ isStreaming--000', isStreaming, videoType)
@@ -1692,9 +1708,24 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
           // handleGetMessTip()
         }
       } else if (!isStreaming && videoType === STATUS_VIDEO.ARCHIVE) {
+        // console.log('🚀 ~ useEffect ~ videoPlayedSecond.current', videoPlayedSecond.current)
+        const currentTime = Math.floor(videoRefInfo?.current?.currentTime || 0)
+        // console.log('🚀 ~ useEffect ~ isMobile', isMobile)
+        // console.log('🚀 ~ useEffect ~ currentTime', currentTime)
+        if (+currentTime > 0) {
+          // reassign current time of playing video
+          videoPlayedSecond.current = currentTime
+        }
+
         handleGetMessTipInitial()
         if (activeSubTab === SUB_TABS.MESS.ALL) {
-          fetchNextMess(GET_MESS_TYPE.FETCH_ARCHIVE_INITIAL, isResizedScreen ? playedSecond : 0)
+          // console.log('🚀 ~ useEffect ~ isResizedScreen', isResizedScreen)
+          // fetch prev and rewind mess when playing video and re-mount chat container
+          if (+currentTime > 0) {
+            fetchPrevMessWhenRewind(currentTime)
+          } else {
+            fetchNextMess(GET_MESS_TYPE.FETCH_ARCHIVE_INITIAL, currentTime)
+          }
         } else if (activeSubTab === SUB_TABS.MESS.TIP) {
           // handleGetMessTip()
         }
