@@ -5,7 +5,7 @@ import React, { memo, useCallback, useEffect, useState } from 'react'
 import useDetailVideo from '@containers/VideoLiveStreamContainer/useDetailVideo'
 import { DELAY_SECONDS } from '@constants/common.constants'
 import { STATUS_VIDEO } from '@services/videoTop.services'
-import _ from 'lodash'
+import _, { debounce } from 'lodash'
 interface Props {
   videoRef?: any
   changeStatusStreaming?: (status: boolean) => void
@@ -117,13 +117,16 @@ const SeekBar: React.FC<Props & SliderProps> = ({
     videoRef.current.currentTime = newSecond
   }
 
-  const handleCommit = (_, value) => {
-    console.log('~~~VALUE SEEK TO ~~~~~', value, (value * durationPlayer) / 100)
-    setTimePlayed(value)
-    const newSecond = (value * durationPlayer) / 100
-    videoRef.current.currentTime = newSecond
-    changeSeekCount(Math.floor(newSecond))
-  }
+  const handleCommit = useCallback(
+    debounce((_, value, durationPlayer) => {
+      console.log('~~~VALUE SEEK TO ~~~~~', value, (value * durationPlayer) / 100)
+      setTimePlayed(value)
+      const newSecond = (value * durationPlayer) / 100
+      videoRef.current.currentTime = newSecond
+      changeSeekCount(Math.floor(newSecond))
+    }, 10),
+    []
+  )
 
   return (
     <div className={classes.sliderSeek}>
@@ -134,7 +137,7 @@ const SeekBar: React.FC<Props & SliderProps> = ({
         value={timePlayed}
         className={classes.seekBar}
         onChange={handleChange}
-        onChangeCommitted={handleCommit}
+        onChangeCommitted={(_, value) => handleCommit(_, value, durationPlayer)}
         {...rest}
       />
     </div>

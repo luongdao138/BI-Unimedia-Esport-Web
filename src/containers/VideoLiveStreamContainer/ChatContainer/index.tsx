@@ -225,7 +225,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     )
     const chatMobileContainerRef = useRef<HTMLDivElement>(null)
     const videoPlayedSecond = useRef(0)
-    // console.log('🚀 ~ videoPlayedSecond', videoPlayedSecond?.current)
+    // console.log('🚀 ~ videoPlayedSecond---000', videoPlayedSecond?.current)
     const videoStreamingSecond = useRef(0)
 
     // const [tab, setTab] = useState(VIDEO_TABS.CHAT)
@@ -779,9 +779,10 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         const newRewindMess = rewindMess?.[video_time] ? [...oldPrevRewindMess, ...rewindMess[video_time]] : [...oldPrevRewindMess]
         // console.log('🚀 ~ handleFetchRewindMess ~ newRewindMess', newRewindMess)
         const transformMessAsc = sortMessages([...newRewindMess])
-        // console.log('🚀 ~ handleFetchRewindMess ~ transformMessAsc', transformMessAsc)
+        console.log('🚀 ~ handleFetchRewindMess ~ transformMessAsc', transformMessAsc)
 
         setIsGettingMess(false)
+        console.log('🚀 ~ handleFetchRewindMess ~ videoPlayedSecond.current', videoPlayedSecond.current)
         setStateMessages(transformMessAsc.filter((v) => +v.video_time <= +videoPlayedSecond.current))
         setCacheMess(transformMessAsc)
 
@@ -1384,6 +1385,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
 
     useEffect(() => {
       if (liveStreamInfo.seek_count && !isStreaming) {
+        videoPlayedSecond.current = liveStreamInfo.seeked_second
         setBottom(true)
         // console.log('🚀 ~ useEffect ~ setBottom--000', isBottom)
         resetMessagesWhenRewind()
@@ -1401,6 +1403,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
             fetchMessTipWhenRewind(liveStreamInfo.seeked_second)
           }, DEBOUNCE_SECOND)
         } else {
+          console.log('🚀 ~ fetchPrevMessWhenRewind--111', 111)
           fetchPrevMessWhenRewind(liveStreamInfo.seeked_second)
         }
         // fetchNextMess(GET_MESS_TYPE.FETCH_NEXT, liveStreamInfo.seeked_second)

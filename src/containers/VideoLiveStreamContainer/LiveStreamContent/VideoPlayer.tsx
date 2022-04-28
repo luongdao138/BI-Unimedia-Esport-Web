@@ -554,9 +554,10 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     videoEl.current?.addEventListener('seeked', () => {
       //rewind complete
       console.log('=================SEEKED===================')
-      if (iPhonePl || androidPl || isMobile) {
-        changeSeekCount(Math.floor(videoEl.current.currentTime))
-      }
+      // if (iPhonePl || androidPl || isMobile) {
+      //   console.log('🚀 ~ handleCommit ~ value--111', videoEl.current.currentTime)
+      //   changeSeekCount(Math.floor(videoEl.current.currentTime))
+      // }
 
       if (!isStreamingEnd.current) {
         setVisible({ ...visible, loading: false, videoLoaded: false })
@@ -714,6 +715,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     // setPlayedSeconds(durationPlayer)
     const newDurationPlayer = Math.floor(durationPlayerRef.current)
     // changeVideoTime(newDurationPlayer, newDurationPlayer)
+    console.log('🚀 ~ handleCommit ~ value--222', newDurationPlayer)
     changeSeekCount(newDurationPlayer)
     setIsStreaming(true)
   }
