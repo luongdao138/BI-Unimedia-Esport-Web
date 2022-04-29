@@ -94,6 +94,8 @@ interface StyleProps {
 
 const useStyles = makeStyles((theme) => ({
   giftMemberList: {
+    // maxHeight: '362px',
+    height: 'calc(100vh - 395px)',
     maxHeight: '362px',
     overflow: 'auto',
     paddingRight: 4,
@@ -158,10 +160,7 @@ const useStyles = makeStyles((theme) => ({
         if (props.isLandscape) {
           return {
             maxHeight: '92px',
-          }
-        } else {
-          return {
-            maxHeight: '362px',
+            height: 'unset',
           }
         }
       },
@@ -173,10 +172,11 @@ const useStyles = makeStyles((theme) => ({
         if (props.isLandscape) {
           return {
             maxHeight: '115px',
+            height: 'unset',
           }
         } else {
           return {
-            maxHeight: '323px',
+            height: '323px',
           }
         }
       },
@@ -195,11 +195,6 @@ const useStyles = makeStyles((theme) => ({
       fontSize: '8px',
       lineHeight: '11px',
       fontWeight: 'bold',
-    },
-  },
-  [theme.breakpoints.between(960, 1280)]: {
-    giftMemberList: {
-      maxHeight: '262px',
     },
   },
 }))
