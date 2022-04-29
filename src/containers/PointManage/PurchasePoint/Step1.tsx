@@ -1,10 +1,9 @@
-import { Box, Typography, makeStyles, withStyles } from '@material-ui/core'
+import { Box, Typography, makeStyles, withStyles, Grid } from '@material-ui/core'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Colors } from '@theme/colors'
 import ESLabel from '@components/Label'
 import { useFormik } from 'formik'
-import ButtonPrimary from '@components/ButtonPrimary'
 import Radio from '@material-ui/core/Radio'
 import { RadioProps } from '@material-ui/core/Radio'
 import { POINTS } from '@constants/common.constants'
@@ -12,17 +11,41 @@ import { FormatHelper } from '@utils/helpers/FormatHelper'
 import { calValueFromTax } from '@utils/helpers/CommonHelper'
 import usePurchasePointData from './usePurchasePointData'
 import ESLoader from '@components/FullScreenLoader'
+import ESChip from '@components/Chip'
+import i18n from '@locales/i18n'
+import { GMO_PAYMENT_TYPE } from '@services/points.service'
 
 interface Step1Props {
   step: number
   onNext: (step: number) => void
   setSelectedPoint: (point: any) => void
+  selectedPoint: number
 }
 
-const Step1: React.FC<Step1Props> = ({ step, onNext, setSelectedPoint }) => {
-  const [selectedPoint, changeSelectedPoint] = React.useState<any>('')
+export const paymentMethodList = [
+  { id: '1', label: i18n.t('common:purchase_point_tab.payment_method.credit_card'), type: 'credit_card', icon: '' },
+  {
+    id: '2',
+    label: i18n.t('common:purchase_point_tab.payment_method.d_haira'),
+    type: GMO_PAYMENT_TYPE.D_BARAI,
+    icon: '/images/docomo.png',
+  },
+  {
+    id: '3',
+    label: i18n.t('common:purchase_point_tab.payment_method.rakuten'),
+    type: GMO_PAYMENT_TYPE.RAKUTEN,
+    icon: '/images/rakuten.png',
+  },
+  {
+    id: '4',
+    label: i18n.t('common:purchase_point_tab.payment_method.pay_pay'),
+    type: GMO_PAYMENT_TYPE.PAY_PAY,
+    icon: '/images/paypay.png',
+  },
+]
 
-  const { metaSavedCardsMeta } = usePurchasePointData()
+const Step1: React.FC<Step1Props> = ({ step, onNext, setSelectedPoint, selectedPoint }) => {
+  const { metaSavedCardsMeta, requestMultiPaymentPurchase } = usePurchasePointData()
 
   const { t } = useTranslation('common')
   const classes = useStyles()
@@ -35,15 +58,50 @@ const Step1: React.FC<Step1Props> = ({ step, onNext, setSelectedPoint }) => {
     },
   })
 
-  const onClickNext = () => {
-    setSelectedPoint(selectedPoint)
-    onNext(step + 1)
+  const openPurchaseWindow = (payload) => {
+    const { access_id, start_url, token } = payload
+    window
+      .open(
+        `../payment_process?url=${encodeURIComponent(start_url)}&AccessID=${encodeURIComponent(access_id)}&Token=${encodeURIComponent(
+          token
+        )}`,
+        '',
+        `width=550,height=400,location=no,toolbar=no,status=no,directories=no,menubar=no,scrollbars=yes,resizable=no,centerscreen=yes,chrome=yes`
+      )
+      ?.focus()
+    // formRef.current.submit()
+    // console.log('ref::', formRef)
+  }
+
+  const handleRequestGMOPaymentSuccess = (payload) => {
+    // console.log('multiPaymentPurchaseData', multiPaymentPurchaseData);
+    openPurchaseWindow(payload)
+  }
+
+  const onClickNext = (type: string) => {
+    switch (type) {
+      case GMO_PAYMENT_TYPE.D_BARAI:
+        // setPaymentMethod(1)
+        requestMultiPaymentPurchase(selectedPoint, type, handleRequestGMOPaymentSuccess)
+        break
+      case GMO_PAYMENT_TYPE.RAKUTEN:
+        // setPaymentMethod(2)
+        requestMultiPaymentPurchase(selectedPoint, type, handleRequestGMOPaymentSuccess)
+        break
+      case GMO_PAYMENT_TYPE.PAY_PAY:
+        // setPaymentMethod(3)
+        requestMultiPaymentPurchase(selectedPoint, type, handleRequestGMOPaymentSuccess)
+        break
+      default:
+        onNext(step + 1)
+        // setPaymentMethod(0)
+        break
+    }
   }
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    changeSelectedPoint(Number(event.target.value))
+    setSelectedPoint(Number(event.target.value))
   }
-
   return (
     <Box>
       {metaSavedCardsMeta.pending && <ESLoader open={metaSavedCardsMeta.pending} />}
@@ -81,11 +139,43 @@ const Step1: React.FC<Step1Props> = ({ step, onNext, setSelectedPoint }) => {
           })}
         </Box>
       </form>
-      <Box pb={4} justifyContent="center" display="flex" className={classes.actionButton}>
+      {selectedPoint !== 0 && (
+        <>
+          <Box className={classes.titleSelectPaymentMethod}>
+            <ESLabel label={t('purchase_point_tab.selectPaymentMethod')} required={true} />
+          </Box>
+          <Grid container>
+            {paymentMethodList.map((i) => {
+              return (
+                <Grid item xs={12} md={6} key={i.id} className={classes.itemPaymentMethod}>
+                  <ESChip
+                    key={i.type}
+                    isGameList={true}
+                    className={classes.paymentMethod}
+                    label={i.label}
+                    onClick={() => onClickNext(i.type)}
+                    icon={
+                      <>
+                        {i.icon && (
+                          <Box className={classes.wrapperIconPaymentMethod}>
+                            <img className={classes.iconPaymentMethod} src={i.icon} />
+                          </Box>
+                        )}
+                      </>
+                    }
+                  />
+                </Grid>
+              )
+            })}
+          </Grid>
+        </>
+      )}
+
+      {/* <Box pb={4} justifyContent="center" display="flex" className={classes.actionButton}>
         <ButtonPrimary type="submit" round fullWidth onClick={onClickNext} disabled={!selectedPoint}>
           {t('purchase_point_tab.enter_payment_info')}
         </ButtonPrimary>
-      </Box>
+      </Box> */}
     </Box>
   )
 }
@@ -106,7 +196,7 @@ const CustomRadio = withStyles({
 
 const useStyles = makeStyles((theme) => ({
   wrap_all_points: {
-    padding: '28px 32px 67px 32px',
+    padding: '28px 32px 25px 32px',
     display: 'flex',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
@@ -115,6 +205,11 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 16,
     fontWeight: 'bold',
     paddingTop: 28,
+    color: Colors.white_opacity['70'],
+  },
+  titleSelectPaymentMethod: {
+    fontSize: 16,
+    fontWeight: 'bold',
     color: Colors.white_opacity['70'],
   },
   container: {
@@ -171,6 +266,18 @@ const useStyles = makeStyles((theme) => ({
     '& .MuiButtonBase-root.button-primary.full-width': {
       width: 220,
     },
+  },
+  itemPaymentMethod: {
+    padding: '10px 25px',
+  },
+  wrapperIconPaymentMethod: {},
+  paymentMethod: {
+    width: '100%',
+    height: 70,
+  },
+  iconPaymentMethod: {
+    width: '100%',
+    height: '100%',
   },
   [theme.breakpoints.down('lg')]: {
     wrap_all_points: {

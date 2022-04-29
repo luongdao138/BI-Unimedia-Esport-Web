@@ -1756,9 +1756,10 @@ export default {
     payment_method: {
       credit_card: 'クレジットカード決済',
       d_haira: 'd払い',
-      pay_pay: 'ペイペイ',
+      pay_pay: 'PayPay',
       rakuten: '楽天ペイ',
     },
+    selectPaymentMethod: '決済方法を選択',
   },
   videos_top_tab: {
     video_list: '動画一覧',
