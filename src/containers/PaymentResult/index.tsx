@@ -1,5 +1,5 @@
 import { Box, makeStyles, Typography } from '@material-ui/core'
-import React, { useEffect, useState } from 'react'
+import React, { memo, useCallback, useEffect, useState } from 'react'
 import ESButton from '@components/Button'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'react-i18next'
@@ -13,7 +13,8 @@ const PaymentResult: React.FC = () => {
   let intervalCountDown = null
 
   useEffect(() => {
-    if (status) {
+    if (status && isPaymentSuccess(status)) {
+      localStorage.setItem('reload_point', Math.random().toString())
       let counter = 6
       intervalCountDown = setInterval(() => {
         if (counter === -1) {
@@ -28,7 +29,6 @@ const PaymentResult: React.FC = () => {
 
   useEffect(() => {
     if (secondToCloseWindow === 0) {
-      localStorage.setItem('reload_point', Math.random().toString())
       window.close()
     }
   }, [secondToCloseWindow])
@@ -42,15 +42,30 @@ const PaymentResult: React.FC = () => {
   }, [router])
 
   const handleCloseClick = () => {
-    // window.close()
-    localStorage.setItem('reload_point', Math.random().toString())
+    if (intervalCountDown) {
+      clearInterval(intervalCountDown)
+    }
+    window.close()
+    // localStorage.setItem('reload_point', Math.random().toString())
   }
+
+  const isPaymentSuccess = useCallback((result) => {
+    return result && result !== 'fail'
+  }, [])
 
   return (
     <Box className={classes.container}>
       <Typography className={classes.title}>{`${status}`}</Typography>
-      <Typography className={classes.title}>{`Close in ${secondToCloseWindow}`}</Typography>
-      <ESButton variant="contained" color="primary" size="medium" round className={classes.button} onClick={handleCloseClick}>
+      {isPaymentSuccess(status) && <Typography className={classes.title}>{`Close in ${secondToCloseWindow}`}</Typography>}
+      <ESButton
+        disabled={!status}
+        variant="contained"
+        color="primary"
+        size="medium"
+        round
+        className={classes.button}
+        onClick={handleCloseClick}
+      >
         {t('common:tournament_create.close')}
       </ESButton>
     </Box>
@@ -74,4 +89,4 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-export default PaymentResult
+export default memo(PaymentResult)
