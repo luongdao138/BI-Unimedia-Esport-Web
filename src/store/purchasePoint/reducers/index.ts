@@ -84,7 +84,6 @@ export default createReducer(initialState, (builder) => {
     state.purchase_success = false
   })
   builder.addCase(pointManageActions.requestMultiPaymentPurchase.fulfilled, (state, action) => {
-    state.purchase_success = false
     state.purchased_point = action.payload.point
   })
 })

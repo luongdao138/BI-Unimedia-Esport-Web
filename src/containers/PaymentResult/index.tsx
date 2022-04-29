@@ -9,12 +9,29 @@ const PaymentResult: React.FC = () => {
   const classes = useStyles()
   const router = useRouter()
   const [status, setStatus] = useState('')
+  const [secondToCloseWindow, setSecond] = useState(6)
+  let intervalCountDown = null
 
   useEffect(() => {
     if (status) {
-      localStorage.setItem('reload_point', Math.random().toString())
+      let counter = 6
+      intervalCountDown = setInterval(() => {
+        if (counter === -1) {
+          clearInterval(intervalCountDown)
+        } else {
+          counter -= 1
+          setSecond(counter)
+        }
+      }, 1000)
     }
   }, [status])
+
+  useEffect(() => {
+    if (secondToCloseWindow === 0) {
+      localStorage.setItem('reload_point', Math.random().toString())
+      window.close()
+    }
+  }, [secondToCloseWindow])
 
   useEffect(() => {
     const queryKey = 'status'
@@ -25,12 +42,14 @@ const PaymentResult: React.FC = () => {
   }, [router])
 
   const handleCloseClick = () => {
-    window.close()
+    // window.close()
+    localStorage.setItem('reload_point', Math.random().toString())
   }
 
   return (
     <Box className={classes.container}>
-      <Typography className={classes.title}>{status}</Typography>
+      <Typography className={classes.title}>{`${status}`}</Typography>
+      <Typography className={classes.title}>{`Close in ${secondToCloseWindow}`}</Typography>
       <ESButton variant="contained" color="primary" size="medium" round className={classes.button} onClick={handleCloseClick}>
         {t('common:tournament_create.close')}
       </ESButton>

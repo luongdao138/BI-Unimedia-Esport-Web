@@ -1,5 +1,5 @@
 import { Box, Typography, makeStyles, withStyles } from '@material-ui/core'
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Colors } from '@theme/colors'
 import ESLabel from '@components/Label'
@@ -19,9 +19,6 @@ import ESLoader from '@components/FullScreenLoader'
 import { validationPurchasePointScheme } from '@containers/PointManage/PurchasePoint/ValidationPurchasePointScheme'
 import _ from 'lodash'
 import FastChatInput from '@containers/VideoLiveStreamContainer/ChatContainer/FastChatInput'
-import i18n from '@locales/i18n'
-import ESSelect from '@components/Select'
-import { GMO_PAYMENT_TYPE } from '@services/points.service'
 
 interface Step2Props {
   selectedPoint: any
@@ -30,16 +27,6 @@ interface Step2Props {
 const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
   const { t } = useTranslation('common')
   const classes = useStyles()
-
-  const paymentMethodList = useCallback(
-    () => [
-      { id: '1', label: t('purchase_point_tab.payment_method.credit_card'), value: '' },
-      { id: '2', label: t('purchase_point_tab.payment_method.d_haira'), value: GMO_PAYMENT_TYPE.D_BARAI },
-      { id: '3', label: t('purchase_point_tab.payment_method.pay_pay'), value: GMO_PAYMENT_TYPE.PAY_PAY },
-      { id: '4', label: t('purchase_point_tab.payment_method.rakuten'), value: GMO_PAYMENT_TYPE.RAKUTEN },
-    ],
-    []
-  )
 
   const {
     metaSavedCardsMeta,
@@ -51,7 +38,6 @@ const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
     metaPurchaseUseNewCardMeta,
     metaPurchaseUseOldCardMeta,
     resetErrorMess,
-    requestMultiPaymentPurchase,
   } = usePurchasePointData()
 
   const [selectedCardId, setSelectedCardId] = React.useState<any>('')
@@ -61,7 +47,7 @@ const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
   const [deletedCard, setDeletedCard] = useState({})
   // const [deletedCard, setDeletedCard] = useState({card_number: '1234'})
   const [hasError, setHasError] = useState(false)
-  const [paymentMethod, setPaymentMethod] = useState(0)
+  // const [paymentMethod, setPaymentMethod] = useState(0)
 
   const cardNameRef = useRef<string>('')
   const cardNumberRef = useRef<string>('')
@@ -195,33 +181,33 @@ const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
     }
   }
 
-  const openPurchaseWindow = (payload) => {
-    const { access_id, start_url, token } = payload
-    window
-      .open(
-        `../payment_process?url=${encodeURIComponent(start_url)}&AccessID=${encodeURIComponent(access_id)}&Token=${encodeURIComponent(
-          token
-        )}`,
-        '',
-        `width=550,height=400,location=no,toolbar=no,status=no,directories=no,menubar=no,scrollbars=yes,resizable=no,centerscreen=yes,chrome=yes`
-      )
-      ?.focus()
-    // formRef.current.submit()
-    // console.log('ref::', formRef)
-  }
+  // const openPurchaseWindow = (payload) => {
+  //   const { access_id, start_url, token } = payload
+  //   window
+  //     .open(
+  //       `../payment_process?url=${encodeURIComponent(start_url)}&AccessID=${encodeURIComponent(access_id)}&Token=${encodeURIComponent(
+  //         token
+  //       )}`,
+  //       '',
+  //       `width=550,height=400,location=no,toolbar=no,status=no,directories=no,menubar=no,scrollbars=yes,resizable=no,centerscreen=yes,chrome=yes`
+  //     )
+  //     ?.focus()
+  //   // formRef.current.submit()
+  //   // console.log('ref::', formRef)
+  // }
 
-  const handleRequestGMOPaymentSuccess = (payload) => {
-    // console.log('multiPaymentPurchaseData', multiPaymentPurchaseData);
-    closeModalPurchasePoint()
-    openPurchaseWindow(payload)
-  }
+  // const handleRequestGMOPaymentSuccess = (payload) => {
+  //   // console.log('multiPaymentPurchaseData', multiPaymentPurchaseData);
+  //   closeModalPurchasePoint()
+  //   openPurchaseWindow(payload)
+  // }
 
-  const handlePurchaseGMO = () => {
-    requestMultiPaymentPurchase(selectedPoint, paymentMethodList()[paymentMethod].value, handleRequestGMOPaymentSuccess)
-  }
+  // const handlePurchaseGMO = () => {
+  //    requestMultiPaymentPurchase(selectedPoint, paymentMethod, handleRequestGMOPaymentSuccess)
+  // }
 
   const handlePurchaseConfirm = () => {
-    return paymentMethod === 0 ? handlePurchasePointCreditCard() : handlePurchaseGMO()
+    return handlePurchasePointCreditCard()
   }
 
   const handleChangeCardNumber = (e) => {
@@ -287,218 +273,192 @@ const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
             </Typography>
           </Box>
         </Box>
-        <ESSelect
-          fullWidth
-          id="category"
-          name="category"
-          value={paymentMethod}
-          onChange={(e) => {
-            setPaymentMethod(parseInt(e.target.value.toString()))
-          }}
-          label={t('purchase_history.payment_method')}
-          required={true}
-          size="big"
-        >
-          <option disabled value={-1}>
-            {i18n.t('common:archive_detail_screen.please_select')}
-          </option>
-          {(paymentMethodList() || []).map((value, index) => {
-            const { id, label } = value
-            return (
-              <option key={id} value={index}>
-                {label}
-              </option>
-            )
-          })}
-        </ESSelect>
-        {paymentMethod === 0 && (
-          <Box className={classes.card_info_wrap}>
-            <Box className={classes.card_wrap + ' ' + classes.first_card_wrap}>
-              <Box className={classes.card_info_title}>{t('purchase_point_tab.card_info_title')}</Box>
-              <Box className={classes.card_info_container}>
-                <Box>
-                  <FastChatInput
-                    id="card_name"
-                    name="card_name"
-                    required={true}
-                    placeholder={t('purchase_point_tab.card_name_placeholder')}
-                    labelPrimary={t('purchase_point_tab.card_name')}
-                    fullWidth
-                    onChange={changeFieldAndResetSelectedCardId}
-                    onBlur={handleBlur}
-                    helperText={touched.card_name && errors?.card_name}
-                    error={touched.card_name && !!errors?.card_name}
-                    size="big"
-                    valueRef={cardNameRef}
-                  />
-                </Box>
-                <Box pt={1}>
-                  <FastChatInput
-                    id="card_number"
-                    name="card_number"
-                    required={true}
-                    placeholder={t('purchase_point_tab.card_number_placeholder')}
-                    labelPrimary={t('purchase_point_tab.card_number')}
-                    fullWidth
-                    onChange={handleChangeCardNumber}
-                    onBlur={handleBlur}
-                    valueRef={cardNumberRef}
-                    helperText={touched.card_number && errors?.card_number}
-                    error={touched.card_number && !!errors?.card_number}
-                    size="big"
-                    formatValue={(e) => {
-                      const card_number = e.target.value.replace(/\s/g, '')
-                      const isValid = (/^[0-9]+$/g.test(card_number) || !e.target.value) && card_number.length <= 16
-                      if (/^[0-9]+$/g.test(card_number) || !e.target.value) {
-                        setSelectedCardId('')
-                      }
-                      // replace space and check is numeric
-                      return {
-                        isValid,
-                        formattedValue: formatCardNumber(e.target.value),
-                      }
-                    }}
-                  />
-                </Box>
-                <Box pt={1}>
-                  <FastChatInput
-                    id="card_expire_date"
-                    name="card_expire_date"
-                    required={true}
-                    placeholder={t('purchase_point_tab.card_expire_date_placeholder')}
-                    labelPrimary={t('purchase_point_tab.card_expire_date')}
-                    fullWidth
-                    onChange={handleChangeCardExpireDate}
-                    onBlur={handleBlur}
-                    helperText={touched.card_expire_date && errors?.card_expire_date}
-                    error={touched.card_expire_date && !!errors?.card_expire_date}
-                    size="big"
-                    valueRef={cardExpiredDateRef}
-                    formatValue={(e) => {
-                      const card_expire_date = e.target.value.replace(/[\s/]/g, '')
-                      const isValid = (/^[0-9]+$/g.test(card_expire_date) || !e.target.value) && card_expire_date.length <= 4
-                      if (/^[0-9]+$/g.test(card_expire_date) || !e.target.value) {
-                        setSelectedCardId('')
-                      }
-                      let formattedValue = card_expire_date
-                      if (card_expire_date.length >= 3) formattedValue = card_expire_date.match(new RegExp('.{1,2}', 'g')).join(' / ')
-                      return {
-                        isValid,
-                        formattedValue,
-                      }
-                    }}
-                  />
-                </Box>
-                <Box pt={1}>
-                  <FastChatInput
-                    id="card_cvc"
-                    name="card_cvc"
-                    required={true}
-                    placeholder=""
-                    labelPrimary={t('purchase_point_tab.card_cvc')}
-                    fullWidth
-                    onChange={handleChangeCardCvc}
-                    onBlur={handleBlur}
-                    helperText={touched.card_cvc && errors?.card_cvc}
-                    error={touched.card_cvc && !!errors?.card_cvc}
-                    size="big"
-                    valueRef={cardCvcRef}
-                    formatValue={(e) => {
-                      const card_cvc = e.target.value
-                      // check is numeric
-                      const isValid = (/^[0-9]+$/g.test(card_cvc) || !card_cvc) && card_cvc.length <= 4
-                      if (/^[0-9]+$/g.test(card_cvc) || !card_cvc) {
-                        setSelectedCardId('')
-                      }
-                      return {
-                        isValid,
-                        formattedValue: card_cvc,
-                      }
-                    }}
-                  />
-                </Box>
-                <Box className={classes.toggle} pt={2}>
-                  <ESSwitchIOS
-                    key={'is_saved_card'}
-                    handleChange={changeFieldAndResetSelectedCardId}
-                    name={'is_saved_card'}
-                    checked={values.is_saved_card}
-                  />
-                  <Box>
-                    <Box className={classes.toggle_name}>{t('purchase_point_tab.register_toggle_name')}</Box>
-                    {isExceedCard && <Box className={classes.mess_exceed_card}>{t('purchase_point_tab.mess_exceed_card')}</Box>}
-                  </Box>
-                </Box>
+        <Box className={classes.card_info_wrap}>
+          <Box className={classes.card_wrap + ' ' + classes.first_card_wrap}>
+            <Box className={classes.card_info_title}>{t('purchase_point_tab.card_info_title')}</Box>
+            <Box className={classes.card_info_container}>
+              <Box>
+                <FastChatInput
+                  id="card_name"
+                  name="card_name"
+                  required={true}
+                  placeholder={t('purchase_point_tab.card_name_placeholder')}
+                  labelPrimary={t('purchase_point_tab.card_name')}
+                  fullWidth
+                  onChange={changeFieldAndResetSelectedCardId}
+                  onBlur={handleBlur}
+                  helperText={touched.card_name && errors?.card_name}
+                  error={touched.card_name && !!errors?.card_name}
+                  size="big"
+                  valueRef={cardNameRef}
+                />
               </Box>
-            </Box>
-            <Box className={classes.card_wrap + ' ' + classes.second_card_wrap}>
-              <Box className={classes.card_info_title}>{t('purchase_point_tab.card_title')}</Box>
-              <Box className={classes.card_info_container + ' ' + classes.second_card_info_container}>
-                <Box className={classes.wrap_all_cards} style={purchasePointInfo.saved_cards.length >= 3 ? { height: 288 } : null}>
-                  {purchasePointInfo.saved_cards.map((card, key) => {
-                    return (
-                      <React.Fragment key={key}>
-                        <Box className={classes.wrap_all_card}>
-                          <Box className={classes.wrap_check_box}>
-                            <CustomRadio
-                              checked={selectedCardId === Number(card.card_seq)}
-                              onChange={(e) => {
-                                resetForm()
-                                setSelectedCardId(Number(e.target.value))
-                              }}
-                              value={card.card_seq}
-                              name="radio-button"
-                              size="small"
-                            />
-                          </Box>
-                          <Box>
-                            <Box className={classes.wrap_card_number}>{formatCardNumber(card.card_number.replace(/\*/g, 'x'))}</Box>
-                          </Box>
-                        </Box>
-                        <Box textAlign="right">
-                          <Box
-                            className={
-                              classes.title_delete_card +
-                              ' ' +
-                              (key + 1 === purchasePointInfo.saved_cards.length ? classes.last_title_delete_card : '')
-                            }
-                            onClick={() => deleteCard(card)}
-                          >
-                            {t('purchase_point_tab.title_delete_card')}
-                          </Box>
-                        </Box>
-                      </React.Fragment>
-                    )
-                  })}
+              <Box pt={1}>
+                <FastChatInput
+                  id="card_number"
+                  name="card_number"
+                  required={true}
+                  placeholder={t('purchase_point_tab.card_number_placeholder')}
+                  labelPrimary={t('purchase_point_tab.card_number')}
+                  fullWidth
+                  onChange={handleChangeCardNumber}
+                  onBlur={handleBlur}
+                  valueRef={cardNumberRef}
+                  helperText={touched.card_number && errors?.card_number}
+                  error={touched.card_number && !!errors?.card_number}
+                  size="big"
+                  formatValue={(e) => {
+                    const card_number = e.target.value.replace(/\s/g, '')
+                    const isValid = (/^[0-9]+$/g.test(card_number) || !e.target.value) && card_number.length <= 16
+                    if (/^[0-9]+$/g.test(card_number) || !e.target.value) {
+                      setSelectedCardId('')
+                    }
+                    // replace space and check is numeric
+                    return {
+                      isValid,
+                      formattedValue: formatCardNumber(e.target.value),
+                    }
+                  }}
+                />
+              </Box>
+              <Box pt={1}>
+                <FastChatInput
+                  id="card_expire_date"
+                  name="card_expire_date"
+                  required={true}
+                  placeholder={t('purchase_point_tab.card_expire_date_placeholder')}
+                  labelPrimary={t('purchase_point_tab.card_expire_date')}
+                  fullWidth
+                  onChange={handleChangeCardExpireDate}
+                  onBlur={handleBlur}
+                  helperText={touched.card_expire_date && errors?.card_expire_date}
+                  error={touched.card_expire_date && !!errors?.card_expire_date}
+                  size="big"
+                  valueRef={cardExpiredDateRef}
+                  formatValue={(e) => {
+                    const card_expire_date = e.target.value.replace(/[\s/]/g, '')
+                    const isValid = (/^[0-9]+$/g.test(card_expire_date) || !e.target.value) && card_expire_date.length <= 4
+                    if (/^[0-9]+$/g.test(card_expire_date) || !e.target.value) {
+                      setSelectedCardId('')
+                    }
+                    let formattedValue = card_expire_date
+                    if (card_expire_date.length >= 3) formattedValue = card_expire_date.match(new RegExp('.{1,2}', 'g')).join(' / ')
+                    return {
+                      isValid,
+                      formattedValue,
+                    }
+                  }}
+                />
+              </Box>
+              <Box pt={1}>
+                <FastChatInput
+                  id="card_cvc"
+                  name="card_cvc"
+                  required={true}
+                  placeholder=""
+                  labelPrimary={t('purchase_point_tab.card_cvc')}
+                  fullWidth
+                  onChange={handleChangeCardCvc}
+                  onBlur={handleBlur}
+                  helperText={touched.card_cvc && errors?.card_cvc}
+                  error={touched.card_cvc && !!errors?.card_cvc}
+                  size="big"
+                  valueRef={cardCvcRef}
+                  formatValue={(e) => {
+                    const card_cvc = e.target.value
+                    // check is numeric
+                    const isValid = (/^[0-9]+$/g.test(card_cvc) || !card_cvc) && card_cvc.length <= 4
+                    if (/^[0-9]+$/g.test(card_cvc) || !card_cvc) {
+                      setSelectedCardId('')
+                    }
+                    return {
+                      isValid,
+                      formattedValue: card_cvc,
+                    }
+                  }}
+                />
+              </Box>
+              <Box className={classes.toggle} pt={2}>
+                <ESSwitchIOS
+                  key={'is_saved_card'}
+                  handleChange={changeFieldAndResetSelectedCardId}
+                  name={'is_saved_card'}
+                  checked={values.is_saved_card}
+                />
+                <Box>
+                  <Box className={classes.toggle_name}>{t('purchase_point_tab.register_toggle_name')}</Box>
+                  {isExceedCard && <Box className={classes.mess_exceed_card}>{t('purchase_point_tab.mess_exceed_card')}</Box>}
                 </Box>
-                {purchasePointInfo.saved_cards.length === 0 ? (
-                  <Box className={classes.wrap_all_card + ' ' + classes.wrap_no_card}>{t('purchase_point_tab.no_card')}</Box>
-                ) : (
-                  <Box textAlign="center" pb={1} className={classes.clearButtonContainer}>
-                    <ESButton
-                      onClick={() => {
-                        setSelectedCardId('')
-                        validateForm()
-                      }}
-                      className={classes.clear_section_btn}
-                      variant="outlined"
-                      round
-                      fullWidth
-                      size="large"
-                    >
-                      {t('purchase_point_tab.clear_section')}
-                    </ESButton>
-                  </Box>
-                )}
               </Box>
             </Box>
           </Box>
-        )}
+          <Box className={classes.card_wrap + ' ' + classes.second_card_wrap}>
+            <Box className={classes.card_info_title}>{t('purchase_point_tab.card_title')}</Box>
+            <Box className={classes.card_info_container + ' ' + classes.second_card_info_container}>
+              <Box className={classes.wrap_all_cards} style={purchasePointInfo.saved_cards.length >= 3 ? { height: 288 } : null}>
+                {purchasePointInfo.saved_cards.map((card, key) => {
+                  return (
+                    <React.Fragment key={key}>
+                      <Box className={classes.wrap_all_card}>
+                        <Box className={classes.wrap_check_box}>
+                          <CustomRadio
+                            checked={selectedCardId === Number(card.card_seq)}
+                            onChange={(e) => {
+                              resetForm()
+                              setSelectedCardId(Number(e.target.value))
+                            }}
+                            value={card.card_seq}
+                            name="radio-button"
+                            size="small"
+                          />
+                        </Box>
+                        <Box>
+                          <Box className={classes.wrap_card_number}>{formatCardNumber(card.card_number.replace(/\*/g, 'x'))}</Box>
+                        </Box>
+                      </Box>
+                      <Box textAlign="right">
+                        <Box
+                          className={
+                            classes.title_delete_card +
+                            ' ' +
+                            (key + 1 === purchasePointInfo.saved_cards.length ? classes.last_title_delete_card : '')
+                          }
+                          onClick={() => deleteCard(card)}
+                        >
+                          {t('purchase_point_tab.title_delete_card')}
+                        </Box>
+                      </Box>
+                    </React.Fragment>
+                  )
+                })}
+              </Box>
+              {purchasePointInfo.saved_cards.length === 0 ? (
+                <Box className={classes.wrap_all_card + ' ' + classes.wrap_no_card}>{t('purchase_point_tab.no_card')}</Box>
+              ) : (
+                <Box textAlign="center" pb={1} className={classes.clearButtonContainer}>
+                  <ESButton
+                    onClick={() => {
+                      setSelectedCardId('')
+                      validateForm()
+                    }}
+                    className={classes.clear_section_btn}
+                    variant="outlined"
+                    round
+                    fullWidth
+                    size="large"
+                  >
+                    {t('purchase_point_tab.clear_section')}
+                  </ESButton>
+                </Box>
+              )}
+            </Box>
+          </Box>
+        </Box>
       </form>
       <Box pb={3} pt={2} justifyContent="center" display="flex" className={classes.actionButton}>
         <ButtonPrimary
           // disable button if has error when use new card and no use old card
-          disabled={paymentMethod !== 0 ? false : (!_.isEmpty(errors) && selectedCardId === '') || isExceedCard}
+          disabled={(!_.isEmpty(errors) && selectedCardId === '') || isExceedCard}
           type="submit"
           round
           fullWidth
