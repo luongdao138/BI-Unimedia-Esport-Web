@@ -91,7 +91,7 @@ const PaymentInfoContainer: React.FC = () => {
             )
           })}
         {data?.length === 0 && (
-          <Box className={classes.tableContentContainer}>
+          <Box className={classes.tableContentContainerNoDeposit}>
             <Typography component="span">{t('payment_information_screen.no_deposit_information')}</Typography>
           </Box>
         )}
@@ -136,6 +136,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingBottom: '24px',
     marginLeft: '24px',
     marginRight: '24px',
+    border: '1px solid rgb(255 255 255 / 30%)',
   },
   headerContainer: {
     display: 'flex',
