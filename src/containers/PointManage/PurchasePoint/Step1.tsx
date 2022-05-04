@@ -157,7 +157,13 @@ const Step1: React.FC<Step1Props> = ({ step, onNext, setSelectedPoint, selectedP
                     icon={
                       <>
                         {i.icon && (
-                          <Box className={classes.wrapperIconPaymentMethod}>
+                          <Box
+                            className={
+                              i.type === GMO_PAYMENT_TYPE.RAKUTEN
+                                ? classes.wrapperIconPaymentMethodRakuten
+                                : classes.wrapperIconPaymentMethod
+                            }
+                          >
                             <img className={classes.iconPaymentMethod} src={i.icon} />
                           </Box>
                         )}
@@ -270,7 +276,14 @@ const useStyles = makeStyles((theme) => ({
   itemPaymentMethod: {
     padding: '10px 25px',
   },
-  wrapperIconPaymentMethod: {},
+  wrapperIconPaymentMethodRakuten: {
+    maxWidth: 83,
+    maxHeight: 31,
+  },
+  wrapperIconPaymentMethod: {
+    maxWidth: 51,
+    maxHeight: 51,
+  },
   paymentMethod: {
     width: '100%',
     height: 70,
