@@ -2222,6 +2222,21 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         )
       )
     }
+    const messActiveUserRef = useRef(null)
+    const handlePointDonateClick = (item) => {
+      if (messActiveUserRef.current && (messActiveUserRef.current.id === item.id || messActiveUserRef.current.local_id === item.local_id)) {
+        messActiveUserRef.current = null
+        setDisplayDialogMess(false)
+      } else {
+        setDisplayDialogMess(true)
+        messActiveUserRef.current = item
+        // setMessActiveUser(item)
+      }
+    }
+
+    useEffect(() => {
+      setMessActiveUser(messActiveUserRef.current)
+    }, [messActiveUserRef.current, displayDialogMess])
 
     const chatContent = () => (
       <>
@@ -2242,14 +2257,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
                         opacity: !messActiveUser ? 1 : item.id === messActiveUser.id ? 1 : 0.5,
                       }}
                       onClick={() => {
-                        // close modal user icon if click icon of user is showed
-                        if (messActiveUser && (messActiveUser.id === item.id || messActiveUser.local_id === item.local_id)) {
-                          setMessActiveUser(null)
-                          setDisplayDialogMess(false)
-                        } else {
-                          setDisplayDialogMess(true)
-                          setMessActiveUser(item)
-                        }
+                        handlePointDonateClick(item)
                       }}
                     >
                       <ESAvatar src={item?.parent?.avatar} size={33} alt={item?.parent?.user_name} />
