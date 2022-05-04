@@ -192,6 +192,8 @@ const useStyles = makeStyles((theme) => ({
       color: Colors.white_opacity[30],
       opacity: 1,
     },
+    height: 'calc(100vh - 495px)',
+    maxHeight: '83px',
   },
   purchaseCommentRoot: {
     backgroundColor: '#212121',
