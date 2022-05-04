@@ -2060,9 +2060,11 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
 
     const closeDialogActiveUser = () => {
       // prevent close modal when click user icon first time
+      console.log('Mess active user click close dialog')
       if (messActiveUser && !displayDialogMess) {
-        setMessActiveUser(null)
+        setDisplayDialogMess(false)
       }
+      setMessActiveUser(null)
       setDisplayDialogMess(false)
     }
 
@@ -2160,7 +2162,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         >
           <Icon className={`${classes.iconAngleDown} fa fa-angle-down`} />
         </IconButton>
-        <ClickAwayListener onClickAway={() => closeDialogActiveUser()}>
+        <ClickAwayListener disableReactTree onClickAway={closeDialogActiveUser}>
           <Box className={`${classes.dialogMess} ${messActiveUser ? classes.dialogMessShow : ''}`}>
             {messActiveUser && (
               <DonateMessage
@@ -2175,8 +2177,12 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
             )}
             <Box
               className={`${classes.messContentOuter}`}
-              onClick={() => {
+              onClick={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+                console.log('Mess active user click content outer')
                 setMessActiveUser(null)
+                setDisplayDialogMess(false)
               }}
             ></Box>
           </Box>
@@ -2222,21 +2228,15 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         )
       )
     }
-    const messActiveUserRef = useRef(null)
     const handlePointDonateClick = (item) => {
-      if (messActiveUserRef.current && (messActiveUserRef.current.id === item.id || messActiveUserRef.current.local_id === item.local_id)) {
-        messActiveUserRef.current = null
+      if (messActiveUser && (messActiveUser.id === item.id || messActiveUser.local_id === item.local_id)) {
+        setMessActiveUser(null)
         setDisplayDialogMess(false)
       } else {
+        setMessActiveUser(item)
         setDisplayDialogMess(true)
-        messActiveUserRef.current = item
-        // setMessActiveUser(item)
       }
     }
-
-    useEffect(() => {
-      setMessActiveUser(messActiveUserRef.current)
-    }, [messActiveUserRef.current, displayDialogMess])
 
     const chatContent = () => (
       <>
@@ -2256,7 +2256,14 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
                         backgroundColor: purchasePoints[`p_${item.point}`].backgroundColor,
                         opacity: !messActiveUser ? 1 : item.id === messActiveUser.id ? 1 : 0.5,
                       }}
-                      onClick={() => {
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        e.preventDefault()
+                        handlePointDonateClick(item)
+                      }}
+                      onTouchEnd={(e) => {
+                        e.stopPropagation()
+                        e.preventDefault()
                         handlePointDonateClick(item)
                       }}
                     >
