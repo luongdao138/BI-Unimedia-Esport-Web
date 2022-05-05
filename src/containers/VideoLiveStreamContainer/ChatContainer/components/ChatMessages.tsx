@@ -5,9 +5,9 @@ import useStyles from '@containers/VideoLiveStreamContainer/ChatContainer/styles
 import { useRotateScreen } from '@utils/hooks/useRotateScreen'
 import DonateMessage from '@containers/VideoLiveStreamContainer/ChatContainer/DonateMessage'
 import ChatTextMessage from '@containers/VideoLiveStreamContainer/ChatContainer/ChatTextMessage'
-import useChatHelper from '@containers/VideoLiveStreamContainer/ChatContainer/useChatHelper'
 import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
 import { useRect } from '@utils/useRect'
+import useCheckNgWord from '@utils/hooks/useCheckNgWord'
 
 interface Props {
   //   cache: CellMeasurerCache
@@ -57,7 +57,7 @@ const ChatMessages: React.FC<Props> = ({
   const isDown1100 = useMediaQuery(theme.breakpoints.down(1100), { noSsr: true })
   const isDown960 = useMediaQuery(theme.breakpoints.down(960), { noSsr: true })
   const matchMd = useMediaQuery(theme.breakpoints.down(1025))
-  const { getMessageWithoutNgWords } = useChatHelper()
+  const { getMessageWithoutNgWords } = useCheckNgWord()
 
   const chatBoardWidth = () => {
     if (!isDown1100) return 482
