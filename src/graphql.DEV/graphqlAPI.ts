@@ -68,57 +68,57 @@ export type ModelBooleanInput = {
 
 export type User = {
   __typename: 'User'
-  id?: string
-  uuid?: string
+  id: string
+  uuid: string
   avatar?: string | null
-  user_name?: string
+  user_name: string
   delete_flag?: boolean | null
-  messages?: ModelMessageConnection
-  createdAt?: string
-  updatedAt?: string
+  messages?: ModelMessageConnection | null
+  createdAt: string
+  updatedAt: string
 }
 
 export type ModelMessageConnection = {
   __typename: 'ModelMessageConnection'
-  items?: Array<Message | null>
+  items: Array<Message | null>
   nextToken?: string | null
 }
 
 export type Message = {
   __typename: 'Message'
-  id?: string
-  owner?: string
+  id: string
+  owner: string
   text?: string | null
   uuid?: string | null
-  video_id?: string
+  video_id: string
   delete_flag?: boolean | null
-  video_time?: number
+  video_time: number
   display_avatar_time?: string | null
   point?: string | null
   use_point_id?: string | null
   is_premium?: boolean | null
   is_premium_number?: number | null
-  userId?: string
+  userId: string
   giftMasterId?: string | null
   local_id?: string | null
   created_time?: string | null
-  parent?: User
-  receiver?: GiftMaster
-  createdAt?: string
-  updatedAt?: string
+  parent?: User | null
+  receiver?: GiftMaster | null
+  createdAt: string
+  updatedAt: string
 }
 
 export type GiftMaster = {
   __typename: 'GiftMaster'
-  id?: string
-  name?: string
+  id: string
+  name: string
   image?: string | null
-  master_id?: string
-  master_uuid?: string
+  master_id: string
+  master_uuid: string
   delete_flag?: boolean | null
-  messages?: ModelMessageConnection
-  createdAt?: string
-  updatedAt?: string
+  messages?: ModelMessageConnection | null
+  createdAt: string
+  updatedAt: string
 }
 
 export type UpdateUserInput = {
@@ -291,14 +291,14 @@ export type ModelVideoConditionInput = {
 
 export type Video = {
   __typename: 'Video'
-  id?: string
-  uuid?: string
-  arn?: string
+  id: string
+  uuid: string
+  arn: string
   process_status?: string | null
   video_status?: string | null
   live_start_time?: string | null
-  createdAt?: string
-  updatedAt?: string
+  createdAt: string
+  updatedAt: string
 }
 
 export type UpdateVideoInput = {
@@ -332,12 +332,12 @@ export type ModelChannelConditionInput = {
 
 export type Channel = {
   __typename: 'Channel'
-  id?: string
-  arn?: string
+  id: string
+  arn: string
   state?: string | null
   alarm_state?: string | null
-  createdAt?: string
-  updatedAt?: string
+  createdAt: string
+  updatedAt: string
 }
 
 export type UpdateChannelInput = {
@@ -365,10 +365,10 @@ export type ModelCowellRealtimeStatusConnectionsConditionInput = {
 
 export type CowellRealtimeStatusConnections = {
   __typename: 'CowellRealtimeStatusConnections'
-  id?: string
-  connectionId?: string
-  createdAt?: string
-  updatedAt?: string
+  id: string
+  connectionId: string
+  createdAt: string
+  updatedAt: string
 }
 
 export type UpdateCowellRealtimeStatusConnectionsInput = {
@@ -393,7 +393,7 @@ export type ModelUserFilterInput = {
 
 export type ModelUserConnection = {
   __typename: 'ModelUserConnection'
-  items?: Array<User | null>
+  items: Array<User | null>
   nextToken?: string | null
 }
 
@@ -413,7 +413,7 @@ export type ModelGiftMasterFilterInput = {
 
 export type ModelGiftMasterConnection = {
   __typename: 'ModelGiftMasterConnection'
-  items?: Array<GiftMaster | null>
+  items: Array<GiftMaster | null>
   nextToken?: string | null
 }
 
@@ -455,7 +455,7 @@ export type ModelVideoFilterInput = {
 
 export type ModelVideoConnection = {
   __typename: 'ModelVideoConnection'
-  items?: Array<Video | null>
+  items: Array<Video | null>
   nextToken?: string | null
 }
 
@@ -471,7 +471,7 @@ export type ModelChannelFilterInput = {
 
 export type ModelChannelConnection = {
   __typename: 'ModelChannelConnection'
-  items?: Array<Channel | null>
+  items: Array<Channel | null>
   nextToken?: string | null
 }
 
@@ -485,7 +485,7 @@ export type ModelCowellRealtimeStatusConnectionsFilterInput = {
 
 export type ModelCowellRealtimeStatusConnectionsConnection = {
   __typename: 'ModelCowellRealtimeStatusConnectionsConnection'
-  items?: Array<CowellRealtimeStatusConnections | null>
+  items: Array<CowellRealtimeStatusConnections | null>
   nextToken?: string | null
 }
 
@@ -514,7 +514,7 @@ export type ModelIntKeyConditionInput = {
 }
 
 export type CreateUserMutationVariables = {
-  input?: CreateUserInput
+  input: CreateUserInput
   condition?: ModelUserConditionInput | null
 }
 
@@ -557,7 +557,7 @@ export type CreateUserMutation = {
 }
 
 export type UpdateUserMutationVariables = {
-  input?: UpdateUserInput
+  input: UpdateUserInput
   condition?: ModelUserConditionInput | null
 }
 
@@ -600,7 +600,7 @@ export type UpdateUserMutation = {
 }
 
 export type DeleteUserMutationVariables = {
-  input?: DeleteUserInput
+  input: DeleteUserInput
   condition?: ModelUserConditionInput | null
 }
 
@@ -643,7 +643,7 @@ export type DeleteUserMutation = {
 }
 
 export type CreateGiftMasterMutationVariables = {
-  input?: CreateGiftMasterInput
+  input: CreateGiftMasterInput
   condition?: ModelGiftMasterConditionInput | null
 }
 
@@ -687,7 +687,7 @@ export type CreateGiftMasterMutation = {
 }
 
 export type UpdateGiftMasterMutationVariables = {
-  input?: UpdateGiftMasterInput
+  input: UpdateGiftMasterInput
   condition?: ModelGiftMasterConditionInput | null
 }
 
@@ -731,7 +731,7 @@ export type UpdateGiftMasterMutation = {
 }
 
 export type DeleteGiftMasterMutationVariables = {
-  input?: DeleteGiftMasterInput
+  input: DeleteGiftMasterInput
   condition?: ModelGiftMasterConditionInput | null
 }
 
@@ -775,7 +775,7 @@ export type DeleteGiftMasterMutation = {
 }
 
 export type CreateMessageMutationVariables = {
-  input?: CreateMessageInput
+  input: CreateMessageInput
   condition?: ModelMessageConditionInput | null
 }
 
@@ -833,7 +833,7 @@ export type CreateMessageMutation = {
 }
 
 export type UpdateMessageMutationVariables = {
-  input?: UpdateMessageInput
+  input: UpdateMessageInput
   condition?: ModelMessageConditionInput | null
 }
 
@@ -891,7 +891,7 @@ export type UpdateMessageMutation = {
 }
 
 export type DeleteMessageMutationVariables = {
-  input?: DeleteMessageInput
+  input: DeleteMessageInput
   condition?: ModelMessageConditionInput | null
 }
 
@@ -949,7 +949,7 @@ export type DeleteMessageMutation = {
 }
 
 export type CreateVideoMutationVariables = {
-  input?: CreateVideoInput
+  input: CreateVideoInput
   condition?: ModelVideoConditionInput | null
 }
 
@@ -968,7 +968,7 @@ export type CreateVideoMutation = {
 }
 
 export type UpdateVideoMutationVariables = {
-  input?: UpdateVideoInput
+  input: UpdateVideoInput
   condition?: ModelVideoConditionInput | null
 }
 
@@ -987,7 +987,7 @@ export type UpdateVideoMutation = {
 }
 
 export type DeleteVideoMutationVariables = {
-  input?: DeleteVideoInput
+  input: DeleteVideoInput
   condition?: ModelVideoConditionInput | null
 }
 
@@ -1006,7 +1006,7 @@ export type DeleteVideoMutation = {
 }
 
 export type CreateChannelMutationVariables = {
-  input?: CreateChannelInput
+  input: CreateChannelInput
   condition?: ModelChannelConditionInput | null
 }
 
@@ -1023,7 +1023,7 @@ export type CreateChannelMutation = {
 }
 
 export type UpdateChannelMutationVariables = {
-  input?: UpdateChannelInput
+  input: UpdateChannelInput
   condition?: ModelChannelConditionInput | null
 }
 
@@ -1040,7 +1040,7 @@ export type UpdateChannelMutation = {
 }
 
 export type DeleteChannelMutationVariables = {
-  input?: DeleteChannelInput
+  input: DeleteChannelInput
   condition?: ModelChannelConditionInput | null
 }
 
@@ -1057,7 +1057,7 @@ export type DeleteChannelMutation = {
 }
 
 export type CreateCowellRealtimeStatusConnectionsMutationVariables = {
-  input?: CreateCowellRealtimeStatusConnectionsInput
+  input: CreateCowellRealtimeStatusConnectionsInput
   condition?: ModelCowellRealtimeStatusConnectionsConditionInput | null
 }
 
@@ -1072,7 +1072,7 @@ export type CreateCowellRealtimeStatusConnectionsMutation = {
 }
 
 export type UpdateCowellRealtimeStatusConnectionsMutationVariables = {
-  input?: UpdateCowellRealtimeStatusConnectionsInput
+  input: UpdateCowellRealtimeStatusConnectionsInput
   condition?: ModelCowellRealtimeStatusConnectionsConditionInput | null
 }
 
@@ -1087,7 +1087,7 @@ export type UpdateCowellRealtimeStatusConnectionsMutation = {
 }
 
 export type DeleteCowellRealtimeStatusConnectionsMutationVariables = {
-  input?: DeleteCowellRealtimeStatusConnectionsInput
+  input: DeleteCowellRealtimeStatusConnectionsInput
   condition?: ModelCowellRealtimeStatusConnectionsConditionInput | null
 }
 
@@ -1102,7 +1102,7 @@ export type DeleteCowellRealtimeStatusConnectionsMutation = {
 }
 
 export type GetUserQueryVariables = {
-  id?: string
+  id: string
 }
 
 export type GetUserQuery = {
@@ -1171,7 +1171,7 @@ export type ListUsersQuery = {
 }
 
 export type GetGiftMasterQueryVariables = {
-  id?: string
+  id: string
 }
 
 export type GetGiftMasterQuery = {
@@ -1242,7 +1242,7 @@ export type ListGiftMastersQuery = {
 }
 
 export type GetMessageQueryVariables = {
-  id?: string
+  id: string
 }
 
 export type GetMessageQuery = {
@@ -1354,7 +1354,7 @@ export type ListMessagesQuery = {
 }
 
 export type GetVideoQueryVariables = {
-  id?: string
+  id: string
 }
 
 export type GetVideoQuery = {
@@ -1396,7 +1396,7 @@ export type ListVideosQuery = {
 }
 
 export type GetChannelQueryVariables = {
-  id?: string
+  id: string
 }
 
 export type GetChannelQuery = {
@@ -1434,7 +1434,7 @@ export type ListChannelsQuery = {
 }
 
 export type GetCowellRealtimeStatusConnectionsQueryVariables = {
-  id?: string
+  id: string
 }
 
 export type GetCowellRealtimeStatusConnectionsQuery = {
@@ -1447,14 +1447,14 @@ export type GetCowellRealtimeStatusConnectionsQuery = {
   } | null
 }
 
-export type ListCowellRealtimeStatusConnectionssQueryVariables = {
+export type ListCowellRealtimeStatusConnectionsQueryVariables = {
   filter?: ModelCowellRealtimeStatusConnectionsFilterInput | null
   limit?: number | null
   nextToken?: string | null
 }
 
-export type ListCowellRealtimeStatusConnectionssQuery = {
-  listCowellRealtimeStatusConnectionss?: {
+export type ListCowellRealtimeStatusConnectionsQuery = {
+  listCowellRealtimeStatusConnections?: {
     __typename: 'ModelCowellRealtimeStatusConnectionsConnection'
     items: Array<{
       __typename: 'CowellRealtimeStatusConnections'
@@ -1468,7 +1468,7 @@ export type ListCowellRealtimeStatusConnectionssQuery = {
 }
 
 export type GetUsersByUuidQueryVariables = {
-  uuid?: string | null
+  uuid: string
   sortDirection?: ModelSortDirection | null
   filter?: ModelUserFilterInput | null
   limit?: number | null
@@ -1497,7 +1497,7 @@ export type GetUsersByUuidQuery = {
 }
 
 export type GetReceiverByUuidQueryVariables = {
-  master_uuid?: string | null
+  master_uuid: string
   sortDirection?: ModelSortDirection | null
   filter?: ModelGiftMasterFilterInput | null
   limit?: number | null
@@ -1527,7 +1527,7 @@ export type GetReceiverByUuidQuery = {
 }
 
 export type GetMessagesByVideoIdQueryVariables = {
-  video_id?: string | null
+  video_id: string
   created_time?: ModelStringKeyConditionInput | null
   sortDirection?: ModelSortDirection | null
   filter?: ModelMessageFilterInput | null
@@ -1585,7 +1585,7 @@ export type GetMessagesByVideoIdQuery = {
 }
 
 export type GetMessagesByVideoIdWithSortQueryVariables = {
-  video_id?: string | null
+  video_id: string
   video_time?: ModelIntKeyConditionInput | null
   sortDirection?: ModelSortDirection | null
   filter?: ModelMessageFilterInput | null
@@ -1643,7 +1643,7 @@ export type GetMessagesByVideoIdWithSortQuery = {
 }
 
 export type GetMessagesByVideoByPremiumQueryVariables = {
-  video_id?: string | null
+  video_id: string
   is_premium_number?: ModelIntKeyConditionInput | null
   sortDirection?: ModelSortDirection | null
   filter?: ModelMessageFilterInput | null
@@ -1701,7 +1701,7 @@ export type GetMessagesByVideoByPremiumQuery = {
 }
 
 export type GetVideosByUuidQueryVariables = {
-  uuid?: string | null
+  uuid: string
   sortDirection?: ModelSortDirection | null
   filter?: ModelVideoFilterInput | null
   limit?: number | null
@@ -1727,7 +1727,7 @@ export type GetVideosByUuidQuery = {
 }
 
 export type GetVideoByUuidQueryVariables = {
-  uuid?: string | null
+  uuid: string
   sortDirection?: ModelSortDirection | null
   filter?: ModelVideoFilterInput | null
   limit?: number | null
@@ -1753,7 +1753,7 @@ export type GetVideoByUuidQuery = {
 }
 
 export type GetChannelByArnQueryVariables = {
-  arn?: string | null
+  arn: string
   sortDirection?: ModelSortDirection | null
   filter?: ModelChannelFilterInput | null
   limit?: number | null
