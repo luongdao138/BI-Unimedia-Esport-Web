@@ -80,7 +80,7 @@ export type User = {
 
 export type ModelMessageConnection = {
   __typename: 'ModelMessageConnection'
-  items?: Array<Message>
+  items?: Array<Message | null>
   nextToken?: string | null
 }
 
@@ -393,7 +393,7 @@ export type ModelUserFilterInput = {
 
 export type ModelUserConnection = {
   __typename: 'ModelUserConnection'
-  items?: Array<User>
+  items?: Array<User | null>
   nextToken?: string | null
 }
 
@@ -413,7 +413,7 @@ export type ModelGiftMasterFilterInput = {
 
 export type ModelGiftMasterConnection = {
   __typename: 'ModelGiftMasterConnection'
-  items?: Array<GiftMaster>
+  items?: Array<GiftMaster | null>
   nextToken?: string | null
 }
 
@@ -455,7 +455,7 @@ export type ModelVideoFilterInput = {
 
 export type ModelVideoConnection = {
   __typename: 'ModelVideoConnection'
-  items?: Array<Video>
+  items?: Array<Video | null>
   nextToken?: string | null
 }
 
@@ -471,7 +471,7 @@ export type ModelChannelFilterInput = {
 
 export type ModelChannelConnection = {
   __typename: 'ModelChannelConnection'
-  items?: Array<Channel>
+  items?: Array<Channel | null>
   nextToken?: string | null
 }
 
@@ -485,7 +485,7 @@ export type ModelCowellRealtimeStatusConnectionsFilterInput = {
 
 export type ModelCowellRealtimeStatusConnectionsConnection = {
   __typename: 'ModelCowellRealtimeStatusConnectionsConnection'
-  items?: Array<CowellRealtimeStatusConnections>
+  items?: Array<CowellRealtimeStatusConnections | null>
   nextToken?: string | null
 }
 
@@ -548,7 +548,7 @@ export type CreateUserMutation = {
         created_time?: string | null
         createdAt: string
         updatedAt: string
-      }>
+      } | null>
       nextToken?: string | null
     } | null
     createdAt: string
@@ -591,7 +591,7 @@ export type UpdateUserMutation = {
         created_time?: string | null
         createdAt: string
         updatedAt: string
-      }>
+      } | null>
       nextToken?: string | null
     } | null
     createdAt: string
@@ -634,7 +634,7 @@ export type DeleteUserMutation = {
         created_time?: string | null
         createdAt: string
         updatedAt: string
-      }>
+      } | null>
       nextToken?: string | null
     } | null
     createdAt: string
@@ -678,7 +678,7 @@ export type CreateGiftMasterMutation = {
         created_time?: string | null
         createdAt: string
         updatedAt: string
-      }>
+      } | null>
       nextToken?: string | null
     } | null
     createdAt: string
@@ -722,7 +722,7 @@ export type UpdateGiftMasterMutation = {
         created_time?: string | null
         createdAt: string
         updatedAt: string
-      }>
+      } | null>
       nextToken?: string | null
     } | null
     createdAt: string
@@ -766,7 +766,7 @@ export type DeleteGiftMasterMutation = {
         created_time?: string | null
         createdAt: string
         updatedAt: string
-      }>
+      } | null>
       nextToken?: string | null
     } | null
     createdAt: string
@@ -1135,7 +1135,7 @@ export type GetUserQuery = {
         created_time?: string | null
         createdAt: string
         updatedAt: string
-      }>
+      } | null>
       nextToken?: string | null
     } | null
     createdAt: string
@@ -1165,7 +1165,7 @@ export type ListUsersQuery = {
       } | null
       createdAt: string
       updatedAt: string
-    }>
+    } | null>
     nextToken?: string | null
   } | null
 }
@@ -1205,7 +1205,7 @@ export type GetGiftMasterQuery = {
         created_time?: string | null
         createdAt: string
         updatedAt: string
-      }>
+      } | null>
       nextToken?: string | null
     } | null
     createdAt: string
@@ -1236,7 +1236,7 @@ export type ListGiftMastersQuery = {
       } | null
       createdAt: string
       updatedAt: string
-    }>
+    } | null>
     nextToken?: string | null
   } | null
 }
@@ -1348,7 +1348,7 @@ export type ListMessagesQuery = {
       } | null
       createdAt: string
       updatedAt: string
-    }>
+    } | null>
     nextToken?: string | null
   } | null
 }
@@ -1390,7 +1390,7 @@ export type ListVideosQuery = {
       live_start_time?: string | null
       createdAt: string
       updatedAt: string
-    }>
+    } | null>
     nextToken?: string | null
   } | null
 }
@@ -1428,7 +1428,7 @@ export type ListChannelsQuery = {
       alarm_state?: string | null
       createdAt: string
       updatedAt: string
-    }>
+    } | null>
     nextToken?: string | null
   } | null
 }
@@ -1462,7 +1462,7 @@ export type ListCowellRealtimeStatusConnectionssQuery = {
       connectionId: string
       createdAt: string
       updatedAt: string
-    }>
+    } | null>
     nextToken?: string | null
   } | null
 }
@@ -1491,7 +1491,7 @@ export type GetUsersByUuidQuery = {
       } | null
       createdAt: string
       updatedAt: string
-    }>
+    } | null>
     nextToken?: string | null
   } | null
 }
@@ -1521,7 +1521,7 @@ export type GetReceiverByUuidQuery = {
       } | null
       createdAt: string
       updatedAt: string
-    }>
+    } | null>
     nextToken?: string | null
   } | null
 }
@@ -1579,7 +1579,7 @@ export type GetMessagesByVideoIdQuery = {
       } | null
       createdAt: string
       updatedAt: string
-    }>
+    } | null>
     nextToken?: string | null
   } | null
 }
@@ -1637,7 +1637,7 @@ export type GetMessagesByVideoIdWithSortQuery = {
       } | null
       createdAt: string
       updatedAt: string
-    }>
+    } | null>
     nextToken?: string | null
   } | null
 }
@@ -1695,7 +1695,7 @@ export type GetMessagesByVideoByPremiumQuery = {
       } | null
       createdAt: string
       updatedAt: string
-    }>
+    } | null>
     nextToken?: string | null
   } | null
 }
@@ -1721,7 +1721,7 @@ export type GetVideosByUuidQuery = {
       live_start_time?: string | null
       createdAt: string
       updatedAt: string
-    }>
+    } | null>
     nextToken?: string | null
   } | null
 }
@@ -1747,7 +1747,7 @@ export type GetVideoByUuidQuery = {
       live_start_time?: string | null
       createdAt: string
       updatedAt: string
-    }>
+    } | null>
     nextToken?: string | null
   } | null
 }
@@ -1771,7 +1771,7 @@ export type GetChannelByArnQuery = {
       alarm_state?: string | null
       createdAt: string
       updatedAt: string
-    }>
+    } | null>
     nextToken?: string | null
   } | null
 }
@@ -1806,7 +1806,7 @@ export type OnCreateUserSubscription = {
         created_time?: string | null
         createdAt: string
         updatedAt: string
-      }>
+      } | null>
       nextToken?: string | null
     } | null
     createdAt: string
@@ -1844,7 +1844,7 @@ export type OnUpdateUserSubscription = {
         created_time?: string | null
         createdAt: string
         updatedAt: string
-      }>
+      } | null>
       nextToken?: string | null
     } | null
     createdAt: string
@@ -1882,7 +1882,7 @@ export type OnDeleteUserSubscription = {
         created_time?: string | null
         createdAt: string
         updatedAt: string
-      }>
+      } | null>
       nextToken?: string | null
     } | null
     createdAt: string
@@ -1921,7 +1921,7 @@ export type OnCreateGiftMasterSubscription = {
         created_time?: string | null
         createdAt: string
         updatedAt: string
-      }>
+      } | null>
       nextToken?: string | null
     } | null
     createdAt: string
@@ -1960,7 +1960,7 @@ export type OnUpdateGiftMasterSubscription = {
         created_time?: string | null
         createdAt: string
         updatedAt: string
-      }>
+      } | null>
       nextToken?: string | null
     } | null
     createdAt: string
@@ -1999,7 +1999,7 @@ export type OnDeleteGiftMasterSubscription = {
         created_time?: string | null
         createdAt: string
         updatedAt: string
-      }>
+      } | null>
       nextToken?: string | null
     } | null
     createdAt: string
