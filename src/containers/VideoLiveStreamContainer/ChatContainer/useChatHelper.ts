@@ -247,12 +247,10 @@ export const useChatHelpers = (props: IImportProps): IExportProps => {
   const handleTransformListMess = (messagesInfo) => {
     const transformMess = [...messagesInfo.items]
     const transformMessAsc = sortMessages(transformMess)
-    console.log('🚀 ~ handleTransformListMess ~ transformMessAsc', transformMessAsc)
     // console.log('🚀 ~ handleTransformListMess ~ setIsSwitchingTab', isSwitchingTab)
 
     // TODO
     if (streamingSecond === Infinity && videoType === STATUS_VIDEO.LIVE_STREAM && !switchTabRef.current) {
-      console.log('🚀 ~ handleTransformListMess ~ streamingSecond', streamingSecond)
       setStateMessages([...transformMessAsc])
     }
     // save mess for use in local
@@ -281,7 +279,6 @@ export const useChatHelpers = (props: IImportProps): IExportProps => {
       setBottom(true)
       setIsGettingMess(false)
       // renderMessWhenTipSwitchTab()
-      console.log('🚀 ~ renderMessWhenTipSwitchTab ~ videoPlayedSecond.current', videoPlayedSecond.current)
       // const isMessageInBottom = checkMessIsInBottom()
       // render new messages with savedMess
       setStateMessages([...transformMessAsc])
@@ -301,7 +298,6 @@ export const useChatHelpers = (props: IImportProps): IExportProps => {
 
   // fetch messages prev when rewind to video time
   const fetchPrevMessWhenRewind = (video_time, sortOrder = APIt.ModelSortDirection.DESC) => {
-    console.log('🚀 ~ fetchPrevMessWhenRewind ~ video_time', video_time)
     if (isSwitchingTabRef.current || isSwitchingSubTabRef.current) {
       return
     }
@@ -337,7 +333,6 @@ export const useChatHelpers = (props: IImportProps): IExportProps => {
       return
     }
     const transformMessAsc = sortMessages(messagesInfo.items)
-    console.log('🚀 ~ handleFetchPrevMessWhenRewind ~ transformMessAsc', transformMessAsc)
     prevRewindMessRef.current = { [video_time]: [...transformMessAsc] }
     // setPrevRewindMess({ [video_time]: [...transformMessAsc] })
 
@@ -349,7 +344,6 @@ export const useChatHelpers = (props: IImportProps): IExportProps => {
     if (!messagesInfo.nextToken) setIsTokenBroken(false)
 
     if (!isSwitchingTabRef.current) {
-      console.log('🚀 ~ handleFetchPrevMessWhenRewind ~ video_time', video_time)
       fetchNextMess(GET_MESS_TYPE.FETCH_NEXT, video_time)
     }
   }
@@ -557,10 +551,8 @@ export const useChatHelpers = (props: IImportProps): IExportProps => {
         : [...oldPrevRewindMess]
       // console.log('🚀 ~ handleFetchRewindMess ~ newRewindMess', newRewindMess)
       const transformMessAsc = sortMessages([...newRewindMess])
-      console.log('🚀 ~ handleFetchRewindMess ~ transformMessAsc', transformMessAsc)
 
       setIsGettingMess(false)
-      console.log('🚀 ~ handleFetchRewindMess ~ videoPlayedSecond.current', videoPlayedSecond.current)
       setStateMessages(transformMessAsc.filter((v) => +v.video_time <= +videoPlayedSecond.current))
       // setCacheMess(transformMessAsc)
       cacheMessRef.current = transformMessAsc
