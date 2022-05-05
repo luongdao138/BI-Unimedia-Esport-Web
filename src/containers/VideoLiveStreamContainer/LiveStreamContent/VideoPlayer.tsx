@@ -64,7 +64,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   isArchived,
   // type,
   videoType,
-  // componentsSize,
+  componentsSize,
   qualities,
 }) => {
   const { setVideoRefInfo } = useContext(VideoContext)
@@ -779,7 +779,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
         id="video"
         ref={videoEl}
         muted={muted}
-        style={{ width: '100%', height: '100%' }}
+        style={{ width: '100%', height: componentsSize.videoHeight }}
         autoPlay={autoPlay}
         src={srcResolution}
         // controls={iPhonePl || androidPl || isMobile}
@@ -794,7 +794,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   }, [muted, autoPlay, srcResolution])
 
   return (
-    <div className={classes.videoPlayer}>
+    <div className={classes.videoPlayer} style={{ height: componentsSize.videoHeight ?? 0 }}>
       {/* {(iPhonePl || androidPl || (!iPadPl && isDownMd)) && (
         <div>
           <video
