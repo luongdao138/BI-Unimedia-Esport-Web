@@ -287,6 +287,7 @@ const useStyles = makeStyles((theme) => ({
   paymentMethod: {
     width: '100%',
     height: 70,
+    border: '1px solid #838383',
   },
   iconPaymentMethod: {
     width: '100%',
