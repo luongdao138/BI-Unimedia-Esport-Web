@@ -1960,67 +1960,70 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       }
     }, [])
 
-    const handleCreateMess = async (local_message: any, input: any, point: any, resetMess: any) => {
+    const handleCreateMess = (local_message: any, input: any, point: any, resetMess: any) => {
       console.log('handleCreateMess', local_message, point)
-      const is_premium_local_message = isPremiumChat(local_message, false)
-      if (isStreaming) {
-        setStateMessages((prev) => [...prev, local_message])
-      }
-
-      // save mess for local
-      // setCacheMess((messages) => [...messages, local_message])
-      cacheMessRef.current = [...cacheMessRef.current, local_message]
-      // setSavedMess((messages) => [...messages, local_message])
-      // save donated messages for local (not check display time)
-      if (is_premium_local_message) {
-        // setSavedDonateMess((messages) => [...messages, local_message])
-        // setCacheDonateMess((messages) => [...messages, local_message])
-        cacheDonateMessRef.current = [...cacheDonateMessRef.current, local_message]
-      }
-      // only save mess tip when has point
-      if (point) {
-        // setCacheMessTip((messages) => [...messages, local_message])
-        cacheMessTipRef.current = [...cacheMessTipRef.current, local_message]
-      }
-
-      // save message to local
-      if (isStreaming) {
-        const isMessageInBottom = checkMessIsInBottom()
-        // render new messages with savedMess
-        if (!point) {
-          // reset input chat
-          // values.message = ''
-          resetMess((value) => !value)
+      setTimeout(() => {
+        const is_premium_local_message = isPremiumChat(local_message, false)
+        if (isStreaming) {
+          setStateMessages((prev) => [...prev, local_message])
         }
-        // setStateMessages((prev) => [...prev, local_message])
 
-        if (isMessageInBottom) {
-          if (point) {
-            scrollBehaviorRef.current = 'instant'
-            // setScrollBehavior('instant')
-            setIsChatInBottom(true)
-          } else {
-            // console.log('🚀 ~ createMess ~ scrollToCurrentMess---000', scrollToCurrentMess)
-            scrollToCurrentMess()
+        // save mess for local
+        // setCacheMess((messages) => [...messages, local_message])
+        cacheMessRef.current = [...cacheMessRef.current, local_message]
+        // setSavedMess((messages) => [...messages, local_message])
+        // save donated messages for local (not check display time)
+        if (is_premium_local_message) {
+          // setSavedDonateMess((messages) => [...messages, local_message])
+          // setCacheDonateMess((messages) => [...messages, local_message])
+          cacheDonateMessRef.current = [...cacheDonateMessRef.current, local_message]
+        }
+        // only save mess tip when has point
+        if (point) {
+          // setCacheMessTip((messages) => [...messages, local_message])
+          cacheMessTipRef.current = [...cacheMessTipRef.current, local_message]
+        }
+
+        // save message to local
+        if (isStreaming) {
+          const isMessageInBottom = checkMessIsInBottom()
+          // render new messages with savedMess
+          if (!point) {
+            // reset input chat
+            // values.message = ''
+            resetMess((value) => !value)
+          }
+          // setStateMessages((prev) => [...prev, local_message])
+
+          if (isMessageInBottom) {
+            if (point) {
+              scrollBehaviorRef.current = 'instant'
+              // setScrollBehavior('instant')
+              setIsChatInBottom(true)
+            } else {
+              // console.log('🚀 ~ createMess ~ scrollToCurrentMess---000', scrollToCurrentMess)
+              scrollToCurrentMess()
+            }
+          }
+
+          // render new users donate
+          if (is_premium_local_message) {
+            // let newMessDonate = [...savedDonateMess]
+            // newMessDonate = newMessDonate.filter((item) => +item.display_avatar_time > +videoPlayedSecond.current)
+            // render user donate icon by time of local
+            setMessagesDonate((prev) => [...prev, local_message])
           }
         }
 
-        // render new users donate
-        if (is_premium_local_message) {
-          // let newMessDonate = [...savedDonateMess]
-          // newMessDonate = newMessDonate.filter((item) => +item.display_avatar_time > +videoPlayedSecond.current)
-          // render user donate icon by time of local
-          setMessagesDonate((prev) => [...prev, local_message])
-        }
-      }
-
-      try {
-        const result = await API.graphql(graphqlOperation(createMessage, { input }))
-        refCreateMessLocal.current(result, local_message)
-      } catch (errors) {
-        if (errors && errors.errors.length !== 0) refCreateMessLocal.current([], local_message, true)
-        console.error(errors)
-      }
+        API.graphql(graphqlOperation(createMessage, { input }))
+          .then((result) => {
+            refCreateMessLocal.current(result, local_message)
+          })
+          .catch((errors) => {
+            if (errors && errors.errors.length !== 0) refCreateMessLocal.current([], local_message, true)
+            console.error(errors)
+          })
+      }, 20)
     }
 
     const checkMessIsInBottom = () => {
@@ -2162,7 +2165,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         >
           <Icon className={`${classes.iconAngleDown} fa fa-angle-down`} />
         </IconButton>
-        <ClickAwayListener disableReactTree onClickAway={closeDialogActiveUser}>
+        <ClickAwayListener onClickAway={closeDialogActiveUser}>
           <Box className={`${classes.dialogMess} ${messActiveUser ? classes.dialogMessShow : ''}`}>
             {messActiveUser && (
               <DonateMessage

@@ -14,6 +14,7 @@ export type InputProps = {
   resetErrorOnChange?: () => void
   valueRef?: React.MutableRefObject<string>
   inputRef?: React.MutableRefObject<HTMLInputElement>
+  resetValue?: boolean
   formatValue?: (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -21,17 +22,26 @@ export type InputProps = {
     formattedValue: string
   }
   initialValue?: string
+  resetWhenPressEnter?: boolean
 }
 
 const ESFastChatInput: React.FC<OutlinedInputProps & InputProps> = (props) => {
   const { resetErrorOnChange, valueRef, inputRef, formatValue } = props
   const [tempMessage, setTempMessage] = useState(props.initialValue || '')
 
+  // console.log('Submit chat rerender')
+
   useEffect(() => {
     if (props.value !== null && props.value !== undefined) {
       setTempMessage(String(props.value))
     }
   }, [props.value])
+
+  useEffect(() => {
+    // console.log('Submit chat reset value change')
+    valueRef.current = ''
+    setTempMessage('')
+  }, [props.resetValue])
 
   const debouncedChangeHandler = useCallback(
     _.debounce((e) => {
@@ -60,7 +70,20 @@ const ESFastChatInput: React.FC<OutlinedInputProps & InputProps> = (props) => {
     resetErrorOnChange?.()
   }
 
-  return <ESInput {...props} inputRef={inputRef} value={tempMessage} onChange={handleChange} />
+  return (
+    <ESInput
+      {...props}
+      inputRef={inputRef}
+      value={tempMessage}
+      onChange={handleChange}
+      onKeyUp={(e) => {
+        if (props.resetWhenPressEnter && e.key === 'Enter') {
+          valueRef.current = ''
+          setTempMessage('')
+        }
+      }}
+    />
+  )
 }
 
 export default memo(ESFastChatInput)
