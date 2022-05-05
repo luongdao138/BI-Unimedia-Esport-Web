@@ -1,41 +1,16 @@
 /* eslint-disable prefer-const */
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Box, ButtonBase, ClickAwayListener, Icon, IconButton, Typography, useMediaQuery, useTheme } from '@material-ui/core'
-// import { useTranslation } from 'react-i18next'
-// import i18n from '@locales/i18n'
-import i18n from '@locales/i18n'
-import { useAppDispatch, useAppSelector } from '@store/hooks'
-import useCheckNgWord from '@utils/hooks/useCheckNgWord'
-import _, { debounce } from 'lodash'
-import React, { forwardRef, memo, useCallback, useContext, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react'
-import sanitizeHtml from 'sanitize-html'
-import useStyles from './styles'
 // import { useAppDispatch, useAppSelector } from '@store/hooks'
 import API, { graphqlOperation, GraphQLResult } from '@aws-amplify/api'
-import { UserProfile } from '@services/user.service'
-import userProfileStore from '@store/userProfile'
-import useDetailVideo from '../useDetailVideo'
-// import { createMessage, deleteMessage } from "src/graphql/mutations";
-const {
-  getUsersByUuid,
-  getMessagesByVideoId,
-  getMessagesByVideoIdWithSort,
-  getMessagesByVideoByPremium,
-} = require(`src/graphql.${process.env.NEXT_PUBLIC_AWS_ENV}/queries`)
-const { onCreateMessage, onUpdateMessage } = require(`src/graphql.${process.env.NEXT_PUBLIC_AWS_ENV}/subscriptions`)
-const { createMessage, createUser, updateMessage, updateUser } = require(`src/graphql.${process.env.NEXT_PUBLIC_AWS_ENV}/mutations`)
 // import ChatTextMessage from '@containers/VideoLiveStreamContainer/ChatContainer/ChatTextMessage'
 // import PremiumChatDialog from '@containers/VideoLiveStreamContainer/ChatContainer/PremiumChatDialog'
 // import * as Yup from 'yup'
 // import { useFormik } from 'formik'
 import ESAvatar from '@components/Avatar'
-import DonateMessage from './DonateMessage'
 // import ESInput from '@components/Input'
 import {
   GIVER_RANK_TYPE,
-  INTERVAL_AUTO_GET_MESS,
-  LIMIT_FETCH_NEXT,
   LIMIT_MAX_MESS_PREV_REWIND,
   LIMIT_MESS,
   LIMIT_MIN_MESS_PREV_REWIND,
@@ -45,13 +20,16 @@ import {
   SUB_TABS,
   VIDEO_TABS,
 } from '@constants/common.constants'
+// import { useTranslation } from 'react-i18next'
+// import i18n from '@locales/i18n'
+import i18n from '@locales/i18n'
+import { Box, ButtonBase, ClickAwayListener, Icon, IconButton, Typography, useMediaQuery, useTheme } from '@material-ui/core'
+import { UserProfile } from '@services/user.service'
 import { RankingsItem, STATUS_VIDEO } from '@services/videoTop.services'
-import moment from 'moment'
-// import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
-import useGraphqlAPI from 'src/types/useGraphqlAPI'
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-const APIt: any = useGraphqlAPI()
+import { useAppDispatch, useAppSelector } from '@store/hooks'
+import userProfileStore from '@store/userProfile'
+// import ChatTab from './Tabs/ChatTab'
+import { Colors } from '@theme/colors'
 // import { DELAY_SECONDS } from '@constants/common.constants'
 // import InfiniteScroll from 'react-infinite-scroll-component'
 // import { WindowScroller, List, AutoSizer } from 'react-virtualized'
@@ -59,11 +37,17 @@ const APIt: any = useGraphqlAPI()
 // import InfiniteLoaderExample from './source/InfiniteLoader/InfiniteLoader.example'
 // import ChatInputContainer from './ChatInputContainer'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
-// import ChatTab from './Tabs/ChatTab'
-import { Colors } from '@theme/colors'
 import { useCheckDisplayChat } from '@utils/hooks/useCheckDisplayChat'
+import useCheckNgWord from '@utils/hooks/useCheckNgWord'
 import { useRotateScreen } from '@utils/hooks/useRotateScreen'
 import { useRect } from '@utils/useRect'
+import _, { debounce } from 'lodash'
+import moment from 'moment'
+import React, { forwardRef, memo, useCallback, useContext, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react'
+import sanitizeHtml from 'sanitize-html'
+// import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
+import useGraphqlAPI from 'src/types/useGraphqlAPI'
+import useDetailVideo from '../useDetailVideo'
 import { VideoContext } from '../VideoContext'
 import { useVideoTabContext } from '../VideoContext/VideTabContext'
 import ChatFooter from './components/ChatFooter'
@@ -71,7 +55,17 @@ import ChatLoader from './components/ChatLoader'
 import ChatMessages from './components/ChatMessages'
 import SubTabGroups from './components/SubTabGroups'
 import TabsContainer from './components/TabsContainer'
+import DonateMessage from './DonateMessage'
+import useStyles from './styles'
 import RankingTab from './Tabs/RankingTab'
+import { useChatHelpers } from './useChatHelper'
+// import { createMessage, deleteMessage } from "src/graphql/mutations";
+const { getUsersByUuid } = require(`src/graphql.${process.env.NEXT_PUBLIC_AWS_ENV}/queries`)
+const { onCreateMessage, onUpdateMessage } = require(`src/graphql.${process.env.NEXT_PUBLIC_AWS_ENV}/subscriptions`)
+const { createMessage, createUser, updateMessage, updateUser } = require(`src/graphql.${process.env.NEXT_PUBLIC_AWS_ENV}/mutations`)
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+const APIt: any = useGraphqlAPI()
 
 export type ChatStyleProps = {
   isLandscape: boolean
@@ -285,6 +279,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     // const [videoTimeIsRewinding, setVideoTimeIsRewinding] = useState(0)
 
     const isSwitchingTabRef = useRef(false)
+    console.log('🚀 ~ isSwitchingTabRef', isSwitchingTabRef)
     const isSwitchingSubTabRef = useRef(false)
     const { activeSubTab, activeTab, setActiveTab, setActiveSubTab } = useVideoTabContext()
 
@@ -298,15 +293,13 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
 
     const cacheMessRef = useRef<any>([])
     const prevRewindMessRef = useRef<any>({})
-    const rewindMessRef = useRef<any>({})
     const cacheMessTipRef = useRef<any>([])
     const autoGetMessRef = useRef<any>([])
-    const archiveInitMessRef = useRef<any>([])
+    const rewindMessRef = useRef<any>({})
+
     const cacheDonateMessRef = useRef<any>([])
     const initTipMessRef = useRef<any>([])
     const scrollBehaviorRef = useRef<string>('smooth')
-    const videoTimeIsRewindingRef = useRef<number>(0)
-    const prevTimeRef = useRef<number>(0)
     const nextTimeRef = useRef<number>(0)
     const prevTokenRef = useRef<any>(null)
     const switchTabRef = useRef<boolean>(false)
@@ -319,7 +312,6 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     const theme = useTheme()
     const isMobile = useMediaQuery(theme.breakpoints.down(769)) || isLandscape
     // console.log('🚀 ~ isMobile', isMobile)
-    const { checkVideoNgWord } = useCheckNgWord()
     // const [savedMess, setSavedMess] = useState([])
     // const [savedDonateMess, setSavedDonateMess] = useState([])
     const [isChatInBottom, setIsChatInBottom] = useState(false)
@@ -363,6 +355,124 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     console.log({ chatInputHeight })
 
     console.log('------------------- Chat component rerender ----------------------')
+
+    const sortMessages = (messages, isSortAsc = true) => {
+      const new_mess = [...messages]
+      const sortFactor = isSortAsc ? 1 : -1
+      return new_mess.sort((a: any, b: any) => sortFactor * (+a.video_time - +b.video_time || a.created_time.localeCompare(b.created_time)))
+    }
+
+    const _scrollToBottom = (position: number) => {
+      //https://github.com/bvaughn/react-virtualized/issues/995
+      if (messagesEndRef.current != null && messagesEndRef) {
+        messagesEndRef.current?.scrollToRow(position - 1)
+        setTimeout(() => {
+          messagesEndRef.current?.scrollToRow(position - 1)
+          // setBottom(true)
+        }, 100)
+      }
+    }
+
+    const refFetchMessTipWhenRewind = useRef(null)
+    const handleFetchMessTipWhenRewind = (second) => {
+      console.log('🚀 ~ fetchMessTipWhenRewind ~ second', second)
+      // find position of latest mess to get prev mess
+      const foundMessIndex = _.findIndex(cacheMessTipRef.current, (v: any) => v.video_time > +second)
+      console.log('🚀 ~ fetchMessTipWhenRewind ~ foundMess', foundMessIndex)
+      let newMess = []
+      // const limit = 2
+      // when live stream get limit to 100 same as tab all mess
+      // const limit = isStreaming ? LIMIT_MESS : LIMIT_MESS_REWIND
+      const limit = isStreaming ? LIMIT_MESS : CommonHelper.randomIntegerInRange(LIMIT_MIN_MESS_PREV_REWIND, LIMIT_MAX_MESS_PREV_REWIND)
+      console.log('🚀 ~ fetchMessTipWhenRewind ~ limit', limit)
+
+      let startSliceIndex = 0
+      // slice array from first ele due to all mess has video time larger than current time
+      if (foundMessIndex === 0) {
+        startSliceIndex = 0
+      } else {
+        // get start slice index to slice cacheMessTip
+        // foundMessIndex is -1 (not found) => get length of cacheMessTip
+        startSliceIndex = (foundMessIndex !== -1 ? foundMessIndex : cacheMessTipRef.current.length) - limit
+        console.log('🚀 ~ fetchMessTipWhenRewind ~ cacheMessTip.length', cacheMessTipRef.current.length)
+      }
+      startSliceIndex = startSliceIndex > 0 ? startSliceIndex : 0
+      console.log('🚀 ~ fetchMessTipWhenRewind ~ startSliceIndex', startSliceIndex)
+      newMess = _.slice(cacheMessTipRef.current, startSliceIndex)
+      console.log('🚀 ~ fetchMessTipWhenRewind ~ newMess', newMess)
+      const filterMess = _.filter(newMess, (v) => v.video_time <= videoPlayedSecond.current)
+      console.log('🚀 ~ fetchMessTipWhenRewind ~ filterMess', filterMess)
+      // const transformDonateMessAsc = transformMessAsc.filter(
+      //   (item) => +item.display_avatar_time >= videoPlayedSecond.current && item.is_premium && +item.point > 300
+      // )
+
+      // console.log('🚀 ~ fetchMessTipWhenRewind ~ cacheMessTip[0]', cacheMessTip[0])
+      console.log('🚀 ~ fetchMessTipWhenRewind ~ newMess[0]', newMess[0])
+      console.log('🚀 ~ fetchMessTipWhenRewind ~ _.first(newMess)', _.first(newMess))
+      if (_.first(newMess) && newMess[0]?.local_id === cacheMessTipRef.current[0]?.local_id) {
+        setIsTokenTipBroken(false)
+      } else {
+        // if first ele of newMess is not first ele of cacheMessTip => has mess before newMess => can get prev tip mess
+        // enable feature get prev tip mess
+        setIsTokenTipBroken(true)
+      }
+
+      // const filterDonateMess = _.filter(
+      //   cacheDonateMess,
+      //   (v) => v.display_avatar_time >= videoPlayedSecond.current && v.is_premium && +v.point > 300
+      // )
+      // const filterCacheDonateMess = _.filter(newMess, (v) => v.is_premium && +v.point > 300)
+      // console.log('🚀 ~ fetchMessTipWhenRewind ~ filterDonateMess', filterDonateMess)
+
+      setIsGettingMess(false)
+      setStateMessages(filterMess)
+      cacheMessRef.current = newMess
+      // setCacheMess(newMess)
+      // setMessagesDonate(filterDonateMess)
+      // setCacheDonateMess(filterCacheDonateMess)
+    }
+    refFetchMessTipWhenRewind.current = handleFetchMessTipWhenRewind
+
+    // fetch some prev mess and all next mess
+    const fetchMessTipWhenRewind = (second) => {
+      refFetchMessTipWhenRewind.current(second)
+    }
+
+    const { fetchMessTipInitial, fetchNextMess, fetchPrevMessWhenRewind, fetchMessInitialStreaming, fetchPrevMess } = useChatHelpers({
+      isSwitchingTabRef,
+      key_video_id,
+      initTipMessRef,
+      prevRewindMessRef,
+      videoPlayedSecond,
+      isGettingRewindMess,
+      autoGetMessRef,
+      isTokenBroken,
+      streamingSecond,
+      videoType,
+      isBottom,
+      prevTokenRef,
+      cacheMessTipRef,
+      cacheDonateMessRef,
+      cacheMessRef,
+      nextTimeRef,
+      isSwitchingSubTabRef,
+      switchTabRef,
+      rewindMessRef,
+      //
+      setIsGettingTipMess,
+      sortMessages,
+      setSuccessGetListMessTip,
+      setIsGettingRewindMess,
+      setIsGettingMess,
+      setStateMessages,
+      setIsTokenBroken,
+      setSuccessGetListMess,
+      setSuccessGetListDonateMess,
+      setIsGettingPrevRewindMess,
+      setBottom,
+      _scrollToBottom,
+      fetchMessTipWhenRewind,
+    })
 
     const resetStates = () => {
       setStateMessages([])
@@ -416,131 +526,6 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       }
     }, [scrolling])
 
-    const refTransformMessTip = useRef(null)
-    const handleTransformMessTip = () => {
-      const transformMess = [...initTipMessRef.current]
-      const transformMessAsc = sortMessages(transformMess)
-      // save mess tip forever except switch tab
-      // setCacheMessTip([...transformMessAsc])
-      cacheMessTipRef.current = [...transformMessAsc]
-
-      // setSuccessGetListMess(true)
-
-      const transformDonateMessAsc = transformMessAsc.filter((item) => item.is_premium && +item.point > 300)
-      cacheDonateMessRef.current = [...transformDonateMessAsc]
-      // setCacheDonateMess([...transformDonateMessAsc])
-
-      // const transformDonateMessAsc = transformDonateMess
-      // const transformDonateMessAsc = sortMessages(transformDonateMess)
-      // comment if no get in initial
-      // setMessagesDonate([...transformDonateMessAsc])
-      // save mess for use in local
-      // save mess tip forever except switch tab
-      // setCacheDonateMessTip([...transformDonateMessAsc])
-      // TODO (remove this line)
-      // setMessagesDonate([...transformDonateMessAsc])
-      // setPrevToken(messagesInfo.nextToken)
-      // console.log('🚀 ~ handleFetchPrevMess ~ messagesInfo.nextToken--111', messagesInfo.nextToken)
-
-      // setSuccessGetListDonateMess(true)
-      setSuccessGetListMessTip(true)
-      // fetch mess by rewinded time when switch tab
-      if (activeSubTab === SUB_TABS.MESS.TIP) {
-        // console.log('🚀 ~ handleTransformMessTip ~ activeSubTab', activeSubTab)
-        fetchMessTipWhenRewind(videoPlayedSecond.current)
-      }
-    }
-    refTransformMessTip.current = handleTransformMessTip
-
-    const fetchMessTipInitial = (nextToken = null) => {
-      try {
-        setIsGettingTipMess(true)
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        let listQV: APIt.GetMessagesByVideoByPremiumQueryVariables = {
-          video_id: key_video_id,
-          is_premium_number: { eq: 1 },
-          limit: 2000,
-          nextToken,
-        }
-        // console.log('🚀 ~ fetchPrevMess ~ listQV---000', listQV)
-        // console.log('🚀 ~ abc ~ 222')
-        API.graphql(graphqlOperation(getMessagesByVideoByPremium, listQV)).then((messagesResults) => {
-          const messagesInfo = messagesResults.data.getMessagesByVideoByPremium
-          if (messagesInfo.nextToken) {
-            initTipMessRef.current = [...initTipMessRef.current, ...messagesInfo.items]
-            // setInitTipMess((messages) => [...messages, ...messagesInfo.items])
-            fetchMessTipInitial(messagesInfo.nextToken)
-          } else {
-            initTipMessRef.current = [...initTipMessRef.current, ...messagesInfo.items]
-            // setInitTipMess((messages) => [...messages, ...messagesInfo.items])
-            refTransformMessTip.current()
-          }
-
-          setIsGettingTipMess(false)
-        })
-      } catch (error) {
-        setIsGettingTipMess(false)
-        console.error(error)
-      }
-    }
-
-    const refFetchPrevMessWhenRewind = useRef(null)
-    const handleFetchPrevMessWhenRewind = (messagesInfo, video_time) => {
-      if (isSwitchingTabRef.current) {
-        return
-      }
-      const transformMessAsc = sortMessages(messagesInfo.items)
-      console.log('🚀 ~ handleFetchPrevMessWhenRewind ~ transformMessAsc', transformMessAsc)
-      prevRewindMessRef.current = { [video_time]: [...transformMessAsc] }
-      // setPrevRewindMess({ [video_time]: [...transformMessAsc] })
-
-      // save token to call api in next time
-      // setPrevToken(messagesInfo.nextToken)
-      prevTokenRef.current = messagesInfo.nextToken
-      // console.log('🚀 ~ handleFetchPrevMessWhenRewind ~ messagesInfo', messagesInfo)
-      // prevent scroll when has no messages
-      if (!messagesInfo.nextToken) setIsTokenBroken(false)
-
-      if (!isSwitchingTabRef.current) {
-        console.log('🚀 ~ handleFetchPrevMessWhenRewind ~ video_time', video_time)
-        fetchNextMess(GET_MESS_TYPE.FETCH_NEXT, video_time)
-      }
-    }
-    refFetchPrevMessWhenRewind.current = handleFetchPrevMessWhenRewind
-
-    // fetch messages prev when rewind to video time
-    const fetchPrevMessWhenRewind = (video_time, sortOrder = APIt.ModelSortDirection.DESC) => {
-      console.log('🚀 ~ fetchPrevMessWhenRewind ~ video_time', video_time)
-      if (isSwitchingTabRef.current || isSwitchingSubTabRef.current) {
-        return
-      }
-      try {
-        setIsGettingPrevRewindMess(true)
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        let listQV: APIt.GetMessagesByVideoIdWithSortQueryVariables = {
-          video_id: key_video_id,
-          video_time: { le: video_time - 1 },
-          sortDirection: sortOrder,
-          // limit: LIMIT_MESS_REWIND,
-          limit: CommonHelper.randomIntegerInRange(LIMIT_MIN_MESS_PREV_REWIND, LIMIT_MAX_MESS_PREV_REWIND),
-          nextToken: null,
-        }
-        API.graphql(graphqlOperation(getMessagesByVideoIdWithSort, listQV)).then((messagesResults) => {
-          if (isSwitchingTabRef.current || isSwitchingSubTabRef.current) {
-            return
-          }
-          const messagesInfo = messagesResults.data.getMessagesByVideoIdWithSort
-          refFetchPrevMessWhenRewind.current(messagesInfo, video_time)
-          setIsGettingPrevRewindMess(false)
-        })
-      } catch (error) {
-        setIsGettingPrevRewindMess(false)
-        console.error(error)
-      }
-    }
-
     // const renderMessWhenTipSwitchTab = () => {
     //   const newMess = cacheMess.filter((item) => +item.video_time <= +videoPlayedSecond.current)
     //   console.log('🚀 ~ renderMessWhenTipSwitchTab ~ videoPlayedSecond.current', videoPlayedSecond.current)
@@ -560,437 +545,9 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     //   setIsSwitchingTab(false)
     // }
 
-    const refTransformListMess = useRef(null)
-    const handleTransformListMess = (messagesInfo) => {
-      const transformMess = [...messagesInfo.items]
-      const transformMessAsc = sortMessages(transformMess)
-      console.log('🚀 ~ handleTransformListMess ~ transformMessAsc', transformMessAsc)
-      // console.log('🚀 ~ handleTransformListMess ~ setIsSwitchingTab', isSwitchingTab)
-
-      // TODO
-      if (streamingSecond === Infinity && videoType === STATUS_VIDEO.LIVE_STREAM && !switchTabRef.current) {
-        console.log('🚀 ~ handleTransformListMess ~ streamingSecond', streamingSecond)
-        setStateMessages([...transformMessAsc])
-      }
-      // save mess for use in local
-      // setCacheMess([...transformMessAsc])
-      cacheMessRef.current = [...transformMessAsc]
-      setSuccessGetListMess(true)
-
-      // const transformDonateMessAsc = transformMessAsc.filter(
-      //   (item) => +item.display_avatar_time >= videoPlayedSecond.current && item.is_premium && +item.point > 300
-      // )
-      // const transformDonateMessAsc = transformDonateMess
-      // const transformDonateMessAsc = sortMessages(transformDonateMess)
-      // comment if no get in initial
-      // setMessagesDonate([...transformDonateMessAsc])
-      // save mess for use in local
-      // comment due to split logic get tip mess to display icon separate with all mess
-      // setCacheDonateMess([...transformDonateMessAsc])
-      // TODO (remove this line)
-      // setMessagesDonate([...transformDonateMessAsc])
-      // setPrevToken(messagesInfo.nextToken)
-      prevTokenRef.current = messagesInfo.nextToken
-      // console.log('🚀 ~ handleFetchPrevMess ~ messagesInfo.nextToken--111', messagesInfo.nextToken)
-
-      setSuccessGetListDonateMess(true)
-      if (switchTabRef.current) {
-        setBottom(true)
-        setIsGettingMess(false)
-        // renderMessWhenTipSwitchTab()
-        console.log('🚀 ~ renderMessWhenTipSwitchTab ~ videoPlayedSecond.current', videoPlayedSecond.current)
-        // const isMessageInBottom = checkMessIsInBottom()
-        // render new messages with savedMess
-        setStateMessages([...transformMessAsc])
-
-        // if (isMessageInBottom) {
-        //   setScrollBehavior('smooth')
-        //   setIsChatInBottom(true)
-        // }
-
-        // setMessagesDonate([...transformDonateMessAsc])
-        // setIsSwitchingTab(false)
-        switchTabRef.current = false
-      }
-      setIsGettingMess(false)
-    }
-    refTransformListMess.current = handleTransformListMess
-
-    const refFetchMessInitialArchive = useRef(null)
-    const handleFetchMessInitialArchive = (video_time) => {
-      // console.log('🚀 ~ handleFetchMessInitialArchive ~ video_time', video_time)
-      // only get mess when no rewind
-      if (!isTokenBroken) {
-        const transformMess = [...archiveInitMessRef.current]
-        // const transformMessAsc = transformMess
-        const transformMessAsc = sortMessages(transformMess)
-
-        // save mess for use in local
-        // setCacheMess([...transformMessAsc])
-        cacheMessRef.current = [...transformMessAsc]
-
-        // const transformDonateMessAsc = transformMessAsc.filter(
-        //   (item) => +item.display_avatar_time >= videoPlayedSecond.current && item.is_premium && +item.point > 300
-        // )
-        // comment if no get in initial
-        // save mess for use in local
-        // setCacheDonateMess([...transformDonateMessAsc])
-        // set next time for auto get mess
-        nextTimeRef.current = video_time + INTERVAL_AUTO_GET_MESS
-        // setNextTime(video_time + INTERVAL_AUTO_GET_MESS)
-      }
-      // setArchiveInitMess([])
-      archiveInitMessRef.current = []
-      setSuccessGetListMess(true)
-      setSuccessGetListDonateMess(true)
-    }
-    refFetchMessInitialArchive.current = handleFetchMessInitialArchive
     // console.log('🚀 ~ setTimeout ~ cache----222', cache)
     // console.log('🚀 ~ setTimeout ~ cache----3333', cache.columnWidth)
 
-    const refFetchPrevMess = useRef(null)
-    const handleFetchPrevMess = (messagesInfo) => {
-      const transformMessAsc = sortMessages(messagesInfo.items)
-      // console.log('🚀 ~ handleFetchPrevMess ~ transformMessAsc', transformMessAsc)
-      // console.log('🚀 ~ handleFetchPrevMess ~ length', transformMessAsc.length)
-      // console.log('🚀 ~ isBottom--1111', isBottom)
-      // console.log('🚀 ~ handleFetchPrevMess ~ isMessageInBottom', isMessageInBottom)
-      setStateMessages((messages) => [...transformMessAsc, ...messages])
-      setTimeout(() => {
-        _scrollToBottom(transformMessAsc.length)
-        if (isBottom) {
-          setBottom(true)
-        }
-        // cache.clearAll()
-      }, 10)
-      // cache.clearAll()
-      cacheMessRef.current = [...transformMessAsc, ...cacheMessRef.current]
-      // setCacheMess((messages) => [...transformMessAsc, ...messages])
-
-      // const transformDonateMessAsc = transformMessAsc.filter(
-      //   (item) => +item.display_avatar_time >= videoPlayedSecond.current && item.is_premium && +item.point > 300
-      // )
-      // const transformDonateMessAsc = transformDonateMess
-      // const transformDonateMessAsc = sortMessages(transformDonateMess)
-      // setMessagesDonate((messages) => [...transformDonateMessAsc, ...messages])
-      // setCacheDonateMess((messages) => [...transformDonateMessAsc, ...messages])
-
-      // save token to call api in next time
-      // setPrevToken(messagesInfo.nextToken)
-      prevTokenRef.current = messagesInfo.nextToken
-      // prevent scroll when has no messages
-      if (!messagesInfo.nextToken) setIsTokenBroken(false)
-      // console.log('🚀 ~ handleFetchPrevMess ~ messagesInfo.nextToken--000', messagesInfo.nextToken)
-    }
-
-    refFetchPrevMess.current = handleFetchPrevMess
-
-    const fetchMessInitialStreaming = (sortOrder = APIt.ModelSortDirection.DESC) => {
-      try {
-        setIsGettingMess(true)
-        // console.log('🚀 ~ loadMoreMess ~ fetchPrevMess--0000', getType)
-        // console.log('🚀 ~ fetchPrevMess ~ video_time---000', video_time)
-        // occur this case when is streaming and fetch mess initial
-        let nextToken = null
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        let listQV: APIt.GetMessagesByVideoIdQueryVariables = {
-          video_id: key_video_id,
-          sortDirection: sortOrder,
-          limit: LIMIT_MESS,
-          nextToken,
-          // filter: {
-          //   video_time: {
-          //     le: 328,
-          //     ge: 324,
-          //   },
-          // },
-        }
-        // console.log('🚀 ~ fetchPrevMess ~ listQV---000', listQV)
-        // console.log('🚀 ~ abc ~ 222')
-        API.graphql(graphqlOperation(getMessagesByVideoId, listQV)).then((messagesResults) => {
-          const messagesInfo = messagesResults.data.getMessagesByVideoId
-          // if (getType === GET_MESS_TYPE.FETCH_NORMAL) {
-          refTransformListMess.current(messagesInfo)
-          // }
-        })
-      } catch (error) {
-        setIsGettingMess(false)
-        console.error(error)
-      }
-    }
-
-    // fetch messages prev when scroll to top when archived or when live stream
-    const fetchPrevMess = (sortOrder = APIt.ModelSortDirection.DESC) => {
-      try {
-        setIsGettingMess(true)
-        if (isTokenBroken) {
-          let nextToken = prevTokenRef.current
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          let listQV: APIt.GetMessagesByVideoIdWithSortQueryVariables = {
-            video_id: key_video_id,
-            video_time: { le: prevTimeRef.current },
-            sortDirection: sortOrder,
-            limit: LIMIT_MESS,
-            nextToken,
-          }
-          // console.log('🚀 ~ getMessagesByVideoIdWithSort ~ 222')
-          API.graphql(graphqlOperation(getMessagesByVideoIdWithSort, listQV)).then((messagesResults) => {
-            // console.log('🚀 ~ API.graphql ~ messagesResults---000', messagesResults)
-            const messagesInfo = messagesResults.data.getMessagesByVideoIdWithSort
-            refFetchPrevMess.current(messagesInfo)
-            setIsGettingMess(false)
-          })
-        } else {
-          let nextToken = prevTokenRef.current
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          let listQV: APIt.GetMessagesByVideoIdQueryVariables = {
-            video_id: key_video_id,
-            sortDirection: sortOrder,
-            limit: LIMIT_MESS,
-            nextToken,
-          }
-          // console.log('🚀 ~ getMessagesByVideoId ~ 222')
-          API.graphql(graphqlOperation(getMessagesByVideoId, listQV)).then((messagesResults) => {
-            const messagesInfo = messagesResults.data.getMessagesByVideoId
-            refFetchPrevMess.current(messagesInfo)
-            setIsGettingMess(false)
-          })
-        }
-
-        // fetch mess prev after rewind => token is removed (check isTokenBroken)
-        // if (
-        //   isTokenBroken
-        // ) {
-        //   listQV = {
-        //     ...listQV,
-        //     filter: {
-        //       video_time: {
-        //         le: prevTime,
-        //       },
-        //     },
-        //   }
-        // }
-      } catch (error) {
-        setIsGettingMess(false)
-        console.error(error)
-      }
-    }
-
-    const refFetchMessAuto = useRef(null)
-    const handleFetchMessAuto = (video_time) => {
-      // only get messages if no rewind
-      if (!isGettingRewindMess) {
-        // console.log('🚀 ~ handleFetchMessAuto ~ video_time', video_time)
-        const transformMessAsc = sortMessages([...autoGetMessRef.current])
-        // setStateMessages(transformMessAsc.filter((v) => +v.video_time <= +videoPlayedSecond.current))
-        // setCacheMess((messages) => [...messages, ...transformMessAsc])
-        cacheMessRef.current = [...cacheMessRef.current, ...transformMessAsc]
-        // const transformDonateMessAsc = transformMessAsc.filter(
-        //   (item) => +item.display_avatar_time >= videoPlayedSecond.current && item.is_premium && +item.point > 300
-        // )
-        // const transformDonateMessAsc = transformDonateMess
-        // const transformDonateMessAsc = sortMessages(transformDonateMess)
-        // comment if no get in initial
-        // save mess for use in local
-        // setCacheDonateMess((messages) => [...messages, ...transformDonateMessAsc])
-        // setNextTime(video_time + INTERVAL_AUTO_GET_MESS)
-        nextTimeRef.current = video_time + INTERVAL_AUTO_GET_MESS
-        autoGetMessRef.current = []
-        // setAutoGetMess([])
-      }
-    }
-    refFetchMessAuto.current = handleFetchMessAuto
-
-    const refFetchRewindMess = useRef(null)
-    const handleFetchRewindMess = (video_time, nextTime) => {
-      // console.log('🚀 ~ handleFetchRewindMess ~ video_time', video_time)
-      // console.log('🚀 ~ handleFetchRewindMess ~ videoTimeIsRewinding', videoTimeIsRewinding)
-      // only get messages with last rewind
-      if (videoTimeIsRewindingRef.current === video_time) {
-        // console.log('🚀 ~ handleFetchRewindMess ~ nextTime--ok', nextTime)
-        const oldPrevRewindMess = prevRewindMessRef.current?.[video_time] ? [...prevRewindMessRef.current[video_time]] : []
-        const newRewindMess = rewindMessRef.current?.[video_time]
-          ? [...oldPrevRewindMess, ...rewindMessRef.current[video_time]]
-          : [...oldPrevRewindMess]
-        // console.log('🚀 ~ handleFetchRewindMess ~ newRewindMess', newRewindMess)
-        const transformMessAsc = sortMessages([...newRewindMess])
-        console.log('🚀 ~ handleFetchRewindMess ~ transformMessAsc', transformMessAsc)
-
-        setIsGettingMess(false)
-        console.log('🚀 ~ handleFetchRewindMess ~ videoPlayedSecond.current', videoPlayedSecond.current)
-        setStateMessages(transformMessAsc.filter((v) => +v.video_time <= +videoPlayedSecond.current))
-        // setCacheMess(transformMessAsc)
-        cacheMessRef.current = transformMessAsc
-
-        // const transformDonateMessAsc = transformMessAsc.filter(
-        //   (item) => +item.display_avatar_time >= videoPlayedSecond.current && item.is_premium && +item.point > 300
-        // )
-        // only get mess has time < played second
-        // const newTransformMessAsc = transformDonateMessAsc.filter((v) => +v.video_time <= +videoPlayedSecond.current)
-        // setMessagesDonate([...newTransformMessAsc])
-        // save mess for use in local
-        // setCacheDonateMess([...transformDonateMessAsc])
-
-        // setPrevRewindMess({})
-        prevRewindMessRef.current = {}
-        rewindMessRef.current = {}
-        // setRewindMess({})
-
-        setIsGettingRewindMess(false)
-        // set prev time to scroll to load more
-        prevTimeRef.current = video_time - 1
-        nextTimeRef.current = nextTime + 1
-        // setPrevTime(video_time - 1)
-        // set next time to auto get mess repeat
-        // setNextTime(nextTime + 1)
-        // set is token broken to allow scroll to load more
-        setIsTokenBroken(true)
-        // reset prev token to get mess is not error
-        // setPrevToken(null)
-
-        // set get list mess when fetch prev and rewind when remount chat container
-        setSuccessGetListMess(true)
-        setSuccessGetListDonateMess(true)
-      }
-    }
-    refFetchRewindMess.current = handleFetchRewindMess
-
-    // fetch messages next when rewind or mess auto get
-    const fetchNextMess = (
-      getType = GET_MESS_TYPE.FETCH_NEXT,
-      video_time = -1,
-      sortOrder = APIt.ModelSortDirection.ASC,
-      nextToken = null
-    ) => {
-      // console.log('🚀 ~ video_time--00', video_time)
-
-      if (isSwitchingTabRef.current) {
-        return
-      }
-      try {
-        let limitMess = LIMIT_MESS
-        // console.log('🚀 ~ loadMoreMess ~ fetchNextMess--0000', getType)
-        // console.log('🚀 ~ fetchPrevMess ~ video_time---000', video_time)
-        if (getType === GET_MESS_TYPE.FETCH_NEXT) {
-          setIsGettingRewindMess(true)
-          setIsGettingMess(true)
-          limitMess = LIMIT_FETCH_NEXT
-        }
-        if (getType === GET_MESS_TYPE.FETCH_ARCHIVE_INITIAL) {
-          setIsGettingMess(true)
-        }
-        if (getType === GET_MESS_TYPE.FETCH_NEXT) {
-          videoTimeIsRewindingRef.current = video_time
-          // setVideoTimeIsRewinding(video_time)
-        }
-
-        const nextTime = +video_time + INTERVAL_AUTO_GET_MESS - 1
-        // console.log('🚀 ~ fetchPrevMess ~ video_time', video_time)
-        // console.log('🚀 ~ nextTime---999', nextTime)
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        let listQV: APIt.GetMessagesByVideoIdWithSortQueryVariables = {
-          video_id: key_video_id,
-          video_time: {
-            between: [video_time, nextTime],
-          },
-          // video_time: {
-          //   ge: video_time,
-          //   le: nextTime
-          // },
-          sortDirection: sortOrder,
-          limit: limitMess,
-          nextToken,
-          // filter: {
-          //   video_time: {
-          //     ge: 900,
-          //     // le: nextTime,
-          //   },
-          // },
-        }
-
-        // if (video_time !== -1) {
-        //   listQV = {
-        //     ...listQV,
-        //     filter: {
-        //       video_time: {
-        //         ge: video_time,
-        //         le: nextTime,
-        //       },
-        //     },
-        //   }
-        // }
-        // console.log('🚀 ~ abc ~ 222')
-        if (isSwitchingTabRef.current) {
-          return
-        }
-        API.graphql(graphqlOperation(getMessagesByVideoIdWithSort, listQV)).then((messagesResults) => {
-          if (isSwitchingTabRef.current) {
-            return
-          }
-          const messagesInfo = messagesResults.data.getMessagesByVideoIdWithSort
-          // && !_.isEmpty(messagesInfo.items)
-          if (getType === GET_MESS_TYPE.FETCH_NEXT) {
-            const newMess = [...messagesInfo.items]
-            if (messagesInfo.nextToken) {
-              // console.log('🚀 ~ API.graphql ~ FETCH_NEXT---999', messagesInfo.items)
-              // save info of messages with video time
-              // setRewindMess((items) => {
-              //   return { ...items, [video_time]: items?.[video_time] ? [...items[video_time], ...newMess] : [...newMess] }
-              // })
-              rewindMessRef.current = {
-                ...rewindMessRef.current,
-                [video_time]: rewindMessRef.current?.[video_time] ? [...rewindMessRef.current[video_time], ...newMess] : [...newMess],
-              }
-              // setRewindMess((items) => {...items, video_time: [......messagesInfo.items]})
-              // setRewindMess((messages) => [...messages, ...messagesInfo.items])
-              fetchNextMess(getType, video_time, sortOrder, messagesInfo.nextToken)
-            } else {
-              // console.log('🚀 ~ API.graphql ~ FETCH_NEXT---000', messagesInfo.items)
-              // save info of messages with video time
-              // setRewindMess((items) => {
-              //   return { ...items, [video_time]: items?.[video_time] ? [...items[video_time], ...newMess] : [...newMess] }
-              // })
-              rewindMessRef.current = {
-                ...rewindMessRef.current,
-                [video_time]: rewindMessRef.current?.[video_time] ? [...rewindMessRef.current[video_time], ...newMess] : [...newMess],
-              }
-              refFetchRewindMess.current(video_time, nextTime)
-              setIsGettingMess(false)
-            }
-          } else if (getType === GET_MESS_TYPE.AUTO) {
-            if (messagesInfo.nextToken) {
-              // setAutoGetMess((messages) => [...messages, ...messagesInfo.items])
-              autoGetMessRef.current = [...autoGetMessRef.current, ...messagesInfo.items]
-              fetchNextMess(getType, video_time, sortOrder, messagesInfo.nextToken)
-            } else {
-              // setAutoGetMess((messages) => [...messages, ...messagesInfo.items])
-              autoGetMessRef.current = [...autoGetMessRef.current, ...messagesInfo.items]
-              refFetchMessAuto.current(video_time)
-            }
-          } else if (getType === GET_MESS_TYPE.FETCH_ARCHIVE_INITIAL) {
-            // console.log('🚀 ~ API.graphql ~ messagesInfo.nextToken', messagesInfo.nextToken)
-            if (messagesInfo.nextToken) {
-              archiveInitMessRef.current = [...archiveInitMessRef.current, ...messagesInfo.items]
-              // setArchiveInitMess((messages) => [...messages, ...messagesInfo.items])
-              fetchNextMess(getType, video_time, sortOrder, messagesInfo.nextToken)
-            } else {
-              archiveInitMessRef.current = [...archiveInitMessRef.current, ...messagesInfo.items]
-              // setArchiveInitMess((messages) => [...messages, ...messagesInfo.items])
-              refFetchMessInitialArchive.current(video_time)
-              setIsGettingMess(false)
-            }
-          }
-        })
-      } catch (error) {
-        setIsGettingRewindMess(false)
-        setIsGettingMess(false)
-        console.error(error)
-      }
-    }
     // console.log('🚀 ~ isStreaming ~ videoPlayedSecond.current', videoPlayedSecond.current)
     // console.log('🚀 ~ isStreaming ~ streamingSecond', streamingSecond)
     // const isStreaming = (() => {
@@ -1378,70 +935,6 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     }
     refFetchPrevMessTip.current = handleFetchPrevMessTip
 
-    const refFetchMessTipWhenRewind = useRef(null)
-    const handleFetchMessTipWhenRewind = (second) => {
-      console.log('🚀 ~ fetchMessTipWhenRewind ~ second', second)
-      // find position of latest mess to get prev mess
-      const foundMessIndex = _.findIndex(cacheMessTipRef.current, (v: any) => v.video_time > +second)
-      console.log('🚀 ~ fetchMessTipWhenRewind ~ foundMess', foundMessIndex)
-      let newMess = []
-      // const limit = 2
-      // when live stream get limit to 100 same as tab all mess
-      // const limit = isStreaming ? LIMIT_MESS : LIMIT_MESS_REWIND
-      const limit = isStreaming ? LIMIT_MESS : CommonHelper.randomIntegerInRange(LIMIT_MIN_MESS_PREV_REWIND, LIMIT_MAX_MESS_PREV_REWIND)
-      console.log('🚀 ~ fetchMessTipWhenRewind ~ limit', limit)
-
-      let startSliceIndex = 0
-      // slice array from first ele due to all mess has video time larger than current time
-      if (foundMessIndex === 0) {
-        startSliceIndex = 0
-      } else {
-        // get start slice index to slice cacheMessTip
-        // foundMessIndex is -1 (not found) => get length of cacheMessTip
-        startSliceIndex = (foundMessIndex !== -1 ? foundMessIndex : cacheMessTipRef.current.length) - limit
-        console.log('🚀 ~ fetchMessTipWhenRewind ~ cacheMessTip.length', cacheMessTipRef.current.length)
-      }
-      startSliceIndex = startSliceIndex > 0 ? startSliceIndex : 0
-      console.log('🚀 ~ fetchMessTipWhenRewind ~ startSliceIndex', startSliceIndex)
-      newMess = _.slice(cacheMessTipRef.current, startSliceIndex)
-      console.log('🚀 ~ fetchMessTipWhenRewind ~ newMess', newMess)
-      const filterMess = _.filter(newMess, (v) => v.video_time <= videoPlayedSecond.current)
-      console.log('🚀 ~ fetchMessTipWhenRewind ~ filterMess', filterMess)
-      // const transformDonateMessAsc = transformMessAsc.filter(
-      //   (item) => +item.display_avatar_time >= videoPlayedSecond.current && item.is_premium && +item.point > 300
-      // )
-
-      // console.log('🚀 ~ fetchMessTipWhenRewind ~ cacheMessTip[0]', cacheMessTip[0])
-      console.log('🚀 ~ fetchMessTipWhenRewind ~ newMess[0]', newMess[0])
-      console.log('🚀 ~ fetchMessTipWhenRewind ~ _.first(newMess)', _.first(newMess))
-      if (_.first(newMess) && newMess[0]?.local_id === cacheMessTipRef.current[0]?.local_id) {
-        setIsTokenTipBroken(false)
-      } else {
-        // if first ele of newMess is not first ele of cacheMessTip => has mess before newMess => can get prev tip mess
-        // enable feature get prev tip mess
-        setIsTokenTipBroken(true)
-      }
-
-      // const filterDonateMess = _.filter(
-      //   cacheDonateMess,
-      //   (v) => v.display_avatar_time >= videoPlayedSecond.current && v.is_premium && +v.point > 300
-      // )
-      // const filterCacheDonateMess = _.filter(newMess, (v) => v.is_premium && +v.point > 300)
-      // console.log('🚀 ~ fetchMessTipWhenRewind ~ filterDonateMess', filterDonateMess)
-
-      setIsGettingMess(false)
-      setStateMessages(filterMess)
-      cacheMessRef.current = newMess
-      // setCacheMess(newMess)
-      // setMessagesDonate(filterDonateMess)
-      // setCacheDonateMess(filterCacheDonateMess)
-    }
-    refFetchMessTipWhenRewind.current = handleFetchMessTipWhenRewind
-
-    // fetch some prev mess and all next mess
-    const fetchMessTipWhenRewind = (second) => {
-      refFetchMessTipWhenRewind.current(second)
-    }
     // console.log('🚀 ~ useEffect ~ isSeeking--222', isSeeking)
 
     useEffect(() => {
@@ -1867,25 +1360,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       }
     }, [])
 
-    const sortMessages = (messages, isSortAsc = true) => {
-      const new_mess = [...messages]
-      const sortFactor = isSortAsc ? 1 : -1
-      return new_mess.sort((a: any, b: any) => sortFactor * (+a.video_time - +b.video_time || a.created_time.localeCompare(b.created_time)))
-    }
-
-    const getMessageWithoutNgWords = (chatMessContent) => {
-      const ngWords = checkVideoNgWord(chatMessContent)
-      if (ngWords.length !== 0) {
-        ngWords.map((item) => {
-          if (chatMessContent.includes(item)) {
-            let regex: RegExp
-            regex = new RegExp(item.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&'), 'g')
-            chatMessContent = chatMessContent.replace(regex, '*'.repeat(item.length))
-          }
-        })
-      }
-      return chatMessContent
-    }
+    const { getMessageWithoutNgWords } = useCheckNgWord()
 
     const updateOldMessData = (updatedMessage, objWithNewProps, compareProp = 'id') => {
       const updatedMessWithNewProp = { ...updatedMessage, ...objWithNewProps }
@@ -2112,17 +1587,6 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         }
       }
       return marginTop
-    }
-
-    const _scrollToBottom = (position: number) => {
-      //https://github.com/bvaughn/react-virtualized/issues/995
-      if (messagesEndRef.current != null && messagesEndRef) {
-        messagesEndRef.current?.scrollToRow(position - 1)
-        setTimeout(() => {
-          messagesEndRef.current?.scrollToRow(position - 1)
-          // setBottom(true)
-        }, 100)
-      }
     }
 
     const handleScrollToBottom = useCallback(() => {
