@@ -44,10 +44,12 @@ const ChatInputContainer: React.FC<ChatInputProps> = ({
   const isMountRef = useRef<boolean>(false)
   const { isLandscape } = useRotateScreen()
 
+  const [resetValue, setResetValue] = useState<boolean>(false)
+
   // console.log('Chat input container rerender')
   // const [visible, setVisible] = useState<boolean>(false)
 
-  const { handleChange, values, handleSubmit, errors, resetForm, setFieldValue, setFieldError } = useFormik<MessageValidationType>({
+  const { handleChange, values, handleSubmit, errors, setFieldValue, setFieldError } = useFormik<MessageValidationType>({
     initialValues: {
       message: '',
     },
@@ -63,6 +65,8 @@ const ChatInputContainer: React.FC<ChatInputProps> = ({
     //   await setFieldValue('message', '')
     //   return
     // }
+    setResetValue((prev) => !prev)
+    // console.log('Submit chat')
     if (valueRef.current) {
       await setFieldValue('message', valueRef.current)
       handleSubmit()
@@ -81,8 +85,7 @@ const ChatInputContainer: React.FC<ChatInputProps> = ({
   const classes = useStyles({ isLandscape })
 
   useEffect(() => {
-    resetForm()
-    valueRef.current = ''
+    setFieldValue('message', valueRef.current)
 
     if (!isMountRef.current) {
       isMountRef.current = true
@@ -99,11 +102,22 @@ const ChatInputContainer: React.FC<ChatInputProps> = ({
     }
   }, [errors.message])
 
-  const handlePressEnter = (event: any) => {
+  const handlePressEnter = useCallback((event: any) => {
     if (event.key === 'Enter') {
       submitForm()
     }
-  }
+  }, [])
+
+  const handleFocus = useCallback(() => {
+    handleChatInputOnFocus()
+    setIsFocusedInput(true)
+  }, [])
+
+  const handleBlur = useCallback(() => {
+    handleChatInputOnBlur()
+    setIsFocusedInput(false)
+  }, [])
+
   return (
     <Box className={classes.chatBox}>
       <Box className={classes.spPurchaseButton}>{purchaseButton()}</Box>
@@ -117,18 +131,14 @@ const ChatInputContainer: React.FC<ChatInputProps> = ({
         value={values.message}
         classes={{ root: classes.input, input: classes.chatTextInput }}
         margin="dense"
-        onFocus={() => {
-          handleChatInputOnFocus()
-          setIsFocusedInput(true)
-        }}
-        onBlur={() => {
-          handleChatInputOnBlur()
-          setIsFocusedInput(false)
-        }}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
         helperText={errors?.message}
         error={Boolean(errors.message)}
         onKeyPress={handlePressEnter}
+        resetWhenPressEnter
         resetErrorOnChange={resetErrorOnChange}
+        resetValue={resetValue}
         endAdornment={
           <LoginRequired>
             <InputAdornment position="end" className={classes.button_send_sp} onClick={submitForm}>
