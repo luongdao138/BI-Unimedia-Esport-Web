@@ -1,11 +1,9 @@
 import { Box, makeStyles } from '@material-ui/core'
 import React, { useEffect } from 'react'
-// import { useTranslation } from 'react-i18next'
-// import { Colors } from '@theme/colors'
 import PurchasePoint from '@containers/PointManage/PurchasePoint'
-import Step2 from '@containers/PointManage/PurchasePoint/Step2'
 import usePurchasePointData from '@containers/PointManage/PurchasePoint/usePurchasePointData'
 import usePointsManage from '@containers/PointManage/usePointsManage'
+import BuyShortagePoints from '@containers/VideoLiveStreamContainer/DonatePoints/BuyShortagePoints'
 interface StepTwoProps {
   isBuyNewPoint: boolean
   lackedPoint?: number
@@ -45,7 +43,7 @@ const StepTwo: React.FC<StepTwoProps> = ({ lackedPoint, isBuyNewPoint, onChangeS
         <PurchasePoint />
       ) : (
         <Box style={{ padding: '20px 0 110px 0' }}>
-          <Step2 selectedPoint={lackedPoint} />
+          <BuyShortagePoints lackedPoint={lackedPoint} />
         </Box>
       )}
     </Box>
