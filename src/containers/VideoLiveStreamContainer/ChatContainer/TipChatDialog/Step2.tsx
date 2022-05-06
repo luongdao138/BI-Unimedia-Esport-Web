@@ -192,19 +192,12 @@ const useStyles = makeStyles((theme) => ({
       color: Colors.white_opacity[30],
       opacity: 1,
     },
-    maxHeight: 'calc(100vh - 580px)',
+    height: 'unset',
     // maxHeight: '83px',
   },
-  [theme.breakpoints.down(1024)]: {
-    [`@media (orientation: landscape)`]: {
-      purchaseCommentInput: (props: StyleProps) => {
-        if (props.isLandscape) {
-          return {
-            maxHeight: '83px',
-            height: 'unset',
-          }
-        }
-      },
+  [theme.breakpoints.up(769)]: {
+    purchaseCommentInput: {
+      maxHeight: 'calc(100vh - 580px)',
     },
   },
   [theme.breakpoints.down(769)]: {
