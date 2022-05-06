@@ -1224,6 +1224,10 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     }, [activeSubTab])
 
     useEffect(() => {
+      // reset prev token when switch tab
+      if (activeTab === VIDEO_TABS.RANKING) {
+        prevTokenRef.current = null
+      }
       if (!isFirstVisitPage && activeTab === VIDEO_TABS.CHAT) {
         if (activeSubTab === SUB_TABS.MESS.ALL || activeSubTab === SUB_TABS.MESS.TIP) {
           console.log('Change tab fire chat')
