@@ -174,9 +174,24 @@ const StreamingReservationContainer: React.FC<Props> = ({
       }
     } else {
       if (!loading) {
-        setLoading(false)
-        setShowResultDialog(true)
-        return
+        // setLoading(false)
+        // setShowResultDialog(true)
+        // return
+        if (stateChannelMedia === EVENT_STATE_CHANNEL.STOPPING) {
+          setLoading(true)
+          setShowResultDialog(false)
+          return
+        } else {
+          setLoading(false)
+          setShowResultDialog(true)
+          return
+        }
+      } else {
+        if (stateChannelMedia === EVENT_STATE_CHANNEL.STOPPED) {
+          setLoading(false)
+          setShowResultDialog(false)
+          return
+        }
       }
       unSub = setTimeout(() => {
         setLoading(false)
@@ -385,6 +400,11 @@ const StreamingReservationContainer: React.FC<Props> = ({
         <ESLoader
           open={!channelProgress}
           showNote={!!formik?.values?.stepSettingTwo?.status || formik?.values?.stepSettingTwo?.status === 0}
+          contentLoader={
+            stateChannelMedia === EVENT_STATE_CHANNEL.STOPPING
+              ? `${t('common:streaming_setting_screen.note_stop_channel_loading')}`
+              : `${t('common:streaming_setting_screen.note_loading')}`
+          }
         />
       </Box>
     </>
