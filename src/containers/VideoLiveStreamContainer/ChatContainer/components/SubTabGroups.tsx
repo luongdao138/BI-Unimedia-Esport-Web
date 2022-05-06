@@ -10,7 +10,7 @@ interface Props {
   successGetListMess: boolean
 }
 
-const SubTabGroups: React.FC<Props> = ({ successGetListMess, successGetListMessTip, isSwitchingSubTabRef }) => {
+const SubTabGroups: React.FC<Props> = ({ isSwitchingSubTabRef }) => {
   const { setActiveSubTab } = useVideoTabContext()
   const [value, setValue] = useState(SUB_TABS.MESS.ALL)
   const isFirstRun = useRef(true)
@@ -45,12 +45,12 @@ const SubTabGroups: React.FC<Props> = ({ successGetListMess, successGetListMessT
       ]}
       value={value}
       onClick={(v) => {
-        if (successGetListMessTip && successGetListMess) {
-          if (isSwitchingSubTabRef) {
-            isSwitchingSubTabRef.current = v === SUB_TABS.MESS.TIP
-          }
-          setValue(v)
+        // if (successGetListMessTip && successGetListMess) {
+        if (isSwitchingSubTabRef) {
+          isSwitchingSubTabRef.current = v === SUB_TABS.MESS.TIP
         }
+        setValue(v)
+        // }
       }}
     ></TabsGroup>
   )
