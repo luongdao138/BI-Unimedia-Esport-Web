@@ -1391,7 +1391,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       if (foundIndex !== -1) {
         const newCacheDonateMess = [...cacheDonateMessRef.current]
         newCacheDonateMess[foundIndex] = { ...updatedMessWithNewProp }
-        cacheDonateMessRef.current = [newCacheDonateMess]
+        cacheDonateMessRef.current = newCacheDonateMess
         // setCacheDonateMess(newCacheDonateMess)
       }
       // update cache message tip
