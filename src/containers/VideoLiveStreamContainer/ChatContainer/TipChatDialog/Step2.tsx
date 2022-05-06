@@ -83,7 +83,6 @@ const Step2: React.FC<Step2Props> = ({
       }
     },
   })
-  564
   const formHasError = values.message.length > purchasePoints[purchaseValueSelected].maxLengthInput
 
   const handlePremiumChatClick = async () => {
@@ -192,7 +191,7 @@ const useStyles = makeStyles((theme) => ({
       color: Colors.white_opacity[30],
       opacity: 1,
     },
-    height: 'unset',
+    maxHeight: 'calc(100vh - 495px)',
     // maxHeight: '83px',
   },
   [theme.breakpoints.up(769)]: {
