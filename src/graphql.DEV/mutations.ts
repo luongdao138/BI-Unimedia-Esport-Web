@@ -3,7 +3,10 @@
 // this is an auto generated file. This will be overwritten
 
 export const createUser = /* GraphQL */ `
-  mutation CreateUser($input: CreateUserInput!, $condition: ModelUserConditionInput) {
+  mutation CreateUser(
+    $input: CreateUserInput!
+    $condition: ModelUserConditionInput
+  ) {
     createUser(input: $input, condition: $condition) {
       id
       uuid
@@ -37,9 +40,12 @@ export const createUser = /* GraphQL */ `
       updatedAt
     }
   }
-`
+`;
 export const updateUser = /* GraphQL */ `
-  mutation UpdateUser($input: UpdateUserInput!, $condition: ModelUserConditionInput) {
+  mutation UpdateUser(
+    $input: UpdateUserInput!
+    $condition: ModelUserConditionInput
+  ) {
     updateUser(input: $input, condition: $condition) {
       id
       uuid
@@ -73,9 +79,12 @@ export const updateUser = /* GraphQL */ `
       updatedAt
     }
   }
-`
+`;
 export const deleteUser = /* GraphQL */ `
-  mutation DeleteUser($input: DeleteUserInput!, $condition: ModelUserConditionInput) {
+  mutation DeleteUser(
+    $input: DeleteUserInput!
+    $condition: ModelUserConditionInput
+  ) {
     deleteUser(input: $input, condition: $condition) {
       id
       uuid
@@ -109,9 +118,12 @@ export const deleteUser = /* GraphQL */ `
       updatedAt
     }
   }
-`
+`;
 export const createGiftMaster = /* GraphQL */ `
-  mutation CreateGiftMaster($input: CreateGiftMasterInput!, $condition: ModelGiftMasterConditionInput) {
+  mutation CreateGiftMaster(
+    $input: CreateGiftMasterInput!
+    $condition: ModelGiftMasterConditionInput
+  ) {
     createGiftMaster(input: $input, condition: $condition) {
       id
       name
@@ -146,9 +158,12 @@ export const createGiftMaster = /* GraphQL */ `
       updatedAt
     }
   }
-`
+`;
 export const updateGiftMaster = /* GraphQL */ `
-  mutation UpdateGiftMaster($input: UpdateGiftMasterInput!, $condition: ModelGiftMasterConditionInput) {
+  mutation UpdateGiftMaster(
+    $input: UpdateGiftMasterInput!
+    $condition: ModelGiftMasterConditionInput
+  ) {
     updateGiftMaster(input: $input, condition: $condition) {
       id
       name
@@ -183,9 +198,12 @@ export const updateGiftMaster = /* GraphQL */ `
       updatedAt
     }
   }
-`
+`;
 export const deleteGiftMaster = /* GraphQL */ `
-  mutation DeleteGiftMaster($input: DeleteGiftMasterInput!, $condition: ModelGiftMasterConditionInput) {
+  mutation DeleteGiftMaster(
+    $input: DeleteGiftMasterInput!
+    $condition: ModelGiftMasterConditionInput
+  ) {
     deleteGiftMaster(input: $input, condition: $condition) {
       id
       name
@@ -220,9 +238,12 @@ export const deleteGiftMaster = /* GraphQL */ `
       updatedAt
     }
   }
-`
+`;
 export const createMessage = /* GraphQL */ `
-  mutation CreateMessage($input: CreateMessageInput!, $condition: ModelMessageConditionInput) {
+  mutation CreateMessage(
+    $input: CreateMessageInput!
+    $condition: ModelMessageConditionInput
+  ) {
     createMessage(input: $input, condition: $condition) {
       id
       owner
@@ -269,9 +290,12 @@ export const createMessage = /* GraphQL */ `
       updatedAt
     }
   }
-`
+`;
 export const updateMessage = /* GraphQL */ `
-  mutation UpdateMessage($input: UpdateMessageInput!, $condition: ModelMessageConditionInput) {
+  mutation UpdateMessage(
+    $input: UpdateMessageInput!
+    $condition: ModelMessageConditionInput
+  ) {
     updateMessage(input: $input, condition: $condition) {
       id
       owner
@@ -318,9 +342,12 @@ export const updateMessage = /* GraphQL */ `
       updatedAt
     }
   }
-`
+`;
 export const deleteMessage = /* GraphQL */ `
-  mutation DeleteMessage($input: DeleteMessageInput!, $condition: ModelMessageConditionInput) {
+  mutation DeleteMessage(
+    $input: DeleteMessageInput!
+    $condition: ModelMessageConditionInput
+  ) {
     deleteMessage(input: $input, condition: $condition) {
       id
       owner
@@ -367,9 +394,12 @@ export const deleteMessage = /* GraphQL */ `
       updatedAt
     }
   }
-`
+`;
 export const createVideo = /* GraphQL */ `
-  mutation CreateVideo($input: CreateVideoInput!, $condition: ModelVideoConditionInput) {
+  mutation CreateVideo(
+    $input: CreateVideoInput!
+    $condition: ModelVideoConditionInput
+  ) {
     createVideo(input: $input, condition: $condition) {
       id
       uuid
@@ -381,9 +411,12 @@ export const createVideo = /* GraphQL */ `
       updatedAt
     }
   }
-`
+`;
 export const updateVideo = /* GraphQL */ `
-  mutation UpdateVideo($input: UpdateVideoInput!, $condition: ModelVideoConditionInput) {
+  mutation UpdateVideo(
+    $input: UpdateVideoInput!
+    $condition: ModelVideoConditionInput
+  ) {
     updateVideo(input: $input, condition: $condition) {
       id
       uuid
@@ -395,9 +428,12 @@ export const updateVideo = /* GraphQL */ `
       updatedAt
     }
   }
-`
+`;
 export const deleteVideo = /* GraphQL */ `
-  mutation DeleteVideo($input: DeleteVideoInput!, $condition: ModelVideoConditionInput) {
+  mutation DeleteVideo(
+    $input: DeleteVideoInput!
+    $condition: ModelVideoConditionInput
+  ) {
     deleteVideo(input: $input, condition: $condition) {
       id
       uuid
@@ -409,9 +445,12 @@ export const deleteVideo = /* GraphQL */ `
       updatedAt
     }
   }
-`
+`;
 export const createChannel = /* GraphQL */ `
-  mutation CreateChannel($input: CreateChannelInput!, $condition: ModelChannelConditionInput) {
+  mutation CreateChannel(
+    $input: CreateChannelInput!
+    $condition: ModelChannelConditionInput
+  ) {
     createChannel(input: $input, condition: $condition) {
       id
       arn
@@ -421,9 +460,12 @@ export const createChannel = /* GraphQL */ `
       updatedAt
     }
   }
-`
+`;
 export const updateChannel = /* GraphQL */ `
-  mutation UpdateChannel($input: UpdateChannelInput!, $condition: ModelChannelConditionInput) {
+  mutation UpdateChannel(
+    $input: UpdateChannelInput!
+    $condition: ModelChannelConditionInput
+  ) {
     updateChannel(input: $input, condition: $condition) {
       id
       arn
@@ -433,9 +475,12 @@ export const updateChannel = /* GraphQL */ `
       updatedAt
     }
   }
-`
+`;
 export const deleteChannel = /* GraphQL */ `
-  mutation DeleteChannel($input: DeleteChannelInput!, $condition: ModelChannelConditionInput) {
+  mutation DeleteChannel(
+    $input: DeleteChannelInput!
+    $condition: ModelChannelConditionInput
+  ) {
     deleteChannel(input: $input, condition: $condition) {
       id
       arn
@@ -445,43 +490,52 @@ export const deleteChannel = /* GraphQL */ `
       updatedAt
     }
   }
-`
+`;
 export const createCowellRealtimeStatusConnections = /* GraphQL */ `
   mutation CreateCowellRealtimeStatusConnections(
     $input: CreateCowellRealtimeStatusConnectionsInput!
     $condition: ModelCowellRealtimeStatusConnectionsConditionInput
   ) {
-    createCowellRealtimeStatusConnections(input: $input, condition: $condition) {
+    createCowellRealtimeStatusConnections(
+      input: $input
+      condition: $condition
+    ) {
       id
       connectionId
       createdAt
       updatedAt
     }
   }
-`
+`;
 export const updateCowellRealtimeStatusConnections = /* GraphQL */ `
   mutation UpdateCowellRealtimeStatusConnections(
     $input: UpdateCowellRealtimeStatusConnectionsInput!
     $condition: ModelCowellRealtimeStatusConnectionsConditionInput
   ) {
-    updateCowellRealtimeStatusConnections(input: $input, condition: $condition) {
+    updateCowellRealtimeStatusConnections(
+      input: $input
+      condition: $condition
+    ) {
       id
       connectionId
       createdAt
       updatedAt
     }
   }
-`
+`;
 export const deleteCowellRealtimeStatusConnections = /* GraphQL */ `
   mutation DeleteCowellRealtimeStatusConnections(
     $input: DeleteCowellRealtimeStatusConnectionsInput!
     $condition: ModelCowellRealtimeStatusConnectionsConditionInput
   ) {
-    deleteCowellRealtimeStatusConnections(input: $input, condition: $condition) {
+    deleteCowellRealtimeStatusConnections(
+      input: $input
+      condition: $condition
+    ) {
       id
       connectionId
       createdAt
       updatedAt
     }
   }
-`
+`;
