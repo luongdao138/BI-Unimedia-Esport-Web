@@ -65,13 +65,14 @@ const ChatInputContainer: React.FC<ChatInputProps> = ({
     //   await setFieldValue('message', '')
     //   return
     // }
-    setResetValue((prev) => !prev)
     // console.log('Submit chat')
     if (valueRef.current) {
       await setFieldValue('message', valueRef.current)
+      setResetValue((prev) => !prev)
       handleSubmit()
     } else {
       await setFieldValue('message', '')
+      setResetValue((prev) => !prev)
       handleSubmit()
     }
   }, [])
@@ -136,7 +137,6 @@ const ChatInputContainer: React.FC<ChatInputProps> = ({
         helperText={errors?.message}
         error={Boolean(errors.message)}
         onKeyPress={handlePressEnter}
-        resetWhenPressEnter
         resetErrorOnChange={resetErrorOnChange}
         resetValue={resetValue}
         endAdornment={

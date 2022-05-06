@@ -83,7 +83,6 @@ const Step2: React.FC<Step2Props> = ({
       }
     },
   })
-  564
   const formHasError = values.message.length > purchasePoints[purchaseValueSelected].maxLengthInput
 
   const handlePremiumChatClick = async () => {

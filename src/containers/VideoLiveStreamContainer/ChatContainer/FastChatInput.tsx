@@ -22,7 +22,6 @@ export type InputProps = {
     formattedValue: string
   }
   initialValue?: string
-  resetWhenPressEnter?: boolean
 }
 
 const ESFastChatInput: React.FC<OutlinedInputProps & InputProps> = (props) => {
@@ -39,8 +38,10 @@ const ESFastChatInput: React.FC<OutlinedInputProps & InputProps> = (props) => {
 
   useEffect(() => {
     // console.log('Submit chat reset value change')
-    valueRef.current = ''
-    setTempMessage('')
+    if (!props.initialValue) {
+      valueRef.current = ''
+      setTempMessage('')
+    }
   }, [props.resetValue])
 
   const debouncedChangeHandler = useCallback(
@@ -70,20 +71,7 @@ const ESFastChatInput: React.FC<OutlinedInputProps & InputProps> = (props) => {
     resetErrorOnChange?.()
   }
 
-  return (
-    <ESInput
-      {...props}
-      inputRef={inputRef}
-      value={tempMessage}
-      onChange={handleChange}
-      onKeyUp={(e) => {
-        if (props.resetWhenPressEnter && e.key === 'Enter') {
-          valueRef.current = ''
-          setTempMessage('')
-        }
-      }}
-    />
-  )
+  return <ESInput {...props} inputRef={inputRef} value={tempMessage} onChange={handleChange} />
 }
 
 export default memo(ESFastChatInput)
