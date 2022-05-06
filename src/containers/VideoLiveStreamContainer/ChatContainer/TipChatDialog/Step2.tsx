@@ -192,8 +192,29 @@ const useStyles = makeStyles((theme) => ({
       color: Colors.white_opacity[30],
       opacity: 1,
     },
-    height: 'calc(100vh - 495px)',
-    maxHeight: '83px',
+    height: 'unset',
+    // maxHeight: '83px',
+  },
+  [theme.breakpoints.up(769)]: {
+    purchaseCommentInput: {
+      maxHeight: 'calc(100vh - 570px)',
+    },
+  },
+  [theme.breakpoints.down(769)]: {
+    [`@media (orientation: landscape)`]: {
+      purchaseCommentInput: (props: StyleProps) => {
+        if (props.isLandscape) {
+          return {
+            maxHeight: '83px',
+            height: 'unset',
+          }
+        } else {
+          return {
+            height: '83px',
+          }
+        }
+      },
+    },
   },
   purchaseCommentRoot: {
     backgroundColor: '#212121',
