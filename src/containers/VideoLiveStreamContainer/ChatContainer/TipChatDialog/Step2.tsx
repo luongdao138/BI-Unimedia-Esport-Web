@@ -192,7 +192,7 @@ const useStyles = makeStyles((theme) => ({
       color: Colors.white_opacity[30],
       opacity: 1,
     },
-    height: 'unset',
+    maxHeight: 'calc(100vh - 495px)',
     // maxHeight: '83px',
   },
   [theme.breakpoints.up(769)]: {
