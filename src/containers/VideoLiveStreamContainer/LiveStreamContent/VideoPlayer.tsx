@@ -779,7 +779,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
         id="video"
         ref={videoEl}
         muted={muted}
-        style={{ width: '100%', height: componentsSize.videoHeight }}
+        style={{ width: '100%', height: document.fullscreenElement !== null ? '100%' : componentsSize.videoHeight }}
         autoPlay={autoPlay}
         src={srcResolution}
         // controls={iPhonePl || androidPl || isMobile}
@@ -791,7 +791,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
         controls={false}
       />
     )
-  }, [muted, autoPlay, srcResolution])
+  }, [muted, autoPlay, srcResolution, document.fullscreenElement])
 
   return (
     <div className={classes.videoPlayer} style={{ height: componentsSize.videoHeight ?? 0 }}>
