@@ -364,10 +364,6 @@ const useStyles = makeStyles((theme) => ({
           maxWidth: '400px',
           left: '10px',
         }
-      } else {
-        return {
-          left: '-90px',
-        }
       }
     },
     titleDialog: {

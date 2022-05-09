@@ -180,6 +180,13 @@ const useStyles = makeStyles((theme) => ({
           }
         }
       },
+      wrapGiftMemberList: (props: StyleProps) => {
+        if (props.isLandscape) {
+          return {
+            paddingLeft: '5px',
+          }
+        }
+      },
     },
 
     stepInfo: { marginTop: 8 },
