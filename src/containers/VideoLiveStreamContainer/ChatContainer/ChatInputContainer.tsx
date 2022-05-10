@@ -68,7 +68,9 @@ const ChatInputContainer: React.FC<ChatInputProps> = ({
     // console.log('Submit chat')
     if (valueRef.current) {
       await setFieldValue('message', valueRef.current)
-      setResetValue((prev) => !prev)
+      if (valueRef.current.length <= 50) {
+        setResetValue((prev) => !prev)
+      }
       handleSubmit()
     } else {
       await setFieldValue('message', '')

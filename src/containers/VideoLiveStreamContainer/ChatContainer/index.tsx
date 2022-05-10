@@ -653,7 +653,8 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     }
 
     const refOnCreateMess = useRef(null)
-    const onCreateMess = (createdMessage) => {
+    const onCreateMess = (createdMessage: any) => {
+      const canAddMess = checkAddMessage(createdMessage)
       if (createdMessage?.video_id === key_video_id && videoType === STATUS_VIDEO.LIVE_STREAM) {
         const created_at = createdMessage?.createdAt ? moment(createdMessage?.createdAt).utc().format('YYYY-MM-DD HH:mm:ss') : null
         if (createdMessage?.is_premium) {
@@ -693,11 +694,11 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
           // if (videoPlayedSecond.current >= streamingSecond || liveStreamInfo.is_pausing_live) {
           if (isStreaming) {
             // render new messages with savedMess
-            const isMessageInBottom = checkMessIsInBottom()
-            setStateMessages([...cacheMessRef.current, createdMessage])
-            if (isMessageInBottom) {
-              scrollToCurrentMess()
-            }
+            // const isMessageInBottom = checkMessIsInBottom()
+            if (canAddMess) setStateMessages([...cacheMessRef.current, createdMessage])
+            // if (isMessageInBottom) {
+            //   scrollToCurrentMess()
+            // }
 
             // render new users donate
             if (isPremiumChat(createdMessage, false)) {
@@ -711,14 +712,14 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
           }
           // save mess for local
           // setCacheMess((messages) => [...messages, createdMessage])
-          cacheMessRef.current = [...cacheMessRef.current, createdMessage]
+          if (canAddMess) cacheMessRef.current = [...cacheMessRef.current, createdMessage]
           // save donated messages for local (not check display time)
           if (isPremiumChat(createdMessage, false)) {
             cacheDonateMessRef.current = [...cacheDonateMessRef.current, createdMessage]
             // setCacheDonateMess((messages) => [...messages, createdMessage])
           }
           // save mess tip to cache
-          if (createdMessage?.is_premium === true) {
+          if (createdMessage?.is_premium === true && canAddMess) {
             // setCacheMessTip((messages) => [...messages, createdMessage])
             cacheMessTipRef.current = [...cacheMessTipRef.current, createMessage]
           }
@@ -1439,17 +1440,23 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       }
     }, [])
 
+    const checkAddMessage = (local_message: any) => {
+      const isPremiumMessage = isPremiumChat(local_message, false)
+      return activeSubTab !== SUB_TABS.MESS.TIP || (isPremiumMessage && activeSubTab === SUB_TABS.MESS.TIP)
+    }
+
     const handleCreateMess = (local_message: any, input: any, point: any, resetMess: any) => {
       console.log('handleCreateMess', local_message, point)
       setTimeout(() => {
+        const canAddMess = checkAddMessage(local_message)
         const is_premium_local_message = isPremiumChat(local_message, false)
-        if (isStreaming) {
+        if (isStreaming && canAddMess) {
           setStateMessages((prev) => [...prev, local_message])
         }
 
         // save mess for local
         // setCacheMess((messages) => [...messages, local_message])
-        cacheMessRef.current = [...cacheMessRef.current, local_message]
+        if (canAddMess) cacheMessRef.current = [...cacheMessRef.current, local_message]
         // setSavedMess((messages) => [...messages, local_message])
         // save donated messages for local (not check display time)
         if (is_premium_local_message) {
@@ -1458,14 +1465,14 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
           cacheDonateMessRef.current = [...cacheDonateMessRef.current, local_message]
         }
         // only save mess tip when has point
-        if (point) {
+        if (point && canAddMess) {
           // setCacheMessTip((messages) => [...messages, local_message])
           cacheMessTipRef.current = [...cacheMessTipRef.current, local_message]
         }
 
         // save message to local
         if (isStreaming) {
-          const isMessageInBottom = checkMessIsInBottom()
+          // const isMessageInBottom = checkMessIsInBottom()
           // render new messages with savedMess
           if (!point) {
             // reset input chat
@@ -1474,16 +1481,16 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
           }
           // setStateMessages((prev) => [...prev, local_message])
 
-          if (isMessageInBottom) {
-            if (point) {
-              scrollBehaviorRef.current = 'instant'
-              // setScrollBehavior('instant')
-              setIsChatInBottom(true)
-            } else {
-              // console.log('🚀 ~ createMess ~ scrollToCurrentMess---000', scrollToCurrentMess)
-              scrollToCurrentMess()
-            }
-          }
+          // if (isMessageInBottom) {
+          //   if (point) {
+          //     scrollBehaviorRef.current = 'instant'
+          //     // setScrollBehavior('instant')
+          //     setIsChatInBottom(true)
+          //   } else {
+          //     // console.log('🚀 ~ createMess ~ scrollToCurrentMess---000', scrollToCurrentMess)
+          //     scrollToCurrentMess()
+          //   }
+          // }
 
           // render new users donate
           if (is_premium_local_message) {
