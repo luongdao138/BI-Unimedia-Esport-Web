@@ -72,7 +72,6 @@ export type ChatStyleProps = {
 }
 
 export type ChatContainerProps = {
-  onPressDonate?: (donatedPoint: number, purchaseComment: string, master_id?: string) => void
   userHasViewingTicket?: boolean | number
   key_video_id?: string
   myPoint?: any
@@ -198,7 +197,6 @@ export const sanitizeMess = (content: string): string =>
 const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
   (
     {
-      onPressDonate,
       userHasViewingTicket,
       key_video_id,
       handleKeyboardVisibleState,
@@ -1766,7 +1764,6 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
           isEnabledChat={isEnabledChat}
           isEnabledGift={isEnabledGift}
           isStreaming={isStreaming}
-          onPressDonate={onPressDonate}
           openPurchasePointModal={openPurchasePointModal}
           handleCreateMess={handleCreateMess}
           chatUser={chatUser}
