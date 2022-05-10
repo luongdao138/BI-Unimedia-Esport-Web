@@ -7,6 +7,7 @@ import _ from 'lodash'
 import { STATUS_SEND_MESS } from '@constants/common.constants'
 import { STATUS_VIDEO } from '@services/videoTop.services'
 import { Colors } from '@theme/colors'
+import useIsomorphicLayoutEffect from '@utils/hooks/useIsomorphicLayoutEffect'
 
 type ChatContainerProps = {
   message?: any
@@ -16,10 +17,12 @@ type ChatContainerProps = {
   resendMess: (message: any) => void
   reDeleteMess: (message: any) => void
   getMessageWithoutNgWords: (chatMessContent: string) => ReactNode
+  measure?: any
+  contentRect?: any
 }
 
 const ChatTextMessage = React.memo<ChatContainerProps>(
-  ({ message, deleteMess, getMessageWithoutNgWords, is_streamer, resendMess, reDeleteMess, videoType }) => {
+  ({ message, deleteMess, getMessageWithoutNgWords, is_streamer, resendMess, reDeleteMess, videoType, measure, contentRect }) => {
     const classes = useStyles()
     const { t } = useTranslation('common')
     const getClassDeletedMess = (): string => {
@@ -27,6 +30,10 @@ const ChatTextMessage = React.memo<ChatContainerProps>(
         return 'line_through_text'
       } else return ''
     }
+
+    useIsomorphicLayoutEffect(() => {
+      measure?.()
+    }, [message, contentRect?.width, contentRect?.height])
 
     return (
       <Box className={classes.chatMessageContainer}>
