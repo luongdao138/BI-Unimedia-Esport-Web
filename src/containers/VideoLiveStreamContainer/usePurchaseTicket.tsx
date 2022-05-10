@@ -24,7 +24,8 @@ const usePurchaseTicketSuperChat = () => {
   const purchaseTicketSuperChat = async (
     params: PurchaseTicketParams,
     onResult?: (isSuccess: boolean) => void,
-    onError?: ({ code: number, message: string }) => void
+    onError?: ({ code: number, message: string }) => void,
+    createMessAfterDonate?: any
   ) => {
     console.log('============= On donate point params ==============', params)
     const result = await dispatch(actions.purchaseTicketSuperChat(params))
@@ -38,6 +39,7 @@ const usePurchaseTicketSuperChat = () => {
         getVideoDetail({ video_id: `${params?.video_id}` })
       }
       params?.handleSuccess()
+      createMessAfterDonate?.()
     } else {
       // onResult()
       if (actions.purchaseTicketSuperChat.rejected.match(result)) {

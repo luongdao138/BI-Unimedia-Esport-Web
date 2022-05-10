@@ -44,7 +44,6 @@ interface Props {
   isStreaming: boolean // done
   donateConfirmModalIsShown: any
   handleKeyboardVisibleState: any
-  onPressDonate: any // done
   openPurchasePointModal: any // done
   errorMsgDonatePoint: any // done
   clearMessageDonatePoint: any // done
@@ -62,7 +61,6 @@ const ChatFooter: React.FC<Props> = ({
   handleKeyboardVisibleState,
   isEnabledChat,
   isStreaming,
-  onPressDonate,
   openPurchasePointModal,
   errorMsgDonatePoint,
   clearMessageDonatePoint,
@@ -197,7 +195,6 @@ const ChatFooter: React.FC<Props> = ({
       normalMessHasError={errorMess ? true : false}
       createMess={createMess}
       onClickOutside={donateConfirmModalIsShown() ? null : handlePremiumChatBoxClickOutside}
-      onPressDonate={onPressDonate}
       openPurchasePointModal={openPurchasePointModal}
       errorMsgDonatePoint={errorMsgDonatePoint}
       clearMessageDonatePoint={clearMessageDonatePoint}

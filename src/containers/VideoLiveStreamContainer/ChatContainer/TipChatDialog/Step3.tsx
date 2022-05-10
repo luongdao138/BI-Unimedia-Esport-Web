@@ -3,34 +3,52 @@ import i18n from '@locales/i18n'
 import { Box, makeStyles, Typography } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import { FormatHelper } from '@utils/helpers/FormatHelper'
-import React from 'react'
+import React, { useContext, useRef } from 'react'
 import TipButtonGroup from './TipButtonGroup'
 import { sanitizeMess } from '../index'
 import { useRotateScreen } from '@utils/hooks/useRotateScreen'
+import { VideoContext } from '@containers/VideoLiveStreamContainer/VideoContext'
 
 type Step3Props = {
   onChangeStep?: (newStep: number) => void
   selectedMember?: any
   tipInfo: any
-  onPressDonate?: (donatedPoint: number, purchaseComment: string, master_id?: string) => void
   errorMsgDonatePoint?: string
+  createMessAfterDonate: any
 }
 
-const Step3: React.FC<Step3Props> = ({ tipInfo, onChangeStep, selectedMember, onPressDonate, errorMsgDonatePoint }) => {
+const Step3: React.FC<Step3Props> = ({ tipInfo, onChangeStep, selectedMember, errorMsgDonatePoint, createMessAfterDonate }) => {
   const { isLandscape } = useRotateScreen()
   const classes = useStyles({ isLandscape })
+  const { confirmDonatePointRef } = useContext(VideoContext)
+
+  const canDonateRef = useRef<boolean>(true)
 
   const onCancel = () => {
     onChangeStep(2)
   }
   const onClick = () => {
-    // tip for member in list gift
-    if (selectedMember?.master_uuid) {
-      onPressDonate(tipInfo?.donatedPoint, sanitizeMess(tipInfo?.message), selectedMember.master_uuid)
-    } else {
-      // tip for streamer
-      onPressDonate(tipInfo?.donatedPoint, sanitizeMess(tipInfo?.message))
+    if (!canDonateRef.current) {
+      return
     }
+    if (confirmDonatePointRef.current) {
+      if (selectedMember?.master_uuid) {
+        // tip for member in list gift
+        confirmDonatePointRef.current(
+          tipInfo?.donatedPoint,
+          sanitizeMess(tipInfo?.message),
+          selectedMember.master_uuid,
+          createMessAfterDonate
+        )
+      } else {
+        // tip for streamer
+        confirmDonatePointRef.current(tipInfo?.donatedPoint, sanitizeMess(tipInfo?.message), undefined, createMessAfterDonate)
+      }
+    }
+    canDonateRef.current = false
+    setTimeout(() => {
+      canDonateRef.current = true
+    }, 1000)
   }
 
   return (

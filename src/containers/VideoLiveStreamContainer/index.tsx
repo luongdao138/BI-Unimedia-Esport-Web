@@ -118,7 +118,6 @@ const VideoDetail: React.FC = () => {
   const [purchaseComment, setPurchaseComment] = useState<string>('')
   const [showPurchaseTicketModal, setShowPurchaseTicketModal] = useState<boolean>(false)
   const [purchaseType, setPurchaseType] = useState<number>(null)
-  const [donatedPoints, setDonatedPoints] = useState<number>(0)
   const [softKeyboardIsShown, setSoftKeyboardIsShown] = useState(false)
   const [errorPurchase, setErrorPurchase] = useState(false)
   const [videoInfo, setVideoInfo] = useState<VIDEO_INFO>({ video_status: STATUS_VIDEO.SCHEDULE, process_status: '' })
@@ -126,12 +125,13 @@ const VideoDetail: React.FC = () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isArchived, setIsArchived] = useState(false)
   const [disabled, setDisabled] = useState(false)
-  const [giftMasterUuid, setGiftMasterUuid] = useState('')
   const [errorMsgDonatePoint, setErrorMsgDonatePoint] = useState('')
 
   // const [loadingPurchasePoint, setLoadingPurchasePoint] = useState<boolean>(false)
 
   console.log('DonatePointsConfirmModal', disabled, errorPurchase, purchaseComment)
+
+  const confirmDonatePointRef = useRef<any>(null)
 
   const {
     getVideoDetail,
@@ -433,97 +433,27 @@ const VideoDetail: React.FC = () => {
     }
   }, [videoDetailError])
 
-  const confirmDonatePoint = useCallback(
-    (donated_point, comment, master_id = '') => {
-      console.log('master_id', master_id)
+  const confirmDonatePoint = (donated_point, comment, master_id = '', cb) => {
+    console.log('master_id', master_id)
 
-      console.log('============= On donate point ==============')
+    console.log('============= On donate point ==============')
 
-      // reset donate point
-      setGiftMasterUuid(master_id)
-      setDonatedPoints(0)
-      setDonatedPoints(donated_point)
-      // reset lack point
-      setLackedPoint(0)
-      setLackedPoint(donated_point - myPoint)
-      setPurchaseComment(comment)
-      setPurchaseType(PURCHASE_TYPE.PURCHASE_SUPER_CHAT)
-      if (myPoint >= donated_point) {
-        // setShowConfirmModal(true)
-        const type = master_id === '' ? PURCHASE_TYPE.PURCHASE_SUPER_CHAT : PURCHASE_TYPE.GIVE_GIFT_TO_MASTER
-        purchaseTicketSuperChat(
-          {
-            point: donated_point,
-            type,
-            video_id: getVideoId(),
-            handleSuccess: handleCloseConfirmModal,
-            ...(type === PURCHASE_TYPE.GIVE_GIFT_TO_MASTER && { master_id }),
-          },
-          (isSuccess) => {
-            if (isSuccess) {
-              setShowConfirmModal(false)
-              setErrorPurchase(false)
-              setDisabled(false)
-              setErrorMsgDonatePoint('')
-              dispatch(commonActions.addToast(i18n.t('common:live_stream_screen.send_gift_success')))
-            } else {
-              // setShowConfirmModal(false)
-              setDisabled(false)
-            }
-          },
-          (error) => {
-            console.log('error==>', error)
-            setShowConfirmModal(false)
-            setErrorPurchase(true)
-            if (error.code === 420) {
-              updateUseGiftFlag(0)
-              setErrorMsgDonatePoint(i18n.t('common:live_stream_screen.error_tip_function_turn_off'))
-            } else if (error.code === 422) {
-              setErrorMsgDonatePoint(i18n.t('common:live_stream_screen.error_address_updated'))
-            }
-          }
-        )
-      } else {
-        dispatch(addToast(i18n.t('common:donate_points.lack_point_mess')))
-        setShowModalPurchasePoint(true)
-      }
-    },
-    [myPoint, detailVideoResult?.uuid]
-  )
-  useEffect(() => {
-    if (showConfirmModal) {
-      handleConfirmPurchaseSuperChat()
-    }
-  }, [showConfirmModal])
-
-  const handleCloseConfirmModal = () => {
-    getMyPointData({ page: 1, limit: 10 })
-    setShowConfirmModal(false)
-    setErrorPurchase(false)
-  }
-  const handleConfirmPurchaseSuperChat = async () => {
+    // reset donate point
+    // reset lack point
+    setLackedPoint(0)
+    setLackedPoint(donated_point - myPoint)
+    setPurchaseComment(comment)
     setPurchaseType(PURCHASE_TYPE.PURCHASE_SUPER_CHAT)
-    setDisabled(true)
-    // if (!loadingPurchasePoint) {
-    debounceDonatePoint(
-      donatedPoints,
-      giftMasterUuid === '' ? PURCHASE_TYPE.PURCHASE_SUPER_CHAT : PURCHASE_TYPE.GIVE_GIFT_TO_MASTER,
-      getVideoId(),
-      giftMasterUuid,
-      handleCloseConfirmModal
-    )
-    // }
-  }
-
-  const debounceDonatePoint = useCallback(
-    _.debounce(async (donatedPoints, type, video_id, masterUuid, handleSuccess: () => void) => {
-      await purchaseTicketSuperChat(
+    if (myPoint >= donated_point) {
+      // setShowConfirmModal(true)
+      const type = master_id === '' ? PURCHASE_TYPE.PURCHASE_SUPER_CHAT : PURCHASE_TYPE.GIVE_GIFT_TO_MASTER
+      purchaseTicketSuperChat(
         {
-          point: donatedPoints,
-          type: type,
-          video_id: video_id,
-          handleSuccess: handleSuccess,
-          ...(type === PURCHASE_TYPE.GIVE_GIFT_TO_MASTER && { master_id: masterUuid }),
+          point: donated_point,
+          type,
+          video_id: getVideoId(),
+          handleSuccess: handleCloseConfirmModal,
+          ...(type === PURCHASE_TYPE.GIVE_GIFT_TO_MASTER && { master_id }),
         },
         (isSuccess) => {
           if (isSuccess) {
@@ -547,11 +477,23 @@ const VideoDetail: React.FC = () => {
           } else if (error.code === 422) {
             setErrorMsgDonatePoint(i18n.t('common:live_stream_screen.error_address_updated'))
           }
-        }
+        },
+        cb
       )
-    }, 700),
-    []
-  )
+    } else {
+      dispatch(addToast(i18n.t('common:donate_points.lack_point_mess')))
+      setShowModalPurchasePoint(true)
+    }
+  }
+
+  confirmDonatePointRef.current = confirmDonatePoint
+
+  const handleCloseConfirmModal = () => {
+    getMyPointData({ page: 1, limit: 10 })
+    setShowConfirmModal(false)
+    setErrorPurchase(false)
+  }
+
   const handlePurchaseTicket = () => {
     if (isAuthenticated) {
       setPurchaseType(PURCHASE_TYPE.PURCHASE_TICKET)
@@ -679,8 +621,6 @@ const VideoDetail: React.FC = () => {
   const openPurchasePointModal = useCallback(
     (donate_point) => {
       // reset donate point
-      setDonatedPoints(0)
-      setDonatedPoints(donate_point)
       // no lack point if my point larger than donate point
       if (+donate_point < +myPoint) {
         setLackedPoint(0)
@@ -708,7 +648,7 @@ const VideoDetail: React.FC = () => {
           myPoint={myPoint} // no over rerender
           chatWidth={componentsSize.chatWidth}
           key_video_id={detailVideoResult?.key_video_id} // no rerender
-          onPressDonate={confirmDonatePoint}
+          // onPressDonate={confirmDonatePoint}
           userHasViewingTicket={userHasViewingTicket()}
           videoType={videoStatus}
           freeToWatch={isVideoFreeToWatch}
@@ -777,7 +717,16 @@ const VideoDetail: React.FC = () => {
 
   return (
     <VideoContext.Provider
-      value={{ videoRefInfo, setVideoRefInfo, giverRankInfo, setGiverRankInfo, receiverRankInfo, setReceiverRankInfo, isMobile }}
+      value={{
+        videoRefInfo,
+        setVideoRefInfo,
+        giverRankInfo,
+        setGiverRankInfo,
+        receiverRankInfo,
+        setReceiverRankInfo,
+        isMobile,
+        confirmDonatePointRef,
+      }}
     >
       <VideoTabContextProvider>
         <Box className={classes.root}>
@@ -898,16 +847,6 @@ const VideoDetail: React.FC = () => {
           handlePurchaseTicket={doConfirmPurchaseTicket}
         />
         <DialogLoginContainer showDialogLogin={showDialogLogin} onCloseDialogLogin={handleCloseDialogLogin} />
-        {/* <DonatePointsConfirmModal
-        hasError={errorPurchase}
-        showConfirmModal={showConfirmModal}
-        handleClose={handleCloseConfirmModal}
-        myPoint={myPoint}
-        ticketPoint={detailVideoResult?.ticket_price}
-        msgContent={purchaseComment}
-        handleConfirm={handleConfirmPurchaseSuperChat}
-        disabled={disabled}
-      /> */}
         <DonatePoints
           myPoint={myPoint}
           lackedPoint={lackedPoint}
