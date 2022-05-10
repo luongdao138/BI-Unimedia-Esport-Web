@@ -1035,7 +1035,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   videoPlayer: {
     height: '100%',
-    minHeight: 230,
   },
   controlOut: {
     // backgroundColor: 'rgba(0,0,0,0.3)',
@@ -1186,7 +1185,11 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export default memo(VideoPlayer, (prev, next) => {
   console.warn('===redenr===', prev.src !== next.src)
-  if (prev.src !== next.src) {
+  if (
+    prev.src !== next.src ||
+    prev.componentsSize.videoHeight !== next.componentsSize.videoHeight ||
+    prev.componentsSize.videoWidth !== next.componentsSize.videoWidth
+  ) {
     return false
   }
   return true

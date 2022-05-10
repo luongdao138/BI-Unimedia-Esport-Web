@@ -5,7 +5,7 @@ import ESTabs from '@components/Tabs'
 import i18n from '@locales/i18n'
 import { Box, Grid, makeStyles, Typography } from '@material-ui/core'
 import { Colors } from '@theme/colors'
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import ChatContainer from './ChatContainer'
 import DistributorInfo from './DistributorInfo'
@@ -592,7 +592,7 @@ const VideoDetail: React.FC = () => {
     return 0
   }
 
-  const componentsSize = (() => {
+  const componentsSize = useMemo(() => {
     const factor = isLandscape ? 0.42 : 0.3
     const chatMaxWidth = 482
     const chatMinWidth = isLandscape ? 0 : 380
@@ -612,7 +612,7 @@ const VideoDetail: React.FC = () => {
       videoWidth,
       videoHeight,
     }
-  })()
+  }, [pageWidth])
 
   const resetErrorDonateMessage = useCallback(() => {
     setErrorMsgDonatePoint('')
