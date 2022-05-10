@@ -1,9 +1,11 @@
-import React, { memo } from 'react'
+import React, { memo, useMemo } from 'react'
 import { Box, Icon, makeStyles, Theme, Typography } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
 import { SettingPanelState } from './ControlBar'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
+import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
+import { useRotateScreen } from '@utils/hooks/useRotateScreen'
 
 type Props = {
   handleOnBackClick?: () => void
@@ -22,6 +24,9 @@ const VideoResolutionPanel: React.FC<Props> = ({
 }) => {
   const classes = useStyles()
   const { t } = useTranslation('common')
+  const { width: pageWidth } = useWindowDimensions(0)
+  const { isLandscape } = useRotateScreen()
+  const isMobile = pageWidth <= 768 || isLandscape
 
   const RadioButton = ({ title, selected, onClick }) => {
     return (
@@ -38,6 +43,63 @@ const VideoResolutionPanel: React.FC<Props> = ({
       </Box>
     )
   }
+
+  const resolutionSelectView = useMemo(() => {
+    if (!isMobile) {
+      return (
+        <Box>
+          {resolutionList.map((item, index) => {
+            return (
+              <RadioButton
+                key={`RadioButton-${item}`}
+                title={item}
+                selected={item === selectedResolution}
+                onClick={() => {
+                  onSelected(item, index)
+                }}
+              />
+            )
+          })}
+        </Box>
+      )
+    }
+    const leftList = resolutionList.slice(0, Math.ceil(resolutionList.length / 2))
+    const rightList = resolutionList.slice(Math.ceil(resolutionList.length / 2))
+
+    return (
+      <Box display="flex" flexDirection="row">
+        <Box flex={1}>
+          {leftList.map((item, index) => {
+            return (
+              <RadioButton
+                key={`RadioButton-${item}`}
+                title={item}
+                selected={item === selectedResolution}
+                onClick={() => {
+                  onSelected(item, index)
+                }}
+              />
+            )
+          })}
+        </Box>
+        <Box flex={1}>
+          {rightList.map((item, index) => {
+            return (
+              <RadioButton
+                key={`RadioButton-${item}`}
+                title={item}
+                selected={item === selectedResolution}
+                onClick={() => {
+                  onSelected(item, index)
+                }}
+              />
+            )
+          })}
+        </Box>
+      </Box>
+    )
+  }, [isMobile, resolutionList])
+
   return (
     <Box
       className={classes.container}
@@ -62,18 +124,7 @@ const VideoResolutionPanel: React.FC<Props> = ({
             : typeSetting === SettingPanelState.PLAY_SPEED && t('videos_top_tab.play_speed')}
         </Typography>
       </Box>
-      {resolutionList.map((item, index) => {
-        return (
-          <RadioButton
-            key={`RadioButton-${item}`}
-            title={item}
-            selected={item === selectedResolution}
-            onClick={() => {
-              onSelected(item, index)
-            }}
-          />
-        )
-      })}
+      {resolutionSelectView}
     </Box>
   )
 }
