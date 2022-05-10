@@ -719,7 +719,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
           // save mess tip to cache
           if (createdMessage?.is_premium === true && canAddMess) {
             // setCacheMessTip((messages) => [...messages, createdMessage])
-            cacheMessTipRef.current = [...cacheMessTipRef.current, createMessage]
+            cacheMessTipRef.current = [...cacheMessTipRef.current, createdMessage]
           }
         }
       }
