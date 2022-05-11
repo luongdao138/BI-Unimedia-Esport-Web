@@ -791,7 +791,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
         controls={false}
       />
     )
-  }, [muted, autoPlay, srcResolution, document.fullscreenElement])
+  }, [muted, autoPlay, srcResolution, document.fullscreenElement, componentsSize.videoHeight])
 
   return (
     <div className={classes.videoPlayer} style={{ height: componentsSize.videoHeight ?? 0 }}>
