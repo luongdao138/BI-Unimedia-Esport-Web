@@ -1,12 +1,25 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import ESAvatar from '@components/Avatar'
-import ESMenu from '@components/Menu'
 import ESMenuItem from '@components/Menu/MenuItem'
 import { debounceTime, REPORT_TYPE } from '@constants/common.constants'
 import { ESRoutes } from '@constants/route.constants'
 import ESReport from '@containers/Report'
 import { VIDEO_TYPE } from '@containers/VideoLiveStreamContainer'
-import { Box, ButtonBase, Icon, makeStyles, Typography, useMediaQuery, useTheme } from '@material-ui/core'
+import {
+  MenuList,
+  ClickAwayListener,
+  Paper,
+  Grow,
+  Popper,
+  Box,
+  ButtonBase,
+  Icon,
+  makeStyles,
+  Typography,
+  useMediaQuery,
+  useTheme,
+  IconButton,
+} from '@material-ui/core'
 import { STATUS_VIDEO } from '@services/videoTop.services'
 import { getIsAuthenticated } from '@store/auth/selectors'
 import { useAppSelector } from '@store/hooks'
@@ -219,6 +232,43 @@ const VideoSubInfo: React.FC<VideoSubInfoProps> = (props) => {
     setShowReportMenu(false)
   }
 
+  // truongVX 11/4/2022
+
+  const [open, setOpen] = React.useState(false)
+  const anchorRef = React.useRef<HTMLButtonElement>(null)
+
+  const handleToggle = () => {
+    setOpen((prevOpen) => !prevOpen)
+  }
+
+  const handleClose = (event) => {
+    if (anchorRef.current && anchorRef.current.contains(event.target as HTMLElement)) {
+      return
+    }
+
+    setOpen(false)
+  }
+
+  function handleListKeyDown(event: React.KeyboardEvent) {
+    if (event.key === 'Tab') {
+      event.preventDefault()
+      setOpen(false)
+    } else if (event.key === 'Escape') {
+      setOpen(false)
+    }
+  }
+
+  // return focus to the button when we transitioned from !open -> open
+  const prevOpen = React.useRef(open)
+  React.useEffect(() => {
+    if (prevOpen.current === true && open === false) {
+      anchorRef.current!.focus()
+    }
+
+    prevOpen.current = open
+  }, [open])
+
+  //
   return (
     <Box className={classes.container}>
       {mobileRegisterChannelVisible && streamerInfoContainer()}
@@ -259,11 +309,52 @@ const VideoSubInfo: React.FC<VideoSubInfoProps> = (props) => {
             </Box>
 
             {/* report icon */}
-            <Box ml={1} pr={!isMobile ? 3 : 0} display="flex" flexDirection="row" flexShrink={0}>
-              <ESMenu>
-                <ESMenuItem onClick={isAuthenticated ? handleReportOpen : goToLogin}>{t('tournament.report')}</ESMenuItem>
-              </ESMenu>
-            </Box>
+            {/* <Button
+              ref={anchorRef}
+              id="composition-button"
+              aria-controls={open ? 'composition-menu' : undefined}
+              aria-expanded={open ? 'true' : undefined}
+              aria-haspopup="true"
+              onClick={handleToggle}
+              className={classes.dropDownMenu}
+            > */}
+            <IconButton
+              style={{ alignItems: 'center' }}
+              ref={anchorRef}
+              id="composition-button"
+              aria-controls={open ? 'composition-menu' : undefined}
+              aria-expanded={open ? 'true' : undefined}
+              aria-haspopup="true"
+              onClick={handleToggle}
+              className={classes.dropDownMenu}
+            >
+              <Icon className="fa fa-ellipsis-v" fontSize="small" />
+            </IconButton>
+            {/* </Button> */}
+            <Popper open={open} anchorEl={anchorRef.current} role={undefined} placement="bottom-end" transition disablePortal>
+              {({ TransitionProps, placement }) => (
+                <Grow
+                  {...TransitionProps}
+                  style={{
+                    background: 'white',
+                    transformOrigin: placement === 'bottom-end' ? 'left top' : 'right bottom',
+                  }}
+                >
+                  <Paper>
+                    <ClickAwayListener onClickAway={handleClose}>
+                      <MenuList
+                        autoFocusItem={open}
+                        id="composition-menu"
+                        aria-labelledby="composition-button"
+                        onKeyDown={handleListKeyDown}
+                      >
+                        <ESMenuItem onClick={isAuthenticated ? handleReportOpen : goToLogin}>{t('tournament.report')}</ESMenuItem>
+                      </MenuList>
+                    </ClickAwayListener>
+                  </Paper>
+                </Grow>
+              )}
+            </Popper>
           </Box>
         </Box>
       )}
@@ -293,7 +384,7 @@ const useStyles = makeStyles((theme) => ({
   dropDownMenu: {
     position: 'relative',
     display: 'inline-block',
-    paddingRight: 30,
+    marginRight: 24,
   },
   dropDownContent: {
     overflow: 'hidden',
