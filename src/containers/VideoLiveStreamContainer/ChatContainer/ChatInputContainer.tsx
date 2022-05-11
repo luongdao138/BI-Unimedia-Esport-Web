@@ -9,6 +9,11 @@ import { sanitizeMess } from '@containers/VideoLiveStreamContainer/ChatContainer
 import EsFastChatInput from '@containers/VideoLiveStreamContainer/ChatContainer/FastChatInput'
 import { useRotateScreen } from '@utils/hooks/useRotateScreen'
 // import TipChatDialog from './TipChatDialog'
+import { useAppSelector } from '@store/hooks'
+import { getIsAuthenticated } from '@store/auth/selectors'
+import { useRouter } from 'next/router'
+import { ESRoutes } from '@constants/route.constants'
+import { useContextualRouting } from 'next-use-contextual-routing'
 
 type MessageValidationType = {
   message: string
@@ -45,6 +50,9 @@ const ChatInputContainer: React.FC<ChatInputProps> = ({
   const { isLandscape } = useRotateScreen()
 
   const [resetValue, setResetValue] = useState<boolean>(false)
+  const isAuthenticated = useAppSelector(getIsAuthenticated)
+  const { makeContextualHref } = useContextualRouting()
+  const router = useRouter()
 
   // console.log('Chat input container rerender')
   // const [visible, setVisible] = useState<boolean>(false)
@@ -66,6 +74,10 @@ const ChatInputContainer: React.FC<ChatInputProps> = ({
     //   return
     // }
     // console.log('Submit chat')
+    if (!isAuthenticated) {
+      router.push(makeContextualHref({ pathName: ESRoutes.LOGIN }), ESRoutes.LOGIN, { shallow: true })
+    }
+
     if (valueRef.current) {
       await setFieldValue('message', valueRef.current)
       if (valueRef.current.length <= 50) {
@@ -77,7 +89,7 @@ const ChatInputContainer: React.FC<ChatInputProps> = ({
       setResetValue((prev) => !prev)
       handleSubmit()
     }
-  }, [])
+  }, [isAuthenticated])
 
   const resetErrorOnChange = useCallback(() => {
     if (errors.message) {
@@ -105,11 +117,14 @@ const ChatInputContainer: React.FC<ChatInputProps> = ({
     }
   }, [errors.message])
 
-  const handlePressEnter = useCallback((event: any) => {
-    if (event.key === 'Enter') {
-      submitForm()
-    }
-  }, [])
+  const handlePressEnter = useCallback(
+    (event: any) => {
+      if (event.key === 'Enter') {
+        submitForm()
+      }
+    },
+    [isAuthenticated]
+  )
 
   const handleFocus = useCallback(() => {
     handleChatInputOnFocus()
