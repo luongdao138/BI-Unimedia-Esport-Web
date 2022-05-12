@@ -211,7 +211,9 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
     }
 
     const handleChangeSpeed = (item, index) => {
-      videoRef.current.playbackRate = parseFloat(index === 1 ? 1.0 : item)
+      videoRef.current.playbackRate = !isMobile
+        ? parseFloat(index === 1 ? 1.0 : item)
+        : parseFloat(item === t('videos_top_tab.standard') ? 1.0 : item)
       setSpeed(item)
 
       closeSettingPanel()
