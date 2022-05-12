@@ -1445,7 +1445,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     }, [])
 
     const checkAddMessage = (local_message: any) => {
-      const isPremiumMessage = isPremiumChat(local_message, false)
+      const isPremiumMessage = local_message.is_premium
       return activeSubTab !== SUB_TABS.MESS.TIP || (isPremiumMessage && activeSubTab === SUB_TABS.MESS.TIP)
     }
 
