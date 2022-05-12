@@ -335,7 +335,7 @@ const useStyles = makeStyles((theme) => ({
     padding: '13px 8px 13px',
     background: '#161616',
     borderRadius: '8px',
-    filter: `drop-shadow(0px 0px 8px ${Colors.black_opacity[80]})`,
+    boxShadow: `0px 0px 8px ${Colors.black_opacity[80]}`,
   },
   stepInfo: {
     textAlign: 'right',

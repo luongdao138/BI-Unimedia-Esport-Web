@@ -68,8 +68,9 @@ const TabSelectContainer: React.FC<TabSelectProps> = ({ sideChatContainer, infoT
   // const [isRankingTab, setRankingTab] = useState(false)
 
   // useEffect(() => {
-  //   console.log('🚀 ~ activeSelectTab--111', activeSelectTab)
-  // }, [activeSelectTab])
+  //   setActiveTab(VIDEO_TABS.CHAT)
+  //   setActiveSubTab(SUB_TABS.MESS.ALL)
+  // }, [])
 
   const getContent = () => {
     switch (activeTab) {

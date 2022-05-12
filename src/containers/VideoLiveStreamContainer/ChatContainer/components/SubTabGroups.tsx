@@ -5,14 +5,13 @@ import i18n from '@locales/i18n'
 import React, { useEffect, useRef, useState } from 'react'
 
 interface Props {
-  successGetListMessTip: boolean
-  isSwitchingSubTabRef: any
-  successGetListMess: boolean
+  prevMessSubTabRef: any
+  needLoadMessRef: any
 }
 
-const SubTabGroups: React.FC<Props> = ({ isSwitchingSubTabRef }) => {
+const SubTabGroups: React.FC<Props> = ({prevMessSubTabRef, needLoadMessRef}) => {
   const { setActiveSubTab } = useVideoTabContext()
-  const [value, setValue] = useState(SUB_TABS.MESS.ALL)
+  const [value, setValue] = useState(prevMessSubTabRef.current)
   const isFirstRun = useRef(true)
 
   useEffect(() => {
@@ -22,8 +21,10 @@ const SubTabGroups: React.FC<Props> = ({ isSwitchingSubTabRef }) => {
     }
 
     const timeoutId = setTimeout(() => {
-      isSwitchingSubTabRef.current = value === SUB_TABS.MESS.TIP
+      // isSwitchingSubTabRef.current = value === SUB_TABS.MESS.TIP
       setActiveSubTab(value)
+      prevMessSubTabRef.current = value;
+      needLoadMessRef.current = true;
     }, 500)
 
     return () => {
@@ -46,9 +47,9 @@ const SubTabGroups: React.FC<Props> = ({ isSwitchingSubTabRef }) => {
       value={value}
       onClick={(v) => {
         // if (successGetListMessTip && successGetListMess) {
-        if (isSwitchingSubTabRef) {
-          isSwitchingSubTabRef.current = v === SUB_TABS.MESS.TIP
-        }
+        // if (isSwitchingSubTabRef) {
+        //   isSwitchingSubTabRef.current = v === SUB_TABS.MESS.TIP
+        // }
         setValue(v)
         // }
       }}
