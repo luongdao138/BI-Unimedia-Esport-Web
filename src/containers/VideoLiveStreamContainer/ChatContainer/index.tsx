@@ -396,9 +396,11 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       }
       startSliceIndex = startSliceIndex > 0 ? startSliceIndex : 0
       console.log('🚀 ~ fetchMessTipWhenRewind ~ startSliceIndex', startSliceIndex)
+      console.log('🚀 ~ cacheMessTipRef.current--00', cacheMessTipRef.current)
       newMess = _.slice(cacheMessTipRef.current, startSliceIndex)
       console.log('🚀 ~ fetchMessTipWhenRewind ~ newMess', newMess)
       const filterMess = _.filter(newMess, (v) => v.video_time <= videoPlayedSecond.current)
+      console.log('🚀 ~ videoPlayedSecond.current', videoPlayedSecond.current)
       console.log('🚀 ~ fetchMessTipWhenRewind ~ filterMess', filterMess)
       // const transformDonateMessAsc = transformMessAsc.filter(
       //   (item) => +item.display_avatar_time >= videoPlayedSecond.current && item.is_premium && +item.point > 300
@@ -653,6 +655,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     const refOnCreateMess = useRef(null)
     const onCreateMess = (createdMessage: any) => {
       const canAddMess = checkAddMessage(createdMessage)
+      console.log('🚀 ~ onCreateMess ~ canAddMess', canAddMess)
       if (createdMessage?.video_id === key_video_id && videoType === STATUS_VIDEO.LIVE_STREAM) {
         const created_at = createdMessage?.createdAt ? moment(createdMessage?.createdAt).utc().format('YYYY-MM-DD HH:mm:ss') : null
         if (createdMessage?.is_premium) {
@@ -716,10 +719,13 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
             cacheDonateMessRef.current = [...cacheDonateMessRef.current, createdMessage]
             // setCacheDonateMess((messages) => [...messages, createdMessage])
           }
+          console.log('🚀 ~ onCreateMess ~ createdMessage--00', createdMessage)
           // save mess tip to cache
           if (createdMessage?.is_premium === true && canAddMess) {
+            console.log('🚀 ~ onCreateMess ~ createdMessage--11', createdMessage)
             // setCacheMessTip((messages) => [...messages, createdMessage])
             cacheMessTipRef.current = [...cacheMessTipRef.current, createdMessage]
+            console.log('🚀 ~ onCreateMess ~  cacheMessTipRef.current', cacheMessTipRef.current)
           }
         }
       }
