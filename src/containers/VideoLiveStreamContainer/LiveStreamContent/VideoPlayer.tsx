@@ -9,8 +9,7 @@ import { QualitiesType, STATUS_VIDEO } from '@services/videoTop.services'
 import useLiveStreamDetail from '../useLiveStreamDetail'
 import { Colors } from '@theme/colors'
 import React, { memo, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
-import ControlBarPlayer, { SettingPanelState } from './ControlBar'
-import SeekBar from './ControlComponent/SeekBar'
+import { SettingPanelState } from './ControlBar'
 // import { useTranslation } from 'react-i18next'
 
 import useDetailVideo from '../useDetailVideo'
@@ -23,6 +22,8 @@ import usePictureInPicture from '../usePictureInPicture'
 import { useRouter } from 'next/router'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
 import _ from 'lodash'
+import { useVideoPlayerContext } from '@containers/VideoLiveStreamContainer/VideoContext/VideoPlayerContext'
+import UtilityArea from './UtilityArea'
 
 declare global {
   interface Document {
@@ -68,6 +69,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   qualities,
 }) => {
   const { setVideoRefInfo } = useContext(VideoContext)
+  const { isStreaming, setIsStreaming, state, setState } = useVideoPlayerContext()
   // const checkStatusVideo = 1
   const refControlBar = useRef<any>(null)
   // check condition display setting panel to display control bar
@@ -82,18 +84,17 @@ const VideoPlayer: React.FC<PlayerProps> = ({
 
   const { t } = useTranslation('common')
   const [autoPlay, setAutoPlay] = useState(true)
-  const [isStreaming, setIsStreaming] = useState(true)
   // const reactPlayerRef = useRef(null)
   const playerContainerRef = useRef(null)
   const [isLive, setIsLive] = useState(null)
 
   //As of Chrome 66, videos must be muted in order to play automatically
-  const [state, setState] = useState({
-    playing: true,
-    muted: true,
-    volume: 0,
-    ended: false,
-  })
+  // const [state, setState] = useState({
+  //   playing: true,
+  //   muted: true,
+  //   volume: 0,
+  //   ended: false,
+  // })
 
   const [visible, setVisible] = useState({
     loading: true,
@@ -869,44 +870,29 @@ const VideoPlayer: React.FC<PlayerProps> = ({
             className={`${classes.processControl} ${isOpenSettingPanel && classes.showControl}`}
             style={isMobile || iPhonePl || androidPl ? { display: isHoveredVideo ? 'block' : 'none', opacity: 1 } : {}}
           >
-            {videoType !== STATUS_VIDEO.LIVE_STREAM && (
-              <SeekBar
-                videoRef={videoEl}
-                changeStatusStreaming={(status) => {
-                  setIsStreaming(status)
-                }}
-                videoType={videoType}
-                isStreaming={isStreaming}
-                state={state}
-                onVideoEnd={onVideoEnd}
-                isStreamingEnd={isStreamingEnd}
-              />
-            )}
-            <div className={classes.controlOut}>
-              <ControlBarPlayer
-                ref={refControlBar}
-                videoRef={videoEl}
-                onPlayPause={handlePlayPause}
-                playing={playing}
-                muted={muted}
-                handleFullScreen={toggleFullScreen1}
-                onMute={handleMute}
-                onChangeVol={handleChangeVol}
-                onChangeVolDrag={handleChangeVolDrag}
-                volume={volume}
-                isLive={isLive}
-                videoStatus={videoType}
-                onReloadTime={handleReloadTime}
-                handleOnRestart={handleOnRestart}
-                resultResolution={(index, flag, item) => changeResolution(index, flag, item)}
-                qualities={qualities}
-                videoType={videoType}
-                isStreaming={isStreaming}
-                state={state}
-                onVideoEnd={onVideoEnd}
-                isStreamingEnd={isStreamingEnd}
-              />
-            </div>
+            <UtilityArea
+              ref={refControlBar}
+              videoRef={videoEl}
+              onPlayPause={handlePlayPause}
+              playing={playing}
+              muted={muted}
+              handleFullScreen={toggleFullScreen1}
+              onMute={handleMute}
+              onChangeVol={handleChangeVol}
+              onChangeVolDrag={handleChangeVolDrag}
+              volume={volume}
+              isLive={isLive}
+              videoStatus={videoType}
+              onReloadTime={handleReloadTime}
+              handleOnRestart={handleOnRestart}
+              resultResolution={(index, flag, item) => changeResolution(index, flag, item)}
+              qualities={qualities}
+              videoType={videoType}
+              isStreaming={isStreaming}
+              state={state}
+              onVideoEnd={onVideoEnd}
+              isStreamingEnd={isStreamingEnd}
+            />
           </div>
         )}
         {/* previous and next only in mobile */}
@@ -1036,12 +1022,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   videoPlayer: {
     height: '100%',
   },
-  controlOut: {
-    // backgroundColor: 'rgba(0,0,0,0.3)',
-    display: 'flex',
-    justifyContent: 'space-between',
-    height: 40,
-  },
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   processControl: (props: { checkStatusVideo: number; isFull?: boolean; isShowNextPre?: boolean }) => {
     return {
@@ -1097,9 +1077,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   [theme.breakpoints.down('xs')]: {
     fontSizeLarge: {
       fontSize: '50px',
-    },
-    controlOut: {
-      height: 26,
     },
   },
   thumbBegin: {

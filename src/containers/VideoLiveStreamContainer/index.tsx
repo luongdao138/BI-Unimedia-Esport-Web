@@ -244,6 +244,7 @@ const VideoDetail: React.FC = () => {
 
     if (isNotStreamingVideo) {
       changeIsStreamingEnd(true)
+      onVideoEnd()
     }
     if (isScheduleVideo) {
       setVideoStatus(STATUS_VIDEO.SCHEDULE)
@@ -675,6 +676,7 @@ const VideoDetail: React.FC = () => {
 
   const onVideoEnd = () => {
     if (videoStatus !== STATUS_VIDEO.ARCHIVE) {
+      console.log('🚀 ~ onVideoEnd ~ videoStatus--11', videoStatus)
       setVideoStatus(STATUS_VIDEO.ARCHIVE)
       setIsArchived(true)
       changeIsStreamingEnd(false)
@@ -726,6 +728,7 @@ const VideoDetail: React.FC = () => {
         setReceiverRankInfo,
         isMobile,
         confirmDonatePointRef,
+        videoStatus,
       }}
     >
       <VideoTabContextProvider>
