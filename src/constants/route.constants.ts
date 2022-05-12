@@ -91,5 +91,4 @@ export const ESRoutes = {
   PAYMENT_INFO: '/payment_info',
   PAYMENT_INFO_DETAIL: '/payment_info/:id',
   ARCHIVE_DETAIL: '/archive_detail',
-  BACK_TO_TOP_TEST: '/back_to_top_test',
 }
