@@ -1180,8 +1180,10 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
 
     const handleSwitchMainTab = () => {
       if (!isFirstVisitPage) {
+        console.log('handleScrollToBottom')
+        _scrollToBottom(stateMessages.length)
         setBottom(true)
-        handleScrollToBottom()
+        // console.log('🚀 ~ useEffect ~ setBottom', 4444)
         if (isStreaming) switchTabRef.current = true
       }
     }
@@ -1233,7 +1235,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       console.log('prevMessSubTabRef.current - change sub tab: ', prevMessSubTabRef.current)
       console.log('needLoadMessRef.current: - change sub tab', needLoadMessRef.current)
 
-      if(needLoadMessRef.current) {
+      if (needLoadMessRef.current) {
         getMessWhenSwitchSubTab()
       }
     }, [activeSubTab])
@@ -1246,7 +1248,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         prevTokenRef.current = null
       }
       if (!isFirstVisitPage && activeTab === VIDEO_TABS.CHAT) {
-          if (!isMobile) handleSwitchMainTab()
+        if (!isMobile) handleSwitchMainTab()
       } else {
         // isSwitchingSubTabRef.current = false
       }
@@ -1610,6 +1612,8 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     }
 
     const handleScrollToBottom = useCallback(() => {
+      console.log('isBottom: ', isBottom)
+
       if (isBottom && !isGettingMess) {
         // if (isBottom) {
         _scrollToBottom(stateMessages.length)
@@ -1802,11 +1806,11 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         <Box>
           {isEnabledMessFilter && (
             <SubTabGroups
-            // isSwitchingSubTabRef={isSwitchingSubTabRef}
-            // successGetListMessTip={successGetListMessTip}
-            // successGetListMess={successGetListMess}
-            prevMessSubTabRef={prevMessSubTabRef}
-            needLoadMessRef={needLoadMessRef}
+              // isSwitchingSubTabRef={isSwitchingSubTabRef}
+              // successGetListMessTip={successGetListMessTip}
+              // successGetListMess={successGetListMess}
+              prevMessSubTabRef={prevMessSubTabRef}
+              needLoadMessRef={needLoadMessRef}
             />
           )}
           {/* {displayChatContent() ? chatContent() : userDoesNotHaveViewingTicketView()} */}
