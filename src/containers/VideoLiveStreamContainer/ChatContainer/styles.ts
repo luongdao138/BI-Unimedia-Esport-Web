@@ -5,13 +5,15 @@ import { Colors } from '@theme/colors'
 const useStyles = makeStyles((theme) => ({
   singleMessTab: {},
   messageTabs: {},
+  rankingContainer: {
+    height: '100%',
+    width: '100%',
+    overflow: 'auto',
+  },
   tabsContent: {
     width: '100%',
     // height: '100%',
-    paddingLeft: '16px',
-    paddingRight: '16px',
-    paddingTop: '10px',
-    paddingBottom: '2px',
+    padding: (props: ChatStyleProps) => (props.isRankingTab ? 0 : '10px 16px 2px 16px'),
     // flex: 1 1 0px;
     // overflow: auto;
   },
@@ -494,6 +496,7 @@ const useStyles = makeStyles((theme) => ({
     purchaseDialogContainer: {
       width: 318,
     },
+
     chatInputMobileContainer: {
       // position: 'absolute',
       // bottom: 120,

@@ -1,6 +1,6 @@
 import ESAvatar from '@components/Avatar'
 import TabsGroup from '@components/TabsGroup'
-import { SUB_TABS } from '@constants/common.constants'
+import { SUB_TABS, VIDEO_TABS } from '@constants/common.constants'
 import Rankings from '@containers/VideoLiveStreamContainer/Rankings'
 import RankingItem from '@containers/VideoLiveStreamContainer/Rankings/RankingItem'
 import RankingItemSelf from '@containers/VideoLiveStreamContainer/Rankings/RankingItemSelf'
@@ -14,13 +14,14 @@ import { useAppSelector } from '@store/hooks'
 
 import { useTranslation } from 'react-i18next'
 import { VideoContext } from '@containers/VideoLiveStreamContainer/VideoContext'
+import { useVideoTabContext } from '@containers/VideoLiveStreamContainer/VideoContext/VideTabContext'
 import _ from 'lodash'
 import { RankingsItem } from '@services/videoTop.services'
 import userProfileStore from '@store/userProfile'
 import { UserProfile } from '@services/user.service'
 import { useRotateScreen } from '@utils/hooks/useRotateScreen'
 
-type RankingTabProps = { type?: string; activeSubTab: number; setActiveSubTab: React.Dispatch<React.SetStateAction<number>> }
+type RankingTabProps = { type?: string }
 
 export enum RECEIPT_SEND_TABS {
   RECEIPT = 0,
@@ -33,7 +34,7 @@ export enum ROLE_USER {
 
 const LIMIT_RANK = 10
 
-const RankingTab: React.FC<RankingTabProps> = ({ activeSubTab, setActiveSubTab }) => {
+const RankingTab: React.FC<RankingTabProps> = () => {
   const { isEnabledRankFilter } = useCheckDisplayChat()
   const { rankingListMeta } = useDetailVideo()
   const { giverRankInfo, receiverRankInfo } = useContext(VideoContext)
@@ -47,19 +48,23 @@ const RankingTab: React.FC<RankingTabProps> = ({ activeSubTab, setActiveSubTab }
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down(769)) || /iPhone|iPad|iPod|Android/i.test(window.navigator.userAgent)
   const { isLandscape } = useRotateScreen()
-  const classes = useStyles({ isLandscape, isMobile })
+  const { activeTab, activeSubTab, setActiveSubTab } = useVideoTabContext()
+  const isRankingTab = activeTab === VIDEO_TABS.RANKING
+  const classes = useStyles({ isLandscape, isMobile, isRankingTab })
 
   const mineGiveInfo: RankingsItem = _.find(giverRankInfo, (v) => {
     return user_uuid && v?.uuid === user_uuid
   })
 
   useEffect(() => {
-    if (activeSubTab !== SUB_TABS.RANKING.RECEIPT && activeSubTab !== SUB_TABS.RANKING.SEND) {
-      // set default tab is receipt (common) if rank receipt is displayed, else set to ranking send
-      const newValue = isDisplayedRankingReceipt ? SUB_TABS.RANKING.RECEIPT : SUB_TABS.RANKING.SEND
-      setActiveSubTab(newValue)
+    if (activeTab === VIDEO_TABS.RANKING) {
+      if (activeSubTab !== SUB_TABS.RANKING.RECEIPT && activeSubTab !== SUB_TABS.RANKING.SEND) {
+        // set default tab is receipt (common) if rank receipt is displayed, else set to ranking send
+        const newValue = isDisplayedRankingReceipt ? SUB_TABS.RANKING.RECEIPT : SUB_TABS.RANKING.SEND
+        setActiveSubTab(newValue)
+      }
     }
-  }, [])
+  }, [activeTab])
 
   const giver: Array<RankingsItem> = _.slice(giverRankInfo, 0, LIMIT_RANK)
   const isUserInTopRank = _.findIndex(giver, (v) => v?.uuid === user_uuid) !== -1
@@ -168,6 +173,7 @@ const RankingTab: React.FC<RankingTabProps> = ({ activeSubTab, setActiveSubTab }
 interface StyleProps {
   isLandscape: boolean
   isMobile: boolean
+  isRankingTab: boolean
 }
 
 const useStyles = makeStyles((theme) => ({

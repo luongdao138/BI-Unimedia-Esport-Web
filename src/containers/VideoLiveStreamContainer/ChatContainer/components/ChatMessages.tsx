@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { memo, useEffect } from 'react'
 import { useMediaQuery, useTheme } from '@material-ui/core'
 import { AutoSizer, CellMeasurer, List, CellMeasurerCache } from 'react-virtualized'
 import useStyles from '@containers/VideoLiveStreamContainer/ChatContainer/styles'
@@ -15,7 +15,7 @@ interface Props {
   messagesEndRef: React.MutableRefObject<any>
   stateMessages: any[]
   isStreamer?: number
-  isTipTab: boolean
+  // isTipTab: boolean
   videoType: number
   deleteMsg: (message: any) => void
   resendMess: (message: any) => void
@@ -39,7 +39,7 @@ const ChatMessages: React.FC<Props> = ({
   // _onScroll,
   isStreamer,
   videoType,
-  isTipTab,
+  // isTipTab,
   deleteMsg,
   resendMess,
   reDeleteMess,
@@ -121,8 +121,6 @@ const ChatMessages: React.FC<Props> = ({
     // console.log('🚀 ~ useEffect ~ cache---000', cache)
   }, [stateMessages])
 
-  // console.log('-------------- Chat component rerender message list-----------------')
-
   const rowRenderer = ({ index, key, style, parent }) => {
     const msg = stateMessages[index]
     const getContent = (measure: any, msg: any) => {
@@ -140,7 +138,7 @@ const ChatMessages: React.FC<Props> = ({
             measure={measure}
             contentRect={contentRect}
           />
-        ) : isTipTab ? null : (
+        ) :  (
           // no display normal mess on tab tip
           <ChatTextMessage
             key={index}
@@ -210,4 +208,4 @@ const ChatMessages: React.FC<Props> = ({
   )
 }
 
-export default ChatMessages
+export default memo(ChatMessages)

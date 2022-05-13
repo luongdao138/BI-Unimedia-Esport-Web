@@ -69,6 +69,7 @@ const APIt: any = useGraphqlAPI()
 
 export type ChatStyleProps = {
   isLandscape: boolean
+  isRankingTab?: boolean
 }
 
 export type ChatContainerProps = {
@@ -276,9 +277,9 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     // console.log('🚀 ~ isTokenBroken', isTokenBroken)
     // const [videoTimeIsRewinding, setVideoTimeIsRewinding] = useState(0)
 
-    const isSwitchingTabRef = useRef(false)
-    console.log('🚀 ~ isSwitchingTabRef', isSwitchingTabRef)
-    const isSwitchingSubTabRef = useRef(false)
+    // const isSwitchingTabRef = useRef(false)
+    // console.log('🚀 ~ isSwitchingTabRef', isSwitchingTabRef)
+    // const isSwitchingSubTabRef = useRef(false)
     const { activeSubTab, activeTab, setActiveTab, setActiveSubTab } = useVideoTabContext()
 
     const { selectors } = userProfileStore
@@ -332,6 +333,8 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     const { isEnabledGift, isEnabledMessFilter, isDisplayedRankingTab } = useCheckDisplayChat()
 
     const isTipTab = activeSubTab === SUB_TABS.MESS.TIP
+    const needLoadMessRef = useRef<boolean>(true)
+    const prevMessSubTabRef = useRef<number>(SUB_TABS.MESS.ALL)
 
     // const { streamingSecond, playedSecond, isViewingStream, liveStreamInfo } = useDetailVideo()
     // const userResult = {streamer: 1}
@@ -349,7 +352,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     // console.log('🚀 ~ successGetListMessTip', successGetListMessTip)
 
     const { height: chatInputHeight } = useRect(chatMobileContainerRef)
-    const classes = useStyles({ isLandscape })
+    const classes = useStyles({ isLandscape, isRankingTab: activeTab === VIDEO_TABS.RANKING })
     console.log({ chatInputHeight })
 
     console.log('------------------- Chat component rerender ----------------------')
@@ -439,7 +442,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     }
 
     const { fetchMessTipInitial, fetchNextMess, fetchPrevMessWhenRewind, fetchMessInitialStreaming, fetchPrevMess } = useChatHelpers({
-      isSwitchingTabRef,
+      // isSwitchingTabRef,
       key_video_id,
       initTipMessRef,
       prevRewindMessRef,
@@ -455,7 +458,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       cacheDonateMessRef,
       cacheMessRef,
       nextTimeRef,
-      isSwitchingSubTabRef,
+      // isSwitchingSubTabRef,
       switchTabRef,
       rewindMessRef,
       //
@@ -1175,14 +1178,22 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       }
     }
 
-    const getMessWhenSwitchTab = () => {
+    const handleSwitchMainTab = () => {
+      if (!isFirstVisitPage) {
+        setBottom(true)
+        handleScrollToBottom()
+        if (isStreaming) switchTabRef.current = true
+      }
+    }
+
+    const getMessWhenSwitchSubTab = () => {
       if (!isFirstVisitPage) {
         switch (activeSubTab) {
           case SUB_TABS.MESS.TIP:
             console.log('Switch to sub tab chat mess')
-            if (!isSwitchingSubTabRef.current) {
-              return
-            }
+            // if (!isSwitchingSubTabRef.current) {
+            //   return
+            // }
             console.log('Switch to sub tab chat mess fire')
 
             setBottom(true)
@@ -1194,9 +1205,9 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
             console.log('Switch to sub tab chat all')
             setBottom(true)
             resetMessWhenSwitchTab()
-            if (isSwitchingSubTabRef.current) {
-              return
-            }
+            // if (isSwitchingSubTabRef.current) {
+            //   return
+            // }
             console.log('Switch to sub tab chat all fire')
             if (isStreaming) {
               // console.log('🚀 ~ useEffect ~ isStreaming', isStreaming)
@@ -1215,46 +1226,37 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     }
 
     useEffect(() => {
-      console.log('🚀 ~ onCreateMess ~ activeSubTab', activeSubTab)
-      console.log('🚀 ~ onCreateMess ~ activeTab', activeTab)
-      console.log('🚀 ~ onCreateMess ~ firstRender--000', isFirstVisitPage)
       if (isFirstVisitPage) {
         setIsFirstVisitPage(false)
       }
-      isSwitchingSubTabRef.current = activeSubTab === SUB_TABS.MESS.TIP
-      // if(!isSwitchingSubTabRef.current) {
-      console.log('Switch sub tab')
-      getMessWhenSwitchTab()
-      // }
+
+      console.log('prevMessSubTabRef.current - change sub tab: ', prevMessSubTabRef.current)
+      console.log('needLoadMessRef.current: - change sub tab', needLoadMessRef.current)
+
+      if(needLoadMessRef.current) {
+        getMessWhenSwitchSubTab()
+      }
     }, [activeSubTab])
 
     useEffect(() => {
+      console.log('prevMessSubTabRef.current: - change tab', prevMessSubTabRef.current)
+      console.log('needLoadMessRef.current: - change tab', needLoadMessRef.current)
       // reset prev token when switch tab
       if (activeTab === VIDEO_TABS.RANKING) {
         prevTokenRef.current = null
       }
       if (!isFirstVisitPage && activeTab === VIDEO_TABS.CHAT) {
-        if (activeSubTab === SUB_TABS.MESS.ALL || activeSubTab === SUB_TABS.MESS.TIP) {
-          console.log('Change tab fire chat')
-          if (!isMobile) getMessWhenSwitchTab()
-        } else {
-          console.log('Change tab fire not chat')
-          setActiveSubTab(SUB_TABS.MESS.ALL)
-        }
+          if (!isMobile) handleSwitchMainTab()
       } else {
-        isSwitchingSubTabRef.current = false
+        // isSwitchingSubTabRef.current = false
       }
+
       // get list ranking if has not get
       if (activeTab === VIDEO_TABS.RANKING && !rankingListMeta.pending && !rankingListMeta.loaded) {
         console.log('Change tab fire ranking')
         fetchDonateRanking({ video_id: detailVideoResult.uuid })
       }
     }, [activeTab])
-
-    useEffect(() => {
-      // TODO
-      // fetchMessInitialStreaming()
-    }, [])
 
     // get all mess tip initial and render icon tip mess separate with all mess
     const handleGetMessTipInitial = () => {
@@ -1678,7 +1680,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
           setBottom={setBottom}
           setScrolling={setScrolling}
           isStreamer={userResult.streamer}
-          isTipTab={isTipTab}
+          // isTipTab={isTipTab}
           videoType={videoType}
           deleteMsg={deleteMsg}
           reDeleteMess={reDeleteMess}
@@ -1800,9 +1802,11 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         <Box>
           {isEnabledMessFilter && (
             <SubTabGroups
-              isSwitchingSubTabRef={isSwitchingSubTabRef}
-              successGetListMessTip={successGetListMessTip}
-              successGetListMess={successGetListMess}
+            // isSwitchingSubTabRef={isSwitchingSubTabRef}
+            // successGetListMessTip={successGetListMessTip}
+            // successGetListMess={successGetListMess}
+            prevMessSubTabRef={prevMessSubTabRef}
+            needLoadMessRef={needLoadMessRef}
             />
           )}
           {/* {displayChatContent() ? chatContent() : userDoesNotHaveViewingTicketView()} */}
@@ -1829,8 +1833,8 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     const handleChangeTab = useCallback((v) => {
       console.log('🚀 ~ handleChangeTab ~ v', v)
 
-      isSwitchingTabRef.current = v === VIDEO_TABS.RANKING ? true : false
-      isSwitchingSubTabRef.current = v === VIDEO_TABS.RANKING ? true : false
+      // isSwitchingTabRef.current = v === VIDEO_TABS.RANKING ? true : false
+      // isSwitchingSubTabRef.current = v === VIDEO_TABS.RANKING ? true : false
       setActiveTab(v)
     }, [])
 
@@ -1840,18 +1844,21 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         style={{ paddingBottom: isStreaming && isLandscape && activeTab === VIDEO_TABS.RANKING ? '56px' : 0 }}
       >
         <TabsContainer
-          isSwitchingSubTabRef={isSwitchingSubTabRef}
-          isSwitchingTabRef={isSwitchingTabRef}
+          // isSwitchingSubTabRef={isSwitchingSubTabRef}
+          // isSwitchingTabRef={isSwitchingTabRef}
+          needLoadMessRef={needLoadMessRef}
+          prevMessSubTabRef={prevMessSubTabRef}
           onChange={handleChangeTab}
           isDisplayedRankingTab={isDisplayedRankingTab}
         />
-        {activeTab === VIDEO_TABS.CHAT && (
-          <Box className={classes.tabsContent} style={{ display: isMobile && activeTab === VIDEO_TABS.CHAT ? 'none' : 'block' }}>
-            {getTabsContent}
-          </Box>
-        )}
+        <Box className={classes.tabsContent} style={{ display: isMobile && activeTab === VIDEO_TABS.CHAT ? 'none' : 'block' }}>
+          {getTabsContent}
+          {/* <DemoChatMessages/> */}
+        </Box>
+        <Box className={classes.rankingContainer} style={{ display: activeTab === VIDEO_TABS.RANKING ? 'block' : 'none' }}>
+          <RankingTab />
+        </Box>
 
-        {activeTab === VIDEO_TABS.RANKING && <RankingTab activeSubTab={activeSubTab} setActiveSubTab={setActiveSubTab} />}
         {renderContent()}
       </Box>
     )
