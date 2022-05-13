@@ -9,7 +9,7 @@ interface Props {
   needLoadMessRef: any
 }
 
-const SubTabGroups: React.FC<Props> = ({prevMessSubTabRef, needLoadMessRef}) => {
+const SubTabGroups: React.FC<Props> = ({ prevMessSubTabRef, needLoadMessRef }) => {
   const { setActiveSubTab } = useVideoTabContext()
   const [value, setValue] = useState(prevMessSubTabRef.current)
   const isFirstRun = useRef(true)
@@ -23,8 +23,8 @@ const SubTabGroups: React.FC<Props> = ({prevMessSubTabRef, needLoadMessRef}) => 
     const timeoutId = setTimeout(() => {
       // isSwitchingSubTabRef.current = value === SUB_TABS.MESS.TIP
       setActiveSubTab(value)
-      prevMessSubTabRef.current = value;
-      needLoadMessRef.current = true;
+      prevMessSubTabRef.current = value
+      needLoadMessRef.current = true
     }, 500)
 
     return () => {
