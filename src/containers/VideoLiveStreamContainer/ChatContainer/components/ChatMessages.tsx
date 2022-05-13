@@ -138,7 +138,7 @@ const ChatMessages: React.FC<Props> = ({
             measure={measure}
             contentRect={contentRect}
           />
-        ) :  (
+        ) : (
           // no display normal mess on tab tip
           <ChatTextMessage
             key={index}

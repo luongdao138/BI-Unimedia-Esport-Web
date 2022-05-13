@@ -1450,6 +1450,11 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
 
     const checkAddMessage = (local_message: any) => {
       const isPremiumMessage = local_message.is_premium
+
+      // current at tip messs sub tab and add normal mess => not add
+      if (!isPremiumMessage && prevMessSubTabRef.current === SUB_TABS.MESS.TIP) {
+        return false
+      }
       return activeSubTab !== SUB_TABS.MESS.TIP || (isPremiumMessage && activeSubTab === SUB_TABS.MESS.TIP)
     }
 
