@@ -28,6 +28,7 @@ interface Props {
   isStreaming: boolean
   isStreamingEnd: React.MutableRefObject<boolean>
   onVideoEnd?: () => void
+  changeRef: any
   state: {
     playing: boolean
     muted: boolean
@@ -41,7 +42,7 @@ interface Props {
 timePlayed: time by 100*/
 }
 
-const UtilityArea: React.FC<Props & SliderProps> = ({ ref, isStreaming, isStreamingEnd, state, videoType, ...rest }) => {
+const UtilityArea: React.FC<Props & SliderProps> = ({ ref, isStreaming, isStreamingEnd, state, videoType, changeRef, ...rest }) => {
   const classes = useStyles()
   const { durationPlayer, playedSeconds } = useVideoPlayer()
   const commonProps = { durationPlayer, playedSeconds }
@@ -56,6 +57,7 @@ const UtilityArea: React.FC<Props & SliderProps> = ({ ref, isStreaming, isStream
           isStreamingEnd={isStreamingEnd}
           state={state}
           videoType={videoType}
+          changeRef={changeRef}
           {...rest}
           {...commonProps}
         />

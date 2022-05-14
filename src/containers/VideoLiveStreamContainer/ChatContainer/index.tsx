@@ -1037,6 +1037,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       if (!isMobileParent) {
         setActiveTab(VIDEO_TABS.CHAT)
         setActiveSubTab(SUB_TABS.MESS.ALL)
+        prevMessSubTabRef.current = SUB_TABS.MESS.ALL
       }
     }
     refHandleResetTabs.current = handleResetTabs
@@ -1285,9 +1286,9 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       if (isStreaming) {
         handleGetMessTipInitial()
         // console.log('🚀 ~ useEffect ~ isStreaming', isStreaming)
-        if (activeSubTab === SUB_TABS.MESS.ALL) {
+        if (prevMessSubTabRef.current === SUB_TABS.MESS.ALL) {
           fetchMessInitialStreaming()
-        } else if (activeSubTab === SUB_TABS.MESS.TIP) {
+        } else if (prevMessSubTabRef.current === SUB_TABS.MESS.TIP) {
           // handleGetMessTip()
         }
       } else if (!isStreaming && videoType === STATUS_VIDEO.ARCHIVE) {
@@ -1301,7 +1302,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         }
 
         handleGetMessTipInitial()
-        if (activeSubTab === SUB_TABS.MESS.ALL) {
+        if (prevMessSubTabRef.current === SUB_TABS.MESS.ALL) {
           // console.log('🚀 ~ useEffect ~ isResizedScreen', isResizedScreen)
           // fetch prev and rewind mess when playing video and re-mount chat container
           if (+currentTime > 0) {
@@ -1309,7 +1310,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
           } else {
             fetchNextMess(GET_MESS_TYPE.FETCH_ARCHIVE_INITIAL, currentTime)
           }
-        } else if (activeSubTab === SUB_TABS.MESS.TIP) {
+        } else if (prevMessSubTabRef.current === SUB_TABS.MESS.TIP) {
           // handleGetMessTip()
         }
       }
@@ -1456,7 +1457,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       if (!isPremiumMessage && prevMessSubTabRef.current === SUB_TABS.MESS.TIP) {
         return false
       }
-      return activeSubTab !== SUB_TABS.MESS.TIP || (isPremiumMessage && activeSubTab === SUB_TABS.MESS.TIP)
+      return prevMessSubTabRef.current !== SUB_TABS.MESS.TIP || (isPremiumMessage && prevMessSubTabRef.current === SUB_TABS.MESS.TIP)
     }
 
     const handleCreateMess = (local_message: any, input: any, point: any, resetMess: any) => {
@@ -1834,7 +1835,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         default:
           return ''
       }
-    }, [activeTab, isEnabledMessFilter, activeSubTab, successGetListMessTip, successGetListMess])
+    }, [activeTab, isEnabledMessFilter])
 
     const renderContent = () => {
       return displayChatContent() ? chatContent() : userDoesNotHaveViewingTicketView()
