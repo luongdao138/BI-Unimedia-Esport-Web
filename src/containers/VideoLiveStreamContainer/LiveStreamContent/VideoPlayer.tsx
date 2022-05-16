@@ -114,7 +114,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   const androidPl = /Android/i.test(window.navigator.userAgent)
   const iPhonePl = /iPhone/i.test(window.navigator.userAgent)
 
-  const { videoWatchTimeReportRequest, getMiniPlayerState, changeMiniPlayerState } = useLiveStreamDetail()
+  const { videoWatchTimeReportRequest, getMiniPlayerState } = useLiveStreamDetail()
   const isStreamingEnd = useRef(liveStreamInfo.is_streaming_end)
   const { isHoveredVideo } = liveStreamInfo
   const handlePauseAndSeekVideo = () => {
@@ -289,7 +289,6 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       handleChangeVol(undefined, prevVolumeRef.current || 1)
     }
   }
-
   // handle keyboard  event
   useEffect(() => {
     const handleVideoKeyboardEvent = (e: KeyboardEvent) => {
@@ -336,10 +335,6 @@ const VideoPlayer: React.FC<PlayerProps> = ({
             isTheateModeRef.current = !isTheateModeRef.current
             changeVideoViewMode(isTheateModeRef.current)
           }
-          break
-        case 'i':
-          isPiPModeRef.current = !isPiPModeRef.current
-          changeMiniPlayerState(isPiPModeRef.current)
           break
         case 'ArrowUp':
           if (enableChangeVolumeRef.current) {
@@ -785,11 +780,12 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   }, [isFull])
 
   const toggleFullScreen1 = () => {
+    console.log('toggle full screen:', document['webkitCurrentFullScreenElement'])
     if (iPhonePl || androidPl) {
       isFullScreenModeRef.current = !isFullScreenModeRef.current
       setIsFull(!isFull)
     } else {
-      if (!document.fullscreenElement) {
+      if (!document['webkitCurrentFullScreenElement']) {
         isFullScreenModeRef.current = true
         if (playerContainerRef.current.requestFullscreen) {
           playerContainerRef.current.requestFullscreen()
@@ -801,9 +797,13 @@ const VideoPlayer: React.FC<PlayerProps> = ({
           playerContainerRef.current.msRequestFullscreen()
         }
       } else {
-        if (document.exitFullscreen) {
+        if (document.exitFullscreen || document['webkitExitFullscreen']) {
           isFullScreenModeRef.current = false
-          document.exitFullscreen()
+          if (document.exitFullscreen) {
+            document.exitFullscreen()
+          } else {
+            document['webkitExitFullscreen']()
+          }
         }
       }
     }
