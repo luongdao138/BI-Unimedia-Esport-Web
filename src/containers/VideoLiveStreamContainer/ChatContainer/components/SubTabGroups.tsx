@@ -7,9 +7,10 @@ import React, { useEffect, useRef, useState } from 'react'
 interface Props {
   prevMessSubTabRef: any
   needLoadMessRef: any
+  needLoadMoreRef: any
 }
 
-const SubTabGroups: React.FC<Props> = ({ prevMessSubTabRef, needLoadMessRef }) => {
+const SubTabGroups: React.FC<Props> = ({ prevMessSubTabRef, needLoadMoreRef }) => {
   const { setActiveSubTab } = useVideoTabContext()
   const [value, setValue] = useState(prevMessSubTabRef.current)
   const isFirstRun = useRef(true)
@@ -24,7 +25,8 @@ const SubTabGroups: React.FC<Props> = ({ prevMessSubTabRef, needLoadMessRef }) =
       // isSwitchingSubTabRef.current = value === SUB_TABS.MESS.TIP
       setActiveSubTab(value)
       prevMessSubTabRef.current = value
-      needLoadMessRef.current = true
+      // console.log('🚀 ~ timeoutId ~ prevMessSubTabRef.current', prevMessSubTabRef.current)
+      needLoadMoreRef.current = false
     }, 500)
 
     return () => {
