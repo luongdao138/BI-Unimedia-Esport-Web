@@ -38,6 +38,7 @@ interface ControlProps {
   isStreaming: boolean
   isStreamingEnd: React.MutableRefObject<boolean>
   onVideoEnd?: () => void
+  changeRef: any
   state: {
     playing: boolean
     muted: boolean
@@ -81,6 +82,7 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
       isStreamingEnd,
       playedSeconds,
       durationPlayer,
+      changeRef,
     },
     ref
   ) => {
@@ -272,17 +274,26 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
               offset={{ top: -5, left: 0 }}
             />
             {!isMobile && (
-              <div className={classes.slider}>
-                <Slider
-                  max={1}
-                  min={0}
-                  value={volume}
-                  step={0.1}
-                  className={classes.volumeBar}
-                  onChange={onChangeVol}
-                  onChangeCommitted={onChangeVolDrag}
-                />
-              </div>
+              <ClickAwayListener
+                onClickAway={() => {
+                  changeRef.current = 'seek'
+                }}
+              >
+                <div className={classes.slider}>
+                  <Slider
+                    max={1}
+                    min={0}
+                    value={volume}
+                    step={0.1}
+                    className={classes.volumeBar}
+                    onChange={onChangeVol}
+                    onChangeCommitted={onChangeVolDrag}
+                    onClick={() => {
+                      changeRef.current = 'volume'
+                    }}
+                  />
+                </div>
+              </ClickAwayListener>
             )}
           </Box>
 

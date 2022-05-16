@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { OutlinedInput, Select, withStyles, IconButton, Icon } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import { makeStyles, createStyles } from '@material-ui/core/styles'
@@ -9,6 +9,7 @@ import useSearch from '@containers/Search/useSearch'
 import router from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
 import { searchTypes } from '@constants/common.constants'
+import DeboucedSearchInput from '@containers/SearchArea/DeboucedSearchInput'
 
 interface SearchAreaProps {
   selectData: dataItem[]
@@ -29,20 +30,20 @@ interface returnItem {
 
 const SearchArea: React.FC<SearchAreaProps> = (props) => {
   const { t } = useTranslation(['common'])
-  const { searchType, searchKeyword, setSearch } = useSearch()
+  const { searchType, setSearch } = useSearch()
   const { selectData, onSearch } = props
   const [hasValue, setHasvalue] = useState<boolean>(false)
   const [option, setOption] = useState<number>(1)
-  const [value, setValue] = useState<string>('')
+  // const [value, setValue] = useState<string>('')
+  const searchTermRef = useRef<string>('')
+  const inputRef = useRef<HTMLInputElement>(null)
   const classes = useStyles()
 
-  useEffect(() => {
-    if (!_.isEmpty(value)) {
-      setHasvalue(true)
-    } else {
-      setHasvalue(false)
-    }
-  }, [value])
+  const [clearFlag, setClearFlag] = useState<boolean>(false)
+
+  const checkHaveValue = useCallback((value: string) => {
+    setHasvalue(!_.isEmpty(value))
+  }, [])
 
   // [CW] Determined if current route is video detail screen
   const isInVideoDetailPage = () => {
@@ -62,16 +63,13 @@ const SearchArea: React.FC<SearchAreaProps> = (props) => {
     } else {
       setOption(searchType)
     }
-    setValue(searchKeyword)
-  }, [searchType, searchKeyword])
-
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(e.target.value)
-  }
+  }, [searchType])
 
   const onClear = () => {
     setHasvalue(false)
-    setValue('')
+    inputRef?.current.focus()
+    setClearFlag((prev) => !prev)
+    // setValue('')
     setSearch({ type: searchType, keyword: '' })
   }
 
@@ -82,7 +80,7 @@ const SearchArea: React.FC<SearchAreaProps> = (props) => {
   const handleSearch = (event) => {
     event.preventDefault()
     onSearch({
-      value: value,
+      value: searchTermRef.current,
       type: option,
     })
   }
@@ -102,30 +100,58 @@ const SearchArea: React.FC<SearchAreaProps> = (props) => {
   const renderSearchInput = () => {
     if (props.isLoggedIn) {
       return (
-        <OutlinedInput
+        // <OutlinedInput
+        //   autoComplete="on"
+        //   onChange={onChange}
+        //   placeholder={t('common:search.search_placeholder')}
+        //   id={`es_${props.userCode}`}
+        //   name={`es_${props.userCode}`}
+        //   value={value}
+        //   classes={{ root: classes.input }}
+        //   margin="dense"
+        //   endAdornment={renderIcon()}
+        // />
+        <DeboucedSearchInput
           autoComplete="on"
-          onChange={onChange}
           placeholder={t('common:search.search_placeholder')}
           id={`es_${props.userCode}`}
           name={`es_${props.userCode}`}
-          value={value}
+          // value={value}
           classes={{ root: classes.input }}
           margin="dense"
           endAdornment={renderIcon()}
+          valueRef={searchTermRef}
+          checkHaveValue={checkHaveValue}
+          clearFlag={clearFlag}
+          inputRef={inputRef}
         />
       )
     } else {
       return (
-        <OutlinedInput
+        // <OutlinedInput
+        //   autoComplete={'off'}
+        //   onChange={onChange}
+        //   placeholder={t('common:search.search_placeholder')}
+        //   id={'search'}
+        //   name="search"
+        //   value={value}
+        //   classes={{ root: classes.input }}
+        //   margin="dense"
+        //   endAdornment={renderIcon()}
+        // />
+        <DeboucedSearchInput
           autoComplete={'off'}
-          onChange={onChange}
           placeholder={t('common:search.search_placeholder')}
           id={'search'}
+          checkHaveValue={checkHaveValue}
           name="search"
-          value={value}
+          // value={value}
           classes={{ root: classes.input }}
+          valueRef={searchTermRef}
           margin="dense"
           endAdornment={renderIcon()}
+          clearFlag={clearFlag}
+          inputRef={inputRef}
         />
       )
     }
@@ -152,7 +178,7 @@ const SearchArea: React.FC<SearchAreaProps> = (props) => {
           ))}
       </Select>
 
-      <Button onClick={handleSearch} className={classes.searchBtn} variant="contained" color="primary">
+      <Button type="submit" className={classes.searchBtn} variant="contained" color="primary">
         {t('common:search.search')}
       </Button>
     </form>
