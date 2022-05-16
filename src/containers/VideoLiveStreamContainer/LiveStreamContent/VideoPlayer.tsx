@@ -292,7 +292,9 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   // handle keyboard  event
   useEffect(() => {
     const handleVideoKeyboardEvent = (e: KeyboardEvent) => {
-      console.log('Keyboard event video player isArchived: ', e.key, isVideoArchive)
+      if (e.target['tagName'] === 'INPUT' || e.target['tagName'] === 'TEXTAREA') {
+        return
+      }
       switch (e.key) {
         case ' ':
           if (isVideoArchive) {
