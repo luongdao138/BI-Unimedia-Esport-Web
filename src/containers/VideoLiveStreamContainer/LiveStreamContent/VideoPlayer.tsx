@@ -114,7 +114,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   const androidPl = /Android/i.test(window.navigator.userAgent)
   const iPhonePl = /iPhone/i.test(window.navigator.userAgent)
 
-  const { videoWatchTimeReportRequest, getMiniPlayerState, changeMiniPlayerState } = useLiveStreamDetail()
+  const { videoWatchTimeReportRequest, getMiniPlayerState } = useLiveStreamDetail()
   const isStreamingEnd = useRef(liveStreamInfo.is_streaming_end)
   const { isHoveredVideo } = liveStreamInfo
   const handlePauseAndSeekVideo = () => {
@@ -289,7 +289,6 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       handleChangeVol(undefined, prevVolumeRef.current || 1)
     }
   }
-
   // handle keyboard  event
   useEffect(() => {
     const handleVideoKeyboardEvent = (e: KeyboardEvent) => {
@@ -336,10 +335,6 @@ const VideoPlayer: React.FC<PlayerProps> = ({
             isTheateModeRef.current = !isTheateModeRef.current
             changeVideoViewMode(isTheateModeRef.current)
           }
-          break
-        case 'i':
-          isPiPModeRef.current = !isPiPModeRef.current
-          changeMiniPlayerState(isPiPModeRef.current)
           break
         case 'ArrowUp':
           if (enableChangeVolumeRef.current) {
