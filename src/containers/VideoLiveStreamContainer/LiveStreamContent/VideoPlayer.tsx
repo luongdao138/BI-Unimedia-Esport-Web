@@ -785,11 +785,12 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   }, [isFull])
 
   const toggleFullScreen1 = () => {
+    console.log('toggle full screen:', document['webkitCurrentFullScreenElement'])
     if (iPhonePl || androidPl) {
       isFullScreenModeRef.current = !isFullScreenModeRef.current
       setIsFull(!isFull)
     } else {
-      if (!document.fullscreenElement) {
+      if (!document['webkitCurrentFullScreenElement']) {
         isFullScreenModeRef.current = true
         if (playerContainerRef.current.requestFullscreen) {
           playerContainerRef.current.requestFullscreen()
@@ -801,9 +802,13 @@ const VideoPlayer: React.FC<PlayerProps> = ({
           playerContainerRef.current.msRequestFullscreen()
         }
       } else {
-        if (document.exitFullscreen) {
+        if (document.exitFullscreen || document['webkitExitFullscreen']) {
           isFullScreenModeRef.current = false
-          document.exitFullscreen()
+          if (document.exitFullscreen) {
+            document.exitFullscreen()
+          } else {
+            document['webkitExitFullscreen']()
+          }
         }
       }
     }
