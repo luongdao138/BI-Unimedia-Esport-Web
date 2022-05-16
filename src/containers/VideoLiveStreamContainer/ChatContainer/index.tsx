@@ -280,7 +280,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     // const isSwitchingTabRef = useRef(false)
     // console.log('🚀 ~ isSwitchingTabRef', isSwitchingTabRef)
     // const isSwitchingSubTabRef = useRef(false)
-    const { activeSubTab, activeTab, setActiveTab, setActiveSubTab } = useVideoTabContext()
+    const { activeSubTab, activeTab, setActiveTab, setActiveSubTab, prevMessSubTabRef } = useVideoTabContext()
 
     const { selectors } = userProfileStore
 
@@ -332,9 +332,8 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     } = useDetailVideo()
     const { isEnabledGift, isEnabledMessFilter, isDisplayedRankingTab } = useCheckDisplayChat()
 
-    const isTipTab = activeSubTab === SUB_TABS.MESS.TIP
     const needLoadMessRef = useRef<boolean>(true)
-    const prevMessSubTabRef = useRef<number>(SUB_TABS.MESS.ALL)
+    const needLoadMoreRef = useRef<boolean>(true)
 
     // const { streamingSecond, playedSecond, isViewingStream, liveStreamInfo } = useDetailVideo()
     // const userResult = {streamer: 1}
@@ -369,6 +368,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         messagesEndRef.current?.scrollToRow(position - 1)
         setTimeout(() => {
           messagesEndRef.current?.scrollToRow(position - 1)
+          needLoadMoreRef.current = true
           // setBottom(true)
         }, 100)
       }
@@ -492,8 +492,9 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
 
     const debouncedHandleLoadMore = useCallback(
       debounce(() => {
+        const isTipSubTab = prevMessSubTabRef.current === SUB_TABS.MESS.TIP
         console.log('🚀 ~ handleLoadMore ~ handleLoadMore-4444')
-        if (isTipTab) {
+        if (isTipSubTab) {
           console.log('🚀 ~ handleLoadMore ~ handleLoadMore-333')
           setIsGettingMess(true)
           setTimeout(() => {
@@ -503,20 +504,19 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
           fetchPrevMess && fetchPrevMess()
         }
       }, 300),
-      [isTokenBroken, isTipTab, isTokenTipBroken]
+      [isTokenBroken, isTokenTipBroken]
     )
 
     const handleLoadMore = () => {
-      console.log('🚀 ~ handleLoadMore ~ handleLoadMore-111')
-      console.log('🚀 ~ handleLoadMore ~ isTokenTipBroken', isTokenTipBroken)
-
+      const isTipSubTab = prevMessSubTabRef.current === SUB_TABS.MESS.TIP
+      if (!needLoadMoreRef.current) return
       // only scroll to load more mess if rewinded or is live stream and has prevToken (has mess in prev page)
       if (
         !isGettingMess &&
         !isGettingPrevRewindMess &&
         !isGettingRewindMess &&
         // only fetch prev if is tib tab and can get prev tip
-        ((isTipTab && isTokenTipBroken) || (!isTipTab && prevTokenRef.current && (isTokenBroken || isStreaming)))
+        ((isTipSubTab && isTokenTipBroken) || (!isTipSubTab && prevTokenRef.current && (isTokenBroken || isStreaming)))
       ) {
         console.log('🚀 ~ handleLoadMore ~ handleLoadMore-222')
         debouncedHandleLoadMore()
@@ -590,6 +590,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         // @ts-ignore
         if (event.wheelDeltaY > 0 && messContainer.offsetHeight === messContainer.scrollHeight) {
           // console.log('🚀 ~ test--1111', messContainer)
+          console.log('==== handle load more ====')
           handleLoadMore()
         }
       }
@@ -958,8 +959,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         setMessagesDonate(newMessDonate)
 
         // filterMessByPlayedSecond(liveStreamInfo.seeked_second, 'smooth')
-        if (isTipTab) {
-          console.log('🚀 ~ useEffect ~ isTipTab', isTipTab)
+        if (prevMessSubTabRef.current === SUB_TABS.MESS.TIP) {
           setIsGettingMess(true)
           setTimeout(() => {
             fetchMessTipWhenRewind(liveStreamInfo.seeked_second)
@@ -1037,6 +1037,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       if (!isMobileParent) {
         setActiveTab(VIDEO_TABS.CHAT)
         setActiveSubTab(SUB_TABS.MESS.ALL)
+        prevMessSubTabRef.current = SUB_TABS.MESS.ALL
       }
     }
     refHandleResetTabs.current = handleResetTabs
@@ -1085,8 +1086,9 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
 
     const filterMessWhenChangeTime = useRef(null)
     const handleFilterMessWhenChangeTime = () => {
+      const isTipSubTab = prevMessSubTabRef.current === SUB_TABS.MESS.TIP
       // auto get mess when no rewind video
-      if (!isTipTab && !isGettingRewindMess && !isStreaming) {
+      if (!isTipSubTab && !isGettingRewindMess && !isStreaming) {
         // check is streaming addition
         // if isStreaming
         if (!isStreaming && videoPlayedSecond.current === nextTimeRef.current - SECOND_AUTO_GET_MESS_BEFORE) {
@@ -1244,9 +1246,9 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       console.log('prevMessSubTabRef.current: - change tab', prevMessSubTabRef.current)
       console.log('needLoadMessRef.current: - change tab', needLoadMessRef.current)
       // reset prev token when switch tab
-      if (activeTab === VIDEO_TABS.RANKING) {
-        prevTokenRef.current = null
-      }
+      // if (activeTab === VIDEO_TABS.RANKING) {
+      //   prevTokenRef.current = null
+      // }
       if (!isFirstVisitPage && activeTab === VIDEO_TABS.CHAT) {
         if (!isMobile) handleSwitchMainTab()
       } else {
@@ -1284,9 +1286,9 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       if (isStreaming) {
         handleGetMessTipInitial()
         // console.log('🚀 ~ useEffect ~ isStreaming', isStreaming)
-        if (activeSubTab === SUB_TABS.MESS.ALL) {
+        if (prevMessSubTabRef.current === SUB_TABS.MESS.ALL) {
           fetchMessInitialStreaming()
-        } else if (activeSubTab === SUB_TABS.MESS.TIP) {
+        } else if (prevMessSubTabRef.current === SUB_TABS.MESS.TIP) {
           // handleGetMessTip()
         }
       } else if (!isStreaming && videoType === STATUS_VIDEO.ARCHIVE) {
@@ -1300,7 +1302,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         }
 
         handleGetMessTipInitial()
-        if (activeSubTab === SUB_TABS.MESS.ALL) {
+        if (prevMessSubTabRef.current === SUB_TABS.MESS.ALL) {
           // console.log('🚀 ~ useEffect ~ isResizedScreen', isResizedScreen)
           // fetch prev and rewind mess when playing video and re-mount chat container
           if (+currentTime > 0) {
@@ -1308,7 +1310,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
           } else {
             fetchNextMess(GET_MESS_TYPE.FETCH_ARCHIVE_INITIAL, currentTime)
           }
-        } else if (activeSubTab === SUB_TABS.MESS.TIP) {
+        } else if (prevMessSubTabRef.current === SUB_TABS.MESS.TIP) {
           // handleGetMessTip()
         }
       }
@@ -1455,7 +1457,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       if (!isPremiumMessage && prevMessSubTabRef.current === SUB_TABS.MESS.TIP) {
         return false
       }
-      return activeSubTab !== SUB_TABS.MESS.TIP || (isPremiumMessage && activeSubTab === SUB_TABS.MESS.TIP)
+      return prevMessSubTabRef.current !== SUB_TABS.MESS.TIP || (isPremiumMessage && prevMessSubTabRef.current === SUB_TABS.MESS.TIP)
     }
 
     const handleCreateMess = (local_message: any, input: any, point: any, resetMess: any) => {
@@ -1833,7 +1835,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         default:
           return ''
       }
-    }, [activeTab, isEnabledMessFilter, activeSubTab, successGetListMessTip, successGetListMess])
+    }, [activeTab, isEnabledMessFilter])
 
     const renderContent = () => {
       return displayChatContent() ? chatContent() : userDoesNotHaveViewingTicketView()
@@ -1859,6 +1861,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
           prevMessSubTabRef={prevMessSubTabRef}
           onChange={handleChangeTab}
           isDisplayedRankingTab={isDisplayedRankingTab}
+          needLoadMoreRef={needLoadMoreRef}
         />
         <Box className={classes.tabsContent} style={{ display: isMobile && activeTab === VIDEO_TABS.CHAT ? 'none' : 'block' }}>
           {getTabsContent}

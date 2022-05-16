@@ -12,11 +12,12 @@ interface Props {
   isDisplayedRankingTab: boolean
   prevMessSubTabRef: any
   needLoadMessRef: any
+  needLoadMoreRef: any
   // isSwitchingTabRef: any
   // isSwitchingSubTabRef: any
 }
 
-const TabsContainer: React.FC<Props> = ({ isDisplayedRankingTab, onChange, needLoadMessRef }) => {
+const TabsContainer: React.FC<Props> = ({ isDisplayedRankingTab, onChange, needLoadMessRef, needLoadMoreRef }) => {
   const { isLandscape } = useRotateScreen()
   const theme = useTheme()
   const isMobile = /iPhone|iPad|iPod|Android/i.test(window.navigator.userAgent) || useMediaQuery(theme.breakpoints.down(769))
@@ -27,8 +28,12 @@ const TabsContainer: React.FC<Props> = ({ isDisplayedRankingTab, onChange, needL
     if (isMobile) {
       return
     }
+
     const timeoutId = setTimeout(() => {
       needLoadMessRef.current = value === VIDEO_TABS.CHAT
+      if (value === VIDEO_TABS.RANKING) {
+        needLoadMoreRef.current = false
+      }
       onChange(value)
     }, 500)
 
