@@ -56,7 +56,7 @@ export type TabSelectProps = {
 
 const TabSelectContainer: React.FC<TabSelectProps> = ({ sideChatContainer, infoTabsContent, renderVideoSubInfo, isLandscape }) => {
   // const { liveStreamInfo } = useDetailVideo()
-  const { setActiveSubTab, setActiveTab, activeSubTab, activeTab } = useVideoTabContext()
+  const { setActiveSubTab, setActiveTab, activeSubTab, activeTab, prevMessSubTabRef } = useVideoTabContext()
   const { isEnabledMessFilter, isDisplayedRankingTab, isDisplayedRankingReceipt } = useCheckDisplayChat()
 
   // const { activeTab, activeSubTab } = liveStreamInfo
@@ -68,8 +68,9 @@ const TabSelectContainer: React.FC<TabSelectProps> = ({ sideChatContainer, infoT
   // const [isRankingTab, setRankingTab] = useState(false)
 
   // useEffect(() => {
-  //   console.log('🚀 ~ activeSelectTab--111', activeSelectTab)
-  // }, [activeSelectTab])
+  //   setActiveTab(VIDEO_TABS.CHAT)
+  //   setActiveSubTab(SUB_TABS.MESS.ALL)
+  // }, [])
 
   const getContent = () => {
     switch (activeTab) {
@@ -178,6 +179,7 @@ const TabSelectContainer: React.FC<TabSelectProps> = ({ sideChatContainer, infoT
                                 key={key}
                                 onClick={(event) => {
                                   event.stopPropagation()
+                                  prevMessSubTabRef.current = v.value
                                   setActiveSubTab(v.value)
                                   // change active tab
                                   setActiveTab(item.value)

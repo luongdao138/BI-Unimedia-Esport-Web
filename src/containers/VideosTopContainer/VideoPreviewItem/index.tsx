@@ -38,10 +38,6 @@ const VideoPreviewItem: React.FC<VideoPreviewItemProps> = ({ data, containerStyl
         shallow: true,
       }
     )
-    // eslint-disable-next-line no-console
-    console.log('onNavigateLive')
-    //router.replace({ pathname: ESRoutes.BACK_TO_TOP_TEST }, `${ESRoutes.TOP}?vid=${vid}`)
-    // router.push({ pathname: ESRoutes.BACK_TO_TOP_TEST }, `${ESRoutes.TOP}?vid=${vid}`)
   }
   useEffect(() => {
     const handleRouteChange = (url) => {

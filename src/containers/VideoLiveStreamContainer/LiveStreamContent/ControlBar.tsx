@@ -1,21 +1,21 @@
+import ReportPanel from '@containers/VideoLiveStreamContainer/LiveStreamContent/ReportPanel'
+import SettingPanel from '@containers/VideoLiveStreamContainer/LiveStreamContent/SettingPanel'
+import VideoResolutionPanel from '@containers/VideoLiveStreamContainer/LiveStreamContent/VideoResolutionPanel'
+import useDetailVideo from '@containers/VideoLiveStreamContainer/useDetailVideo'
+import useLiveStreamDetail from '@containers/VideoLiveStreamContainer/useLiveStreamDetail'
 import { Box, ClickAwayListener, Icon, makeStyles, Slider, Theme, Typography, useMediaQuery, useTheme } from '@material-ui/core'
 import { Crop54 as TheatreViewMode, Crop75 as NormalViewMode } from '@material-ui/icons'
+import { VIDEO_RESOLUTION } from '@services/liveStreamDetail.service'
+import { QualitiesType } from '@services/videoTop.services'
 import { Colors } from '@theme/colors'
-import React, { forwardRef, memo, useEffect, useImperativeHandle, useState, useRef } from 'react'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
+import React, { forwardRef, memo, useEffect, useImperativeHandle, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import ReactTooltip from 'react-tooltip'
-import useDetailVideo from '@containers/VideoLiveStreamContainer/useDetailVideo'
 import Play from './ControlComponent/Play'
 import PlayerTooltip from './ControlComponent/PlayerTooltip'
 import Reload from './ControlComponent/Reload'
 import TimeBar from './ControlComponent/TimeBar'
-import SettingPanel from '@containers/VideoLiveStreamContainer/LiveStreamContent/SettingPanel'
-import VideoResolutionPanel from '@containers/VideoLiveStreamContainer/LiveStreamContent/VideoResolutionPanel'
-import ReportPanel from '@containers/VideoLiveStreamContainer/LiveStreamContent/ReportPanel'
-import useLiveStreamDetail from '@containers/VideoLiveStreamContainer/useLiveStreamDetail'
-import { VIDEO_RESOLUTION } from '@services/liveStreamDetail.service'
-import { QualitiesType } from '@services/videoTop.services'
-import { CommonHelper } from '@utils/helpers/CommonHelper'
 
 interface ControlProps {
   ref: any
@@ -38,12 +38,15 @@ interface ControlProps {
   isStreaming: boolean
   isStreamingEnd: React.MutableRefObject<boolean>
   onVideoEnd?: () => void
+  changeRef: any
   state: {
     playing: boolean
     muted: boolean
     volume: number
     ended: boolean
   }
+  playedSeconds: number
+  durationPlayer: number
 }
 
 export enum SettingPanelState {
@@ -77,6 +80,9 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
       state,
       isStreaming,
       isStreamingEnd,
+      playedSeconds,
+      durationPlayer,
+      changeRef,
     },
     ref
   ) => {
@@ -103,59 +109,17 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
     const classes = useStyles({ liveStreaming: durationPlayerRef.current === playerSecondsRef.current ? true : false })
     // console.log('------------- Controlbar rerender -------------');
 
-    // const throttleUpdateTime = useCallback(
-    //   _.throttle((event) => {
-    //     const videoInfo = event.target
-    //     const newPlayedSecondTime = videoInfo.currentTime
-    //   let durationTime = videoType === STATUS_VIDEO.LIVE_STREAM ? videoInfo.duration - DELAY_SECONDS : videoInfo.duration
-    //   // handle delayed time when is living
-    //   if (isStreaming && videoType === STATUS_VIDEO.LIVE_STREAM) {
-    //     const isDelayedTime = newPlayedSecondTime < durationTime || newPlayedSecondTime > durationTime
-    //     // reset duration time to equal played time when live is delayed
-    //     if (isDelayedTime) {
-    //       durationTime = newPlayedSecondTime
-    //     }
-    //   }
-    //   // if(!isStreaming && durationTime < newPlayedSecondTime && videoType === STATUS_VIDEO.LIVE_STREAM){
-    //   if (!isStreaming && videoType === STATUS_VIDEO.LIVE_STREAM) {
-    //     durationTime = videoInfo.duration
-    //   }
-    //   const newDurationTime = durationTime
-    //   // const newDurationTime = videoInfo.duration
-    //   setPlayedSeconds(newPlayedSecondTime)
-    //   setDurationPlayer(newDurationTime)
-    //   if (
-    //     Math.floor(newPlayedSecondTime) !== liveStreamInfo.played_second ||
-    //     Math.floor(newDurationTime) !== liveStreamInfo.streaming_second
-    //   ) {
-    //     // changeVideoTime(Math.floor(newDurationTime), Math.floor(newPlayedSecondTime))
-    //   }
-    //   }, 1000),
-    //   []
-    // )
+    const commonProps = { durationPlayer, playedSeconds }
 
-    // const throttleUpdateDurationChange = useCallback(
-    //   _.throttle((event) => {
-    //     if (isStreamingEnd.current) {
-    //       onVideoEnd()
-    //     }
-    //     const duration = event.target.duration
+    // useEffect(() => {
+    //   videoRef.current.addEventListener('timeupdate', () => {
+    //     // const videoInfo = event.target
+    //   })
 
-    //     if (!state.playing) {
-    //       if (Math.floor(duration) !== liveStreamInfo.played_second) {
-    //         // changeVideoTime(Math.floor(duration), Math.floor(duration))
-    //       }
-    //       setDurationPlayer(duration)
-    //     }
-    //   }, 1000),
-    //   []
-    // )
-
-    //   useEffect(() => {
-    //     videoRef.current.addEventListener('timeupdate', throttleUpdateTime)
-
-    //     videoRef.current.addEventListener('durationchange', throttleUpdateDurationChange)
-    //  }, [])
+    //   videoRef.current.addEventListener('durationchange', () => {
+    //     // const duration = event.target.duration
+    //   })
+    // }, [])
 
     function isEnableBtnPIP() {
       if (isMobile) {
@@ -189,14 +153,6 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
 
     const tooltipRef = React.createRef<any>()
 
-    //Tooltip
-    // const PlayerTooltip = (id: string, title: string, offset?: any) => {
-    //   return (
-    //     <ReactTooltip id={id} type="dark" effect="solid" className={classes.playerTooltip} offset={offset || { top: -10, left: 10 }}>
-    //       <span>{title}</span>
-    //     </ReactTooltip>
-    //   )
-    // }
     const toggleFullScreen = () => {
       handleFullScreen()
       setFull(!isFull)
@@ -257,7 +213,9 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
     }
 
     const handleChangeSpeed = (item, index) => {
-      videoRef.current.playbackRate = parseFloat(index === 1 ? 1.0 : item)
+      videoRef.current.playbackRate = !isMobile
+        ? parseFloat(index === 1 ? 1.0 : item)
+        : parseFloat(item === t('videos_top_tab.standard') ? 1.0 : item)
       setSpeed(item)
 
       closeSettingPanel()
@@ -285,6 +243,7 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
             onVideoEnd={onVideoEnd}
             isStreamingEnd={isStreamingEnd}
             // durationsPlayer={durationsPlayer}
+            {...commonProps}
           />
           <Box
             className={classes.buttonVolume}
@@ -315,17 +274,26 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
               offset={{ top: -5, left: 0 }}
             />
             {!isMobile && (
-              <div className={classes.slider}>
-                <Slider
-                  max={1}
-                  min={0}
-                  value={volume}
-                  step={0.1}
-                  className={classes.volumeBar}
-                  onChange={onChangeVol}
-                  onChangeCommitted={onChangeVolDrag}
-                />
-              </div>
+              <ClickAwayListener
+                onClickAway={() => {
+                  changeRef.current = 'seek'
+                }}
+              >
+                <div className={classes.slider}>
+                  <Slider
+                    max={1}
+                    min={0}
+                    value={volume}
+                    step={0.1}
+                    className={classes.volumeBar}
+                    onChange={onChangeVol}
+                    onChangeCommitted={onChangeVolDrag}
+                    onClick={() => {
+                      changeRef.current = 'volume'
+                    }}
+                  />
+                </div>
+              </ClickAwayListener>
             )}
           </Box>
 
@@ -338,6 +306,7 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
               state={state}
               onVideoEnd={onVideoEnd}
               isStreamingEnd={isStreamingEnd}
+              {...commonProps}
             />
           </div>
           {!isLive && isLive !== null && !isMobile && (
@@ -353,6 +322,7 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
                 // currentTime={playerSecondsRef}
                 // durationsPlayer={durationPlayerRef}
                 isLive={isLive}
+                {...commonProps}
               />
               <Reload
                 videoRef={videoRef}
@@ -365,6 +335,7 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
                 // currentTime={playerSecondsRef}
                 // durationsPlayer={durationPlayerRef}
                 isLive={isLive}
+                {...commonProps}
               />
             </>
           )}

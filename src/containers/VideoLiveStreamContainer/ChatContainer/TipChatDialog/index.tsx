@@ -10,7 +10,6 @@ import Step1 from './Step1'
 import Step2 from './Step2'
 import Step3 from './Step3'
 import Icon from '@material-ui/core/Icon'
-import usePurchaseTicketSuperChat from '@containers/VideoLiveStreamContainer/usePurchaseTicket'
 import useDetailVideo from '@containers/VideoLiveStreamContainer/useDetailVideo'
 import { useRotateScreen } from '@utils/hooks/useRotateScreen'
 // import * as commonActions from '@store/common/actions'
@@ -24,7 +23,6 @@ export type TipMessProps = {
 type TipChatDialogProps = {
   openPurchasePointModal?: (point: any) => void
   onClickOutside?: () => void
-  onPressDonate?: (donatedPoint: number, purchaseComment: string, master_id?: string) => void
   normalMessHasError?: boolean
   createMess?: (message: string, point?: number, tip_mess?: TipMessProps) => Promise<void>
   errorMsgDonatePoint?: string
@@ -34,7 +32,6 @@ type TipChatDialogProps = {
 
 const TipChatDialog: React.FC<TipChatDialogProps> = ({
   createMess,
-  onPressDonate,
   onClickOutside,
   normalMessHasError,
   openPurchasePointModal,
@@ -43,7 +40,31 @@ const TipChatDialog: React.FC<TipChatDialogProps> = ({
   preLoading,
 }) => {
   // const dispatch = useAppDispatch()
-  const { clearPurchaseTicket, getPurchaseTicket } = usePurchaseTicketSuperChat()
+
+  const [selectedMember, setSelectedMember] = useState(null)
+  const [tipInfo, setTipInfo] = useState(null)
+  const createMessAfterDonate = () => {
+    if (!tipInfo) return
+    const { message, donatedPoint } = tipInfo
+    // eslint-disable-next-line no-console
+    //  console.log('🚀 ~ useEffect ~ message, donatedPoint', message, donatedPoint, selectedMember)
+    // tip for member in list gift
+    if (selectedMember?.master_uuid) {
+      createMess(message, donatedPoint, {
+        master_uuid: selectedMember?.master_uuid,
+        image: selectedMember?.image,
+        name: selectedMember?.name,
+      })
+    } else {
+      // tip for streamer
+      createMess(message, donatedPoint, {
+        master_uuid: null,
+        image: selectedMember?.image,
+        name: selectedMember?.name,
+      })
+    }
+  }
+
   const { videoGiftMaster, videoGiftMasterLoading } = useDetailVideo()
   const { isLandscape } = useRotateScreen()
 
@@ -52,8 +73,6 @@ const TipChatDialog: React.FC<TipChatDialogProps> = ({
   const myPoint = myPointsData?.total_point ? Number(myPointsData.total_point) : 0
   const totalSteps = 3
   const [step, setStep] = useState(1)
-  const [selectedMember, setSelectedMember] = useState(null)
-  const [tipInfo, setTipInfo] = useState(null)
   const [isFirstRender, setIsFirstRender] = useState(true)
   const [purchaseValueSelected, setPurchaseValueSelected] = useState<string>('p_100')
   const [isNoHaveListUsers, setIsNoHaveListUsers] = useState<boolean>(false)
@@ -124,35 +143,6 @@ const TipChatDialog: React.FC<TipChatDialogProps> = ({
   }, [])
 
   useEffect(() => {
-    // console.log('Send message graphql', isFirstRender, dataPurchaseTicketSuperChat?.code)
-    // if (dataPurchaseTicketSuperChat?.code === 200 && !isFirstRender) {
-    if (getPurchaseTicket()?.code === 200 && tipInfo) {
-      // console.log('Send message graphql fire')
-      const { message, donatedPoint } = tipInfo
-      // eslint-disable-next-line no-console
-      console.log('🚀 ~ useEffect ~ message, donatedPoint', message, donatedPoint, selectedMember)
-      // tip for member in list gift
-      if (selectedMember?.master_uuid) {
-        createMess(message, donatedPoint, {
-          master_uuid: selectedMember?.master_uuid,
-          image: selectedMember?.image,
-          name: selectedMember?.name,
-        })
-      } else {
-        // tip for streamer
-        createMess(message, donatedPoint, {
-          master_uuid: null,
-          image: selectedMember?.image,
-          name: selectedMember?.name,
-        })
-      }
-      // values.message = ''
-    }
-
-    return clearPurchaseTicket
-  }, [getPurchaseTicket, selectedMember])
-
-  useEffect(() => {
     // check if didn't select tip in settings then default selected streamer
     if (!videoGiftMasterLoading && videoGiftMaster?.gift_group_id === null) {
       setIsNoHaveListUsers(true)
@@ -193,7 +183,7 @@ const TipChatDialog: React.FC<TipChatDialogProps> = ({
   const commonStepProps = {
     onChangeStep,
     selectedMember,
-    onPressDonate,
+    createMessAfterDonate,
   }
 
   const renderSteps = () => {
@@ -345,7 +335,7 @@ const useStyles = makeStyles((theme) => ({
     padding: '13px 8px 13px',
     background: '#161616',
     borderRadius: '8px',
-    filter: `drop-shadow(0px 0px 8px ${Colors.black_opacity[80]})`,
+    boxShadow: `0px 0px 8px ${Colors.black_opacity[80]}`,
   },
   stepInfo: {
     textAlign: 'right',
@@ -363,10 +353,6 @@ const useStyles = makeStyles((theme) => ({
           paddingBottom: 8,
           maxWidth: '400px',
           left: '10px',
-        }
-      } else {
-        return {
-          left: '-90px',
         }
       }
     },

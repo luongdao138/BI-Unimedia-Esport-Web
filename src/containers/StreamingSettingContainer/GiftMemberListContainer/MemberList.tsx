@@ -179,6 +179,7 @@ const MemberList: React.FC = () => {
         >
           {({ height, width }) => (
             <List
+              style={{ overflowY: 'scroll', overflowX: 'hidden' }}
               key={listKey}
               ref={giftListRef}
               overscanRowsCount={10}

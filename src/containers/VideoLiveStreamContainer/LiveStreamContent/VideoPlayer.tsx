@@ -4,13 +4,12 @@
 // import ReactPlayer from 'react-player'
 import ESLoader from '@components/Loader'
 import { DELAY_SECONDS } from '@constants/common.constants'
-import { Box, Icon, makeStyles, Theme, Typography, useMediaQuery, useTheme } from '@material-ui/core'
+import { Box, ClickAwayListener, Icon, makeStyles, Theme, Typography, useMediaQuery, useTheme } from '@material-ui/core'
 import { QualitiesType, STATUS_VIDEO } from '@services/videoTop.services'
 import useLiveStreamDetail from '../useLiveStreamDetail'
 import { Colors } from '@theme/colors'
 import React, { memo, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
-import ControlBarPlayer, { SettingPanelState } from './ControlBar'
-import SeekBar from './ControlComponent/SeekBar'
+import { SettingPanelState } from './ControlBar'
 // import { useTranslation } from 'react-i18next'
 
 import useDetailVideo from '../useDetailVideo'
@@ -23,6 +22,9 @@ import usePictureInPicture from '../usePictureInPicture'
 import { useRouter } from 'next/router'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
 import _ from 'lodash'
+import { useVideoPlayerContext } from '@containers/VideoLiveStreamContainer/VideoContext/VideoPlayerContext'
+import UtilityArea from './UtilityArea'
+import { VIDEO_TYPE } from '@containers/VideoLiveStreamContainer'
 
 declare global {
   interface Document {
@@ -68,6 +70,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   qualities,
 }) => {
   const { setVideoRefInfo } = useContext(VideoContext)
+  const { isStreaming, setIsStreaming, state, setState } = useVideoPlayerContext()
   // const checkStatusVideo = 1
   const refControlBar = useRef<any>(null)
   // check condition display setting panel to display control bar
@@ -82,18 +85,17 @@ const VideoPlayer: React.FC<PlayerProps> = ({
 
   const { t } = useTranslation('common')
   const [autoPlay, setAutoPlay] = useState(true)
-  const [isStreaming, setIsStreaming] = useState(true)
   // const reactPlayerRef = useRef(null)
   const playerContainerRef = useRef(null)
   const [isLive, setIsLive] = useState(null)
 
   //As of Chrome 66, videos must be muted in order to play automatically
-  const [state, setState] = useState({
-    playing: true,
-    muted: true,
-    volume: 0,
-    ended: false,
-  })
+  // const [state, setState] = useState({
+  //   playing: true,
+  //   muted: true,
+  //   volume: 0,
+  //   ended: false,
+  // })
 
   const [visible, setVisible] = useState({
     loading: true,
@@ -102,7 +104,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   })
   const [flagResol, setFlagResol] = useState(false)
 
-  const { liveStreamInfo, changeSeekCount, detailVideoResult, changeIsFullScreenMode } = useDetailVideo()
+  const { liveStreamInfo, changeSeekCount, detailVideoResult, changeIsFullScreenMode, changeVideoViewMode } = useDetailVideo()
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'), { noSsr: true })
   const isDownMd = useMediaQuery(theme.breakpoints.down(769), { noSsr: true })
@@ -112,7 +114,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   const androidPl = /Android/i.test(window.navigator.userAgent)
   const iPhonePl = /iPhone/i.test(window.navigator.userAgent)
 
-  const { videoWatchTimeReportRequest, getMiniPlayerState } = useLiveStreamDetail()
+  const { videoWatchTimeReportRequest, getMiniPlayerState, changeMiniPlayerState } = useLiveStreamDetail()
   const isStreamingEnd = useRef(liveStreamInfo.is_streaming_end)
   const { isHoveredVideo } = liveStreamInfo
   const handlePauseAndSeekVideo = () => {
@@ -137,6 +139,8 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   const isSafari = CommonHelper.checkIsSafariBrowser()
   const [isFull, setIsFull] = useState<boolean>(false)
   const classes = useStyles({ checkStatusVideo: videoType, isFull })
+
+  const isVideoArchive = isArchived || videoType === VIDEO_TYPE.ARCHIVED
 
   const {
     requestPIP,
@@ -233,6 +237,149 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     }
   }, [])
 
+  const handleChangeVideoTime = (type: 'next' | 'prev' | 'reload') => {
+    if (videoType !== STATUS_VIDEO.ARCHIVE && type !== 'reload') {
+      return
+    }
+    let newSecond = 0
+    // if (!isLive) {
+    switch (type) {
+      case 'next':
+        videoEl.current.currentTime = playerSecondsRef.current + 10
+        newSecond = playerSecondsRef.current + 10
+
+        break
+      case 'prev':
+        videoEl.current.currentTime = playerSecondsRef.current - 10
+        newSecond = playerSecondsRef.current - 10
+        break
+      case 'reload':
+        videoEl.current.currentTime = videoType === STATUS_VIDEO.LIVE_STREAM ? durationPlayerRef.current : 0
+        break
+    }
+    // eslint-disable-next-line no-console
+    changeSeekCount(Math.floor(newSecond))
+    if (type === 'reload') {
+      handleOnRestart()
+    }
+    // }
+  }
+
+  const handleChangeVideoVolume = (type: 'inc' | 'decs', isEnabled = false) => {
+    console.log('handle change video volume - isArchived: ', isArchived)
+    if (type === 'inc') {
+      if (currentVolumeRef.current < 1) {
+        enableDragVolumeRef.current = isEnabled
+        handleChangeVol(undefined, currentVolumeRef.current + 0.1)
+      }
+    } else {
+      if (currentVolumeRef.current > 0) {
+        enableDragVolumeRef.current = isEnabled
+        handleChangeVol(undefined, currentVolumeRef.current - 0.1)
+      }
+    }
+  }
+
+  const toggleMute = () => {
+    if (currentVolumeRef.current > 0) {
+      prevVolumeRef.current = currentVolumeRef.current
+      handleChangeVol(undefined, 0)
+      // setState({ ...state, muted: true, volume: 0 })
+    } else {
+      handleChangeVol(undefined, prevVolumeRef.current || 1)
+    }
+  }
+
+  // handle keyboard  event
+  useEffect(() => {
+    const handleVideoKeyboardEvent = (e: KeyboardEvent) => {
+      console.log('Keyboard event video player isArchived: ', e.key, isVideoArchive)
+      switch (e.key) {
+        case ' ':
+          if (isVideoArchive) {
+            handlePlayPause()
+          }
+          break
+        case 'k':
+          if (isVideoArchive) {
+            handlePlayPause()
+          }
+          break
+        case 'f':
+          toggleFullScreen1()
+          break
+        case 'm':
+          toggleMute()
+          break
+        case 'ArrowRight':
+          if (changeRef.current === 'seek') {
+            handleChangeVideoTime('next')
+          } else {
+            handleChangeVideoVolume('inc')
+          }
+          break
+        case 'l':
+          handleChangeVideoTime('next')
+          break
+        case 'ArrowLeft':
+          if (changeRef.current === 'seek') {
+            handleChangeVideoTime('prev')
+          } else {
+            handleChangeVideoVolume('decs')
+          }
+          break
+        case 'j':
+          handleChangeVideoTime('prev')
+          break
+        case 't':
+          if (!isFullScreenModeRef.current && !isPiPModeRef.current) {
+            isTheateModeRef.current = !isTheateModeRef.current
+            changeVideoViewMode(isTheateModeRef.current)
+          }
+          break
+        case 'i':
+          isPiPModeRef.current = !isPiPModeRef.current
+          changeMiniPlayerState(isPiPModeRef.current)
+          break
+        case 'ArrowUp':
+          if (enableChangeVolumeRef.current) {
+            handleChangeVideoVolume('inc', changeRef.current === 'seek')
+          }
+          break
+
+        case 'ArrowDown':
+          if (enableChangeVolumeRef.current) {
+            handleChangeVideoVolume('decs', changeRef.current === 'seek')
+          }
+          break
+        case 'r':
+          handleChangeVideoTime('reload')
+          break
+        default:
+          break
+      }
+    }
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key == ' ') {
+        e.preventDefault()
+      }
+
+      if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+        if (enableChangeVolumeRef.current) {
+          e.preventDefault()
+        }
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    window.addEventListener('keyup', handleVideoKeyboardEvent)
+    return () => {
+      window.removeEventListener('keyup', handleVideoKeyboardEvent)
+      window.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [isVideoArchive])
+
   // useEffect(() => {
   //   if(Math.floor(playedSeconds) !== liveStreamInfo.played_second) {
   //     changePlayedSecond(Math.floor(playedSeconds))
@@ -251,21 +398,25 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   //   screenfull.toggle(playerContainerRef.current)
   // }
 
-  const handleMute = () => {
-    setState({ ...state, muted: !state.muted, volume: videoEl.current?.volume })
-  }
-
   const handleChangeVol = (_, val) => {
+    if (!enableDragVolumeRef.current) {
+      enableDragVolumeRef.current = true
+      return
+    }
+    if (val > 1) val = 1
+    if (val < 0) val = 0
+    val = Number(val.toFixed(1))
+    currentVolumeRef.current = val
     if (videoEl.current !== null) {
       videoEl.current.volume = val
     }
-    setState({ ...state, volume: val, muted: videoEl.current?.volume === 0 ? true : false })
+    setState({ ...state, volume: val, muted: videoEl.current?.volume === 0 })
   }
   const handleChangeVolDrag = (_, val) => {
     if (videoEl.current !== null) {
       videoEl.current.volume = val
     }
-    setState({ ...state, volume: val, muted: videoEl.current?.volume === 0 ? true : false })
+    setState({ ...state, volume: val, muted: videoEl.current?.volume === 0 })
   }
 
   //video
@@ -289,6 +440,14 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   // }, [startLive, state.ended, endLive, isLive])
 
   const { playing, muted, volume, ended } = state
+  const currentVolumeRef = useRef(0)
+  const prevVolumeRef = useRef(1)
+  const isFullScreenModeRef = useRef<boolean>(false)
+  const enableDragVolumeRef = useRef<boolean>(true)
+  const enableChangeVolumeRef = useRef<boolean>(false)
+  const changeRef = useRef<'seek' | 'volume'>('seek')
+  const isPiPModeRef = useRef<boolean>(getMiniPlayerState)
+  const isTheateModeRef = useRef<boolean>(liveStreamInfo.is_normal_view_mode)
   const { loading, videoLoaded } = visible
   // const hls = new Hls()
   const chatBoardWidth = () => {
@@ -627,9 +786,11 @@ const VideoPlayer: React.FC<PlayerProps> = ({
 
   const toggleFullScreen1 = () => {
     if (iPhonePl || androidPl) {
+      isFullScreenModeRef.current = !isFullScreenModeRef.current
       setIsFull(!isFull)
     } else {
       if (!document.fullscreenElement) {
+        isFullScreenModeRef.current = true
         if (playerContainerRef.current.requestFullscreen) {
           playerContainerRef.current.requestFullscreen()
         } else if (playerContainerRef.current.mozRequestFullScreen) {
@@ -641,6 +802,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
         }
       } else {
         if (document.exitFullscreen) {
+          isFullScreenModeRef.current = false
           document.exitFullscreen()
         }
       }
@@ -779,7 +941,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
         id="video"
         ref={videoEl}
         muted={muted}
-        style={{ width: '100%', height: componentsSize.videoHeight }}
+        style={{ width: '100%', height: document.fullscreenElement !== null ? '100%' : componentsSize.videoHeight }}
         autoPlay={autoPlay}
         src={srcResolution}
         // controls={iPhonePl || androidPl || isMobile}
@@ -791,11 +953,22 @@ const VideoPlayer: React.FC<PlayerProps> = ({
         controls={false}
       />
     )
-  }, [muted, autoPlay, srcResolution])
+  }, [muted, autoPlay, srcResolution, document.fullscreenElement, componentsSize.videoHeight])
 
   return (
-    <div className={classes.videoPlayer} style={{ height: componentsSize.videoHeight ?? 0 }}>
-      {/* {(iPhonePl || androidPl || (!iPadPl && isDownMd)) && (
+    <ClickAwayListener
+      onClickAway={() => {
+        enableChangeVolumeRef.current = false
+      }}
+    >
+      <div
+        className={classes.videoPlayer}
+        style={{ height: componentsSize.videoHeight ?? 0 }}
+        onClick={() => {
+          enableChangeVolumeRef.current = true
+        }}
+      >
+        {/* {(iPhonePl || androidPl || (!iPadPl && isDownMd)) && (
         <div>
           <video
             id="video"
@@ -821,76 +994,62 @@ const VideoPlayer: React.FC<PlayerProps> = ({
           )}
         </div>
       )} */}
-      {/* {(!isMobile && !androidPl && !iPhonePl)  && ( */}
-      <div
-        ref={playerContainerRef}
-        className={`${isMobile || iPhonePl || androidPl ? classes.playerContainer : classes.playerContainerPC} ${
-          isFull === true ? classes.forceFullscreenIosSafariPlayer : ''
-        }`}
-      >
-        <div style={{ height: '100%', position: 'relative' }} onClick={handlePlayPauseOut}>
-          {Video}
-          {getMiniPlayerState && (
-            <Box id="exist-picture-in-picture" className={classes.existPictureInPicture}>
-              <Box textAlign="center">
-                <img src={'/images/ic_picture_in_picture.svg'} />
-                <Typography className={classes.textInPictureInPicture}>{t('videos_top_tab.mini_player_message')}</Typography>
+        {/* {(!isMobile && !androidPl && !iPhonePl)  && ( */}
+        <div
+          ref={playerContainerRef}
+          className={`${isMobile || iPhonePl || androidPl ? classes.playerContainer : classes.playerContainerPC} ${
+            isFull === true ? classes.forceFullscreenIosSafariPlayer : ''
+          }`}
+        >
+          <div style={{ height: '100%', position: 'relative' }} onClick={handlePlayPauseOut}>
+            {Video}
+            {getMiniPlayerState && (
+              <Box id="exist-picture-in-picture" className={classes.existPictureInPicture}>
+                <Box textAlign="center">
+                  <img src={'/images/ic_picture_in_picture.svg'} />
+                  <Typography className={classes.textInPictureInPicture}>{t('videos_top_tab.mini_player_message')}</Typography>
+                </Box>
               </Box>
-            </Box>
-          )}
-
-          {!isMobile && !androidPl && !iPhonePl && !mediaOverlayIsShown && loading && (
-            <div className={classes.playOverView}>
-              {videoLoaded && (
-                <div
-                  className={classes.thumbBegin}
-                  style={{
-                    backgroundImage: `url(${thumbnail ?? '/images/live_stream/thumbnail_default.png'})`,
-                    backgroundSize: 'cover',
-                  }}
-                >
-                  <div className={classes.loadingThumbBlur} />
-                </div>
-              )}
-              {ended || !playing ? (
-                <Icon className={`fas fa-play ${classes.fontSizeLarge}`} />
-              ) : (
-                <div className={classes.showLoader}>
-                  <ESLoader />
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-
-        {/* {!isMobile && !androidPl && !iPhonePl && isLoadedMetaData && ( */}
-        {isLoadedMetaData && (
-          <div
-            className={`${classes.processControl} ${isOpenSettingPanel && classes.showControl}`}
-            style={isMobile || iPhonePl || androidPl ? { display: isHoveredVideo ? 'block' : 'none', opacity: 1 } : {}}
-          >
-            {videoType !== STATUS_VIDEO.LIVE_STREAM && (
-              <SeekBar
-                videoRef={videoEl}
-                changeStatusStreaming={(status) => {
-                  setIsStreaming(status)
-                }}
-                videoType={videoType}
-                isStreaming={isStreaming}
-                state={state}
-                onVideoEnd={onVideoEnd}
-                isStreamingEnd={isStreamingEnd}
-              />
             )}
-            <div className={classes.controlOut}>
-              <ControlBarPlayer
+
+            {!isMobile && !androidPl && !iPhonePl && !mediaOverlayIsShown && loading && (
+              <div className={classes.playOverView}>
+                {videoLoaded && (
+                  <div
+                    className={classes.thumbBegin}
+                    style={{
+                      backgroundImage: `url(${thumbnail ?? '/images/live_stream/thumbnail_default.png'})`,
+                      backgroundSize: 'cover',
+                    }}
+                  >
+                    <div className={classes.loadingThumbBlur} />
+                  </div>
+                )}
+                {ended || !playing ? (
+                  <Icon className={`fas fa-play ${classes.fontSizeLarge}`} />
+                ) : (
+                  <div className={classes.showLoader}>
+                    <ESLoader />
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* {!isMobile && !androidPl && !iPhonePl && isLoadedMetaData && ( */}
+          {isLoadedMetaData && (
+            <div
+              className={`${classes.processControl} ${isOpenSettingPanel && classes.showControl}`}
+              style={isMobile || iPhonePl || androidPl ? { display: isHoveredVideo ? 'block' : 'none', opacity: 1 } : {}}
+            >
+              <UtilityArea
                 ref={refControlBar}
                 videoRef={videoEl}
                 onPlayPause={handlePlayPause}
                 playing={playing}
                 muted={muted}
                 handleFullScreen={toggleFullScreen1}
-                onMute={handleMute}
+                onMute={toggleMute}
                 onChangeVol={handleChangeVol}
                 onChangeVolDrag={handleChangeVolDrag}
                 volume={volume}
@@ -905,39 +1064,39 @@ const VideoPlayer: React.FC<PlayerProps> = ({
                 state={state}
                 onVideoEnd={onVideoEnd}
                 isStreamingEnd={isStreamingEnd}
+                changeRef={changeRef}
               />
             </div>
-          </div>
-        )}
-        {/* previous and next only in mobile */}
-        {(isMobile || androidPl || iPhonePl) && videoType !== STATUS_VIDEO.LIVE_STREAM && (
-          <div className={classes.playOverViewSP} style={{ opacity: isHoveredVideo && (isMobile || androidPl || iPhonePl) ? 1 : 0 }}>
-            <div className={classes.nextPreSP}>
-              <Box
-                className={classes.buttonNormal}
-                data-tip
-                data-for="previous"
-                onClick={(e) => {
-                  onChangeTime(e, -10)
-                }}
-              >
-                <img src={'/images/ic_previous.svg'} className={classes.image} />
-              </Box>
-              <Box
-                className={classes.buttonNormal}
-                data-tip
-                data-for="next"
-                onClick={(e) => {
-                  onChangeTime(e, +10)
-                }}
-              >
-                <img src={'/images/ic_next.svg'} className={classes.image} />
-              </Box>
+          )}
+          {/* previous and next only in mobile */}
+          {(isMobile || androidPl || iPhonePl) && videoType !== STATUS_VIDEO.LIVE_STREAM && (
+            <div className={classes.playOverViewSP} style={{ opacity: isHoveredVideo && (isMobile || androidPl || iPhonePl) ? 1 : 0 }}>
+              <div className={classes.nextPreSP}>
+                <Box
+                  className={classes.buttonNormal}
+                  data-tip
+                  data-for="previous"
+                  onClick={(e) => {
+                    onChangeTime(e, -10)
+                  }}
+                >
+                  <img src={'/images/ic_previous.svg'} className={classes.image} />
+                </Box>
+                <Box
+                  className={classes.buttonNormal}
+                  data-tip
+                  data-for="next"
+                  onClick={(e) => {
+                    onChangeTime(e, +10)
+                  }}
+                >
+                  <img src={'/images/ic_next.svg'} className={classes.image} />
+                </Box>
+              </div>
             </div>
-          </div>
-        )}
-        {/*errorVideo && <div className={classes.loading} />} */}
-        {/* {visible.videoError && (
+          )}
+          {/*errorVideo && <div className={classes.loading} />} */}
+          {/* {visible.videoError && (
           <div className={classes.overViewError}>
             <div
               className={classes.thumbBegin}
@@ -956,9 +1115,10 @@ const VideoPlayer: React.FC<PlayerProps> = ({
             </Box>
           </div>
         )} */}
+        </div>
+        {/* )} */}
       </div>
-      {/* )} */}
-    </div>
+    </ClickAwayListener>
   )
 }
 
@@ -1035,13 +1195,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   videoPlayer: {
     height: '100%',
-    minHeight: 230,
-  },
-  controlOut: {
-    // backgroundColor: 'rgba(0,0,0,0.3)',
-    display: 'flex',
-    justifyContent: 'space-between',
-    height: 40,
   },
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   processControl: (props: { checkStatusVideo: number; isFull?: boolean; isShowNextPre?: boolean }) => {
@@ -1098,9 +1251,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   [theme.breakpoints.down('xs')]: {
     fontSizeLarge: {
       fontSize: '50px',
-    },
-    controlOut: {
-      height: 26,
     },
   },
   thumbBegin: {
@@ -1186,7 +1336,11 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export default memo(VideoPlayer, (prev, next) => {
   console.warn('===redenr===', prev.src !== next.src)
-  if (prev.src !== next.src) {
+  if (
+    prev.src !== next.src ||
+    prev.componentsSize.videoHeight !== next.componentsSize.videoHeight ||
+    prev.componentsSize.videoWidth !== next.componentsSize.videoWidth
+  ) {
     return false
   }
   return true
