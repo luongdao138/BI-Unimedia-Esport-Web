@@ -9,6 +9,7 @@ import _ from 'lodash'
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import useDetailVideo from '../useDetailVideo'
+import VideoPlayerContextProvider from '@containers/VideoLiveStreamContainer/VideoContext/VideoPlayerContext'
 import VideoPlayer from './VideoPlayer'
 
 interface LiveStreamContentProps {
@@ -72,28 +73,30 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
             className={classes.thumb}
           />
         ) : (
-          <VideoPlayer
-            componentsSize={componentsSize}
-            isArchived={isArchived}
-            key={keyVideoPlayer}
-            videoType={videoType}
-            src={detailVideoResult?.archived_url}
-            // src={'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8'}
-            thumbnail={
-              detailVideoResult?.thumbnail
-                ? detailVideoResult?.thumbnail
-                : !detailVideoResult?.thumbnail && detailVideoResult?.video_thumbnail
-                ? detailVideoResult?.video_thumbnail
-                : '/images/live_stream/thumbnail_default.png'
-            }
-            statusVideo={showOverlayOnMediaPlayer() ? true : null}
-            mediaOverlayIsShown={showOverlayOnMediaPlayer()}
-            onVideoEnd={onVideoEnd}
-            startLive={Date.parse(detailVideoResult?.live_stream_start_time)}
-            endLive={detailVideoResult?.live_stream_end_time}
-            type={detailVideoResult?.status}
-            qualities={detailVideoResult?.qualities}
-          />
+          <VideoPlayerContextProvider>
+            <VideoPlayer
+              componentsSize={componentsSize}
+              isArchived={isArchived}
+              key={keyVideoPlayer}
+              videoType={videoType}
+              src={detailVideoResult?.archived_url}
+              // src={'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8'}
+              thumbnail={
+                detailVideoResult?.thumbnail
+                  ? detailVideoResult?.thumbnail
+                  : !detailVideoResult?.thumbnail && detailVideoResult?.video_thumbnail
+                  ? detailVideoResult?.video_thumbnail
+                  : '/images/live_stream/thumbnail_default.png'
+              }
+              statusVideo={showOverlayOnMediaPlayer() ? true : null}
+              mediaOverlayIsShown={showOverlayOnMediaPlayer()}
+              onVideoEnd={onVideoEnd}
+              startLive={Date.parse(detailVideoResult?.live_stream_start_time)}
+              endLive={detailVideoResult?.live_stream_end_time}
+              type={detailVideoResult?.status}
+              qualities={detailVideoResult?.qualities}
+            />
+          </VideoPlayerContextProvider>
         )}
       </>
     )

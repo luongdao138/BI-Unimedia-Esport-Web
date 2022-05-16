@@ -277,9 +277,9 @@ export const getCowellRealtimeStatusConnections = /* GraphQL */ `
     }
   }
 `
-export const listCowellRealtimeStatusConnectionss = /* GraphQL */ `
-  query ListCowellRealtimeStatusConnectionss($filter: ModelCowellRealtimeStatusConnectionsFilterInput, $limit: Int, $nextToken: String) {
-    listCowellRealtimeStatusConnectionss(filter: $filter, limit: $limit, nextToken: $nextToken) {
+export const listCowellRealtimeStatusConnections = /* GraphQL */ `
+  query ListCowellRealtimeStatusConnections($filter: ModelCowellRealtimeStatusConnectionsFilterInput, $limit: Int, $nextToken: String) {
+    listCowellRealtimeStatusConnections(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
         connectionId
@@ -291,7 +291,7 @@ export const listCowellRealtimeStatusConnectionss = /* GraphQL */ `
   }
 `
 export const getUsersByUuid = /* GraphQL */ `
-  query GetUsersByUuid($uuid: String, $sortDirection: ModelSortDirection, $filter: ModelUserFilterInput, $limit: Int, $nextToken: String) {
+  query GetUsersByUuid($uuid: String!, $sortDirection: ModelSortDirection, $filter: ModelUserFilterInput, $limit: Int, $nextToken: String) {
     getUsersByUuid(uuid: $uuid, sortDirection: $sortDirection, filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
@@ -311,7 +311,7 @@ export const getUsersByUuid = /* GraphQL */ `
 `
 export const getReceiverByUuid = /* GraphQL */ `
   query GetReceiverByUuid(
-    $master_uuid: String
+    $master_uuid: String!
     $sortDirection: ModelSortDirection
     $filter: ModelGiftMasterFilterInput
     $limit: Int
@@ -337,7 +337,7 @@ export const getReceiverByUuid = /* GraphQL */ `
 `
 export const getMessagesByVideoId = /* GraphQL */ `
   query GetMessagesByVideoId(
-    $video_id: String
+    $video_id: String!
     $created_time: ModelStringKeyConditionInput
     $sortDirection: ModelSortDirection
     $filter: ModelMessageFilterInput
@@ -397,7 +397,7 @@ export const getMessagesByVideoId = /* GraphQL */ `
 `
 export const getMessagesByVideoIdWithSort = /* GraphQL */ `
   query GetMessagesByVideoIdWithSort(
-    $video_id: String
+    $video_id: String!
     $video_time: ModelIntKeyConditionInput
     $sortDirection: ModelSortDirection
     $filter: ModelMessageFilterInput
@@ -457,7 +457,7 @@ export const getMessagesByVideoIdWithSort = /* GraphQL */ `
 `
 export const getMessagesByVideoByPremium = /* GraphQL */ `
   query GetMessagesByVideoByPremium(
-    $video_id: String
+    $video_id: String!
     $is_premium_number: ModelIntKeyConditionInput
     $sortDirection: ModelSortDirection
     $filter: ModelMessageFilterInput
@@ -517,7 +517,7 @@ export const getMessagesByVideoByPremium = /* GraphQL */ `
 `
 export const getVideosByUuid = /* GraphQL */ `
   query GetVideosByUuid(
-    $uuid: String
+    $uuid: String!
     $sortDirection: ModelSortDirection
     $filter: ModelVideoFilterInput
     $limit: Int
@@ -539,7 +539,13 @@ export const getVideosByUuid = /* GraphQL */ `
   }
 `
 export const getVideoByUuid = /* GraphQL */ `
-  query GetVideoByUuid($uuid: String, $sortDirection: ModelSortDirection, $filter: ModelVideoFilterInput, $limit: Int, $nextToken: String) {
+  query GetVideoByUuid(
+    $uuid: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelVideoFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
     getVideoByUuid(uuid: $uuid, sortDirection: $sortDirection, filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
@@ -557,7 +563,7 @@ export const getVideoByUuid = /* GraphQL */ `
 `
 export const getChannelByArn = /* GraphQL */ `
   query GetChannelByArn(
-    $arn: String
+    $arn: String!
     $sortDirection: ModelSortDirection
     $filter: ModelChannelFilterInput
     $limit: Int

@@ -10,6 +10,7 @@ import _ from 'lodash'
 import { STATUS_SEND_MESS } from '@constants/common.constants'
 import { STATUS_VIDEO } from '@services/videoTop.services'
 import ESAvatar from '@components/Avatar'
+import useIsomorphicLayoutEffect from '@utils/hooks/useIsomorphicLayoutEffect'
 
 type DonateMessageProps = {
   message?: any
@@ -19,6 +20,8 @@ type DonateMessageProps = {
   resendMess: (message: any) => void
   reDeleteMess: (message: any) => void
   getMessageWithoutNgWords: (chatMessContent: string) => ReactNode
+  measure?: any
+  contentRect?: any
 }
 
 const DonateMessage: React.FC<DonateMessageProps> = ({
@@ -29,9 +32,15 @@ const DonateMessage: React.FC<DonateMessageProps> = ({
   resendMess,
   reDeleteMess,
   videoType,
+  measure,
+  contentRect,
 }) => {
   const classes = useStyles()
   const { t } = useTranslation('common')
+
+  useIsomorphicLayoutEffect(() => {
+    measure?.()
+  }, [message, contentRect?.width, contentRect?.height])
 
   const renderBgColor = (bgColorProperty: string, isHeader = false) => {
     const bgColor = purchasePoints[`p_${message.point}`][bgColorProperty]

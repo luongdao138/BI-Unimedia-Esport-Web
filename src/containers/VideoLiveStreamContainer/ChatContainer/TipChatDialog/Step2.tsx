@@ -83,7 +83,6 @@ const Step2: React.FC<Step2Props> = ({
       }
     },
   })
-  564
   const formHasError = values.message.length > purchasePoints[purchaseValueSelected].maxLengthInput
 
   const handlePremiumChatClick = async () => {
@@ -116,7 +115,7 @@ const Step2: React.FC<Step2Props> = ({
 
   return (
     <Box>
-      <Box className={classes.dialogPanel}>
+      <Box className={`scroll_common ${classes.dialogPanel}`}>
         <Box className={`${classes.selectedMemberInfo}`}>
           <GiftMember data={selectedMember} />
         </Box>
@@ -182,7 +181,13 @@ interface StyleProps {
 }
 
 const useStyles = makeStyles((theme) => ({
-  dialogPanel: { background: `${Colors.white_opacity[10]}`, borderRadius: '5px', padding: '8px 20px 20px 30px' },
+  dialogPanel: {
+    background: `${Colors.white_opacity[10]}`,
+    borderRadius: '5px',
+    padding: '8px 20px 20px 30px',
+    maxHeight: 'calc(100vh - 320px)',
+    overflow: 'auto',
+  },
   selectedMemberInfo: {},
   end: {},
   purchaseCommentInput: {
@@ -192,37 +197,31 @@ const useStyles = makeStyles((theme) => ({
       color: Colors.white_opacity[30],
       opacity: 1,
     },
-    maxHeight: 'calc(100vh - 580px)',
-    // maxHeight: '83px',
+
+    // maxHeight: 'calc(100vh - 495px)',
+    height: '100%',
   },
-  [theme.breakpoints.down(1024)]: {
-    [`@media (orientation: landscape)`]: {
-      purchaseCommentInput: (props: StyleProps) => {
-        if (props.isLandscape) {
-          return {
-            maxHeight: '83px',
-            height: 'unset',
-          }
-        }
-      },
-    },
-  },
-  [theme.breakpoints.down(769)]: {
-    [`@media (orientation: landscape)`]: {
-      purchaseCommentInput: (props: StyleProps) => {
-        if (props.isLandscape) {
-          return {
-            maxHeight: '83px',
-            height: 'unset',
-          }
-        } else {
-          return {
-            height: '83px',
-          }
-        }
-      },
-    },
-  },
+  // [theme.breakpoints.up(769)]: {
+  //   purchaseCommentInput: {
+  //     maxHeight: 'calc(100vh - 580px)',
+  //   },
+  // },
+  // [theme.breakpoints.down(769)]: {
+  //   [`@media (orientation: landscape)`]: {
+  //     purchaseCommentInput: (props: StyleProps) => {
+  //       if (props.isLandscape) {
+  //         return {
+  //           maxHeight: '83px',
+  //           height: 'unset',
+  //         }
+  //       } else {
+  //         return {
+  //           height: '83px',
+  //         }
+  //       }
+  //     },
+  //   },
+  // },
   purchaseCommentRoot: {
     backgroundColor: '#212121',
     padding: '9px 9px 13px !important',
@@ -339,6 +338,9 @@ const useStyles = makeStyles((theme) => ({
     purchaseItemText: {
       fontSize: '10px',
       lineHeight: '13px',
+    },
+    dialogPanel: {
+      maxHeight: 'unset',
     },
     [`@media (orientation: landscape)`]: {
       dialogPanel: (props: StyleProps) => {

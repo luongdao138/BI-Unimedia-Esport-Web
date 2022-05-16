@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { memo, useEffect } from 'react'
 import { useMediaQuery, useTheme } from '@material-ui/core'
 import { AutoSizer, CellMeasurer, List, CellMeasurerCache } from 'react-virtualized'
 import useStyles from '@containers/VideoLiveStreamContainer/ChatContainer/styles'
@@ -15,7 +15,7 @@ interface Props {
   messagesEndRef: React.MutableRefObject<any>
   stateMessages: any[]
   isStreamer?: number
-  isTipTab: boolean
+  // isTipTab: boolean
   videoType: number
   deleteMsg: (message: any) => void
   resendMess: (message: any) => void
@@ -39,7 +39,7 @@ const ChatMessages: React.FC<Props> = ({
   // _onScroll,
   isStreamer,
   videoType,
-  isTipTab,
+  // isTipTab,
   deleteMsg,
   resendMess,
   reDeleteMess,
@@ -104,50 +104,63 @@ const ChatMessages: React.FC<Props> = ({
     }
   }
 
+  const clearCache = () => {
+    // measureCallbacksRef.current.forEach((measure) => {
+    //   measure?.()
+    // })
+    messagesEndRef.current?.recomputeRowHeights(0)
+  }
+
   useEffect(() => {
-    cache.clearAll()
+    clearCache()
   }, [contentRect?.width])
 
   useEffect(() => {
     setTimeout(handleScrollToBottom, 10)
-    cache.clearAll()
+    clearCache()
     // console.log('🚀 ~ useEffect ~ cache---000', cache)
   }, [stateMessages])
 
-  // console.log('-------------- Chat component rerender message list-----------------')
-
   const rowRenderer = ({ index, key, style, parent }) => {
     const msg = stateMessages[index]
+    const getContent = (measure: any, msg: any) => {
+      return !msg.delete_flag || isStreamer ? (
+        msg.is_premium ? (
+          <DonateMessage
+            key={index}
+            message={msg}
+            videoType={videoType}
+            deleteMess={deleteMsg}
+            getMessageWithoutNgWords={getMessageWithoutNgWords}
+            is_streamer={isStreamer}
+            resendMess={resendMess}
+            reDeleteMess={reDeleteMess}
+            measure={measure}
+            contentRect={contentRect}
+          />
+        ) : (
+          // no display normal mess on tab tip
+          <ChatTextMessage
+            key={index}
+            message={msg}
+            videoType={videoType}
+            getMessageWithoutNgWords={getMessageWithoutNgWords}
+            deleteMess={deleteMsg}
+            is_streamer={isStreamer}
+            resendMess={resendMess}
+            reDeleteMess={reDeleteMess}
+            measure={measure}
+            contentRect={contentRect}
+          />
+        )
+      ) : null
+    }
+
     return (
       <CellMeasurer cache={cache} columnIndex={0} columnCount={1} key={key} parent={parent} rowIndex={index}>
-        {({ registerChild }) => (
+        {({ registerChild, measure }) => (
           <div key={key} style={style} ref={registerChild}>
-            {!msg.delete_flag || isStreamer ? (
-              msg.is_premium ? (
-                <DonateMessage
-                  key={index}
-                  message={msg}
-                  videoType={videoType}
-                  deleteMess={deleteMsg}
-                  getMessageWithoutNgWords={getMessageWithoutNgWords}
-                  is_streamer={isStreamer}
-                  resendMess={resendMess}
-                  reDeleteMess={reDeleteMess}
-                />
-              ) : isTipTab ? null : (
-                // no display normal mess on tab tip
-                <ChatTextMessage
-                  key={index}
-                  message={msg}
-                  videoType={videoType}
-                  getMessageWithoutNgWords={getMessageWithoutNgWords}
-                  deleteMess={deleteMsg}
-                  is_streamer={isStreamer}
-                  resendMess={resendMess}
-                  reDeleteMess={reDeleteMess}
-                />
-              )
-            ) : null}
+            {getContent(measure, msg)}
           </div>
         )}
       </CellMeasurer>
@@ -167,7 +180,7 @@ const ChatMessages: React.FC<Props> = ({
       <AutoSizer
         style={{ flex: 1 }}
         onResize={() => {
-          cache.clearAll()
+          clearCache()
         }}
       >
         {({ height, width }) => {
@@ -195,4 +208,4 @@ const ChatMessages: React.FC<Props> = ({
   )
 }
 
-export default ChatMessages
+export default memo(ChatMessages)

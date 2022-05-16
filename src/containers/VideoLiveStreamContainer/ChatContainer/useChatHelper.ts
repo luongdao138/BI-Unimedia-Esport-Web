@@ -29,7 +29,7 @@ type IExportProps = {
   fetchPrevMess: (sortOrder?: any) => void
 }
 type IImportProps = {
-  isSwitchingTabRef: any
+  // isSwitchingTabRef: any
   key_video_id: string
   initTipMessRef: any
   prevRewindMessRef: any
@@ -45,7 +45,7 @@ type IImportProps = {
   cacheDonateMessRef: any
   cacheMessRef: any
   nextTimeRef: any
-  isSwitchingSubTabRef: any
+  // isSwitchingSubTabRef: any
   switchTabRef: any
   rewindMessRef: any
   //
@@ -77,7 +77,7 @@ export const useChatHelpers = (props: IImportProps): IExportProps => {
   const prevTimeRef = useRef<number>(0)
 
   const {
-    isSwitchingTabRef,
+    // isSwitchingTabRef,
     key_video_id,
     initTipMessRef,
     prevRewindMessRef,
@@ -93,7 +93,7 @@ export const useChatHelpers = (props: IImportProps): IExportProps => {
     cacheDonateMessRef,
     cacheMessRef,
     nextTimeRef,
-    isSwitchingSubTabRef,
+    // isSwitchingSubTabRef,
     switchTabRef,
     rewindMessRef,
     //
@@ -298,9 +298,9 @@ export const useChatHelpers = (props: IImportProps): IExportProps => {
 
   // fetch messages prev when rewind to video time
   const fetchPrevMessWhenRewind = (video_time, sortOrder = APIt.ModelSortDirection.DESC) => {
-    if (isSwitchingTabRef.current || isSwitchingSubTabRef.current) {
-      return
-    }
+    // if (isSwitchingTabRef.current || isSwitchingSubTabRef.current) {
+    //   return
+    // }
     try {
       setIsGettingPrevRewindMess(true)
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -314,9 +314,9 @@ export const useChatHelpers = (props: IImportProps): IExportProps => {
         nextToken: null,
       }
       API.graphql(graphqlOperation(getMessagesByVideoIdWithSort, listQV)).then((messagesResults) => {
-        if (isSwitchingTabRef.current || isSwitchingSubTabRef.current) {
-          return
-        }
+        // if (isSwitchingTabRef.current || isSwitchingSubTabRef.current) {
+        //   return
+        // }
         const messagesInfo = messagesResults.data.getMessagesByVideoIdWithSort
         refFetchPrevMessWhenRewind.current(messagesInfo, video_time)
         setIsGettingPrevRewindMess(false)
@@ -329,9 +329,9 @@ export const useChatHelpers = (props: IImportProps): IExportProps => {
 
   const refFetchPrevMessWhenRewind = useRef(null)
   const handleFetchPrevMessWhenRewind = (messagesInfo, video_time) => {
-    if (isSwitchingTabRef.current) {
-      return
-    }
+    // if (isSwitchingTabRef.current) {
+    //   return
+    // }
     const transformMessAsc = sortMessages(messagesInfo.items)
     prevRewindMessRef.current = { [video_time]: [...transformMessAsc] }
     // setPrevRewindMess({ [video_time]: [...transformMessAsc] })
@@ -343,9 +343,9 @@ export const useChatHelpers = (props: IImportProps): IExportProps => {
     // prevent scroll when has no messages
     if (!messagesInfo.nextToken) setIsTokenBroken(false)
 
-    if (!isSwitchingTabRef.current) {
-      fetchNextMess(GET_MESS_TYPE.FETCH_NEXT, video_time)
-    }
+    // if (!isSwitchingTabRef.current) {
+    fetchNextMess(GET_MESS_TYPE.FETCH_NEXT, video_time)
+    // }
   }
   refFetchPrevMessWhenRewind.current = handleFetchPrevMessWhenRewind
 
@@ -413,9 +413,9 @@ export const useChatHelpers = (props: IImportProps): IExportProps => {
   ) => {
     // console.log('🚀 ~ video_time--00', video_time)
 
-    if (isSwitchingTabRef.current) {
-      return
-    }
+    // if (isSwitchingTabRef.current) {
+    //   return
+    // }
     try {
       let limitMess = LIMIT_MESS
       // console.log('🚀 ~ loadMoreMess ~ fetchNextMess--0000', getType)
@@ -470,13 +470,13 @@ export const useChatHelpers = (props: IImportProps): IExportProps => {
       //   }
       // }
       // console.log('🚀 ~ abc ~ 222')
-      if (isSwitchingTabRef.current) {
-        return
-      }
+      // if (isSwitchingTabRef.current) {
+      //   return
+      // }
       API.graphql(graphqlOperation(getMessagesByVideoIdWithSort, listQV)).then((messagesResults) => {
-        if (isSwitchingTabRef.current) {
-          return
-        }
+        // if (isSwitchingTabRef.current) {
+        //   return
+        // }
         const messagesInfo = messagesResults.data.getMessagesByVideoIdWithSort
         // && !_.isEmpty(messagesInfo.items)
         if (getType === GET_MESS_TYPE.FETCH_NEXT) {

@@ -367,7 +367,7 @@ const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
                   formatValue={(e) => {
                     const card_cvc = e.target.value
                     // check is numeric
-                    const isValid = (/^[0-9]+$/g.test(card_cvc) || !card_cvc) && card_cvc.length <= 4
+                    const isValid = (/^[0-9]+$/g.test(card_cvc) || !card_cvc) && card_cvc.length <= 3
                     if (/^[0-9]+$/g.test(card_cvc) || !card_cvc) {
                       setSelectedCardId('')
                     }
