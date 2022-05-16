@@ -289,7 +289,6 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       handleChangeVol(undefined, prevVolumeRef.current || 1)
     }
   }
-
   // handle keyboard  event
   useEffect(() => {
     const handleVideoKeyboardEvent = (e: KeyboardEvent) => {
@@ -336,10 +335,6 @@ const VideoPlayer: React.FC<PlayerProps> = ({
             isTheateModeRef.current = !isTheateModeRef.current
             changeVideoViewMode(isTheateModeRef.current)
           }
-          break
-        case 'i':
-          isPiPModeRef.current = !isPiPModeRef.current
-          changeMiniPlayerState(isPiPModeRef.current)
           break
         case 'ArrowUp':
           if (enableChangeVolumeRef.current) {
