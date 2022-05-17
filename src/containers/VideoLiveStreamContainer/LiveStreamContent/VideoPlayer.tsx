@@ -292,19 +292,16 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   // handle keyboard  event
   useEffect(() => {
     const handleVideoKeyboardEvent = (e: KeyboardEvent) => {
+      console.log('event target tagname: ', e.target['tagName'])
       if (e.target['tagName'] === 'INPUT' || e.target['tagName'] === 'TEXTAREA') {
         return
       }
       switch (e.key) {
         case ' ':
-          if (isVideoArchive) {
-            handlePlayPause()
-          }
+          handlePlayPause()
           break
         case 'k':
-          if (isVideoArchive) {
-            handlePlayPause()
-          }
+          handlePlayPause()
           break
         case 'f':
           toggleFullScreen1()
@@ -313,24 +310,24 @@ const VideoPlayer: React.FC<PlayerProps> = ({
           toggleMute()
           break
         case 'ArrowRight':
-          if (changeRef.current === 'seek') {
+          if (changeRef.current === 'seek' && isVideoArchive) {
             handleChangeVideoTime('next')
-          } else {
+          } else if (changeRef.current === 'volume') {
             handleChangeVideoVolume('inc')
           }
           break
         case 'l':
-          handleChangeVideoTime('next')
+          if (isVideoArchive) handleChangeVideoTime('next')
           break
         case 'ArrowLeft':
-          if (changeRef.current === 'seek') {
+          if (changeRef.current === 'seek' && isVideoArchive) {
             handleChangeVideoTime('prev')
-          } else {
+          } else if (changeRef.current === 'volume') {
             handleChangeVideoVolume('decs')
           }
           break
         case 'j':
-          handleChangeVideoTime('prev')
+          if (isVideoArchive) handleChangeVideoTime('prev')
           break
         case 't':
           if (!isFullScreenModeRef.current && !isPiPModeRef.current) {
@@ -358,6 +355,9 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     }
 
     const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.target['tagName'] === 'INPUT' || e.target['tagName'] === 'TEXTAREA') {
+        return
+      }
       if (e.key == ' ') {
         e.preventDefault()
       }
