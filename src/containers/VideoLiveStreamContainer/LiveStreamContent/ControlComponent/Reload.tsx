@@ -38,7 +38,12 @@ const ReloadButton: React.FC<Props> = ({ videoRef, typeButton, isLive, onPressCa
     // if (!isLive) {
     switch (typeButton) {
       case 'reload':
-        videoRef.current.currentTime = videoStatus === STATUS_VIDEO.LIVE_STREAM ? durationPlayer : 0
+        if (/iPhone/i.test(window.navigator.userAgent)) {
+          //ios safari duration in video live stream is Infinity
+          videoRef.current?.load()
+        } else {
+          videoRef.current.currentTime = videoStatus === STATUS_VIDEO.LIVE_STREAM ? durationPlayer : 0
+        }
         break
       case 'previous':
         videoRef.current.currentTime = playedSeconds - 10
