@@ -366,6 +366,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       //https://github.com/bvaughn/react-virtualized/issues/995
       if (messagesEndRef.current != null && messagesEndRef) {
         messagesEndRef.current?.scrollToRow(position - 1)
+        needLoadMoreRef.current = false
         setTimeout(() => {
           messagesEndRef.current?.scrollToRow(position - 1)
           needLoadMoreRef.current = true
@@ -429,6 +430,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
 
       setIsGettingMess(false)
       setStateMessages(filterMess)
+      _scrollToBottom(filterMess.length)
       cacheMessRef.current = newMess
       // setCacheMess(newMess)
       // setMessagesDonate(filterDonateMess)
@@ -1161,22 +1163,13 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
 
     const resetMessWhenSwitchTab = () => {
       setStateMessages([])
-      // setCacheMess([])
       cacheMessRef.current = []
-      // setMessagesDonate([])
-      // setCacheDonateMess([])
     }
 
     const handleGetMessTip = () => {
       // if get mess initial success => get mess same as when rewind time
       if (successGetListMessTip) {
-        setIsGettingMess(true)
-        setTimeout(() => {
-          console.log('🚀 ~ setTimeout ~ setIsGettingMess', 111)
-          fetchMessTipWhenRewind(videoPlayedSecond.current)
-        }, DEBOUNCE_SECOND)
-      } else {
-        // handleGetMessTipInitial()
+        fetchMessTipWhenRewind(videoPlayedSecond.current)
       }
     }
 
@@ -1194,14 +1187,8 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       if (!isFirstVisitPage) {
         switch (activeSubTab) {
           case SUB_TABS.MESS.TIP:
-            console.log('Switch to sub tab chat mess')
-            // if (!isSwitchingSubTabRef.current) {
-            //   return
-            // }
-            console.log('Switch to sub tab chat mess fire')
-
             setBottom(true)
-            resetMessWhenSwitchTab()
+            cacheMessRef.current = []
             handleGetMessTip()
             break
 
@@ -1209,13 +1196,8 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
             console.log('Switch to sub tab chat all')
             setBottom(true)
             resetMessWhenSwitchTab()
-            // if (isSwitchingSubTabRef.current) {
-            //   return
-            // }
             console.log('Switch to sub tab chat all fire')
             if (isStreaming) {
-              // console.log('🚀 ~ useEffect ~ isStreaming', isStreaming)
-              // setIsSwitchingTab(true)
               switchTabRef.current = true
               fetchMessInitialStreaming()
             } else {
