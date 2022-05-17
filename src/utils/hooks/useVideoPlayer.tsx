@@ -18,8 +18,8 @@ export const useVideoPlayer = (): {
   const { isStreaming, state } = useVideoPlayerContext()
 
   const handleUpdateDurationTime = (event) => {
-    const duration = event.target.duration
-    console.log('🚀 ~ usePlayer--11', duration)
+    const duration = Math.floor(event.target.duration)
+    console.log('==========🚀 ~ usePlayer--11', duration)
 
     if (!state.playing) {
       // if (Math.floor(duration) !== liveStreamInfo.played_second) {

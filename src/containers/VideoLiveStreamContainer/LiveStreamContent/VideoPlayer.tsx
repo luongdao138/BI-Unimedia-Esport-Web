@@ -117,19 +117,19 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   const { videoWatchTimeReportRequest, getMiniPlayerState } = useLiveStreamDetail()
   const isStreamingEnd = useRef(liveStreamInfo.is_streaming_end)
   const { isHoveredVideo } = liveStreamInfo
-  const handlePauseAndSeekVideo = () => {
-    // // seek to current live stream second if is pausing live and is not playing
-    // if (!state.playing && liveStreamInfo.is_pausing_live) {
-    //   const newSecond = Math.floor(durationPlayer)
-    //   changeSeekCount(Math.floor(newSecond))
-    // }
-    // // if pause video when is live streaming => set is pausing to true
-    // if (state.playing && Math.floor(playedSeconds) === Math.floor(durationPlayer)) {
-    //   changeIsPausingLive(true)
-    // } else {
-    //   changeIsPausingLive(false)
-    // }
-  }
+  // const handlePauseAndSeekVideo = () => {
+  //   // // seek to current live stream second if is pausing live and is not playing
+  //   // if (!state.playing && liveStreamInfo.is_pausing_live) {
+  //   //   const newSecond = Math.floor(durationPlayer)
+  //   //   changeSeekCount(Math.floor(newSecond))
+  //   // }
+  //   // // if pause video when is live streaming => set is pausing to true
+  //   // if (state.playing && Math.floor(playedSeconds) === Math.floor(durationPlayer)) {
+  //   //   changeIsPausingLive(true)
+  //   // } else {
+  //   //   changeIsPausingLive(false)
+  //   // }
+  // }
 
   const [isPortrait, setIsPortrait] = useState<boolean>(!!isMobile)
   const [resolution, setResolution] = useState(VIDEO_RESOLUTION_HLS.AUTO)
@@ -811,15 +811,19 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     }
   }
 
-  const handlePlayPauseOut = () => {
-    if (!isMobile && !iPhonePl && !androidPl) {
-      handlePauseAndSeekVideo()
+  const handlePlayPauseOut = (type?: string) => {
+    if ((!isMobile && !iPhonePl && !androidPl) || ((isMobile || iPhonePl || androidPl) && type === 'in')) {
       if (videoEl.current?.paused || videoEl.current?.ended) {
-        videoEl.current?.play()
         //new version
         if (videoType === STATUS_VIDEO.LIVE_STREAM && videoEl.current !== null) {
-          videoEl.current.currentTime = durationPlayerRef.current
+          if (iPhonePl) {
+            //ios safari duration in video live stream is Infinity
+            videoEl.current?.load()
+          } else {
+            videoEl.current.currentTime = Math.floor(durationPlayerRef.current)
+          }
         }
+        videoEl.current?.play()
         setState({ ...state, playing: true })
         setVisible({ ...visible, loading: false, videoLoaded: false })
       } else {
@@ -831,17 +835,21 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     }
   }
   const handlePlayPause = () => {
-    handlePauseAndSeekVideo()
-    //new version
-    if (videoType === STATUS_VIDEO.LIVE_STREAM && videoEl.current !== null) {
-      videoEl.current.currentTime = durationPlayerRef.current
-    }
     if (videoEl.current?.paused || videoEl.current?.ended) {
+      //new version
+      if (videoType === STATUS_VIDEO.LIVE_STREAM && videoEl.current !== null) {
+        if (iPhonePl) {
+          //ios safari duration in video live stream is Infinity
+          videoEl.current?.load()
+        } else {
+          videoEl.current.currentTime = Math.floor(durationPlayerRef.current)
+        }
+      }
       videoEl.current?.play()
       setState({ ...state, playing: true })
       setVisible({ ...visible, loading: false, videoLoaded: false })
     } else {
-      videoEl.current?.pause()
+      videoEl.current.pause()
       setState({ ...state, playing: false })
       setVisible({ ...visible, loading: true, videoLoaded: false })
       setIsStreaming(false)
@@ -1003,7 +1011,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
             isFull === true ? classes.forceFullscreenIosSafariPlayer : ''
           }`}
         >
-          <div style={{ height: '100%', position: 'relative' }} onClick={handlePlayPauseOut}>
+          <div style={{ height: '100%', position: 'relative' }} onClick={() => handlePlayPauseOut('out')}>
             {Video}
             {getMiniPlayerState && (
               <Box id="exist-picture-in-picture" className={classes.existPictureInPicture}>
@@ -1047,7 +1055,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
               <UtilityArea
                 ref={refControlBar}
                 videoRef={videoEl}
-                onPlayPause={handlePlayPause}
+                onPlayPause={() => handlePlayPauseOut('in')}
                 playing={playing}
                 muted={muted}
                 handleFullScreen={toggleFullScreen1}
