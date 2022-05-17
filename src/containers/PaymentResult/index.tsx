@@ -11,7 +11,6 @@ const PaymentResult: React.FC = () => {
   const [status, setStatus] = useState('')
   const [secondToCloseWindow, setSecond] = useState(6)
   let intervalCountDown = null
-
   useEffect(() => {
     if (status && isPaymentSuccess(status)) {
       localStorage.setItem('reload_point', Math.random().toString())
@@ -55,8 +54,14 @@ const PaymentResult: React.FC = () => {
 
   return (
     <Box className={classes.container}>
-      <Typography className={classes.title}>{`${status}`}</Typography>
-      {isPaymentSuccess(status) && <Typography className={classes.title}>{`Close in ${secondToCloseWindow}`}</Typography>}
+      {status === 'ok' ? (
+        <Typography className={classes.title}>決済が正常に完了しました。</Typography>
+      ) : (
+        <>
+          <Typography className={classes.messError}>お支払いに失敗しました。</Typography>
+          <Typography className={classes.messError}>「閉じる」ボタンをクリックして、再度ご購入手続きをお願いいたします。</Typography>
+        </>
+      )}
       <ESButton
         disabled={!status}
         variant="contained"
@@ -66,7 +71,7 @@ const PaymentResult: React.FC = () => {
         className={classes.button}
         onClick={handleCloseClick}
       >
-        {t('common:tournament_create.close')}
+        {t('common:tournament_create.close')} {secondToCloseWindow}
       </ESButton>
     </Box>
   )
@@ -84,8 +89,15 @@ const useStyles = makeStyles((theme) => ({
     marginTop: '48px',
   },
   title: {
-    fontSize: 30,
+    fontSize: 20,
     marginBottom: theme.spacing(6),
+    color: '#ffff00',
+    textAlign: 'center',
+  },
+  messError: {
+    fontSize: 20,
+    color: '#ffff00',
+    textAlign: 'center',
   },
 }))
 
