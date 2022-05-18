@@ -9,7 +9,7 @@ import { VIDEO_RESOLUTION } from '@services/liveStreamDetail.service'
 import { QualitiesType } from '@services/videoTop.services'
 import { Colors } from '@theme/colors'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
-import React, { forwardRef, memo, useEffect, useImperativeHandle, useRef, useState } from 'react'
+import React, { forwardRef, memo, useImperativeHandle, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import ReactTooltip from 'react-tooltip'
 import Play from './ControlComponent/Play'
@@ -92,7 +92,7 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
 
     // const classes = useStyles({ liveStreaming: durationPlayer === playedSeconds ? true : false })
     const { t } = useTranslation('common')
-    const [isFull, setFull] = useState<boolean>(false)
+    // const [isFull, setFull] = useState<boolean>(false)
     const { changeVideoViewMode, liveStreamInfo } = useDetailVideo()
     const { is_normal_view_mode } = liveStreamInfo
     const [settingPanel, setSettingPanel] = useState(SettingPanelState.NONE)
@@ -107,6 +107,7 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
     const durationPlayerRef = useRef<number>(0)
     const playerSecondsRef = useRef<number>(0)
     const classes = useStyles({ liveStreaming: durationPlayerRef.current === playerSecondsRef.current ? true : false })
+    const { isChrome } = CommonHelper.getBrowserInfo()
     // console.log('------------- Controlbar rerender -------------');
 
     const commonProps = { durationPlayer, playedSeconds }
@@ -146,7 +147,8 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
 
     useImperativeHandle(ref, () => {
       return {
-        isFull: isFull,
+        // isFull: isFull,
+        isFull: isChrome ? document.fullscreenElement : document['webkitFullscreenElement'],
         settingPanel: settingPanel,
       }
     })
@@ -155,18 +157,18 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
 
     const toggleFullScreen = () => {
       handleFullScreen()
-      setFull(!isFull)
+      // setFull(!isFull)
     }
 
-    useEffect(() => {
-      document.addEventListener('fullscreenchange', () => {
-        if (document.fullscreenElement) {
-          setFull(true)
-        } else {
-          setFull(false)
-        }
-      })
-    }, [])
+    // useEffect(() => {
+    //   document.addEventListener('fullscreenchange', () => {
+    //     if (document.fullscreenElement) {
+    //       setFull(true)
+    //     } else {
+    //       setFull(false)
+    //     }
+    //   })
+    // }, [])
 
     const handleOnSettingButtonClick = (e) => {
       // e.stopPropagation()
@@ -357,7 +359,7 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
         </div>
         <div className={classes.controlRight}>
           {/* toggle theater mode button */}
-          {!isFull && !isMobile && (
+          {(isChrome ? !document.fullscreenElement : !document['webkitFullscreenElement']) && !isMobile && (
             <div
               ref={tooltipRef}
               className={classes.wrapViewMode}
@@ -490,23 +492,27 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
             data-for="toggleFullScreen"
             id={'fullscreenRef'}
           >
-            {!isFull ? (
+            {(isChrome ? !document.fullscreenElement : !document['webkitFullscreenElement']) ? (
               <img src={'/images/ic_full_screen.svg'} className={classes.sizeFullscreen} />
             ) : (
               <Icon fontSize={'small'} className={`fas fa-compress ${classes.pauseSmall}`} />
             )}
             <PlayerTooltip
               id={'toggleFullScreen'}
-              title={!isFull ? t('videos_top_tab.full_screen') : t('videos_top_tab.exit_full_screen')}
+              title={
+                (isChrome ? !document.fullscreenElement : !document['webkitFullscreenElement'])
+                  ? t('videos_top_tab.full_screen')
+                  : t('videos_top_tab.exit_full_screen')
+              }
               offset={
-                !isFull
+                (isChrome ? !document.fullscreenElement : !document['webkitFullscreenElement'])
                   ? { top: -10, left: 10 }
                   : {
                       top: 0,
                       left: 0,
                     }
               }
-              place={!isFull ? 'top' : 'left'}
+              place={(isChrome ? !document.fullscreenElement : !document['webkitFullscreenElement']) ? 'top' : 'left'}
             />
           </Box>
         </div>
