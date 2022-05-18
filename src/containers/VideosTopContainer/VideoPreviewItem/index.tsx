@@ -47,6 +47,7 @@ const VideoPreviewItem: React.FC<VideoPreviewItemProps> = ({ data, containerStyl
       // }
       // eslint-disable-next-line no-console
       console.log('URL=>', url)
+      window.scrollTo({ top: 0, behavior: 'smooth' })
       const isRedirectVideoDetailSuccess = url.includes('/?vid=')
       // eslint-disable-next-line no-console
       console.log('redirectVideoDetailSuccess=>', isRedirectVideoDetailSuccess)
