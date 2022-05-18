@@ -114,6 +114,8 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   const androidPl = /Android/i.test(window.navigator.userAgent)
   const iPhonePl = /iPhone/i.test(window.navigator.userAgent)
 
+  const processControlRef = useRef<HTMLDivElement>(null)
+
   const { videoWatchTimeReportRequest, getMiniPlayerState } = useLiveStreamDetail()
   const isStreamingEnd = useRef(liveStreamInfo.is_streaming_end)
   const { isHoveredVideo } = liveStreamInfo
@@ -184,6 +186,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       }
     } else {
       videoEl.current.onpause = function () {
+        console.log('========getMiniPlayerState======', getMiniPlayerState)
         setState({ ...state, playing: false })
         setVisible({ ...visible, loading: true, videoLoaded: false })
       }
@@ -289,6 +292,14 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       handleChangeVol(undefined, prevVolumeRef.current || 1)
     }
   }
+
+  useEffect(() => {
+    if (state.playing) {
+      videoEl.current?.play()
+    } else {
+      videoEl.current?.pause()
+    }
+  }, [state.playing])
   // handle keyboard  event
   useEffect(() => {
     const handleVideoKeyboardEvent = (e: KeyboardEvent) => {
@@ -772,9 +783,9 @@ const VideoPlayer: React.FC<PlayerProps> = ({
 
     return () => {
       //@ts-ignore
-      window.onscroll = () => {
-        //TODO: remove event onscroll window
-      }
+      // window.onscroll = () => {
+      //   //TODO: remove event onscroll window
+      // }
     }
   }, [resolution])
   useEffect(() => {
@@ -811,8 +822,35 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     }
   }
 
-  const handlePlayPauseOut = (type?: string) => {
-    if ((!isMobile && !iPhonePl && !androidPl) || ((isMobile || iPhonePl || androidPl) && type === 'in')) {
+  const handlePlayPauseOut = useCallback(
+    _.debounce((type?: string) => {
+      if ((!isMobile && !iPhonePl && !androidPl) || ((isMobile || iPhonePl || androidPl) && type === 'in')) {
+        if (videoEl.current?.paused || videoEl.current?.ended) {
+          //new version
+          if (videoType === STATUS_VIDEO.LIVE_STREAM && videoEl.current !== null) {
+            if (iPhonePl) {
+              //ios safari duration in video live stream is Infinity
+              videoEl.current?.load()
+            } else {
+              videoEl.current.currentTime = Math.floor(durationPlayerRef.current)
+            }
+          }
+          // setState({ ...state, playing: true })
+          setState((prev) => ({ ...prev, playing: !prev.playing }))
+          setVisible({ ...visible, loading: false, videoLoaded: false })
+        } else {
+          // setState({ ...state, playing: false })
+          setState((prev) => ({ ...prev, playing: !prev.playing }))
+          setVisible({ ...visible, loading: true, videoLoaded: false })
+          setIsStreaming(false)
+        }
+      }
+    }, 100),
+    [isMobile]
+  )
+  const handlePlayPause = useCallback(
+    _.debounce(() => {
+      console.log('handle play pause')
       if (videoEl.current?.paused || videoEl.current?.ended) {
         //new version
         if (videoType === STATUS_VIDEO.LIVE_STREAM && videoEl.current !== null) {
@@ -823,38 +861,18 @@ const VideoPlayer: React.FC<PlayerProps> = ({
             videoEl.current.currentTime = Math.floor(durationPlayerRef.current)
           }
         }
-        videoEl.current?.play()
-        setState({ ...state, playing: true })
+        setState((prev) => ({ ...prev, playing: !prev.playing }))
+        // setState({ ...state, playing: true })
         setVisible({ ...visible, loading: false, videoLoaded: false })
       } else {
-        videoEl.current.pause()
-        setState({ ...state, playing: false })
+        setState((prev) => ({ ...prev, playing: !prev.playing }))
+        // setState({ ...state, playing: false })
         setVisible({ ...visible, loading: true, videoLoaded: false })
         setIsStreaming(false)
       }
-    }
-  }
-  const handlePlayPause = () => {
-    if (videoEl.current?.paused || videoEl.current?.ended) {
-      //new version
-      if (videoType === STATUS_VIDEO.LIVE_STREAM && videoEl.current !== null) {
-        if (iPhonePl) {
-          //ios safari duration in video live stream is Infinity
-          videoEl.current?.load()
-        } else {
-          videoEl.current.currentTime = Math.floor(durationPlayerRef.current)
-        }
-      }
-      videoEl.current?.play()
-      setState({ ...state, playing: true })
-      setVisible({ ...visible, loading: false, videoLoaded: false })
-    } else {
-      videoEl.current.pause()
-      setState({ ...state, playing: false })
-      setVisible({ ...visible, loading: true, videoLoaded: false })
-      setIsStreaming(false)
-    }
-  }
+    }, 100),
+    []
+  )
   const handleReturnPlayPause = () => {
     if (flagResol) {
       if (videoEl.current?.paused || videoEl.current?.ended) {
@@ -892,11 +910,17 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     setIsStreaming(true)
   }
 
-  window.onscroll = () => {
-    if (playing) {
-      videoEl.current?.play()
+  const handleDoubleClickVideo = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!processControlRef.current.contains(e.target as Node)) {
+      toggleFullScreen1()
     }
   }
+
+  // window.onscroll = () => {
+  //   if (playing) {
+  //     videoEl.current?.play()
+  //   }
+  // }
 
   const handleOnRestart = () => {
     setIsStreaming(false)
@@ -977,6 +1001,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
         onClick={() => {
           enableChangeVolumeRef.current = true
         }}
+        onDoubleClick={handleDoubleClickVideo}
       >
         {/* {(iPhonePl || androidPl || (!iPadPl && isDownMd)) && (
         <div>
@@ -1049,6 +1074,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
           {/* {!isMobile && !androidPl && !iPhonePl && isLoadedMetaData && ( */}
           {isLoadedMetaData && (
             <div
+              ref={processControlRef}
               className={`${classes.processControl} ${isOpenSettingPanel && classes.showControl}`}
               style={isMobile || iPhonePl || androidPl ? { display: isHoveredVideo ? 'block' : 'none', opacity: 1 } : {}}
             >
