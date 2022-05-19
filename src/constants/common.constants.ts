@@ -399,3 +399,8 @@ export const SUB_TABS = {
 
 export const GIVER_RANK_TYPE = 'GIVER'
 export const RECEIVER_RANK_TYPE = 'RECEIVER'
+
+export const STATUS_GET_MESS = {
+  SUCCESS: 'SUCCESS',
+  GETTING: 'GETTING',
+}
