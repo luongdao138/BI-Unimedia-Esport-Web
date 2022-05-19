@@ -218,7 +218,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     )
     const chatMobileContainerRef = useRef<HTMLDivElement>(null)
     const videoPlayedSecond = useRef(0)
-    // console.log('🚀 ~ videoPlayedSecond---000', videoPlayedSecond?.current)
+    console.log('🚀 ~ videoPlayedSecond---000', videoPlayedSecond?.current)
     const videoStreamingSecond = useRef(0)
 
     // const [tab, setTab] = useState(VIDEO_TABS.CHAT)
@@ -273,14 +273,31 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     // console.log('🚀 ~ nextTime', nextTime)
     const [isTokenBroken, setIsTokenBroken] = useState(false)
     const [isTokenTipBroken, setIsTokenTipBroken] = useState(false)
-    // console.log('🚀 ~ isTokenTipBroken', isTokenTipBroken)
-    // console.log('🚀 ~ isTokenBroken', isTokenBroken)
+    console.log('🚀 ~ isTokenTipBroken', isTokenTipBroken)
+    console.log('🚀 ~ isTokenBroken', isTokenBroken)
     // const [videoTimeIsRewinding, setVideoTimeIsRewinding] = useState(0)
 
     // const isSwitchingTabRef = useRef(false)
     // console.log('🚀 ~ isSwitchingTabRef', isSwitchingTabRef)
     // const isSwitchingSubTabRef = useRef(false)
-    const { activeSubTab, activeTab, setActiveTab, setActiveSubTab, prevMessSubTabRef } = useVideoTabContext()
+    const {
+      activeSubTab,
+      activeTab,
+      setActiveTab,
+      setActiveSubTab,
+      prevMessSubTabRef,
+      isTipMessTab,
+      // isAllMessTab,
+      // isPrevTipMessTab,
+      // isPrevAllMessTab,
+      needLoadMoreRef,
+    } = useVideoTabContext()
+    console.log('🚀 ~ timeoutId ~ prevMessSubTabRef.current--22', prevMessSubTabRef.current)
+
+    // 2 variable are only changed and get latest val when active sub tab change => re render this component
+    const isPrevTipMessTab = prevMessSubTabRef.current === SUB_TABS.MESS.TIP
+    const isPrevAllMessTab = prevMessSubTabRef.current === SUB_TABS.MESS.ALL
+    console.log('🚀 ~ isPrevAllMessTab--00', isPrevAllMessTab)
 
     const { selectors } = userProfileStore
 
@@ -288,14 +305,24 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
 
     // const [initTipMess, setInitTipMess] = useState([])
     const [stateMessages, setStateMessages] = useState([])
-    // console.log('🚀 ~ stateMessages---000', stateMessages)
+    console.log('🚀 ~ stateMessages---000', stateMessages)
 
-    const cacheMessRef = useRef<any>([])
+    // mess tip on server to fetch new data from it
+    const serverTipMessRef = useRef<any>([])
+    // saved mess in local is used when switch tab
+    const savedTipMessRef = useRef<any>([])
+    const savedAllMessRef = useRef<any>([])
+    console.log('🚀 ~ savedAllMessRef', savedAllMessRef?.current)
+    console.log('🚀 ~ serverTipMessRef', serverTipMessRef?.current)
+    console.log('🚀 ~ savedTipMessRef', savedTipMessRef?.current)
+
     const prevRewindMessRef = useRef<any>({})
-    const cacheMessTipRef = useRef<any>([])
     const autoGetMessRef = useRef<any>([])
     const rewindMessRef = useRef<any>({})
 
+    // cache donate mess and mess common
+    const cacheStateMessRef = useRef<any>([])
+    console.log('🚀 ~ cacheStateMessRef.current', cacheStateMessRef.current)
     const cacheDonateMessRef = useRef<any>([])
     const initTipMessRef = useRef<any>([])
     const scrollBehaviorRef = useRef<string>('smooth')
@@ -333,7 +360,6 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     const { isEnabledGift, isEnabledMessFilter, isDisplayedRankingTab } = useCheckDisplayChat()
 
     const needLoadMessRef = useRef<boolean>(true)
-    const needLoadMoreRef = useRef<boolean>(true)
 
     // const { streamingSecond, playedSecond, isViewingStream, liveStreamInfo } = useDetailVideo()
     // const userResult = {streamer: 1}
@@ -370,6 +396,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         setTimeout(() => {
           messagesEndRef.current?.scrollToRow(position - 1)
           needLoadMoreRef.current = true
+          console.log('🚀 ~ test--scrollTop--111', needLoadMoreRef)
           // setBottom(true)
         }, 100)
       }
@@ -379,7 +406,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     const handleFetchMessTipWhenRewind = (second) => {
       console.log('🚀 ~ fetchMessTipWhenRewind ~ second', second)
       // find position of latest mess to get prev mess
-      const foundMessIndex = _.findIndex(cacheMessTipRef.current, (v: any) => v.video_time > +second)
+      const foundMessIndex = _.findIndex(serverTipMessRef.current, (v: any) => v.video_time > +second)
       console.log('🚀 ~ fetchMessTipWhenRewind ~ foundMess', foundMessIndex)
       let newMess = []
       // const limit = 2
@@ -395,13 +422,14 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       } else {
         // get start slice index to slice cacheMessTip
         // foundMessIndex is -1 (not found) => get length of cacheMessTip
-        startSliceIndex = (foundMessIndex !== -1 ? foundMessIndex : cacheMessTipRef.current.length) - limit
-        console.log('🚀 ~ fetchMessTipWhenRewind ~ cacheMessTip.length', cacheMessTipRef.current.length)
+        startSliceIndex = (foundMessIndex !== -1 ? foundMessIndex : serverTipMessRef.current.length) - limit
+        console.log('🚀 ~ fetchMessTipWhenRewind ~ cacheMessTip.length', serverTipMessRef.current.length)
       }
       startSliceIndex = startSliceIndex > 0 ? startSliceIndex : 0
       console.log('🚀 ~ fetchMessTipWhenRewind ~ startSliceIndex', startSliceIndex)
-      console.log('🚀 ~ cacheMessTipRef.current--00', cacheMessTipRef.current)
-      newMess = _.slice(cacheMessTipRef.current, startSliceIndex)
+      console.log('🚀 ~ serverTipMessRef.current--00', serverTipMessRef.current)
+      // new cache tip mess from startSliceIndex to end of list mess
+      newMess = _.slice(serverTipMessRef.current, startSliceIndex)
       console.log('🚀 ~ fetchMessTipWhenRewind ~ newMess', newMess)
       const filterMess = _.filter(newMess, (v) => v.video_time <= videoPlayedSecond.current)
       console.log('🚀 ~ videoPlayedSecond.current', videoPlayedSecond.current)
@@ -413,7 +441,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       // console.log('🚀 ~ fetchMessTipWhenRewind ~ cacheMessTip[0]', cacheMessTip[0])
       console.log('🚀 ~ fetchMessTipWhenRewind ~ newMess[0]', newMess[0])
       console.log('🚀 ~ fetchMessTipWhenRewind ~ _.first(newMess)', _.first(newMess))
-      if (_.first(newMess) && newMess[0]?.local_id === cacheMessTipRef.current[0]?.local_id) {
+      if (_.first(newMess) && newMess[0]?.local_id === serverTipMessRef.current[0]?.local_id) {
         setIsTokenTipBroken(false)
       } else {
         // if first ele of newMess is not first ele of cacheMessTip => has mess before newMess => can get prev tip mess
@@ -428,10 +456,14 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       // const filterCacheDonateMess = _.filter(newMess, (v) => v.is_premium && +v.point > 300)
       // console.log('🚀 ~ fetchMessTipWhenRewind ~ filterDonateMess', filterDonateMess)
 
-      setIsGettingMess(false)
-      setStateMessages(filterMess)
-      _scrollToBottom(filterMess.length)
-      cacheMessRef.current = newMess
+      isTipMessTab && setIsGettingMess(false)
+      if (isPrevTipMessTab) {
+        setStateMessages(filterMess)
+        cacheStateMessRef.current = newMess
+        _scrollToBottom(filterMess.length)
+      }
+      savedTipMessRef.current = newMess
+      console.log('🚀 ~ 000 ~ savedTipMessRef.current', savedTipMessRef.current)
       // setCacheMess(newMess)
       // setMessagesDonate(filterDonateMess)
       // setCacheDonateMess(filterCacheDonateMess)
@@ -439,9 +471,9 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     refFetchMessTipWhenRewind.current = handleFetchMessTipWhenRewind
 
     // fetch some prev mess and all next mess
-    const fetchMessTipWhenRewind = (second) => {
-      refFetchMessTipWhenRewind.current(second)
-    }
+    // const fetchMessTipWhenRewind = (second) => {
+    //   refFetchMessTipWhenRewind.current(second)
+    // }
 
     const { fetchMessTipInitial, fetchNextMess, fetchPrevMessWhenRewind, fetchMessInitialStreaming, fetchPrevMess } = useChatHelpers({
       // isSwitchingTabRef,
@@ -456,13 +488,17 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       videoType,
       isBottom,
       prevTokenRef,
-      cacheMessTipRef,
+      serverTipMessRef,
       cacheDonateMessRef,
-      cacheMessRef,
+      cacheStateMessRef,
       nextTimeRef,
       // isSwitchingSubTabRef,
       switchTabRef,
       rewindMessRef,
+      savedAllMessRef,
+      prevMessSubTabRef,
+      savedTipMessRef,
+      isPrevAllMessTab,
       //
       setIsGettingTipMess,
       sortMessages,
@@ -476,8 +512,13 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       setIsGettingPrevRewindMess,
       setBottom,
       _scrollToBottom,
-      fetchMessTipWhenRewind,
+      refFetchMessTipWhenRewind,
     })
+
+    const executeGetPrevRewind = (video_time) => {
+      fetchPrevMessWhenRewind(video_time)
+      fetchNextMess(GET_MESS_TYPE.FETCH_NEXT, video_time)
+    }
 
     const resetStates = () => {
       setStateMessages([])
@@ -511,7 +552,15 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
 
     const handleLoadMore = () => {
       const isTipSubTab = prevMessSubTabRef.current === SUB_TABS.MESS.TIP
-      if (!needLoadMoreRef.current) return
+
+      console.log('🚀 ~ handleLoadMore ~ prevTokenRef.current', prevTokenRef.current)
+      console.log('🚀 ~ handleLoadMore ~ isTokenTipBroken', isTokenTipBroken)
+      console.log('🚀 ~ handleLoadMore ~ isTokenBroken', isTokenBroken)
+      console.log('🚀 ~ handleLoadMore ~ needLoadMoreRef.current', needLoadMoreRef.current)
+      if (!needLoadMoreRef.current) {
+        return
+      }
+
       // only scroll to load more mess if rewinded or is live stream and has prevToken (has mess in prev page)
       if (
         !isGettingMess &&
@@ -695,14 +744,14 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
           setReceiverRankInfo(newDataReceiver)
         }
 
-        const foundIndex = findMessUpdated(cacheMessRef.current, createdMessage, 'local_id')
+        const foundIndex = findMessUpdated(cacheStateMessRef.current, createdMessage, 'local_id')
         // only add new message if no found message in local
         if (foundIndex === -1) {
           // if (videoPlayedSecond.current >= streamingSecond || liveStreamInfo.is_pausing_live) {
           if (isStreaming) {
             // render new messages with savedMess
             // const isMessageInBottom = checkMessIsInBottom()
-            if (canAddMess) setStateMessages([...cacheMessRef.current, createdMessage])
+            if (canAddMess) setStateMessages([...cacheStateMessRef.current, createdMessage])
             // if (isMessageInBottom) {
             //   scrollToCurrentMess()
             // }
@@ -719,20 +768,28 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
           }
           // save mess for local
           // setCacheMess((messages) => [...messages, createdMessage])
-          if (canAddMess) cacheMessRef.current = [...cacheMessRef.current, createdMessage]
+          if (canAddMess) cacheStateMessRef.current = [...cacheStateMessRef.current, createdMessage]
           // save donated messages for local (not check display time)
           if (isPremiumChat(createdMessage, false)) {
             cacheDonateMessRef.current = [...cacheDonateMessRef.current, createdMessage]
             // setCacheDonateMess((messages) => [...messages, createdMessage])
           }
           console.log('🚀 ~ onCreateMess ~ createdMessage--00', createdMessage)
+
           // save mess tip to cache
-          if (createdMessage?.is_premium === true && canAddMess) {
+          if (createdMessage?.is_premium && canAddMess) {
             console.log('🚀 ~ onCreateMess ~ createdMessage--11', createdMessage)
             // setCacheMessTip((messages) => [...messages, createdMessage])
-            cacheMessTipRef.current = [...cacheMessTipRef.current, createdMessage]
-            console.log('🚀 ~ onCreateMess ~  cacheMessTipRef.current', cacheMessTipRef.current)
+            // add new mess to mess on server
+            serverTipMessRef.current = [...serverTipMessRef.current, createdMessage]
+            // add new mess to mess on local
+            savedTipMessRef.current = [...savedTipMessRef.current, createdMessage]
+            console.log('🚀 ~ onCreateMess ~  serverTipMessRef.current', serverTipMessRef.current)
           }
+        }
+        const savedAllMessFoundIndex = findMessUpdated(savedAllMessRef.current, createdMessage, 'local_id')
+        if (savedAllMessFoundIndex === -1) {
+          savedAllMessRef.current = [...savedAllMessRef.current, createdMessage]
         }
       }
     }
@@ -807,7 +864,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         if (!firstRender && +realStreamingSecond > 0) {
           // console.log('🚀 ~ filterByStreaming ~ firstRender', firstRender)
           setFirstRender(true)
-          const newMess = cacheMessRef.current.filter((item) => +item.video_time <= +realStreamingSecond)
+          const newMess = cacheStateMessRef.current.filter((item) => +item.video_time <= +realStreamingSecond)
           const isMessageInBottom = checkMessIsInBottom()
           // render new messages with savedMess
           setStateMessages([...newMess])
@@ -846,7 +903,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       // console.log('🚀 ~ filterMessByPlayedSecond ~ behaviorOfScroll', behaviorOfScroll)
       // const oldMessCount = stateMessages.length
       // console.log('🚀 ~ filterMessByPlayedSecond ~ oldMessCount', oldMessCount)
-      let newMess = [...cacheMessRef.current]
+      let newMess = [...cacheStateMessRef.current]
       newMess = newMess.filter((item) => +item.video_time <= +new_played_second)
       console.log('🚀 ~ filterMessByPlayedSecond ~ newMess', newMess)
       // let isCheckSeeMore = false
@@ -892,18 +949,18 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     const handleFetchPrevMessTip = () => {
       console.log('🚀 ~ fetchMessTipWhenRewind ~ 111', 111)
       if (stateMessages[0]) {
-        let foundMessIndex = _.findIndex(cacheMessTipRef.current, (v: any) => v.local_id === stateMessages[0]?.local_id)
-        let found = _.find(cacheMessTipRef.current, (v) => v.local_id === stateMessages[0]?.local_id)
+        let foundMessIndex = _.findIndex(serverTipMessRef.current, (v: any) => v.local_id === stateMessages[0]?.local_id)
+        let found = _.find(serverTipMessRef.current, (v) => v.local_id === stateMessages[0]?.local_id)
         console.log('🚀 ~ fetchPrevMessTip ~ found', found)
         // const limit = 2
         const limit = LIMIT_MESS
-        foundMessIndex = foundMessIndex !== -1 ? foundMessIndex : cacheMessTipRef.current.length
+        foundMessIndex = foundMessIndex !== -1 ? foundMessIndex : serverTipMessRef.current.length
         console.log('🚀 ~ fetchPrevMessTip ~ foundMessIndex', foundMessIndex)
         let startSliceIndex = foundMessIndex - limit
         startSliceIndex = startSliceIndex > 0 ? startSliceIndex : 0
         console.log('🚀 ~ fetchPrevMessTip ~ startSliceIndex', startSliceIndex)
 
-        let newMess: any = _.slice(cacheMessTipRef.current, startSliceIndex, foundMessIndex)
+        let newMess: any = _.slice(serverTipMessRef.current, startSliceIndex, foundMessIndex)
         console.log('🚀 ~ fetchMessTipWhenRewind ~ newMess', newMess)
         const filterMess = [...newMess, ...stateMessages]
         console.log('🚀 ~ fetchMessTipWhenRewind ~ filterMess', filterMess)
@@ -921,12 +978,13 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         }, 10)
 
         // setCacheMess([...newMess, ...cacheMess])
-        cacheMessRef.current = [...newMess, ...cacheMessRef.current]
+        cacheStateMessRef.current = [...newMess, ...cacheStateMessRef.current]
+        savedTipMessRef.current = [...newMess, ...savedTipMessRef.current]
 
         // console.log('🚀 ~ fetchMessTipWhenRewind ~ cacheMessTip[0]', cacheMessTip[0])
         console.log('🚀 ~ fetchMessTipWhenRewind ~ newMess[0]', newMess[0])
         console.log('🚀 ~ fetchMessTipWhenRewind ~ _.first(newMess)', _.first(newMess))
-        if ((_.first(newMess) && newMess[0]?.local_id === cacheMessTipRef.current[0]?.local_id) || !_.first(newMess)) {
+        if ((_.first(newMess) && newMess[0]?.local_id === serverTipMessRef.current[0]?.local_id) || !_.first(newMess)) {
           setIsTokenTipBroken(false)
         } else {
           // enable feature get prev tip mess
@@ -949,6 +1007,9 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     // console.log('🚀 ~ useEffect ~ isSeeking--222', isSeeking)
 
     useEffect(() => {
+      if (liveStreamInfo.seek_count) {
+        // needLoadMessRef.current = true
+      }
       if (liveStreamInfo.seek_count && !isStreaming) {
         videoPlayedSecond.current = liveStreamInfo.seeked_second
         setBottom(true)
@@ -961,15 +1022,15 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         setMessagesDonate(newMessDonate)
 
         // filterMessByPlayedSecond(liveStreamInfo.seeked_second, 'smooth')
-        if (prevMessSubTabRef.current === SUB_TABS.MESS.TIP) {
-          setIsGettingMess(true)
-          setTimeout(() => {
-            fetchMessTipWhenRewind(liveStreamInfo.seeked_second)
-          }, DEBOUNCE_SECOND)
-        } else {
-          console.log('🚀 ~ fetchPrevMessWhenRewind--111', 111)
-          fetchPrevMessWhenRewind(liveStreamInfo.seeked_second)
-        }
+        // if (prevMessSubTabRef.current === SUB_TABS.MESS.TIP) {
+        isTipMessTab && setIsGettingMess(true)
+        setTimeout(() => {
+          refFetchMessTipWhenRewind?.current(liveStreamInfo.seeked_second)
+        }, DEBOUNCE_SECOND)
+        // } else {
+        console.log('🚀 ~ fetchPrevMessWhenRewind--111', 111)
+        executeGetPrevRewind(liveStreamInfo.seeked_second)
+        // }
         // fetchNextMess(GET_MESS_TYPE.FETCH_NEXT, liveStreamInfo.seeked_second)
         // console.log('🚀 ~ useEffect ~ isSeeking---000', isSeeking)
 
@@ -1059,7 +1120,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       setMessagesDonate([])
       // setSavedDonateMess([])
       // setCacheMess([])
-      cacheMessRef.current = []
+      cacheStateMessRef.current = []
       cacheDonateMessRef.current = []
       // setCacheDonateMess([])
       // setRewindMess({})
@@ -1074,7 +1135,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     const resetMessagesWhenRewind = () => {
       setStateMessages([])
       // setCacheMess([])
-      cacheMessRef.current = []
+      cacheStateMessRef.current = []
       setMessActiveUser(null)
       // setCacheDonateMess([])
     }
@@ -1088,9 +1149,9 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
 
     const filterMessWhenChangeTime = useRef(null)
     const handleFilterMessWhenChangeTime = () => {
-      const isTipSubTab = prevMessSubTabRef.current === SUB_TABS.MESS.TIP
+      // const isTipSubTab = prevMessSubTabRef.current === SUB_TABS.MESS.TIP
       // auto get mess when no rewind video
-      if (!isTipSubTab && !isGettingRewindMess && !isStreaming) {
+      if (!isGettingRewindMess && !isStreaming) {
         // check is streaming addition
         // if isStreaming
         if (!isStreaming && videoPlayedSecond.current === nextTimeRef.current - SECOND_AUTO_GET_MESS_BEFORE) {
@@ -1161,17 +1222,26 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       }
     }, [videoRefInfo])
 
-    const resetMessWhenSwitchTab = () => {
-      setStateMessages([])
-      cacheMessRef.current = []
-    }
+    // const resetMessWhenSwitchTab = () => {
+    //   setStateMessages([])
+    //   // setCacheMess([])
+    //   cacheStateMessRef.current = []
+    //   // setMessagesDonate([])
+    //   // setCacheDonateMess([])
+    // }
 
-    const handleGetMessTip = () => {
-      // if get mess initial success => get mess same as when rewind time
-      if (successGetListMessTip) {
-        fetchMessTipWhenRewind(videoPlayedSecond.current)
-      }
-    }
+    // const handleGetMessTip = () => {
+    //   // if get mess initial success => get mess same as when rewind time
+    //   if (successGetListMessTip) {
+    //     setIsGettingMess(true)
+    //     setTimeout(() => {
+    //       console.log('🚀 ~ setTimeout ~ setIsGettingMess', 111)
+    //       refFetchMessTipWhenRewind?.current(videoPlayedSecond.current)
+    //     }, DEBOUNCE_SECOND)
+    //   } else {
+    //     // handleGetMessTipInitial()
+    //   }
+    // }
 
     const handleSwitchMainTab = () => {
       if (!isFirstVisitPage) {
@@ -1188,22 +1258,52 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         switch (activeSubTab) {
           case SUB_TABS.MESS.TIP:
             setBottom(true)
-            cacheMessRef.current = []
-            handleGetMessTip()
+            // resetMessWhenSwitchTab()
+
+            if (!successGetListMessTip) {
+              handleGetMessTipInitial()
+              return
+            }
+            console.log('🚀 ~ getMessWhenSwitchSubTab ~ successGetListMessTip', successGetListMessTip)
+
+            // if (needLoadMessRef.current) {
+            //   handleGetMessTip()
+            // } else {
+            // eslint-disable-next-line no-case-declarations
+            const filterMess = _.filter(savedTipMessRef.current, (v) => v.video_time <= videoPlayedSecond.current)
+            console.log('🚀 ~ getMessWhenSwitchSubTab ~ videoPlayedSecond.current', videoPlayedSecond.current)
+            console.log('🚀 ~ getMessWhenSwitchSubTab ~ filterMess', filterMess)
+            cacheStateMessRef.current = savedTipMessRef.current
+            console.log('🚀 ~ getMessWhenSwitchSubTab ~ serverTipMessRef.current', serverTipMessRef.current)
+            setStateMessages(filterMess)
+            console.log('🚀 ~ 000-current', serverTipMessRef.current)
+            // }
             break
 
           case SUB_TABS.MESS.ALL:
             console.log('Switch to sub tab chat all')
             setBottom(true)
-            resetMessWhenSwitchTab()
+            // resetMessWhenSwitchTab()
+            // if (isSwitchingSubTabRef.current) {
+            //   return
+            // }
             console.log('Switch to sub tab chat all fire')
             if (isStreaming) {
               switchTabRef.current = true
-              fetchMessInitialStreaming()
+              // fetchMessInitialStreaming()
             } else {
-              // fetch prev mess rewinded when switch tab
-              fetchPrevMessWhenRewind(videoPlayedSecond.current)
+              // if (needLoadMessRef.current) {
+              //   // fetch prev mess rewinded when switch tab
+              //   executeGetPrevRewind(videoPlayedSecond.current)
+              // } else {
+              // }
             }
+            // eslint-disable-next-line no-case-declarations
+            const newFilterMess = _.filter(savedAllMessRef.current, (v) => v.video_time <= videoPlayedSecond.current)
+            console.log('🚀 ~ getMessWhenSwitchSubTab ~ filterMess', newFilterMess)
+            cacheStateMessRef.current = savedAllMessRef.current
+            setStateMessages(newFilterMess)
+            console.log('🚀 ~ 000-current---111', serverTipMessRef.current)
             break
           default:
             break
@@ -1219,9 +1319,9 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       console.log('prevMessSubTabRef.current - change sub tab: ', prevMessSubTabRef.current)
       console.log('needLoadMessRef.current: - change sub tab', needLoadMessRef.current)
 
-      if (needLoadMessRef.current) {
-        getMessWhenSwitchSubTab()
-      }
+      getMessWhenSwitchSubTab()
+      // reset status need load mess
+      needLoadMessRef.current = false
     }, [activeSubTab])
 
     useEffect(() => {
@@ -1246,7 +1346,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
 
     // get all mess tip initial and render icon tip mess separate with all mess
     const handleGetMessTipInitial = () => {
-      // console.log('🚀 ~ handleGetMessTipInitial ~ 111', 11)
+      console.log('🚀 ~ handleGetMessTipInitial ~ 111', 11)
 
       // if has not get mess tip initial yet => get mess tip initial
       // setInitTipMess([])
@@ -1284,17 +1384,19 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         }
 
         handleGetMessTipInitial()
-        if (prevMessSubTabRef.current === SUB_TABS.MESS.ALL) {
-          // console.log('🚀 ~ useEffect ~ isResizedScreen', isResizedScreen)
-          // fetch prev and rewind mess when playing video and re-mount chat container
-          if (+currentTime > 0) {
-            fetchPrevMessWhenRewind(currentTime)
-          } else {
-            fetchNextMess(GET_MESS_TYPE.FETCH_ARCHIVE_INITIAL, currentTime)
-          }
-        } else if (prevMessSubTabRef.current === SUB_TABS.MESS.TIP) {
-          // handleGetMessTip()
+        // if (prevMessSubTabRef.current === SUB_TABS.MESS.ALL) {
+        // fetch prev and rewind mess when playing video and re-mount chat container
+        if (+currentTime > 0) {
+          console.log('🚀 ~ useEffect ~ isResizedScreen', 22)
+          executeGetPrevRewind(currentTime)
+        } else {
+          console.log('🚀 ~ useEffect ~ isResizedScreen', 33)
+          isPrevAllMessTab && fetchNextMess(GET_MESS_TYPE.FETCH_ARCHIVE_INITIAL, currentTime)
         }
+        // } else if (prevMessSubTabRef.current === SUB_TABS.MESS.TIP) {
+        //   console.log('🚀 ~ useEffect ~ isResizedScreen', 222)
+        //   // handleGetMessTip()
+        // }
       }
       // fetchMessInitialStreaming()
     }, [videoType])
@@ -1367,11 +1469,11 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         newStateMess[foundIndex] = { ...updatedMessWithNewProp }
         setStateMessages(newStateMess)
       }
-      foundIndex = findMessUpdated(cacheMessRef.current, updatedMessage, compareProp)
+      foundIndex = findMessUpdated(cacheStateMessRef.current, updatedMessage, compareProp)
       if (foundIndex !== -1) {
-        const newCacheMess = [...cacheMessRef.current]
+        const newCacheMess = [...cacheStateMessRef.current]
         newCacheMess[foundIndex] = { ...updatedMessWithNewProp }
-        cacheMessRef.current = newCacheMess
+        cacheStateMessRef.current = newCacheMess
         // setCacheMess(newCacheMess)
       }
       foundIndex = findMessUpdated(messagesDonate, updatedMessage, compareProp)
@@ -1388,14 +1490,31 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         // setCacheDonateMess(newCacheDonateMess)
       }
       // update cache message tip
-      foundIndex = findMessUpdated(cacheMessTipRef.current, updatedMessage, compareProp)
+      foundIndex = findMessUpdated(serverTipMessRef.current, updatedMessage, compareProp)
       if (foundIndex !== -1) {
-        const newCacheMessTip = [...cacheMessTipRef.current]
+        const newCacheMessTip = [...serverTipMessRef.current]
         newCacheMessTip[foundIndex] = { ...updatedMessWithNewProp }
         if (updatedMessage?.is_premium === true) {
-          // setCacheMessTip(newCacheMessTip)
-          cacheMessTipRef.current = newCacheMessTip
+          serverTipMessRef.current = newCacheMessTip
         }
+      }
+
+      // update message tip on local
+      foundIndex = findMessUpdated(savedTipMessRef.current, updatedMessage, compareProp)
+      if (foundIndex !== -1) {
+        const newSavedMessTip = [...savedTipMessRef.current]
+        newSavedMessTip[foundIndex] = { ...updatedMessWithNewProp }
+        if (updatedMessage?.is_premium === true) {
+          savedTipMessRef.current = newSavedMessTip
+        }
+      }
+
+      // update cache message tip
+      foundIndex = findMessUpdated(savedAllMessRef.current, updatedMessage, compareProp)
+      if (foundIndex !== -1) {
+        const newSavedAllMess = [...savedAllMessRef.current]
+        newSavedAllMess[foundIndex] = { ...updatedMessWithNewProp }
+        savedAllMessRef.current = newSavedAllMess
       }
     }
 
@@ -1453,7 +1572,9 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
 
         // save mess for local
         // setCacheMess((messages) => [...messages, local_message])
-        if (canAddMess) cacheMessRef.current = [...cacheMessRef.current, local_message]
+        if (canAddMess) cacheStateMessRef.current = [...cacheStateMessRef.current, local_message]
+        savedAllMessRef.current = [...savedAllMessRef.current, local_message]
+
         // setSavedMess((messages) => [...messages, local_message])
         // save donated messages for local (not check display time)
         if (is_premium_local_message) {
@@ -1464,7 +1585,8 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         // only save mess tip when has point
         if (point && canAddMess) {
           // setCacheMessTip((messages) => [...messages, local_message])
-          cacheMessTipRef.current = [...cacheMessTipRef.current, local_message]
+          serverTipMessRef.current = [...serverTipMessRef.current, local_message]
+          savedTipMessRef.current = [...savedTipMessRef.current, local_message]
         }
 
         // save message to local
@@ -1800,6 +1922,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
               // successGetListMess={successGetListMess}
               prevMessSubTabRef={prevMessSubTabRef}
               needLoadMessRef={needLoadMessRef}
+              needLoadMoreRef={needLoadMoreRef}
             />
           )}
           {/* {displayChatContent() ? chatContent() : userDoesNotHaveViewingTicketView()} */}

@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { useRef } from 'react'
 import useGraphqlAPI from 'src/types/useGraphqlAPI'
 import API, { graphqlOperation } from '@aws-amplify/api'
@@ -8,7 +9,7 @@ import {
   LIMIT_MAX_MESS_PREV_REWIND,
   LIMIT_MESS,
   LIMIT_MIN_MESS_PREV_REWIND,
-  SUB_TABS,
+  STATUS_GET_MESS,
 } from '@constants/common.constants'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
 import { STATUS_VIDEO } from '@services/videoTop.services'
@@ -41,13 +42,17 @@ type IImportProps = {
   videoType: any
   isBottom: any
   prevTokenRef: any
-  cacheMessTipRef: any
+  serverTipMessRef: any
   cacheDonateMessRef: any
-  cacheMessRef: any
+  cacheStateMessRef: any
   nextTimeRef: any
   // isSwitchingSubTabRef: any
   switchTabRef: any
   rewindMessRef: any
+  savedAllMessRef: any
+  prevMessSubTabRef: any
+  savedTipMessRef: any
+  isPrevAllMessTab: any
   //
   setIsGettingTipMess: (value: boolean) => void
   sortMessages: (value: any) => any
@@ -61,7 +66,7 @@ type IImportProps = {
   setIsGettingPrevRewindMess: (value: any) => any
   setBottom: (value: any) => any
   _scrollToBottom: (value: any) => any
-  fetchMessTipWhenRewind: (value: any) => any
+  refFetchMessTipWhenRewind: any
 }
 
 // export const useChatHelpers =  (setIsGettingTipMess, key_video_id, setInitTipMess): IExportProps => {
@@ -70,11 +75,13 @@ export const useChatHelpers = (props: IImportProps): IExportProps => {
   // const [rewindMess, setRewindMess] = useState<any>({})
   // const [archiveInitMess, setArchiveInitMess] = useState([])
 
-  const { activeSubTab } = useVideoTabContext()
+  const { isAllMessTab } = useVideoTabContext()
 
   const archiveInitMessRef = useRef<any>([])
   const videoTimeIsRewindingRef = useRef<number>(0)
   const prevTimeRef = useRef<number>(0)
+  const statusFetchPrevRewindRef = useRef<any>({})
+  const statusFetchRewindRef = useRef<any>({})
 
   const {
     // isSwitchingTabRef,
@@ -89,13 +96,17 @@ export const useChatHelpers = (props: IImportProps): IExportProps => {
     videoType,
     isBottom,
     prevTokenRef,
-    cacheMessTipRef,
+    serverTipMessRef,
     cacheDonateMessRef,
-    cacheMessRef,
+    cacheStateMessRef,
     nextTimeRef,
     // isSwitchingSubTabRef,
     switchTabRef,
     rewindMessRef,
+    savedAllMessRef,
+    // prevMessSubTabRef,
+    // savedTipMessRef,
+    isPrevAllMessTab,
     //
     setIsGettingTipMess,
     sortMessages,
@@ -109,7 +120,7 @@ export const useChatHelpers = (props: IImportProps): IExportProps => {
     setIsGettingPrevRewindMess,
     setBottom,
     _scrollToBottom,
-    fetchMessTipWhenRewind,
+    refFetchMessTipWhenRewind,
   } = props
 
   // fetch messages prev when scroll to top when archived or when live stream
@@ -222,7 +233,8 @@ export const useChatHelpers = (props: IImportProps): IExportProps => {
       // cache.clearAll()
     }, 10)
     // cache.clearAll()
-    cacheMessRef.current = [...transformMessAsc, ...cacheMessRef.current]
+    cacheStateMessRef.current = [...transformMessAsc, ...cacheStateMessRef.current]
+    savedAllMessRef.current = [...transformMessAsc, ...savedAllMessRef.current]
     // setCacheMess((messages) => [...transformMessAsc, ...messages])
 
     // const transformDonateMessAsc = transformMessAsc.filter(
@@ -255,7 +267,8 @@ export const useChatHelpers = (props: IImportProps): IExportProps => {
     }
     // save mess for use in local
     // setCacheMess([...transformMessAsc])
-    cacheMessRef.current = [...transformMessAsc]
+    cacheStateMessRef.current = [...transformMessAsc]
+    savedAllMessRef.current = [...transformMessAsc]
     setSuccessGetListMess(true)
 
     // const transformDonateMessAsc = transformMessAsc.filter(
@@ -298,11 +311,13 @@ export const useChatHelpers = (props: IImportProps): IExportProps => {
 
   // fetch messages prev when rewind to video time
   const fetchPrevMessWhenRewind = (video_time, sortOrder = APIt.ModelSortDirection.DESC) => {
+    console.log('🚀 ~ fetchPrevMessWhenRewind ~ video_time', video_time)
     // if (isSwitchingTabRef.current || isSwitchingSubTabRef.current) {
     //   return
     // }
     try {
-      setIsGettingPrevRewindMess(true)
+      statusFetchPrevRewindRef.current?.[video_time] === STATUS_GET_MESS.GETTING
+      isAllMessTab && setIsGettingPrevRewindMess(true)
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       const listQV: APIt.GetMessagesByVideoIdWithSortQueryVariables = {
@@ -327,6 +342,63 @@ export const useChatHelpers = (props: IImportProps): IExportProps => {
     }
   }
 
+  const getNextTime = (video_time) => +video_time + INTERVAL_AUTO_GET_MESS - 1
+
+  const onSuccessGetPrevRewind = (video_time) => {
+    console.log('🚀 ~  ~ .current?.[video_time]', statusFetchPrevRewindRef.current?.[video_time])
+    console.log('🚀 ~  ~ .current?.[222', statusFetchRewindRef.current?.[video_time])
+    if (
+      statusFetchPrevRewindRef.current?.[video_time] === STATUS_GET_MESS.SUCCESS &&
+      statusFetchRewindRef.current?.[video_time] === STATUS_GET_MESS.SUCCESS
+    ) {
+      const nextTime = getNextTime(video_time)
+      // console.log('🚀 ~ handleFetchRewindMess ~ nextTime--ok', nextTime)
+      const oldPrevRewindMess = prevRewindMessRef.current?.[video_time] ? [...prevRewindMessRef.current[video_time]] : []
+      const newRewindMess = rewindMessRef.current?.[video_time]
+        ? [...oldPrevRewindMess, ...rewindMessRef.current[video_time]]
+        : [...oldPrevRewindMess]
+      // console.log('🚀 ~ handleFetchRewindMess ~ newRewindMess', newRewindMess)
+      const transformMessAsc = sortMessages([...newRewindMess])
+
+      isAllMessTab && setIsGettingMess(false)
+      if (isPrevAllMessTab) {
+        setStateMessages(transformMessAsc.filter((v) => +v.video_time <= +videoPlayedSecond.current))
+        cacheStateMessRef.current = transformMessAsc
+      }
+      savedAllMessRef.current = transformMessAsc
+
+      // const transformDonateMessAsc = transformMessAsc.filter(
+      //   (item) => +item.display_avatar_time >= videoPlayedSecond.current && item.is_premium && +item.point > 300
+      // )
+      // only get mess has time < played second
+      // const newTransformMessAsc = transformDonateMessAsc.filter((v) => +v.video_time <= +videoPlayedSecond.current)
+      // setMessagesDonate([...newTransformMessAsc])
+      // save mess for use in local
+      // setCacheDonateMess([...transformDonateMessAsc])
+
+      // setPrevRewindMess({})
+      prevRewindMessRef.current = {}
+      rewindMessRef.current = {}
+      // setRewindMess({})
+
+      setIsGettingRewindMess(false)
+      // set prev time to scroll to load more
+      prevTimeRef.current = video_time - 1
+      nextTimeRef.current = nextTime + 1
+      // setPrevTime(video_time - 1)
+      // set next time to auto get mess repeat
+      // setNextTime(nextTime + 1)
+      // set is token broken to allow scroll to load more
+      setIsTokenBroken(true)
+      // reset prev token to get mess is not error
+      // setPrevToken(null)
+
+      // set get list mess when fetch prev and rewind when remount chat container
+      setSuccessGetListMess(true)
+      setSuccessGetListDonateMess(true)
+    }
+  }
+
   const refFetchPrevMessWhenRewind = useRef(null)
   const handleFetchPrevMessWhenRewind = (messagesInfo, video_time) => {
     // if (isSwitchingTabRef.current) {
@@ -343,8 +415,11 @@ export const useChatHelpers = (props: IImportProps): IExportProps => {
     // prevent scroll when has no messages
     if (!messagesInfo.nextToken) setIsTokenBroken(false)
 
+    statusFetchPrevRewindRef.current = { [video_time]: STATUS_GET_MESS.SUCCESS }
+    onSuccessGetPrevRewind(video_time)
+
     // if (!isSwitchingTabRef.current) {
-    fetchNextMess(GET_MESS_TYPE.FETCH_NEXT, video_time)
+    // fetchNextMess(GET_MESS_TYPE.FETCH_NEXT, video_time)
     // }
   }
   refFetchPrevMessWhenRewind.current = handleFetchPrevMessWhenRewind
@@ -360,7 +435,8 @@ export const useChatHelpers = (props: IImportProps): IExportProps => {
 
       // save mess for use in local
       // setCacheMess([...transformMessAsc])
-      cacheMessRef.current = [...transformMessAsc]
+      cacheStateMessRef.current = [...transformMessAsc]
+      savedAllMessRef.current = [...transformMessAsc]
 
       // const transformDonateMessAsc = transformMessAsc.filter(
       //   (item) => +item.display_avatar_time >= videoPlayedSecond.current && item.is_premium && +item.point > 300
@@ -383,11 +459,13 @@ export const useChatHelpers = (props: IImportProps): IExportProps => {
   const handleFetchMessAuto = (video_time) => {
     // only get messages if no rewind
     if (!isGettingRewindMess) {
-      // console.log('🚀 ~ handleFetchMessAuto ~ video_time', video_time)
+      console.log('🚀 ~ handleFetchMessAuto ~ video_time', autoGetMessRef.current)
+      console.log('🚀 ~ handleFetchMessAuto ~ isPrevAllMessTab', isPrevAllMessTab)
       const transformMessAsc = sortMessages([...autoGetMessRef.current])
       // setStateMessages(transformMessAsc.filter((v) => +v.video_time <= +videoPlayedSecond.current))
       // setCacheMess((messages) => [...messages, ...transformMessAsc])
-      cacheMessRef.current = [...cacheMessRef.current, ...transformMessAsc]
+      if (isPrevAllMessTab) cacheStateMessRef.current = [...cacheStateMessRef.current, ...transformMessAsc]
+      savedAllMessRef.current = [...savedAllMessRef.current, ...transformMessAsc]
       // const transformDonateMessAsc = transformMessAsc.filter(
       //   (item) => +item.display_avatar_time >= videoPlayedSecond.current && item.is_premium && +item.point > 300
       // )
@@ -421,9 +499,12 @@ export const useChatHelpers = (props: IImportProps): IExportProps => {
       // console.log('🚀 ~ loadMoreMess ~ fetchNextMess--0000', getType)
       // console.log('🚀 ~ fetchPrevMess ~ video_time---000', video_time)
       if (getType === GET_MESS_TYPE.FETCH_NEXT) {
-        setIsGettingRewindMess(true)
-        setIsGettingMess(true)
+        statusFetchRewindRef.current = { [video_time]: STATUS_GET_MESS.GETTING }
         limitMess = LIMIT_FETCH_NEXT
+        if (isAllMessTab) {
+          setIsGettingRewindMess(true)
+          setIsGettingMess(true)
+        }
       }
       if (getType === GET_MESS_TYPE.FETCH_ARCHIVE_INITIAL) {
         setIsGettingMess(true)
@@ -433,7 +514,7 @@ export const useChatHelpers = (props: IImportProps): IExportProps => {
         // setVideoTimeIsRewinding(video_time)
       }
 
-      const nextTime = +video_time + INTERVAL_AUTO_GET_MESS - 1
+      const nextTime = getNextTime(video_time)
       // console.log('🚀 ~ fetchPrevMess ~ video_time', video_time)
       // console.log('🚀 ~ nextTime---999', nextTime)
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -443,36 +524,11 @@ export const useChatHelpers = (props: IImportProps): IExportProps => {
         video_time: {
           between: [video_time, nextTime],
         },
-        // video_time: {
-        //   ge: video_time,
-        //   le: nextTime
-        // },
         sortDirection: sortOrder,
         limit: limitMess,
         nextToken,
-        // filter: {
-        //   video_time: {
-        //     ge: 900,
-        //     // le: nextTime,
-        //   },
-        // },
       }
 
-      // if (video_time !== -1) {
-      //   listQV = {
-      //     ...listQV,
-      //     filter: {
-      //       video_time: {
-      //         ge: video_time,
-      //         le: nextTime,
-      //       },
-      //     },
-      //   }
-      // }
-      // console.log('🚀 ~ abc ~ 222')
-      // if (isSwitchingTabRef.current) {
-      //   return
-      // }
       API.graphql(graphqlOperation(getMessagesByVideoIdWithSort, listQV)).then((messagesResults) => {
         // if (isSwitchingTabRef.current) {
         //   return
@@ -504,8 +560,8 @@ export const useChatHelpers = (props: IImportProps): IExportProps => {
               ...rewindMessRef.current,
               [video_time]: rewindMessRef.current?.[video_time] ? [...rewindMessRef.current[video_time], ...newMess] : [...newMess],
             }
-            refFetchRewindMess.current(video_time, nextTime)
-            setIsGettingMess(false)
+            refFetchRewindMess.current(video_time)
+            isAllMessTab && setIsGettingMess(false)
           }
         } else if (getType === GET_MESS_TYPE.AUTO) {
           if (messagesInfo.nextToken) {
@@ -539,54 +595,15 @@ export const useChatHelpers = (props: IImportProps): IExportProps => {
   }
 
   const refFetchRewindMess = useRef(null)
-  const handleFetchRewindMess = (video_time, nextTime) => {
+  const handleFetchRewindMess = (video_time) => {
     // console.log('🚀 ~ handleFetchRewindMess ~ video_time', video_time)
     // console.log('🚀 ~ handleFetchRewindMess ~ videoTimeIsRewinding', videoTimeIsRewinding)
     // only get messages with last rewind
-    if (videoTimeIsRewindingRef.current === video_time) {
-      // console.log('🚀 ~ handleFetchRewindMess ~ nextTime--ok', nextTime)
-      const oldPrevRewindMess = prevRewindMessRef.current?.[video_time] ? [...prevRewindMessRef.current[video_time]] : []
-      const newRewindMess = rewindMessRef.current?.[video_time]
-        ? [...oldPrevRewindMess, ...rewindMessRef.current[video_time]]
-        : [...oldPrevRewindMess]
-      // console.log('🚀 ~ handleFetchRewindMess ~ newRewindMess', newRewindMess)
-      const transformMessAsc = sortMessages([...newRewindMess])
-
-      setIsGettingMess(false)
-      setStateMessages(transformMessAsc.filter((v) => +v.video_time <= +videoPlayedSecond.current))
-      // setCacheMess(transformMessAsc)
-      cacheMessRef.current = transformMessAsc
-
-      // const transformDonateMessAsc = transformMessAsc.filter(
-      //   (item) => +item.display_avatar_time >= videoPlayedSecond.current && item.is_premium && +item.point > 300
-      // )
-      // only get mess has time < played second
-      // const newTransformMessAsc = transformDonateMessAsc.filter((v) => +v.video_time <= +videoPlayedSecond.current)
-      // setMessagesDonate([...newTransformMessAsc])
-      // save mess for use in local
-      // setCacheDonateMess([...transformDonateMessAsc])
-
-      // setPrevRewindMess({})
-      prevRewindMessRef.current = {}
-      rewindMessRef.current = {}
-      // setRewindMess({})
-
-      setIsGettingRewindMess(false)
-      // set prev time to scroll to load more
-      prevTimeRef.current = video_time - 1
-      nextTimeRef.current = nextTime + 1
-      // setPrevTime(video_time - 1)
-      // set next time to auto get mess repeat
-      // setNextTime(nextTime + 1)
-      // set is token broken to allow scroll to load more
-      setIsTokenBroken(true)
-      // reset prev token to get mess is not error
-      // setPrevToken(null)
-
-      // set get list mess when fetch prev and rewind when remount chat container
-      setSuccessGetListMess(true)
-      setSuccessGetListDonateMess(true)
+    if (videoTimeIsRewindingRef.current !== video_time) {
+      return
     }
+    statusFetchRewindRef.current = { [video_time]: STATUS_GET_MESS.SUCCESS }
+    onSuccessGetPrevRewind(video_time)
   }
   refFetchRewindMess.current = handleFetchRewindMess
 
@@ -629,7 +646,8 @@ export const useChatHelpers = (props: IImportProps): IExportProps => {
     const transformMessAsc = sortMessages(transformMess)
     // save mess tip forever except switch tab
     // setCacheMessTip([...transformMessAsc])
-    cacheMessTipRef.current = [...transformMessAsc]
+    serverTipMessRef.current = [...transformMessAsc]
+    // savedTipMessRef.current = [...transformMessAsc]
 
     // setSuccessGetListMess(true)
 
@@ -652,10 +670,10 @@ export const useChatHelpers = (props: IImportProps): IExportProps => {
     // setSuccessGetListDonateMess(true)
     setSuccessGetListMessTip(true)
     // fetch mess by rewinded time when switch tab
-    if (activeSubTab === SUB_TABS.MESS.TIP) {
-      // console.log('🚀 ~ handleTransformMessTip ~ activeSubTab', activeSubTab)
-      fetchMessTipWhenRewind(videoPlayedSecond.current)
-    }
+    // if (activeSubTab === SUB_TABS.MESS.TIP) {
+    // console.log('🚀 ~ handleTransformMessTip ~ activeSubTab', activeSubTab)
+    refFetchMessTipWhenRewind.current(videoPlayedSecond.current)
+    // }
   }
   refTransformMessTip.current = handleTransformMessTip
 
