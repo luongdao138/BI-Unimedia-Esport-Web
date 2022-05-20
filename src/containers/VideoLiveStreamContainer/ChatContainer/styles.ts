@@ -63,6 +63,28 @@ const useStyles = makeStyles((theme) => ({
       background: Colors.white,
     },
   },
+  messCountContainer: {
+    color: '#fff',
+    right: '50%',
+    bottom: '30px',
+    display: 'flex',
+    padding: '5px 15px',
+    zIndex: 3,
+    position: 'absolute',
+    transform: 'translateX(50%)',
+    alignItems: 'center',
+    borderRadius: '8px',
+    gap: '10px',
+    backgroundColor: 'hsl(240deg 2% 38% / 80%)',
+    cursor: 'pointer',
+  },
+  newMess: {
+    fontWeight: 600,
+    fontSize: '12px',
+  },
+  newMessIcon: {
+    fontSize: '12px',
+  },
   loaderBox: {
     flexGrow: 0,
     width: 20,

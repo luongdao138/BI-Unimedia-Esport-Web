@@ -116,7 +116,7 @@ const ChatMessages: React.FC<Props> = ({
   }, [contentRect?.width])
 
   useEffect(() => {
-    setTimeout(handleScrollToBottom, 10)
+    handleScrollToBottom()
     clearCache()
     // console.log('🚀 ~ useEffect ~ cache---000', cache)
   }, [stateMessages])
