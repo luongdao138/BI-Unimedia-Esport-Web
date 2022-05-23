@@ -1750,6 +1750,7 @@ export default {
       pay_pay: 'ペイペイ',
       rakuten: '楽天ペイ',
     },
+    selectPaymentMethod: '決済方法',
   },
   videos_top_tab: {
     video_list: '動画一覧',

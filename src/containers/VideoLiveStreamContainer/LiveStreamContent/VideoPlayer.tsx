@@ -187,7 +187,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     } else {
       videoEl.current.onpause = function () {
         console.log('========getMiniPlayerState======', getMiniPlayerState)
-        setState({ ...state, playing: false })
+        setState({ ...state, playing: false, muted: videoEl.current.muted })
         setVisible({ ...visible, loading: true, videoLoaded: false })
       }
     }
