@@ -184,7 +184,7 @@ export const useChatHelpers = (props: IImportProps): IExportProps => {
 
   const fetchMessInitialStreaming = (sortOrder = APIt.ModelSortDirection.DESC) => {
     try {
-      setIsGettingMess(true)
+      isAllMessTab && setIsGettingMess(true)
       // console.log('🚀 ~ loadMoreMess ~ fetchPrevMess--0000', getType)
       // console.log('🚀 ~ fetchPrevMess ~ video_time---000', video_time)
       // occur this case when is streaming and fetch mess initial
@@ -263,11 +263,11 @@ export const useChatHelpers = (props: IImportProps): IExportProps => {
 
     // TODO
     if (streamingSecond === Infinity && videoType === STATUS_VIDEO.LIVE_STREAM && !switchTabRef.current) {
-      setStateMessages([...transformMessAsc])
+      isAllMessTab && setStateMessages([...transformMessAsc])
     }
     // save mess for use in local
     // setCacheMess([...transformMessAsc])
-    cacheStateMessRef.current = [...transformMessAsc]
+    if (isAllMessTab) cacheStateMessRef.current = [...transformMessAsc]
     savedAllMessRef.current = [...transformMessAsc]
     setSuccessGetListMess(true)
 
@@ -305,7 +305,7 @@ export const useChatHelpers = (props: IImportProps): IExportProps => {
       // setIsSwitchingTab(false)
       switchTabRef.current = false
     }
-    setIsGettingMess(false)
+    isAllMessTab && setIsGettingMess(false)
   }
   refTransformListMess.current = handleTransformListMess
 
