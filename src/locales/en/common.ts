@@ -1759,7 +1759,7 @@ export default {
       pay_pay: 'PayPay',
       rakuten: '楽天ペイ',
     },
-    selectPaymentMethod: '決済方法を選択',
+    selectPaymentMethod: '決済方法',
   },
   videos_top_tab: {
     video_list: '動画一覧',
