@@ -9,13 +9,14 @@ import { VIDEO_RESOLUTION } from '@services/liveStreamDetail.service'
 import { QualitiesType } from '@services/videoTop.services'
 import { Colors } from '@theme/colors'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
-import React, { forwardRef, memo, useImperativeHandle, useRef, useState } from 'react'
+import React, { forwardRef, memo, useEffect, useImperativeHandle, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import ReactTooltip from 'react-tooltip'
-import Play from './ControlComponent/Play'
-import PlayerTooltip from './ControlComponent/PlayerTooltip'
-import Reload from './ControlComponent/Reload'
-import TimeBar from './ControlComponent/TimeBar'
+import Play from '@containers/VideoLiveStreamContainer/LiveStreamContent/ControlComponent/Play'
+import PlayerTooltip from '@containers/VideoLiveStreamContainer/LiveStreamContent/ControlComponent/PlayerTooltip'
+import Reload from '@containers/VideoLiveStreamContainer/LiveStreamContent/ControlComponent/Reload'
+import TimeBar from '@containers/VideoLiveStreamContainer/LiveStreamContent/ControlComponent/TimeBar'
+import { useControlBarContext } from '@containers/VideoLiveStreamContainer/VideoContext/ControlBarContext'
 
 interface ControlProps {
   ref: any
@@ -94,6 +95,7 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
     const { t } = useTranslation('common')
     // const [isFull, setFull] = useState<boolean>(false)
     const { changeVideoViewMode, liveStreamInfo } = useDetailVideo()
+    const { changeShowSettingPanel, canHideChatTimeoutRef } = useControlBarContext()
     const { is_normal_view_mode } = liveStreamInfo
     const [settingPanel, setSettingPanel] = useState(SettingPanelState.NONE)
     const { changeMiniPlayerState } = useLiveStreamDetail()
@@ -152,6 +154,10 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
         settingPanel: settingPanel,
       }
     })
+
+    useEffect(() => {
+      changeShowSettingPanel(settingPanel !== SettingPanelState.NONE)
+    }, [settingPanel])
 
     const tooltipRef = React.createRef<any>()
 
@@ -229,10 +235,19 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
       return result
     }
 
+    const handleChangeCanHideControlBar = (value: boolean) => {
+      canHideChatTimeoutRef.current = value
+    }
+
     return (
       // <div className={classes.controlBar}>
       <>
-        <div className={classes.controlLeft}>
+        <div
+          className={classes.controlLeft}
+          onMouseMove={() => handleChangeCanHideControlBar(false)}
+          onMouseLeave={() => handleChangeCanHideControlBar(true)}
+          onMouseEnter={() => handleChangeCanHideControlBar(false)}
+        >
           <Play onPlayPause={onPlayPause} playing={playing} />
           <Reload
             videoRef={videoRef}
@@ -357,7 +372,12 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
             </>
           )}
         </div>
-        <div className={classes.controlRight}>
+        <div
+          className={classes.controlRight}
+          onMouseMove={() => handleChangeCanHideControlBar(false)}
+          onMouseLeave={() => handleChangeCanHideControlBar(true)}
+          onMouseEnter={() => handleChangeCanHideControlBar(false)}
+        >
           {/* toggle theater mode button */}
           {(isChrome ? !document.fullscreenElement : !document['webkitFullscreenElement']) && !isMobile && (
             <div
