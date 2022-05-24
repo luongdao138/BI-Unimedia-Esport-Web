@@ -7,6 +7,7 @@ import { Slider, SliderProps } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
 import { debounce } from 'lodash'
 import React, { memo, useCallback, useContext, useEffect, useState } from 'react'
+import { isMobile } from 'react-device-detect'
 
 interface Props {
   playedSeconds: number
@@ -23,11 +24,11 @@ const SeekBar: React.FC<Props & SliderProps> = ({ playedSeconds, durationPlayer,
   // const [currentTimeState, setCurrentTime] = useState(0);
   // const [duration, setDuration] = useState(0)
   const [timePlayed, setTimePlayed] = useState(0)
-  const { changeSeekCount } = useDetailVideo()
+  const { changeSeekCount, changeIsHoveredVideoStatus } = useDetailVideo()
 
-  const { setIsStreaming } = useVideoPlayerContext()
+  const { setIsStreaming, state } = useVideoPlayerContext()
   const { videoRefInfo } = useContext(VideoContext)
-  const { canHideChatTimeoutRef } = useControlBarContext()
+  const { canHideChatTimeoutRef, timeoutRef, isShowSettingPanel } = useControlBarContext()
 
   useEffect(() => {
     setTimePlayed((playedSeconds / durationPlayer) * 100)
@@ -42,6 +43,20 @@ const SeekBar: React.FC<Props & SliderProps> = ({ playedSeconds, durationPlayer,
       setIsStreaming(false)
     }
     videoRefInfo.current.currentTime = newSecond
+
+    if (isMobile) {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current)
+      }
+
+      timeoutRef.current = setTimeout(() => {
+        const canHideControlBar = !isShowSettingPanel && state.playing
+        // const canHideControlBar = true
+        if (canHideControlBar) {
+          changeIsHoveredVideoStatus(false)
+        }
+      }, 3500)
+    }
   }
 
   const handleCommit = useCallback(

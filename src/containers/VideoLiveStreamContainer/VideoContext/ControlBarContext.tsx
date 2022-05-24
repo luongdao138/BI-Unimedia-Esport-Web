@@ -30,9 +30,7 @@ const ControlBarContextProvider: React.FC = ({ children }: { children: React.Rea
 
   const changeShowSettingPanel = useCallback(
     (value: boolean) => {
-      if (!isMobile) {
         setIsShowSettingPanel(value)
-      }
     },
     [isMobile]
   )

@@ -26,6 +26,7 @@ import { useVideoPlayerContext } from '@containers/VideoLiveStreamContainer/Vide
 import UtilityArea from './UtilityArea'
 import { VIDEO_TYPE } from '@containers/VideoLiveStreamContainer'
 import { useControlBarContext } from '@containers/VideoLiveStreamContainer/VideoContext/ControlBarContext'
+import { isMobile as isMobileDevice } from 'react-device-detect'
 
 declare global {
   interface Document {
@@ -106,7 +107,14 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   })
   const [flagResol, setFlagResol] = useState(false)
 
-  const { liveStreamInfo, changeSeekCount, detailVideoResult, changeIsFullScreenMode, changeVideoViewMode } = useDetailVideo()
+  const {
+    liveStreamInfo,
+    changeSeekCount,
+    detailVideoResult,
+    changeIsFullScreenMode,
+    changeVideoViewMode,
+    changeIsHoveredVideoStatus,
+  } = useDetailVideo()
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'), { noSsr: true })
   const isDownMd = useMediaQuery(theme.breakpoints.down(769), { noSsr: true })
@@ -181,16 +189,18 @@ const VideoPlayer: React.FC<PlayerProps> = ({
 
   useEffect(() => {
     // IS SHOWING PIP?
-    if (getMiniPlayerState) {
-      if (isLoadedMetaData) {
-        videoEl.current.muted = false
-        requestPIP(videoEl.current)
-      }
-    } else {
-      videoEl.current.onpause = function () {
-        console.log('========getMiniPlayerState======', getMiniPlayerState)
-        setState({ ...state, playing: false, muted: videoEl.current.muted, volume: videoEl.current?.volume })
-        setVisible({ ...visible, loading: true, videoLoaded: false })
+    if (videoEl?.current) {
+      if (getMiniPlayerState) {
+        if (isLoadedMetaData) {
+          videoEl.current.muted = false
+          requestPIP(videoEl.current)
+        }
+      } else {
+        videoEl.current.onpause = function () {
+          console.log('========getMiniPlayerState======', getMiniPlayerState)
+          setState({ ...state, playing: false, muted: videoEl.current.muted, volume: videoEl.current?.volume })
+          setVisible({ ...visible, loading: true, videoLoaded: false })
+        }
       }
     }
   }, [getMiniPlayerState])
@@ -828,6 +838,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     _.debounce((type?: string) => {
       if ((!isMobile && !iPhonePl && !androidPl) || ((isMobile || iPhonePl || androidPl) && type === 'in')) {
         if (videoEl.current?.paused || videoEl.current?.ended) {
+          changeShowControlBar(true)
           //new version
           if (videoType === STATUS_VIDEO.LIVE_STREAM && videoEl.current !== null) {
             if (iPhonePl) {
@@ -990,6 +1001,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     }
     timeoutRef.current = setTimeout(() => {
       const canHideControlBar = canHideChatTimeoutRef.current && !isShowSettingPanel && state.playing
+      // console.log('canHideControlBar PC: ', canHideControlBar)
       if (canHideControlBar) {
         changeShowControlBar(false)
       }
@@ -1005,6 +1017,9 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   }
 
   useEffect(() => {
+    if (isMobileDevice) {
+      return
+    }
     if (isShowControlBar) {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current)
@@ -1018,6 +1033,25 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       }, 4500)
     }
   }, [isShowControlBar, isShowSettingPanel, state.playing])
+
+  useEffect(() => {
+    console.log('isHoveredVideo change: ', isHoveredVideo)
+    if (isMobileDevice) {
+      // if (isHoveredVideo) {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current)
+      }
+
+      timeoutRef.current = setTimeout(() => {
+        const canHideControlBar = !isShowSettingPanel && state.playing
+        // const canHideControlBar = true
+        if (canHideControlBar) {
+          changeIsHoveredVideoStatus(false)
+        }
+      }, 3500)
+      // }
+    }
+  }, [isHoveredVideo, state.playing, isShowSettingPanel])
 
   const Video = useMemo(() => {
     return (
