@@ -25,6 +25,7 @@ import _ from 'lodash'
 import { useVideoPlayerContext } from '@containers/VideoLiveStreamContainer/VideoContext/VideoPlayerContext'
 import UtilityArea from './UtilityArea'
 import { VIDEO_TYPE } from '@containers/VideoLiveStreamContainer'
+import { useControlBarContext } from '@containers/VideoLiveStreamContainer/VideoContext/ControlBarContext'
 
 declare global {
   interface Document {
@@ -71,6 +72,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
 }) => {
   const { setVideoRefInfo } = useContext(VideoContext)
   const { isStreaming, setIsStreaming, state, setState } = useVideoPlayerContext()
+  const { isShowControlBar, changeShowControlBar, isShowSettingPanel, timeoutRef, canHideChatTimeoutRef } = useControlBarContext()
   // const checkStatusVideo = 1
   const refControlBar = useRef<any>(null)
   // check condition display setting panel to display control bar
@@ -140,7 +142,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   const [playRateReturn, setPlayRateReturn] = useState(1)
   const isSafari = CommonHelper.checkIsSafariBrowser()
   const [isFull, setIsFull] = useState<boolean>(false)
-  const classes = useStyles({ checkStatusVideo: videoType, isFull })
+  const classes = useStyles({ checkStatusVideo: videoType, isFull, isShowControlBar })
 
   const isVideoArchive = isArchived || videoType === VIDEO_TYPE.ARCHIVED
 
@@ -969,6 +971,54 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     videoEl.current.currentTime = playerSecondsRef.current + time
   }
 
+  const handleVideoMouseEnter = () => {
+    changeShowControlBar(true)
+  }
+
+  const handleVideoMouseLeave = () => {
+    console.log('isOpenSettingPanel: ', isShowSettingPanel)
+    const canHideControlBar = !isShowSettingPanel && state.playing
+    if (canHideControlBar) {
+      changeShowControlBar(false)
+    }
+  }
+
+  const handleVideoMouseMove = () => {
+    changeShowControlBar(true)
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current)
+    }
+    timeoutRef.current = setTimeout(() => {
+      const canHideControlBar = canHideChatTimeoutRef.current && !isShowSettingPanel && state.playing
+      if (canHideControlBar) {
+        changeShowControlBar(false)
+      }
+    }, 4500)
+  }
+
+  const handleClickOutsidePlayer = () => {
+    const canHideControlBar = isShowControlBar && isShowSettingPanel && state.playing
+    if (canHideControlBar) {
+      changeShowControlBar(false)
+    }
+    enableChangeVolumeRef.current = false
+  }
+
+  useEffect(() => {
+    if (isShowControlBar) {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current)
+      }
+
+      timeoutRef.current = setTimeout(() => {
+        const canHideControlBar = canHideChatTimeoutRef.current && !isShowSettingPanel && state.playing
+        if (canHideControlBar) {
+          changeShowControlBar(false)
+        }
+      }, 4500)
+    }
+  }, [isShowControlBar, isShowSettingPanel, state.playing])
+
   const Video = useMemo(() => {
     return (
       <video
@@ -990,11 +1040,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   }, [muted, autoPlay, srcResolution, document.fullscreenElement, componentsSize.videoHeight])
 
   return (
-    <ClickAwayListener
-      onClickAway={() => {
-        enableChangeVolumeRef.current = false
-      }}
-    >
+    <ClickAwayListener onClickAway={handleClickOutsidePlayer}>
       <div
         className={classes.videoPlayer}
         style={{ height: componentsSize.videoHeight ?? 0 }}
@@ -1002,6 +1048,9 @@ const VideoPlayer: React.FC<PlayerProps> = ({
           enableChangeVolumeRef.current = true
         }}
         onDoubleClick={handleDoubleClickVideo}
+        onMouseEnter={handleVideoMouseEnter}
+        onMouseLeave={handleVideoMouseLeave}
+        onMouseMove={handleVideoMouseMove}
       >
         {/* {(iPhonePl || androidPl || (!iPadPl && isDownMd)) && (
         <div>
@@ -1158,6 +1207,13 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   )
 }
 
+interface StyleProps {
+  isShowControlBar?: boolean
+  checkStatusVideo: number
+  isFull?: boolean
+  isShowNextPre?: boolean
+}
+
 const useStyles = makeStyles((theme: Theme) => ({
   existPictureInPicture: {
     position: 'absolute',
@@ -1233,7 +1289,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: '100%',
   },
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  processControl: (props: { checkStatusVideo: number; isFull?: boolean; isShowNextPre?: boolean }) => {
+  processControl: (props: StyleProps) => {
     return {
       width: '100%',
       position: props.isFull ? 'fixed' : 'absolute',
@@ -1248,7 +1304,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       // justifyContent: 'space-between',
       zIndex: 99,
       transition: 'opacity 0.1s ease-in',
-      opacity: 0, //always show controlBar by status video
+      opacity: props.isShowControlBar ? 1 : 0, //always show controlBar by status video
       background:
         props.checkStatusVideo !== STATUS_VIDEO.LIVE_STREAM
           ? 'linear-gradient(rgb(128 128 128 / 0%) 20%, rgb(39 39 39) 100%)'
@@ -1259,11 +1315,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     opacity: '1 !important',
   },
 
-  playerContainerPC: (props: { checkStatusVideo: number; isFull?: boolean; isShowNextPre?: boolean }) => {
+  playerContainerPC: (props: StyleProps) => {
     return {
       height: '100%',
       '&:hover $processControl': {
-        opacity: 1,
+        // opacity: 1,
         background:
           props.checkStatusVideo !== STATUS_VIDEO.LIVE_STREAM
             ? 'linear-gradient(rgb(128 128 128 / 0%) 20%, rgb(39 39 39) 100%)'
