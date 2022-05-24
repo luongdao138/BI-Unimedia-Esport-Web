@@ -55,6 +55,7 @@ interface PlayerProps {
     videoHeight: number
   }
   qualities?: Array<QualitiesType>
+  video_id: string | string[]
 }
 
 const VideoPlayer: React.FC<PlayerProps> = ({
@@ -756,6 +757,11 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       console.log('=================loadeddata===================', videoEl.current)
       // setVisible({ ...visible, loading: true, videoLoaded: true })
       // videoEl.current.currentTime = 40
+      if (videoEl.current.readyState >= 3) {
+        //your code goes here
+        videoEl.current.play()
+        setState((prev) => ({ ...prev, playing: true }))
+      }
     })
     videoEl.current?.addEventListener('emptied', (event) => {
       console.log('=================emptied===================')
