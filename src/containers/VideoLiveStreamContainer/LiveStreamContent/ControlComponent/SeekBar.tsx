@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 import useDetailVideo from '@containers/VideoLiveStreamContainer/useDetailVideo'
 import { VideoContext } from '@containers/VideoLiveStreamContainer/VideoContext'
+import { useControlBarContext } from '@containers/VideoLiveStreamContainer/VideoContext/ControlBarContext'
 import { useVideoPlayerContext } from '@containers/VideoLiveStreamContainer/VideoContext/VideoPlayerContext'
 import { Slider, SliderProps } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
@@ -26,6 +27,7 @@ const SeekBar: React.FC<Props & SliderProps> = ({ playedSeconds, durationPlayer,
 
   const { setIsStreaming } = useVideoPlayerContext()
   const { videoRefInfo } = useContext(VideoContext)
+  const { canHideChatTimeoutRef } = useControlBarContext()
 
   useEffect(() => {
     setTimePlayed((playedSeconds / durationPlayer) * 100)
@@ -53,6 +55,10 @@ const SeekBar: React.FC<Props & SliderProps> = ({ playedSeconds, durationPlayer,
     []
   )
 
+  const handleChangeCanHideControlBar = (value: boolean) => {
+    canHideChatTimeoutRef.current = value
+  }
+
   return (
     <div className={classes.sliderSeek}>
       <Slider
@@ -62,6 +68,9 @@ const SeekBar: React.FC<Props & SliderProps> = ({ playedSeconds, durationPlayer,
         value={timePlayed}
         className={classes.seekBar}
         onChange={handleChange}
+        onMouseMove={() => handleChangeCanHideControlBar(false)}
+        onMouseLeave={() => handleChangeCanHideControlBar(true)}
+        onMouseEnter={() => handleChangeCanHideControlBar(false)}
         onChangeCommitted={(_, value) => handleCommit(_, value, durationPlayer)}
         {...rest}
       />
