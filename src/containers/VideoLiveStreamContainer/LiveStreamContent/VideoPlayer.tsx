@@ -187,7 +187,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     } else {
       videoEl.current.onpause = function () {
         console.log('========getMiniPlayerState======', getMiniPlayerState)
-        setState({ ...state, playing: false, muted: videoEl.current.muted })
+        setState({ ...state, playing: false, muted: videoEl.current.muted, volume: videoEl.current?.volume })
         setVisible({ ...visible, loading: true, videoLoaded: false })
       }
     }
@@ -783,9 +783,9 @@ const VideoPlayer: React.FC<PlayerProps> = ({
 
     return () => {
       //@ts-ignore
-      // window.onscroll = () => {
-      //   //TODO: remove event onscroll window
-      // }
+      window.onscroll = () => {
+        //TODO: remove event onscroll window
+      }
     }
   }, [resolution])
   useEffect(() => {
@@ -916,11 +916,11 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     }
   }
 
-  // window.onscroll = () => {
-  //   if (playing) {
-  //     videoEl.current?.play()
-  //   }
-  // }
+  window.onscroll = () => {
+    if (playing) {
+      videoEl.current?.play()
+    }
+  }
 
   const handleOnRestart = () => {
     setIsStreaming(false)
