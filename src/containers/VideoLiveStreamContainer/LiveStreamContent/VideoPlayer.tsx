@@ -85,6 +85,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   // const [playedSeconds, setPlayedSeconds] = useState(0)
   const durationPlayerRef = useRef<number>(0)
   const playerSecondsRef = useRef<number>(0)
+  const doubleTapRef = useRef<boolean>(false)
   // const { videoEl } = useContext(VideoContext)
 
   const { t } = useTranslation('common')
@@ -1014,6 +1015,28 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     }, 4500)
   }
 
+  const handleVideoTouch = (e: any) => {
+    if (!doubleTapRef.current) {
+      doubleTapRef.current = true
+      setTimeout(() => {
+        doubleTapRef.current = false
+      }, 300)
+
+      return
+    }
+
+    const clickedX = e.touches?.[0]?.clientX
+    e.preventDefault()
+    console.log('test tab: ', { clickedX, videoDisplayWidth })
+    if (clickedX / videoDisplayWidth < 0.35) {
+      handleChangeVideoTime('prev')
+    }
+
+    if (clickedX / videoDisplayWidth > 0.65) {
+      handleChangeVideoTime('next')
+    }
+  }
+
   const handleClickOutsidePlayer = () => {
     const canHideControlBar = isShowControlBar && isShowSettingPanel && state.playing
     if (canHideControlBar) {
@@ -1091,6 +1114,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
         onMouseEnter={handleVideoMouseEnter}
         onMouseLeave={handleVideoMouseLeave}
         onMouseMove={handleVideoMouseMove}
+        onTouchStart={handleVideoTouch}
       >
         {/* {(iPhonePl || androidPl || (!iPadPl && isDownMd)) && (
         <div>
