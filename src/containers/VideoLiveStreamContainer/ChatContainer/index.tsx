@@ -553,10 +553,10 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     const handleLoadMore = () => {
       const isTipSubTab = prevMessSubTabRef.current === SUB_TABS.MESS.TIP
 
-      console.log('🚀 ~ handleLoadMore ~ prevTokenRef.current', prevTokenRef.current)
-      console.log('🚀 ~ handleLoadMore ~ isTokenTipBroken', isTokenTipBroken)
-      console.log('🚀 ~ handleLoadMore ~ isTokenBroken', isTokenBroken)
-      console.log('🚀 ~ handleLoadMore ~ needLoadMoreRef.current', needLoadMoreRef.current)
+      // console.log('🚀 ~ handleLoadMore ~ prevTokenRef.current', prevTokenRef.current)
+      // console.log('🚀 ~ handleLoadMore ~ isTokenTipBroken', isTokenTipBroken)
+      // console.log('🚀 ~ handleLoadMore ~ isTokenBroken', isTokenBroken)
+      // console.log('🚀 ~ handleLoadMore ~ needLoadMoreRef.current', needLoadMoreRef.current)
       if (!needLoadMoreRef.current) {
         return
       }
