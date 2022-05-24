@@ -1680,7 +1680,12 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     const matchSm = useMediaQuery(theme.breakpoints.down(769))
     // const matchMd = useMediaQuery(theme.breakpoints.down(1025))
 
-    const getMarginBottom = () => (matchSm && isLandscape ? 45 : 0)
+    const getMarginBottom = () => {
+      if (matchSm) {
+        return isLandscape && isStreaming ? 45 : 0
+      }
+      return 0
+    }
 
     const getMarginTopOfComponents = (componentType = 'chatBoard') => {
       let marginTop = 0

@@ -547,6 +547,7 @@ const useStyles = makeStyles((theme) => ({
         return {
           flex: '1 1 0',
           minWidth: 0,
+          // paddingBottom: 0,
         }
     },
     tabsContainer: (props: ChatStyleProps) => {
