@@ -41,6 +41,7 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
     onVideoEnd,
     isArchived,
     componentsSize,
+    video_id,
   } = props
 
   const { t } = useTranslation('common')
@@ -95,6 +96,7 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
               endLive={detailVideoResult?.live_stream_end_time}
               type={detailVideoResult?.status}
               qualities={detailVideoResult?.qualities}
+              video_id={video_id}
             />
           </VideoPlayerContextProvider>
         )}
