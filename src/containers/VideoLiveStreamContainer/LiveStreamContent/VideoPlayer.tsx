@@ -27,6 +27,7 @@ import UtilityArea from './UtilityArea'
 import { VIDEO_TYPE } from '@containers/VideoLiveStreamContainer'
 import { useControlBarContext } from '@containers/VideoLiveStreamContainer/VideoContext/ControlBarContext'
 import { isMobile as isMobileDevice } from 'react-device-detect'
+import { useRect } from '@utils/hooks/useRect'
 
 declare global {
   interface Document {
@@ -80,18 +81,19 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   // check condition display setting panel to display control bar
   const isOpenSettingPanel = refControlBar?.current && refControlBar?.current.settingPanel !== SettingPanelState.NONE ? true : false
 
+  const playerContainerRef = useRef(null)
   const videoEl = useRef(null)
   // const [durationPlayer, setDurationPlayer] = useState(0)
   // const [playedSeconds, setPlayedSeconds] = useState(0)
   const durationPlayerRef = useRef<number>(0)
   const playerSecondsRef = useRef<number>(0)
   const doubleTapRef = useRef<boolean>(false)
+  const { height: videoDisplayHeight } = useRect(playerContainerRef)
   // const { videoEl } = useContext(VideoContext)
 
   const { t } = useTranslation('common')
   const [autoPlay, setAutoPlay] = useState(true)
   // const reactPlayerRef = useRef(null)
-  const playerContainerRef = useRef(null)
   const [isLive, setIsLive] = useState(null)
 
   //As of Chrome 66, videos must be muted in order to play automatically
@@ -200,7 +202,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       } else {
         videoEl.current.onpause = function () {
           console.log('========getMiniPlayerState======', getMiniPlayerState)
-          setState({ ...state, playing: false, muted: videoEl.current.muted, volume: videoEl.current?.volume })
+          setState({ ...state, playing: false, muted: videoEl.current?.muted, volume: videoEl.current?.volume })
           setVisible({ ...visible, loading: true, videoLoaded: false })
         }
       }
@@ -758,7 +760,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       console.log('=================loadeddata===================', videoEl.current)
       // setVisible({ ...visible, loading: true, videoLoaded: true })
       // videoEl.current.currentTime = 40
-      if (videoEl.current.readyState >= 3) {
+      if (videoEl.current?.readyState >= 3) {
         //your code goes here
         videoEl.current.play()
         setState((prev) => ({ ...prev, playing: true }))
@@ -931,7 +933,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   }
 
   const handleDoubleClickVideo = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!processControlRef.current.contains(e.target as Node)) {
+    if (!processControlRef.current.contains(e.target as Node) && !isMobileDevice) {
       toggleFullScreen1()
     }
   }
@@ -1016,6 +1018,9 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   }
 
   const handleVideoTouch = (e: any) => {
+    if (!isVideoArchive) {
+      return
+    }
     if (!doubleTapRef.current) {
       doubleTapRef.current = true
       setTimeout(() => {
@@ -1025,15 +1030,19 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       return
     }
 
-    const clickedX = e.touches?.[0]?.clientX
+    const touchedX = e.touches?.[0]?.clientX
+    const touchedY = e.touches?.[0]?.clientY
     e.preventDefault()
-    console.log('test tab: ', { clickedX, videoDisplayWidth })
-    if (clickedX / videoDisplayWidth < 0.35) {
-      handleChangeVideoTime('prev')
-    }
+    changeIsHoveredVideoStatus(true)
+    console.log('test tab: ', { touchedX, videoDisplayWidth, touchedY, videoDisplayHeight })
+    if (touchedY / videoDisplayHeight < 0.75) {
+      if (touchedX / videoDisplayWidth < 0.35) {
+        handleChangeVideoTime('prev')
+      }
 
-    if (clickedX / videoDisplayWidth > 0.65) {
-      handleChangeVideoTime('next')
+      if (touchedX / videoDisplayWidth > 0.65) {
+        handleChangeVideoTime('next')
+      }
     }
   }
 
