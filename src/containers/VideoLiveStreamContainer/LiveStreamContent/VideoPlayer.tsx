@@ -57,6 +57,7 @@ interface PlayerProps {
   }
   qualities?: Array<QualitiesType>
   video_id: string | string[]
+  handleOpenRelatedVideos: () => void
 }
 
 const VideoPlayer: React.FC<PlayerProps> = ({
@@ -72,8 +73,9 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   videoType,
   componentsSize,
   qualities,
+  handleOpenRelatedVideos,
 }) => {
-  const { setVideoRefInfo } = useContext(VideoContext)
+  const { setVideoRefInfo, isFull, setIsFull, canDisplayRelatedVideos } = useContext(VideoContext)
   const { isStreaming, setIsStreaming, state, setState } = useVideoPlayerContext()
   const { isShowControlBar, changeShowControlBar, isShowSettingPanel, timeoutRef, canHideChatTimeoutRef } = useControlBarContext()
   // const checkStatusVideo = 1
@@ -129,6 +131,9 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   const iPhonePl = /iPhone/i.test(window.navigator.userAgent)
 
   const processControlRef = useRef<HTMLDivElement>(null)
+  const touchEndRef = useRef(null)
+  const touchStartRef = useRef(null)
+  const minSwipeDistance = 50
 
   const { videoWatchTimeReportRequest, getMiniPlayerState } = useLiveStreamDetail()
   const isStreamingEnd = useRef(liveStreamInfo.is_streaming_end)
@@ -153,7 +158,6 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   const [resolutionSelected, setResolutionSelected] = useState(VIDEO_RESOLUTION.AUTO)
   const [playRateReturn, setPlayRateReturn] = useState(1)
   const isSafari = CommonHelper.checkIsSafariBrowser()
-  const [isFull, setIsFull] = useState<boolean>(false)
   const classes = useStyles({ checkStatusVideo: videoType, isFull, isShowControlBar })
 
   const isVideoArchive = isArchived || videoType === VIDEO_TYPE.ARCHIVED
@@ -202,7 +206,12 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       } else {
         videoEl.current.onpause = function () {
           console.log('========getMiniPlayerState======', getMiniPlayerState)
-          setState({ ...state, playing: false, muted: videoEl.current?.muted, volume: videoEl.current?.volume })
+          setState({
+            ...state,
+            playing: false,
+            muted: videoEl.current?.muted,
+            volume: videoEl.current?.muted === true ? 0 : videoEl.current?.volume,
+          })
           setVisible({ ...visible, loading: true, videoLoaded: false })
         }
       }
@@ -723,6 +732,9 @@ const VideoPlayer: React.FC<PlayerProps> = ({
 
     videoEl.current?.addEventListener('ended', () => {
       console.log('================END VIDEO HTML====================')
+      if (canDisplayRelatedVideos) {
+        handleOpenRelatedVideos()
+      }
       setState({ ...state, playing: false })
       setVisible({ ...visible, loading: true, videoLoaded: true })
     })
@@ -808,7 +820,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
         //TODO: remove event onscroll window
       }
     }
-  }, [resolution])
+  }, [resolution, canDisplayRelatedVideos])
   useEffect(() => {
     changeIsFullScreenMode(isFull)
   }, [isFull])
@@ -1054,6 +1066,24 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     enableChangeVolumeRef.current = false
   }
 
+  const handleSwipeTouchStart = (e: any) => {
+    touchEndRef.current = null
+    touchStartRef.current = e.targetTouches?.[0].clientY
+  }
+
+  const handleSwipeTouchMove = (e: any) => {
+    touchEndRef.current = e.targetTouches[0].clientY
+  }
+
+  const handleSwipeTouchEnd = () => {
+    if (!touchStartRef.current || !touchEndRef.current) return
+    const distance = touchStartRef.current - touchEndRef.current
+    const isUpSwipe = distance > minSwipeDistance
+    if (isUpSwipe && canDisplayRelatedVideos) {
+      handleOpenRelatedVideos()
+    }
+  }
+
   useEffect(() => {
     if (isMobileDevice) {
       return
@@ -1157,6 +1187,9 @@ const VideoPlayer: React.FC<PlayerProps> = ({
           className={`${isMobile || iPhonePl || androidPl ? classes.playerContainer : classes.playerContainerPC} ${
             isFull === true ? classes.forceFullscreenIosSafariPlayer : ''
           }`}
+          onTouchEnd={handleSwipeTouchEnd}
+          onTouchMove={handleSwipeTouchMove}
+          onTouchStart={handleSwipeTouchStart}
         >
           <div style={{ height: '100%', position: 'relative' }} onClick={() => handlePlayPauseOut('out')}>
             {Video}

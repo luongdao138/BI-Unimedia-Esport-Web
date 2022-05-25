@@ -68,7 +68,7 @@ const useStyles = makeStyles((theme) => ({
     width: 20,
     height: 20,
     // position: 'absolute',
-    zIndex: 1000,
+    zIndex: 1,
     left: 0,
     right: 0,
     top: '0px',
