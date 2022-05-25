@@ -202,7 +202,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       } else {
         videoEl.current.onpause = function () {
           console.log('========getMiniPlayerState======', getMiniPlayerState)
-          setState({ ...state, playing: false, muted: videoEl.current.muted, volume: videoEl.current?.volume })
+          setState({ ...state, playing: false, muted: videoEl.current?.muted, volume: videoEl.current?.volume })
           setVisible({ ...visible, loading: true, videoLoaded: false })
         }
       }
@@ -760,7 +760,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       console.log('=================loadeddata===================', videoEl.current)
       // setVisible({ ...visible, loading: true, videoLoaded: true })
       // videoEl.current.currentTime = 40
-      if (videoEl.current.readyState >= 3) {
+      if (videoEl.current?.readyState >= 3) {
         //your code goes here
         videoEl.current.play()
         setState((prev) => ({ ...prev, playing: true }))
@@ -933,7 +933,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   }
 
   const handleDoubleClickVideo = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!processControlRef.current.contains(e.target as Node)) {
+    if (!processControlRef.current.contains(e.target as Node) && !isMobileDevice) {
       toggleFullScreen1()
     }
   }
@@ -1033,6 +1033,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     const touchedX = e.touches?.[0]?.clientX
     const touchedY = e.touches?.[0]?.clientY
     e.preventDefault()
+    changeIsHoveredVideoStatus(true)
     console.log('test tab: ', { touchedX, videoDisplayWidth, touchedY, videoDisplayHeight })
     if (touchedY / videoDisplayHeight < 0.75) {
       if (touchedX / videoDisplayWidth < 0.35) {
