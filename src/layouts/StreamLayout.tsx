@@ -89,7 +89,7 @@ const StreamLayout: React.FC<StreamLayoutProps> = ({ children, patternBg, footer
             </Box>
           </aside>
           <main role="minimize_main" className="minimize_main">
-            <div className="minimize_content_wrapper">
+            <div className="minimize_content_wrapper" style={{ paddingTop: 60 }}>
               <div className="minimize_content">{renderContent()}</div>
               {footer ? <Footer /> : ''}
             </div>
