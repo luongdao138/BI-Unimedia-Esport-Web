@@ -1223,6 +1223,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
                 onVideoEnd={onVideoEnd}
                 isStreamingEnd={isStreamingEnd}
                 changeRef={changeRef}
+                isFull={isFull}
               />
             </div>
           )}
