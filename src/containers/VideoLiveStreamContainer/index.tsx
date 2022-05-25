@@ -614,7 +614,7 @@ const VideoDetail: React.FC = () => {
       videoWidth,
       videoHeight,
     }
-  }, [pageWidth])
+  }, [pageWidth, isLandscape, isMobile])
 
   const resetErrorDonateMessage = useCallback(() => {
     setErrorMsgDonatePoint('')
