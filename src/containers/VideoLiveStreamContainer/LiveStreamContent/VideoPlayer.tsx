@@ -834,22 +834,31 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       setIsFull(!isFull)
     } else {
       const htmlEl: any = document.querySelector('html')
+      const element = isSafari ? playerContainerRef.current : htmlEl
+
+      console.log('Check safari browser: ', isSafari)
+
       if (!document['webkitCurrentFullScreenElement']) {
-        changeFullscreenMode(true)
+        if (!isSafari) {
+          changeFullscreenMode(true)
+        }
+
         isFullScreenModeRef.current = true
-        if (htmlEl.requestFullscreen) {
-          htmlEl.requestFullscreen()
-        } else if (htmlEl.mozRequestFullScreen) {
-          htmlEl.mozRequestFullScreen()
-        } else if (htmlEl.webkitRequestFullscreen) {
-          htmlEl.webkitRequestFullscreen()
-        } else if (htmlEl.msRequestFullscreen) {
-          htmlEl.msRequestFullscreen()
+        if (element.requestFullscreen) {
+          element.requestFullscreen()
+        } else if (element.mozRequestFullScreen) {
+          element.mozRequestFullScreen()
+        } else if (element.webkitRequestFullscreen) {
+          element.webkitRequestFullscreen()
+        } else if (element.msRequestFullscreen) {
+          element.msRequestFullscreen()
         }
       } else {
         if (document.exitFullscreen || document['webkitExitFullscreen']) {
           isFullScreenModeRef.current = false
-          changeFullscreenMode(false)
+          if (!isSafari) {
+            changeFullscreenMode(false)
+          }
           if (document.exitFullscreen) {
             document.exitFullscreen()
           } else {

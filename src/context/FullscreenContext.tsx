@@ -1,3 +1,4 @@
+import { CommonHelper } from '@utils/helpers/CommonHelper'
 import React, { createContext, useCallback, useContext, useState, useEffect } from 'react'
 
 interface ContextState {
@@ -13,6 +14,8 @@ const FullscreenContextProvider: React.FC = ({ children }: { children: React.Rea
   const [isFullscreenMode, setIsFullScreenMode] = useState<boolean>(false)
   const [isShowHeader, setIsShowHeader] = useState<boolean>(false)
 
+  const isSafariBrowser = CommonHelper.checkIsSafariBrowser()
+
   const changeFullscreenMode = useCallback((value: boolean) => {
     setIsFullScreenMode(value)
   }, [])
@@ -26,24 +29,25 @@ const FullscreenContextProvider: React.FC = ({ children }: { children: React.Rea
   }, [isFullscreenMode])
 
   useEffect(() => {
-    const handleFullscreenChange = () => {
-      if (document.fullscreenElement) {
-        setIsFullScreenMode(true)
-      } else {
-        setIsFullScreenMode(false)
+    if(!isSafariBrowser) {
+      const handleFullscreenChange = () => {
+        if (document.fullscreenElement) {
+          setIsFullScreenMode(true)
+        } else {
+          setIsFullScreenMode(false)
+        }
       }
-    }
-
-    const handleScroll = () => {
-      setIsShowHeader(scrollY > 0)
-    }
-
-    addEventListener('fullscreenchange', handleFullscreenChange)
-    addEventListener('scroll', handleScroll)
-
-    return () => {
-      removeEventListener('fullscreenchange', handleFullscreenChange)
-      removeEventListener('scroll', handleScroll)
+  
+      const handleScroll = () => {
+        setIsShowHeader(scrollY > 0)
+      }
+      addEventListener('fullscreenchange', handleFullscreenChange)
+      addEventListener('scroll', handleScroll)
+  
+      return () => {
+        removeEventListener('fullscreenchange', handleFullscreenChange)
+        removeEventListener('scroll', handleScroll)
+      }
     }
   }, [])
 
