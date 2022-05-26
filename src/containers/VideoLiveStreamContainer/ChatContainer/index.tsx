@@ -7,7 +7,6 @@ import API, { graphqlOperation, GraphQLResult } from '@aws-amplify/api'
 // import PremiumChatDialog from '@containers/VideoLiveStreamContainer/ChatContainer/PremiumChatDialog'
 // import * as Yup from 'yup'
 // import { useFormik } from 'formik'
-import { ArrowDownward } from '@material-ui/icons'
 import ESAvatar from '@components/Avatar'
 // import ESInput from '@components/Input'
 import {
@@ -21,9 +20,9 @@ import {
   SUB_TABS,
   VIDEO_TABS,
 } from '@constants/common.constants'
-import { useFullscreenContext } from '@context/FullscreenContext'
 // import { useTranslation } from 'react-i18next'
 // import i18n from '@locales/i18n'
+import { useFullscreenContext } from '@context/FullscreenContext'
 import i18n from '@locales/i18n'
 import { Box, ButtonBase, ClickAwayListener, Icon, IconButton, Typography, useMediaQuery, useTheme } from '@material-ui/core'
 import { UserProfile } from '@services/user.service'
@@ -363,10 +362,6 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     const { isEnabledGift, isEnabledMessFilter, isDisplayedRankingTab } = useCheckDisplayChat()
 
     const needLoadMessRef = useRef<boolean>(true)
-    const [unreadMessCount, setUnreadMessCount] = useState<number>(0)
-    const [showIcon, setShowIcon] = useState<boolean>(true)
-
-    const displayNewMessCount = !isBottom && !isFullScreen && videoType === STATUS_VIDEO.LIVE_STREAM
 
     // const { streamingSecond, playedSecond, isViewingStream, liveStreamInfo } = useDetailVideo()
     // const userResult = {streamer: 1}
@@ -390,13 +385,6 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
 
     console.log('------------------- Chat component rerender ----------------------')
 
-    useEffect(() => {
-      if (isBottom) {
-        setUnreadMessCount(0)
-        setShowIcon(true)
-      }
-    }, [isBottom])
-
     const sortMessages = (messages, isSortAsc = true) => {
       const new_mess = [...messages]
       const sortFactor = isSortAsc ? 1 : -1
@@ -408,12 +396,12 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       if (messagesEndRef.current != null && messagesEndRef) {
         messagesEndRef.current?.scrollToRow(position - 1)
         needLoadMoreRef.current = false
-        // setTimeout(() => {
-        messagesEndRef.current?.scrollToRow(position - 1)
-        needLoadMoreRef.current = true
-        console.log('🚀 ~ test--scrollTop--111', needLoadMoreRef)
-        // setBottom(true)
-        // }, timeout)
+        setTimeout(() => {
+          messagesEndRef.current?.scrollToRow(position - 1)
+          needLoadMoreRef.current = true
+          console.log('🚀 ~ test--scrollTop--111', needLoadMoreRef)
+          // setBottom(true)
+        }, 100)
       }
     }
 
@@ -475,7 +463,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       if (isPrevTipMessTab) {
         setStateMessages(filterMess)
         cacheStateMessRef.current = newMess
-        _scrollToBottom(filterMess.length, 0)
+        _scrollToBottom(filterMess.length)
       }
       savedTipMessRef.current = newMess
       console.log('🚀 ~ 000 ~ savedTipMessRef.current', savedTipMessRef.current)
@@ -783,12 +771,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
           }
           // save mess for local
           // setCacheMess((messages) => [...messages, createdMessage])
-          if (canAddMess) {
-            if (!isBottom) {
-              setUnreadMessCount((prev) => prev + 1)
-            }
-            cacheStateMessRef.current = [...cacheStateMessRef.current, createdMessage]
-          }
+          if (canAddMess) cacheStateMessRef.current = [...cacheStateMessRef.current, createdMessage]
           // save donated messages for local (not check display time)
           if (isPremiumChat(createdMessage, false)) {
             cacheDonateMessRef.current = [...cacheDonateMessRef.current, createdMessage]
@@ -990,9 +973,13 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
 
         // setStateMessages(filterMess)
         setStateMessages((messages) => [...newMess, ...messages])
-        if (isBottom) {
-          setBottom(true)
-        }
+        setTimeout(() => {
+          _scrollToBottom(newMess.length)
+          if (isBottom) {
+            setBottom(true)
+          }
+        }, 10)
+
         // setCacheMess([...newMess, ...cacheMess])
         cacheStateMessRef.current = [...newMess, ...cacheStateMessRef.current]
         savedTipMessRef.current = [...newMess, ...savedTipMessRef.current]
@@ -1292,7 +1279,6 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
             cacheStateMessRef.current = savedTipMessRef.current
             console.log('🚀 ~ getMessWhenSwitchSubTab ~ serverTipMessRef.current', serverTipMessRef.current)
             setStateMessages(filterMess)
-            _scrollToBottom(filterMess.length)
             console.log('🚀 ~ 000-current', serverTipMessRef.current)
             // }
             break
@@ -1320,7 +1306,6 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
             console.log('🚀 ~ getMessWhenSwitchSubTab ~ filterMess', newFilterMess)
             cacheStateMessRef.current = savedAllMessRef.current
             setStateMessages(newFilterMess)
-            _scrollToBottom(newFilterMess.length)
             console.log('🚀 ~ 000-current---111', serverTipMessRef.current)
             break
           default:
@@ -1586,9 +1571,6 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         const canAddMess = checkAddMessage(local_message)
         const is_premium_local_message = isPremiumChat(local_message, false)
         if (isStreaming && canAddMess) {
-          if (!isBottom) {
-            setUnreadMessCount((prev) => prev + 1)
-          }
           setStateMessages((prev) => [...prev, local_message])
         }
 
@@ -1667,17 +1649,6 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
           return true
         }
       }
-    }
-
-    const formatUnreadMessCount = (messCount: number) => {
-      if (!messCount) {
-        return 'See new messages'
-      }
-      if (messCount <= 20) {
-        return messCount + ' new messages'
-      }
-
-      return '20+ new messages'
     }
 
     const scrollToCurrentMess = (behavior = 'smooth') => {
@@ -1765,7 +1736,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
 
       if (isBottom && !isGettingMess) {
         // if (isBottom) {
-        _scrollToBottom(stateMessages.length, 0)
+        _scrollToBottom(stateMessages.length)
         // console.log('🚀 ~ useEffect ~ setBottom', 4444)
         setBottom(true)
       }
@@ -1781,34 +1752,24 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         }}
       >
         <ChatLoader open={isGettingMess || isGettingPrevRewindMess || isGettingTipMess} />
-        {showIcon ? (
-          <IconButton
-            disableRipple
-            style={{
-              display: !isBottom && !isFullScreen ? 'flex' : 'none',
-              bottom: isMobile && isStreaming ? (isLandscape ? 66 : 180) : 30,
-            }}
-            className={classes.bottomArrow}
-            onMouseEnter={() => setShowIcon(false)}
-            aria-label="scroll bottom"
-            size="small"
-          >
-            <Icon className={`${classes.iconAngleDown} fa fa-angle-down`} />
-          </IconButton>
-        ) : (
-          <Box
-            style={{ display: displayNewMessCount ? 'flex' : 'none' }}
-            onMouseLeave={() => setShowIcon(true)}
-            className={classes.messCountContainer}
-            onClick={() => {
-              _scrollToBottom(stateMessages.length, 0)
+        <IconButton
+          disableRipple
+          style={{
+            display: !isBottom && !isFullScreen ? 'flex' : 'none',
+            bottom: isMobile && isStreaming ? (isLandscape ? 66 : 180) : 30,
+          }}
+          className={classes.bottomArrow}
+          onClick={() => {
+            setTimeout(() => {
+              _scrollToBottom(stateMessages.length)
               setBottom(true)
-            }}
-          >
-            <ArrowDownward className={classes.newMessIcon} />
-            <Typography className={classes.newMess}>{formatUnreadMessCount(unreadMessCount)}</Typography>
-          </Box>
-        )}
+            }, 10)
+          }}
+          aria-label="scroll bottom"
+          size="small"
+        >
+          <Icon className={`${classes.iconAngleDown} fa fa-angle-down`} />
+        </IconButton>
         <ClickAwayListener onClickAway={closeDialogActiveUser}>
           <Box className={`${classes.dialogMess} ${messActiveUser ? classes.dialogMessShow : ''}`}>
             {messActiveUser && (
