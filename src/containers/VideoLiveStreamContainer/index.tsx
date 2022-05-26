@@ -61,6 +61,7 @@ import VideoTabContextProvider from '@containers/VideoLiveStreamContainer/VideoC
 import ControlBarContextProvider from '@containers/VideoLiveStreamContainer/VideoContext/ControlBarContext'
 import RelatedVideosMobile from './RelatedVideos/RelatedVideosMobile'
 import RelatedVideoContextProvider from './VideoContext/RelatedVideoContext'
+import { useFullscreenContext } from '@context/FullscreenContext'
 
 export interface videoStyleProps {
   availHeight: number
@@ -68,6 +69,7 @@ export interface videoStyleProps {
   isLandscape: boolean
   isIphone: boolean
   showRelatedVideos?: boolean
+  isFullscreenMode?: boolean
 }
 
 export enum VIDEO_TYPE {
@@ -140,6 +142,7 @@ const VideoDetail: React.FC = () => {
   const confirmDonatePointRef = useRef<any>(null)
   const [showRelatedVideos, setShowRelatedVideos] = useState<boolean>(false)
   const canDisplayRelatedVideos = isMobileDevice && isLandscape && isFull
+  const { isFullscreenMode } = useFullscreenContext()
 
   const {
     getVideoDetail,
@@ -174,7 +177,14 @@ const VideoDetail: React.FC = () => {
   const iPhonePl = /iPhone/i.test(window.navigator.userAgent)
 
   // const handleDonatePointRef = useRef<any>(null)
-  const classes = useStyles({ availHeight: height, availWidth: window.innerWidth, isLandscape, isIphone: iPhonePl, showRelatedVideos })
+  const classes = useStyles({
+    availHeight: height,
+    availWidth: window.innerWidth,
+    isLandscape,
+    isIphone: iPhonePl,
+    showRelatedVideos,
+    isFullscreenMode,
+  })
 
   const handleShowDialogLogin = () => {
     setShowDialogLogin(true)
@@ -648,7 +658,6 @@ const VideoDetail: React.FC = () => {
         className={`${classes.wrapChatContainer} ${is_normal_view_mode ? '' : classes.wrapTheatreChatContainer}`}
         style={{
           width: isMobile ? '100%' : componentsSize.chatWidth,
-          // width: componentsSize.chatWidth,
         }}
       >
         <ChatContainer
@@ -767,7 +776,7 @@ const VideoDetail: React.FC = () => {
               <Box
                 className={classes.videoContainer}
                 style={{
-                  width: !is_normal_view_mode || isMobile ? '100%' : componentsSize.videoWidth,
+                  width: isFullscreenMode ? '100vw' : !is_normal_view_mode || isMobile ? '100%' : componentsSize.videoWidth,
                   marginRight: !is_normal_view_mode && !isMobile ? '16px' : '0',
                 }}
                 onClick={() => {
@@ -893,6 +902,11 @@ const VideoDetail: React.FC = () => {
 export default VideoDetail
 
 const useStyles = makeStyles((theme) => ({
+  '@global': {
+    '*::-webkit-scrollbar': {
+      width: (props: videoStyleProps) => props.isFullscreenMode && '0',
+    },
+  },
   root: {
     backgroundColor: '#212121',
     display: 'flex',
@@ -954,16 +968,17 @@ const useStyles = makeStyles((theme) => ({
   wrapChatContainer: {
     display: 'flex',
     flexDirection: 'column',
-    position: 'fixed',
+    position: (props: videoStyleProps) => (props.isFullscreenMode ? 'relative' : 'fixed'),
     right: '0',
-    top: '61px',
+    top: (props: videoStyleProps) => (props.isFullscreenMode ? '0' : '61px'),
+    flexGrow: (props: videoStyleProps) => (props.isFullscreenMode ? 1 : 'unset'),
     bottom: '0px',
     height: 'calc(100vh - 61px)',
     background: Colors.white_opacity[10],
   },
   wrapTheatreChatContainer: {
-    position: 'relative',
-    top: 0,
+    top: '0 !important',
+    position: () => 'relative',
   },
   [theme.breakpoints.down(769)]: {
     root: {
@@ -972,8 +987,8 @@ const useStyles = makeStyles((theme) => ({
     },
     wrapChatContainer: {
       width: '100%',
-      position: 'relative',
-      top: 'auto',
+      position: 'relative !important',
+      top: 'auto !important',
       height: 'auto',
       bottom: 'auto',
     },

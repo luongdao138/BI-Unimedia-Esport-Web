@@ -20,6 +20,7 @@ import {
   SUB_TABS,
   VIDEO_TABS,
 } from '@constants/common.constants'
+import { useFullscreenContext } from '@context/FullscreenContext'
 // import { useTranslation } from 'react-i18next'
 // import i18n from '@locales/i18n'
 import i18n from '@locales/i18n'
@@ -70,6 +71,7 @@ const APIt: any = useGraphqlAPI()
 export type ChatStyleProps = {
   isLandscape: boolean
   isRankingTab?: boolean
+  isFullscreenMode?: boolean
 }
 
 export type ChatContainerProps = {
@@ -377,7 +379,8 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     // console.log('🚀 ~ successGetListMessTip', successGetListMessTip)
 
     const { height: chatInputHeight } = useRect(chatMobileContainerRef)
-    const classes = useStyles({ isLandscape, isRankingTab: activeTab === VIDEO_TABS.RANKING })
+    const { isFullscreenMode } = useFullscreenContext()
+    const classes = useStyles({ isLandscape, isRankingTab: activeTab === VIDEO_TABS.RANKING, isFullscreenMode })
     console.log({ chatInputHeight })
 
     console.log('------------------- Chat component rerender ----------------------')

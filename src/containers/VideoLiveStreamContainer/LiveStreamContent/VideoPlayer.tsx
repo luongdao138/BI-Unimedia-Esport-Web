@@ -28,6 +28,7 @@ import { VIDEO_TYPE } from '@containers/VideoLiveStreamContainer'
 import { useControlBarContext } from '@containers/VideoLiveStreamContainer/VideoContext/ControlBarContext'
 import { isMobile as isMobileDevice } from 'react-device-detect'
 import { useRect } from '@utils/hooks/useRect'
+import { useFullscreenContext } from '@context/FullscreenContext'
 
 declare global {
   interface Document {
@@ -134,6 +135,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   const touchEndRef = useRef(null)
   const touchStartRef = useRef(null)
   const minSwipeDistance = 50
+  const { changeFullscreenMode, isFullscreenMode } = useFullscreenContext()
 
   const { videoWatchTimeReportRequest, getMiniPlayerState } = useLiveStreamDetail()
   const isStreamingEnd = useRef(liveStreamInfo.is_streaming_end)
@@ -831,20 +833,23 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       isFullScreenModeRef.current = !isFullScreenModeRef.current
       setIsFull(!isFull)
     } else {
+      const htmlEl: any = document.querySelector('html')
       if (!document['webkitCurrentFullScreenElement']) {
+        changeFullscreenMode(true)
         isFullScreenModeRef.current = true
-        if (playerContainerRef.current.requestFullscreen) {
-          playerContainerRef.current.requestFullscreen()
-        } else if (playerContainerRef.current.mozRequestFullScreen) {
-          playerContainerRef.current.mozRequestFullScreen()
-        } else if (playerContainerRef.current.webkitRequestFullscreen) {
-          playerContainerRef.current.webkitRequestFullscreen()
-        } else if (playerContainerRef.current.msRequestFullscreen) {
-          playerContainerRef.current.msRequestFullscreen()
+        if (htmlEl.requestFullscreen) {
+          htmlEl.requestFullscreen()
+        } else if (htmlEl.mozRequestFullScreen) {
+          htmlEl.mozRequestFullScreen()
+        } else if (htmlEl.webkitRequestFullscreen) {
+          htmlEl.webkitRequestFullscreen()
+        } else if (htmlEl.msRequestFullscreen) {
+          htmlEl.msRequestFullscreen()
         }
       } else {
         if (document.exitFullscreen || document['webkitExitFullscreen']) {
           isFullScreenModeRef.current = false
+          changeFullscreenMode(false)
           if (document.exitFullscreen) {
             document.exitFullscreen()
           } else {
@@ -1145,7 +1150,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     <ClickAwayListener onClickAway={handleClickOutsidePlayer}>
       <div
         className={classes.videoPlayer}
-        style={{ height: componentsSize.videoHeight ?? 0 }}
+        style={{ height: isFullscreenMode ? '100vh' : componentsSize.videoHeight ?? 0 }}
         onClick={() => {
           enableChangeVolumeRef.current = true
         }}

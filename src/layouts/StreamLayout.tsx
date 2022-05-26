@@ -17,6 +17,7 @@ import { useTheme } from '@material-ui/core/styles'
 import useGetProfile from '@utils/hooks/useGetProfile'
 import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
 import { useRotateScreen } from '@utils/hooks/useRotateScreen'
+import { useFullscreenContext } from '@context/FullscreenContext'
 
 interface StreamLayoutProps {
   patternBg?: boolean
@@ -49,6 +50,8 @@ const StreamLayout: React.FC<StreamLayoutProps> = ({
   const { userProfile } = useGetProfile()
   const isStreamer = userProfile?.attributes?.delivery_flag || false
 
+  const { isFullscreenMode, changeFullscreenMode, changeShowHeader } = useFullscreenContext()
+
   // config layout for video detail page
   const queryKey = 'vid'
   const video_id = router.query[queryKey] || router.asPath.match(new RegExp(`[&?]${queryKey}=(.*)(&|$)`))
@@ -59,6 +62,20 @@ const StreamLayout: React.FC<StreamLayoutProps> = ({
   const toggleDrawer = (open: boolean) => {
     setOpen(open)
   }
+
+  useEffect(() => {
+    return () => {
+      if (document.fullscreenElement || document['webkitFullscreenElement'] || document['mozFullScreenElement']) {
+        if (document.exitFullscreen) {
+          document.exitFullscreen()
+        } else {
+          document['webkitExitFullscreen']?.()
+        }
+      }
+      changeFullscreenMode(false)
+      changeShowHeader(true)
+    }
+  }, [])
 
   useEffect(() => {
     if (loginRequired && !isAuthenticated) {
@@ -121,8 +138,8 @@ const StreamLayout: React.FC<StreamLayoutProps> = ({
               </Box>
             </Box>
           </aside>
-          <main role="minimize_main" className="minimize_main">
-            <div className="minimize_content_wrapper" style={{ paddingTop: isMobile && video_id ? '0px' : '60px' }}>
+          <main role="minimize_main" className={isFullscreenMode ? 'minimize_main_fullscreen' : 'minimize_main'}>
+            <div className="minimize_content_wrapper" style={{ paddingTop: (isMobile && video_id) || isFullscreenMode ? '0px' : '60px' }}>
               <div className="minimize_content">{renderContent()}</div>
               {footer ? <Footer /> : ''}
             </div>

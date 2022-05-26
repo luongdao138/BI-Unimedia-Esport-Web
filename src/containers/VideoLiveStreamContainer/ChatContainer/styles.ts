@@ -86,7 +86,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    marginRight: '16px',
+    marginRight: (props: ChatStyleProps) => (props.isFullscreenMode ? '0' : '16px'),
     height: '100%',
     flex: 1,
   },

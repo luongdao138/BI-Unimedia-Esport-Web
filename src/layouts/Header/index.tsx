@@ -48,6 +48,7 @@ import useDetailVideo from '@containers/VideoLiveStreamContainer/useDetailVideo'
 import { Colors } from '@theme/colors'
 import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
 import { useRotateScreen } from '@utils/hooks/useRotateScreen'
+import { useFullscreenContext } from '@context/FullscreenContext'
 
 interface returnItem {
   value: string
@@ -73,6 +74,7 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open, video_id = '
   const { navigateScreen } = useReturnHref()
   const { makeContextualHref } = useContextualRouting()
   const chatCount = useAppSelector(unseenCount)
+  const { isFullscreenMode, isShowHeader } = useFullscreenContext()
 
   const {
     liveStreamInfo: { isHoveredVideo },
@@ -152,6 +154,11 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open, video_id = '
           isMobile && video_id && !isHoveredVideo ? classes.hideHeader : ''
         }`}
         position="fixed"
+        style={{
+          transition: 'all 0.25s ease-in-out',
+          opacity: !isFullscreenMode || isShowHeader ? 1 : 0,
+          visibility: !isFullscreenMode || isShowHeader ? 'visible' : 'hidden',
+        }}
       >
         <Container maxWidth="xl" className="header-container">
           <Toolbar className={classes.toolbar}>
