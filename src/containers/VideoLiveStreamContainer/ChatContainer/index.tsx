@@ -21,6 +21,7 @@ import {
   SUB_TABS,
   VIDEO_TABS,
 } from '@constants/common.constants'
+import { useFullscreenContext } from '@context/FullscreenContext'
 // import { useTranslation } from 'react-i18next'
 // import i18n from '@locales/i18n'
 import i18n from '@locales/i18n'
@@ -71,6 +72,7 @@ const APIt: any = useGraphqlAPI()
 export type ChatStyleProps = {
   isLandscape: boolean
   isRankingTab?: boolean
+  isFullscreenMode?: boolean
 }
 
 export type ChatContainerProps = {
@@ -274,8 +276,8 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     // console.log('🚀 ~ nextTime', nextTime)
     const [isTokenBroken, setIsTokenBroken] = useState(false)
     const [isTokenTipBroken, setIsTokenTipBroken] = useState(false)
-    console.log('🚀 ~ isTokenTipBroken', isTokenTipBroken)
-    console.log('🚀 ~ isTokenBroken', isTokenBroken)
+    // console.log('🚀 ~ isTokenTipBroken', isTokenTipBroken)
+    // console.log('🚀 ~ isTokenBroken', isTokenBroken)
     // const [videoTimeIsRewinding, setVideoTimeIsRewinding] = useState(0)
 
     // const isSwitchingTabRef = useRef(false)
@@ -306,16 +308,16 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
 
     // const [initTipMess, setInitTipMess] = useState([])
     const [stateMessages, setStateMessages] = useState([])
-    console.log('🚀 ~ stateMessages---000', stateMessages)
+    // console.log('🚀 ~ stateMessages---000', stateMessages)
 
     // mess tip on server to fetch new data from it
     const serverTipMessRef = useRef<any>([])
     // saved mess in local is used when switch tab
     const savedTipMessRef = useRef<any>([])
     const savedAllMessRef = useRef<any>([])
-    console.log('🚀 ~ savedAllMessRef', savedAllMessRef?.current)
-    console.log('🚀 ~ serverTipMessRef', serverTipMessRef?.current)
-    console.log('🚀 ~ savedTipMessRef', savedTipMessRef?.current)
+    // console.log('🚀 ~ savedAllMessRef', savedAllMessRef?.current)
+    // console.log('🚀 ~ serverTipMessRef', serverTipMessRef?.current)
+    // console.log('🚀 ~ savedTipMessRef', savedTipMessRef?.current)
 
     const prevRewindMessRef = useRef<any>({})
     const autoGetMessRef = useRef<any>([])
@@ -323,7 +325,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
 
     // cache donate mess and mess common
     const cacheStateMessRef = useRef<any>([])
-    console.log('🚀 ~ cacheStateMessRef.current', cacheStateMessRef.current)
+    // console.log('🚀 ~ cacheStateMessRef.current', cacheStateMessRef.current)
     const cacheDonateMessRef = useRef<any>([])
     const initTipMessRef = useRef<any>([])
     const scrollBehaviorRef = useRef<string>('smooth')
@@ -382,7 +384,8 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     // console.log('🚀 ~ successGetListMessTip', successGetListMessTip)
 
     const { height: chatInputHeight } = useRect(chatMobileContainerRef)
-    const classes = useStyles({ isLandscape, isRankingTab: activeTab === VIDEO_TABS.RANKING })
+    const { isFullscreenMode } = useFullscreenContext()
+    const classes = useStyles({ isLandscape, isRankingTab: activeTab === VIDEO_TABS.RANKING, isFullscreenMode })
     console.log({ chatInputHeight })
 
     console.log('------------------- Chat component rerender ----------------------')
@@ -565,10 +568,10 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     const handleLoadMore = () => {
       const isTipSubTab = prevMessSubTabRef.current === SUB_TABS.MESS.TIP
 
-      console.log('🚀 ~ handleLoadMore ~ prevTokenRef.current', prevTokenRef.current)
-      console.log('🚀 ~ handleLoadMore ~ isTokenTipBroken', isTokenTipBroken)
-      console.log('🚀 ~ handleLoadMore ~ isTokenBroken', isTokenBroken)
-      console.log('🚀 ~ handleLoadMore ~ needLoadMoreRef.current', needLoadMoreRef.current)
+      // console.log('🚀 ~ handleLoadMore ~ prevTokenRef.current', prevTokenRef.current)
+      // console.log('🚀 ~ handleLoadMore ~ isTokenTipBroken', isTokenTipBroken)
+      // console.log('🚀 ~ handleLoadMore ~ isTokenBroken', isTokenBroken)
+      // console.log('🚀 ~ handleLoadMore ~ needLoadMoreRef.current', needLoadMoreRef.current)
       if (!needLoadMoreRef.current) {
         return
       }
@@ -1382,12 +1385,13 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
 
       if (isStreaming) {
         handleGetMessTipInitial()
+        fetchMessInitialStreaming()
         // console.log('🚀 ~ useEffect ~ isStreaming', isStreaming)
-        if (prevMessSubTabRef.current === SUB_TABS.MESS.ALL) {
-          fetchMessInitialStreaming()
-        } else if (prevMessSubTabRef.current === SUB_TABS.MESS.TIP) {
-          // handleGetMessTip()
-        }
+        // if (prevMessSubTabRef.current === SUB_TABS.MESS.ALL) {
+        //   fetchMessInitialStreaming()
+        // } else if (prevMessSubTabRef.current === SUB_TABS.MESS.TIP) {
+        //   // handleGetMessTip()
+        // }
       } else if (!isStreaming && videoType === STATUS_VIDEO.ARCHIVE) {
         // console.log('🚀 ~ useEffect ~ videoPlayedSecond.current', videoPlayedSecond.current)
         const currentTime = Math.floor(videoRefInfo?.current?.currentTime || 0)
@@ -1708,7 +1712,12 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     const matchSm = useMediaQuery(theme.breakpoints.down(769))
     // const matchMd = useMediaQuery(theme.breakpoints.down(1025))
 
-    const getMarginBottom = () => (matchSm && isLandscape ? 45 : 0)
+    const getMarginBottom = () => {
+      if (matchSm) {
+        return isLandscape && isStreaming ? 45 : 0
+      }
+      return 0
+    }
 
     const getMarginTopOfComponents = (componentType = 'chatBoard') => {
       let marginTop = 0

@@ -174,7 +174,7 @@ const ChatMessages: React.FC<Props> = ({
       ref={contentRef}
       style={{
         marginBottom: (matchSm && !isLandscape) || (!matchSm && matchMd && isLandscape) ? chatInputHeight : 0,
-        height: matchSm ? `calc(100vh -  ${calculateVideoHeight()}px)` : '100%',
+        height: matchSm && !isLandscape ? `calc(100vh -  ${calculateVideoHeight()}px)` : '100%',
       }}
     >
       <AutoSizer

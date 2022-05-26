@@ -90,7 +90,7 @@ const useStyles = makeStyles((theme) => ({
     width: 20,
     height: 20,
     // position: 'absolute',
-    zIndex: 1000,
+    zIndex: 1,
     left: 0,
     right: 0,
     top: '0px',
@@ -108,7 +108,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    marginRight: '16px',
+    marginRight: (props: ChatStyleProps) => (props.isFullscreenMode ? '0' : '16px'),
     height: '100%',
     flex: 1,
   },
@@ -569,6 +569,7 @@ const useStyles = makeStyles((theme) => ({
         return {
           flex: '1 1 0',
           minWidth: 0,
+          // paddingBottom: 0,
         }
     },
     tabsContainer: (props: ChatStyleProps) => {

@@ -206,8 +206,8 @@ const useStyles = makeStyles((theme) => ({
   [theme.breakpoints.down(769)]: {
     [`@media (orientation: landscape)`]: {
       rankingContainer: (props: StyleProps) => ({
-        marginLeft: 10,
-        marginRight: 10,
+        // marginLeft: 10,
+        // marginRight: 10,
         background: '#212121',
         padding: '0 8px',
         height: props.isLandscape ? 'unset' : 440,

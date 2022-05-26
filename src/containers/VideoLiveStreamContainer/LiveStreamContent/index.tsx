@@ -28,6 +28,7 @@ interface LiveStreamContentProps {
   ticketPrice?: number
   clickButtonPurchaseTicket?: () => void
   onVideoEnd: () => void
+  handleOpenRelatedVideos: () => void
 }
 
 const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
@@ -41,6 +42,8 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
     onVideoEnd,
     isArchived,
     componentsSize,
+    video_id,
+    handleOpenRelatedVideos,
   } = props
 
   const { t } = useTranslation('common')
@@ -95,6 +98,8 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
               endLive={detailVideoResult?.live_stream_end_time}
               type={detailVideoResult?.status}
               qualities={detailVideoResult?.qualities}
+              video_id={video_id}
+              handleOpenRelatedVideos={handleOpenRelatedVideos}
             />
           </VideoPlayerContextProvider>
         )}
