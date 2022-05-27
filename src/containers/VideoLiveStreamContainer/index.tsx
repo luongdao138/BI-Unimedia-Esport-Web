@@ -28,6 +28,7 @@ import { RankingsItem, STATUS_VIDEO } from '@services/videoTop.services'
 import { useAppSelector } from '@store/hooks'
 import { getIsAuthenticated } from '@store/auth/selectors'
 import { ESRoutes } from '@constants/route.constants'
+import { isMobile as isMobileDevice } from 'react-device-detect'
 
 const { getVideoByUuid } = require(`src/graphql.${process.env.NEXT_PUBLIC_AWS_ENV}/queries`)
 const { onUpdateVideo, onUpdateChannel } = require(`src/graphql.${process.env.NEXT_PUBLIC_AWS_ENV}/subscriptions`)
@@ -58,12 +59,17 @@ import { CommonHelper } from '@utils/helpers/CommonHelper'
 import GoogleAd from '@components/GoogleAds'
 import VideoTabContextProvider from '@containers/VideoLiveStreamContainer/VideoContext/VideTabContext'
 import ControlBarContextProvider from '@containers/VideoLiveStreamContainer/VideoContext/ControlBarContext'
+import RelatedVideosMobile from './RelatedVideos/RelatedVideosMobile'
+import RelatedVideoContextProvider from './VideoContext/RelatedVideoContext'
+import { useFullscreenContext } from '@context/FullscreenContext'
 
 export interface videoStyleProps {
   availHeight: number
   availWidth: number
   isLandscape: boolean
   isIphone: boolean
+  showRelatedVideos?: boolean
+  isFullscreenMode?: boolean
 }
 
 export enum VIDEO_TYPE {
@@ -125,6 +131,7 @@ const VideoDetail: React.FC = () => {
   const [videoStatus, setVideoStatus] = useState(null)
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isArchived, setIsArchived] = useState(false)
+  const [isFull, setIsFull] = useState<boolean>(false)
   const [disabled, setDisabled] = useState(false)
   const [errorMsgDonatePoint, setErrorMsgDonatePoint] = useState('')
 
@@ -133,6 +140,9 @@ const VideoDetail: React.FC = () => {
   console.log('DonatePointsConfirmModal', disabled, errorPurchase, purchaseComment)
 
   const confirmDonatePointRef = useRef<any>(null)
+  const [showRelatedVideos, setShowRelatedVideos] = useState<boolean>(false)
+  const canDisplayRelatedVideos = isMobileDevice && isLandscape && isFull
+  const { isFullscreenMode } = useFullscreenContext()
 
   const {
     getVideoDetail,
@@ -167,7 +177,14 @@ const VideoDetail: React.FC = () => {
   const iPhonePl = /iPhone/i.test(window.navigator.userAgent)
 
   // const handleDonatePointRef = useRef<any>(null)
-  const classes = useStyles({ availHeight: height, availWidth: window.innerWidth, isLandscape, isIphone: iPhonePl })
+  const classes = useStyles({
+    availHeight: height,
+    availWidth: window.innerWidth,
+    isLandscape,
+    isIphone: iPhonePl,
+    showRelatedVideos,
+    isFullscreenMode,
+  })
 
   const handleShowDialogLogin = () => {
     setShowDialogLogin(true)
@@ -641,7 +658,6 @@ const VideoDetail: React.FC = () => {
         className={`${classes.wrapChatContainer} ${is_normal_view_mode ? '' : classes.wrapTheatreChatContainer}`}
         style={{
           width: isMobile ? '100%' : componentsSize.chatWidth,
-          // width: componentsSize.chatWidth,
         }}
       >
         <ChatContainer
@@ -684,6 +700,14 @@ const VideoDetail: React.FC = () => {
       navigateToArchiveUrl()
     }
   }
+
+  const handleCloseRelatedVideos = () => {
+    setShowRelatedVideos(false)
+  }
+
+  const handleOpenRelatedVideos = useCallback(() => {
+    setShowRelatedVideos(true)
+  }, [])
 
   const isLoadingVideo = _.isEmpty(detailVideoResult) && isVideoFreeToWatch === -1
 
@@ -730,134 +754,146 @@ const VideoDetail: React.FC = () => {
         isMobile,
         confirmDonatePointRef,
         videoStatus,
+        setIsFull,
+        isFull,
+        canDisplayRelatedVideos,
       }}
     >
       <VideoTabContextProvider>
         <ControlBarContextProvider>
-          <Box className={classes.root}>
-            {' '}
-            {isPendingPurchaseTicket && <ESLoader />}
-            {isPendingPurchaseSuperChat && <FullESLoader open={isPendingPurchaseSuperChat} />}
-            {/* render video */}
-            <Box
-              className={classes.videoContainer}
-              style={{
-                width: !is_normal_view_mode || isMobile ? '100%' : componentsSize.videoWidth,
-                marginRight: !is_normal_view_mode && !isMobile ? '16px' : '0',
-              }}
-              onClick={() => {
-                changeIsHoveredVideoStatus(!isHoveredVideo)
-                console.log('🚀 ~ isHoveredVideo', isHoveredVideo)
-              }}
-            >
-              {isLoadingVideo ? (
-                <Box
-                  style={{
-                    backgroundColor: '#6A6A6C',
-                    width: '100%',
-                    height: componentsSize.videoHeight,
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    textAlign: 'center',
-                    borderRadius: 8,
-                  }}
-                >
-                  <ESLoader />
-                </Box>
-              ) : (
-                <>
-                  <LiveStreamContent
-                    componentsSize={componentsSize}
-                    isArchived={isArchived}
-                    video_id={getVideoId()}
-                    userHasViewingTicket={userHasViewingTicket()}
-                    videoType={videoStatus}
-                    freeToWatch={isVideoFreeToWatch}
-                    ticketAvailableForSale={isTicketAvailableForSale()}
-                    softKeyboardIsShown={softKeyboardIsShown}
-                    ticketPrice={detailVideoResult?.ticket_price}
-                    clickButtonPurchaseTicket={handlePurchaseTicket}
-                    onVideoEnd={onVideoEnd}
-                  />
-                  {/* <GoogleAd
+          <RelatedVideoContextProvider video_id={getVideoId()}>
+            <Box className={classes.root}>
+              {isPendingPurchaseTicket && <ESLoader />}
+              {isPendingPurchaseSuperChat && <FullESLoader open={isPendingPurchaseSuperChat} />}
+              {canDisplayRelatedVideos && (
+                <RelatedVideosMobile
+                  handleCloseRelatedVideos={handleCloseRelatedVideos}
+                  video_id={getVideoId()}
+                  showRelatedVideos={showRelatedVideos}
+                />
+              )}
+              {/* render video */}
+              <Box
+                className={classes.videoContainer}
+                style={{
+                  width: isFullscreenMode ? '100vw' : !is_normal_view_mode || isMobile ? '100%' : componentsSize.videoWidth,
+                  marginRight: !is_normal_view_mode && !isMobile ? '16px' : '0',
+                }}
+                onClick={() => {
+                  changeIsHoveredVideoStatus(!isHoveredVideo)
+                  console.log('🚀 ~ isHoveredVideo', isHoveredVideo)
+                }}
+              >
+                {isLoadingVideo ? (
+                  <Box
+                    style={{
+                      backgroundColor: '#6A6A6C',
+                      width: '100%',
+                      height: componentsSize.videoHeight,
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      textAlign: 'center',
+                      borderRadius: 8,
+                    }}
+                  >
+                    <ESLoader />
+                  </Box>
+                ) : (
+                  <>
+                    <LiveStreamContent
+                      componentsSize={componentsSize}
+                      isArchived={isArchived}
+                      video_id={getVideoId()}
+                      userHasViewingTicket={userHasViewingTicket()}
+                      videoType={videoStatus}
+                      freeToWatch={isVideoFreeToWatch}
+                      ticketAvailableForSale={isTicketAvailableForSale()}
+                      softKeyboardIsShown={softKeyboardIsShown}
+                      ticketPrice={detailVideoResult?.ticket_price}
+                      clickButtonPurchaseTicket={handlePurchaseTicket}
+                      onVideoEnd={onVideoEnd}
+                      handleOpenRelatedVideos={handleOpenRelatedVideos}
+                    />
+                    {/* <GoogleAd
                 id={{ idPatten1: !screenDownSP && 'ad_video_detail_t', idPatten4: screenDownSP && 'ad_video_detail_b' }}
                 // idTag={!screenDownSP ? 'ad_video_detail_top1' : 'ad_video_detail_bottom1'}
               /> */}
-                  {renderGoogleAds()}
-                </>
-              )}
-            </Box>
-            {/* render tabs and content tabs */}
-            {!isLoadingVideo && (
-              <Box
-                className={classes.allTabsContainer}
-                style={{ width: isLandscape ? componentsSize.chatWidth : isMobile ? '100%' : componentsSize.videoWidth }}
-                onClick={() => {
-                  changeIsHoveredVideoStatus(false)
-                }}
-              >
-                {!isMobile && renderVideoSubInfo()}
-                <Grid container direction="row" className={classes.contentContainer}>
-                  {/* {getTabs()}
-              {getContent()} */}
-                  {isMobile ? (
-                    <>
-                      <TabSelectContainer
-                        sideChatContainer={sideChatContainer}
-                        renderVideoSubInfo={renderVideoSubInfo}
-                        infoTabsContent={(currentTab) => getContent(currentTab)}
-                        isLandscape={isLandscape}
-                      ></TabSelectContainer>
-                    </>
-                  ) : (
-                    <>
-                      {getTabs()}
-                      {getContent(tab)}
-                    </>
-                  )}
-                </Grid>
+                    {renderGoogleAds()}
+                  </>
+                )}
               </Box>
-            )}
-            {/* render chat loading and chat container on PC */}
-            {!isMobile &&
-              (_.isEmpty(detailVideoResult) ? (
+              {/* render tabs and content tabs */}
+              {!isLoadingVideo && (
                 <Box
-                  style={{
-                    display: 'flex',
-                    // marginLeft: 16,
-                    // marginRight: 16,
-                    backgroundColor: 'transparent',
-                    height: '100%',
-                    flexDirection: 'column',
-                    borderRadius: 8,
-                    right: 0,
-                    flex: 1,
-                    position: is_normal_view_mode ? 'absolute' : 'relative',
+                  className={classes.allTabsContainer}
+                  style={{ width: isLandscape ? componentsSize.chatWidth : isMobile ? '100%' : componentsSize.videoWidth }}
+                  onClick={() => {
+                    changeIsHoveredVideoStatus(false)
                   }}
                 >
-                  <PreloadChatContainer />
+                  {!isMobile && renderVideoSubInfo()}
+                  <Grid container direction="row" className={classes.contentContainer}>
+                    {/* {getTabs()}
+              {getContent()} */}
+                    {isMobile ? (
+                      <>
+                        <TabSelectContainer
+                          sideChatContainer={sideChatContainer}
+                          renderVideoSubInfo={renderVideoSubInfo}
+                          infoTabsContent={(currentTab) => getContent(currentTab)}
+                          isLandscape={isLandscape}
+                        ></TabSelectContainer>
+                      </>
+                    ) : (
+                      <>
+                        {getTabs()}
+                        {getContent(tab)}
+                      </>
+                    )}
+                  </Grid>
                 </Box>
-              ) : (
-                sideChatContainer()
-              ))}
-          </Box>
+              )}
+              {/* render chat loading and chat container on PC */}
+              {!isMobile &&
+                (_.isEmpty(detailVideoResult) ? (
+                  <Box
+                    style={{
+                      display: 'flex',
+                      // marginLeft: 16,
+                      // marginRight: 16,
+                      backgroundColor: 'transparent',
+                      height: '100%',
+                      flexDirection: 'column',
+                      borderRadius: 8,
+                      right: 0,
+                      flex: 1,
+                      position: is_normal_view_mode ? 'absolute' : 'relative',
+                    }}
+                  >
+                    <PreloadChatContainer />
+                  </Box>
+                ) : (
+                  sideChatContainer()
+                ))}
+            </Box>
 
-          {/* all modal */}
-          <PurchaseTicketSuperChat
-            myPoints={myPoint}
-            donatedPoints={detailVideoResult?.ticket_price}
-            showModal={showPurchaseTicketModal}
-            setShowModal={setShowPurchaseTicketModal}
-            handlePurchaseTicket={doConfirmPurchaseTicket}
-          />
-          <DialogLoginContainer showDialogLogin={showDialogLogin} onCloseDialogLogin={handleCloseDialogLogin} />
-          <DonatePoints
-            myPoint={myPoint}
-            lackedPoint={lackedPoint}
-            showModalPurchasePoint={showModalPurchasePoint}
-            setShowModalPurchasePoint={(value) => setShowModalPurchasePoint(value)}
-          />
+            {/* all modal */}
+            <PurchaseTicketSuperChat
+              myPoints={myPoint}
+              donatedPoints={detailVideoResult?.ticket_price}
+              showModal={showPurchaseTicketModal}
+              setShowModal={setShowPurchaseTicketModal}
+              handlePurchaseTicket={doConfirmPurchaseTicket}
+            />
+            <DialogLoginContainer showDialogLogin={showDialogLogin} onCloseDialogLogin={handleCloseDialogLogin} />
+            <DonatePoints
+              myPoint={myPoint}
+              lackedPoint={lackedPoint}
+              showModalPurchasePoint={showModalPurchasePoint}
+              setShowModalPurchasePoint={(value) => setShowModalPurchasePoint(value)}
+            />
+          </RelatedVideoContextProvider>
         </ControlBarContextProvider>
       </VideoTabContextProvider>
     </VideoContext.Provider>
@@ -866,6 +902,11 @@ const VideoDetail: React.FC = () => {
 export default VideoDetail
 
 const useStyles = makeStyles((theme) => ({
+  '@global': {
+    '*::-webkit-scrollbar': {
+      width: (props: videoStyleProps) => props.isFullscreenMode && '0',
+    },
+  },
   root: {
     backgroundColor: '#212121',
     display: 'flex',
@@ -927,16 +968,17 @@ const useStyles = makeStyles((theme) => ({
   wrapChatContainer: {
     display: 'flex',
     flexDirection: 'column',
-    position: 'fixed',
+    position: (props: videoStyleProps) => (props.isFullscreenMode ? 'relative' : 'fixed'),
     right: '0',
-    top: '61px',
+    top: (props: videoStyleProps) => (props.isFullscreenMode ? '0' : '61px'),
+    flexGrow: (props: videoStyleProps) => (props.isFullscreenMode ? 1 : 'unset'),
     bottom: '0px',
     height: 'calc(100vh - 61px)',
     background: Colors.white_opacity[10],
   },
   wrapTheatreChatContainer: {
-    position: 'relative',
-    top: 0,
+    top: '0 !important',
+    position: () => 'relative',
   },
   [theme.breakpoints.down(769)]: {
     root: {
@@ -945,8 +987,8 @@ const useStyles = makeStyles((theme) => ({
     },
     wrapChatContainer: {
       width: '100%',
-      position: 'relative',
-      top: 'auto',
+      position: 'relative !important',
+      top: 'auto !important',
       height: 'auto',
       bottom: 'auto',
     },
