@@ -260,6 +260,26 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     }
   }
 
+  const handleHideControlBarMobile = () => {
+    if (isMobileDevice) {
+      // if (isHoveredVideo) {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current)
+      }
+
+      timeoutRef.current = setTimeout(() => {
+        const canHideControlBar = !isShowSettingPanel && state.playing
+        // const canHideControlBar = true
+        console.log('isHoveredVideo before fire: ', canHideControlBar)
+        if (canHideControlBar) {
+          console.log('isHoveredVideo fire: ')
+          changeIsHoveredVideoStatus(false)
+        }
+      }, 3500)
+      // }
+    }
+  }
+
   useEffect(() => {
     window.addEventListener('orientationchange', handleOrientationChange)
     return () => {
@@ -289,6 +309,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     }
     // eslint-disable-next-line no-console
     changeSeekCount(Math.floor(newSecond))
+    console.log('handle change time fire: ', isHoveredVideo)
     if (type === 'reload') {
       handleOnRestart()
     }
@@ -1062,6 +1083,8 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     CommonHelper.disableOnClickEvent(e)
     // e.stopPropagation()
     videoEl.current.currentTime = playerSecondsRef.current + time
+    changeSeekCount(Math.floor(playerSecondsRef.current + time))
+    handleHideControlBarMobile()
   }
 
   const handleVideoMouseEnter = () => {
@@ -1106,8 +1129,6 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     const touchedX = e.touches?.[0]?.clientX
     const touchedY = e.touches?.[0]?.clientY
     e.preventDefault()
-    changeIsHoveredVideoStatus(true)
-    console.log('test tab: ', { touchedX, videoDisplayWidth, touchedY, videoDisplayHeight })
     if (touchedY / videoDisplayHeight < 0.75) {
       if (touchedX / videoDisplayWidth < 0.35) {
         handleChangeVideoTime('prev')
@@ -1165,21 +1186,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
 
   useEffect(() => {
     console.log('isHoveredVideo change: ', isHoveredVideo)
-    if (isMobileDevice) {
-      // if (isHoveredVideo) {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current)
-      }
-
-      timeoutRef.current = setTimeout(() => {
-        const canHideControlBar = !isShowSettingPanel && state.playing
-        // const canHideControlBar = true
-        if (canHideControlBar) {
-          changeIsHoveredVideoStatus(false)
-        }
-      }, 3500)
-      // }
-    }
+    handleHideControlBarMobile()
   }, [isHoveredVideo, state.playing, isShowSettingPanel])
 
   const Video = useMemo(() => {
