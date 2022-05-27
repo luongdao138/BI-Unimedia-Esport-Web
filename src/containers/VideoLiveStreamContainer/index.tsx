@@ -272,6 +272,12 @@ const VideoDetail: React.FC = () => {
   }, [JSON.stringify(videoInfo)])
 
   useEffect(() => {
+    if (!isLandscape) {
+      setShowRelatedVideos(false)
+    }
+  }, [isLandscape])
+
+  useEffect(() => {
     if (rankingListMeta.loaded) {
       console.log('🚀 ~ useEffect ~ rankingListMeta.loaded', rankingListMeta.loaded)
       // const newData = CommonHelper.getRankInfo(
