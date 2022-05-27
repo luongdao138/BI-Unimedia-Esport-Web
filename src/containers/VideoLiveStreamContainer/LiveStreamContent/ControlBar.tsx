@@ -48,6 +48,7 @@ interface ControlProps {
   }
   playedSeconds: number
   durationPlayer: number
+  isFull?: boolean
 }
 
 export enum SettingPanelState {
@@ -84,6 +85,7 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
       playedSeconds,
       durationPlayer,
       changeRef,
+      isFull,
     },
     ref
   ) => {
@@ -512,7 +514,7 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
             data-for="toggleFullScreen"
             id={'fullscreenRef'}
           >
-            {(isChrome ? !document.fullscreenElement : !document['webkitFullscreenElement']) ? (
+            {(isMobile ? !isFull : isChrome ? !document.fullscreenElement : !document['webkitFullscreenElement']) ? (
               <img src={'/images/ic_full_screen.svg'} className={classes.sizeFullscreen} />
             ) : (
               <Icon fontSize={'small'} className={`fas fa-compress ${classes.pauseSmall}`} />

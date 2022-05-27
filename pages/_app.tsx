@@ -38,6 +38,7 @@ import Script from 'react-load-script'
 import Amplify from 'aws-amplify'
 import useVideoNgWords from '@utils/hooks/useVideoNgWords'
 import { noop } from 'lodash'
+import FullscreenContextProvider from '@context/FullscreenContext'
 
 // [CW] Configure Amplify for chat realtime in live stream video
 const AWS_PROJECT_REGION = process.env.NEXT_PUBLIC_AWS_PROJECT_REGION
@@ -135,17 +136,19 @@ const App = ({ Component, pageProps }: Props) => {
           }}
         >
           <ThemeProvider theme={theme}>
-            <ESLoader open={loader} />
-            <ToastContainer />
-            <DialogContainer />
-            <SimpleReactLightbox>
-              <ConfirmProvider defaultOptions={defaultConfirmationOptions}>
-                <Layout>
-                  <CssBaseline />
-                  <Component {...pageProps} />
-                </Layout>
-              </ConfirmProvider>
-            </SimpleReactLightbox>
+            <FullscreenContextProvider>
+              <ESLoader open={loader} />
+              <ToastContainer />
+              <DialogContainer />
+              <SimpleReactLightbox>
+                <ConfirmProvider defaultOptions={defaultConfirmationOptions}>
+                  <Layout>
+                    <CssBaseline />
+                    <Component {...pageProps} />
+                  </Layout>
+                </ConfirmProvider>
+              </SimpleReactLightbox>
+            </FullscreenContextProvider>
           </ThemeProvider>
         </RouteContext.Provider>
       </PersistGate>

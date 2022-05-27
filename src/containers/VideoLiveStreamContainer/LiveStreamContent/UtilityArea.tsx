@@ -10,6 +10,7 @@ import SeekBar from './ControlComponent/SeekBar'
 interface Props {
   ref: any
   videoRef?: any
+  isFull?: boolean
   onPlayPause?: () => void
   playing?: boolean
   handleFullScreen?: () => void
@@ -42,7 +43,7 @@ interface Props {
 timePlayed: time by 100*/
 }
 
-const UtilityArea: React.FC<Props & SliderProps> = ({ ref, isStreaming, isStreamingEnd, state, videoType, changeRef, ...rest }) => {
+const UtilityArea: React.FC<Props & SliderProps> = ({ ref, isStreaming, isStreamingEnd, state, videoType, changeRef, isFull, ...rest }) => {
   const classes = useStyles()
   const { durationPlayer, playedSeconds } = useVideoPlayer()
   const commonProps = { durationPlayer, playedSeconds }
@@ -58,6 +59,7 @@ const UtilityArea: React.FC<Props & SliderProps> = ({ ref, isStreaming, isStream
           state={state}
           videoType={videoType}
           changeRef={changeRef}
+          isFull={isFull}
           {...rest}
           {...commonProps}
         />

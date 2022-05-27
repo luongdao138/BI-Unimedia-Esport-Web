@@ -28,6 +28,7 @@ import { VIDEO_TYPE } from '@containers/VideoLiveStreamContainer'
 import { useControlBarContext } from '@containers/VideoLiveStreamContainer/VideoContext/ControlBarContext'
 import { isMobile as isMobileDevice } from 'react-device-detect'
 import { useRect } from '@utils/hooks/useRect'
+import { useFullscreenContext } from '@context/FullscreenContext'
 
 declare global {
   interface Document {
@@ -57,6 +58,7 @@ interface PlayerProps {
   }
   qualities?: Array<QualitiesType>
   video_id: string | string[]
+  handleOpenRelatedVideos: () => void
 }
 
 const VideoPlayer: React.FC<PlayerProps> = ({
@@ -72,8 +74,9 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   videoType,
   componentsSize,
   qualities,
+  handleOpenRelatedVideos,
 }) => {
-  const { setVideoRefInfo } = useContext(VideoContext)
+  const { setVideoRefInfo, isFull, setIsFull, canDisplayRelatedVideos } = useContext(VideoContext)
   const { isStreaming, setIsStreaming, state, setState } = useVideoPlayerContext()
   const { isShowControlBar, changeShowControlBar, isShowSettingPanel, timeoutRef, canHideChatTimeoutRef } = useControlBarContext()
   // const checkStatusVideo = 1
@@ -129,6 +132,10 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   const iPhonePl = /iPhone/i.test(window.navigator.userAgent)
 
   const processControlRef = useRef<HTMLDivElement>(null)
+  const touchEndRef = useRef(null)
+  const touchStartRef = useRef(null)
+  const minSwipeDistance = 50
+  const { changeFullscreenMode, isFullscreenMode } = useFullscreenContext()
 
   const { videoWatchTimeReportRequest, getMiniPlayerState } = useLiveStreamDetail()
   const isStreamingEnd = useRef(liveStreamInfo.is_streaming_end)
@@ -153,7 +160,6 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   const [resolutionSelected, setResolutionSelected] = useState(VIDEO_RESOLUTION.AUTO)
   const [playRateReturn, setPlayRateReturn] = useState(1)
   const isSafari = CommonHelper.checkIsSafariBrowser()
-  const [isFull, setIsFull] = useState<boolean>(false)
   const classes = useStyles({ checkStatusVideo: videoType, isFull, isShowControlBar })
 
   const isVideoArchive = isArchived || videoType === VIDEO_TYPE.ARCHIVED
@@ -202,7 +208,12 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       } else {
         videoEl.current.onpause = function () {
           console.log('========getMiniPlayerState======', getMiniPlayerState)
-          setState({ ...state, playing: false, muted: videoEl.current?.muted, volume: videoEl.current?.volume })
+          setState({
+            ...state,
+            playing: false,
+            muted: videoEl.current?.muted,
+            volume: videoEl.current?.muted === true ? 0 : videoEl.current?.volume,
+          })
           setVisible({ ...visible, loading: true, videoLoaded: false })
         }
       }
@@ -691,7 +702,8 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     handleReturnPlayPause()
     //console.log('🚀 ~ useEffect ~ videoEl---0000', videoEl)
     // onSaveVideoRef(document.querySelector('video'), document.createElement('video'))
-    videoEl.current?.addEventListener('timeupdate', (event) => {
+
+    const handleTimeUpdate = (event) => {
       const videoInfo = event.target
       // console.log(
       //   '->current->duration-> range',
@@ -701,17 +713,17 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       //   videoInfo.duration - DELAY_SECONDS
       // )
       videoInfo ? handleUpdateVideoTime.current(videoInfo) : ''
-    })
+    }
 
-    videoEl.current.addEventListener('durationchange', (event) => {
+    const handleDurationChange = (event) => {
       console.log('------->>durationchange<<<-----', event.target.duration, state.playing)
       if (isStreamingEnd.current) {
         onVideoEnd()
       }
       handleUpdateVideoDuration.current(event.target.duration)
-    })
+    }
 
-    videoEl.current?.addEventListener('volumechange', () => {
+    const handleVolumeChange = () => {
       setState({
         ...state,
         muted: videoEl.current?.muted,
@@ -719,22 +731,25 @@ const VideoPlayer: React.FC<PlayerProps> = ({
         playing: !videoEl.current?.paused,
       })
       // setState({ ...state, muted: videoEl.current?.volume!==0?false:true, volume:  videoEl.current?.volume, playing: !videoEl.current?.paused })
-    })
+    }
 
-    videoEl.current?.addEventListener('ended', () => {
+    const handleVideoEnd = () => {
       console.log('================END VIDEO HTML====================')
+      if (canDisplayRelatedVideos) {
+        handleOpenRelatedVideos()
+      }
       setState({ ...state, playing: false })
       setVisible({ ...visible, loading: true, videoLoaded: true })
-    })
+    }
 
-    //check event video
-    videoEl.current?.addEventListener('seeking', () => {
+    const handleVideoSeeking = () => {
       console.log('=================SEEKING===================')
       if (!isStreamingEnd.current) {
         setVisible({ ...visible, loading: true, videoLoaded: false })
       }
-    })
-    videoEl.current?.addEventListener('seeked', () => {
+    }
+
+    const handleVideoSeeked = () => {
       //rewind complete
       console.log('=================SEEKED===================')
       // if (iPhonePl || androidPl || isMobile) {
@@ -745,18 +760,18 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       if (!isStreamingEnd.current) {
         setVisible({ ...visible, loading: false, videoLoaded: false })
       }
-    })
+    }
 
-    //load data
-    videoEl.current?.addEventListener('loadedmetadata', (event) => {
+    const handleVideoLoadedmetadata = (event) => {
       console.log('=================loadedmetadata===================', videoEl.current)
       console.log(event)
       setFlagResol(false)
       if (!isStreamingEnd.current) {
         setVisible({ ...visible, loading: true, videoLoaded: true })
       }
-    })
-    videoEl.current?.addEventListener('loadeddata', () => {
+    }
+
+    const handleVideoLoadeddata = () => {
       console.log('=================loadeddata===================', videoEl.current)
       // setVisible({ ...visible, loading: true, videoLoaded: true })
       // videoEl.current.currentTime = 40
@@ -765,15 +780,17 @@ const VideoPlayer: React.FC<PlayerProps> = ({
         videoEl.current.play()
         setState((prev) => ({ ...prev, playing: true }))
       }
-    })
-    videoEl.current?.addEventListener('emptied', (event) => {
+    }
+
+    const handleVideoEmptied = (event) => {
       console.log('=================emptied===================')
       console.log(event)
       if (flagResol) {
         setVisible({ ...visible, loading: true, videoLoaded: true })
       }
-    })
-    videoEl.current?.addEventListener('canplay', (event) => {
+    }
+
+    const handleVideoCanplay = (event) => {
       console.log('=================canplay===================', videoEl.current)
       console.log(event)
       if (!isStreamingEnd.current) {
@@ -783,32 +800,76 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       if (videoEl.current && iPhonePl && isSafari && !Hls.isSupported() && resolution !== -1) {
         videoEl.current.currentTime = playerSecondsRef.current
       }
-    })
-    videoEl.current?.addEventListener('error', (event) => {
+    }
+
+    const handleVideoError = (event) => {
       console.log('=================error===================')
       console.log(event)
-    })
-    videoEl.current?.addEventListener('play', (event) => {
+    }
+
+    const handleVideoPlay = (event) => {
       console.log('=================play===================', videoEl.current)
       console.log(event)
       setVisible({ ...visible, loading: true, videoLoaded: true })
-    })
-    videoEl.current?.addEventListener('playing', (event) => {
+    }
+
+    const handleVideoPlaying = (event) => {
       console.log('=================playing===================', playing, videoEl.current)
       console.log(event)
       if (!isStreamingEnd.current) {
         setVisible({ ...visible, loading: false, videoLoaded: false })
       }
       // setState({...state, playing:true})
-    })
+    }
+
+    videoEl.current?.addEventListener('timeupdate', handleTimeUpdate)
+
+    videoEl.current?.addEventListener('durationchange', handleDurationChange)
+
+    videoEl.current?.addEventListener('volumechange', handleVolumeChange)
+
+    videoEl.current?.addEventListener('ended', handleVideoEnd)
+
+    //check event video
+    videoEl.current?.addEventListener('seeking', handleVideoSeeking)
+    videoEl.current?.addEventListener('seeked', handleVideoSeeked)
+
+    //load data
+    videoEl.current?.addEventListener('loadedmetadata', handleVideoLoadedmetadata)
+    videoEl.current?.addEventListener('loadeddata', handleVideoLoadeddata)
+    videoEl.current?.addEventListener('emptied', handleVideoEmptied)
+    videoEl.current?.addEventListener('canplay', handleVideoCanplay)
+    videoEl.current?.addEventListener('error', handleVideoError)
+    videoEl.current?.addEventListener('play', handleVideoPlay)
+    videoEl.current?.addEventListener('playing', handleVideoPlaying)
 
     return () => {
+      videoEl.current?.removeEventListener('timeupdate', handleTimeUpdate)
+
+      videoEl.current?.removeEventListener('durationchange', handleDurationChange)
+
+      videoEl.current?.removeEventListener('volumechange', handleVolumeChange)
+
+      videoEl.current?.removeEventListener('ended', handleVideoEnd)
+
+      //check event video
+      videoEl.current?.removeEventListener('seeking', handleVideoSeeking)
+      videoEl.current?.removeEventListener('seeked', handleVideoSeeked)
+
+      //load data
+      videoEl.current?.removeEventListener('loadedmetadata', handleVideoLoadedmetadata)
+      videoEl.current?.removeEventListener('loadeddata', handleVideoLoadeddata)
+      videoEl.current?.removeEventListener('emptied', handleVideoEmptied)
+      videoEl.current?.removeEventListener('canplay', handleVideoCanplay)
+      videoEl.current?.removeEventListener('error', handleVideoError)
+      videoEl.current?.removeEventListener('play', handleVideoPlay)
+      videoEl.current?.removeEventListener('playing', handleVideoPlaying)
       //@ts-ignore
       window.onscroll = () => {
         //TODO: remove event onscroll window
       }
     }
-  }, [resolution])
+  }, [resolution, canDisplayRelatedVideos])
   useEffect(() => {
     changeIsFullScreenMode(isFull)
   }, [isFull])
@@ -819,20 +880,32 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       isFullScreenModeRef.current = !isFullScreenModeRef.current
       setIsFull(!isFull)
     } else {
+      const htmlEl: any = document.querySelector('html')
+      const element = isSafari ? playerContainerRef.current : htmlEl
+
+      console.log('Check safari browser: ', isSafari)
+
       if (!document['webkitCurrentFullScreenElement']) {
+        if (!isSafari) {
+          changeFullscreenMode(true)
+        }
+
         isFullScreenModeRef.current = true
-        if (playerContainerRef.current.requestFullscreen) {
-          playerContainerRef.current.requestFullscreen()
-        } else if (playerContainerRef.current.mozRequestFullScreen) {
-          playerContainerRef.current.mozRequestFullScreen()
-        } else if (playerContainerRef.current.webkitRequestFullscreen) {
-          playerContainerRef.current.webkitRequestFullscreen()
-        } else if (playerContainerRef.current.msRequestFullscreen) {
-          playerContainerRef.current.msRequestFullscreen()
+        if (element.requestFullscreen) {
+          element.requestFullscreen()
+        } else if (element.mozRequestFullScreen) {
+          element.mozRequestFullScreen()
+        } else if (element.webkitRequestFullscreen) {
+          element.webkitRequestFullscreen()
+        } else if (element.msRequestFullscreen) {
+          element.msRequestFullscreen()
         }
       } else {
         if (document.exitFullscreen || document['webkitExitFullscreen']) {
           isFullScreenModeRef.current = false
+          if (!isSafari) {
+            changeFullscreenMode(false)
+          }
           if (document.exitFullscreen) {
             document.exitFullscreen()
           } else {
@@ -1054,6 +1127,24 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     enableChangeVolumeRef.current = false
   }
 
+  const handleSwipeTouchStart = (e: any) => {
+    touchEndRef.current = null
+    touchStartRef.current = e.targetTouches?.[0].clientY
+  }
+
+  const handleSwipeTouchMove = (e: any) => {
+    touchEndRef.current = e.targetTouches[0].clientY
+  }
+
+  const handleSwipeTouchEnd = () => {
+    if (!touchStartRef.current || !touchEndRef.current) return
+    const distance = touchStartRef.current - touchEndRef.current
+    const isUpSwipe = distance > minSwipeDistance
+    if (isUpSwipe && canDisplayRelatedVideos) {
+      handleOpenRelatedVideos()
+    }
+  }
+
   useEffect(() => {
     if (isMobileDevice) {
       return
@@ -1115,7 +1206,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     <ClickAwayListener onClickAway={handleClickOutsidePlayer}>
       <div
         className={classes.videoPlayer}
-        style={{ height: componentsSize.videoHeight ?? 0 }}
+        style={{ height: isFullscreenMode ? '100vh' : componentsSize.videoHeight ?? 0 }}
         onClick={() => {
           enableChangeVolumeRef.current = true
         }}
@@ -1157,6 +1248,9 @@ const VideoPlayer: React.FC<PlayerProps> = ({
           className={`${isMobile || iPhonePl || androidPl ? classes.playerContainer : classes.playerContainerPC} ${
             isFull === true ? classes.forceFullscreenIosSafariPlayer : ''
           }`}
+          onTouchEnd={handleSwipeTouchEnd}
+          onTouchMove={handleSwipeTouchMove}
+          onTouchStart={handleSwipeTouchStart}
         >
           <div style={{ height: '100%', position: 'relative' }} onClick={() => handlePlayPauseOut('out')}>
             {Video}
@@ -1223,6 +1317,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
                 onVideoEnd={onVideoEnd}
                 isStreamingEnd={isStreamingEnd}
                 changeRef={changeRef}
+                isFull={isFull}
               />
             </div>
           )}
