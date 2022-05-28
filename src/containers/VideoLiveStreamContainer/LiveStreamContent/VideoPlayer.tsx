@@ -29,6 +29,7 @@ import { useControlBarContext } from '@containers/VideoLiveStreamContainer/Video
 import { isMobile as isMobileDevice } from 'react-device-detect'
 import { useRect } from '@utils/hooks/useRect'
 import { useFullscreenContext } from '@context/FullscreenContext'
+import { ArrowLeft, ArrowRight } from '@material-ui/icons'
 
 declare global {
   interface Document {
@@ -93,6 +94,10 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   const playerSecondsRef = useRef<number>(0)
   const doubleTapRef = useRef<boolean>(false)
   const { height: videoPlayerHeight, width: videoPlayerWidth } = useRect(videoPlayerRef)
+  const [isShowNext, setIsShowNext] = useState<boolean>(false)
+  const [isShowPrev, setIsShowPrev] = useState<boolean>(false)
+  const nextRef = useRef(null)
+  const prevRef = useRef(null)
   // const { videoEl } = useContext(VideoContext)
 
   const { t } = useTranslation('common')
@@ -1113,6 +1118,28 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     }, 4500)
   }
 
+  const handleShowNextIcon = () => {
+    if (nextRef.current) {
+      clearTimeout(nextRef.current)
+    }
+    setIsShowNext(true)
+
+    nextRef.current = setTimeout(() => {
+      setIsShowNext(false)
+    }, 1000)
+  }
+
+  const handleShowPrevIcon = () => {
+    if (prevRef.current) {
+      clearTimeout(prevRef.current)
+    }
+    setIsShowPrev(true)
+
+    prevRef.current = setTimeout(() => {
+      setIsShowPrev(false)
+    }, 1000)
+  }
+
   const handleVideoTouch = (e: any) => {
     if (!isVideoArchive) {
       return
@@ -1132,10 +1159,12 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     if (touchedY / videoPlayerHeight < 0.75) {
       if (touchedX / videoPlayerWidth < 0.35) {
         handleChangeVideoTime('prev')
+        handleShowPrevIcon()
       }
 
       if (touchedX / videoPlayerWidth > 0.65) {
         handleChangeVideoTime('next')
+        handleShowNextIcon()
       }
     }
   }
@@ -1278,6 +1307,27 @@ const VideoPlayer: React.FC<PlayerProps> = ({
               </Box>
             )}
 
+            {isShowNext && (
+              <Box className={classes.iconWrapper}>
+                <Box className={classes.icons}>
+                  <ArrowRight />
+                  <ArrowRight />
+                  <ArrowRight />
+                </Box>
+                <Typography className={classes.iconText}>10s</Typography>
+              </Box>
+            )}
+            {isShowPrev && (
+              <Box className={classes.iconWrapper} style={{ left: '15%', right: 'unset' }}>
+                <Box className={classes.icons}>
+                  <ArrowLeft />
+                  <ArrowLeft />
+                  <ArrowLeft />
+                </Box>
+                <Typography className={classes.iconText}>10s</Typography>
+              </Box>
+            )}
+
             {!isMobile && !androidPl && !iPhonePl && !mediaOverlayIsShown && loading && (
               <div className={classes.playOverView}>
                 {videoLoaded && (
@@ -1398,6 +1448,27 @@ interface StyleProps {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
+  iconWrapper: {
+    position: 'absolute',
+    zIndex: 20,
+    top: '50%',
+    transform: 'translateY(-50%)',
+    right: '15%',
+    display: 'flex',
+    alignItems: 'center',
+    flexDirection: 'column',
+  },
+  icons: {
+    '& svg': {
+      color: '#fff',
+      margin: '0 -12px',
+      fontSize: '36px',
+    },
+  },
+  iconText: {
+    color: '#fff',
+    marginTop: '-10px',
+  },
   existPictureInPicture: {
     position: 'absolute',
     top: 0,
