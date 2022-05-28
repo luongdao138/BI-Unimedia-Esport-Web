@@ -85,13 +85,14 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   const isOpenSettingPanel = refControlBar?.current && refControlBar?.current.settingPanel !== SettingPanelState.NONE ? true : false
 
   const playerContainerRef = useRef(null)
+  const videoPlayerRef = useRef(null)
   const videoEl = useRef(null)
   // const [durationPlayer, setDurationPlayer] = useState(0)
   // const [playedSeconds, setPlayedSeconds] = useState(0)
   const durationPlayerRef = useRef<number>(0)
   const playerSecondsRef = useRef<number>(0)
   const doubleTapRef = useRef<boolean>(false)
-  const { height: videoDisplayHeight } = useRect(playerContainerRef)
+  const { height: videoPlayerHeight, width: videoPlayerWidth } = useRect(videoPlayerRef)
   // const { videoEl } = useContext(VideoContext)
 
   const { t } = useTranslation('common')
@@ -1129,12 +1130,12 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     const touchedX = e.touches?.[0]?.clientX
     const touchedY = e.touches?.[0]?.clientY
     e.preventDefault()
-    if (touchedY / videoDisplayHeight < 0.75) {
-      if (touchedX / videoDisplayWidth < 0.35) {
+    if (touchedY / videoPlayerHeight < 0.75) {
+      if (touchedX / videoPlayerWidth < 0.35) {
         handleChangeVideoTime('prev')
       }
 
-      if (touchedX / videoDisplayWidth > 0.65) {
+      if (touchedX / videoPlayerWidth > 0.65) {
         handleChangeVideoTime('next')
       }
     }
@@ -1217,6 +1218,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
         onClick={() => {
           enableChangeVolumeRef.current = true
         }}
+        ref={videoPlayerRef}
         onDoubleClick={handleDoubleClickVideo}
         onMouseEnter={handleVideoMouseEnter}
         onMouseLeave={handleVideoMouseLeave}
