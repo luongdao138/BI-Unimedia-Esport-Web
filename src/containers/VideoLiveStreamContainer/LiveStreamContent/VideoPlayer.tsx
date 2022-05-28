@@ -897,7 +897,6 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   }, [isFull])
 
   const toggleFullScreen1 = () => {
-    console.log('toggle full screen:', document['webkitCurrentFullScreenElement'])
     if (iPhonePl || androidPl) {
       isFullScreenModeRef.current = !isFullScreenModeRef.current
       setIsFull(!isFull)
@@ -1261,7 +1260,14 @@ const VideoPlayer: React.FC<PlayerProps> = ({
           onTouchMove={handleSwipeTouchMove}
           onTouchStart={handleSwipeTouchStart}
         >
-          <div style={{ height: '100%', position: 'relative' }} onClick={() => handlePlayPauseOut('out')}>
+          <div
+            style={{ height: '100%', position: 'relative' }}
+            onClick={() => {
+              setTimeout(() => {
+                handlePlayPauseOut('out')
+              }, 300)
+            }}
+          >
             {Video}
             {getMiniPlayerState && (
               <Box id="exist-picture-in-picture" className={classes.existPictureInPicture}>
