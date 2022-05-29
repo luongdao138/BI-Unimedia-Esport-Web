@@ -472,12 +472,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     if (videoEl.current !== null) {
       videoEl.current.volume = val
     }
-    setState({ ...state, volume: val, muted: videoEl.current?.volume === 0 })
-  }
-  const handleChangeVolDrag = (_, val) => {
-    if (videoEl.current !== null) {
-      videoEl.current.volume = val
-    }
+    console.log('change video volume event fire: ', val)
     setState({ ...state, volume: val, muted: videoEl.current?.volume === 0 })
   }
 
@@ -901,7 +896,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     changeIsFullScreenMode(isFull)
   }, [isFull])
 
-  const toggleFullScreen1 = () => {
+  const toggleFullScreen1 = (isDoubleClick = false) => {
     if (iPhonePl || androidPl) {
       isFullScreenModeRef.current = !isFullScreenModeRef.current
       setIsFull(!isFull)
@@ -938,6 +933,24 @@ const VideoPlayer: React.FC<PlayerProps> = ({
             document['webkitExitFullscreen']()
           }
         }
+      }
+
+      if (!isDoubleClick || isMobileDevice) return
+
+      if (state.playing) {
+        changeShowControlBar(true)
+        if (videoType === STATUS_VIDEO.LIVE_STREAM && videoEl.current !== null) {
+          videoEl.current.currentTime = Math.floor(durationPlayerRef.current)
+        }
+        // setState({ ...state, playing: true })
+        videoEl.current?.play()
+        setState((prev) => ({ ...prev, playing: !prev.playing }))
+        setVisible({ ...visible, loading: false, videoLoaded: false })
+      } else {
+        videoEl.current?.pause()
+        setState((prev) => ({ ...prev, playing: !prev.playing }))
+        setVisible({ ...visible, loading: true, videoLoaded: false })
+        setIsStreaming(false)
       }
     }
   }
@@ -1033,7 +1046,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
 
   const handleDoubleClickVideo = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!processControlRef.current.contains(e.target as Node) && !isMobileDevice) {
-      toggleFullScreen1()
+      toggleFullScreen1(true)
     }
   }
 
@@ -1368,7 +1381,6 @@ const VideoPlayer: React.FC<PlayerProps> = ({
                 handleFullScreen={toggleFullScreen1}
                 onMute={toggleMute}
                 onChangeVol={handleChangeVol}
-                onChangeVolDrag={handleChangeVolDrag}
                 volume={volume}
                 isLive={isLive}
                 videoStatus={videoType}
