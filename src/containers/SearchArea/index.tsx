@@ -9,7 +9,7 @@ import useSearch from '@containers/Search/useSearch'
 import router from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
 import { searchTypes } from '@constants/common.constants'
-import DeboucedSearchInput from '@containers/SearchArea/DeboucedSearchInput'
+import FastSearchInput from '@containers/SearchArea/FastSearchInput'
 
 interface SearchAreaProps {
   selectData: dataItem[]
@@ -30,12 +30,12 @@ interface returnItem {
 
 const SearchArea: React.FC<SearchAreaProps> = (props) => {
   const { t } = useTranslation(['common'])
-  const { searchType, setSearch } = useSearch()
+  const { searchType, setSearch, searchKeyword } = useSearch()
   const { selectData, onSearch } = props
   const [hasValue, setHasvalue] = useState<boolean>(false)
   const [option, setOption] = useState<number>(1)
   // const [value, setValue] = useState<string>('')
-  const searchTermRef = useRef<string>('')
+  const searchTermRef = useRef<string>(searchKeyword)
   const inputRef = useRef<HTMLInputElement>(null)
   const classes = useStyles()
 
@@ -111,7 +111,7 @@ const SearchArea: React.FC<SearchAreaProps> = (props) => {
         //   margin="dense"
         //   endAdornment={renderIcon()}
         // />
-        <DeboucedSearchInput
+        <FastSearchInput
           autoComplete="on"
           placeholder={t('common:search.search_placeholder')}
           id={`es_${props.userCode}`}
@@ -139,7 +139,7 @@ const SearchArea: React.FC<SearchAreaProps> = (props) => {
         //   margin="dense"
         //   endAdornment={renderIcon()}
         // />
-        <DeboucedSearchInput
+        <FastSearchInput
           autoComplete={'off'}
           placeholder={t('common:search.search_placeholder')}
           id={'search'}

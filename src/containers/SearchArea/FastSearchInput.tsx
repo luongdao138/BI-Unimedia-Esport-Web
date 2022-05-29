@@ -1,5 +1,5 @@
 import { OutlinedInputProps } from '@material-ui/core'
-import React, { memo, ReactElement, useEffect, useState } from 'react'
+import React, { memo, ReactElement, useEffect, useRef, useState } from 'react'
 import ESInput from '@components/Input'
 import useSearch from '@containers/Search/useSearch'
 
@@ -11,18 +11,17 @@ export type InputProps = {
   nowrapHelperText?: boolean
   size?: 'big' | 'small'
   isSubmit?: boolean
-  resetErrorOnChange?: () => void
   valueRef?: React.MutableRefObject<string>
   inputRef?: React.MutableRefObject<HTMLInputElement>
   checkHaveValue: (value: string) => void
   clearFlag: boolean
 }
 
-const DebouncedSearchInput: React.FC<OutlinedInputProps & InputProps> = (props) => {
-  const { resetErrorOnChange, valueRef, inputRef } = props
-  const [tempMessage, setTempMessage] = useState('')
-
+const FastSearchInput: React.FC<OutlinedInputProps & InputProps> = (props) => {
+  const { valueRef, inputRef } = props
   const { searchKeyword } = useSearch()
+  const [tempMessage, setTempMessage] = useState(searchKeyword)
+  const firstRenderRef = useRef<boolean>(true)
 
   // console.log('Submit chat rerender')
   useEffect(() => {
@@ -36,6 +35,10 @@ const DebouncedSearchInput: React.FC<OutlinedInputProps & InputProps> = (props) 
   }, [searchKeyword])
 
   useEffect(() => {
+    if (firstRenderRef.current) {
+      firstRenderRef.current = false
+      return
+    }
     setTempMessage('')
     valueRef.current = ''
   }, [props.clearFlag])
@@ -46,10 +49,9 @@ const DebouncedSearchInput: React.FC<OutlinedInputProps & InputProps> = (props) 
     if (valueRef) {
       valueRef.current = e.target.value
     }
-    resetErrorOnChange?.()
   }
 
   return <ESInput {...props} inputRef={inputRef} value={tempMessage} onChange={handleChange} />
 }
 
-export default memo(DebouncedSearchInput)
+export default memo(FastSearchInput)
