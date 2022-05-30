@@ -6,6 +6,7 @@ import authStore from '@store/auth'
 import { UserLoginParams } from '@services/auth.service'
 import { ESRoutes } from '@constants/route.constants'
 import useReturnHref from '@utils/hooks/useReturnHref'
+import { registerLoading } from '@store/auth/selectors'
 
 const { selectors, actions } = authStore
 const getRegisterMeta = createMetaSelector(actions.registerByEmail)
@@ -18,6 +19,7 @@ const useRegisterByEmail = () => {
   const meta = useAppSelector(getRegisterMeta)
 
   const registerByEmail = (param: UserLoginParams) => dispatch(actions.registerByEmail(param))
+  const registerByEmailLoading = useAppSelector(registerLoading)
 
   const resetMeta = () => dispatch(clearMetaData(actions.registerByEmail.typePrefix))
 
@@ -33,7 +35,7 @@ const useRegisterByEmail = () => {
     }
   }, [meta.loaded])
 
-  return { user, registerByEmail, resetMeta, meta, backAction }
+  return { user, registerByEmail, resetMeta, meta, backAction, registerByEmailLoading }
 }
 
 export default useRegisterByEmail

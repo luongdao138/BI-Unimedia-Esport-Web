@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { makeStyles, Theme, Typography, Box } from '@material-ui/core'
 import { IconButton } from '@material-ui/core'
 import Icon from '@material-ui/core/Icon'
@@ -24,7 +24,7 @@ import ESPasswordInput from '@components/PasswordInput'
 const RegisterByEmailContainer: React.FC = () => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
-  const { registerByEmail, meta, backAction, resetMeta } = useRegisterByEmail()
+  const { registerByEmail, meta, backAction, resetMeta, registerByEmailLoading } = useRegisterByEmail()
   const [score, setScore] = useState(0)
   const dispatch = useAppDispatch()
   const { checkNgWord } = useCheckNgWord()
@@ -127,6 +127,7 @@ const RegisterByEmailContainer: React.FC = () => {
 
           <Box className={classes.blankSpace}></Box>
         </form>
+        {registerByEmailLoading && <ESLoader open={true} />}
       </ESStickyFooter>
 
       {meta.pending && <ESLoader open={meta.pending} />}
