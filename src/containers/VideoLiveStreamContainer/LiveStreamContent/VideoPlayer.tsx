@@ -1400,7 +1400,13 @@ const VideoPlayer: React.FC<PlayerProps> = ({
           )}
           {/* previous and next only in mobile */}
           {(isMobile || androidPl || iPhonePl) && videoType !== STATUS_VIDEO.LIVE_STREAM && (
-            <div className={classes.playOverViewSP} style={{ opacity: isHoveredVideo && (isMobile || androidPl || iPhonePl) ? 1 : 0 }}>
+            <div
+              className={classes.playOverViewSP}
+              style={{
+                opacity: isHoveredVideo && (isMobile || androidPl || iPhonePl) ? 1 : 0,
+                visibility: isHoveredVideo && (isMobile || androidPl || iPhonePl) ? 'visible' : 'hidden',
+              }}
+            >
               <div className={classes.nextPreSP}>
                 <Box
                   className={classes.buttonNormal}

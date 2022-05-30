@@ -16,7 +16,8 @@
               "@theme": "./src/theme",
               "@utils": "./src/utils",
               "@layouts": "./src/layouts",
-              "@locales": "./src/locales"
+              "@locales": "./src/locales",
+              "@context": "./src/context"
             }
           }
         ],
@@ -39,6 +40,7 @@
               "@theme": "./src/theme",
               "@utils": "./src/utils",
               "@layouts": "./src/layouts",
+              "@context": "./src/context",
               "@locales": "./src/locales"
             }
           }
@@ -71,7 +73,8 @@
               "@theme": "./src/theme",
               "@utils": "./src/utils",
               "@layouts": "./src/layouts",
-              "@locales": "./src/locales"
+              "@locales": "./src/locales",
+              "@context": "./src/context"
             }
           }
         ],

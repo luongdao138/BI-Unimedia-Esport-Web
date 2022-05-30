@@ -179,24 +179,37 @@ const useStyles = makeStyles(() => ({
     // paddingBottom: 10,
     // height:20,
     margin: '0px 5px',
+    cursor: 'pointer',
+    '&:hover .MuiSlider-rail': {
+      transform: 'scaleY(1.5)',
+    },
+    '&:hover .MuiSlider-track': {
+      transform: 'scaleY(1.5)',
+    },
   },
   seekBar: {
     // width: 90,
     // marginLeft: 16,
     // marginRight: 8,
     borderRadius: 2,
-    padding: '3px 0px',
+    height: '3px',
+    padding: 0,
+    // '&:hover': {
+    //   transform: 'scaleY(1.5)',
+    // },
     '&:hover .MuiSlider-thumb': {
       visibility: 'visible',
     },
     '& .MuiSlider-rail': {
       color: '#C3C3C3',
-      height: 3,
+      height: '3px',
+      transition: 'transform 0.2s',
       // borderRadius: 2,
     },
     '& .MuiSlider-track': {
       color: '#FF4786',
-      height: 3,
+      height: '3px',
+      transition: 'transform 0.2s',
       // borderRadius: 2,
     },
     '& .MuiSlider-thumb': {
@@ -205,8 +218,8 @@ const useStyles = makeStyles(() => ({
       // height: 8,
       // borderRadius: 4,
       visibility: 'hidden',
+      marginTop: '-4.5px',
     },
-
     '& .MuiSlider-thumb.Mui-focusVisible, .MuiSlider-thumb:hover': {
       boxShadow: 'none',
     },
