@@ -1,11 +1,10 @@
 import { Box, Typography, makeStyles, withStyles } from '@material-ui/core'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Colors } from '@theme/colors'
 import ESLabel from '@components/Label'
 import { useFormik } from 'formik'
 import ButtonPrimary from '@components/ButtonPrimary'
-import ESInput from '@components/Input'
 import ESSwitchIOS from '@components/Switch'
 import ESButton from '@components/Button'
 import { FormatHelper } from '@utils/helpers/FormatHelper'
@@ -17,8 +16,10 @@ import usePurchasePointData from './usePurchasePointData'
 import PointPurchaseConfirmModal from './PointPurchaseConfirmModal'
 import CardDeleteConfirmModal from './CardDeleteConfirmModal'
 import ESLoader from '@components/FullScreenLoader'
-import { validationPurchasePointScheme } from './ValidationPurchasePointScheme'
+import { validationPurchasePointScheme } from '@containers/PointManage/PurchasePoint/ValidationPurchasePointScheme'
 import _ from 'lodash'
+import FastChatInput from '@containers/VideoLiveStreamContainer/ChatContainer/FastChatInput'
+
 interface Step2Props {
   selectedPoint: any
 }
@@ -46,6 +47,12 @@ const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
   const [deletedCard, setDeletedCard] = useState({})
   // const [deletedCard, setDeletedCard] = useState({card_number: '1234'})
   const [hasError, setHasError] = useState(false)
+  // const [paymentMethod, setPaymentMethod] = useState(0)
+
+  const cardNameRef = useRef<string>('')
+  const cardNumberRef = useRef<string>('')
+  const cardExpiredDateRef = useRef<string>('')
+  const cardCvcRef = useRef<string>('')
 
   const closeModalPurchasePoint = () => {
     setIsPurchasingPoint(false)
@@ -107,6 +114,14 @@ const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
   })
   const { values, errors, touched, handleChange, handleSubmit, handleBlur, setFieldValue, resetForm, validateForm } = formik
 
+  const submitForm = async () => {
+    await setFieldValue('card_name', cardNameRef.current)
+    await setFieldValue('card_number', cardNumberRef.current)
+    await setFieldValue('card_expire_date', cardExpiredDateRef.current)
+    await setFieldValue('card_cvc', cardCvcRef.current)
+    handleSubmit()
+  }
+
   const isExceedCard = purchasePointInfo.saved_cards.length >= 5 && values.is_saved_card
 
   useEffect(() => {
@@ -114,6 +129,7 @@ const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
   }, [])
 
   const confirmPurchasePoint = () => {
+    // localStorage.setItem('aaa', Math.random().toString());
     // reset error and open modal confirm
     setHasError(false)
     setIsShowPurchasePointModal(true)
@@ -126,7 +142,7 @@ const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
     setIsShowDeleteCardModal(true)
   }
 
-  const handlePurchasePoint = (): void => {
+  const handlePurchasePointCreditCard = (): void => {
     // purchase point use new card
     if (selectedCardId === '') {
       resetErrorMess()
@@ -163,6 +179,35 @@ const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
         point: selectedPoint,
       })
     }
+  }
+
+  // const openPurchaseWindow = (payload) => {
+  //   const { access_id, start_url, token } = payload
+  //   window
+  //     .open(
+  //       `../payment_process?url=${encodeURIComponent(start_url)}&AccessID=${encodeURIComponent(access_id)}&Token=${encodeURIComponent(
+  //         token
+  //       )}`,
+  //       '',
+  //       `width=550,height=400,location=no,toolbar=no,status=no,directories=no,menubar=no,scrollbars=yes,resizable=no,centerscreen=yes,chrome=yes`
+  //     )
+  //     ?.focus()
+  //   // formRef.current.submit()
+  //   // console.log('ref::', formRef)
+  // }
+
+  // const handleRequestGMOPaymentSuccess = (payload) => {
+  //   // console.log('multiPaymentPurchaseData', multiPaymentPurchaseData);
+  //   closeModalPurchasePoint()
+  //   openPurchaseWindow(payload)
+  // }
+
+  // const handlePurchaseGMO = () => {
+  //    requestMultiPaymentPurchase(selectedPoint, paymentMethod, handleRequestGMOPaymentSuccess)
+  // }
+
+  const handlePurchaseConfirm = () => {
+    return handlePurchasePointCreditCard()
   }
 
   const handleChangeCardNumber = (e) => {
@@ -210,7 +255,12 @@ const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
       <Box className={classes.title}>
         <ESLabel label={t('purchase_point_tab.purchase_goods')} />
       </Box>
-      <form onSubmit={handleSubmit}>
+      <form
+        onSubmit={
+          // handleSubmit
+          submitForm
+        }
+      >
         <Box className={classes.container}>
           <Box className={classes.wrap_point}>
             <Typography className={classes.point}>{FormatHelper.currencyFormat(selectedPoint.toString())}</Typography>
@@ -223,19 +273,15 @@ const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
             </Typography>
           </Box>
         </Box>
-        <Box className={classes.title}>
-          <ESLabel label={t('purchase_history.payment_method')} />
-        </Box>
         <Box className={classes.card_info_wrap}>
           <Box className={classes.card_wrap + ' ' + classes.first_card_wrap}>
             <Box className={classes.card_info_title}>{t('purchase_point_tab.card_info_title')}</Box>
             <Box className={classes.card_info_container}>
               <Box>
-                <ESInput
+                <FastChatInput
                   id="card_name"
                   name="card_name"
                   required={true}
-                  value={values.card_name}
                   placeholder={t('purchase_point_tab.card_name_placeholder')}
                   labelPrimary={t('purchase_point_tab.card_name')}
                   fullWidth
@@ -244,30 +290,42 @@ const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
                   helperText={touched.card_name && errors?.card_name}
                   error={touched.card_name && !!errors?.card_name}
                   size="big"
+                  valueRef={cardNameRef}
                 />
               </Box>
               <Box pt={1}>
-                <ESInput
+                <FastChatInput
                   id="card_number"
                   name="card_number"
                   required={true}
-                  value={values.card_number}
                   placeholder={t('purchase_point_tab.card_number_placeholder')}
                   labelPrimary={t('purchase_point_tab.card_number')}
                   fullWidth
                   onChange={handleChangeCardNumber}
                   onBlur={handleBlur}
+                  valueRef={cardNumberRef}
                   helperText={touched.card_number && errors?.card_number}
                   error={touched.card_number && !!errors?.card_number}
                   size="big"
+                  formatValue={(e) => {
+                    const card_number = e.target.value.replace(/\s/g, '')
+                    const isValid = (/^[0-9]+$/g.test(card_number) || !e.target.value) && card_number.length <= 16
+                    if (/^[0-9]+$/g.test(card_number) || !e.target.value) {
+                      setSelectedCardId('')
+                    }
+                    // replace space and check is numeric
+                    return {
+                      isValid,
+                      formattedValue: formatCardNumber(e.target.value),
+                    }
+                  }}
                 />
               </Box>
               <Box pt={1}>
-                <ESInput
+                <FastChatInput
                   id="card_expire_date"
                   name="card_expire_date"
                   required={true}
-                  value={values.card_expire_date}
                   placeholder={t('purchase_point_tab.card_expire_date_placeholder')}
                   labelPrimary={t('purchase_point_tab.card_expire_date')}
                   fullWidth
@@ -276,14 +334,27 @@ const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
                   helperText={touched.card_expire_date && errors?.card_expire_date}
                   error={touched.card_expire_date && !!errors?.card_expire_date}
                   size="big"
+                  valueRef={cardExpiredDateRef}
+                  formatValue={(e) => {
+                    const card_expire_date = e.target.value.replace(/[\s/]/g, '')
+                    const isValid = (/^[0-9]+$/g.test(card_expire_date) || !e.target.value) && card_expire_date.length <= 4
+                    if (/^[0-9]+$/g.test(card_expire_date) || !e.target.value) {
+                      setSelectedCardId('')
+                    }
+                    let formattedValue = card_expire_date
+                    if (card_expire_date.length >= 3) formattedValue = card_expire_date.match(new RegExp('.{1,2}', 'g')).join(' / ')
+                    return {
+                      isValid,
+                      formattedValue,
+                    }
+                  }}
                 />
               </Box>
               <Box pt={1}>
-                <ESInput
+                <FastChatInput
                   id="card_cvc"
                   name="card_cvc"
                   required={true}
-                  value={values.card_cvc}
                   placeholder=""
                   labelPrimary={t('purchase_point_tab.card_cvc')}
                   fullWidth
@@ -292,6 +363,19 @@ const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
                   helperText={touched.card_cvc && errors?.card_cvc}
                   error={touched.card_cvc && !!errors?.card_cvc}
                   size="big"
+                  valueRef={cardCvcRef}
+                  formatValue={(e) => {
+                    const card_cvc = e.target.value
+                    // check is numeric
+                    const isValid = (/^[0-9]+$/g.test(card_cvc) || !card_cvc) && card_cvc.length <= 3
+                    if (/^[0-9]+$/g.test(card_cvc) || !card_cvc) {
+                      setSelectedCardId('')
+                    }
+                    return {
+                      isValid,
+                      formattedValue: card_cvc,
+                    }
+                  }}
                 />
               </Box>
               <Box className={classes.toggle} pt={2}>
@@ -387,7 +471,7 @@ const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
         <PointPurchaseConfirmModal
           errorMess={purchasePointInfo.mess_error_purchase_point}
           isLoading={isLoading}
-          handlePurchasePoint={handlePurchasePoint}
+          handlePurchasePoint={handlePurchaseConfirm}
           open={isShowPurchasePointModal}
           selectedPoint={selectedPoint}
           hasError={hasError}
@@ -451,6 +535,7 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     color: '#4D4D4D',
     padding: '0 9px 0 0',
+    marginBottom: '16px',
   },
   actionButton: {
     '& .MuiButtonBase-root.button-primary.full-width': {
@@ -483,6 +568,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     fontSize: '14px',
     flex: 1,
+    marginTop: '16px',
   },
   card_wrap: {
     width: '50%',

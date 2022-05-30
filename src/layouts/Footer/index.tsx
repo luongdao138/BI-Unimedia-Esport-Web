@@ -196,6 +196,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     footerInner: {
       flexDirection: 'column',
       alignItems: 'center',
+      marginBottom: '130px',
     },
     iconText: {
       marginBottom: theme.spacing(2),

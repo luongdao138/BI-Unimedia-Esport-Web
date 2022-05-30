@@ -21,6 +21,7 @@ import { LiveStreamSettingHelper } from '@utils/helpers/LiveStreamSettingHelper'
 import useLiveSetting from '../useLiveSetting'
 import {
   baseViewingURL,
+  CODE_ERROR_RENEW_SPECIAL,
   GetCategoryResponse,
   SetLiveStreamParams,
   StreamUrlAndKeyParams,
@@ -41,7 +42,12 @@ import ESNumberInputStream from '@components/NumberInput/stream'
 import Linkify from 'react-linkify'
 import SmallLoader from '@components/Loader/SmallLoader'
 import { STATUS_VIDEO } from '@services/videoTop.services'
+import ESBoxftDashColumn from '@components/ESBoxftDashColumn'
+import ESLabelWithSwitch from '@components/LabelWithSwitch'
+import { useListGiftInfoDialog, useRankingInfoDialog } from '../useListGiftInfoDialog'
 import CharacterLimited from '@components/CharacterLimited'
+import { hhmmss } from '@containers/VideoPlayer/customPlugins/time'
+import { TABS } from '@containers/StreamingSettingContainer'
 
 interface StepsProps {
   step: number
@@ -60,6 +66,8 @@ interface StepsProps {
   obsStatusDynamo?: string | number
   videoStatusDynamo?: string | number
   processStatusDynamo?: string
+  openPopupGroupList?: (open: boolean, tab: TABS) => void
+  liveStartTime?: string
 }
 
 const KEY_TYPE = {
@@ -85,6 +93,8 @@ const Steps: React.FC<StepsProps> = ({
   obsStatusDynamo,
   videoStatusDynamo,
   processStatusDynamo,
+  openPopupGroupList,
+  liveStartTime,
 }) => {
   const dispatch = useAppDispatch()
   const { t } = useTranslation(['common'])
@@ -112,6 +122,7 @@ const Steps: React.FC<StepsProps> = ({
   const [isLoading, setLoading] = useState(false)
   const [dataRenew, setDataRenew] = useState(null)
   const [flagArn, setFlagArn] = useState(false)
+  const [countTime, setCountTime] = useState('')
   const handleEnableLink = () => {
     if (
       status === 1 ||
@@ -127,6 +138,8 @@ const Steps: React.FC<StepsProps> = ({
   }
 
   const classes = useStyles({ statusRecord: obsStatusDynamo, isEnable: handleEnableLink(), channelArn: stateChannelArn, videoStatusDynamo })
+  const listGiftInfo = useListGiftInfoDialog()
+  const rankingInfo = useRankingInfoDialog()
 
   const formRef = {
     title: useRef(null),
@@ -366,35 +379,49 @@ const Steps: React.FC<StepsProps> = ({
       stream_key: stepSettingTwo.stream_key,
       video_publish_end_time:
         stepSettingTwo.video_publish_end_time !== null ? CommonHelper.formatDateTimeJP(stepSettingTwo.video_publish_end_time) : null,
+      use_gift: stepSettingTwo.use_gift === false ? 0 : 1,
+      gift_group_id: stepSettingTwo.gift_group_id,
+      group_title: stepSettingTwo.group_title,
+      ranking_flag: stepSettingTwo.ranking_flag === false ? 0 : 1,
     }
-    debouncedHandleConfirmForm(data, stepSettingTwo, step, isShare)
+    debouncedHandleConfirmForm(data, stepSettingTwo, step, stepSettingTwo?.share_sns_flag)
   }
 
   const debouncedHandleConfirmForm = useCallback(
-    _.debounce((data: SetLiveStreamParams, stepSettingTwo, step: number, isShare: boolean) => {
-      setLiveStreamConfirm(data, (process) => {
-        // console.log('process===', process);
-        onNext(
-          step + 1,
-          stepSettingTwo.share_sns_flag,
-          {
-            title: stepSettingTwo.title,
-            content: `${baseViewingURL}${stepSettingTwo.uuid}`,
-          },
-          process
-        )
-        formik.setFieldValue('stepSettingTwo.step_setting', step + 1)
-        const { left, top } = getBoxPositionOnWindowCenter(550, 400)
-        if (isShare) {
-          window
-            .open(
-              getTwitterShareUrl(),
-              '',
-              `width=550,height=400,location=no,toolbar=no,status=no,directories=no,menubar=no,scrollbars=yes,resizable=no,centerscreen=yes,chrome=yes,left=${left},top=${top}`
-            )
-            ?.focus()
+    _.debounce((data: SetLiveStreamParams, stepSettingTwo, step: number, share_sns_flag: boolean) => {
+      setLiveStreamConfirm(
+        data,
+        (process) => {
+          // console.log('process===', process);
+          onNext(
+            step + 1,
+            share_sns_flag,
+            {
+              title: stepSettingTwo.title,
+              content: `${baseViewingURL}${stepSettingTwo.uuid}`,
+            },
+            process
+          )
+          formik.setFieldValue('stepSettingTwo.step_setting', step + 1)
+          const { left, top } = getBoxPositionOnWindowCenter(550, 400)
+          if (isShare) {
+            window
+              .open(
+                getTwitterShareUrl(),
+                '',
+                `width=550,height=400,location=no,toolbar=no,status=no,directories=no,menubar=no,scrollbars=yes,resizable=no,centerscreen=yes,chrome=yes,left=${left},top=${top}`
+              )
+              ?.focus()
+          }
+        },
+        (codeError) => {
+          if (codeError === CODE_ERROR_RENEW_SPECIAL.GROUP_LIST_DOES_NOT_EXIST) {
+            formik.setFieldValue('stepSettingTwo.step_setting', 1)
+            formik.setFieldValue('stepSettingTwo.has_group_list', true)
+            window.scrollTo({ behavior: 'smooth', top: document.body.scrollHeight })
+          }
         }
-      })
+      )
     }, 700),
     []
   )
@@ -423,6 +450,67 @@ const Steps: React.FC<StepsProps> = ({
       ) {
         window.open(`${baseViewingURL}${formik?.values?.stepSettingTwo?.uuid}`, '_blank')
       }
+    }
+  }
+
+  const changeFieldAndResetSelectedGift = (): void => {
+    // formik.handleChange(e)
+    formik.setFieldValue('stepSettingTwo.use_gift', !formik?.values?.stepSettingTwo?.use_gift)
+    formik.setFieldValue('stepSettingTwo.ranking_flag', false)
+    formik.setFieldValue('stepSettingTwo.group_title', '')
+    formik.setFieldValue('stepSettingTwo.gift_group_id', null)
+  }
+
+  const handleListGiftInfo = () => {
+    listGiftInfo().then(() => {
+      return
+    })
+  }
+
+  const handleRankingInfo = () => {
+    rankingInfo().then(() => {
+      return
+    })
+  }
+
+  const onClearNameListChip = () => {
+    formik.setFieldValue('stepSettingTwo.group_title', '')
+    formik.setFieldValue('stepSettingTwo.gift_group_id', null)
+    formik.setFieldValue('stepSettingTwo.has_group_list', false)
+  }
+
+  const openGroupList = () => {
+    openPopupGroupList(true, TABS.STREAMING_RESERVATION)
+  }
+
+  //V3.0 count time
+  useEffect(() => {
+    const updTime = () => {
+      const diff = (moment.now() - moment(liveStartTime).valueOf()) / 1000
+      // const diff = (Date.now() - new Date(liveStartTime).getTime()) / 1000
+      hhmmss(diff)
+      setCountTime(hhmmss(diff))
+    }
+    updTime()
+    const interval = setInterval(() => {
+      if (liveStartTime && obsStatusDynamo === TAG_STATUS_RECORD.LIVE_STREAMING && videoStatusDynamo == '1') {
+        updTime()
+      }
+    }, 1000)
+    return () => {
+      clearInterval(interval)
+    }
+  })
+
+  const returnTextChip = () => {
+    if (formik?.values?.stepSettingTwo?.use_gift) {
+      if (formik?.values?.stepSettingTwo?.group_title) {
+        return formik?.values?.stepSettingTwo?.group_title
+      } else {
+        return i18n.t('common:streaming_setting_screen.unselected')
+      }
+    } else {
+      return i18n.t('common:streaming_setting_screen.ranking_flag.off')
     }
   }
 
@@ -458,6 +546,20 @@ const Steps: React.FC<StepsProps> = ({
                   ? i18n.t('common:streaming_setting_screen.status_tag_updated')
                   : i18n.t('common:streaming_setting_screen.status_tag_live_streaming')}
               </Typography>
+              <Box
+                className={classes.countTime}
+                style={{
+                  visibility:
+                    liveStartTime && obsStatusDynamo === TAG_STATUS_RECORD.LIVE_STREAMING && videoStatusDynamo == '1'
+                      ? 'visible'
+                      : 'hidden',
+                }}
+              >
+                <Typography className={classes.textTagStatus}>{i18n.t('common:streaming_setting_screen.title_count_time')}</Typography>
+                <Typography className={classes.textTagStatus} style={{ marginLeft: 16 }}>
+                  {countTime}
+                </Typography>
+              </Box>
             </Box>
             <Box
               // py={1}
@@ -511,7 +613,34 @@ const Steps: React.FC<StepsProps> = ({
               </Box>
             )}
           </Box>
-          <Box pb={2} className={classes.wrap_input}>
+          {/* TODO: V3.0 SNS */}
+          {isFirstStep() ? (
+            <Box pb={isFirstStep() ? 2 : 0}>
+              <ESCheckboxBig
+                checked={formik?.values?.stepSettingTwo?.share_sns_flag}
+                onChange={() => formik.setFieldValue('stepSettingTwo.share_sns_flag', !formik?.values?.stepSettingTwo?.share_sns_flag)}
+                label={t('common:streaming_setting_screen.share_SNS')}
+                name="isShareSNS"
+                disabled={isLive}
+              />
+            </Box>
+          ) : (
+            <ESInput
+              id="title"
+              name="title"
+              value={
+                formik?.values?.stepSettingTwo?.share_sns_flag
+                  ? t('common:streaming_setting_screen.shared_it')
+                  : t('common:streaming_setting_screen.dont_share')
+              }
+              fullWidth
+              labelPrimary={t('common:streaming_setting_screen.share_SNS')}
+              disabled={true}
+              size="big"
+              className={getAddClassByStep(classes.input_text)}
+            />
+          )}
+          <Box pb={2} pt={isFirstStep() ? 0 : 2} className={classes.wrap_input}>
             <Box className={classes.firstItem}>
               <ESLabel label={i18n.t('common:streaming_setting_screen.thumbnail')} />
               <Box pt={1} className={classes.box}>
@@ -914,170 +1043,257 @@ const Steps: React.FC<StepsProps> = ({
               </Box>
             )}
           </Box>
+          {/* TODO: V3.0 form ticket new v3.0 */}
           {paid_delivery_flag && (
             <>
               {isFirstStep() ? (
-                <Box pb={3 / 8}>
-                  <ESCheckboxBig
-                    checked={formik?.values?.stepSettingTwo?.use_ticket}
-                    onChange={() => {
-                      checkUseTicket()
-                    }}
-                    label={t('common:streaming_setting_screen.ticket_use')}
-                    name="stepSettingTwo.use_ticket"
-                    disabled={disable}
-                  />
+                <Box pb={2} pt={2} className={classes.wrap_input_box_switch}>
+                  <div className={classes.firstItem}>
+                    <ESLabelWithSwitch
+                      fullWidth
+                      labelPrimary={t('common:streaming_setting_screen.ticket_use')}
+                      valueSwitch={formik?.values?.stepSettingTwo?.use_ticket}
+                      handleChangeSwitch={checkUseTicket}
+                      disabled={disable}
+                    />
+                  </div>
                 </Box>
               ) : (
                 <ESLabel label={i18n.t('common:streaming_setting_screen.ticket_use')} />
               )}
-              {/* TODO: Apply component enter point eXeポイント */}
               {isFirstStep() ? (
-                <Box pb={2} className={classes.wrap_input}>
-                  <Box className={classes.firstItem}>
-                    <ESNumberInputStream
-                      id="ticket_price"
-                      name="stepSettingTwo.ticket_price"
-                      type="tel"
-                      fullWidth
-                      nameValue={'stepSettingTwo.ticket_price'}
-                      // className={classes.input}
-                      placeholder={'0'}
-                      value={
-                        isFirstStep() && (formik?.values?.stepSettingTwo?.ticket_price === 0 || !formik?.values?.stepSettingTwo?.use_ticket)
-                          ? ''
-                          : formik?.values?.stepSettingTwo?.ticket_price
-                      }
-                      onChange={(e) => {
-                        setValidateField('ticket_price')
-                        handleUpdateValidateField('ticket_price')
-                        formik.handleChange(e)
-                        if (onChangeFlag) {
-                          setOnChangeFlag(true)
-                          flagUpdateFieldDate(true)
-                        }
-                      }}
-                      helperText={
-                        validateField !== 'all'
-                          ? checkDisplayErrorOnChange(formik, 'ticket_price', validateField).helperText
-                          : checkDisplayErrorOnSubmit(formik, 'ticket_price').helperText
-                      }
-                      error={
-                        validateField !== 'all'
-                          ? checkDisplayErrorOnChange(formik, 'ticket_price', validateField).error
-                          : checkDisplayErrorOnSubmit(formik, 'ticket_price').error
-                      }
-                      size="big"
-                      isNumber={true}
-                      formik={formik}
-                      disabled={isLive}
-                      // className={getAddClassByStep(classes.input_text_number)}
-                      className={classes.input_text_number}
-                      readOnly={!formik?.values?.stepSettingTwo?.use_ticket}
-                      nowrapHelperText
-                      endAdornment={
-                        isFirstStep() ? (
-                          <InputAdornment position="end" className={classes.inputContainer}>
-                            <Box className={classes.inputAdornment}>{t('common:common.eXe_points')}</Box>
-                          </InputAdornment>
+                <ESBoxftDashColumn isSelectedGift={formik?.values?.stepSettingTwo?.use_ticket}>
+                  {/* TODO: Apply component enter point eXeポイント */}
+                  <div className={classes.boxRightTicket}>
+                    {isFirstStep() ? (
+                      <Box pb={2} className={classes.wrap_input_ticket}>
+                        <Box className={classes.firstItemShort}>
+                          <ESNumberInputStream
+                            id="ticket_price"
+                            name="stepSettingTwo.ticket_price"
+                            type="tel"
+                            fullWidth
+                            nameValue={'stepSettingTwo.ticket_price'}
+                            // className={classes.input}
+                            placeholder={'0'}
+                            value={
+                              isFirstStep() &&
+                              (formik?.values?.stepSettingTwo?.ticket_price === 0 || !formik?.values?.stepSettingTwo?.use_ticket)
+                                ? ''
+                                : formik?.values?.stepSettingTwo?.ticket_price
+                            }
+                            onChange={(e) => {
+                              setValidateField('ticket_price')
+                              handleUpdateValidateField('ticket_price')
+                              formik.handleChange(e)
+                              if (onChangeFlag) {
+                                setOnChangeFlag(true)
+                                flagUpdateFieldDate(true)
+                              }
+                            }}
+                            helperText={
+                              validateField !== 'all'
+                                ? checkDisplayErrorOnChange(formik, 'ticket_price', validateField).helperText
+                                : checkDisplayErrorOnSubmit(formik, 'ticket_price').helperText
+                            }
+                            error={
+                              validateField !== 'all'
+                                ? checkDisplayErrorOnChange(formik, 'ticket_price', validateField).error
+                                : checkDisplayErrorOnSubmit(formik, 'ticket_price').error
+                            }
+                            size="big"
+                            isNumber={true}
+                            formik={formik}
+                            disabled={isLive}
+                            // className={getAddClassByStep(classes.input_text_number)}
+                            className={classes.input_text_ticket}
+                            readOnly={!formik?.values?.stepSettingTwo?.use_ticket}
+                            nowrapHelperText
+                            endAdornment={
+                              isFirstStep() ? (
+                                <InputAdornment position="end" className={classes.inputContainer}>
+                                  <Box className={classes.inputAdornment}>{t('common:common.eXe_points')}</Box>
+                                </InputAdornment>
+                              ) : (
+                                <></>
+                              )
+                            }
+                          />
+                        </Box>
+                      </Box>
+                    ) : (
+                      <Box pb={2} pt={2}>
+                        <Typography className={classes.date}>
+                          {formik.values.stepSettingTwo.use_ticket
+                            ? `利用する（${formik?.values?.stepSettingTwo?.ticket_price} ${t('common:common.eXe_points')}）`
+                            : '利用しない'}
+                        </Typography>
+                      </Box>
+                    )}
+
+                    <Box pb={2} className={classes.wrap_input}>
+                      <div ref={formRef['sell_ticket_start_time']} className={classes.firstItemShort}>
+                        <ESLabel
+                          label={i18n.t('common:delivery_reservation_tab.ticket_sales_start_datetime')}
+                          required={formik?.values?.stepSettingTwo?.use_ticket}
+                        />
+                        {isFirstStep() ? (
+                          <ESInputDatePicker
+                            name="stepSettingTwo.sell_ticket_start_time"
+                            placeholder={i18n.t('common:delivery_reservation_tab.ticket_sales_start_datetime')}
+                            fullWidth
+                            value={formik?.values?.stepSettingTwo?.sell_ticket_start_time}
+                            onChange={(date) => {
+                              const temp = moment(date).add(5, 's')
+                              formik.setFieldValue('stepSettingTwo.sell_ticket_start_time', temp)
+                              setValidateField('sell_ticket_start_time')
+                              handleUpdateValidateField('sell_ticket_start_time')
+                              setOnChangeFlag(true)
+                              flagUpdateFieldDate(true)
+                            }}
+                            helperText={
+                              validateField !== 'all'
+                                ? checkDisplayErrorOnChange(formik, 'sell_ticket_start_time', validateField).helperText
+                                : checkDisplayErrorOnSubmit(formik, 'sell_ticket_start_time').helperText
+                            }
+                            error={
+                              validateField !== 'all'
+                                ? checkDisplayErrorOnChange(formik, 'sell_ticket_start_time', validateField).error
+                                : checkDisplayErrorOnSubmit(formik, 'sell_ticket_start_time').error
+                            }
+                            readOnly={!formik?.values?.stepSettingTwo?.use_ticket}
+                            minDateMessage={''}
+                            disabled={isLive}
+                            InputProps={{
+                              classes: { root: classes.root },
+                            }}
+                            onBlur={formik.handleBlur}
+                            minutesStep={1}
+                            disablePast={!(!!status || status === 0)}
+                          />
                         ) : (
-                          <></>
-                        )
-                      }
-                    />
-                  </Box>
-                </Box>
+                          <Box pt={1}>
+                            <Typography className={classes.date}>
+                              {formik?.values?.stepSettingTwo?.sell_ticket_start_time !== null
+                                ? moment(formik?.values?.stepSettingTwo?.sell_ticket_start_time).format('YYYY年MM月DD日 HH:mm')
+                                : i18n.t('common:delivery_reservation_tab.ticket_sales_start_datetime')}
+                            </Typography>
+                          </Box>
+                        )}
+                      </div>
+                    </Box>
+                  </div>
+                </ESBoxftDashColumn>
               ) : (
-                <Box pb={2}>
-                  <Typography className={classes.date}>
-                    {formik.values.stepSettingTwo.use_ticket
-                      ? `利用する（${formik?.values?.stepSettingTwo?.ticket_price} ${t('common:common.eXe_points')}）`
-                      : '利用しない'}
-                  </Typography>
+                <Box pb={2} pt={2}>
+                  <ESBoxftDashColumn colorLine="#767676" isSelectedGift={true}>
+                    <Box>
+                      <Typography className={`${classes.date} ${classes.newTextftDash} ${classes.pd8}`}>
+                        {formik.values.stepSettingTwo.use_ticket
+                          ? `利用する（${formik?.values?.stepSettingTwo?.ticket_price} ${t('common:common.eXe_points')}）`
+                          : '利用しない'}
+                      </Typography>
+                      <Box className={`${classes.newTextftDash} ${classes.pdLabelDate}`}>
+                        <ESLabel
+                          label={i18n.t('common:delivery_reservation_tab.ticket_sales_start_datetime')}
+                          required={formik?.values?.stepSettingTwo?.use_ticket}
+                        />
+                        <Typography className={`${classes.date} ${classes.pd8}`}>
+                          {formik.values.stepSettingTwo.use_ticket
+                            ? moment(formik?.values?.stepSettingTwo?.sell_ticket_start_time).format('YYYY年MM月DD日 HH:mm')
+                            : ''}
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </ESBoxftDashColumn>
                 </Box>
               )}
-
-              <Box pb={2} className={classes.wrap_input}>
-                <div ref={formRef['sell_ticket_start_time']} className={classes.firstItem}>
-                  <ESLabel
-                    label={i18n.t('common:delivery_reservation_tab.ticket_sales_start_datetime')}
-                    required={formik?.values?.stepSettingTwo?.use_ticket}
-                  />
-                  {isFirstStep() ? (
-                    <ESInputDatePicker
-                      name="stepSettingTwo.sell_ticket_start_time"
-                      placeholder={i18n.t('common:delivery_reservation_tab.ticket_sales_start_datetime')}
-                      fullWidth
-                      value={formik?.values?.stepSettingTwo?.sell_ticket_start_time}
-                      onChange={(date) => {
-                        const temp = moment(date).add(5, 's')
-                        formik.setFieldValue('stepSettingTwo.sell_ticket_start_time', temp)
-                        setValidateField('sell_ticket_start_time')
-                        handleUpdateValidateField('sell_ticket_start_time')
-                        setOnChangeFlag(true)
-                        flagUpdateFieldDate(true)
-                      }}
-                      helperText={
-                        validateField !== 'all'
-                          ? checkDisplayErrorOnChange(formik, 'sell_ticket_start_time', validateField).helperText
-                          : checkDisplayErrorOnSubmit(formik, 'sell_ticket_start_time').helperText
-                      }
-                      error={
-                        validateField !== 'all'
-                          ? checkDisplayErrorOnChange(formik, 'sell_ticket_start_time', validateField).error
-                          : checkDisplayErrorOnSubmit(formik, 'sell_ticket_start_time').error
-                      }
-                      readOnly={!formik?.values?.stepSettingTwo?.use_ticket}
-                      minDateMessage={''}
-                      disabled={isLive}
-                      InputProps={{
-                        classes: { root: classes.root },
-                      }}
-                      onBlur={formik.handleBlur}
-                      minutesStep={1}
-                      disablePast={!(!!status || status === 0)}
-                    />
-                  ) : (
-                    <Box pt={1}>
-                      <Typography className={classes.date}>
-                        {formik?.values?.stepSettingTwo?.sell_ticket_start_time !== null
-                          ? moment(formik?.values?.stepSettingTwo?.sell_ticket_start_time).format('YYYY年MM月DD日 HH:mm')
-                          : i18n.t('common:delivery_reservation_tab.ticket_sales_start_datetime')}
-                      </Typography>
-                    </Box>
-                  )}
-                </div>
-              </Box>
             </>
           )}
+          {/* gift */}
           {isFirstStep() ? (
-            <Box>
-              <ESCheckboxBig
-                checked={formik?.values?.stepSettingTwo?.share_sns_flag}
-                onChange={() => formik.setFieldValue('stepSettingTwo.share_sns_flag', !formik?.values?.stepSettingTwo?.share_sns_flag)}
-                label={t('common:streaming_setting_screen.share_SNS')}
-                name="isShareSNS"
-                disabled={isLive}
-              />
+            <Box pb={2} pt={2} className={classes.wrap_input_box_switch}>
+              <div className={classes.firstItem}>
+                <ESLabelWithSwitch
+                  fullWidth
+                  labelPrimary={i18n.t('common:streaming_setting_screen.title_gift')}
+                  valueSwitch={formik?.values?.stepSettingTwo?.use_gift}
+                  handleChangeSwitch={changeFieldAndResetSelectedGift}
+                />
+              </div>
             </Box>
           ) : (
-            <ESInput
-              id="title"
-              name="title"
-              value={
-                formik?.values?.stepSettingTwo?.share_sns_flag
-                  ? t('common:streaming_setting_screen.shared_it')
-                  : t('common:streaming_setting_screen.dont_share')
-              }
-              fullWidth
-              labelPrimary={t('common:streaming_setting_screen.share_SNS')}
-              disabled={true}
-              size="big"
-              className={getAddClassByStep(classes.input_text)}
-            />
+            <ESLabel label={i18n.t('common:streaming_setting_screen.title_gift')} />
+          )}
+          {isFirstStep() ? (
+            <ESBoxftDashColumn isSelectedGift={formik?.values?.stepSettingTwo?.use_gift}>
+              <Box className={classes.boxAboutGift}>
+                <Box className={classes.select_show_about_gift} pt={1}>
+                  <label className={classes.labelNavigate} onClick={openGroupList}>
+                    {i18n.t('common:streaming_setting_screen.chooses_list_person_gift')}
+                  </label>
+                  <Typography className={classes.giftInfoList} variant="body2" onClick={handleListGiftInfo}>
+                    <Icon className={`fa fa-info-circle ${classes.iconMargin}`} fontSize="small" />{' '}
+                    {i18n.t('common:streaming_setting_screen.about_the_gift_list')}
+                  </Typography>
+                </Box>
+                <Box pt={1} className={classes.nameList}>
+                  <div className={classes.textAndClear}>
+                    <Typography className={classes.labelNameObject}>
+                      {`${i18n.t('common:streaming_setting_screen.list_gift_selected')} ${
+                        formik?.values?.stepSettingTwo?.group_title
+                          ? formik?.values?.stepSettingTwo?.group_title
+                          : i18n.t('common:streaming_setting_screen.unselected')
+                      }`}
+                    </Typography>
+                    <Box
+                      className={classes.iconClear}
+                      style={{ visibility: formik?.values?.stepSettingTwo?.group_title ? 'visible' : 'hidden' }}
+                      onClick={onClearNameListChip}
+                    >
+                      <Icon className={`far fa-times-circle ${classes.sizeIconClear}`} />{' '}
+                    </Box>
+                  </div>
+                </Box>
+                <Box className={classes.select_show_about_gift} pt={1.8} pb={1}>
+                  <ESCheckboxBig
+                    checked={formik?.values?.stepSettingTwo?.ranking_flag}
+                    onChange={() => formik.setFieldValue('stepSettingTwo.ranking_flag', !formik?.values?.stepSettingTwo?.ranking_flag)}
+                    label={t('common:streaming_setting_screen.individual_gift_ranking_display')}
+                    name="stepSettingTwo.ranking_flag"
+                    classNameLabel={classes.esCheckBox}
+                  />
+                  <Typography className={classes.giftInfoList} variant="body2" onClick={handleRankingInfo}>
+                    <Icon className={`fa fa-info-circle ${classes.iconMargin}`} fontSize="small" />{' '}
+                    {i18n.t('common:streaming_setting_screen.about_individual_gift_ranking')}
+                  </Typography>
+                </Box>
+              </Box>
+            </ESBoxftDashColumn>
+          ) : (
+            <Box pb={2} pt={2}>
+              <ESBoxftDashColumn colorLine="#767676" isSelectedGift={true}>
+                <Box className={classes.newTextftDash}>
+                  <Box pt={1} className={classes.nameList}>
+                    <Typography className={`${classes.labelNameObject} ${classes.labelRank}`}>
+                      {`${i18n.t('common:streaming_setting_screen.list_gift_selected')} ${returnTextChip()}`}
+                    </Typography>
+                  </Box>
+                  <Box className={`${classes.nameList} ${classes.nameListRanking}`}>
+                    <Typography className={`${classes.labelNameObject} ${classes.labelRank}`}>
+                      {`${i18n.t('common:streaming_setting_screen.individual_gift_ranking_display')}： ${
+                        formik?.values?.stepSettingTwo?.ranking_flag
+                          ? i18n.t('common:streaming_setting_screen.ranking_flag.on')
+                          : i18n.t('common:streaming_setting_screen.ranking_flag.off')
+                      }`}
+                    </Typography>
+                  </Box>
+                </Box>
+              </ESBoxftDashColumn>
+            </Box>
           )}
           {/* stream URL */}
-          <Box pt={2} className={classes.wrap_input} flexDirection="row" display="flex" alignItems="flex-end">
+          <Box pt={isFirstStep() ? 2 : 0} className={classes.wrap_input} flexDirection="row" display="flex" alignItems="flex-end">
             <Box className={classes.firstItem}>
               <ESInput
                 id="stream_url"
@@ -1267,6 +1483,12 @@ const Steps: React.FC<StepsProps> = ({
                   {i18n.t('common:streaming_setting_screen.check_submit')}
                 </ButtonPrimary>
               </Box>
+              <Typography
+                className={classes.textErrorGroupDelete}
+                style={{ display: formik?.values?.stepSettingTwo?.has_group_list ? 'flex' : 'none' }}
+              >
+                {i18n.t('common:streaming_setting_screen.group_list_does_not_exist')}
+              </Typography>
             </Grid>
           ) : (
             <Grid item xs={12}>
@@ -1341,6 +1563,29 @@ const useStyles = makeStyles((theme: Theme) => ({
       backgroundColor: '#000000',
       padding: '10.5px 14px',
       borderRadius: 4,
+    },
+    '& :-webkit-autofill': {
+      WebkitBoxShadow: '0 0 0 100px transparent inset',
+    },
+  },
+  input_text_ticket: {
+    '&.Mui-disabled': {
+      color: Colors.white_opacity['70'],
+      '& .MuiOutlinedInput-notchedOutline': {
+        // borderColor: 'transparent',
+        backgroundColor: 'transparent',
+      },
+      '&.MuiOutlinedInput-multiline.MuiOutlinedInput-marginDense': {
+        padding: 0,
+        display: 'flex',
+      },
+    },
+    '& .MuiInputBase-input.Mui-disabled': {
+      display: 'flex',
+      alignItems: 'center',
+      padding: '10.5px 14px 10.5px 14px',
+      color: Colors.white_opacity['70'],
+      borderColor: 'transparent',
     },
     '& :-webkit-autofill': {
       WebkitBoxShadow: '0 0 0 100px transparent inset',
@@ -1473,8 +1718,109 @@ const useStyles = makeStyles((theme: Theme) => ({
   firstItem: {
     width: '494px',
   },
+  firstItemShort: {
+    width: '450px',
+  },
   wrap_input: {
     paddingLeft: 0,
+  },
+  wrap_input_ticket: {
+    paddingLeft: 0,
+  },
+  wrap_input_box_switch: {
+    paddingLeft: 0,
+    paddingBottom: 0,
+  },
+  labelNavigate: {
+    fontWeight: 'bold',
+    fontSize: theme.typography.h3.fontSize,
+    textDecoration: 'underline',
+    textUnderlineOffset: '2px',
+    color: '#ffffff70',
+    cursor: 'pointer',
+  },
+  labelNameObject: {
+    fontWeight: 'normal',
+    fontSize: 14,
+    color: '#ffffff50',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+  },
+  giftInfoList: {
+    position: 'relative',
+    color: Colors.secondary,
+    cursor: 'pointer',
+    marginLeft: theme.spacing(2),
+    fontSize: 10,
+  },
+  iconMargin: {
+    marginRight: theme.spacing(1 / 2),
+  },
+  boxAboutGift: {
+    paddingLeft: 24,
+  },
+  esCheckBox: {
+    color: '#ffffff70',
+  },
+  firstItemBoxSwitch: {
+    // width: '494px',
+  },
+  select_show_about_gift: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  boxRightTicket: {
+    marginLeft: 24,
+    marginTop: 10,
+  },
+  nameList: {
+    width: 450,
+  },
+  newTextftDash: {
+    paddingLeft: 22,
+  },
+  nameListRanking: {
+    paddingTop: 8,
+  },
+  labelRank: {
+    paddingBottom: 8,
+    color: Colors.white_opacity[70],
+  },
+  pdLabelDate: {
+    paddingTop: 10,
+  },
+  pd8: {
+    paddingTop: 8,
+  },
+  textAndClear: {
+    flexDirection: 'row',
+    display: 'flex',
+    alignItems: 'center',
+    width: '100%',
+  },
+  iconClear: {
+    paddingLeft: 20,
+  },
+  sizeIconClear: {
+    fontSize: 21,
+    color: Colors.white_opacity[50],
+  },
+  countTime: {
+    flexDirection: 'row',
+    display: 'flex',
+    marginLeft: 24,
+  },
+  textErrorGroupDelete: {
+    color: '#F7F735',
+    fontSize: 12,
+    fontWeight: 400,
+    lineHeight: 1.66,
+    display: 'flex',
+    alignItems: 'center',
+    marginTop: 20,
+    justifyContent: 'center',
   },
   [theme.breakpoints.down(768)]: {
     container: {
@@ -1486,7 +1832,23 @@ const useStyles = makeStyles((theme: Theme) => ({
       flexWrap: 'wrap-reverse',
       justifyContent: 'flex-end',
     },
+    wrap_input_ticket: {
+      position: 'relative',
+      width: '100%',
+      flexWrap: 'wrap-reverse',
+      justifyContent: 'flex-end',
+      paddingBottom: 8,
+    },
+    wrap_input_box_switch: {
+      position: 'relative',
+      width: '100%',
+      flexWrap: 'wrap-reverse',
+      justifyContent: 'flex-end',
+    },
     firstItem: {
+      width: '100%',
+    },
+    firstItemShort: {
       width: '100%',
     },
     lastItem: {
@@ -1498,6 +1860,46 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     sp_wrap_input_tag: {
       paddingBottom: 13,
+    },
+    select_show_about_gift: {
+      flexDirection: 'column',
+      alignItems: 'start',
+    },
+    boxAboutGift: {
+      paddingLeft: 16,
+    },
+    labelNameObject: {
+      marginLeft: 0,
+      paddingTop: 8,
+    },
+    giftInfoList: {
+      marginLeft: 0,
+      paddingTop: 8,
+    },
+    boxRightTicket: {
+      marginLeft: 16,
+      width: '100%',
+      marginTop: 8,
+    },
+    nameList: {
+      width: window.innerWidth - 74,
+    },
+    newTextftDash: {
+      paddingLeft: 13,
+    },
+    nameListRanking: {
+      // paddingLeft: 13,
+      paddingTop: 8,
+    },
+    labelRank: {
+      paddingTop: 0,
+      paddingBottom: 8,
+    },
+    pdLabelDate: {
+      paddingTop: 16,
+    },
+    countTime: {
+      marginLeft: 16,
     },
   },
   addPaddingNote: {

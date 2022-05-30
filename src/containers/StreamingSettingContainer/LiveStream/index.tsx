@@ -21,8 +21,10 @@ import * as commonActions from '@store/common/actions'
 
 const { getChannelByArn, getVideoByUuid } = require(`src/graphql.${process.env.NEXT_PUBLIC_AWS_ENV}/queries`)
 const { onCreateVideo, onUpdateChannel, onUpdateVideo } = require(`src/graphql.${process.env.NEXT_PUBLIC_AWS_ENV}/subscriptions`)
-// import * as APIt from 'src/types/graphqlAPI'
 import useGraphqlAPI from 'src/types/useGraphqlAPI'
+import { getTimeZone } from '@utils/helpers/CommonHelper'
+import moment from 'moment'
+import { TABS } from '@containers/StreamingSettingContainer'
 /* eslint-disable @typescript-eslint/no-unused-vars */
 // @ts-ignore
 const APIt: any = useGraphqlAPI()
@@ -33,9 +35,10 @@ interface Props {
   formik?: FormikProps<FormLiveType>
   validateField?: string
   handleUpdateValidateField?: (value: string) => void
+  openPopupGroupList?: (open: boolean, tab: TABS) => void
 }
 
-const LiveStreamContainer: React.FC<Props> = ({ formik, validateField, handleUpdateValidateField }) => {
+const LiveStreamContainer: React.FC<Props> = ({ formik, validateField, handleUpdateValidateField, openPopupGroupList }) => {
   const [step, setStep] = useState(1)
   const router = useRouter()
   const dispatch = useAppDispatch()
@@ -52,6 +55,9 @@ const LiveStreamContainer: React.FC<Props> = ({ formik, validateField, handleUpd
   const [showResultDialog, setShowResultDialog] = useState(false)
   const [obsStatusDynamo, setObsStatusDynamo] = useState(null)
   const [videoStatusDynamo, setVideoStatusDynamo] = useState(null)
+  const [liveStartTime, setLiveStartTime] = useState('')
+  const { liveSettingInformation } = useLiveSetting()
+  const status = !!(liveSettingInformation?.data?.status === 1 && liveSettingInformation?.data?.live_stream_start_time)
 
   const onChangeStep = (step: number, isShare?: boolean, post?: { title: string; content: string }): void => {
     console.log('click next step', step, stateChannelMedia)
@@ -181,8 +187,10 @@ const LiveStreamContainer: React.FC<Props> = ({ formik, validateField, handleUpd
       const videoRs: any = await API.graphql(graphqlOperation(getVideoByUuid, listQV))
       const videoData = videoRs.data.getVideoByUuid.items.find((item) => item.uuid === videoId)
       console.log('LIVE::queryVideoByUUID===>', videoData, videoRs)
+      // setLiveStartTime('2022-02-15 13:40:12')
       if (videoData) {
         setVideoStatusDynamo(videoData?.video_status)
+        setLiveStartTime(moment.utc(videoData?.live_start_time).tz(getTimeZone()).format('YYYY-MM-DD HH:mm:ss'))
         if (videoData?.process_status === EVENT_LIVE_STATUS.STREAM_OFF) {
           //Updated
           setObsStatusDynamo(0)
@@ -224,6 +232,7 @@ const LiveStreamContainer: React.FC<Props> = ({ formik, validateField, handleUpd
         if (updateVideoData) {
           if (updateVideoData?.uuid === formik.values?.stepSettingOne?.uuid_clone) {
             setVideoStatusDynamo(updateVideoData?.video_status)
+            setLiveStartTime(moment.utc(updateVideoData?.live_start_time).tz(getTimeZone()).format('YYYY-MM-DD HH:mm:ss'))
             if (updateVideoData?.process_status === EVENT_LIVE_STATUS.STREAM_START) {
               //live
               setObsStatusDynamo(1)
@@ -269,6 +278,7 @@ const LiveStreamContainer: React.FC<Props> = ({ formik, validateField, handleUpd
         if (createdVideo) {
           if (createdVideo?.uuid === formik.values?.stepSettingOne?.uuid_clone) {
             setVideoStatusDynamo(createdVideo?.video_status)
+            setLiveStartTime(moment.utc(createdVideo?.live_start_time).tz(getTimeZone()).format('YYYY-MM-DD HH:mm:ss'))
             if (createdVideo?.process_status === EVENT_LIVE_STATUS.STREAM_START) {
               //live
               setObsStatusDynamo(1)
@@ -337,10 +347,21 @@ const LiveStreamContainer: React.FC<Props> = ({ formik, validateField, handleUpd
         videoStatusDynamo={videoStatusDynamo}
         validateField={validateField}
         handleUpdateValidateField={handleUpdateValidateField}
+        openPopupGroupList={openPopupGroupList}
+        liveStartTime={liveStartTime}
       />
       <ESModal open={modal && showResultDialog} handleClose={handleClose}>
         <BlankLayout>
-          <SettingsCompleted onClose={onClose} onComplete={onComplete} />
+          <SettingsCompleted
+            onClose={onClose}
+            onComplete={onComplete}
+            messageNotification={status ? '' : t('common:streaming_setting_screen.step3_delivery_settings_content')}
+            titleNotification={
+              status
+                ? t('common:streaming_setting_screen.step3_delivery_settings_content_update')
+                : t('common:streaming_setting_screen.complete_delivery_settings')
+            }
+          />
         </BlankLayout>
       </ESModal>
       <Box style={{ display: loading ? 'flex' : 'none' }}>

@@ -1,5 +1,6 @@
 import { URI } from '@constants/uri.constants'
 import api from './api'
+import { GiftMasterType } from '@services/gift.service'
 
 export const TYPE_VIDEO_TOP = {
   ALL: 'all',
@@ -194,8 +195,14 @@ export type SearchType = {
 }
 
 export type VideoDetailParams = {
-  video_id: string
+  video_id: string | string[]
   timezone?: string
+  user_id?: number
+}
+
+export type QualitiesType = {
+  output_name?: string
+  url?: string
 }
 
 export type VideoDetailData = {
@@ -234,6 +241,10 @@ export type VideoDetailData = {
   live_stream_end_time?: string
   id?: number
   video_thumbnail?: string
+  ranking_flag?: number
+  use_gift?: number
+  group_items?: any
+  qualities?: Array<QualitiesType>
 }
 
 export type DetailUserData = {
@@ -281,6 +292,41 @@ export type VideoRefType = {
   videoElement: any
 }
 
+export type RankingsItem = {
+  id?: number
+  email?: string
+  nickname?: string
+  point?: number
+  //
+  master_avatar?: string
+  master_id?: string
+  master_name?: string
+  master_uuid?: string
+  total?: string | number
+  type?: string | number
+  user_avatar?: string
+  user_id?: string
+  user_nickname?: string
+  video_id?: string
+  streamer?: number
+  uuid?: string
+  created_at?: string
+}
+
+export type RankingsResponse = {
+  message?: string
+  code?: number
+  data: {
+    giver: Array<RankingsItem>
+    receive: Array<RankingsItem>
+    streamer: { uuid?: string; user_avatar?: string; user_nickname?: string }
+  }
+}
+
+export type RankingsParams = {
+  video_id?: string
+}
+
 export const ListVideoAll = async (params: ListVideoTopParams): Promise<ListVideoTopResponse> => {
   const { data } = await api.get<ListVideoTopResponse>(URI.GET_LIST_VIDEO_TOP, { params })
   return data
@@ -323,5 +369,67 @@ export const VideoSearch = async (params: SearchVideoParams): Promise<SearchVide
 
 export const DetailVideo = async (params: VideoDetailParams): Promise<VideoDetailResponse> => {
   const { data } = await api.get<VideoDetailResponse>(URI.VIDEO_DETAIL, { params })
+  return data
+}
+
+export type VideoGiftMasterResponse = {
+  message?: string
+  code?: number
+  data?: VideoGiftMasterData
+}
+
+export type VideoGiftMasterData = {
+  gift_group_id?: number
+  id?: number
+  title?: string
+  user_id?: number
+  status?: number
+  group_uuid?: string
+  user_nickname?: string
+  user_avatar?: string
+  group_item?: Array<GiftMasterType>
+}
+
+export const getVideoGiftMasterList = async (params: VideoDetailParams): Promise<VideoGiftMasterResponse> => {
+  const { data } = await api.get<VideoGiftMasterResponse>(URI.VIDEO_GIFT_MASTER, { params })
+  return data
+}
+
+export const rankingList = async (params: RankingsParams): Promise<RankingsResponse> => {
+  const URL = `${URI.GET_RANKINGS}/${params.video_id}`
+  const { data } = await api.get<RankingsResponse>(URL)
+  return data
+}
+
+export type ReportReason = {
+  id?: string
+  type?: string
+  attributes?: {
+    reason?: string
+  }
+}
+
+export type ReportReasonResponse = {
+  data?: Array<ReportReason>
+}
+
+export const getReportReason = async (): Promise<ReportReasonResponse> => {
+  const { data } = await api.get<ReportReasonResponse>(URI.GET_VIDEO_REPORT_REASON)
+  return data
+}
+
+export type SendVideoReportResponse = {
+  success: string
+}
+
+export type SendVideoReportRequestBody = {
+  reason_id: number
+  report_type: number
+  user_email?: string
+  target_id?: number
+}
+
+export const sendVideoReport = async (requestBody: SendVideoReportRequestBody): Promise<SendVideoReportResponse> => {
+  const { data } = await api.post<SendVideoReportResponse>(URI.SEND_VIDEO_REPORT, requestBody)
   return data
 }

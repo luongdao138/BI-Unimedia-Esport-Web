@@ -28,10 +28,10 @@ const SettingsCompleted: React.FC<Props> = ({ titleNotification, messageNotifica
         </Box>
         <Box display="flex" flexDirection="column" alignItems="center" className={classes.wrapContent}>
           <Typography variant="h2" className={classes.headerStep3}>
-            {titleNotification || t('common:streaming_setting_screen.complete_delivery_settings')}
+            {titleNotification ?? t('common:streaming_setting_screen.complete_delivery_settings')}
           </Typography>
           <Typography variant="subtitle1" className={classes.contentStep3}>
-            {messageNotification || t('common:streaming_setting_screen.step3_delivery_settings_content')}
+            {messageNotification ?? t('common:streaming_setting_screen.step3_delivery_settings_content')}
           </Typography>
           <Box className={classes.redirectButton} onClick={onComplete}>
             <ButtonPrimary fullWidth round>

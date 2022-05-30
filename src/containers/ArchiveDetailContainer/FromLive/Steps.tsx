@@ -36,6 +36,8 @@ import { CommonHelper } from '@utils/helpers/CommonHelper'
 import VideoDeleteConfirmModal from '@containers/ArchiveDetailContainer/DeleteVideoConfirmModal/VideoDeleteConfirmModal'
 import ESLoader from '@components/FullScreenLoader'
 import { CookieData } from '@services/archiveList.service'
+import ESBoxftDashColumn from '@components/ESBoxftDashColumn'
+import { ESRoutes } from '@constants/route.constants'
 
 interface StepsProps {
   step: number
@@ -136,6 +138,8 @@ const Steps: React.FC<StepsProps> = ({
       overrideVideoArchive(data)
       // Back to prev screen
       if (isSuccess) {
+        // eslint-disable-next-line no-console
+        console.log('backToTopVideo::back::6')
         router.back()
       }
     })
@@ -154,6 +158,8 @@ const Steps: React.FC<StepsProps> = ({
       overrideDeleteVideo(uuid)
       // Back to prev screen
       if (isSuccess) {
+        // eslint-disable-next-line no-console
+        console.log('backToTopVideo::back::7')
         router.back()
       } else {
         setDeleteMsg(message)
@@ -240,9 +246,27 @@ const Steps: React.FC<StepsProps> = ({
     }
   }
 
+  const handleReportClick = () => {
+    const { uuid } = videoArchivedDetail
+    router.push({ pathname: ESRoutes.STREAMING_GIFT_REPORT, query: { video_id: uuid } })
+  }
+
+  const returnTextChip = () => {
+    if (videoArchivedDetail?.use_gift) {
+      if (videoArchivedDetail?.group_title) {
+        return videoArchivedDetail?.group_title
+      } else {
+        return i18n.t('common:streaming_setting_screen.unselected')
+      }
+    } else {
+      return i18n.t('common:streaming_setting_screen.ranking_flag.off')
+    }
+  }
+
   return (
     <Box py={4} className={classes.container}>
       <Box className={classes.formContainer}>
+        <Typography className={classes.textTitleReup}>{i18n.t('common:archive_detail_screen.title')}</Typography>
         <form onSubmit={formik.handleSubmit}>
           {/* link url */}
           <Box className={classes.wrap_input} display="flex" flexDirection="row" alignItems="flex-end">
@@ -446,31 +470,71 @@ const Steps: React.FC<StepsProps> = ({
             </Box>
           )}
 
-          {isFromSchedule && (
+          {!isFromSchedule && (
             <Box pb={2}>
               <Box className={classes.label}>{i18n.t('common:archive_detail_screen.delivery_date_time')}</Box>
               <Box className={classes.dateTime} pt={1} pl={1}>
-                {CommonHelper.formatDateTimeJP(videoArchivedDetail?.stream_schedule_start_time)}
+                {CommonHelper.formatDateTimeJP(videoArchivedDetail?.live_stream_start_time)}
               </Box>
             </Box>
           )}
 
-          <Box pb={2}>
+          {/* <Box pb={2}>
             <Box className={classes.label}>{i18n.t('common:archive_detail_screen.ticket_amount')}</Box>
             <Box className={classes.dateTime} pt={1} pl={1} height="28px">
               {videoArchivedDetail && videoArchivedDetail?.ticket_price
                 ? `${FormatHelper.currencyFormat(videoArchivedDetail?.ticket_price.toString())} ${i18n.t('common:common.eXe_points')}`
                 : ''}
             </Box>
+          </Box> */}
+
+          {/* V3: ticket */}
+          <Box className={classes.label}>{i18n.t('common:streaming_setting_screen.ticket_use')}</Box>
+          <Box pb={2} pt={2}>
+            <ESBoxftDashColumn colorLine="#767676" isSelectedGift>
+              <Box className={classes.newTextftDash}>
+                <Box className={classes.dateTime} pt={1} pb={3 / 4} height="34px">
+                  {videoArchivedDetail && videoArchivedDetail?.ticket_price
+                    ? i18n
+                        .t('common:delivery_reservation_tab.ticket_use')
+                        .replace('%d', FormatHelper.currencyFormat(videoArchivedDetail?.ticket_price.toString()))
+                    : i18n.t('common:delivery_reservation_tab.ticket_not_use')}
+                </Box>
+                {isFromSchedule && (
+                  <Box className={` ${classes.pdLabelDate}`}>
+                    <Box className={classes.label}>{i18n.t('common:delivery_reservation_tab.ticket_sales_start_datetime')}</Box>
+                    {videoArchivedDetail?.sell_ticket_start_time && (
+                      <Box className={classes.dateTime} pt={1}>
+                        {CommonHelper.formatDateTimeJP(videoArchivedDetail?.sell_ticket_start_time)}
+                      </Box>
+                    )}
+                  </Box>
+                )}
+              </Box>
+            </ESBoxftDashColumn>
           </Box>
 
-          <Box pb={2}>
-            <Box className={classes.label}>{i18n.t('common:archive_detail_screen.ticket_sale_date_time')}</Box>
-            <Box className={classes.dateTime} pt={1} pl={1} height="28px">
-              {videoArchivedDetail && videoArchivedDetail?.sell_ticket_start_time
-                ? CommonHelper.formatDateTimeJP(videoArchivedDetail?.sell_ticket_start_time)
-                : ''}
-            </Box>
+          {/* V3: gift */}
+          <ESLabel label={i18n.t('common:streaming_setting_screen.title_gift')} />
+          <Box pb={2} pt={2}>
+            <ESBoxftDashColumn colorLine="#767676" isSelectedGift={true}>
+              <Box className={classes.newTextftDash}>
+                <Box pt={1} className={classes.nameList}>
+                  <Typography className={`${classes.labelNameObject} ${classes.labelRank}`}>
+                    {`${i18n.t('common:streaming_setting_screen.list_gift_selected')} ${returnTextChip()}`}
+                  </Typography>
+                </Box>
+                <Box className={`${classes.nameList} ${classes.nameListRanking}`}>
+                  <Typography className={`${classes.labelNameObject} ${classes.labelRank}`}>
+                    {`${i18n.t('common:streaming_setting_screen.individual_gift_ranking_display')}： ${
+                      formik?.values?.ranking_flag
+                        ? i18n.t('common:streaming_setting_screen.ranking_flag.on')
+                        : i18n.t('common:streaming_setting_screen.ranking_flag.off')
+                    }`}
+                  </Typography>
+                </Box>
+              </Box>
+            </ESBoxftDashColumn>
           </Box>
 
           {/* Archive delivery end date and time */}
@@ -556,6 +620,17 @@ const Steps: React.FC<StepsProps> = ({
           <Typography className={classes.captionNote}>{i18n.t('common:archive_detail_screen.note_for_publish_delivery_pb')}</Typography>
           <Box paddingBottom={3} />
 
+          <Box onClick={handleReportClick} className={classes.boxFeature}>
+            <Box flexDirection="row" display="flex" marginBottom={1}>
+              <Box className={classes.wrapIcon}>
+                <img src={'/images/icons/report.svg'} className={classes.imageIcon} />
+              </Box>
+              <Box className={classes.textIcon} pl={1}>
+                {i18n.t('common:archive_detail_screen.report_data')}
+              </Box>
+            </Box>
+          </Box>
+
           <Box flexDirection="row" display="flex" marginBottom={1} onClick={handleDownloadVideo}>
             <a
               target="_blank"
@@ -618,7 +693,6 @@ const Steps: React.FC<StepsProps> = ({
         </form>
         <VideoDeleteConfirmModal
           open={deleteModalVisible}
-          video={videoArchivedDetail}
           handleClose={handleCloseDeleteModal}
           handleDeleteVideo={onDelete}
           isLoading={deleteLoading}
@@ -765,6 +839,37 @@ const useStyles = makeStyles((theme: Theme) => ({
   wrap_input: {
     paddingLeft: 0,
   },
+  nameList: {
+    width: 450,
+  },
+  newTextftDash: {
+    paddingLeft: 22,
+  },
+  nameListRanking: {
+    paddingTop: 8,
+  },
+  labelRank: {
+    paddingBottom: 8,
+    color: Colors.white_opacity[70],
+  },
+  pdLabelDate: {
+    paddingTop: 10,
+    paddingBottom: 11,
+  },
+  labelNameObject: {
+    fontWeight: 'normal',
+    fontSize: 14,
+    color: '#FFFFFF50',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+  },
+  textTitleReup: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: Colors.white_opacity[70],
+    marginBottom: 20,
+  },
   [theme.breakpoints.down(768)]: {
     container: {
       padding: '34px 24px 32px 24px',
@@ -788,6 +893,31 @@ const useStyles = makeStyles((theme: Theme) => ({
     coverImg: {
       height: 'calc((100vw - 48px) * 9/16)',
     },
+    nameList: {
+      width: window.innerWidth - 74,
+    },
+    newTextftDash: {
+      paddingLeft: 13,
+    },
+    nameListRanking: {
+      // paddingLeft: 13,
+      paddingTop: 8,
+    },
+    labelRank: {
+      paddingTop: 0,
+      paddingBottom: 8,
+    },
+    pdLabelDate: {
+      paddingTop: 16,
+      paddingBottom: 8,
+    },
+    labelNameObject: {
+      marginLeft: 0,
+      paddingTop: 8,
+    },
+    textTitleReup: {
+      marginBottom: 15,
+    },
   },
   addPaddingNote: {
     paddingTop: 8,
@@ -804,5 +934,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& :-webkit-autofill': {
       WebkitBoxShadow: '0 0 0 100px #000000 inset',
     },
+  },
+  boxFeature: {
+    flexDirection: 'row',
+    display: 'flex',
+    cursor: 'pointer',
   },
 }))

@@ -3,6 +3,22 @@ import api from './api'
 
 export const LIMIT_ITEM = 6
 
+export const VIDEO_RESOLUTION = {
+  AUTO: '自動',
+  _1080P: '1080p',
+  _720P: '720p',
+  _480P: '480p',
+  _360P: '360p',
+}
+
+export const VIDEO_RESOLUTION_HLS = {
+  AUTO: -1,
+  _360P: 0,
+  _480P: 1,
+  _720P: 2,
+  _1080P: 3,
+}
+
 export type TypeVideoArchived = {
   id?: number
   uuid?: string
@@ -83,6 +99,7 @@ export type TimeReportResponse = {
   code?: number
   data?: Array<any>
 }
+
 export const ListArchivedVideoStream = async (params: ListArchivedVideoStreamParams): Promise<ListArchivedVideoStreamResponse> => {
   const URL = URI.VIDEOS + `${params.video_id}/archived`
   const { data } = await api.get<ListArchivedVideoStreamResponse>(URL, { params })

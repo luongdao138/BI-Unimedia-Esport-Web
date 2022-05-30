@@ -5,13 +5,13 @@ import ESTabs from '@components/Tabs'
 import i18n from '@locales/i18n'
 import { Box, Grid, makeStyles, Typography } from '@material-ui/core'
 import { Colors } from '@theme/colors'
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import ChatContainer from './ChatContainer'
 import DistributorInfo from './DistributorInfo'
 // import LiveStreamContent from './LiveStreamContent'
 import DonatePoints from './DonatePoints'
-import DonatePointsConfirmModal from './DonatePointsConfirmModal/DonatePointsConfirmModal'
+// import DonatePointsConfirmModal from './DonatePointsConfirmModal/DonatePointsConfirmModal'
 import ProgramInfoNoViewingTicket from '@containers/VideoLiveStreamContainer/ProgramInfoNoViewingTicket'
 import usePointsManage from '@containers/PointManage/usePointsManage'
 import FullESLoader from '@components/FullScreenLoader'
@@ -24,22 +24,25 @@ import useDetailVideo from './useDetailVideo'
 import moment from 'moment'
 import ESLoader from '@components/Loader'
 import PreloadChatContainer from './PreloadContainer/PreloadChatContainer'
-import { STATUS_VIDEO } from '@services/videoTop.services'
+import { RankingsItem, STATUS_VIDEO } from '@services/videoTop.services'
 import { useAppSelector } from '@store/hooks'
 import { getIsAuthenticated } from '@store/auth/selectors'
 import { ESRoutes } from '@constants/route.constants'
+import { isMobile as isMobileDevice } from 'react-device-detect'
+
 const { getVideoByUuid } = require(`src/graphql.${process.env.NEXT_PUBLIC_AWS_ENV}/queries`)
 const { onUpdateVideo, onUpdateChannel } = require(`src/graphql.${process.env.NEXT_PUBLIC_AWS_ENV}/subscriptions`)
-// import * as APIt from 'src/types/graphqlAPI'
 import API, { GraphQLResult, graphqlOperation } from '@aws-amplify/api'
-import { EVENT_LIVE_STATUS, LIVE_VIDEO_TYPE } from '@constants/common.constants'
+import { EVENT_LIVE_STATUS, LIVE_VIDEO_TYPE, VIDEO_INFO_TABS } from '@constants/common.constants'
 import DialogLoginContainer from '@containers/DialogLogin'
 import _ from 'lodash'
 import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
 import LiveStreamContent from './LiveStreamContent'
 import { PurchaseTicketParams } from '@services/points.service'
 import useGraphqlAPI from 'src/types/useGraphqlAPI'
-import { VideoContext } from './VideoContext.js'
+import TabSelectContainer from './TabSelectContainer'
+import { VideoContext } from '@containers/VideoLiveStreamContainer/VideoContext'
+// import { CommonHelper } from '@utils/helpers/CommonHelper'
 
 import { useResizeScreen } from '@utils/hooks/useResizeScreen'
 
@@ -49,12 +52,24 @@ const APIt: any = useGraphqlAPI()
 import ProgramInfo from './ProgramInfo'
 import RelatedVideos from './RelatedVideos'
 import VideoSubInfo from './VideoSubInfo'
+import { use100vh } from 'react-div-100vh'
+import { useRotateScreen } from '@utils/hooks/useRotateScreen'
+import * as commonActions from '@store/common/actions'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
+import GoogleAd from '@components/GoogleAds'
+import VideoTabContextProvider from '@containers/VideoLiveStreamContainer/VideoContext/VideTabContext'
+import ControlBarContextProvider from '@containers/VideoLiveStreamContainer/VideoContext/ControlBarContext'
+import RelatedVideosMobile from './RelatedVideos/RelatedVideosMobile'
+import RelatedVideoContextProvider from './VideoContext/RelatedVideoContext'
+import { useFullscreenContext } from '@context/FullscreenContext'
 
-enum TABS {
-  PROGRAM_INFO = 1,
-  DISTRIBUTOR_INFO = 2,
-  RELATED_VIDEOS = 3,
-  COMMENT = 0,
+export interface videoStyleProps {
+  availHeight: number
+  availWidth: number
+  isLandscape: boolean
+  isIphone: boolean
+  showRelatedVideos?: boolean
+  isFullscreenMode?: boolean
 }
 
 export enum VIDEO_TYPE {
@@ -62,6 +77,7 @@ export enum VIDEO_TYPE {
   SCHEDULE = 1,
   ARCHIVED = 2,
 }
+
 type VIDEO_INFO = {
   video_status: string | number
   process_status: string
@@ -71,12 +87,20 @@ const VideoDetail: React.FC = () => {
   const PURCHASE_TYPE = {
     PURCHASE_TICKET: 1,
     PURCHASE_SUPER_CHAT: 2,
+    GIVE_GIFT_TO_MASTER: 4,
   }
-  const classes = useStyles()
+  // console.log('🚀 ~ height', height)
+  const height = use100vh()
+  console.log('🚀 ~ heighta', height)
+  console.log('🚀 ~ innerHeight', window.innerHeight)
+  const { isLandscape } = useRotateScreen()
+  // const classes = useStyles({ availHeight: height, availWidth: window.innerWidth, isLandscape })
   const { t } = useTranslation('common')
   const { isResizedScreen, setIsResizedScreen } = useResizeScreen()
   const { width: pageWidth } = useWindowDimensions(0)
-  const isMobile = pageWidth <= 768
+
+  const isMobile = pageWidth <= 768 || isLandscape
+  console.log('🚀 ~ isMobile', isMobile)
   const dispatch = useAppDispatch()
   const router = useRouter()
   const video_id = Array.isArray(router.query?.vid) ? router.query.vid[0] : router.query.vid // uuid video
@@ -84,13 +108,14 @@ const VideoDetail: React.FC = () => {
   const isAuthenticated = useAppSelector(getIsAuthenticated)
   // const userProfile = useAppSelector(selectors.getUserProfile)
   const [videoRefInfo, setVideoRefInfo] = useState(null)
-  console.log('🚀 ~ useEffect ~ videoRefInfo---222', videoRefInfo)
+  const [giverRankInfo, setGiverRankInfo] = useState<Array<RankingsItem>>([])
+  const [receiverRankInfo, setReceiverRankInfo] = useState<Array<RankingsItem>>([])
 
   const { getMyPointData, myPointsData } = usePointsManage()
   const { purchaseTicketSuperChat, meta_purchase_ticket_super_chat } = usePurchaseTicketSuperChat()
   const myPoint = myPointsData?.total_point ? Number(myPointsData.total_point) : 0
 
-  const [tab, setTab] = useState(TABS.PROGRAM_INFO)
+  const [tab, setTab] = useState(VIDEO_INFO_TABS.PROGRAM_INFO)
   const [showDialogLogin, setShowDialogLogin] = useState<boolean>(false)
   const [firstRender, setFirstRender] = useState(true)
 
@@ -100,14 +125,24 @@ const VideoDetail: React.FC = () => {
   const [purchaseComment, setPurchaseComment] = useState<string>('')
   const [showPurchaseTicketModal, setShowPurchaseTicketModal] = useState<boolean>(false)
   const [purchaseType, setPurchaseType] = useState<number>(null)
-  const [donatedPoints, setDonatedPoints] = useState<number>(0)
   const [softKeyboardIsShown, setSoftKeyboardIsShown] = useState(false)
   const [errorPurchase, setErrorPurchase] = useState(false)
   const [videoInfo, setVideoInfo] = useState<VIDEO_INFO>({ video_status: STATUS_VIDEO.SCHEDULE, process_status: '' })
   const [videoStatus, setVideoStatus] = useState(null)
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isArchived, setIsArchived] = useState(false)
+  const [isFull, setIsFull] = useState<boolean>(false)
   const [disabled, setDisabled] = useState(false)
+  const [errorMsgDonatePoint, setErrorMsgDonatePoint] = useState('')
+
+  // const [loadingPurchasePoint, setLoadingPurchasePoint] = useState<boolean>(false)
+
+  console.log('DonatePointsConfirmModal', disabled, errorPurchase, purchaseComment)
+
+  const confirmDonatePointRef = useRef<any>(null)
+  const [showRelatedVideos, setShowRelatedVideos] = useState<boolean>(false)
+  const canDisplayRelatedVideos = isMobileDevice && isLandscape && isFull
+  const { isFullscreenMode } = useFullscreenContext()
 
   const {
     getVideoDetail,
@@ -118,15 +153,38 @@ const VideoDetail: React.FC = () => {
     resetVideoDetailData,
     changeIsStreamingEnd,
     liveStreamInfo,
+    changeIsHoveredVideoStatus,
+    fetchDonateRanking,
+    rankingListMeta,
+    giverRankings,
+    receiverRankings,
+    updateUseGiftFlag,
   } = useDetailVideo()
+  console.log('🚀 ~ rankingListMeta', rankingListMeta)
 
-  const { is_normal_view_mode } = liveStreamInfo
+  const { is_normal_view_mode, isHoveredVideo } = liveStreamInfo
 
   const isPendingPurchaseTicket = meta_purchase_ticket_super_chat?.pending && purchaseType === PURCHASE_TYPE.PURCHASE_TICKET
 
   const isPendingPurchaseSuperChat = meta_purchase_ticket_super_chat.pending && purchaseType === PURCHASE_TYPE.PURCHASE_SUPER_CHAT
 
   const [isVideoFreeToWatch, setIsVideoFreeToWatch] = useState(detailVideoResult?.use_ticket ? detailVideoResult?.use_ticket : -1)
+
+  console.log('🚀 ~ isLandscape', isLandscape)
+  // const theme = useTheme()
+  // const screenDownSP = useMediaQuery(theme.breakpoints.down(576))
+  const androidPl = /Android/i.test(window.navigator.userAgent)
+  const iPhonePl = /iPhone/i.test(window.navigator.userAgent)
+
+  // const handleDonatePointRef = useRef<any>(null)
+  const classes = useStyles({
+    availHeight: height,
+    availWidth: window.innerWidth,
+    isLandscape,
+    isIphone: iPhonePl,
+    showRelatedVideos,
+    isFullscreenMode,
+  })
 
   const handleShowDialogLogin = () => {
     setShowDialogLogin(true)
@@ -163,6 +221,8 @@ const VideoDetail: React.FC = () => {
     if (refChatContainer && refChatContainer.current) {
       refChatContainer.current.resetStates()
     }
+    // eslint-disable-next-line no-console
+    console.log('backToTopVideo::direct::3')
     router.replace(
       {
         pathname: ESRoutes.TOP,
@@ -194,13 +254,15 @@ const VideoDetail: React.FC = () => {
     // }
     const isNotStreamingVideo =
       (video_status === EVENT_LIVE_STATUS.RECORDING_ARCHIVED && process_status === EVENT_LIVE_STATUS.RECORDING_END) ||
-      (+video_status === STATUS_VIDEO.ARCHIVE && process_status === EVENT_LIVE_STATUS.STREAM_END)
+      (+video_status === STATUS_VIDEO.ARCHIVE && process_status === EVENT_LIVE_STATUS.STREAM_END) ||
+      (+video_status === STATUS_VIDEO.OVER_LOAD && process_status === EVENT_LIVE_STATUS.STREAM_OFF)
 
     const isScheduleVideo = +video_status === STATUS_VIDEO.SCHEDULE && +videoStatus !== STATUS_VIDEO.LIVE_STREAM
     const isLiveStreamVideo = +video_status === STATUS_VIDEO.LIVE_STREAM && process_status === EVENT_LIVE_STATUS.STREAM_START
 
     if (isNotStreamingVideo) {
       changeIsStreamingEnd(true)
+      onVideoEnd()
     }
     if (isScheduleVideo) {
       setVideoStatus(STATUS_VIDEO.SCHEDULE)
@@ -208,6 +270,41 @@ const VideoDetail: React.FC = () => {
       setVideoStatus(STATUS_VIDEO.LIVE_STREAM)
     }
   }, [JSON.stringify(videoInfo)])
+
+  useEffect(() => {
+    if (!isLandscape) {
+      setShowRelatedVideos(false)
+    }
+  }, [isLandscape])
+
+  useEffect(() => {
+    if (rankingListMeta.loaded) {
+      console.log('🚀 ~ useEffect ~ rankingListMeta.loaded', rankingListMeta.loaded)
+      // const newData = CommonHelper.getRankInfo(
+      //   giverRankings,
+      //   [
+      //     {
+      //       video_id: 2014,
+      //       user_nickname: 'aitx7270_8',
+      //       user_avatar: 'https://s3-ap-northeast-1.amazonaws.com/cowell-dev-avatar-media/users/cover/420/1640752240-420.jpg',
+      //       user_id: 420,
+      //       master_id: 60,
+      //       master_name: 'Thanh Binh',
+      //       master_avatar: '',
+      //       master_uuid: '123',
+      //       type: 0,
+      //       total: '20000',
+      //     },
+      //   ],
+      //   GIVER_RANK_TYPE
+      // )
+      // console.log('🚀 ~ useEffect ~ newData--000', newData)
+      setGiverRankInfo(giverRankings)
+      setReceiverRankInfo(receiverRankings)
+      // setGiverRankInfo((newInfo) => CommonHelper.getRankInfo(giverRankings, newInfo, GIVER_RANK_TYPE))
+      // setReceiverRankInfo((newInfo) => CommonHelper.getRankInfo(receiverRankings, newInfo))
+    }
+  }, [rankingListMeta])
 
   useEffect(() => {
     // update IsVideoFreeToWatch
@@ -340,12 +437,18 @@ const VideoDetail: React.FC = () => {
 
   useEffect(() => {
     if (video_id) {
-      getVideoDetail({ video_id: `${video_id}` })
+      getVideoDetail({ video_id: `${video_id}` }, true)
     }
   }, [video_id, isAuthenticated])
 
   useEffect(() => {
-    setTab(isMobile ? TABS.COMMENT : TABS.PROGRAM_INFO)
+    if (detailVideoResult.uuid) {
+      fetchDonateRanking({ video_id: detailVideoResult.uuid })
+    }
+  }, [detailVideoResult.uuid])
+
+  useEffect(() => {
+    // setTab(isMobile ? VIDEO_INFO_TABS.COMMENT : VIDEO_INFO_TABS.PROGRAM_INFO)
   }, [isMobile])
 
   useEffect(() => {
@@ -355,56 +458,66 @@ const VideoDetail: React.FC = () => {
     }
   }, [videoDetailError])
 
-  const confirmDonatePoint = (donated_point, comment) => {
+  const confirmDonatePoint = (donated_point, comment, master_id = '', cb) => {
+    console.log('master_id', master_id)
+
+    console.log('============= On donate point ==============')
+
     // reset donate point
-    setDonatedPoints(0)
-    setDonatedPoints(donated_point)
     // reset lack point
     setLackedPoint(0)
     setLackedPoint(donated_point - myPoint)
     setPurchaseComment(comment)
     setPurchaseType(PURCHASE_TYPE.PURCHASE_SUPER_CHAT)
     if (myPoint >= donated_point) {
-      setShowConfirmModal(true)
-    } else {
-      dispatch(addToast(i18n.t('common:donate_points.lack_point_mess')))
-      setShowModalPurchasePoint(true)
-    }
-  }
-  const handleCloseConfirmModal = () => {
-    getMyPointData({ page: 1, limit: 10 })
-    setShowConfirmModal(false)
-    setErrorPurchase(false)
-  }
-  const handleConfirmPurchaseSuperChat = async () => {
-    setPurchaseType(PURCHASE_TYPE.PURCHASE_SUPER_CHAT)
-    setDisabled(true)
-    debounceDonatePoint(donatedPoints, PURCHASE_TYPE.PURCHASE_SUPER_CHAT, getVideoId(), handleCloseConfirmModal)
-  }
-
-  const debounceDonatePoint = useCallback(
-    _.debounce(async (donatedPoints, type, video_id, handleSuccess: () => void) => {
-      await purchaseTicketSuperChat(
+      // setShowConfirmModal(true)
+      const type = master_id === '' ? PURCHASE_TYPE.PURCHASE_SUPER_CHAT : PURCHASE_TYPE.GIVE_GIFT_TO_MASTER
+      purchaseTicketSuperChat(
         {
-          point: donatedPoints,
-          type: type,
-          video_id: video_id,
-          handleSuccess: handleSuccess,
+          point: donated_point,
+          type,
+          video_id: getVideoId(),
+          handleSuccess: handleCloseConfirmModal,
+          ...(type === PURCHASE_TYPE.GIVE_GIFT_TO_MASTER && { master_id }),
         },
         (isSuccess) => {
           if (isSuccess) {
             setShowConfirmModal(false)
             setErrorPurchase(false)
             setDisabled(false)
+            setErrorMsgDonatePoint('')
+            dispatch(commonActions.addToast(i18n.t('common:live_stream_screen.send_gift_success')))
           } else {
             // setShowConfirmModal(false)
             setDisabled(false)
           }
-        }
+        },
+        (error) => {
+          console.log('error==>', error)
+          setShowConfirmModal(false)
+          setErrorPurchase(true)
+          if (error.code === 420) {
+            updateUseGiftFlag(0)
+            setErrorMsgDonatePoint(i18n.t('common:live_stream_screen.error_tip_function_turn_off'))
+          } else if (error.code === 422) {
+            setErrorMsgDonatePoint(i18n.t('common:live_stream_screen.error_address_updated'))
+          }
+        },
+        cb
       )
-    }, 700),
-    []
-  )
+    } else {
+      dispatch(addToast(i18n.t('common:donate_points.lack_point_mess')))
+      setShowModalPurchasePoint(true)
+    }
+  }
+
+  confirmDonatePointRef.current = confirmDonatePoint
+
+  const handleCloseConfirmModal = () => {
+    getMyPointData({ page: 1, limit: 10 })
+    setShowConfirmModal(false)
+    setErrorPurchase(false)
+  }
 
   const handlePurchaseTicket = () => {
     if (isAuthenticated) {
@@ -461,29 +574,29 @@ const VideoDetail: React.FC = () => {
     return (
       <Grid item xs={12} className={classes.tabsContainer}>
         <ESTabs value={tab} onChange={(_, v) => setTab(v)} className={classes.tabs} scrollButtons="off" variant="scrollable">
-          {isMobile && <ESTab label={t('live_stream_screen.comment')} value={TABS.COMMENT} className={classes.singleTab} />}
-          <ESTab label={t('live_stream_screen.program_info')} value={TABS.PROGRAM_INFO} className={classes.singleTab} />
-          <ESTab label={t('live_stream_screen.distributor_info')} value={TABS.DISTRIBUTOR_INFO} className={classes.singleTab} />
-          <ESTab label={t('live_stream_screen.related_videos')} value={TABS.RELATED_VIDEOS} className={classes.singleTab} />
+          {/* {isMobile && <ESTab label={t('live_stream_screen.comment')} value={VIDEO_INFO_TABS.COMMENT} className={classes.singleTab} />} */}
+          <ESTab label={t('live_stream_screen.program_info')} value={VIDEO_INFO_TABS.PROGRAM_INFO} className={classes.singleTab} />
+          <ESTab label={t('live_stream_screen.distributor_info')} value={VIDEO_INFO_TABS.DISTRIBUTOR_INFO} className={classes.singleTab} />
+          <ESTab label={t('live_stream_screen.related_videos')} value={VIDEO_INFO_TABS.RELATED_VIDEOS} className={classes.singleTab} />
         </ESTabs>
       </Grid>
     )
   }
 
-  const getContent = () => {
-    switch (tab) {
-      case TABS.PROGRAM_INFO:
+  const getContent = (currentTab) => {
+    switch (currentTab) {
+      case VIDEO_INFO_TABS.PROGRAM_INFO:
         return !isScheduleAndNotHaveTicket() ? (
           <ProgramInfo video_id={getVideoId()} />
         ) : (
           <ProgramInfoNoViewingTicket videoInfo={detailVideoResult} />
         )
-      case TABS.DISTRIBUTOR_INFO:
+      case VIDEO_INFO_TABS.DISTRIBUTOR_INFO:
         return <DistributorInfo video_id={getVideoId()} />
-      case TABS.RELATED_VIDEOS:
+      case VIDEO_INFO_TABS.RELATED_VIDEOS:
         return <RelatedVideos video_id={getVideoId()} />
-      case TABS.COMMENT:
-        return sideChatContainer()
+      // case VIDEO_INFO_TABS.COMMENT:
+      //   return sideChatContainer()
       default:
         break
     }
@@ -504,12 +617,17 @@ const VideoDetail: React.FC = () => {
     return 0
   }
 
-  const componentsSize = (() => {
+  const componentsSize = useMemo(() => {
+    const factor = isLandscape ? 0.42 : 0.3
     const chatMaxWidth = 482
-    const chatMinWidth = 330
-    const pageWidthWithoutMenu = pageWidth - sizeMenuWidth()
+    const chatMinWidth = isLandscape ? 0 : 380
+
+    const isSafari = CommonHelper.checkIsSafariBrowser()
+    let pageWidthWithoutMenu = pageWidth - sizeMenuWidth()
+    // subtract screen width on safari (PC) with width of scroll (16px)
+    pageWidthWithoutMenu = isSafari && !isMobile ? pageWidthWithoutMenu - 16 : pageWidthWithoutMenu
     // render chat component is 30% of page width without menu
-    let chatWidth = Math.round(pageWidthWithoutMenu * 0.3)
+    let chatWidth = Math.round(pageWidthWithoutMenu * factor)
     // limit width of chat component
     chatWidth = chatWidth > chatMaxWidth ? chatMaxWidth : chatWidth < chatMinWidth ? chatMinWidth : chatWidth
     const videoWidth = isMobile ? pageWidthWithoutMenu : pageWidthWithoutMenu - chatWidth
@@ -519,7 +637,26 @@ const VideoDetail: React.FC = () => {
       videoWidth,
       videoHeight,
     }
-  })()
+  }, [pageWidth, isLandscape, isMobile])
+
+  const resetErrorDonateMessage = useCallback(() => {
+    setErrorMsgDonatePoint('')
+  }, [])
+
+  const openPurchasePointModal = useCallback(
+    (donate_point) => {
+      // reset donate point
+      // no lack point if my point larger than donate point
+      if (+donate_point < +myPoint) {
+        setLackedPoint(0)
+      } else {
+        setLackedPoint(donate_point - myPoint)
+      }
+      setPurchaseType(PURCHASE_TYPE.PURCHASE_SUPER_CHAT)
+      setShowModalPurchasePoint(true)
+    },
+    [myPoint]
+  )
 
   const sideChatContainer = () => {
     return (
@@ -531,29 +668,19 @@ const VideoDetail: React.FC = () => {
       >
         <ChatContainer
           ref={refChatContainer}
-          isResizedScreen={isResizedScreen}
-          myPoint={myPoint}
+          isResizedScreen={isResizedScreen} // no over rerender
+          myPoint={myPoint} // no over rerender
           chatWidth={componentsSize.chatWidth}
-          key_video_id={detailVideoResult?.key_video_id}
-          onPressDonate={confirmDonatePoint}
+          key_video_id={detailVideoResult?.key_video_id} // no rerender
+          // onPressDonate={confirmDonatePoint}
           userHasViewingTicket={userHasViewingTicket()}
           videoType={videoStatus}
           freeToWatch={isVideoFreeToWatch}
-          handleKeyboardVisibleState={changeSoftKeyboardVisibleState}
+          handleKeyboardVisibleState={setSoftKeyboardIsShown}
           donateConfirmModalIsShown={modalIsShown}
-          openPurchasePointModal={(donate_point) => {
-            // reset donate point
-            setDonatedPoints(0)
-            setDonatedPoints(donate_point)
-            // no lack point if my point larger than donate point
-            if (+donate_point < +myPoint) {
-              setLackedPoint(0)
-            } else {
-              setLackedPoint(donate_point - myPoint)
-            }
-            setPurchaseType(PURCHASE_TYPE.PURCHASE_SUPER_CHAT)
-            setShowModalPurchasePoint(true)
-          }}
+          openPurchasePointModal={openPurchasePointModal}
+          errorMsgDonatePoint={errorMsgDonatePoint}
+          clearMessageDonatePoint={resetErrorDonateMessage}
         />
       </Box>
     )
@@ -570,12 +697,9 @@ const VideoDetail: React.FC = () => {
   const userHasViewingTicket = () => (userResult ? userResult?.buy_ticket : 0)
   const isScheduleAndNotHaveTicket = () => videoStatus === STATUS_VIDEO.SCHEDULE && userResult?.buy_ticket === 0
 
-  const changeSoftKeyboardVisibleState = (visible: boolean) => {
-    setSoftKeyboardIsShown(visible)
-  }
-
   const onVideoEnd = () => {
     if (videoStatus !== STATUS_VIDEO.ARCHIVE) {
+      console.log('🚀 ~ onVideoEnd ~ videoStatus--11', videoStatus)
       setVideoStatus(STATUS_VIDEO.ARCHIVE)
       setIsArchived(true)
       changeIsStreamingEnd(false)
@@ -583,130 +707,212 @@ const VideoDetail: React.FC = () => {
     }
   }
 
+  const handleCloseRelatedVideos = () => {
+    setShowRelatedVideos(false)
+  }
+
+  const handleOpenRelatedVideos = useCallback(() => {
+    setShowRelatedVideos(true)
+  }, [])
+
   const isLoadingVideo = _.isEmpty(detailVideoResult) && isVideoFreeToWatch === -1
 
+  const renderVideoSubInfo = () => {
+    return (
+      <VideoSubInfo
+        componentsSize={componentsSize}
+        isArchived={isArchived}
+        video_id={getVideoId()}
+        userHasViewingTicket={userHasViewingTicket()}
+        videoType={videoStatus}
+        freeToWatch={isVideoFreeToWatch}
+        ticketAvailableForSale={isTicketAvailableForSale()}
+        softKeyboardIsShown={softKeyboardIsShown}
+        ticketPrice={detailVideoResult?.ticket_price}
+        clickButtonPurchaseTicket={handlePurchaseTicket}
+        onVideoEnd={onVideoEnd}
+      />
+    )
+  }
+
+  const renderGoogleAds = () => {
+    if (!iPhonePl && !androidPl && !isMobile) {
+      return (
+        <>
+          {/* <div id={'ad_video_detail_top_p3'} className={'google_ad_patten_1'} /> */}
+          {/* GADS: video detail */}
+          <GoogleAd id={{ idPatten1: 'ad_video_d' }} idTag={'ad_video_d_p3'} currenPath={window.location.href} />
+        </>
+      )
+    }
+    return null
+  }
+
   return (
-    <VideoContext.Provider value={{ videoRefInfo, setVideoRefInfo }}>
-      <Box className={classes.root}>
-        {isPendingPurchaseTicket && <ESLoader />}
-        {isPendingPurchaseSuperChat && <FullESLoader open={isPendingPurchaseSuperChat} />}
-
-        {/* <Box className={classes.container} style={{ width: isMobile ? '100%' : componentsSize.videoWidth }}> */}
-        <Box
-          className={classes.container}
-          style={{
-            width: !is_normal_view_mode || isMobile ? '100%' : componentsSize.videoWidth,
-            marginRight: !is_normal_view_mode && !isMobile ? '16px' : '0',
-          }}
-        >
-          {isLoadingVideo ? (
-            <Box
-              style={{
-                backgroundColor: '#6A6A6C',
-                width: '100%',
-                height: componentsSize.videoHeight,
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                textAlign: 'center',
-                borderRadius: 8,
-              }}
-            >
-              <ESLoader />
+    <VideoContext.Provider
+      value={{
+        videoRefInfo,
+        setVideoRefInfo,
+        giverRankInfo,
+        setGiverRankInfo,
+        receiverRankInfo,
+        setReceiverRankInfo,
+        isMobile,
+        confirmDonatePointRef,
+        videoStatus,
+        setIsFull,
+        isFull,
+        canDisplayRelatedVideos,
+      }}
+    >
+      <VideoTabContextProvider>
+        <ControlBarContextProvider>
+          <RelatedVideoContextProvider video_id={getVideoId()}>
+            <Box className={classes.root}>
+              {isPendingPurchaseTicket && <ESLoader />}
+              {isPendingPurchaseSuperChat && <FullESLoader open={isPendingPurchaseSuperChat} />}
+              {canDisplayRelatedVideos && (
+                <RelatedVideosMobile
+                  handleCloseRelatedVideos={handleCloseRelatedVideos}
+                  video_id={getVideoId()}
+                  showRelatedVideos={showRelatedVideos}
+                />
+              )}
+              {/* render video */}
+              <Box
+                className={classes.videoContainer}
+                style={{
+                  width: isFullscreenMode ? '100vw' : !is_normal_view_mode || isMobile ? '100%' : componentsSize.videoWidth,
+                  marginRight: !is_normal_view_mode && !isMobile ? '16px' : '0',
+                }}
+                onClick={() => {
+                  changeIsHoveredVideoStatus(!isHoveredVideo)
+                  console.log('🚀 ~ isHoveredVideo', isHoveredVideo)
+                }}
+              >
+                {isLoadingVideo ? (
+                  <Box
+                    style={{
+                      backgroundColor: '#6A6A6C',
+                      width: '100%',
+                      height: componentsSize.videoHeight,
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      textAlign: 'center',
+                      borderRadius: 8,
+                    }}
+                  >
+                    <ESLoader />
+                  </Box>
+                ) : (
+                  <>
+                    <LiveStreamContent
+                      componentsSize={componentsSize}
+                      isArchived={isArchived}
+                      video_id={getVideoId()}
+                      userHasViewingTicket={userHasViewingTicket()}
+                      videoType={videoStatus}
+                      freeToWatch={isVideoFreeToWatch}
+                      ticketAvailableForSale={isTicketAvailableForSale()}
+                      softKeyboardIsShown={softKeyboardIsShown}
+                      ticketPrice={detailVideoResult?.ticket_price}
+                      clickButtonPurchaseTicket={handlePurchaseTicket}
+                      onVideoEnd={onVideoEnd}
+                      handleOpenRelatedVideos={handleOpenRelatedVideos}
+                    />
+                    {/* <GoogleAd
+                id={{ idPatten1: !screenDownSP && 'ad_video_detail_t', idPatten4: screenDownSP && 'ad_video_detail_b' }}
+                // idTag={!screenDownSP ? 'ad_video_detail_top1' : 'ad_video_detail_bottom1'}
+              /> */}
+                    {renderGoogleAds()}
+                  </>
+                )}
+              </Box>
+              {/* render tabs and content tabs */}
+              {!isLoadingVideo && (
+                <Box
+                  className={classes.allTabsContainer}
+                  style={{ width: isLandscape ? componentsSize.chatWidth : isMobile ? '100%' : componentsSize.videoWidth }}
+                  onClick={() => {
+                    changeIsHoveredVideoStatus(false)
+                  }}
+                >
+                  {!isMobile && renderVideoSubInfo()}
+                  <Grid container direction="row" className={classes.contentContainer}>
+                    {/* {getTabs()}
+              {getContent()} */}
+                    {isMobile ? (
+                      <>
+                        <TabSelectContainer
+                          sideChatContainer={sideChatContainer}
+                          renderVideoSubInfo={renderVideoSubInfo}
+                          infoTabsContent={(currentTab) => getContent(currentTab)}
+                          isLandscape={isLandscape}
+                        ></TabSelectContainer>
+                      </>
+                    ) : (
+                      <>
+                        {getTabs()}
+                        {getContent(tab)}
+                      </>
+                    )}
+                  </Grid>
+                </Box>
+              )}
+              {/* render chat loading and chat container on PC */}
+              {!isMobile &&
+                (_.isEmpty(detailVideoResult) ? (
+                  <Box
+                    style={{
+                      display: 'flex',
+                      // marginLeft: 16,
+                      // marginRight: 16,
+                      backgroundColor: 'transparent',
+                      height: '100%',
+                      flexDirection: 'column',
+                      borderRadius: 8,
+                      right: 0,
+                      flex: 1,
+                      position: is_normal_view_mode ? 'absolute' : 'relative',
+                    }}
+                  >
+                    <PreloadChatContainer />
+                  </Box>
+                ) : (
+                  sideChatContainer()
+                ))}
             </Box>
-          ) : (
-            <>
-              <LiveStreamContent
-                componentsSize={componentsSize}
-                isArchived={isArchived}
-                video_id={getVideoId()}
-                userHasViewingTicket={userHasViewingTicket()}
-                videoType={videoStatus}
-                freeToWatch={isVideoFreeToWatch}
-                ticketAvailableForSale={isTicketAvailableForSale()}
-                softKeyboardIsShown={softKeyboardIsShown}
-                ticketPrice={detailVideoResult?.ticket_price}
-                clickButtonPurchaseTicket={handlePurchaseTicket}
-                onVideoEnd={onVideoEnd}
-              />
-            </>
-          )}
-        </Box>
 
-        {!isLoadingVideo && (
-          <Box className={classes.container} style={{ width: isMobile ? '100%' : componentsSize.videoWidth }}>
-            <VideoSubInfo
-              componentsSize={componentsSize}
-              isArchived={isArchived}
-              video_id={getVideoId()}
-              userHasViewingTicket={userHasViewingTicket()}
-              videoType={videoStatus}
-              freeToWatch={isVideoFreeToWatch}
-              ticketAvailableForSale={isTicketAvailableForSale()}
-              softKeyboardIsShown={softKeyboardIsShown}
-              ticketPrice={detailVideoResult?.ticket_price}
-              clickButtonPurchaseTicket={handlePurchaseTicket}
-              onVideoEnd={onVideoEnd}
+            {/* all modal */}
+            <PurchaseTicketSuperChat
+              myPoints={myPoint}
+              donatedPoints={detailVideoResult?.ticket_price}
+              showModal={showPurchaseTicketModal}
+              setShowModal={setShowPurchaseTicketModal}
+              handlePurchaseTicket={doConfirmPurchaseTicket}
             />
-            <Grid container direction="row" className={classes.contentContainer}>
-              {getTabs()}
-              {getContent()}
-            </Grid>
-          </Box>
-        )}
-
-        {!isMobile &&
-          (_.isEmpty(detailVideoResult) ? (
-            <Box
-              style={{
-                display: 'flex',
-                // marginLeft: 16,
-                // marginRight: 16,
-                backgroundColor: 'transparent',
-                height: '100%',
-                flexDirection: 'column',
-                borderRadius: 8,
-                right: 0,
-                flex: 1,
-                position: is_normal_view_mode ? 'absolute' : 'relative',
-              }}
-            >
-              <PreloadChatContainer />
-            </Box>
-          ) : (
-            sideChatContainer()
-          ))}
-      </Box>
-      <PurchaseTicketSuperChat
-        myPoints={myPoint}
-        donatedPoints={detailVideoResult?.ticket_price}
-        showModal={showPurchaseTicketModal}
-        setShowModal={setShowPurchaseTicketModal}
-        handlePurchaseTicket={doConfirmPurchaseTicket}
-      />
-      <DialogLoginContainer showDialogLogin={showDialogLogin} onCloseDialogLogin={handleCloseDialogLogin} />
-      <DonatePointsConfirmModal
-        hasError={errorPurchase}
-        showConfirmModal={showConfirmModal}
-        handleClose={handleCloseConfirmModal}
-        myPoint={myPoint}
-        ticketPoint={detailVideoResult?.ticket_price}
-        msgContent={purchaseComment}
-        handleConfirm={handleConfirmPurchaseSuperChat}
-        disabled={disabled}
-      />
-      <DonatePoints
-        myPoint={myPoint}
-        lackedPoint={lackedPoint}
-        showModalPurchasePoint={showModalPurchasePoint}
-        setShowModalPurchasePoint={(value) => setShowModalPurchasePoint(value)}
-      />
+            <DialogLoginContainer showDialogLogin={showDialogLogin} onCloseDialogLogin={handleCloseDialogLogin} />
+            <DonatePoints
+              myPoint={myPoint}
+              lackedPoint={lackedPoint}
+              showModalPurchasePoint={showModalPurchasePoint}
+              setShowModalPurchasePoint={(value) => setShowModalPurchasePoint(value)}
+            />
+          </RelatedVideoContextProvider>
+        </ControlBarContextProvider>
+      </VideoTabContextProvider>
     </VideoContext.Provider>
   )
 }
 export default VideoDetail
 
 const useStyles = makeStyles((theme) => ({
+  '@global': {
+    '*::-webkit-scrollbar': {
+      width: (props: videoStyleProps) => props.isFullscreenMode && '0',
+    },
+  },
   root: {
     backgroundColor: '#212121',
     display: 'flex',
@@ -715,6 +921,16 @@ const useStyles = makeStyles((theme) => ({
     flexWrap: 'wrap',
   },
   container: {
+    display: 'flex',
+    flexDirection: 'column',
+    width: '100%',
+  },
+  videoContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    width: '100%',
+  },
+  allTabsContainer: {
     display: 'flex',
     flexDirection: 'column',
     width: '100%',
@@ -758,23 +974,32 @@ const useStyles = makeStyles((theme) => ({
   wrapChatContainer: {
     display: 'flex',
     flexDirection: 'column',
-    position: 'fixed',
+    position: (props: videoStyleProps) => (props.isFullscreenMode ? 'relative' : 'fixed'),
     right: '0',
-    top: '61px',
+    top: (props: videoStyleProps) => (props.isFullscreenMode ? '0' : '61px'),
+    flexGrow: (props: videoStyleProps) => (props.isFullscreenMode ? 1 : 'unset'),
     bottom: '0px',
     height: 'calc(100vh - 61px)',
+    background: Colors.white_opacity[10],
   },
   wrapTheatreChatContainer: {
-    position: 'relative',
-    top: 0,
+    top: '0 !important',
+    position: () => 'relative',
   },
   [theme.breakpoints.down(769)]: {
+    root: {
+      // minHeight: '100vh',
+      flexDirection: 'column',
+    },
     wrapChatContainer: {
       width: '100%',
-      position: 'relative',
-      top: 'auto',
+      position: 'relative !important',
+      top: 'auto !important',
       height: 'auto',
       bottom: 'auto',
+    },
+    contentContainer: {
+      flexDirection: 'column',
     },
   },
   [theme.breakpoints.down(419)]: {
@@ -817,6 +1042,52 @@ const useStyles = makeStyles((theme) => ({
       // '& .MuiTab-wrapper': {
       //   fontSize: 12,
       // },
+    },
+  },
+
+  [`@media (orientation: landscape)`]: {
+    root: (props: videoStyleProps) => {
+      if (props.isLandscape)
+        return {
+          flexWrap: 'nowrap',
+          flexDirection: 'row',
+        }
+    },
+    allTabsContainer: (props: videoStyleProps) => {
+      if (props.isLandscape)
+        return {
+          flexShrink: 0,
+        }
+    },
+    wrapChatContainer: (props: videoStyleProps) => {
+      if (props.isLandscape)
+        return {
+          flex: 1,
+          width: '100%',
+          position: 'relative',
+          top: 'auto',
+          height: 'auto',
+          bottom: 'auto',
+          overflow: 'auto',
+        }
+    },
+    contentContainer: (props: videoStyleProps) => {
+      if (props.isLandscape)
+        return {
+          height: props.availHeight,
+          flexWrap: 'nowrap',
+          flexDirection: 'column',
+        }
+    },
+    [`@media (orientation: landscape)`]: {
+      [theme.breakpoints.down(769)]: {
+        wrapChatContainer: (props: videoStyleProps) => {
+          if (props.isLandscape)
+            return {
+              overflow: 'auto',
+            }
+        },
+      },
     },
   },
 }))

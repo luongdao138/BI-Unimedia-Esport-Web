@@ -1,17 +1,31 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import ESAvatar from '@components/Avatar'
-import ESMenu from '@components/Menu'
 import ESMenuItem from '@components/Menu/MenuItem'
 import { debounceTime, REPORT_TYPE } from '@constants/common.constants'
 import { ESRoutes } from '@constants/route.constants'
 import ESReport from '@containers/Report'
 import { VIDEO_TYPE } from '@containers/VideoLiveStreamContainer'
-import { Box, ButtonBase, Icon, makeStyles, Typography, useMediaQuery, useTheme } from '@material-ui/core'
+import {
+  MenuList,
+  ClickAwayListener,
+  Paper,
+  Grow,
+  Popper,
+  Box,
+  ButtonBase,
+  Icon,
+  makeStyles,
+  Typography,
+  useMediaQuery,
+  useTheme,
+  IconButton,
+} from '@material-ui/core'
 import { STATUS_VIDEO } from '@services/videoTop.services'
 import { getIsAuthenticated } from '@store/auth/selectors'
 import { useAppSelector } from '@store/hooks'
 import { Colors } from '@theme/colors'
 import { FormatHelper } from '@utils/helpers/FormatHelper'
+import { useRotateScreen } from '@utils/hooks/useRotateScreen'
 import _ from 'lodash'
 import { useContextualRouting } from 'next-use-contextual-routing'
 import { useRouter } from 'next/router'
@@ -47,8 +61,9 @@ const VideoSubInfo: React.FC<VideoSubInfoProps> = (props) => {
   const theme = useTheme()
   const { t } = useTranslation('common')
   const isAuthenticated = useAppSelector(getIsAuthenticated)
+  const { isLandscape } = useRotateScreen()
 
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
+  const isMobile = useMediaQuery(theme.breakpoints.down(769))
   // const downMd = useMediaQuery(theme.breakpoints.down(769))
   const { detailVideoResult, userResult } = useDetailVideo()
   const { userReactionVideoStream, userFollowChannel } = useLiveStreamDetail()
@@ -68,7 +83,7 @@ const VideoSubInfo: React.FC<VideoSubInfoProps> = (props) => {
 
   const isSubscribed = () => subscribe
 
-  const classes = useStyles({ isSubscribed: isSubscribed() })
+  const classes = useStyles({ isSubscribed: isSubscribed(), isLandscape })
 
   const toggleSubscribeClick = () => {
     const newSubscribe = subscribe === 0 ? 1 : 0
@@ -161,7 +176,7 @@ const VideoSubInfo: React.FC<VideoSubInfoProps> = (props) => {
 
   const registerChannelButton = () => (
     <ButtonBase onClick={isAuthenticated ? toggleSubscribeClick : goToLogin} className={classes.register_channel_btn}>
-      <Box>
+      <Box display={'flex'} alignItems={'center'}>
         <Icon className={`far fa-heart ${classes.heartIcon}`} fontSize="small" />
       </Box>
       <Box pl={1} className={classes.subscribeLabel}>
@@ -217,6 +232,43 @@ const VideoSubInfo: React.FC<VideoSubInfoProps> = (props) => {
     setShowReportMenu(false)
   }
 
+  // truongVX 11/4/2022
+
+  const [open, setOpen] = React.useState(false)
+  const anchorRef = React.useRef<HTMLButtonElement>(null)
+
+  const handleToggle = () => {
+    setOpen((prevOpen) => !prevOpen)
+  }
+
+  const handleClose = (event) => {
+    if (anchorRef.current && anchorRef.current.contains(event.target as HTMLElement)) {
+      return
+    }
+
+    setOpen(false)
+  }
+
+  function handleListKeyDown(event: React.KeyboardEvent) {
+    if (event.key === 'Tab') {
+      event.preventDefault()
+      setOpen(false)
+    } else if (event.key === 'Escape') {
+      setOpen(false)
+    }
+  }
+
+  // return focus to the button when we transitioned from !open -> open
+  const prevOpen = React.useRef(open)
+  React.useEffect(() => {
+    if (prevOpen.current === true && open === false) {
+      anchorRef.current!.focus()
+    }
+
+    prevOpen.current = open
+  }, [open])
+
+  //
   return (
     <Box className={classes.container}>
       {mobileRegisterChannelVisible && streamerInfoContainer()}
@@ -257,11 +309,52 @@ const VideoSubInfo: React.FC<VideoSubInfoProps> = (props) => {
             </Box>
 
             {/* report icon */}
-            <Box ml={1} pr={!isMobile ? 3 : 0} display="flex" flexDirection="row" flexShrink={0}>
-              <ESMenu>
-                <ESMenuItem onClick={isAuthenticated ? handleReportOpen : goToLogin}>{t('tournament.report')}</ESMenuItem>
-              </ESMenu>
-            </Box>
+            {/* <Button
+              ref={anchorRef}
+              id="composition-button"
+              aria-controls={open ? 'composition-menu' : undefined}
+              aria-expanded={open ? 'true' : undefined}
+              aria-haspopup="true"
+              onClick={handleToggle}
+              className={classes.dropDownMenu}
+            > */}
+            <IconButton
+              style={{ alignItems: 'center' }}
+              ref={anchorRef}
+              id="composition-button"
+              aria-controls={open ? 'composition-menu' : undefined}
+              aria-expanded={open ? 'true' : undefined}
+              aria-haspopup="true"
+              onClick={handleToggle}
+              className={classes.dropDownMenu}
+            >
+              <Icon className="fa fa-ellipsis-v" fontSize="small" />
+            </IconButton>
+            {/* </Button> */}
+            <Popper open={open} anchorEl={anchorRef.current} role={undefined} placement="bottom-end" transition disablePortal>
+              {({ TransitionProps, placement }) => (
+                <Grow
+                  {...TransitionProps}
+                  style={{
+                    background: 'white',
+                    transformOrigin: placement === 'bottom-end' ? 'left top' : 'right bottom',
+                  }}
+                >
+                  <Paper>
+                    <ClickAwayListener onClickAway={handleClose}>
+                      <MenuList
+                        autoFocusItem={open}
+                        id="composition-menu"
+                        aria-labelledby="composition-button"
+                        onKeyDown={handleListKeyDown}
+                      >
+                        <ESMenuItem onClick={isAuthenticated ? handleReportOpen : goToLogin}>{t('tournament.report')}</ESMenuItem>
+                      </MenuList>
+                    </ClickAwayListener>
+                  </Paper>
+                </Grow>
+              )}
+            </Popper>
           </Box>
         </Box>
       )}
@@ -291,7 +384,7 @@ const useStyles = makeStyles((theme) => ({
   dropDownMenu: {
     position: 'relative',
     display: 'inline-block',
-    paddingRight: 30,
+    marginRight: 24,
   },
   dropDownContent: {
     overflow: 'hidden',
@@ -419,10 +512,10 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   icon: {},
-  heartIcon: (props: { isSubscribed?: number }) => ({
+  heartIcon: (props: { isSubscribed?: number; isLandscape: boolean }) => ({
     color: props?.isSubscribed === 1 ? Colors.white : Colors.primary,
   }),
-  subscribeLabel: (props: { isSubscribed?: number }) => ({
+  subscribeLabel: (props: { isSubscribed?: number; isLandscape: boolean }) => ({
     color: props?.isSubscribed === 1 ? Colors.white : Colors.primary,
   }),
   wrap_streamer_info: {
@@ -463,7 +556,7 @@ const useStyles = makeStyles((theme) => ({
     paddingRight: '34px',
   },
   register_person_number: {},
-  register_channel_btn: (props: { isSubscribed?: number }) => ({
+  register_channel_btn: (props: { isSubscribed?: number; isLandscape: boolean }) => ({
     background: props?.isSubscribed === 1 ? Colors.primary : Colors.transparent,
     ...(props?.isSubscribed !== 1 && {
       borderRadius: 4,
@@ -482,7 +575,9 @@ const useStyles = makeStyles((theme) => ({
     flexShrink: 0,
     marginLeft: 30,
   }),
-  [theme.breakpoints.down(768)]: {
+  [theme.breakpoints.down(769)]: {
+    wrap_info: { padding: '12px 8px 18px 8px' },
+    streamer_data: { maxWidth: '150px' },
     wrap_movie_info: {},
     wrapPreLoadReactionButton: {
       width: 'calc(100vw)',
@@ -553,7 +648,9 @@ const useStyles = makeStyles((theme) => ({
       paddingTop: '16px',
       paddingBottom: '5px',
       height: 'auto',
+      border: 'none',
     },
+    streamer_info: { paddingLeft: 8 },
     avatar: {
       width: '36px',
       height: '36px',
@@ -581,12 +678,13 @@ const useStyles = makeStyles((theme) => ({
       marginRight: 8,
     }),
   },
-  [theme.breakpoints.down(321)]: {
+  [theme.breakpoints.down(376)]: {
     subscribeLabel: {
-      fontSize: 10,
+      fontSize: 8,
+      paddingLeft: 4,
     },
     heartIcon: {
-      fontSize: 10,
+      fontSize: 8,
     },
     avatar: {
       marginRight: 8,
@@ -595,8 +693,8 @@ const useStyles = makeStyles((theme) => ({
       paddingRight: 13,
     },
     register_channel_btn: () => ({
-      padding: '2x 10px',
-      marginLeft: 15,
+      padding: '4px 8px',
+      marginRight: 8,
     }),
   },
   process: {
@@ -648,6 +746,22 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  [`@media (orientation: landscape)`]: {
+    wrap_streamer_info: (props: { isSubscribed?: number; isLandscape: boolean }) => {
+      if (props.isLandscape)
+        return {
+          flexDirection: 'column',
+          alignItems: 'flex-start',
+          gap: '16px',
+        }
+    },
+    register_channel_btn: (props: { isSubscribed?: number; isLandscape: boolean }) => {
+      if (props.isLandscape)
+        return {
+          marginLeft: 8,
+        }
+    },
   },
 }))
 export default VideoSubInfo

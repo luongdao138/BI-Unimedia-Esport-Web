@@ -15,6 +15,7 @@ import useDetailVideo from '../useDetailVideo'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
 import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
 import SmallLoader from '@components/Loader/SmallLoader'
+import { useRotateScreen } from '@utils/hooks/useRotateScreen'
 
 interface dataItem {
   id: number
@@ -27,7 +28,9 @@ type DistributorInfoProps = {
 
 const LIMIT_ITEM = 12
 const DistributorInfo: React.FC<DistributorInfoProps> = ({ video_id }) => {
-  const classes = useStyles()
+  const { isLandscape } = useRotateScreen()
+
+  const classes = useStyles({ isLandscape })
   const theme = useTheme()
   const downMd = useMediaQuery(theme.breakpoints.down(769), { noSsr: true })
   const isLoading = false
@@ -504,7 +507,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   [theme.breakpoints.down(769)]: {
     titleContainer: {
       position: 'relative',
-      marginTop: 16,
+      marginTop: 0,
       flexDirection: 'column',
     },
     socialMediaContainer: {
@@ -537,6 +540,26 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     seeMore: {
       justifyContent: 'center',
+    },
+  },
+  [`@media (orientation: landscape)`]: {
+    wrapContentContainer: (props: { isLandscape: boolean }) => {
+      if (props.isLandscape)
+        return {
+          width: '100%',
+        }
+    },
+    textContainer: (props: { isLandscape: boolean }) => {
+      if (props.isLandscape)
+        return {
+          marginLeft: 0,
+        }
+    },
+    title: (props: { isLandscape: boolean }) => {
+      if (props.isLandscape)
+        return {
+          wordBreak: 'break-all',
+        }
     },
   },
 }))

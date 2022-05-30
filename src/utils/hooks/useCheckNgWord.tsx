@@ -1,6 +1,7 @@
 import { useAppSelector } from '@store/hooks'
 import { getNgWords, getVideoNgWords } from '@store/ngWords/selectors'
 import _ from 'lodash'
+import { ReactNode } from 'react'
 
 const useCheckNgWord = (): {
   checkNgWord: (subject: string | string[]) => string[]
@@ -9,6 +10,7 @@ const useCheckNgWord = (): {
   checkVideoNgWord: (subject: string | string[]) => string[]
   checkVideoNgWordFields: (fields: any) => string
   checkVideoNgWordByField: (fields: any) => string[]
+  getMessageWithoutNgWords: (chatMessContent: string) => ReactNode
 } => {
   const ngWords = useAppSelector(getNgWords)
   const videoNgWords = useAppSelector(getVideoNgWords)
@@ -121,6 +123,19 @@ const useCheckNgWord = (): {
     return _.findKey(fields, (value) => (_.isString(value) ? value.match(regex) : null))
   }
 
+  const getMessageWithoutNgWords = (chatMessContent) => {
+    const allNgWords = checkVideoNgWord(chatMessContent)
+    if (allNgWords.length !== 0) {
+      allNgWords.map((item) => {
+        if (chatMessContent.includes(item)) {
+          const regex = new RegExp(item.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&'), 'g')
+          chatMessContent = chatMessContent.replace(regex, '*'.repeat(item.length))
+        }
+      })
+    }
+    return chatMessContent
+  }
+
   return {
     checkNgWord,
     checkNgWordFields,
@@ -128,6 +143,7 @@ const useCheckNgWord = (): {
     checkVideoNgWord,
     checkVideoNgWordFields,
     checkVideoNgWordByField,
+    getMessageWithoutNgWords,
   }
 }
 

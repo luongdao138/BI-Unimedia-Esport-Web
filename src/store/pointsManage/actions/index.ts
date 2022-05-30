@@ -96,7 +96,7 @@ export const purchaseTicketSuperChat = createAsyncThunk<services.PurchaseTicketR
         return res
       } else {
         // throw res.message
-        return rejectWithValue(JSON.stringify(res.message))
+        return rejectWithValue(JSON.stringify({ code: res.code, message: res.message }))
       }
     } catch (error) {
       if (!error.response) {
@@ -106,3 +106,19 @@ export const purchaseTicketSuperChat = createAsyncThunk<services.PurchaseTicketR
     }
   }
 )
+
+export const clearPurchaseTicket = createAction<void>(POINT_MANAGE_ACTION_TYPE.CLEAR_PURCHASE_TICKET)
+export const requestMultiPaymentPurchase = createAsyncThunk<
+  services.MultiPaymentPurchaseResponse,
+  services.MultiPaymentPurchaseRequestParams
+>(POINT_MANAGE_ACTION_TYPE.MULTI_PAYMENT_PURCHASE, async (purchaseParams, { rejectWithValue }) => {
+  try {
+    const result = await services.MultiPaymentPurchase(purchaseParams)
+    return { ...result, ...purchaseParams }
+  } catch (error) {
+    if (!error.response) {
+      throw error
+    }
+    return rejectWithValue(error.response.data)
+  }
+})

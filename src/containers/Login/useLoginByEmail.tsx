@@ -26,6 +26,8 @@ const useLoginByEmail = () => {
 
   useEffect(() => {
     if (meta.loaded) {
+      // eslint-disable-next-line no-console
+      console.log('backToTop::handleLogin():2')
       handleLogin()
       resetMeta()
     }

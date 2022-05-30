@@ -11,6 +11,26 @@ export const onCreateUser = /* GraphQL */ `
       user_name
       delete_flag
       messages {
+        items {
+          id
+          owner
+          text
+          uuid
+          video_id
+          delete_flag
+          video_time
+          display_avatar_time
+          point
+          use_point_id
+          is_premium
+          is_premium_number
+          userId
+          giftMasterId
+          local_id
+          created_time
+          createdAt
+          updatedAt
+        }
         nextToken
       }
       createdAt
@@ -27,6 +47,26 @@ export const onUpdateUser = /* GraphQL */ `
       user_name
       delete_flag
       messages {
+        items {
+          id
+          owner
+          text
+          uuid
+          video_id
+          delete_flag
+          video_time
+          display_avatar_time
+          point
+          use_point_id
+          is_premium
+          is_premium_number
+          userId
+          giftMasterId
+          local_id
+          created_time
+          createdAt
+          updatedAt
+        }
         nextToken
       }
       createdAt
@@ -43,6 +83,137 @@ export const onDeleteUser = /* GraphQL */ `
       user_name
       delete_flag
       messages {
+        items {
+          id
+          owner
+          text
+          uuid
+          video_id
+          delete_flag
+          video_time
+          display_avatar_time
+          point
+          use_point_id
+          is_premium
+          is_premium_number
+          userId
+          giftMasterId
+          local_id
+          created_time
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const onCreateGiftMaster = /* GraphQL */ `
+  subscription OnCreateGiftMaster {
+    onCreateGiftMaster {
+      id
+      name
+      image
+      master_id
+      master_uuid
+      delete_flag
+      messages {
+        items {
+          id
+          owner
+          text
+          uuid
+          video_id
+          delete_flag
+          video_time
+          display_avatar_time
+          point
+          use_point_id
+          is_premium
+          is_premium_number
+          userId
+          giftMasterId
+          local_id
+          created_time
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const onUpdateGiftMaster = /* GraphQL */ `
+  subscription OnUpdateGiftMaster {
+    onUpdateGiftMaster {
+      id
+      name
+      image
+      master_id
+      master_uuid
+      delete_flag
+      messages {
+        items {
+          id
+          owner
+          text
+          uuid
+          video_id
+          delete_flag
+          video_time
+          display_avatar_time
+          point
+          use_point_id
+          is_premium
+          is_premium_number
+          userId
+          giftMasterId
+          local_id
+          created_time
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const onDeleteGiftMaster = /* GraphQL */ `
+  subscription OnDeleteGiftMaster {
+    onDeleteGiftMaster {
+      id
+      name
+      image
+      master_id
+      master_uuid
+      delete_flag
+      messages {
+        items {
+          id
+          owner
+          text
+          uuid
+          video_id
+          delete_flag
+          video_time
+          display_avatar_time
+          point
+          use_point_id
+          is_premium
+          is_premium_number
+          userId
+          giftMasterId
+          local_id
+          created_time
+          createdAt
+          updatedAt
+        }
         nextToken
       }
       createdAt
@@ -64,7 +235,9 @@ export const onCreateMessage = /* GraphQL */ `
       point
       use_point_id
       is_premium
+      is_premium_number
       userId
+      giftMasterId
       local_id
       created_time
       parent {
@@ -73,6 +246,22 @@ export const onCreateMessage = /* GraphQL */ `
         avatar
         user_name
         delete_flag
+        messages {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      receiver {
+        id
+        name
+        image
+        master_id
+        master_uuid
+        delete_flag
+        messages {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -95,7 +284,9 @@ export const onUpdateMessage = /* GraphQL */ `
       point
       use_point_id
       is_premium
+      is_premium_number
       userId
+      giftMasterId
       local_id
       created_time
       parent {
@@ -104,6 +295,22 @@ export const onUpdateMessage = /* GraphQL */ `
         avatar
         user_name
         delete_flag
+        messages {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      receiver {
+        id
+        name
+        image
+        master_id
+        master_uuid
+        delete_flag
+        messages {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -126,7 +333,9 @@ export const onDeleteMessage = /* GraphQL */ `
       point
       use_point_id
       is_premium
+      is_premium_number
       userId
+      giftMasterId
       local_id
       created_time
       parent {
@@ -135,6 +344,22 @@ export const onDeleteMessage = /* GraphQL */ `
         avatar
         user_name
         delete_flag
+        messages {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      receiver {
+        id
+        name
+        image
+        master_id
+        master_uuid
+        delete_flag
+        messages {
+          nextToken
+        }
         createdAt
         updatedAt
       }

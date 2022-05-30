@@ -81,6 +81,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   container: {
     maxWidth: 500,
+    '&.MuiContainer-root': {
+      paddingLeft: 15,
+      paddingRight: 15,
+    },
   },
   title: {
     textAlign: 'center',

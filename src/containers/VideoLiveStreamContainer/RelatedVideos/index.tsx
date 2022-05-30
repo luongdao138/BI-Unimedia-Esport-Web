@@ -2,54 +2,27 @@ import { Box, Theme, makeStyles, Grid, Typography } from '@material-ui/core'
 import VideoPreviewItem from '@containers/VideosTopContainer/VideoPreviewItem'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import { useTheme } from '@material-ui/core/styles'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { PreloadPreviewItem } from '../PreloadContainer'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import i18n from '@locales/i18n'
-import useLiveStreamDetail from '../useLiveStreamDetail'
 import { TypeVideoArchived } from '@services/liveStreamDetail.service'
 import ESLoader from '@components/Loader'
 import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
+import { useRotateScreen } from '@utils/hooks/useRotateScreen'
+import { useRelatedVideoContext } from '@containers/VideoLiveStreamContainer/VideoContext/RelatedVideoContext'
 
 type RelatedVideosProps = {
   video_id?: string | string[]
 }
-const LIMIT_ITEM = 12
-const RelatedVideos: React.FC<RelatedVideosProps> = ({ video_id }) => {
-  const classes = useStyles()
+const RelatedVideos: React.FC<RelatedVideosProps> = () => {
+  const { isLandscape } = useRotateScreen()
+  const classes = useStyles({ isLandscape })
+
   const theme = useTheme()
   const downMd = useMediaQuery(theme.breakpoints.down(769), { noSsr: true })
-  const [page, setPage] = useState<number>(1)
-  const [hasMore, setHasMore] = useState(true)
-  const limit = LIMIT_ITEM
-  const { meta_related_video_stream, relatedVideoStreamData, getRelatedVideoStream, resetRelatedVideoStream } = useLiveStreamDetail()
-  const isLoading = meta_related_video_stream?.pending
-  const { width: itemWidthDownMdScreen } = useWindowDimensions(48)
-
-  useEffect(() => {
-    if (video_id) {
-      getRelatedVideoStream({ video_id: video_id, page: 1, limit: limit })
-    }
-    return () => {
-      setPage(1)
-      setHasMore(true)
-      resetRelatedVideoStream()
-    }
-  }, [video_id])
-
-  useEffect(() => {
-    if (page > 1) getRelatedVideoStream({ video_id: video_id, page: page, limit: LIMIT_ITEM })
-  }, [page])
-
-  const handleLoadMore = async () => {
-    if (relatedVideoStreamData.length > 0 && relatedVideoStreamData.length < LIMIT_ITEM * page) {
-      setHasMore(false)
-      return
-    }
-    if (relatedVideoStreamData.length > 0 && relatedVideoStreamData.length == LIMIT_ITEM * page) {
-      await setPage(page + 1)
-    }
-  }
+  const { width: itemWidthDownMdScreen } = useWindowDimensions(16)
+  const { hasMore, handleLoadMore, relatedVideoStreamData, isLoading } = useRelatedVideoContext()
 
   const renderRelatedVideoItem = (item: TypeVideoArchived, index: number) => {
     return (
@@ -186,9 +159,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   [theme.breakpoints.down(769)]: {
+    container: { marginTop: 16 },
     wrapContentContainer: {
       width: 'calc(100vw)',
       overflow: 'auto',
+      padding: '0 8px 8px 8px',
     },
     wrapPreLoadContainer: {
       width: 290,
@@ -203,6 +178,14 @@ const useStyles = makeStyles((theme: Theme) => ({
       display: 'flex',
       justifyContent: 'center',
       marginBottom: '24px',
+    },
+  },
+  [`@media (orientation: landscape)`]: {
+    wrapContentContainer: (props: { isLandscape: boolean }) => {
+      if (props.isLandscape)
+        return {
+          width: '100%',
+        }
     },
   },
 }))

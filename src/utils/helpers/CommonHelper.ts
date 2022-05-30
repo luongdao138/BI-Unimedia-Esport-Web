@@ -1,6 +1,15 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { FORMAT_DATE_TIME_JP, FORMAT_SCHEDULE_TIME, TAX, REGEX_DETECT_BRANCH, FORMAT_YEAR_MONTH } from '@constants/common.constants'
+import {
+  FORMAT_DATE_TIME_JP,
+  FORMAT_SCHEDULE_TIME,
+  TAX,
+  REGEX_DETECT_BRANCH,
+  FORMAT_YEAR_MONTH,
+  RECEIVER_RANK_TYPE,
+  FORMAT_TIME_SAFARI,
+} from '@constants/common.constants'
 import { StoreType } from '@store/store'
+import _ from 'lodash'
 import moment from 'moment'
 import * as mTimeZone from 'moment-timezone'
 
@@ -254,7 +263,7 @@ const formatDateTimeJP = (date: string): string => {
   return dateResult
 }
 const formatDateYearMonth = (date: string): string => {
-  const dateResult = moment(date).format(FORMAT_YEAR_MONTH)
+  const dateResult = moment(date, FORMAT_TIME_SAFARI).format(FORMAT_YEAR_MONTH)
   return dateResult
 }
 
@@ -317,7 +326,7 @@ const linkifyString = (url = ''): string => {
   return '<a target="_blank" href="' + url + '" style="color:#FFF">' + url + '</a>'
 }
 
-const splitToLinkifyComponent = (text = '') => {
+const splitToLinkifyComponent = (text = ''): any => {
   const { url: linkifyRegex } = regex
   const urlFromText = text.match(linkifyRegex)
   if (!urlFromText || urlFromText.length === 0) {
@@ -351,6 +360,14 @@ const hasScrollBar = (elem_id: string): boolean => {
     false
   }
 }
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+const addSttDataList = (data: any, itemPerPage: number, page: number): any => {
+  return data.map((dataObj, index) => ({ ...dataObj, no: itemPerPage * page - itemPerPage + index + 1 }))
+}
+
+const insertSymbolToFirstString = (symbol: string, str: string): string => {
+  return symbol.concat(str)
+}
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const checkUserCode = (userCode: string | number, callback: () => void) => {
@@ -369,6 +386,77 @@ const handleAccountSystem = (userCode: string | number) => {
   }
 }
 
+const calculateRankTotal = (oldRankInfo, newRankInfo, compareProp = 'master_uuid') => {
+  let rankInfo = [...oldRankInfo]
+  newRankInfo.map((v) => {
+    const foundIndex = _.findIndex(oldRankInfo, [compareProp, v?.[compareProp]])
+    const foundItem = _.find(oldRankInfo, [compareProp, v?.[compareProp]])
+    // eslint-disable-next-line no-console
+    console.log('🚀 ~ newRankInfo.map ~ foundIndex', foundIndex)
+    // eslint-disable-next-line no-console
+    console.log('🚀 ~ newRankInfo.map ~ foundItem', foundItem)
+    if (foundIndex !== -1) {
+      // update total of old ranking
+      const newItem = { ...foundItem, total: +foundItem?.total + +v?.total, created_at: v?.created_at }
+      rankInfo[foundIndex] = { ...newItem }
+    } else {
+      // const foundIndex = _.findIndex(oldRankInfo, (oldInfo: { total: string | number }) => {
+      //   // eslint-disable-next-line no-console
+      //   console.log('🚀 ~ foundIndex ~ o', oldInfo)
+      //   // eslint-disable-next-line no-console
+      //   console.log('🚀 ~ foundIndex ~ compare', +oldInfo.total <= +v.total)
+      //   // eslint-disable-next-line no-console
+      //   console.log('🚀 ~ foundIndex ~ +v.total', +v.total)
+      //   // eslint-disable-next-line no-console
+      //   console.log('🚀 ~ foundIndex ~ +o.total', +oldInfo.total)
+      //   return +oldInfo.total <= +v.total
+      // })
+      // // eslint-disable-next-line no-console
+      // console.log('🚀 ~ foundIndex ~ foundIndex---111', foundIndex)
+      // // insert rank of new user to list ranking if has lower ranking
+      // if (foundIndex !== -1) {
+      //   rankInfo.splice(foundIndex, 0, v)
+      // } else {
+      //   // add rank of new user to lowest level of ranking
+      //   rankInfo = [...rankInfo, { ...v }]
+      // }
+      // add rank of new user to lowest level of ranking
+      rankInfo = [...rankInfo, { ...v }]
+    }
+    return ''
+  })
+
+  // sort rank info
+  return rankInfo.sort((a, b) => {
+    if (+a.total === +b.total) {
+      if (a.created_at && b.created_at) {
+        return -1 * (+moment(a.created_at).valueOf() - +moment(b.created_at).valueOf())
+      } else if (!a.created_at && b.created_at) {
+        return 1
+      } else {
+        return -1
+      }
+    } else {
+      return -1 * (+a.total - +b.total)
+    }
+  })
+}
+
+const getRankInfo = (oldRankInfo: Array<any>, newRankInfo: Array<any>, rankType = RECEIVER_RANK_TYPE): Array<any> => {
+  let rankInfo = [...oldRankInfo]
+  const isReceiverRankType = rankType === RECEIVER_RANK_TYPE
+  if (isReceiverRankType) {
+    rankInfo = calculateRankTotal(rankInfo, newRankInfo)
+    // eslint-disable-next-line no-console
+    console.log('🚀 ~ getRankInfo ~ rankInfo--000', rankInfo)
+  } else {
+    rankInfo = calculateRankTotal(rankInfo, newRankInfo, 'uuid')
+    // eslint-disable-next-line no-console
+    console.log('🚀 ~ getRankInfo ~ rankInfo---111', rankInfo)
+  }
+  return rankInfo
+}
+
 const getBrowserInfo = () => {
   // @ts-ignore
   const isOpera = (!!window.opr && !!opr.addons) || !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0
@@ -383,7 +471,7 @@ const getBrowserInfo = () => {
   const isIE = /*@cc_on!@*/ !!document.documentMode
   const isEdge = !isIE && !!window.StyleMedia
   // @ts-ignore
-  const isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor)
+  const isChrome = !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime)
   // @ts-ignore
   const isEdgeChromium = isChrome && navigator.userAgent.indexOf('Edg') != -1
   // @ts-ignore
@@ -396,6 +484,52 @@ const getBrowserInfo = () => {
     isEdge,
     // isSafari,
     isIE,
+  }
+}
+
+const checkIsSafariBrowser = (): boolean => {
+  const ua = navigator.userAgent.toLowerCase()
+  if (ua.indexOf('safari') != -1) {
+    if (ua.indexOf('chrome') > -1) {
+      return false
+    } else {
+      return true
+    }
+  }
+  return false
+}
+
+const isDeviceAndroid = () => {
+  let isAndroid = false
+  const userAgent = navigator.userAgent.toLowerCase()
+  const Android = userAgent.indexOf('android') > -1
+  if (Android) {
+    isAndroid = true
+  }
+  return isAndroid
+}
+const isCheckVersionIOSAllowPIP = () => {
+  const isIOS = navigator.userAgent.match(/ipad|iphone|ipod/i)
+  let versionIOS
+  if (isIOS) {
+    versionIOS = +navigator.userAgent
+      .match(/OS (\d)?\d_\d(_\d)?/i)[0]
+      .replace('_', '.')
+      .replace('_', '')
+      .replace('OS ', '')
+    return versionIOS >= 13.4
+  }
+  return false
+}
+
+const disableOnClickEvent = (e) => {
+  const androidPl = /Android/i.test(window.navigator.userAgent)
+  const iPhonePl = /iPhone/i.test(window.navigator.userAgent)
+  const isMobile = window.innerWidth <= 576 || androidPl || iPhonePl
+
+  if (isMobile) {
+    e.stopPropagation()
+    e.preventDefault()
   }
 }
 
@@ -428,5 +562,12 @@ export const CommonHelper = {
   hasScrollBar,
   checkUserCode,
   handleAccountSystem,
+  addSttDataList,
+  getRankInfo,
   getBrowserInfo,
+  insertSymbolToFirstString,
+  checkIsSafariBrowser,
+  isDeviceAndroid,
+  isCheckVersionIOSAllowPIP,
+  disableOnClickEvent,
 }

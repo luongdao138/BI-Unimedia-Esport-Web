@@ -12,7 +12,6 @@ import { useTranslation } from 'react-i18next'
 import { FormikProps } from 'formik'
 import { FormLiveType } from '@containers/arena/UpsertForm/FormLiveSettingsModel/FormLiveSettingsType'
 import API, { GraphQLResult, graphqlOperation } from '@aws-amplify/api'
-// import * as APIt from 'src/types/graphqlAPI'
 import useGraphqlAPI from 'src/types/useGraphqlAPI'
 /* eslint-disable @typescript-eslint/no-unused-vars */
 // @ts-ignore
@@ -26,18 +25,29 @@ import { Box } from '@material-ui/core'
 import { STATUS_VIDEO } from '@services/videoTop.services'
 import { useAppDispatch } from '@store/hooks'
 import * as commonActions from '@store/common/actions'
+import { getTimeZone } from '@utils/helpers/CommonHelper'
+import moment from 'moment'
+import { TABS } from '@containers/StreamingSettingContainer'
 
 interface Props {
   formik?: FormikProps<FormLiveType>
   flagUpdateFieldDate?: (flag: boolean) => void
   handleUpdateValidateField?: (value: string) => void
   validateFieldProps?: string
+  openPopupGroupList?: (open: boolean, tab: TABS) => void
 }
 
-const StreamingReservationContainer: React.FC<Props> = ({ formik, flagUpdateFieldDate, handleUpdateValidateField, validateFieldProps }) => {
+const StreamingReservationContainer: React.FC<Props> = ({
+  formik,
+  flagUpdateFieldDate,
+  handleUpdateValidateField,
+  validateFieldProps,
+  openPopupGroupList,
+}) => {
   const [step, setStep] = useState(1)
   const router = useRouter()
-  const { categoryData } = useLiveSetting()
+  const { categoryData, scheduleInformation } = useLiveSetting()
+  const status = scheduleInformation?.data?.status === 1
 
   const [modal, setModal] = useState(false)
   const { t } = useTranslation(['common'])
@@ -55,6 +65,7 @@ const StreamingReservationContainer: React.FC<Props> = ({ formik, flagUpdateFiel
   const [obsStatusDynamo, setObsStatusDynamo] = useState(null)
   const [videoStatusDynamo, setVideoStatusDynamo] = useState(null)
   const [processStatusDynamo, setProcessStatusDynamo] = useState(null)
+  const [liveStartTime, setLiveStartTime] = useState('')
 
   const onChangeStep = (step: number, isShare?: boolean, post?: { title: string; content: string }, channel_progress?: string): void => {
     console.log('SCHEDULE: click next step', step, stateChannelMedia, channel_progress)
@@ -163,9 +174,24 @@ const StreamingReservationContainer: React.FC<Props> = ({ formik, flagUpdateFiel
       }
     } else {
       if (!loading) {
-        setLoading(false)
-        setShowResultDialog(true)
-        return
+        // setLoading(false)
+        // setShowResultDialog(true)
+        // return
+        if (stateChannelMedia === EVENT_STATE_CHANNEL.STOPPING) {
+          setLoading(true)
+          setShowResultDialog(false)
+          return
+        } else {
+          setLoading(false)
+          setShowResultDialog(true)
+          return
+        }
+      } else {
+        if (stateChannelMedia === EVENT_STATE_CHANNEL.STOPPED) {
+          setLoading(false)
+          setShowResultDialog(false)
+          return
+        }
       }
       unSub = setTimeout(() => {
         setLoading(false)
@@ -190,9 +216,11 @@ const StreamingReservationContainer: React.FC<Props> = ({ formik, flagUpdateFiel
       const videoRs: any = await API.graphql(graphqlOperation(getVideoByUuid, listQV))
       const videoData = videoRs.data.getVideoByUuid.items.find((item) => item.uuid === videoId)
       console.log('SCHEDULE::queryVideoByUUID===>', videoData, videoRs)
+      // setLiveStartTime('2022-02-15 13:40:12')
       if (videoData) {
         setVideoStatusDynamo(videoData?.video_status)
         setProcessStatusDynamo(videoData?.process_status)
+        setLiveStartTime(moment.utc(videoData?.live_start_time).tz(getTimeZone()).format('YYYY-MM-DD HH:mm:ss'))
         if (videoData?.process_status === EVENT_LIVE_STATUS.STREAM_OFF) {
           //Updated
           setObsStatusDynamo(0)
@@ -235,6 +263,7 @@ const StreamingReservationContainer: React.FC<Props> = ({ formik, flagUpdateFiel
           if (updateVideoData?.uuid === formik.values?.stepSettingTwo?.uuid) {
             setVideoStatusDynamo(updateVideoData?.video_status)
             setProcessStatusDynamo(updateVideoData?.process_status)
+            setLiveStartTime(moment.utc(updateVideoData?.live_start_time).tz(getTimeZone()).format('YYYY-MM-DD HH:mm:ss'))
             if (updateVideoData?.process_status === EVENT_LIVE_STATUS.STREAM_START) {
               //live
               setObsStatusDynamo(1)
@@ -281,6 +310,7 @@ const StreamingReservationContainer: React.FC<Props> = ({ formik, flagUpdateFiel
           if (createdVideo?.uuid === formik.values?.stepSettingTwo?.uuid) {
             setVideoStatusDynamo(createdVideo?.video_status)
             setProcessStatusDynamo(createdVideo?.process_status)
+            setLiveStartTime(moment.utc(createdVideo?.live_start_time).tz(getTimeZone()).format('YYYY-MM-DD HH:mm:ss'))
             if (createdVideo?.process_status === EVENT_LIVE_STATUS.STREAM_START) {
               //live
               setObsStatusDynamo(1)
@@ -349,14 +379,20 @@ const StreamingReservationContainer: React.FC<Props> = ({ formik, flagUpdateFiel
         obsStatusDynamo={obsStatusDynamo}
         videoStatusDynamo={videoStatusDynamo}
         processStatusDynamo={processStatusDynamo}
+        openPopupGroupList={openPopupGroupList}
+        liveStartTime={liveStartTime}
       />
       <ESModal open={modal && (showResultDialog || channelProgress)} handleClose={handleClose}>
         <BlankLayout>
           <SettingsCompleted
-            titleNotification={t('common:streaming_setting_screen.tab2_notification_title')}
-            messageNotification={t('common:streaming_setting_screen.tab2_notification_mess')}
             onClose={onClose}
             onComplete={onComplete}
+            messageNotification={status ? '' : t('common:streaming_setting_screen.tab2_notification_mess')}
+            titleNotification={
+              status
+                ? t('common:streaming_setting_screen.tab2_notification_mess_update')
+                : t('common:streaming_setting_screen.complete_delivery_settings')
+            }
           />
         </BlankLayout>
       </ESModal>
@@ -364,6 +400,11 @@ const StreamingReservationContainer: React.FC<Props> = ({ formik, flagUpdateFiel
         <ESLoader
           open={!channelProgress}
           showNote={!!formik?.values?.stepSettingTwo?.status || formik?.values?.stepSettingTwo?.status === 0}
+          contentLoader={
+            stateChannelMedia === EVENT_STATE_CHANNEL.STOPPING
+              ? `${t('common:streaming_setting_screen.note_stop_channel_loading')}`
+              : `${t('common:streaming_setting_screen.note_loading')}`
+          }
         />
       </Box>
     </>

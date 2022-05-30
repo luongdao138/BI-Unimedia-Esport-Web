@@ -1,69 +1,80 @@
 /* eslint-disable prefer-const */
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Box, Typography, Icon, IconButton, useTheme, useMediaQuery, ButtonBase, ClickAwayListener } from '@material-ui/core'
-// import { useTranslation } from 'react-i18next'
-// import i18n from '@locales/i18n'
-import React, { useState, useEffect, useRef, forwardRef, useImperativeHandle, useCallback, useContext } from 'react'
-import sanitizeHtml from 'sanitize-html'
-import i18n from '@locales/i18n'
-import useStyles from './styles'
-import useCheckNgWord from '@utils/hooks/useCheckNgWord'
-import _, { debounce } from 'lodash'
-import { useAppDispatch, useAppSelector } from '@store/hooks'
 // import { useAppDispatch, useAppSelector } from '@store/hooks'
-import userProfileStore from '@store/userProfile'
-import { UserProfile } from '@services/user.service'
-import API, { GraphQLResult, graphqlOperation } from '@aws-amplify/api'
-// import { createMessage, deleteMessage } from "src/graphql/mutations";
-const {
-  getUsersByUuid,
-  getMessagesByVideoId,
-  getMessagesByVideoIdWithSort,
-} = require(`src/graphql.${process.env.NEXT_PUBLIC_AWS_ENV}/queries`)
-const { onCreateMessage, onUpdateMessage } = require(`src/graphql.${process.env.NEXT_PUBLIC_AWS_ENV}/subscriptions`)
-const { createMessage, createUser, updateMessage, updateUser } = require(`src/graphql.${process.env.NEXT_PUBLIC_AWS_ENV}/mutations`)
-// import * as APIt from 'src/types/graphqlAPI'
-import useDetailVideo from '../useDetailVideo'
-import usePurchaseTicketSuperChat from '../usePurchaseTicket'
-import ChatTextMessage from '@containers/VideoLiveStreamContainer/ChatContainer/ChatTextMessage'
-import PremiumChatDialog from '@containers/VideoLiveStreamContainer/ChatContainer/PremiumChatDialog'
+import API, { graphqlOperation, GraphQLResult } from '@aws-amplify/api'
+// import ChatTextMessage from '@containers/VideoLiveStreamContainer/ChatContainer/ChatTextMessage'
+// import PremiumChatDialog from '@containers/VideoLiveStreamContainer/ChatContainer/PremiumChatDialog'
 // import * as Yup from 'yup'
 // import { useFormik } from 'formik'
-import DonateMessage from './DonateMessage'
 import ESAvatar from '@components/Avatar'
 // import ESInput from '@components/Input'
-import { STATUS_VIDEO } from '@services/videoTop.services'
-import LoginRequired from '@containers/LoginRequired'
-import moment from 'moment'
 import {
-  INTERVAL_AUTO_GET_MESS,
-  LIMIT_FETCH_NEXT,
+  GIVER_RANK_TYPE,
   LIMIT_MAX_MESS_PREV_REWIND,
   LIMIT_MESS,
   LIMIT_MIN_MESS_PREV_REWIND,
+  RECEIVER_RANK_TYPE,
   SECOND_AUTO_GET_MESS_BEFORE,
   STATUS_SEND_MESS,
+  SUB_TABS,
+  VIDEO_TABS,
 } from '@constants/common.constants'
-import { v4 as uuidv4 } from 'uuid'
-import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
-import useGraphqlAPI from 'src/types/useGraphqlAPI'
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-const APIt: any = useGraphqlAPI()
+// import { useTranslation } from 'react-i18next'
+// import i18n from '@locales/i18n'
+import { useFullscreenContext } from '@context/FullscreenContext'
+import i18n from '@locales/i18n'
+import { Box, ButtonBase, ClickAwayListener, Icon, IconButton, Typography, useMediaQuery, useTheme } from '@material-ui/core'
+import { UserProfile } from '@services/user.service'
+import { RankingsItem, STATUS_VIDEO } from '@services/videoTop.services'
+import { useAppDispatch, useAppSelector } from '@store/hooks'
+import userProfileStore from '@store/userProfile'
+// import ChatTab from './Tabs/ChatTab'
+import { Colors } from '@theme/colors'
 // import { DELAY_SECONDS } from '@constants/common.constants'
 // import InfiniteScroll from 'react-infinite-scroll-component'
 // import { WindowScroller, List, AutoSizer } from 'react-virtualized'
-import { List, CellMeasurer, AutoSizer, CellMeasurerCache } from 'react-virtualized'
+// import { CellMeasurer } from 'react-virtualized'
 // import InfiniteLoaderExample from './source/InfiniteLoader/InfiniteLoader.example'
-import Loader from '@components/Loader'
-import { useRect } from '@utils/hooks/useRect'
-import ChatInput from './ChatInput'
+// import ChatInputContainer from './ChatInputContainer'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
-import { VideoContext } from '../VideoContext.js'
+import { useCheckDisplayChat } from '@utils/hooks/useCheckDisplayChat'
+import useCheckNgWord from '@utils/hooks/useCheckNgWord'
+import { useRotateScreen } from '@utils/hooks/useRotateScreen'
+import { useRect } from '@utils/useRect'
+import _, { debounce } from 'lodash'
+import moment from 'moment'
+import React, { forwardRef, memo, useCallback, useContext, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react'
+import sanitizeHtml from 'sanitize-html'
+// import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
+import useGraphqlAPI from 'src/types/useGraphqlAPI'
+import useDetailVideo from '../useDetailVideo'
+import { VideoContext } from '../VideoContext'
+import { useVideoTabContext } from '../VideoContext/VideTabContext'
+import ChatFooter from './components/ChatFooter'
+import ChatLoader from './components/ChatLoader'
+import ChatMessages from './components/ChatMessages'
+import SubTabGroups from './components/SubTabGroups'
+import TabsContainer from './components/TabsContainer'
+import DonateMessage from './DonateMessage'
+import useStyles from './styles'
+import RankingTab from './Tabs/RankingTab'
+import { useChatHelpers } from './useChatHelper'
+// import { createMessage, deleteMessage } from "src/graphql/mutations";
+const { getUsersByUuid } = require(`src/graphql.${process.env.NEXT_PUBLIC_AWS_ENV}/queries`)
+const { onCreateMessage, onUpdateMessage } = require(`src/graphql.${process.env.NEXT_PUBLIC_AWS_ENV}/subscriptions`)
+const { createMessage, createUser, updateMessage, updateUser } = require(`src/graphql.${process.env.NEXT_PUBLIC_AWS_ENV}/mutations`)
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+const APIt: any = useGraphqlAPI()
+
+export type ChatStyleProps = {
+  isLandscape: boolean
+  isRankingTab?: boolean
+  isFullscreenMode?: boolean
+}
 
 export type ChatContainerProps = {
-  onPressDonate?: (donatedPoint: number, purchaseComment: string) => void
   userHasViewingTicket?: boolean | number
   key_video_id?: string
   myPoint?: any
@@ -75,7 +86,11 @@ export type ChatContainerProps = {
   ref: any
   chatWidth: any
   isResizedScreen: boolean
+  errorMsgDonatePoint?: string
+  clearMessageDonatePoint: () => void
 }
+
+const DEBOUNCE_SECOND = 300
 
 export enum GET_MESS_TYPE {
   AUTO = 1,
@@ -89,8 +104,10 @@ export const purchasePoints = {
   p_100: {
     id: 'p_100',
     value: 100,
-    backgroundColor: '#2680EB',
-    borderColor: '#2680EB',
+    receiverHeaderBgColor: Colors.white_opacity[20],
+    headerBgColor: '#A3C6FF',
+    backgroundColor: '#476AFF',
+    borderColor: '#476AFF',
     flex: 65.5,
     maxLengthInput: 50,
     displayTime: 0,
@@ -98,8 +115,10 @@ export const purchasePoints = {
   p_300: {
     id: 'p_300',
     value: 300,
-    backgroundColor: '#01B7FB',
-    borderColor: '#01B7FB',
+    receiverHeaderBgColor: Colors.white_opacity[15],
+    headerBgColor: '#7F97FF',
+    backgroundColor: '#478EFF',
+    borderColor: '#478EFF',
     flex: 86,
     maxLengthInput: 50,
     displayTime: 0,
@@ -107,8 +126,10 @@ export const purchasePoints = {
   p_500: {
     id: 'p_500',
     value: 500,
-    backgroundColor: '#0FB732',
-    borderColor: '#0FB732',
+    receiverHeaderBgColor: Colors.white_opacity[20],
+    headerBgColor: '#8BEECF',
+    backgroundColor: '#17DD9F',
+    borderColor: '#17DD9F',
     flex: 94,
     maxLengthInput: 150,
     displayTime: 120,
@@ -116,8 +137,10 @@ export const purchasePoints = {
   p_1000: {
     id: 'p_1000',
     value: 1000,
-    backgroundColor: '#EBD600',
-    borderColor: '#EBD600',
+    receiverHeaderBgColor: Colors.white_opacity[20],
+    headerBgColor: '#E5EC91',
+    backgroundColor: '#CBD923',
+    borderColor: '#CBD923',
     flex: 94,
     maxLengthInput: 200,
     displayTime: 300,
@@ -125,6 +148,8 @@ export const purchasePoints = {
   p_3000: {
     id: 'p_3000',
     value: 3000,
+    receiverHeaderBgColor: Colors.white_opacity[15],
+    headerBgColor: '#FF9661',
     backgroundColor: '#FF6A1C',
     borderColor: '#FF6A1C',
     flex: 98,
@@ -134,15 +159,17 @@ export const purchasePoints = {
   // p_2500: {
   //   id: 'p_2500',
   //   value: 5000,
-  //   backgroundColor: '#9147F9',
-  //   borderColor: '#9147F9',
+  //   backgroundColor: '#F86B80',
+  //   borderColor: '#F86B80',
   //   width: 90,
   // },
   p_5000: {
     id: 'p_5000',
     value: 5000,
-    backgroundColor: '#9147F9',
-    borderColor: '#9147F9',
+    receiverHeaderBgColor: Colors.white_opacity[30],
+    headerBgColor: '#FDD3D9',
+    backgroundColor: '#F86B80',
+    borderColor: '#F86B80',
     flex: 112,
     maxLengthInput: 250,
     displayTime: 1800,
@@ -150,8 +177,10 @@ export const purchasePoints = {
   p_10000: {
     id: 'p_10000',
     value: 10000,
-    backgroundColor: '#C91315',
-    borderColor: '#C91315',
+    receiverHeaderBgColor: Colors.white_opacity[25],
+    headerBgColor: '#F64D67',
+    backgroundColor: '#F20025',
+    borderColor: '#F20025',
     flex: 151,
     maxLengthInput: 270,
     displayTime: 3600,
@@ -166,117 +195,176 @@ export const sanitizeMess = (content: string): string =>
     allowedTags: [],
     allowedAttributes: {},
   })
-
-const cache = new CellMeasurerCache({
-  fixedWidth: true,
-  defaultHeight: 25,
-})
-
-const contentRef = React.createRef<HTMLDivElement>()
+// const contentRef = React.createRef<HTMLDivElement>()
 
 const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
   (
     {
-      onPressDonate,
       userHasViewingTicket,
       key_video_id,
-      myPoint,
       handleKeyboardVisibleState,
       donateConfirmModalIsShown,
+      // myPoint,
       openPurchasePointModal,
       videoType,
       freeToWatch,
-      isResizedScreen,
+      errorMsgDonatePoint,
+      clearMessageDonatePoint,
     },
     ref
   ) => {
     const dispatch = useAppDispatch()
-    const { videoRefInfo } = useContext(VideoContext)
+    const { isLandscape } = useRotateScreen()
+    const { videoRefInfo, giverRankInfo, setGiverRankInfo, receiverRankInfo, setReceiverRankInfo, isMobile: isMobileParent } = useContext(
+      VideoContext
+    )
+    const chatMobileContainerRef = useRef<HTMLDivElement>(null)
     const videoPlayedSecond = useRef(0)
-    console.log('🚀 ~ videoPlayedSecond', videoPlayedSecond?.current)
+    console.log('🚀 ~ videoPlayedSecond---000', videoPlayedSecond?.current)
     const videoStreamingSecond = useRef(0)
 
-    const [errorMess, setErrorMess] = useState<string>('')
-    const [isResetMess, setIsResetMess] = useState<boolean>(false)
+    // const [tab, setTab] = useState(VIDEO_TABS.CHAT)
+    // const [messageTab, setMessageTab] = useState(SUB_TABS.MESS.ALL
     // console.log('🚀 ~ isResetMess', isResetMess)
     const [isBottom, setBottom] = useState<boolean>(true)
     // console.log('🚀 ~ isBottom--000', isBottom)
     const [scrolling, setScrolling] = useState<number>(0)
     const messagesEndRef = useRef<any>(null)
-    const [purchaseDialogVisible, setPurchaseDialogVisible] = useState<boolean>(false)
+    // const [purchaseDialogVisible, setPurchaseDialogVisible] = useState<boolean>(false)
     const [messActiveUser, setMessActiveUser] = useState<any>(null)
     const [successGetListMess, setSuccessGetListMess] = useState(false)
     const [successGetListDonateMess, setSuccessGetListDonateMess] = useState(false)
+    const [successGetListMessTip, setSuccessGetListMessTip] = useState(false)
     const [successFlagGetAddUSer, setSuccessFlagGetAddUSer] = useState(false)
     const [messagesDonate, setMessagesDonate] = useState([])
+    // const [isSwitchingTab, setIsSwitchingTab] = useState(false)
     // console.log('🚀 ~ messagesDonate', messagesDonate)
     // const [displaySeeMore, setDisplaySeeMore] = useState(false)
     // console.log('🚀 ~ displaySeeMore', displaySeeMore)
     const [displayDialogMess, setDisplayDialogMess] = useState(false)
     const [firstRender, setFirstRender] = useState(false)
-    const [prevRewindMess, setPrevRewindMess] = useState({})
-    const [scrollBehavior, setScrollBehavior] = useState('smooth')
+    const [isFirstVisitPage, setIsFirstVisitPage] = useState(true)
+    // const [prevRewindMess, setPrevRewindMess] = useState({})
+    // console.log('🚀 ~ prevRewindMess', prevRewindMess)
+    // const [scrollBehavior, setScrollBehavior] = useState('smooth')
     const isVideoFreeToWatch = freeToWatch === 0 ? true : false
     // const [nextToken, setNextToken] = useState(null)
-    const [prevToken, setPrevToken] = useState(null)
+    // const [prevToken, setPrevToken] = useState(null)
     // console.log('🚀 ~ prevToken', prevToken)
     const [isGettingMess, setIsGettingMess] = useState(false)
+    const [isGettingTipMess, setIsGettingTipMess] = useState(false)
+    // console.log('🚀 ~ isGettingMess', isGettingMess)
     const [isGettingPrevRewindMess, setIsGettingPrevRewindMess] = useState(false)
     const [isGettingRewindMess, setIsGettingRewindMess] = useState(false)
-    const [cacheMess, setCacheMess] = useState([])
+    // const [cacheMess, setCacheMess] = useState([])
+    // save mess tip to cache, when switch tab => get mess in this cache and show
+    // const [cacheMessTip, setCacheMessTip] = useState([])
+    // console.log('🚀 ~ cacheMessTip', cacheMessTip)
     // console.log('🚀 ~ cacheMess', cacheMess)
-    const [rewindMess, setRewindMess] = useState<any>({})
+    // const [rewindMess, setRewindMess] = useState<any>({})
     // console.log('🚀 ~ rewindMess---000', rewindMess)
-    const [autoGetMess, setAutoGetMess] = useState<any>([])
-    const [archiveInitMess, setArchiveInitMess] = useState([])
-    const [cacheDonateMess, setCacheDonateMess] = useState([])
+    // const [autoGetMess, setAutoGetMess] = useState<any>([])
+    // const [archiveInitMess, setArchiveInitMess] = useState([])
+    // const [cacheDonateMess, setCacheDonateMess] = useState([])
+    // const [cacheDonateMessTip, setCacheDonateMessTip] = useState([])
     // console.log('🚀 ~ cacheDonateMess', cacheDonateMess)
     // console.log('🚀 ~ cacheMess', cacheMess)
-    const [prevTime, setPrevTime] = useState(0)
+    // const [prevTime, setPrevTime] = useState(0)
     // console.log('🚀 ~ prevTime', prevTime)
-    const [nextTime, setNextTime] = useState(0)
+    // const [nextTime, setNextTime] = useState(0)
     // console.log('🚀 ~ nextTime', nextTime)
     const [isTokenBroken, setIsTokenBroken] = useState(false)
-    const [videoTimeIsRewinding, setVideoTimeIsRewinding] = useState(0)
-    // console.log('🚀 ~ videoTimeIsRewinding', videoTimeIsRewinding)
+    const [isTokenTipBroken, setIsTokenTipBroken] = useState(false)
+    // console.log('🚀 ~ isTokenTipBroken', isTokenTipBroken)
+    // console.log('🚀 ~ isTokenBroken', isTokenBroken)
+    // const [videoTimeIsRewinding, setVideoTimeIsRewinding] = useState(0)
 
-    // const getChatData = () =>
-    //   Array(30)
-    //     .fill('')
-    //     .map((_, i) => ({
-    //       id: i,
-    //       user: 'Account Name',
-    //       content: 'チャットのコメントははここに表示されます。チャットのコメントははここに表示されます。',
-    //     }))
+    // const isSwitchingTabRef = useRef(false)
+    // console.log('🚀 ~ isSwitchingTabRef', isSwitchingTabRef)
+    // const isSwitchingSubTabRef = useRef(false)
+    const {
+      activeSubTab,
+      activeTab,
+      setActiveTab,
+      setActiveSubTab,
+      prevMessSubTabRef,
+      isTipMessTab,
+      // isAllMessTab,
+      // isPrevTipMessTab,
+      // isPrevAllMessTab,
+      needLoadMoreRef,
+    } = useVideoTabContext()
+    console.log('🚀 ~ timeoutId ~ prevMessSubTabRef.current--22', prevMessSubTabRef.current)
 
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    //@ts-ignore
-    // const [chartDataFake, setChartDataFake] = useState(getChatData())
+    // 2 variable are only changed and get latest val when active sub tab change => re render this component
+    const isPrevTipMessTab = prevMessSubTabRef.current === SUB_TABS.MESS.TIP
+    const isPrevAllMessTab = prevMessSubTabRef.current === SUB_TABS.MESS.ALL
+    console.log('🚀 ~ isPrevAllMessTab--00', isPrevAllMessTab)
 
     const { selectors } = userProfileStore
 
     const userProfile = useAppSelector<UserProfile>(selectors.getUserProfile)
 
+    // const [initTipMess, setInitTipMess] = useState([])
     const [stateMessages, setStateMessages] = useState([])
     // console.log('🚀 ~ stateMessages---000', stateMessages)
 
+    // mess tip on server to fetch new data from it
+    const serverTipMessRef = useRef<any>([])
+    // saved mess in local is used when switch tab
+    const savedTipMessRef = useRef<any>([])
+    const savedAllMessRef = useRef<any>([])
+    // console.log('🚀 ~ savedAllMessRef', savedAllMessRef?.current)
+    // console.log('🚀 ~ serverTipMessRef', serverTipMessRef?.current)
+    // console.log('🚀 ~ savedTipMessRef', savedTipMessRef?.current)
+
+    const prevRewindMessRef = useRef<any>({})
+    const autoGetMessRef = useRef<any>([])
+    const rewindMessRef = useRef<any>({})
+
+    // cache donate mess and mess common
+    const cacheStateMessRef = useRef<any>([])
+    // console.log('🚀 ~ cacheStateMessRef.current', cacheStateMessRef.current)
+    const cacheDonateMessRef = useRef<any>([])
+    const initTipMessRef = useRef<any>([])
+    const scrollBehaviorRef = useRef<string>('smooth')
+    const nextTimeRef = useRef<number>(0)
+    const prevTokenRef = useRef<any>(null)
+    const switchTabRef = useRef<boolean>(false)
+    const seekingRef = useRef<boolean>(false)
+
+    // const isFirstRender = useRef<boolean>(false);
+    // const isFirstRender = useRef<boolean>(false);
+
     const [chatUser, setChatUser] = useState<any>({})
     const theme = useTheme()
-    const isMobile = useMediaQuery(theme.breakpoints.down(769))
-    const { checkVideoNgWord } = useCheckNgWord()
+    const isMobile = useMediaQuery(theme.breakpoints.down(769)) || isLandscape
+    // console.log('🚀 ~ isMobile', isMobile)
     // const [savedMess, setSavedMess] = useState([])
     // const [savedDonateMess, setSavedDonateMess] = useState([])
     const [isChatInBottom, setIsChatInBottom] = useState(false)
-    const [isSeeking, setIsSeeking] = useState(false)
+    // const [isSeeking, setIsSeeking] = useState(false)
 
-    const contentRect = useRect(contentRef)
+    // const contentRect = useRect(contentRef)
 
-    const { width: pageWidth } = useWindowDimensions(0)
-    const isDesktopDown1280 = pageWidth > 768 && pageWidth <= 1280
-    const { userResult, streamingSecond, playedSecond, liveStreamInfo, resetChatState } = useDetailVideo()
+    // const { width: pageWidth } = useWindowDimensions(0)
+    // const isDesktopDown1280 = pageWidth > 768 && pageWidth <= 1280
+    const {
+      userResult,
+      streamingSecond,
+      liveStreamInfo,
+      resetChatState,
+      detailVideoResult,
+      rankingListMeta,
+      fetchDonateRanking,
+      isFullScreen,
+    } = useDetailVideo()
+    const { isEnabledGift, isEnabledMessFilter, isDisplayedRankingTab } = useCheckDisplayChat()
+
+    const needLoadMessRef = useRef<boolean>(true)
+
     // const { streamingSecond, playedSecond, isViewingStream, liveStreamInfo } = useDetailVideo()
     // const userResult = {streamer: 1}
-    const { dataPurchaseTicketSuperChat } = usePurchaseTicketSuperChat()
     // const dispatch = useAppDispatch()
 
     const isEnabledChat =
@@ -284,10 +372,156 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       !liveStreamInfo.is_end_live &&
       (+streamingSecond >= 0 || streamingSecond === Infinity) &&
       successGetListMess &&
-      successGetListDonateMess
+      successGetListDonateMess &&
+      successGetListMessTip
     // const isEnabledChat = true
+    // console.log('🚀 ~ isEnabledChat', isEnabledChat)
+    // console.log('🚀 ~ successGetListMessTip', successGetListMessTip)
 
-    const classes = useStyles()
+    const { height: chatInputHeight } = useRect(chatMobileContainerRef)
+    const { isFullscreenMode } = useFullscreenContext()
+    const classes = useStyles({ isLandscape, isRankingTab: activeTab === VIDEO_TABS.RANKING, isFullscreenMode })
+    console.log({ chatInputHeight })
+
+    console.log('------------------- Chat component rerender ----------------------')
+
+    const sortMessages = (messages, isSortAsc = true) => {
+      const new_mess = [...messages]
+      const sortFactor = isSortAsc ? 1 : -1
+      return new_mess.sort((a: any, b: any) => sortFactor * (+a.video_time - +b.video_time || a.created_time.localeCompare(b.created_time)))
+    }
+
+    const _scrollToBottom = (position: number) => {
+      //https://github.com/bvaughn/react-virtualized/issues/995
+      if (messagesEndRef.current != null && messagesEndRef) {
+        messagesEndRef.current?.scrollToRow(position - 1)
+        needLoadMoreRef.current = false
+        setTimeout(() => {
+          messagesEndRef.current?.scrollToRow(position - 1)
+          needLoadMoreRef.current = true
+          console.log('🚀 ~ test--scrollTop--111', needLoadMoreRef)
+          // setBottom(true)
+        }, 100)
+      }
+    }
+
+    const refFetchMessTipWhenRewind = useRef(null)
+    const handleFetchMessTipWhenRewind = (second) => {
+      console.log('🚀 ~ fetchMessTipWhenRewind ~ second', second)
+      // find position of latest mess to get prev mess
+      const foundMessIndex = _.findIndex(serverTipMessRef.current, (v: any) => v.video_time > +second)
+      console.log('🚀 ~ fetchMessTipWhenRewind ~ foundMess', foundMessIndex)
+      let newMess = []
+      // const limit = 2
+      // when live stream get limit to 100 same as tab all mess
+      // const limit = isStreaming ? LIMIT_MESS : LIMIT_MESS_REWIND
+      const limit = isStreaming ? LIMIT_MESS : CommonHelper.randomIntegerInRange(LIMIT_MIN_MESS_PREV_REWIND, LIMIT_MAX_MESS_PREV_REWIND)
+      console.log('🚀 ~ fetchMessTipWhenRewind ~ limit', limit)
+
+      let startSliceIndex = 0
+      // slice array from first ele due to all mess has video time larger than current time
+      if (foundMessIndex === 0) {
+        startSliceIndex = 0
+      } else {
+        // get start slice index to slice cacheMessTip
+        // foundMessIndex is -1 (not found) => get length of cacheMessTip
+        startSliceIndex = (foundMessIndex !== -1 ? foundMessIndex : serverTipMessRef.current.length) - limit
+        console.log('🚀 ~ fetchMessTipWhenRewind ~ cacheMessTip.length', serverTipMessRef.current.length)
+      }
+      startSliceIndex = startSliceIndex > 0 ? startSliceIndex : 0
+      console.log('🚀 ~ fetchMessTipWhenRewind ~ startSliceIndex', startSliceIndex)
+      console.log('🚀 ~ serverTipMessRef.current--00', serverTipMessRef.current)
+      // new cache tip mess from startSliceIndex to end of list mess
+      newMess = _.slice(serverTipMessRef.current, startSliceIndex)
+      console.log('🚀 ~ fetchMessTipWhenRewind ~ newMess', newMess)
+      const filterMess = _.filter(newMess, (v) => v.video_time <= videoPlayedSecond.current)
+      console.log('🚀 ~ videoPlayedSecond.current', videoPlayedSecond.current)
+      console.log('🚀 ~ fetchMessTipWhenRewind ~ filterMess', filterMess)
+      // const transformDonateMessAsc = transformMessAsc.filter(
+      //   (item) => +item.display_avatar_time >= videoPlayedSecond.current && item.is_premium && +item.point > 300
+      // )
+
+      // console.log('🚀 ~ fetchMessTipWhenRewind ~ cacheMessTip[0]', cacheMessTip[0])
+      console.log('🚀 ~ fetchMessTipWhenRewind ~ newMess[0]', newMess[0])
+      console.log('🚀 ~ fetchMessTipWhenRewind ~ _.first(newMess)', _.first(newMess))
+      if (_.first(newMess) && newMess[0]?.local_id === serverTipMessRef.current[0]?.local_id) {
+        setIsTokenTipBroken(false)
+      } else {
+        // if first ele of newMess is not first ele of cacheMessTip => has mess before newMess => can get prev tip mess
+        // enable feature get prev tip mess
+        setIsTokenTipBroken(true)
+      }
+
+      // const filterDonateMess = _.filter(
+      //   cacheDonateMess,
+      //   (v) => v.display_avatar_time >= videoPlayedSecond.current && v.is_premium && +v.point > 300
+      // )
+      // const filterCacheDonateMess = _.filter(newMess, (v) => v.is_premium && +v.point > 300)
+      // console.log('🚀 ~ fetchMessTipWhenRewind ~ filterDonateMess', filterDonateMess)
+
+      isTipMessTab && setIsGettingMess(false)
+      if (isPrevTipMessTab) {
+        setStateMessages(filterMess)
+        cacheStateMessRef.current = newMess
+        _scrollToBottom(filterMess.length)
+      }
+      savedTipMessRef.current = newMess
+      console.log('🚀 ~ 000 ~ savedTipMessRef.current', savedTipMessRef.current)
+      // setCacheMess(newMess)
+      // setMessagesDonate(filterDonateMess)
+      // setCacheDonateMess(filterCacheDonateMess)
+    }
+    refFetchMessTipWhenRewind.current = handleFetchMessTipWhenRewind
+
+    // fetch some prev mess and all next mess
+    // const fetchMessTipWhenRewind = (second) => {
+    //   refFetchMessTipWhenRewind.current(second)
+    // }
+
+    const { fetchMessTipInitial, fetchNextMess, fetchPrevMessWhenRewind, fetchMessInitialStreaming, fetchPrevMess } = useChatHelpers({
+      // isSwitchingTabRef,
+      key_video_id,
+      initTipMessRef,
+      prevRewindMessRef,
+      videoPlayedSecond,
+      isGettingRewindMess,
+      autoGetMessRef,
+      isTokenBroken,
+      streamingSecond,
+      videoType,
+      isBottom,
+      prevTokenRef,
+      serverTipMessRef,
+      cacheDonateMessRef,
+      cacheStateMessRef,
+      nextTimeRef,
+      // isSwitchingSubTabRef,
+      switchTabRef,
+      rewindMessRef,
+      savedAllMessRef,
+      prevMessSubTabRef,
+      savedTipMessRef,
+      isPrevAllMessTab,
+      //
+      setIsGettingTipMess,
+      sortMessages,
+      setSuccessGetListMessTip,
+      setIsGettingRewindMess,
+      setIsGettingMess,
+      setStateMessages,
+      setIsTokenBroken,
+      setSuccessGetListMess,
+      setSuccessGetListDonateMess,
+      setIsGettingPrevRewindMess,
+      setBottom,
+      _scrollToBottom,
+      refFetchMessTipWhenRewind,
+    })
+
+    const executeGetPrevRewind = (video_time) => {
+      fetchPrevMessWhenRewind(video_time)
+      fetchNextMess(GET_MESS_TYPE.FETCH_NEXT, video_time)
+    }
 
     const resetStates = () => {
       setStateMessages([])
@@ -298,21 +532,47 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         resetStates: resetStates,
       }
     })
-
-    useEffect(() => {
-      cache.clearAll()
-    }, [contentRect?.width])
+    // useEffect(() => {
+    //   cache.clearAll()
+    // }, [contentRect?.width])
 
     const debouncedHandleLoadMore = useCallback(
       debounce(() => {
-        fetchPrevMess && fetchPrevMess()
+        const isTipSubTab = prevMessSubTabRef.current === SUB_TABS.MESS.TIP
+        console.log('🚀 ~ handleLoadMore ~ handleLoadMore-4444')
+        if (isTipSubTab) {
+          console.log('🚀 ~ handleLoadMore ~ handleLoadMore-333')
+          setIsGettingMess(true)
+          setTimeout(() => {
+            refFetchPrevMessTip.current()
+          }, DEBOUNCE_SECOND)
+        } else {
+          fetchPrevMess && fetchPrevMess()
+        }
       }, 300),
-      [isTokenBroken]
+      [isTokenBroken, isTokenTipBroken]
     )
 
     const handleLoadMore = () => {
+      const isTipSubTab = prevMessSubTabRef.current === SUB_TABS.MESS.TIP
+
+      // console.log('🚀 ~ handleLoadMore ~ prevTokenRef.current', prevTokenRef.current)
+      // console.log('🚀 ~ handleLoadMore ~ isTokenTipBroken', isTokenTipBroken)
+      // console.log('🚀 ~ handleLoadMore ~ isTokenBroken', isTokenBroken)
+      // console.log('🚀 ~ handleLoadMore ~ needLoadMoreRef.current', needLoadMoreRef.current)
+      if (!needLoadMoreRef.current) {
+        return
+      }
+
       // only scroll to load more mess if rewinded or is live stream and has prevToken (has mess in prev page)
-      if (!isGettingMess && !isGettingPrevRewindMess && !isGettingRewindMess && prevToken && (isTokenBroken || isStreaming)) {
+      if (
+        !isGettingMess &&
+        !isGettingPrevRewindMess &&
+        !isGettingRewindMess &&
+        // only fetch prev if is tib tab and can get prev tip
+        ((isTipSubTab && isTokenTipBroken) || (!isTipSubTab && prevTokenRef.current && (isTokenBroken || isStreaming)))
+      ) {
+        console.log('🚀 ~ handleLoadMore ~ handleLoadMore-222')
         debouncedHandleLoadMore()
       }
     }
@@ -323,429 +583,47 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       }
     }, [scrolling])
 
-    const refFetchPrevMessWhenRewind = useRef(null)
-    const handleFetchPrevMessWhenRewind = (messagesInfo, video_time) => {
-      const transformMessAsc = sortMessages(messagesInfo.items)
-      setPrevRewindMess({ [video_time]: [...transformMessAsc] })
+    // const renderMessWhenTipSwitchTab = () => {
+    //   const newMess = cacheMess.filter((item) => +item.video_time <= +videoPlayedSecond.current)
+    //   console.log('🚀 ~ renderMessWhenTipSwitchTab ~ videoPlayedSecond.current', videoPlayedSecond.current)
+    //   console.log('🚀 ~ renderMessWhenTipSwitchTab ~ cacheMess', cacheMess)
+    //   console.log('🚀 ~ renderMessWhenTipSwitchTab ~ newMess', newMess)
+    //   const isMessageInBottom = checkMessIsInBottom()
+    //   // render new messages with savedMess
+    //   setStateMessages([...newMess])
 
-      // save token to call api in next time
-      setPrevToken(messagesInfo.nextToken)
-      // console.log('🚀 ~ handleFetchPrevMessWhenRewind ~ messagesInfo', messagesInfo)
-      // prevent scroll when has no messages
-      if (!messagesInfo.nextToken) setIsTokenBroken(false)
-      fetchNextMess(GET_MESS_TYPE.FETCH_NEXT, video_time)
-    }
-    refFetchPrevMessWhenRewind.current = handleFetchPrevMessWhenRewind
+    //   if (isMessageInBottom) {
+    //     setScrollBehavior('smooth')
+    //     setIsChatInBottom(true)
+    //   }
 
-    // fetch messages prev when rewind to video time
-    const fetchPrevMessWhenRewind = (video_time, sortOrder = APIt.ModelSortDirection.DESC) => {
-      try {
-        setIsGettingPrevRewindMess(true)
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        let listQV: APIt.GetMessagesByVideoIdWithSortQueryVariables = {
-          video_id: key_video_id,
-          video_time: { le: video_time - 1 },
-          sortDirection: sortOrder,
-          limit: CommonHelper.randomIntegerInRange(LIMIT_MIN_MESS_PREV_REWIND, LIMIT_MAX_MESS_PREV_REWIND),
-          nextToken: null,
-        }
-        API.graphql(graphqlOperation(getMessagesByVideoIdWithSort, listQV)).then((messagesResults) => {
-          const messagesInfo = messagesResults.data.getMessagesByVideoIdWithSort
-          refFetchPrevMessWhenRewind.current(messagesInfo, video_time)
-          setIsGettingPrevRewindMess(false)
-        })
-      } catch (error) {
-        setIsGettingPrevRewindMess(false)
-        console.error(error)
-      }
-    }
+    //   const newMessagesDonate = cacheDonateMess.filter((item) => +item.display_avatar_time > +realStreamingSecond)
+    //   setMessagesDonate(newMessagesDonate)
+    //   setIsSwitchingTab(false)
+    // }
 
-    const refTransformListMess = useRef(null)
-    const handleTransformListMess = (messagesInfo) => {
-      const transformMess = [...messagesInfo.items]
-      const transformMessAsc = sortMessages(transformMess)
-      if (streamingSecond === Infinity && videoType === STATUS_VIDEO.LIVE_STREAM) {
-        setStateMessages([...transformMessAsc])
-      }
-      // save mess for use in local
-      setCacheMess([...transformMessAsc])
-      setSuccessGetListMess(true)
-
-      const transformDonateMessAsc = transformMessAsc.filter(
-        (item) => +item.display_avatar_time >= videoPlayedSecond.current && item.is_premium && +item.point > 300
-      )
-      // const transformDonateMessAsc = transformDonateMess
-      // const transformDonateMessAsc = sortMessages(transformDonateMess)
-      // comment if no get in initial
-      // setMessagesDonate([...transformDonateMessAsc])
-      // save mess for use in local
-      setCacheDonateMess([...transformDonateMessAsc])
-      setPrevToken(messagesInfo.nextToken)
-      // console.log('🚀 ~ handleFetchPrevMess ~ messagesInfo.nextToken--111', messagesInfo.nextToken)
-
-      setSuccessGetListDonateMess(true)
-    }
-    refTransformListMess.current = handleTransformListMess
-
-    const refFetchMessInitialArchive = useRef(null)
-    const handleFetchMessInitialArchive = (video_time) => {
-      // console.log('🚀 ~ handleFetchMessInitialArchive ~ video_time', video_time)
-      // only get mess when no rewind
-      if (!isTokenBroken) {
-        const transformMess = [...archiveInitMess]
-        // const transformMessAsc = transformMess
-        const transformMessAsc = sortMessages(transformMess)
-
-        // save mess for use in local
-        setCacheMess([...transformMessAsc])
-
-        const transformDonateMessAsc = transformMessAsc.filter(
-          (item) => +item.display_avatar_time >= videoPlayedSecond.current && item.is_premium && +item.point > 300
-        )
-        // comment if no get in initial
-        // save mess for use in local
-        setCacheDonateMess([...transformDonateMessAsc])
-        // set next time for auto get mess
-        setNextTime(video_time + INTERVAL_AUTO_GET_MESS)
-      }
-      setArchiveInitMess([])
-      setSuccessGetListMess(true)
-      setSuccessGetListDonateMess(true)
-    }
-    refFetchMessInitialArchive.current = handleFetchMessInitialArchive
     // console.log('🚀 ~ setTimeout ~ cache----222', cache)
     // console.log('🚀 ~ setTimeout ~ cache----3333', cache.columnWidth)
 
-    const refFetchPrevMess = useRef(null)
-    const handleFetchPrevMess = (messagesInfo) => {
-      const transformMessAsc = sortMessages(messagesInfo.items)
-      // console.log('🚀 ~ handleFetchPrevMess ~ transformMessAsc', transformMessAsc)
-      // console.log('🚀 ~ handleFetchPrevMess ~ length', transformMessAsc.length)
-      // console.log('🚀 ~ isBottom--1111', isBottom)
-      // console.log('🚀 ~ handleFetchPrevMess ~ isMessageInBottom', isMessageInBottom)
-      setStateMessages((messages) => [...transformMessAsc, ...messages])
-      setTimeout(() => {
-        _scrollToBottom(transformMessAsc.length)
-        if (isBottom) {
-          setBottom(true)
-        }
-        // cache.clearAll()
-      }, 10)
-      // cache.clearAll()
-      setCacheMess((messages) => [...transformMessAsc, ...messages])
-
-      const transformDonateMessAsc = transformMessAsc.filter(
-        (item) => +item.display_avatar_time >= videoPlayedSecond.current && item.is_premium && +item.point > 300
-      )
-      // const transformDonateMessAsc = transformDonateMess
-      // const transformDonateMessAsc = sortMessages(transformDonateMess)
-      setMessagesDonate((messages) => [...transformDonateMessAsc, ...messages])
-      setCacheDonateMess((messages) => [...transformDonateMessAsc, ...messages])
-
-      // save token to call api in next time
-      setPrevToken(messagesInfo.nextToken)
-      // prevent scroll when has no messages
-      if (!messagesInfo.nextToken) setIsTokenBroken(false)
-      // console.log('🚀 ~ handleFetchPrevMess ~ messagesInfo.nextToken--000', messagesInfo.nextToken)
-    }
-
-    refFetchPrevMess.current = handleFetchPrevMess
-
-    const fetchMessInitialStreaming = (sortOrder = APIt.ModelSortDirection.DESC) => {
-      try {
-        setIsGettingMess(true)
-        // console.log('🚀 ~ loadMoreMess ~ fetchPrevMess--0000', getType)
-        // console.log('🚀 ~ fetchPrevMess ~ video_time---000', video_time)
-        // occur this case when is streaming and fetch mess initial
-        let nextToken = null
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        let listQV: APIt.GetMessagesByVideoIdQueryVariables = {
-          video_id: key_video_id,
-          sortDirection: sortOrder,
-          limit: LIMIT_MESS,
-          nextToken,
-          // filter: {
-          //   video_time: {
-          //     le: 328,
-          //     ge: 324,
-          //   },
-          // },
-        }
-        // console.log('🚀 ~ fetchPrevMess ~ listQV---000', listQV)
-        // console.log('🚀 ~ abc ~ 222')
-        API.graphql(graphqlOperation(getMessagesByVideoId, listQV)).then((messagesResults) => {
-          const messagesInfo = messagesResults.data.getMessagesByVideoId
-          // if (getType === GET_MESS_TYPE.FETCH_NORMAL) {
-          refTransformListMess.current(messagesInfo)
-          // }
-          setIsGettingMess(false)
-        })
-      } catch (error) {
-        setIsGettingMess(false)
-        console.error(error)
-      }
-    }
-
-    // fetch messages prev when scroll to top when archived or when live stream
-    const fetchPrevMess = (sortOrder = APIt.ModelSortDirection.DESC) => {
-      try {
-        setIsGettingMess(true)
-        if (isTokenBroken) {
-          let nextToken = prevToken
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          let listQV: APIt.GetMessagesByVideoIdWithSortQueryVariables = {
-            video_id: key_video_id,
-            video_time: { le: prevTime },
-            sortDirection: sortOrder,
-            limit: LIMIT_MESS,
-            nextToken,
-          }
-          // console.log('🚀 ~ getMessagesByVideoIdWithSort ~ 222')
-          API.graphql(graphqlOperation(getMessagesByVideoIdWithSort, listQV)).then((messagesResults) => {
-            // console.log('🚀 ~ API.graphql ~ messagesResults---000', messagesResults)
-            const messagesInfo = messagesResults.data.getMessagesByVideoIdWithSort
-            refFetchPrevMess.current(messagesInfo)
-            setIsGettingMess(false)
-          })
-        } else {
-          let nextToken = prevToken
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          let listQV: APIt.GetMessagesByVideoIdQueryVariables = {
-            video_id: key_video_id,
-            sortDirection: sortOrder,
-            limit: LIMIT_MESS,
-            nextToken,
-          }
-          // console.log('🚀 ~ getMessagesByVideoId ~ 222')
-          API.graphql(graphqlOperation(getMessagesByVideoId, listQV)).then((messagesResults) => {
-            const messagesInfo = messagesResults.data.getMessagesByVideoId
-            refFetchPrevMess.current(messagesInfo)
-            setIsGettingMess(false)
-          })
-        }
-
-        // fetch mess prev after rewind => token is removed (check isTokenBroken)
-        // if (
-        //   isTokenBroken
-        // ) {
-        //   listQV = {
-        //     ...listQV,
-        //     filter: {
-        //       video_time: {
-        //         le: prevTime,
-        //       },
-        //     },
-        //   }
-        // }
-      } catch (error) {
-        setIsGettingMess(false)
-        console.error(error)
-      }
-    }
-
-    const refFetchMessAuto = useRef(null)
-    const handleFetchMessAuto = (video_time) => {
-      // only get messages if no rewind
-      if (!isGettingRewindMess) {
-        // console.log('🚀 ~ handleFetchMessAuto ~ video_time', video_time)
-        const transformMessAsc = sortMessages([...autoGetMess])
-        // setStateMessages(transformMessAsc.filter((v) => +v.video_time <= +videoPlayedSecond.current))
-        setCacheMess((messages) => [...messages, ...transformMessAsc])
-        const transformDonateMessAsc = transformMessAsc.filter(
-          (item) => +item.display_avatar_time >= videoPlayedSecond.current && item.is_premium && +item.point > 300
-        )
-        // const transformDonateMessAsc = transformDonateMess
-        // const transformDonateMessAsc = sortMessages(transformDonateMess)
-        // comment if no get in initial
-        // save mess for use in local
-        setCacheDonateMess((messages) => [...messages, ...transformDonateMessAsc])
-        setNextTime(video_time + INTERVAL_AUTO_GET_MESS)
-        setAutoGetMess([])
-      }
-    }
-    refFetchMessAuto.current = handleFetchMessAuto
-
-    const refFetchRewindMess = useRef(null)
-    const handleFetchRewindMess = (video_time, nextTime) => {
-      // console.log('🚀 ~ handleFetchRewindMess ~ video_time', video_time)
-      // console.log('🚀 ~ handleFetchRewindMess ~ videoTimeIsRewinding', videoTimeIsRewinding)
-      // only get messages with last rewind
-      if (videoTimeIsRewinding === video_time) {
-        // console.log('🚀 ~ handleFetchRewindMess ~ nextTime--ok', nextTime)
-        const oldPrevRewindMess = prevRewindMess?.[video_time] ? [...prevRewindMess[video_time]] : []
-        const newRewindMess = rewindMess?.[video_time] ? [...oldPrevRewindMess, ...rewindMess[video_time]] : [...oldPrevRewindMess]
-        // console.log('🚀 ~ handleFetchRewindMess ~ newRewindMess', newRewindMess)
-        const transformMessAsc = sortMessages([...newRewindMess])
-
-        setStateMessages(transformMessAsc.filter((v) => +v.video_time <= +videoPlayedSecond.current))
-        setCacheMess(transformMessAsc)
-
-        const transformDonateMessAsc = transformMessAsc.filter(
-          (item) => +item.display_avatar_time >= videoPlayedSecond.current && item.is_premium && +item.point > 300
-        )
-        // only get mess has time < played second
-        const newTransformMessAsc = transformDonateMessAsc.filter((v) => +v.video_time <= +videoPlayedSecond.current)
-        setMessagesDonate([...newTransformMessAsc])
-        // save mess for use in local
-        setCacheDonateMess([...transformDonateMessAsc])
-
-        setPrevRewindMess({})
-        setRewindMess({})
-        setIsGettingMess(false)
-        setIsGettingRewindMess(false)
-        // set prev time to scroll to load more
-        setPrevTime(video_time - 1)
-        // set next time to auto get mess repeat
-        setNextTime(nextTime + 1)
-        // set is token broken to allow scroll to load more
-        setIsTokenBroken(true)
-        // reset prev token to get mess is not error
-        // setPrevToken(null)
-      }
-    }
-    refFetchRewindMess.current = handleFetchRewindMess
-
-    // fetch messages next when rewind or mess auto get
-    const fetchNextMess = (
-      getType = GET_MESS_TYPE.FETCH_NEXT,
-      video_time = -1,
-      sortOrder = APIt.ModelSortDirection.ASC,
-      nextToken = null
-    ) => {
-      try {
-        let limitMess = LIMIT_MESS
-        // console.log('🚀 ~ loadMoreMess ~ fetchNextMess--0000', getType)
-        // console.log('🚀 ~ fetchPrevMess ~ video_time---000', video_time)
-        if (getType === GET_MESS_TYPE.FETCH_NEXT) {
-          setIsGettingRewindMess(true)
-          setIsGettingMess(true)
-          limitMess = LIMIT_FETCH_NEXT
-        }
-        if (getType === GET_MESS_TYPE.FETCH_ARCHIVE_INITIAL) {
-          setIsGettingMess(true)
-        }
-        if (getType === GET_MESS_TYPE.FETCH_NEXT) {
-          setVideoTimeIsRewinding(video_time)
-        }
-
-        const nextTime = +video_time + INTERVAL_AUTO_GET_MESS - 1
-        // console.log('🚀 ~ fetchPrevMess ~ video_time', video_time)
-        // console.log('🚀 ~ nextTime---999', nextTime)
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        let listQV: APIt.GetMessagesByVideoIdWithSortQueryVariables = {
-          video_id: key_video_id,
-          video_time: {
-            between: [video_time, nextTime],
-          },
-          // video_time: {
-          //   ge: video_time,
-          //   le: nextTime
-          // },
-          sortDirection: sortOrder,
-          limit: limitMess,
-          nextToken,
-          // filter: {
-          //   video_time: {
-          //     ge: 900,
-          //     // le: nextTime,
-          //   },
-          // },
-        }
-
-        // if (video_time !== -1) {
-        //   listQV = {
-        //     ...listQV,
-        //     filter: {
-        //       video_time: {
-        //         ge: video_time,
-        //         le: nextTime,
-        //       },
-        //     },
-        //   }
-        // }
-        // console.log('🚀 ~ abc ~ 222')
-        API.graphql(graphqlOperation(getMessagesByVideoIdWithSort, listQV)).then((messagesResults) => {
-          const messagesInfo = messagesResults.data.getMessagesByVideoIdWithSort
-          // && !_.isEmpty(messagesInfo.items)
-          if (getType === GET_MESS_TYPE.FETCH_NEXT) {
-            const newMess = [...messagesInfo.items]
-            if (messagesInfo.nextToken) {
-              // console.log('🚀 ~ API.graphql ~ FETCH_NEXT---999', messagesInfo.items)
-              // save info of messages with video time
-              setRewindMess((items) => {
-                return { ...items, [video_time]: items?.[video_time] ? [...items[video_time], ...newMess] : [...newMess] }
-              })
-              // setRewindMess((items) => {...items, video_time: [......messagesInfo.items]})
-              // setRewindMess((messages) => [...messages, ...messagesInfo.items])
-              fetchNextMess(getType, video_time, sortOrder, messagesInfo.nextToken)
-            } else {
-              // console.log('🚀 ~ API.graphql ~ FETCH_NEXT---000', messagesInfo.items)
-              // save info of messages with video time
-              setRewindMess((items) => {
-                return { ...items, [video_time]: items?.[video_time] ? [...items[video_time], ...newMess] : [...newMess] }
-              })
-              refFetchRewindMess.current(video_time, nextTime)
-              setIsGettingMess(false)
-            }
-          } else if (getType === GET_MESS_TYPE.AUTO) {
-            if (messagesInfo.nextToken) {
-              setAutoGetMess((messages) => [...messages, ...messagesInfo.items])
-              fetchNextMess(getType, video_time, sortOrder, messagesInfo.nextToken)
-            } else {
-              setAutoGetMess((messages) => [...messages, ...messagesInfo.items])
-              refFetchMessAuto.current(video_time)
-            }
-          } else if (getType === GET_MESS_TYPE.FETCH_ARCHIVE_INITIAL) {
-            // console.log('🚀 ~ API.graphql ~ messagesInfo.nextToken', messagesInfo.nextToken)
-            if (messagesInfo.nextToken) {
-              setArchiveInitMess((messages) => [...messages, ...messagesInfo.items])
-              fetchNextMess(getType, video_time, sortOrder, messagesInfo.nextToken)
-            } else {
-              setArchiveInitMess((messages) => [...messages, ...messagesInfo.items])
-              refFetchMessInitialArchive.current(video_time)
-              setIsGettingMess(false)
-            }
-          }
-        })
-      } catch (error) {
-        setIsGettingRewindMess(false)
-        setIsGettingMess(false)
-        console.error(error)
-      }
-    }
     // console.log('🚀 ~ isStreaming ~ videoPlayedSecond.current', videoPlayedSecond.current)
     // console.log('🚀 ~ isStreaming ~ streamingSecond', streamingSecond)
-    const isStreaming = (() => {
-      // console.log('🚀 ~ isStreaming ~ videoType', videoType, videoPlayedSecond.current, streamingSecond)
-      // console.log('🚀 ~ isStreaming ~ videoPlayedSecond.current >= streamingSecond', videoPlayedSecond.current >= streamingSecond)
-      // return true
-      if (videoType === STATUS_VIDEO.LIVE_STREAM) {
-        return true
-        // if (streamingSecond === Infinity) {
-        //   return true
-        // }
-        // if (videoPlayedSecond.current >= streamingSecond) {
-        //   return true
-        // }
-      }
-      return false
-    })()
-
-    const renderLoader = () => {
-      if (isGettingMess === true || isGettingPrevRewindMess === true) {
-        return (
-          <Box className={classes.loaderBox}>
-            <Loader />
-          </Box>
-        )
-      }
-      return null
-    }
+    // const isStreaming = (() => {
+    //   // console.log('🚀 ~ isStreaming ~ videoType', videoType, videoPlayedSecond.current, streamingSecond)
+    //   // console.log('🚀 ~ isStreaming ~ videoPlayedSecond.current >= streamingSecond', videoPlayedSecond.current >= streamingSecond)
+    //   // return true
+    //   if (videoType === STATUS_VIDEO.LIVE_STREAM) {
+    //     return true
+    //     // if (streamingSecond === Infinity) {
+    //     //   return true
+    //     // }
+    //     // if (videoPlayedSecond.current >= streamingSecond) {
+    //     //   return true
+    //     // }
+    //   }
+    //   return false
+    // })()
+    const isStreaming = videoType === STATUS_VIDEO.LIVE_STREAM
+    // const isStreaming = true
 
     const messContainer = document.getElementById('list_mess')
     // const messContainer = document.getElementById('messList')
@@ -766,6 +644,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         // @ts-ignore
         if (event.wheelDeltaY > 0 && messContainer.offsetHeight === messContainer.scrollHeight) {
           // console.log('🚀 ~ test--1111', messContainer)
+          console.log('==== handle load more ====')
           handleLoadMore()
         }
       }
@@ -795,8 +674,9 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     // }
 
     // const messListContainer = document.getElementById('list_mess')
-    // if (messListContainer) {
-    //   messListContainer.onscroll = function () {
+    // if (messContainer) {
+    //   messContainer.onscroll = function () {
+    //     console.log('🚀 ~ event-111', event)
     //     // if (messContainer.scrollTop + messContainer.offsetHeight >= messContainer.scrollHeight) {
     //     //   // if (messContainer.scrollTop === 0) {
     //     //   setDisplaySeeMore(false)
@@ -831,35 +711,88 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     }
 
     const refOnCreateMess = useRef(null)
-    const onCreateMess = (createdMessage) => {
+    const onCreateMess = (createdMessage: any) => {
+      const canAddMess = checkAddMessage(createdMessage)
+      console.log('🚀 ~ onCreateMess ~ canAddMess', createdMessage)
       if (createdMessage?.video_id === key_video_id && videoType === STATUS_VIDEO.LIVE_STREAM) {
-        const foundIndex = findMessUpdated(cacheMess, createdMessage, 'local_id')
+        const created_at = createdMessage?.createdAt ? moment(createdMessage?.createdAt).utc().format('YYYY-MM-DD HH:mm:ss') : null
+        if (createdMessage?.is_premium) {
+          const uuid = createdMessage?.uuid
+          const total = createdMessage?.point
+          const newDataGiver = CommonHelper.getRankInfo(
+            [...giverRankInfo],
+            [{ uuid, total, user_avatar: createdMessage?.parent?.avatar, user_nickname: createdMessage?.parent?.user_name, created_at }],
+            GIVER_RANK_TYPE
+          )
+          setGiverRankInfo(newDataGiver)
+          let newReceiver: RankingsItem = { total, created_at }
+          // donate for user gift
+          if (createdMessage?.giftMasterId) {
+            newReceiver = {
+              ...newReceiver,
+              master_uuid: createdMessage?.giftMasterId,
+              master_name: createdMessage?.receiver?.name,
+              master_avatar: createdMessage?.receiver?.image,
+            }
+          } else {
+            // donate for streamer
+            newReceiver = {
+              ...newReceiver,
+              master_uuid: null,
+              user_nickname: liveStreamInfo?.streamer?.user_nickname,
+              user_avatar: liveStreamInfo?.streamer?.user_avatar,
+            }
+          }
+          const newDataReceiver = CommonHelper.getRankInfo([...receiverRankInfo], [{ ...newReceiver }], RECEIVER_RANK_TYPE)
+          setReceiverRankInfo(newDataReceiver)
+        }
+
+        const foundIndex = findMessUpdated(cacheStateMessRef.current, createdMessage, 'local_id')
         // only add new message if no found message in local
         if (foundIndex === -1) {
           // if (videoPlayedSecond.current >= streamingSecond || liveStreamInfo.is_pausing_live) {
           if (isStreaming) {
             // render new messages with savedMess
-            const isMessageInBottom = checkMessIsInBottom()
-            setStateMessages([...cacheMess, createdMessage])
-            if (isMessageInBottom) {
-              scrollToCurrentMess()
-            }
+            // const isMessageInBottom = checkMessIsInBottom()
+            if (canAddMess) setStateMessages([...cacheStateMessRef.current, createdMessage])
+            // if (isMessageInBottom) {
+            //   scrollToCurrentMess()
+            // }
 
             // render new users donate
             if (isPremiumChat(createdMessage, false)) {
-              let newMessDonate = [...cacheDonateMess]
+              let newMessDonate = [...cacheDonateMessRef.current]
               // newMessDonate = newMessDonate.filter((item) => +item.display_avatar_time > +streamingSecond)
-              newMessDonate = newMessDonate.filter((item) => +item.display_avatar_time > +videoPlayedSecond.current)
+              newMessDonate = filterMessDonateLocal(newMessDonate)
+              // newMessDonate.filter((item) => +item.display_avatar_time > +videoPlayedSecond.current)
               // render user donate icon by time of local
               setMessagesDonate([...newMessDonate, createdMessage])
             }
           }
           // save mess for local
-          setCacheMess((messages) => [...messages, createdMessage])
+          // setCacheMess((messages) => [...messages, createdMessage])
+          if (canAddMess) cacheStateMessRef.current = [...cacheStateMessRef.current, createdMessage]
           // save donated messages for local (not check display time)
           if (isPremiumChat(createdMessage, false)) {
-            setCacheDonateMess((messages) => [...messages, createdMessage])
+            cacheDonateMessRef.current = [...cacheDonateMessRef.current, createdMessage]
+            // setCacheDonateMess((messages) => [...messages, createdMessage])
           }
+          console.log('🚀 ~ onCreateMess ~ createdMessage--00', createdMessage)
+
+          // save mess tip to cache
+          if (createdMessage?.is_premium && canAddMess) {
+            console.log('🚀 ~ onCreateMess ~ createdMessage--11', createdMessage)
+            // setCacheMessTip((messages) => [...messages, createdMessage])
+            // add new mess to mess on server
+            serverTipMessRef.current = [...serverTipMessRef.current, createdMessage]
+            // add new mess to mess on local
+            savedTipMessRef.current = [...savedTipMessRef.current, createdMessage]
+            console.log('🚀 ~ onCreateMess ~  serverTipMessRef.current', serverTipMessRef.current)
+          }
+        }
+        const savedAllMessFoundIndex = findMessUpdated(savedAllMessRef.current, createdMessage, 'local_id')
+        if (savedAllMessFoundIndex === -1) {
+          savedAllMessRef.current = [...savedAllMessRef.current, createdMessage]
         }
       }
     }
@@ -927,28 +860,34 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     }, [successGetListMess])
 
     const filterByStreaming = () => {
-      if (successGetListMess && successGetListDonateMess) {
+      if (successGetListMess && successGetListDonateMess && successGetListMessTip) {
         // fix bug streaming second is not true when access url first time
         const realStreamingSecond = videoPlayedSecond.current
         // check archive video => no use that case
         if (!firstRender && +realStreamingSecond > 0) {
           // console.log('🚀 ~ filterByStreaming ~ firstRender', firstRender)
           setFirstRender(true)
-          const newMess = cacheMess.filter((item) => +item.video_time <= +realStreamingSecond)
+          const newMess = cacheStateMessRef.current.filter((item) => +item.video_time <= +realStreamingSecond)
           const isMessageInBottom = checkMessIsInBottom()
           // render new messages with savedMess
           setStateMessages([...newMess])
 
           if (isMessageInBottom) {
-            setScrollBehavior('smooth')
+            scrollBehaviorRef.current = 'smooth'
             setIsChatInBottom(true)
           }
 
-          const newMessagesDonate = cacheDonateMess.filter((item) => +item.display_avatar_time > +realStreamingSecond)
+          const newMessagesDonate = filterMessDonateLocal(cacheDonateMessRef.current, realStreamingSecond)
+          // const newMessagesDonate = cacheDonateMess.filter(
+          //   (item) => +item.video_time <= +realStreamingSecond && +item.display_avatar_time > +realStreamingSecond
+          // )
           setMessagesDonate(newMessagesDonate)
         } else {
           // only check displaying of user donate icon
-          const newMessagesDonate = cacheDonateMess.filter((item) => +item.display_avatar_time > +realStreamingSecond)
+          const newMessagesDonate = filterMessDonateLocal(cacheDonateMessRef.current, realStreamingSecond)
+          // const newMessagesDonate = cacheDonateMess.filter(
+          //   (item) => +item.video_time <= +realStreamingSecond && +item.display_avatar_time > +realStreamingSecond
+          // )
           if (!_.isEqual(messagesDonate, newMessagesDonate)) {
             setMessagesDonate(newMessagesDonate)
           }
@@ -967,8 +906,9 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       // console.log('🚀 ~ filterMessByPlayedSecond ~ behaviorOfScroll', behaviorOfScroll)
       // const oldMessCount = stateMessages.length
       // console.log('🚀 ~ filterMessByPlayedSecond ~ oldMessCount', oldMessCount)
-      let newMess = [...cacheMess]
+      let newMess = [...cacheStateMessRef.current]
       newMess = newMess.filter((item) => +item.video_time <= +new_played_second)
+      console.log('🚀 ~ filterMessByPlayedSecond ~ newMess', newMess)
       // let isCheckSeeMore = false
       // if (oldMessCount < newMess.length) {
       //   isCheckSeeMore = true
@@ -983,37 +923,124 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         setStateMessages([...newMess])
       }
 
-      let newMessDonate = [...cacheDonateMess]
-      newMessDonate = newMessDonate.filter(
-        (item) => +item.display_avatar_time > +new_played_second && +item.video_time <= +new_played_second
-      )
+      let newMessDonate = [...cacheDonateMessRef.current]
+      newMessDonate = filterMessDonateLocal(newMessDonate, new_played_second)
+      // newMessDonate = newMessDonate.filter(
+      //   (item) => +item.display_avatar_time > +new_played_second && +item.video_time <= +new_played_second
+      // )
       // render user donate icon by time of local
       if (!_.isEqual(messagesDonate, newMessDonate)) {
         setMessagesDonate(newMessDonate)
       }
     }
 
-    // useEffect(() => {
-    //   filterMessWhenChangeTime()
-    // }, [videoPlayedSecond.current])
-
     useEffect(() => {
       if (isChatInBottom) {
-        scrollToCurrentMess(scrollBehavior)
+        scrollToCurrentMess(scrollBehaviorRef.current)
         setIsChatInBottom(false)
       }
     }, [isChatInBottom])
 
+    const filterMessDonateLocal = (allMess, currentTime = 0) => {
+      const time = currentTime ? currentTime : videoPlayedSecond.current
+      return allMess.filter(
+        (item) => +item.video_time <= +time && +item.display_avatar_time > +time && item.is_premium && +item.point > 300
+      )
+    }
+
+    const refFetchPrevMessTip = useRef(null)
+    const handleFetchPrevMessTip = () => {
+      console.log('🚀 ~ fetchMessTipWhenRewind ~ 111', 111)
+      if (stateMessages[0]) {
+        let foundMessIndex = _.findIndex(serverTipMessRef.current, (v: any) => v.local_id === stateMessages[0]?.local_id)
+        let found = _.find(serverTipMessRef.current, (v) => v.local_id === stateMessages[0]?.local_id)
+        console.log('🚀 ~ fetchPrevMessTip ~ found', found)
+        // const limit = 2
+        const limit = LIMIT_MESS
+        foundMessIndex = foundMessIndex !== -1 ? foundMessIndex : serverTipMessRef.current.length
+        console.log('🚀 ~ fetchPrevMessTip ~ foundMessIndex', foundMessIndex)
+        let startSliceIndex = foundMessIndex - limit
+        startSliceIndex = startSliceIndex > 0 ? startSliceIndex : 0
+        console.log('🚀 ~ fetchPrevMessTip ~ startSliceIndex', startSliceIndex)
+
+        let newMess: any = _.slice(serverTipMessRef.current, startSliceIndex, foundMessIndex)
+        console.log('🚀 ~ fetchMessTipWhenRewind ~ newMess', newMess)
+        const filterMess = [...newMess, ...stateMessages]
+        console.log('🚀 ~ fetchMessTipWhenRewind ~ filterMess', filterMess)
+        // const transformDonateMessAsc = transformMessAsc.filter(
+        //   (item) => +item.display_avatar_time >= videoPlayedSecond.current && item.is_premium && +item.point > 300
+        // )
+
+        // setStateMessages(filterMess)
+        setStateMessages((messages) => [...newMess, ...messages])
+        setTimeout(() => {
+          _scrollToBottom(newMess.length)
+          if (isBottom) {
+            setBottom(true)
+          }
+        }, 10)
+
+        // setCacheMess([...newMess, ...cacheMess])
+        cacheStateMessRef.current = [...newMess, ...cacheStateMessRef.current]
+        savedTipMessRef.current = [...newMess, ...savedTipMessRef.current]
+
+        // console.log('🚀 ~ fetchMessTipWhenRewind ~ cacheMessTip[0]', cacheMessTip[0])
+        console.log('🚀 ~ fetchMessTipWhenRewind ~ newMess[0]', newMess[0])
+        console.log('🚀 ~ fetchMessTipWhenRewind ~ _.first(newMess)', _.first(newMess))
+        if ((_.first(newMess) && newMess[0]?.local_id === serverTipMessRef.current[0]?.local_id) || !_.first(newMess)) {
+          setIsTokenTipBroken(false)
+        } else {
+          // enable feature get prev tip mess
+          setIsTokenTipBroken(true)
+        }
+
+        // const filterDonateMess = _.filter(
+        //   filterMess,
+        //   (v) => v.display_avatar_time >= videoPlayedSecond.current && v.is_premium && +v.point > 300
+        // )
+        // console.log('🚀 ~ fetchMessTipWhenRewind ~ filterDonateMess', filterDonateMess)
+        // setMessagesDonate(filterDonateMess)
+        // setCacheDonateMess([...newMess, ...cacheDonateMess])
+
+        setIsGettingMess(false)
+      }
+    }
+    refFetchPrevMessTip.current = handleFetchPrevMessTip
+
+    // console.log('🚀 ~ useEffect ~ isSeeking--222', isSeeking)
+
     useEffect(() => {
+      if (liveStreamInfo.seek_count) {
+        // needLoadMessRef.current = true
+      }
       if (liveStreamInfo.seek_count && !isStreaming) {
+        videoPlayedSecond.current = liveStreamInfo.seeked_second
         setBottom(true)
         // console.log('🚀 ~ useEffect ~ setBottom--000', isBottom)
         resetMessagesWhenRewind()
+        // filter and rerender list icon tip mess
+        console.log('🚀 ~ useEffect ~ liveStreamInfo.seeked_second', liveStreamInfo.seeked_second)
+        const newMessDonate = filterMessDonateLocal(cacheDonateMessRef.current, liveStreamInfo.seeked_second)
+        console.log('🚀 ~ useEffect ~ newMessDonate', newMessDonate)
+        setMessagesDonate(newMessDonate)
+
         // filterMessByPlayedSecond(liveStreamInfo.seeked_second, 'smooth')
-        fetchPrevMessWhenRewind(liveStreamInfo.seeked_second)
+        // if (prevMessSubTabRef.current === SUB_TABS.MESS.TIP) {
+        isTipMessTab && setIsGettingMess(true)
+        setTimeout(() => {
+          refFetchMessTipWhenRewind?.current(liveStreamInfo.seeked_second)
+        }, DEBOUNCE_SECOND)
+        // } else {
+        console.log('🚀 ~ fetchPrevMessWhenRewind--111', 111)
+        executeGetPrevRewind(liveStreamInfo.seeked_second)
+        // }
         // fetchNextMess(GET_MESS_TYPE.FETCH_NEXT, liveStreamInfo.seeked_second)
-        if (!isSeeking) {
-          setIsSeeking(true)
+        // console.log('🚀 ~ useEffect ~ isSeeking---000', isSeeking)
+
+        if (!seekingRef.current) {
+          // console.log('🚀 ~ useEffect ~ isSeeking', isSeeking)
+          // setIsSeeking(true)
+          seekingRef.current = true
         }
       }
     }, [liveStreamInfo.seek_count])
@@ -1069,9 +1096,22 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       }
     }, [userProfile])
 
+    const refHandleResetTabs = useRef(null)
+    const handleResetTabs = () => {
+      // only reset active tab on PC
+      // reset tabs to default value when view other videos
+      if (!isMobileParent) {
+        setActiveTab(VIDEO_TABS.CHAT)
+        setActiveSubTab(SUB_TABS.MESS.ALL)
+        prevMessSubTabRef.current = SUB_TABS.MESS.ALL
+      }
+    }
+    refHandleResetTabs.current = handleResetTabs
+
     useEffect(
       () => () => {
         dispatch(resetChatState())
+        refHandleResetTabs.current()
       },
       ['componentWillUnMount']
     )
@@ -1082,53 +1122,64 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       // setSavedMess([])
       setMessagesDonate([])
       // setSavedDonateMess([])
-      setCacheMess([])
-      setCacheDonateMess([])
-      setRewindMess({})
-      setPrevRewindMess({})
-      setAutoGetMess([])
+      // setCacheMess([])
+      cacheStateMessRef.current = []
+      cacheDonateMessRef.current = []
+      // setCacheDonateMess([])
+      // setRewindMess({})
+      rewindMessRef.current = {}
+      // setPrevRewindMess({})
+      prevRewindMessRef.current = {}
+      autoGetMessRef.current = []
+      // setAutoGetMess([])
       setMessActiveUser(null)
     }
 
     const resetMessagesWhenRewind = () => {
       setStateMessages([])
-      setCacheMess([])
-      setCacheDonateMess([])
+      // setCacheMess([])
+      cacheStateMessRef.current = []
       setMessActiveUser(null)
+      // setCacheDonateMess([])
     }
 
     useEffect(() => {
       if (key_video_id) {
         resetMessages()
+        refHandleResetTabs.current()
       }
     }, [key_video_id])
 
-    const filterMessWhenChangeTime = () => {
+    const filterMessWhenChangeTime = useRef(null)
+    const handleFilterMessWhenChangeTime = () => {
+      // const isTipSubTab = prevMessSubTabRef.current === SUB_TABS.MESS.TIP
       // auto get mess when no rewind video
       if (!isGettingRewindMess && !isStreaming) {
         // check is streaming addition
         // if isStreaming
-        if (!isStreaming && videoPlayedSecond.current === nextTime - SECOND_AUTO_GET_MESS_BEFORE) {
+        if (!isStreaming && videoPlayedSecond.current === nextTimeRef.current - SECOND_AUTO_GET_MESS_BEFORE) {
           // console.log('🚀 ~ useEffect ~ fetchNextMess-auto', fetchNextMess)
-          fetchNextMess(GET_MESS_TYPE.AUTO, nextTime)
+          fetchNextMess(GET_MESS_TYPE.AUTO, nextTimeRef.current)
         }
       }
       // console.log('2-played->streaming->range', videoPlayedSecond.current, streamingSecond, streamingSecond - videoPlayedSecond.current)
       if (isStreaming) {
         filterByStreaming()
       } else {
-        console.log('🚀 ~ filterMessWhenChangeTime ~ isSeeking', isSeeking)
+        // console.log('🚀 ~ filterMessWhenChangeTime ~ isSeeking', isSeeking)
         //  filter mess when user no seeking or pausing live video
-        if (!isSeeking && !liveStreamInfo.is_pausing_live) {
+        if (!seekingRef.current && !liveStreamInfo.is_pausing_live) {
+          // console.log('🚀 ~ filterMessWhenChangeTime ~ isSeeking', isSeeking)
           filterMessByPlayedSecond(videoPlayedSecond.current)
         }
       }
-      if (isSeeking) {
-        setIsSeeking(false)
+      if (seekingRef.current) {
+        seekingRef.current = false
       }
     }
+    filterMessWhenChangeTime.current = handleFilterMessWhenChangeTime
 
-    console.log('🚀 ~  videoPlayedSecond.current--333', videoPlayedSecond.current)
+    // console.log('🚀 ~  videoPlayedSecond.current--333', videoPlayedSecond.current)
 
     const handleUpdateVideoTime = useRef(null)
     const onUpdateVideoTime = (videoInfo) => {
@@ -1139,9 +1190,9 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
 
       // update played second
       if (Math.floor(newPlayedSecondTime) !== videoPlayedSecond.current) {
-        console.log('🚀 ~  videoPlayedSecond.current--000', videoPlayedSecond.current)
+        // console.log('🚀 ~  videoPlayedSecond.current--000', videoPlayedSecond.current)
         videoPlayedSecond.current = Math.floor(newPlayedSecondTime)
-        filterMessWhenChangeTime()
+        filterMessWhenChangeTime.current()
       }
       // update streaming second
       if (Math.floor(durationTime) !== videoStreamingSecond.current) {
@@ -1158,7 +1209,13 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
 
     useEffect(() => {
       console.log('🚀 ~ useEffect ~ videoRefInfo---999', videoRefInfo)
+      // console.log('🚀 ~ useEffect ~ videoRefInfo---555', videoRefInfo?.current?.currentTime)
       if (videoRefInfo && videoRefInfo?.current) {
+        videoRefInfo?.current?.addEventListener('seeking', () => {
+          console.log('=================SEEKING--000===================')
+          seekingRef.current = true
+          // setIsSeeking(true)
+        })
         videoRefInfo?.current?.addEventListener('timeupdate', handleUpdateTime)
       }
       return () => {
@@ -1168,23 +1225,185 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       }
     }, [videoRefInfo])
 
+    // const resetMessWhenSwitchTab = () => {
+    //   setStateMessages([])
+    //   // setCacheMess([])
+    //   cacheStateMessRef.current = []
+    //   // setMessagesDonate([])
+    //   // setCacheDonateMess([])
+    // }
+
+    // const handleGetMessTip = () => {
+    //   // if get mess initial success => get mess same as when rewind time
+    //   if (successGetListMessTip) {
+    //     setIsGettingMess(true)
+    //     setTimeout(() => {
+    //       console.log('🚀 ~ setTimeout ~ setIsGettingMess', 111)
+    //       refFetchMessTipWhenRewind?.current(videoPlayedSecond.current)
+    //     }, DEBOUNCE_SECOND)
+    //   } else {
+    //     // handleGetMessTipInitial()
+    //   }
+    // }
+
+    const handleSwitchMainTab = () => {
+      if (!isFirstVisitPage) {
+        console.log('handleScrollToBottom')
+        _scrollToBottom(stateMessages.length)
+        setBottom(true)
+        // console.log('🚀 ~ useEffect ~ setBottom', 4444)
+        if (isStreaming) switchTabRef.current = true
+      }
+    }
+
+    const getMessWhenSwitchSubTab = () => {
+      if (!isFirstVisitPage) {
+        switch (activeSubTab) {
+          case SUB_TABS.MESS.TIP:
+            setBottom(true)
+            // resetMessWhenSwitchTab()
+
+            if (!successGetListMessTip) {
+              handleGetMessTipInitial()
+              return
+            }
+            console.log('🚀 ~ getMessWhenSwitchSubTab ~ successGetListMessTip', successGetListMessTip)
+
+            // if (needLoadMessRef.current) {
+            //   handleGetMessTip()
+            // } else {
+            // eslint-disable-next-line no-case-declarations
+            const filterMess = _.filter(savedTipMessRef.current, (v) => v.video_time <= videoPlayedSecond.current)
+            console.log('🚀 ~ getMessWhenSwitchSubTab ~ videoPlayedSecond.current', videoPlayedSecond.current)
+            console.log('🚀 ~ getMessWhenSwitchSubTab ~ filterMess', filterMess)
+            cacheStateMessRef.current = savedTipMessRef.current
+            console.log('🚀 ~ getMessWhenSwitchSubTab ~ serverTipMessRef.current', serverTipMessRef.current)
+            setStateMessages(filterMess)
+            console.log('🚀 ~ 000-current', serverTipMessRef.current)
+            // }
+            break
+
+          case SUB_TABS.MESS.ALL:
+            console.log('Switch to sub tab chat all')
+            setBottom(true)
+            // resetMessWhenSwitchTab()
+            // if (isSwitchingSubTabRef.current) {
+            //   return
+            // }
+            console.log('Switch to sub tab chat all fire')
+            if (isStreaming) {
+              switchTabRef.current = true
+              // fetchMessInitialStreaming()
+            } else {
+              // if (needLoadMessRef.current) {
+              //   // fetch prev mess rewinded when switch tab
+              //   executeGetPrevRewind(videoPlayedSecond.current)
+              // } else {
+              // }
+            }
+            // eslint-disable-next-line no-case-declarations
+            const newFilterMess = _.filter(savedAllMessRef.current, (v) => v.video_time <= videoPlayedSecond.current)
+            console.log('🚀 ~ getMessWhenSwitchSubTab ~ filterMess', newFilterMess)
+            cacheStateMessRef.current = savedAllMessRef.current
+            setStateMessages(newFilterMess)
+            console.log('🚀 ~ 000-current---111', serverTipMessRef.current)
+            break
+          default:
+            break
+        }
+      }
+    }
+
+    useEffect(() => {
+      if (isFirstVisitPage) {
+        setIsFirstVisitPage(false)
+      }
+
+      console.log('prevMessSubTabRef.current - change sub tab: ', prevMessSubTabRef.current)
+      console.log('needLoadMessRef.current: - change sub tab', needLoadMessRef.current)
+
+      getMessWhenSwitchSubTab()
+      // reset status need load mess
+      needLoadMessRef.current = false
+    }, [activeSubTab])
+
+    useEffect(() => {
+      console.log('prevMessSubTabRef.current: - change tab', prevMessSubTabRef.current)
+      console.log('needLoadMessRef.current: - change tab', needLoadMessRef.current)
+      // reset prev token when switch tab
+      // if (activeTab === VIDEO_TABS.RANKING) {
+      //   prevTokenRef.current = null
+      // }
+      if (!isFirstVisitPage && activeTab === VIDEO_TABS.CHAT) {
+        if (!isMobile) handleSwitchMainTab()
+      } else {
+        // isSwitchingSubTabRef.current = false
+      }
+
+      // get list ranking if has not get
+      if (activeTab === VIDEO_TABS.RANKING && !rankingListMeta.pending && !rankingListMeta.loaded) {
+        console.log('Change tab fire ranking')
+        fetchDonateRanking({ video_id: detailVideoResult.uuid })
+      }
+    }, [activeTab])
+
+    // get all mess tip initial and render icon tip mess separate with all mess
+    const handleGetMessTipInitial = () => {
+      console.log('🚀 ~ handleGetMessTipInitial ~ 111', 11)
+
+      // if has not get mess tip initial yet => get mess tip initial
+      // setInitTipMess([])
+      initTipMessRef.current = []
+      fetchMessTipInitial()
+    }
+    // console.log('🚀 ~ useEffect ~ videoPlayedSecond.1111', videoPlayedSecond.current)
+
     useEffect(() => {
       // console.log('🚀 ~ useEffect ~ isStreaming--000', isStreaming, videoType)
       // console.log('🚀 ~ useEffect ~ isStreaming', playedSecond)
       // console.log('🚀 ~ useEffect ~ isResizedScreen', isResizedScreen)
-      if (isStreaming) {
-        // console.log('🚀 ~ useEffect ~ isStreaming', isStreaming)
-        fetchMessInitialStreaming()
-      } else if (!isStreaming && videoType === STATUS_VIDEO.ARCHIVE) {
-        fetchNextMess(GET_MESS_TYPE.FETCH_ARCHIVE_INITIAL, isResizedScreen ? playedSecond : 0)
-      }
-    }, [videoType])
+      // TODO
+      // reset mess donate when move from live stream to archive
+      setMessagesDonate([])
+      cacheDonateMessRef.current = []
+      // setCacheDonateMess([])
 
-    useEffect(() => {
-      if (dataPurchaseTicketSuperChat?.code === 200) {
-        setPurchaseDialogVisible(false)
+      if (isStreaming) {
+        handleGetMessTipInitial()
+        fetchMessInitialStreaming()
+        // console.log('🚀 ~ useEffect ~ isStreaming', isStreaming)
+        // if (prevMessSubTabRef.current === SUB_TABS.MESS.ALL) {
+        //   fetchMessInitialStreaming()
+        // } else if (prevMessSubTabRef.current === SUB_TABS.MESS.TIP) {
+        //   // handleGetMessTip()
+        // }
+      } else if (!isStreaming && videoType === STATUS_VIDEO.ARCHIVE) {
+        // console.log('🚀 ~ useEffect ~ videoPlayedSecond.current', videoPlayedSecond.current)
+        const currentTime = Math.floor(videoRefInfo?.current?.currentTime || 0)
+        // console.log('🚀 ~ useEffect ~ isMobile', isMobile)
+        // console.log('🚀 ~ useEffect ~ currentTime', currentTime)
+        if (+currentTime > 0) {
+          // reassign current time of playing video
+          videoPlayedSecond.current = currentTime
+        }
+
+        handleGetMessTipInitial()
+        // if (prevMessSubTabRef.current === SUB_TABS.MESS.ALL) {
+        // fetch prev and rewind mess when playing video and re-mount chat container
+        if (+currentTime > 0) {
+          console.log('🚀 ~ useEffect ~ isResizedScreen', 22)
+          executeGetPrevRewind(currentTime)
+        } else {
+          console.log('🚀 ~ useEffect ~ isResizedScreen', 33)
+          isPrevAllMessTab && fetchNextMess(GET_MESS_TYPE.FETCH_ARCHIVE_INITIAL, currentTime)
+        }
+        // } else if (prevMessSubTabRef.current === SUB_TABS.MESS.TIP) {
+        //   console.log('🚀 ~ useEffect ~ isResizedScreen', 222)
+        //   // handleGetMessTip()
+        // }
       }
-    }, [dataPurchaseTicketSuperChat])
+      // fetchMessInitialStreaming()
+    }, [videoType])
 
     const refUpdateMessLocal = useRef(null)
     const handleUpdateMessLocal = (result, local_message, error = false) => {
@@ -1207,7 +1426,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     }
     refUpdateMessBeforeCallApi.current = handleUpdateMessBeforeCallApi
 
-    async function deleteMsg(message: any) {
+    const deleteMsg = useCallback(async (message: any) => {
       const input = {
         id: message.id,
         delete_flag: true,
@@ -1225,9 +1444,9 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
           refUpdateMessLocal.current([], { ...message, delete_flag: true }, true)
         }
       }
-    }
+    }, [])
 
-    const reDeleteMess = async (message: any) => {
+    const reDeleteMess = useCallback(async (message: any) => {
       const input = {
         id: message.id,
         delete_flag: true,
@@ -1242,76 +1461,9 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       } catch (errors) {
         if (errors && errors.errors.length !== 0) refUpdateMessLocal.current([], newMess, true)
       }
-    }
+    }, [])
 
-    const sortMessages = (messages, isSortAsc = true) => {
-      const new_mess = [...messages]
-      const sortFactor = isSortAsc ? 1 : -1
-      return new_mess.sort((a: any, b: any) => sortFactor * (+a.video_time - +b.video_time || a.created_time.localeCompare(b.created_time)))
-    }
-
-    const handleChatInputOnFocus = () => {
-      handleKeyboardVisibleState(true)
-    }
-
-    const handleChatInputOnBlur = () => {
-      handleKeyboardVisibleState(false)
-    }
-
-    const handlePremiumChatBoxClickOutside = () => {
-      setPurchaseDialogVisible(false)
-    }
-
-    const purchaseInfoDialog = () => (
-      <PremiumChatDialog
-        normalMessHasError={errorMess ? true : false}
-        createMess={createMess}
-        onClickOutside={donateConfirmModalIsShown() ? null : handlePremiumChatBoxClickOutside}
-        onPressDonate={onPressDonate}
-        myPoint={myPoint}
-        openPurchasePointModal={openPurchasePointModal}
-        isEnabledChat={isEnabledChat}
-      />
-    )
-
-    const purchaseIconClick = () => {
-      setPurchaseDialogVisible(!purchaseDialogVisible)
-    }
-
-    const getMessageWithoutNgWords = (chatMessContent) => {
-      const ngWords = checkVideoNgWord(chatMessContent)
-      if (ngWords.length !== 0) {
-        ngWords.map((item) => {
-          if (chatMessContent.includes(item)) {
-            let regex: RegExp
-            regex = new RegExp(item.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&'), 'g')
-            chatMessContent = chatMessContent.replace(regex, '*'.repeat(item.length))
-          }
-        })
-      }
-      return chatMessContent
-    }
-
-    type MessInput = {
-      id?: string
-      owner?: string
-      text?: string
-      uuid?: string | null
-      video_id?: string
-      delete_flag?: boolean | null
-      video_time?: number
-      display_avatar_time?: string | null
-      point?: string | null
-      use_point_id?: string | null
-      is_premium?: boolean | null
-      userId?: string
-      local_id?: string | null
-      created_time?: string | null
-      parent?: {
-        avatar?: string
-        user_name?: string
-      }
-    }
+    const { getMessageWithoutNgWords } = useCheckNgWord()
 
     const updateOldMessData = (updatedMessage, objWithNewProps, compareProp = 'id') => {
       const updatedMessWithNewProp = { ...updatedMessage, ...objWithNewProps }
@@ -1321,11 +1473,12 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         newStateMess[foundIndex] = { ...updatedMessWithNewProp }
         setStateMessages(newStateMess)
       }
-      foundIndex = findMessUpdated(cacheMess, updatedMessage, compareProp)
+      foundIndex = findMessUpdated(cacheStateMessRef.current, updatedMessage, compareProp)
       if (foundIndex !== -1) {
-        const newCacheMess = [...cacheMess]
+        const newCacheMess = [...cacheStateMessRef.current]
         newCacheMess[foundIndex] = { ...updatedMessWithNewProp }
-        setCacheMess(newCacheMess)
+        cacheStateMessRef.current = newCacheMess
+        // setCacheMess(newCacheMess)
       }
       foundIndex = findMessUpdated(messagesDonate, updatedMessage, compareProp)
       if (foundIndex !== -1) {
@@ -1333,16 +1486,45 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         newDonateMess[foundIndex] = { ...updatedMessWithNewProp }
         setMessagesDonate(newDonateMess)
       }
-      foundIndex = findMessUpdated(cacheDonateMess, updatedMessage, compareProp)
+      foundIndex = findMessUpdated(cacheDonateMessRef.current, updatedMessage, compareProp)
       if (foundIndex !== -1) {
-        const newCacheDonateMess = [...cacheDonateMess]
+        const newCacheDonateMess = [...cacheDonateMessRef.current]
         newCacheDonateMess[foundIndex] = { ...updatedMessWithNewProp }
-        setCacheDonateMess(newCacheDonateMess)
+        cacheDonateMessRef.current = newCacheDonateMess
+        // setCacheDonateMess(newCacheDonateMess)
+      }
+      // update cache message tip
+      foundIndex = findMessUpdated(serverTipMessRef.current, updatedMessage, compareProp)
+      if (foundIndex !== -1) {
+        const newCacheMessTip = [...serverTipMessRef.current]
+        newCacheMessTip[foundIndex] = { ...updatedMessWithNewProp }
+        if (updatedMessage?.is_premium === true) {
+          serverTipMessRef.current = newCacheMessTip
+        }
+      }
+
+      // update message tip on local
+      foundIndex = findMessUpdated(savedTipMessRef.current, updatedMessage, compareProp)
+      if (foundIndex !== -1) {
+        const newSavedMessTip = [...savedTipMessRef.current]
+        newSavedMessTip[foundIndex] = { ...updatedMessWithNewProp }
+        if (updatedMessage?.is_premium === true) {
+          savedTipMessRef.current = newSavedMessTip
+        }
+      }
+
+      // update cache message tip
+      foundIndex = findMessUpdated(savedAllMessRef.current, updatedMessage, compareProp)
+      if (foundIndex !== -1) {
+        const newSavedAllMess = [...savedAllMessRef.current]
+        newSavedAllMess[foundIndex] = { ...updatedMessWithNewProp }
+        savedAllMessRef.current = newSavedAllMess
       }
     }
 
     const refCreateMessLocal = useRef(null)
     const handleCreateMessLocal = (result, local_message, error = false) => {
+      // console.log('🚀 ~ handleCreateMessLocal ~ result--000', result)
       if (error) {
         updateOldMessData(local_message, { mess_status: STATUS_SEND_MESS.ERROR_SEND }, 'local_id')
       } else {
@@ -1354,7 +1536,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     }
     refCreateMessLocal.current = handleCreateMessLocal
 
-    const resendMess = async (message: any) => {
+    const resendMess = useCallback(async (message: any) => {
       if (isStreaming) {
         const videoTime = videoPlayedSecond.current
         let newMess = { ...message, video_time: videoTime }
@@ -1371,106 +1553,86 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
           if (errors && errors.errors.length !== 0) refCreateMessLocal.current([], newMess, true)
         }
       }
+    }, [])
+
+    const checkAddMessage = (local_message: any) => {
+      const isPremiumMessage = local_message.is_premium
+
+      // current at tip messs sub tab and add normal mess => not add
+      if (!isPremiumMessage && prevMessSubTabRef.current === SUB_TABS.MESS.TIP) {
+        return false
+      }
+      return prevMessSubTabRef.current !== SUB_TABS.MESS.TIP || (isPremiumMessage && prevMessSubTabRef.current === SUB_TABS.MESS.TIP)
     }
 
-    const createMess = async (message: string, point = 0): Promise<void> => {
-      if (successFlagGetAddUSer && Object.keys(chatUser).length > 0 && message && isEnabledChat && isStreaming) {
-        const videoTime = videoPlayedSecond.current
-        let input: MessInput = {
-          // id is auto populated by AWS Amplify
-          owner: chatUser.user_name,
-          text: sanitizeMess(message),
-          uuid: chatUser.uuid,
-          video_id: key_video_id,
-          video_time: videoTime,
-          // point: 500,//optional : show when Post is use pOint
-          is_premium: false,
-          userId: chatUser.id,
-          delete_flag: false,
-          local_id: uuidv4(),
-          created_time: moment().toISOString(),
-        }
-        if (point) {
-          input = {
-            ...input,
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            //@ts-ignore
-            point: point.toString(),
-            is_premium: true,
-            display_avatar_time: videoTime + purchasePoints[`p_${point}`].displayTime,
-          }
-        }
-
-        let local_message = {
-          ...input,
-          mess_status: STATUS_SEND_MESS.PENDING,
-        }
-        if (point) {
-          const { nickname, avatar_url } = userProfile.attributes
-          local_message = {
-            ...local_message,
-            parent: { avatar: avatar_url, user_name: nickname },
-          }
-        }
-
+    const handleCreateMess = (local_message: any, input: any, point: any, resetMess: any) => {
+      console.log('handleCreateMess', local_message, point)
+      setTimeout(() => {
+        const canAddMess = checkAddMessage(local_message)
         const is_premium_local_message = isPremiumChat(local_message, false)
+        if (isStreaming && canAddMess) {
+          setStateMessages((prev) => [...prev, local_message])
+        }
+
         // save mess for local
-        setCacheMess((messages) => [...messages, local_message])
+        // setCacheMess((messages) => [...messages, local_message])
+        if (canAddMess) cacheStateMessRef.current = [...cacheStateMessRef.current, local_message]
+        savedAllMessRef.current = [...savedAllMessRef.current, local_message]
+
         // setSavedMess((messages) => [...messages, local_message])
         // save donated messages for local (not check display time)
         if (is_premium_local_message) {
           // setSavedDonateMess((messages) => [...messages, local_message])
-          setCacheDonateMess((messages) => [...messages, local_message])
+          // setCacheDonateMess((messages) => [...messages, local_message])
+          cacheDonateMessRef.current = [...cacheDonateMessRef.current, local_message]
+        }
+        // only save mess tip when has point
+        if (point && canAddMess) {
+          // setCacheMessTip((messages) => [...messages, local_message])
+          serverTipMessRef.current = [...serverTipMessRef.current, local_message]
+          savedTipMessRef.current = [...savedTipMessRef.current, local_message]
         }
 
         // save message to local
         if (isStreaming) {
-          const isMessageInBottom = checkMessIsInBottom()
+          // const isMessageInBottom = checkMessIsInBottom()
           // render new messages with savedMess
           if (!point) {
             // reset input chat
             // values.message = ''
-            setIsResetMess((value) => !value)
+            resetMess((value) => !value)
           }
-          setStateMessages([...stateMessages, local_message])
+          // setStateMessages((prev) => [...prev, local_message])
 
-          if (isMessageInBottom) {
-            if (point) {
-              setScrollBehavior('instant')
-              setIsChatInBottom(true)
-            } else {
-              // console.log('🚀 ~ createMess ~ scrollToCurrentMess---000', scrollToCurrentMess)
-              scrollToCurrentMess()
-            }
-          }
+          // if (isMessageInBottom) {
+          //   if (point) {
+          //     scrollBehaviorRef.current = 'instant'
+          //     // setScrollBehavior('instant')
+          //     setIsChatInBottom(true)
+          //   } else {
+          //     // console.log('🚀 ~ createMess ~ scrollToCurrentMess---000', scrollToCurrentMess)
+          //     scrollToCurrentMess()
+          //   }
+          // }
 
           // render new users donate
           if (is_premium_local_message) {
-            // TODO
             // let newMessDonate = [...savedDonateMess]
             // newMessDonate = newMessDonate.filter((item) => +item.display_avatar_time > +videoPlayedSecond.current)
             // render user donate icon by time of local
-            setMessagesDonate([...messagesDonate, local_message])
+            setMessagesDonate((prev) => [...prev, local_message])
           }
         }
 
-        try {
-          const result = await API.graphql(graphqlOperation(createMessage, { input }))
-          refCreateMessLocal.current(result, local_message)
-        } catch (errors) {
-          if (errors && errors.errors.length !== 0) refCreateMessLocal.current([], local_message, true)
-          console.error(errors)
-        }
-      }
-    }
-
-    const refCreateNewMessLocal = useRef(null)
-    const handleCreateNewMessLocal = (mess) => {
-      createMess(mess)
-    }
-    refCreateNewMessLocal.current = handleCreateNewMessLocal
-    const sendNormalMess = (mess: string) => {
-      refCreateNewMessLocal.current(mess)
+        API.graphql(graphqlOperation(createMessage, { input }))
+          .then((result) => {
+            refCreateMessLocal.current(result, local_message)
+          })
+          .catch((errors) => {
+            if (errors && errors.errors.length !== 0) refCreateMessLocal.current([], local_message, true)
+            console.error(errors)
+          })
+      }, 20)
     }
 
     const checkMessIsInBottom = () => {
@@ -1489,7 +1651,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       }
     }
 
-    const scrollToCurrentMess = (behavior = '') => {
+    const scrollToCurrentMess = (behavior = 'smooth') => {
       // console.log('🚀 ~ scrollToCurrentMess ~ isEnabledChat--000', isEnabledChat)
       if (!behavior) {
         if (isEnabledChat && isStreaming) {
@@ -1498,7 +1660,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       }
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       //@ts-ignore
-      messContainer.scrollTo({ top: messContainer.scrollHeight, behavior: behavior })
+      messContainer?.scrollTo({ top: messContainer.scrollHeight, behavior: behavior })
       // if (messagesEndRef.current != null && messagesEndRef) {
       //   messagesEndRef.current?.scrollToRow(stateMessages.length - 1)
       //   setTimeout(() => {
@@ -1508,42 +1670,24 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       // }
     }
 
-    const chatInputComponent = () => (
-      <Box
-        className={`${classes.chatInputMobileContainer}`}
-        style={{ bottom: isMobile ? '0px' : errorMess ? '-132.5px' : '-116.5px' }}
-        // style={{ bottom: isMobile ? '0px' : errors?.message ? '-132.5px' : '-110.5px' }}
-      >
-        {purchaseDialogVisible && isMobile && purchaseInfoDialog()}
-        {isEnabledChat &&
-          (isStreaming ? (
-            <Box className={classes.chatInputContainer}>
-              {purchaseDialogVisible && !isMobile && purchaseInfoDialog()}
-              <LoginRequired>
-                <IconButton onClick={purchaseIconClick} id="btnOpenPremiumChatDialog" className={classes.iconPurchase}>
-                  <img id="btnOpenPremiumChatDialogImage" src="/images/ic_purchase.svg" />
-                </IconButton>
-              </LoginRequired>
-              <ChatInput
-                isResetMess={isResetMess}
-                handleChatInputOnFocus={handleChatInputOnFocus}
-                handleChatInputOnBlur={handleChatInputOnBlur}
-                setErrorMess={setErrorMess}
-                sendNormalMess={sendNormalMess}
-              ></ChatInput>
-            </Box>
-          ) : (
-            <></>
-          ))}
-      </Box>
-    )
-
     const closeDialogActiveUser = () => {
       // prevent close modal when click user icon first time
+      console.log('Mess active user click close dialog')
       if (messActiveUser && !displayDialogMess) {
-        setMessActiveUser(null)
+        setDisplayDialogMess(false)
       }
+      setMessActiveUser(null)
       setDisplayDialogMess(false)
+    }
+
+    const matchSm = useMediaQuery(theme.breakpoints.down(769))
+    // const matchMd = useMediaQuery(theme.breakpoints.down(1025))
+
+    const getMarginBottom = () => {
+      if (matchSm) {
+        return isLandscape && isStreaming ? 45 : 0
+      }
+      return 0
     }
 
     const getMarginTopOfComponents = (componentType = 'chatBoard') => {
@@ -1563,224 +1707,57 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         // only margin top when has donate message
         // render margin top higher with donate message is first item
         if (transformedMess.length !== 0 && transformedMess[0].is_premium) {
-          marginTop = 16
+          // marginTop = 16
+          marginTop = 8
         } else {
-          marginTop = 12
+          // marginTop = 12
+          marginTop = 8
         }
       }
       if (componentType === 'userIcon') {
         // return 16
         // margin top 16 when has donate message
+        if (isMobile) return 8
         if (transformedDonateMess.length !== 0) {
           return 16
         }
         // render margin top higher with donate message is first item
         if (transformedMess.length !== 0 && transformedMess[0].is_premium) {
-          marginTop = 16
+          marginTop = 8
         } else {
-          marginTop = 12
+          marginTop = 8
         }
       }
       return marginTop
     }
-    // console.log('🚀 ~ checkMessIsInBottom ~ isGettingMess', isGettingMess)
-    // const rowCount = filteredMessages.length + 1
-    // const _rowRenderer = ({ index, key, style }) => {
-    //   console.log('🚀 ~ checkMessIsInBottom ~ key', key)
-    //   console.log('🚀 ~ Example1 ~ index', index)
-    //   console.log('🚀 ~ Example1 ~ index > 0', +index > 0)
-    //   console.log('🚀 ~ Example1 ~ stateMessages', stateMessages[index])
-    //   // let content
-    //   // stateMessages[index] && (
-    //   console.log('🚀 ~ checkMessIsInBottom ~ isGettingMess', isGettingMess)
-    //   // if (index === 0 && isGettingMess) {
-    //   //   return (
-    //   //     <div key={key} style={style}>
-    //   //       ....Loading
-    //   //     </div>
-    //   //   )
-    //   // } else {
-    //   // const newMess = isGettingMess ? stateMessages[index - 1] : stateMessages[index]
-    //   const newMess = stateMessages[index]
-    //   return (
-    //     newMess && (
-    //       <div key={key} style={style}>
-    //         <ChatTextMessage
-    //           key={index}
-    //           message={newMess}
-    //           videoType={videoType}
-    //           getMessageWithoutNgWords={getMessageWithoutNgWords}
-    //           deleteMess={deleteMsg}
-    //           is_streamer={userResult?.streamer}
-    //           resendMess={resendMess}
-    //           reDeleteMess={reDeleteMess}
-    //         />
-    //       </div>
-    //     )
-    //   )
-    //   // }
 
-    //   // return (
-    //   //   <ChatTextMessage
-    //   //     key={index}
-    //   //     message={msg}
-    //   //     videoType={videoType}
-    //   //     getMessageWithoutNgWords={getMessageWithoutNgWords}
-    //   //     deleteMess={deleteMsg}
-    //   //     is_streamer={userResult?.streamer}
-    //   //     resendMess={resendMess}
-    //   //     reDeleteMess={reDeleteMess}
-    //   //   />
-    //   // )
-    // }
+    const handleScrollToBottom = useCallback(() => {
+      console.log('isBottom: ', isBottom)
 
-    const rowRenderer = ({ index, key, style, parent }) => {
-      const msg = stateMessages[index]
-      return (
-        <CellMeasurer cache={cache} columnIndex={0} columnCount={1} key={key} parent={parent} rowIndex={index}>
-          {({ registerChild }) => (
-            <div key={key} style={style} ref={registerChild}>
-              {!msg.delete_flag || userResult.streamer ? (
-                msg.is_premium ? (
-                  <DonateMessage
-                    key={index}
-                    message={msg}
-                    videoType={videoType}
-                    deleteMess={deleteMsg}
-                    getMessageWithoutNgWords={getMessageWithoutNgWords}
-                    is_streamer={userResult?.streamer}
-                    resendMess={resendMess}
-                    reDeleteMess={reDeleteMess}
-                  />
-                ) : (
-                  <ChatTextMessage
-                    key={index}
-                    message={msg}
-                    videoType={videoType}
-                    getMessageWithoutNgWords={getMessageWithoutNgWords}
-                    deleteMess={deleteMsg}
-                    is_streamer={userResult?.streamer}
-                    resendMess={resendMess}
-                    reDeleteMess={reDeleteMess}
-                  />
-                )
-              ) : null}
-              {/* <ChatTextMessage
-                key={index}
-                message={msg}
-                videoType={videoType}
-                getMessageWithoutNgWords={getMessageWithoutNgWords}
-                deleteMess={deleteMsg}
-                is_streamer={userResult?.streamer}
-                resendMess={resendMess}
-                reDeleteMess={reDeleteMess}
-              /> */}
-            </div>
-          )}
-        </CellMeasurer>
-      )
-    }
-
-    const _scrollToBottom = (position: number) => {
-      //https://github.com/bvaughn/react-virtualized/issues/995
-      if (messagesEndRef.current != null && messagesEndRef) {
-        messagesEndRef.current?.scrollToRow(position - 1)
-        setTimeout(() => {
-          messagesEndRef.current?.scrollToRow(position - 1)
-          // setBottom(true)
-        }, 100)
-      }
-    }
-
-    const _onScroll = (e) => {
-      const scrollPos = e.scrollTop + e.clientHeight
-      // console.log('🚀 ~ test--scrollTop', e.scrollTop)
-      // console.log('🚀 ~ test--clientHeight', e.clientHeight)
-      // console.log('🚀 ~ test--scrollHeight', e.scrollHeight)
-      // console.log('🚀 ~ test--333', isGettingRewindMess)
-      const height = e.scrollHeight
-      const offset = Math.abs(height - scrollPos)
-      // console.log('🚀 ~ checkMessIsInBottom ~ offset', offset)
-      const bottomThreshold = 150
-      // only fetch prev mess when no rewind
-      if (!isGettingRewindMess && e.scrollTop <= 0) {
-        // console.log('🚀 ~ checkMessIsInBottom ~ e.scrollTop <= 0', e.scrollTop <= 0)
-        // handle this later
-        setScrolling(scrolling + 1)
-      }
-      if (offset < bottomThreshold) {
-        // console.log('🚀 ~ useEffect ~ setBottom', 222)
+      if (isBottom && !isGettingMess) {
+        // if (isBottom) {
+        _scrollToBottom(stateMessages.length)
+        // console.log('🚀 ~ useEffect ~ setBottom', 4444)
         setBottom(true)
-      } else if (offset > bottomThreshold) {
-        // console.log('🚀 ~ useEffect ~ setBottom', 333)
-        if (stateMessages.length) {
-          // console.log('🚀 ~ checkMessIsInBottom ~ stateMessages.length', stateMessages.length)
-          setBottom(false)
-        }
       }
-    }
+    }, [isBottom, isGettingMess, stateMessages])
 
-    // const testAbc = () => {
-    //   console.log('🚀 ~ testAbc ~ testAbc', 123)
-
-    //   cache.clearAll()
-    // }
-
-    useEffect(() => {
-      // console.log('🚀 ~ setTimeout ~ isBottom--2222', cache)
-      // console.log('🚀 ~ setTimeout ~ isGettingMess--1111', isGettingMess)
-
-      setTimeout(() => {
-        // console.log('🚀 ~ setTimeout ~ isGettingMess--2222', isGettingMess)
-        if (isBottom && !isGettingMess) {
-          // if (isBottom) {
-          _scrollToBottom(stateMessages.length)
-          // console.log('🚀 ~ useEffect ~ setBottom', 4444)
-          setBottom(true)
-        }
-      }, 10)
-      cache.clearAll()
-      // console.log('🚀 ~ useEffect ~ cache---000', cache)
-    }, [stateMessages])
-
-    // const _isRowLoaded = ({ index }) => {
-    //   console.log('🚀 ~ Example ~ index', index)
-    //   console.log('🚀 ~ Example ~ allMess[index]', stateMessages[index])
-    //   return index >= 0 // STATUS_LOADING or STATUS_LOADED
-    // }
-
-    // const rowCount = stateMessages.length
-    // const cache = new CellMeasurerCache({
-    //   fixedWidth: true,
-    //   defaultHeight: 25,
-    // })
     const chatBoardComponent = () => (
       <Box
         id="chatContentMain"
         className={`${classes.chatBoardContainer}`}
         style={{
           marginTop: getMarginTopOfComponents('chatBoard'),
+          marginBottom: getMarginBottom(),
         }}
       >
-        {/* <div onClick={() => debouncedHandleLoadMore()} style={{ flexGrow: 0 }}>
-          Load more
-        </div> */}
-        {renderLoader()}
-        {/* <ButtonBase
-          onClick={() => scrollToCurrentMess('smooth')}
-          className={`${classes.btn_show_more} ${displaySeeMore ? classes.displaySeeMore : ''}`}
-        >
-          {i18n.t('common:live_stream_screen.show_more_mess')}
-        </ButtonBase> */}
-        {/* <ButtonBase
-          onClick={() => testAbc()}
-          // className={`${classes.btn_show_more} ${displaySeeMore ? classes.displaySeeMore : ''}`}
-        >
-          dgsds
-        </ButtonBase> */}
+        <ChatLoader open={isGettingMess || isGettingPrevRewindMess || isGettingTipMess} />
         <IconButton
           disableRipple
-          style={{ display: !isBottom ? 'flex' : 'none' }}
+          style={{
+            display: !isBottom && !isFullScreen ? 'flex' : 'none',
+            bottom: isMobile && isStreaming ? (isLandscape ? 66 : 180) : 30,
+          }}
           className={classes.bottomArrow}
           onClick={() => {
             setTimeout(() => {
@@ -1793,7 +1770,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
         >
           <Icon className={`${classes.iconAngleDown} fa fa-angle-down`} />
         </IconButton>
-        <ClickAwayListener onClickAway={() => closeDialogActiveUser()}>
+        <ClickAwayListener onClickAway={closeDialogActiveUser}>
           <Box className={`${classes.dialogMess} ${messActiveUser ? classes.dialogMessShow : ''}`}>
             {messActiveUser && (
               <DonateMessage
@@ -1808,152 +1785,35 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
             )}
             <Box
               className={`${classes.messContentOuter}`}
-              onClick={() => {
+              onClick={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+                console.log('Mess active user click content outer')
                 setMessActiveUser(null)
+                setDisplayDialogMess(false)
               }}
             ></Box>
           </Box>
         </ClickAwayListener>
-        <div
-          className={classes.chatBoard}
-          id="chatBoard"
-          ref={contentRef}
-          // ref={(ref) => {
-          //   setScrollChatRef(ref)
-          // }}
-          style={
-            {
-              // flexDirection: 'column-reverse',
-              // height: 600,
-              // marginTop: getMarginTopOfComponents('chatBoard'),
-              // height: isMobile ? '253px' : chatHeight,
-            }
-          }
-        >
-          <AutoSizer
-            style={{ flex: 1 }}
-            onResize={() => {
-              cache.clearAll()
-            }}
-          >
-            {({ height, width }) => {
-              // console.log('🚀 ~ MessageList ~ height', height)
-              return (
-                <List
-                  ref={messagesEndRef}
-                  onScroll={(e) => _onScroll(e)}
-                  overscanRowsCount={10}
-                  deferredMeasurementCache={cache}
-                  rowHeight={cache.rowHeight}
-                  // rowHeight={25}
-                  rowRenderer={rowRenderer}
-                  rowCount={stateMessages.length}
-                  className={classes.listContainer}
-                  id="list_mess"
-                  // style={{
-                  //   outline: 0,
-                  //   marginRight: 10,
-                  // }}
-                  height={height}
-                  width={width}
-                />
-              )
-            }}
-          </AutoSizer>
-          {/* <InfiniteLoader thresold={1} isRowLoaded={_isRowLoaded} loadMoreRows={_loadMoreRows} rowCount={rowCount}>
-            {({ onRowsRendered, registerChild }) => (
-              <AutoSizer disableHeight>
-                {({ width }) => (
-                  <List
-                    id="messList"
-                    ref={registerChild}
-                    // className={classes.List}
-                    height={600}
-                    onRowsRendered={onRowsRendered}
-                    rowCount={rowCount}
-                    rowHeight={30}
-                    rowRenderer={_rowRenderer}
-                    width={width}
-                  />
-                )}
-              </AutoSizer>
-            )}
-          </InfiniteLoader> */}
-          {/* <InfiniteScroll
-            scrollableTarget={'chatBoard'}
-            dataLength={stateMessages.length}
-            next={loadMoreMess}
-            hasMore={true}
-            loader={<h4>...Loading</h4>}
-            scrollThreshold={'1px'}
-            inverse={true}
-            style={{ display: 'flex', flexDirection: 'column-reverse' }}
-          >
-            {stateMessages.map((msg: any, i: number) => {
-              // only display message is not deleted or display all mess if user is streamer
-              return !msg.delete_flag || userResult.streamer ? (
-                msg.is_premium ? (
-                  <DonateMessage
-                    key={i}
-                    message={msg}
-                    videoType={videoType}
-                    deleteMess={deleteMsg}
-                    getMessageWithoutNgWords={getMessageWithoutNgWords}
-                    is_streamer={userResult?.streamer}
-                    resendMess={resendMess}
-                    reDeleteMess={reDeleteMess}
-                  />
-                ) : (
-                  <ChatTextMessage
-                    key={i}
-                    message={msg}
-                    videoType={videoType}
-                    getMessageWithoutNgWords={getMessageWithoutNgWords}
-                    deleteMess={deleteMsg}
-                    is_streamer={userResult?.streamer}
-                    resendMess={resendMess}
-                    reDeleteMess={reDeleteMess}
-                  />
-                )
-              ) : null
-            })}
-          </InfiniteScroll> */}
-          {/* {stateMessages.slice(0, 10).map((msg: any, i: number) => {
-            // only display message is not deleted or display all mess if user is streamer
-            return !msg.delete_flag || userResult.streamer ? (
-              msg.is_premium ? (
-                <DonateMessage
-                  key={i}
-                  message={msg}
-                  videoType={videoType}
-                  deleteMess={deleteMsg}
-                  getMessageWithoutNgWords={getMessageWithoutNgWords}
-                  is_streamer={userResult?.streamer}
-                  resendMess={resendMess}
-                  reDeleteMess={reDeleteMess}
-                />
-              ) : (
-                <ChatTextMessage
-                  key={i}
-                  message={msg}
-                  videoType={videoType}
-                  getMessageWithoutNgWords={getMessageWithoutNgWords}
-                  deleteMess={deleteMsg}
-                  is_streamer={userResult?.streamer}
-                  resendMess={resendMess}
-                  reDeleteMess={reDeleteMess}
-                />
-              )
-            ) : null
-          })} */}
-        </div>
+        <ChatMessages
+          chatInputHeight={chatInputHeight}
+          messagesEndRef={messagesEndRef}
+          stateMessages={stateMessages}
+          // _onScroll={_onScroll}
+          isGettingRewindMess={isGettingRewindMess}
+          setBottom={setBottom}
+          setScrolling={setScrolling}
+          isStreamer={userResult.streamer}
+          // isTipTab={isTipTab}
+          videoType={videoType}
+          deleteMsg={deleteMsg}
+          reDeleteMess={reDeleteMess}
+          resendMess={resendMess}
+          handleScrollToBottom={handleScrollToBottom}
+        />
         {/* {isMobile ? chatComponentMobile() : chatInputComponent()} */}
       </Box>
     )
-
-    const chatComponentMobile = () => {
-      return purchaseDialogVisible ? purchaseInfoDialog() : chatInputComponent()
-    }
 
     const chatNotAvailableMessage = () => {
       if (videoType === STATUS_VIDEO.SCHEDULE && (isVideoFreeToWatch || userHasViewingTicket)) {
@@ -1962,58 +1822,87 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
       return i18n.t('common:live_stream_screen.chat_purchase_ticket_note')
     }
 
-    const userDoesNotHaveViewingTicketView = () => (
-      <Box className={classes.chatPurchaseTicketBox}>
-        <Typography className={classes.chatPurchaseTicketNote}>{chatNotAvailableMessage()}</Typography>
-      </Box>
-    )
-
-    // const chatContentPaddingBottom = () => {
-    //   if (purchaseDialogVisible) {
-    //     return 325
-    //   } else if (!isEnabledChat) {
-    //     return 16
-    //   }
-    //   return 0
-    // }
+    const userDoesNotHaveViewingTicketView = () => {
+      return (
+        activeTab === VIDEO_TABS.CHAT && (
+          <Box className={classes.chatPurchaseTicketBox}>
+            <Typography
+              className={classes.chatPurchaseTicketNote}
+              style={{ margin: isEnabledMessFilter ? '0 16px 18px 16px' : '18px 16px' }}
+            >
+              {chatNotAvailableMessage()}
+            </Typography>
+          </Box>
+        )
+      )
+    }
+    const handlePointDonateClick = (item) => {
+      if (messActiveUser && (messActiveUser.id === item.id || messActiveUser.local_id === item.local_id)) {
+        setMessActiveUser(null)
+        setDisplayDialogMess(false)
+      } else {
+        setMessActiveUser(item)
+        setDisplayDialogMess(true)
+      }
+    }
 
     const chatContent = () => (
       <>
-        {/* <Button onClick={scrollToCurrentMess}>Scroll to chat mess</Button> */}
-        <Box className={classes.userWatchingList} style={{ marginTop: getMarginTopOfComponents('userIcon') }}>
-          {messagesDonate
-            .slice()
-            .reverse()
-            .map((item, index) =>
-              !item.delete_flag ? (
-                <Box
-                  key={index}
-                  className={classes.userWatchingItem}
-                  style={{
-                    backgroundColor: purchasePoints[`p_${item.point}`].backgroundColor,
-                    opacity: !messActiveUser ? 1 : item.id === messActiveUser.id ? 1 : 0.5,
-                  }}
-                  onClick={() => {
-                    // close modal user icon if click icon of user is showed
-                    if (messActiveUser && (messActiveUser.id === item.id || messActiveUser.local_id === item.local_id)) {
-                      setMessActiveUser(null)
-                      setDisplayDialogMess(false)
-                    } else {
-                      setDisplayDialogMess(true)
-                      setMessActiveUser(item)
-                    }
-                  }}
-                >
-                  <ESAvatar src={item?.parent?.avatar} size={isDesktopDown1280 ? 26 : 32} alt={item.parent.user_name} />
-                </Box>
-              ) : (
-                ''
-              )
-            )}
-        </Box>
+        {activeTab === VIDEO_TABS.CHAT && (
+          <>
+            {/* <Button onClick={scrollToCurrentMess}>Scroll to chat mess</Button> */}
+            <Box className={classes.userWatchingList} style={{ marginTop: getMarginTopOfComponents('userIcon') }}>
+              {messagesDonate
+                .slice()
+                .reverse()
+                .map((item, index) =>
+                  !item.delete_flag ? (
+                    <Box
+                      key={index}
+                      className={classes.userWatchingItem}
+                      style={{
+                        backgroundColor: purchasePoints[`p_${item.point}`].backgroundColor,
+                        opacity: !messActiveUser ? 1 : item.id === messActiveUser.id ? 1 : 0.5,
+                      }}
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        e.preventDefault()
+                        handlePointDonateClick(item)
+                      }}
+                      onTouchEnd={(e) => {
+                        e.stopPropagation()
+                        e.preventDefault()
+                        handlePointDonateClick(item)
+                      }}
+                    >
+                      <ESAvatar src={item?.parent?.avatar} size={33} alt={item?.parent?.user_name} />
+                      <Box className={classes.textPoint}>{item.point}</Box>
+                    </Box>
+                  ) : (
+                    ''
+                  )
+                )}
+            </Box>
 
-        {chatBoardComponent()}
-        {isMobile ? chatComponentMobile() : chatInputComponent()}
+            {chatBoardComponent()}
+          </>
+        )}
+        <ChatFooter
+          chatContainerRef={chatMobileContainerRef}
+          clearMessageDonatePoint={clearMessageDonatePoint}
+          donateConfirmModalIsShown={donateConfirmModalIsShown}
+          errorMsgDonatePoint={errorMsgDonatePoint}
+          handleKeyboardVisibleState={handleKeyboardVisibleState}
+          isEnabledChat={isEnabledChat}
+          isEnabledGift={isEnabledGift}
+          isStreaming={isStreaming}
+          openPurchasePointModal={openPurchasePointModal}
+          handleCreateMess={handleCreateMess}
+          chatUser={chatUser}
+          key_video_id={key_video_id}
+          successFlagGetAddUSer={successFlagGetAddUSer}
+          videoPlayedSecond={videoPlayedSecond}
+        />
         {isEnabledChat && !isStreaming ? (
           <Box className={classes.chatInputContainer} style={{ width: '100%', height: 81 }}>
             <ButtonBase onClick={() => scrollToCurrentMess('smooth')} className={`${classes.btn_scroll_mess}`}>
@@ -2027,54 +1916,79 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     )
 
     const displayChatContent = () => {
+      // TODO
       return videoType !== STATUS_VIDEO.SCHEDULE && (isVideoFreeToWatch || userHasViewingTicket)
+      // return true
     }
 
-    const chatBoxPaddingBottom = () => {
-      if (!isEnabledChat || !isStreaming) {
-        return '0px'
+    const renderMessageTab = () => {
+      return (
+        <Box>
+          {isEnabledMessFilter && (
+            <SubTabGroups
+              // isSwitchingSubTabRef={isSwitchingSubTabRef}
+              // successGetListMessTip={successGetListMessTip}
+              // successGetListMess={successGetListMess}
+              prevMessSubTabRef={prevMessSubTabRef}
+              needLoadMessRef={needLoadMessRef}
+              needLoadMoreRef={needLoadMoreRef}
+            />
+          )}
+          {/* {displayChatContent() ? chatContent() : userDoesNotHaveViewingTicketView()} */}
+          {/* <ChatTab activeTab={messageTab} /> */}
+        </Box>
+      )
+    }
+
+    const getTabsContent = useMemo(() => {
+      switch (activeTab) {
+        case VIDEO_TABS.CHAT:
+          return renderMessageTab()
+        // case VIDEO_TABS.RANKING:
+        //   return <RankingTab />
+        default:
+          return ''
       }
-      return errorMess ? '133px' : '110.5px'
+    }, [activeTab, isEnabledMessFilter])
+
+    const renderContent = () => {
+      return displayChatContent() ? chatContent() : userDoesNotHaveViewingTicketView()
     }
 
-    // const chatHeight = (() => {
-    //   // 35 is chat header,
-    //   let newChatHeight = (chatWidth * 250) / 153 - 35
-    //   if (messagesDonate.filter((item) => !item.delete_flag).length !== 0) {
-    //     // 56 is height of message donate
-    //     newChatHeight = newChatHeight - (isDesktopDown1280 ? 34 : 56) - getMarginTopOfComponents('chatBoard')
-    //   } else {
-    //     // 16 is margin top of message donate when it is empty
-    //     newChatHeight = newChatHeight - getMarginTopOfComponents('userIcon')
-    //   }
-    //   // height of chat when display chat content
-    //   if (displayChatContent()) {
-    //     // 116.5 is input chat when video is streaming
-    //     newChatHeight = newChatHeight - (isDesktopDown1280 ? 77 : 116.5)
-    //   }
-    //   return Math.round((newChatHeight + Number.EPSILON) * 100) / 100
-    // })()
+    const handleChangeTab = useCallback((v) => {
+      console.log('🚀 ~ handleChangeTab ~ v', v)
+
+      // isSwitchingTabRef.current = v === VIDEO_TABS.RANKING ? true : false
+      // isSwitchingSubTabRef.current = v === VIDEO_TABS.RANKING ? true : false
+      setActiveTab(v)
+    }, [])
 
     return (
       <Box
-        className={classes.container}
-        style={
-          displayChatContent() && isMobile
-            ? {
-                paddingBottom: chatBoxPaddingBottom(),
-              }
-            : {}
-        }
+        className={classes.chatArea}
+        style={{ paddingBottom: isStreaming && isLandscape && activeTab === VIDEO_TABS.RANKING ? '56px' : 0 }}
       >
-        {!isMobile && (
-          <Box className={classes.chatHeader}>
-            <Typography className={classes.headerTitle}>{i18n.t('common:live_stream_screen.chat_header')}</Typography>
-          </Box>
-        )}
-        {displayChatContent() ? chatContent() : userDoesNotHaveViewingTicketView()}
+        <TabsContainer
+          // isSwitchingSubTabRef={isSwitchingSubTabRef}
+          // isSwitchingTabRef={isSwitchingTabRef}
+          needLoadMessRef={needLoadMessRef}
+          prevMessSubTabRef={prevMessSubTabRef}
+          onChange={handleChangeTab}
+          isDisplayedRankingTab={isDisplayedRankingTab}
+          needLoadMoreRef={needLoadMoreRef}
+        />
+        <Box className={classes.tabsContent} style={{ display: isMobile && activeTab === VIDEO_TABS.CHAT ? 'none' : 'block' }}>
+          {getTabsContent}
+          {/* <DemoChatMessages/> */}
+        </Box>
+        <Box className={classes.rankingContainer} style={{ display: activeTab === VIDEO_TABS.RANKING ? 'block' : 'none' }}>
+          <RankingTab />
+        </Box>
+
+        {renderContent()}
       </Box>
     )
   }
 )
 
-export default ChatContainer
+export default memo(ChatContainer)

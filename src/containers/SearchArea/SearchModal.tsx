@@ -53,8 +53,18 @@ const SearchModal: React.FC<SearchModalProps> = ({ show, selectData, onSearch, h
     }
   }, [])
 
+  // [CW] Determined if current route is video detail screen
+  const isInVideoDetailPage = () => {
+    if (router.pathname !== ESRoutes.TOP) {
+      return false
+    }
+    const queryKey = 'vid'
+    const video_id = router.query[queryKey] || router.asPath.match(new RegExp(`[&?]${queryKey}=(.*)(&|$)`))
+    return !!video_id
+  }
+
   useEffect(() => {
-    if (router.pathname == ESRoutes.VIDEO_TOP || router.pathname == ESRoutes.SEARCH_VIDEO) {
+    if (router.pathname == ESRoutes.VIDEO_TOP || router.pathname == ESRoutes.SEARCH_VIDEO || isInVideoDetailPage()) {
       //[CW] only search video
       setOption(searchTypes.VIDEO)
     } else {

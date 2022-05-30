@@ -1,5 +1,5 @@
 import { OutlinedInputProps } from '@material-ui/core'
-import { ReactElement, useCallback, useEffect, useState } from 'react'
+import { memo, ReactElement, useCallback, useEffect, useState } from 'react'
 import ESInput from '@components/Input'
 import _ from 'lodash'
 
@@ -13,11 +13,11 @@ export type InputProps = {
 }
 
 const ESFastInput: React.FC<OutlinedInputProps & InputProps> = (props) => {
-  const [value, setValue] = useState('')
+  const [tempMessage, setTempMessage] = useState('')
 
   useEffect(() => {
     if (props.value !== null && props.value !== undefined) {
-      setValue(String(props.value))
+      setTempMessage(String(props.value))
     }
   }, [props.value])
 
@@ -30,11 +30,11 @@ const ESFastInput: React.FC<OutlinedInputProps & InputProps> = (props) => {
 
   const handleChange = (e) => {
     e.persist()
-    setValue(e.target.value)
+    setTempMessage(e.target.value)
     debouncedChangeHandler(e)
   }
 
-  return <ESInput {...props} value={value} onChange={handleChange} />
+  return <ESInput {...props} value={tempMessage} onChange={handleChange} />
 }
 
-export default ESFastInput
+export default memo(ESFastInput)

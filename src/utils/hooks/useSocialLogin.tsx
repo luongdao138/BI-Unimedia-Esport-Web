@@ -43,6 +43,8 @@ const useSocialLogin = (
 
   useEffect(() => {
     if (meta.loaded) {
+      // eslint-disable-next-line no-console
+      console.log('backToTop::handleLogin():1')
       if (type === 'login') handleLogin()
       if (type === 'register') navigateScreen(ESRoutes.REGISTER_PROFILE)
       resetMeta()

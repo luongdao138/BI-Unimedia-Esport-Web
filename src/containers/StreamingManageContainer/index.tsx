@@ -23,6 +23,8 @@ const StreamingManageContainer: React.FC = () => {
           </div>
           <div
             onClick={() => {
+              // router.push(ESRoutes.VIDEO_STREAMING_SETTING)
+              // TODO
               router.push(ESRoutes.LIVE_STREAM_LIST)
             }}
           >
@@ -33,14 +35,23 @@ const StreamingManageContainer: React.FC = () => {
               router.push(ESRoutes.ARCHIVED_LIST)
             }}
           >
-            <SettingsRowItem key="archived_list" title={t('streaming_manage_screen.archived_list')} showSwitch={false} />
+            <SettingsRowItem key="archived_list" title={t('streaming_manage_screen.archive_list')} showSwitch={false} />
           </div>
           <div
             onClick={() => {
+              // router.push(ESRoutes.VIDEO_STREAMING_SETTING)
+              // TODO
               router.push(ESRoutes.PAYMENT_INFO)
             }}
           >
             <SettingsRowItem key="payment_information" title={t('streaming_manage_screen.payment_information')} showSwitch={false} />
+          </div>
+          <div
+            onClick={() => {
+              router.push(ESRoutes.GIFT_MANAGEMENT)
+            }}
+          >
+            <SettingsRowItem key="distribution_data_management" title={t('streaming_manage_screen.gift_management')} showSwitch={false} />
           </div>
         </LoginRequired>
       </Box>

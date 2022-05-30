@@ -8,3 +8,4 @@ export const relatedVideoStream = createSelector(getRoot, (state) => state.video
 export const reactionVideoData = createSelector(getRoot, (state) => state.reactionData)
 export const followChannelData = createSelector(getRoot, (state) => state.followData)
 export const videoWatchTimeReportData = createSelector(getRoot, (state) => state.videoWatchTimeReport)
+export const getMiniVideoVisibleState = createSelector(getRoot, (state) => state.miniVideoVisible)

@@ -21,7 +21,6 @@ type Props = {
 
 const Pagination: React.FC<Props> = ({ page, pageNumber, setPage, disabled }) => {
   const classes = useStyles()
-
   const firstPage = () => {
     setPage(PAGE_VALUES.FIRST_PAGE)
   }

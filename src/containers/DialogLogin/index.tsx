@@ -61,6 +61,8 @@ const DialogLoginContainer: React.FC<DialogLoginProps> = ({ showDialogLogin, onC
     if (document.referrer) {
       handleClick()
     } else {
+      // eslint-disable-next-line no-console
+      console.log('backToTopVideo::direct::1')
       _router.push(ESRoutes.VIDEO_TOP)
     }
   }

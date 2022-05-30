@@ -21,7 +21,7 @@ import ESLoader from '@components/FullScreenLoader'
 import { CookieData } from '@services/archiveList.service'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
 
-const ITEM_PER_PAGE = 25
+const ITEM_PER_PAGE = 5
 
 const ArchivedListContainer: React.FC = () => {
   const router = useRouter()
@@ -155,6 +155,9 @@ const ArchivedListContainer: React.FC = () => {
       }
     }
 
+    const handleReportClick = () => {
+      router.push({ pathname: ESRoutes.STREAMING_GIFT_REPORT, query: { video_id: rowData?.uuid } })
+    }
     return (
       <Box className={classes.wrapItem} key={rowData?.uuid} onClick={isMobile ? redirectArchivedDetail(uuid, scheduledFlag) : null}>
         <table className={classes.outerTable}>
@@ -221,6 +224,10 @@ const ArchivedListContainer: React.FC = () => {
                       {!isMobile && (
                         <>
                           <td rowSpan={3} className={classes.cellIcons}>
+                            <Box mr={1} component="span" onClick={handleReportClick}>
+                              <img src={'/images/icons/report.svg'} className={classes.imageReload} />
+                            </Box>
+
                             <Box mr={1} component="span" onClick={handleDownloadVideo}>
                               <img
                                 src={'/images/icons/download.svg'}
@@ -325,7 +332,6 @@ const ArchivedListContainer: React.FC = () => {
         {totalPage > 1 && pagination()}
         <VideoDeleteConfirmModal
           open={deleteModalVisible}
-          video={selectedDeleteVideo}
           handleClose={handleCloseDeleteModal}
           handleDeleteVideo={onDelete}
           isLoading={deleteLoading}

@@ -1,8 +1,54 @@
 import { makeStyles } from '@material-ui/core'
-import { purchasePoints } from './index'
+import { ChatStyleProps, purchasePoints } from './index'
 import { Colors } from '@theme/colors'
 
 const useStyles = makeStyles((theme) => ({
+  singleMessTab: {},
+  messageTabs: {},
+  rankingContainer: {
+    height: '100%',
+    width: '100%',
+    overflow: 'auto',
+  },
+  tabsContent: {
+    width: '100%',
+    // height: '100%',
+    padding: (props: ChatStyleProps) => (props.isRankingTab ? 0 : '10px 16px 2px 16px'),
+    // flex: 1 1 0px;
+    // overflow: auto;
+  },
+  singleTab: { maxWidth: 'none' },
+  tabsContainer: {
+    display: 'flex',
+    width: '100%',
+    borderBottom: `1px solid ${Colors.white_opacity[30]}`,
+  },
+  tabs: {
+    display: 'flex',
+    overflowY: 'hidden',
+    width: '100%',
+    '& .MuiButtonBase-root': {
+      background: '#212121',
+      flex: 1,
+      minHeight: '53px',
+      padding: '16px 12px',
+      minWidth: '100px',
+      '& .MuiTab-wrapper': {
+        fontSize: '14px',
+        fontWeight: 'bold',
+        lineHeight: '17px',
+      },
+      '&.Mui-selected': {
+        '& .MuiTab-wrapper': {
+          color: Colors.white,
+        },
+      },
+    },
+    '& .MuiTabs-indicator': {
+      backgroundColor: Colors.white,
+      height: 1,
+    },
+  },
   iconAngleDown: {
     color: Colors.grey[200],
   },
@@ -11,18 +57,40 @@ const useStyles = makeStyles((theme) => ({
     position: 'absolute',
     right: '50%',
     bottom: 30,
-    zIndex: 1000,
+    zIndex: 3,
     background: Colors.white,
     '&:hover': {
       background: Colors.white,
     },
+  },
+  messCountContainer: {
+    color: '#fff',
+    right: '50%',
+    bottom: '30px',
+    display: 'flex',
+    padding: '5px 15px',
+    zIndex: 3,
+    position: 'absolute',
+    transform: 'translateX(50%)',
+    alignItems: 'center',
+    borderRadius: '8px',
+    gap: '10px',
+    backgroundColor: 'hsl(240deg 2% 38% / 80%)',
+    cursor: 'pointer',
+  },
+  newMess: {
+    fontWeight: 600,
+    fontSize: '12px',
+  },
+  newMessIcon: {
+    fontSize: '12px',
   },
   loaderBox: {
     flexGrow: 0,
     width: 20,
     height: 20,
     // position: 'absolute',
-    zIndex: 1000,
+    zIndex: 1,
     left: 0,
     right: 0,
     top: '0px',
@@ -36,14 +104,11 @@ const useStyles = makeStyles((theme) => ({
     height: 40,
     width: '100%',
   },
-  container: {
+  chatArea: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    // width: 482,
-    marginLeft: '16px',
-    marginRight: '16px',
-    border: `1px solid #FFFFFF4D`,
+    marginRight: (props: ChatStyleProps) => (props.isFullscreenMode ? '0' : '16px'),
     height: '100%',
     flex: 1,
   },
@@ -68,7 +133,6 @@ const useStyles = makeStyles((theme) => ({
   },
   chatPurchaseTicketNote: {
     fontSize: 14,
-    margin: '18px 16px',
   },
   purchaseCommentInputContainer: {
     width: '100%',
@@ -120,28 +184,28 @@ const useStyles = makeStyles((theme) => ({
     // marginTop: 16,
     // marginTop: 8,
     scrollbarColor: '#222 transparent',
-    '&::-webkit-scrollbar': {
-      width: '20px',
-      opacity: 1,
-      padding: 2,
-      cursor: 'pointer',
-    },
-    '&::-webkit-scrollbar-track': {
-      background: '#4D4D4D',
-      border: 'solid 3px transparent',
-    },
-    '&::-webkit-scrollbar-thumb': {
-      backgroundColor: '#212121',
-      backgroundClip: 'padding-box',
-      border: '4px solid rgba(0, 0, 0, 0)',
-      width: '14px',
-      cursor: 'pointer',
-    },
+    // '&::-webkit-scrollbar': {
+    //   width: '20px',
+    //   opacity: 1,
+    //   padding: 2,
+    //   cursor: 'pointer',
+    // },
+    // '&::-webkit-scrollbar-track': {
+    //   background: '#4D4D4D',
+    //   border: 'solid 3px transparent',
+    // },
+    // '&::-webkit-scrollbar-thumb': {
+    //   backgroundColor: '#212121',
+    //   backgroundClip: 'padding-box',
+    //   border: '4px solid rgba(0, 0, 0, 0)',
+    //   width: '14px',
+    //   cursor: 'pointer',
+    // },
   },
   listContainer: {
     scrollbarColor: '#222 transparent',
     '&::-webkit-scrollbar': {
-      width: '20px',
+      width: 16,
       opacity: 1,
       padding: 2,
       cursor: 'pointer',
@@ -166,6 +230,7 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     display: 'flex',
     flexDirection: 'column',
+    paddingBottom: 14,
     // height: 'calc(100% - 12px)'
   },
   chatMessageUser: {
@@ -213,28 +278,35 @@ const useStyles = makeStyles((theme) => ({
   },
   chatInputContainer: {
     backgroundColor: '#0A0A0A',
-    padding: 16,
     borderRadius: 4,
     position: 'relative',
+    padding: '4px 8px 16px 8px',
+  },
+  hideIconGift: {
+    padding: '47px 8px 16px 8px',
   },
   chatInputMobileContainer: {
+    backgroundColor: '#212121',
     // position: 'absolute',
     // left: 0,
     width: '100%',
     // bottom: 0
+    position: 'relative',
+  },
+  blurInputChat: {
+    background: 'rgb(0 0 0 / 80%)',
+    backdropFilter: 'blur(4px)',
+    height: '100%',
+    width: '100%',
+    position: 'absolute',
+    bottom: '0',
+    left: '0',
+    zIndex: 20,
   },
   // chatInputStreamingStyle: {
   //   position: 'relative',
   //   bottom: 0,
   // },
-  chatBox: {
-    display: 'flex',
-    flexDirection: 'row',
-    width: '100%',
-    '& .MuiFormControl-root': {
-      flex: 1,
-    },
-  },
   input: () => ({
     height: 42,
     borderBottomRightRadius: 'unset',
@@ -272,19 +344,12 @@ const useStyles = makeStyles((theme) => ({
   sendIcon: {
     width: 30,
   },
-  chatTextInput: {
-    fontSize: 14,
-    color: 'white',
-    '&::placeholder': {
-      color: '#FFFFFF',
-      opacity: 1,
-    },
-  },
   iconPurchase: {
-    width: 20,
-    height: 20,
-    marginBottom: 12.5,
-    marginRight: 8,
+    padding: '0px',
+    margin: '0 0 3px 0',
+    '&.giftDisabled': {
+      opacity: 0.5,
+    },
   },
   userWatchingList: {
     marginTop: '16px',
@@ -307,22 +372,33 @@ const useStyles = makeStyles((theme) => ({
     },
     '&::-webkit-scrollbar-track': {
       paddingLeft: 1,
-      background: 'rgba(0,0,0,0.5)',
+      background: '#3d3d3c',
     },
     '&::-webkit-scrollbar-thumb': {
-      backgroundColor: '#222222',
+      backgroundColor: '#222',
       borderRadius: 6,
     },
   },
+  textPoint: {
+    position: 'absolute',
+    bottom: '4px',
+    color: '#fff',
+    fontSize: '14px',
+    fontWeight: 400,
+    lineHeight: '14px',
+    height: '14px',
+  },
   userWatchingItem: {
     display: 'flex',
-    width: 40,
-    height: 40,
+    width: 52,
+    height: 52,
     backgroundColor: '#476AFF',
     borderRadius: 4,
-    marginRight: 4,
-    padding: 4,
+    marginRight: 8,
+    padding: '5px 9px 0px 9px',
     cursor: 'pointer',
+    justifyContent: 'center',
+    position: 'relative',
   },
   ...purchasePoints,
   purchaseCommentRoot: {
@@ -404,12 +480,12 @@ const useStyles = makeStyles((theme) => ({
     height: 50,
   },
   [theme.breakpoints.down(1100)]: {
-    container: {
+    chatArea: {
       // width: 350,
     },
   },
   [theme.breakpoints.down(870)]: {
-    container: {
+    chatArea: {
       // width: 240,
     },
   },
@@ -423,28 +499,113 @@ const useStyles = makeStyles((theme) => ({
       height: 'auto',
     },
     userWatchingList: {
-      marginLeft: '16px',
-      marginRight: '16px',
+      // marginLeft: '16px',
+      // marginRight: '16px',
       marginTop: '16px',
     },
-    container: {
+    chatArea: {
       width: '100%',
       border: 'unset',
       paddingBottom: 'unset',
       marginRight: 'unset',
       marginLeft: 'unset',
       height: 'auto',
+      background: '#212121',
     },
-    chatBoard: {
-      height: 253,
-    },
+    // chatBoard: {
+    //   height: 'calc(100vh - 300px)',
+    // },
     purchaseDialogContainer: {
       width: 318,
     },
+
     chatInputMobileContainer: {
-      position: 'fixed',
+      // position: 'absolute',
+      // bottom: 120,
       bottom: 0,
-      zIndex: 2,
+      position: 'fixed',
+      zIndex: 10,
+      width: 'calc(100vw - 32px)',
+      borderRadius: '4px',
+    },
+    blurInputChat: {
+      position: 'fixed',
+      height: 110,
+    },
+    tabsContainer: {
+      display: 'none',
+    },
+    iconPurchase: {
+      margin: '0px !important',
+      padding: '0px !important',
+    },
+    chatInputContainer: {
+      padding: '8px 6px 8px 6px',
+    },
+    hideIconGift: {
+      padding: '6px',
+    },
+  },
+  [`@media (orientation: landscape)`]: {
+    chatBoard: (props: ChatStyleProps) => {
+      if (props.isLandscape)
+        return {
+          height: '100%',
+        }
+    },
+    chatArea: (props: ChatStyleProps) => {
+      if (props.isLandscape)
+        return {
+          width: '100%',
+          border: 'unset',
+          paddingBottom: 'unset',
+          marginRight: 'unset',
+          marginLeft: 'unset',
+          height: '100%',
+        }
+    },
+    chatBoardContainer: (props: ChatStyleProps) => {
+      if (props.isLandscape)
+        return {
+          flex: '1 1 0',
+          minWidth: 0,
+          // paddingBottom: 0,
+        }
+    },
+    tabsContainer: (props: ChatStyleProps) => {
+      if (props.isLandscape)
+        return {
+          display: 'none',
+        }
+    },
+    chatInputMobileContainer: (props: ChatStyleProps) => {
+      if (props.isLandscape)
+        return {
+          width: 'calc(100% - 32px)',
+          bottom: 0,
+          position: 'absolute',
+        }
+    },
+
+    // chat input landscape
+    chatInputContainer: (props: ChatStyleProps) => {
+      if (props.isLandscape)
+        return {
+          padding: '8px 6px 8px 6px',
+        }
+    },
+    iconPurchase: (props: ChatStyleProps) => {
+      if (props.isLandscape)
+        return {
+          margin: '0 3px 0 0',
+        }
+    },
+    blurInputChat: (props: ChatStyleProps) => {
+      if (props.isLandscape) {
+        return {
+          display: 'none',
+        }
+      }
     },
   },
 }))

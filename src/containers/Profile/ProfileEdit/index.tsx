@@ -112,7 +112,14 @@ const ProfileEditContainer: React.FC = () => {
     <>
       <Box pt={7.5} pb={9} className={classes.topContainer}>
         <Box py={2} display="flex" flexDirection="row" alignItems="center">
-          <IconButton className={classes.iconButtonBg} onClick={() => router.back()}>
+          <IconButton
+            className={classes.iconButtonBg}
+            onClick={() => {
+              // eslint-disable-next-line no-console
+              console.log('backToTopVideo::back::10')
+              router.back()
+            }}
+          >
             <Icon className="fa fa-arrow-left" fontSize="small" />
           </IconButton>
           <Box pl={2}>{<Typography variant="h2">{i18n.t('common:user_profile.edit_profile')}</Typography>}</Box>

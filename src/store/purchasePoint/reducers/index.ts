@@ -1,5 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit'
 import * as actions from '../actions'
+import * as pointManageActions from '@store/pointsManage/actions'
 import { SavedCards } from '@services/purchasePoints.service'
 import { GMO_ERROR_CODE } from '@constants/common.constants'
 
@@ -75,5 +76,14 @@ export default createReducer(initialState, (builder) => {
   })
   builder.addCase(actions.resetErrorMess, (state) => {
     state.mess_error_purchase_point = ''
+  })
+  builder.addCase(actions.newPaymentMethodSuccessState, (state, action) => {
+    state.purchase_success = action.payload.success
+  })
+  builder.addCase(pointManageActions.requestMultiPaymentPurchase.pending, (state, _) => {
+    state.purchase_success = false
+  })
+  builder.addCase(pointManageActions.requestMultiPaymentPurchase.fulfilled, (state, action) => {
+    state.purchased_point = action.payload.point
   })
 })

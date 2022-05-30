@@ -6,6 +6,8 @@ import ESMenu from '@components/Menu'
 import _ from 'lodash'
 import { STATUS_SEND_MESS } from '@constants/common.constants'
 import { STATUS_VIDEO } from '@services/videoTop.services'
+import { Colors } from '@theme/colors'
+import useIsomorphicLayoutEffect from '@utils/hooks/useIsomorphicLayoutEffect'
 
 type ChatContainerProps = {
   message?: any
@@ -15,10 +17,12 @@ type ChatContainerProps = {
   resendMess: (message: any) => void
   reDeleteMess: (message: any) => void
   getMessageWithoutNgWords: (chatMessContent: string) => ReactNode
+  measure?: any
+  contentRect?: any
 }
 
 const ChatTextMessage = React.memo<ChatContainerProps>(
-  ({ message, deleteMess, getMessageWithoutNgWords, is_streamer, resendMess, reDeleteMess, videoType }) => {
+  ({ message, deleteMess, getMessageWithoutNgWords, is_streamer, resendMess, reDeleteMess, videoType, measure, contentRect }) => {
     const classes = useStyles()
     const { t } = useTranslation('common')
     const getClassDeletedMess = (): string => {
@@ -26,6 +30,10 @@ const ChatTextMessage = React.memo<ChatContainerProps>(
         return 'line_through_text'
       } else return ''
     }
+
+    useIsomorphicLayoutEffect(() => {
+      measure?.()
+    }, [message, contentRect?.width, contentRect?.height])
 
     return (
       <Box className={classes.chatMessageContainer}>
@@ -84,6 +92,7 @@ const ChatTextMessage = React.memo<ChatContainerProps>(
 const useStyles = makeStyles(() => ({
   normalMessage: {
     wordBreak: 'break-all',
+    color: Colors.white_opacity[70],
   },
   icon: {},
   resendIcon: {
@@ -105,7 +114,7 @@ const useStyles = makeStyles(() => ({
   iconClass: {
     display: 'none',
     position: 'absolute',
-    right: '4px',
+    right: '-1px',
     padding: '2px 0 0 0',
     '& .MuiIcon-fontSizeSmall': {
       fontSize: '0.82rem',
@@ -130,15 +139,15 @@ const useStyles = makeStyles(() => ({
   container: {
     display: 'flex',
     flexDirection: 'row',
-    marginRight: 16,
+    marginRight: 8,
   },
   chatMessage: {
     fontSize: 14,
-    marginBottom: 4,
-    color: '#FFFFFF',
+    marginBottom: 8,
+    color: Colors.white_opacity[30],
   },
   chatMessageUser: {
-    color: '#FF4786',
+    color: '#fff',
   },
 }))
 

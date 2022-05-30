@@ -10,6 +10,7 @@ import _ from 'lodash'
 import { STATUS_SEND_MESS } from '@constants/common.constants'
 import { STATUS_VIDEO } from '@services/videoTop.services'
 import ESAvatar from '@components/Avatar'
+import useIsomorphicLayoutEffect from '@utils/hooks/useIsomorphicLayoutEffect'
 
 type DonateMessageProps = {
   message?: any
@@ -19,6 +20,8 @@ type DonateMessageProps = {
   resendMess: (message: any) => void
   reDeleteMess: (message: any) => void
   getMessageWithoutNgWords: (chatMessContent: string) => ReactNode
+  measure?: any
+  contentRect?: any
 }
 
 const DonateMessage: React.FC<DonateMessageProps> = ({
@@ -29,11 +32,22 @@ const DonateMessage: React.FC<DonateMessageProps> = ({
   resendMess,
   reDeleteMess,
   videoType,
+  measure,
+  contentRect,
 }) => {
   const classes = useStyles()
   const { t } = useTranslation('common')
 
-  const bgColor = message.delete_flag ? '#7e7c80' : message.point ? purchasePoints[`p_${message.point}`].backgroundColor : '#7e7c80'
+  useIsomorphicLayoutEffect(() => {
+    measure?.()
+  }, [message, contentRect?.width, contentRect?.height])
+
+  const renderBgColor = (bgColorProperty: string, isHeader = false) => {
+    const bgColor = purchasePoints[`p_${message.point}`][bgColorProperty]
+    const deletedBgColor = '#7e7c80'
+    const newBgColor = message.delete_flag ? (isHeader ? hexToRgba(deletedBgColor, 0.8) : deletedBgColor) : bgColor
+    return { backgroundColor: newBgColor }
+  }
 
   const getClassDeletedMess = (): string => {
     if (message.delete_flag) {
@@ -43,8 +57,8 @@ const DonateMessage: React.FC<DonateMessageProps> = ({
 
   return (
     <Box className={classes.accountInfo}>
-      <Box className={classes.accountInfoHeader} style={{ backgroundColor: hexToRgba(bgColor, 0.8) }}>
-        <ESAvatar src={message?.parent?.avatar} size={32} alt={message.parent.user_name} className={classes.userAvatar} />
+      <Box className={classes.accountInfoHeader} style={renderBgColor('headerBgColor', true)}>
+        <ESAvatar src={message?.parent?.avatar} size={34} alt={message?.parent?.user_name} className={classes.userAvatar} />
         <Typography className={classes.accountName}>
           <span className={getClassDeletedMess()}>{message.owner}</span>
         </Typography>
@@ -54,29 +68,6 @@ const DonateMessage: React.FC<DonateMessageProps> = ({
         <Typography className={classes.accountRemainUnit}>
           <span className={getClassDeletedMess()}>{t('common.eXe_points')}</span>
         </Typography>
-        <Box className={classes.mess_status}>
-          {message.mess_status === STATUS_SEND_MESS.PENDING ? <CircularProgress size={12} /> : ''}
-          {message.mess_status === STATUS_SEND_MESS.ERROR_SEND || message.mess_status === STATUS_SEND_MESS.ERROR_DELETE ? (
-            <Icon
-              color="primary"
-              className={`fa fa-exclamation-triangle ${classes.resendIcon}`}
-              fontSize="small"
-              onClick={() => {
-                if (message.mess_status === STATUS_SEND_MESS.ERROR_SEND) {
-                  resendMess(message)
-                } else {
-                  reDeleteMess(message)
-                }
-              }}
-            />
-          ) : (
-            ''
-          )}
-          {/* {(!message.mess_status || message.mess_status === STATUS_SEND_MESS.LOADED) ? ( */}
-          {/* {(!message.mess_status || message.mess_status === STATUS_SEND_MESS.LOADED) ? (
-            <Icon color="primary" className={`fa fa-check-circle ${classes.icon}`} fontSize="small" />
-          ) : ''} */}
-        </Box>
         {videoType === STATUS_VIDEO.LIVE_STREAM && is_streamer && message.id ? (
           <ESMenu className={classes.menu_del_mess} iconClass={classes.iconClass} disableRipple>
             {message.delete_flag ? (
@@ -91,10 +82,43 @@ const DonateMessage: React.FC<DonateMessageProps> = ({
           ''
         )}
       </Box>
-      <Box className={classes.accountInfoContent} style={{ backgroundColor: bgColor }}>
+      <Box className={classes.accountInfoContent} style={renderBgColor('backgroundColor')}>
+        {message?.receiver && (
+          <Box className={classes.receiverContainer} style={renderBgColor('receiverHeaderBgColor', true)}>
+            <img className={classes.receiverSign} src="/images/receiverSign.svg" />
+            <ESAvatar src={message?.receiver?.image} size={34} alt={message?.receiver?.name} className={classes.receiverAvatar} />
+            <Typography className={classes.receiverName}>
+              <span className={getClassDeletedMess()}>{message?.receiver?.name}</span>
+            </Typography>
+          </Box>
+        )}
+
         <Typography className={classes.accountInfoContentText}>
           {/* <span className={getClassDeletedMess()}>{getMessageWithoutNgWords(message.text) + ' ' + message.video_time + 's'}</span> */}
           <span className={getClassDeletedMess()}>{getMessageWithoutNgWords(message.text)}</span>
+          <Box className={classes.mess_status}>
+            {message.mess_status === STATUS_SEND_MESS.PENDING ? <CircularProgress size={12} /> : ''}
+            {message.mess_status === STATUS_SEND_MESS.ERROR_SEND || message.mess_status === STATUS_SEND_MESS.ERROR_DELETE ? (
+              <Icon
+                color="primary"
+                className={`fa fa-exclamation-triangle ${classes.resendIcon}`}
+                fontSize="small"
+                onClick={() => {
+                  if (message.mess_status === STATUS_SEND_MESS.ERROR_SEND) {
+                    resendMess(message)
+                  } else {
+                    reDeleteMess(message)
+                  }
+                }}
+              />
+            ) : (
+              ''
+            )}
+            {/* {(!message.mess_status || message.mess_status === STATUS_SEND_MESS.LOADED) ? ( */}
+            {/* {(!message.mess_status || message.mess_status === STATUS_SEND_MESS.LOADED) ? (
+            <Icon color="primary" className={`fa fa-check-circle ${classes.icon}`} fontSize="small" />
+          ) : ''} */}
+          </Box>
         </Typography>
       </Box>
     </Box>
@@ -102,8 +126,18 @@ const DonateMessage: React.FC<DonateMessageProps> = ({
 }
 
 const useStyles = makeStyles(() => ({
+  receiverName: {
+    color: '#000',
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
+    fontWeight: 500,
+  },
+  receiverAvatar: {},
+  receiverSign: {},
+  receiverContainer: { display: 'flex', gap: '8px', alignItems: 'center', marginBottom: '8px', padding: '8px' },
   userAvatar: {
-    marginRight: 5,
+    marginRight: 8,
     alignSelf: 'center',
   },
   icon: {},
@@ -116,14 +150,15 @@ const useStyles = makeStyles(() => ({
     // display: "flex",
     // marginBottom: "4px",
     display: 'none',
-    position: 'absolute',
-    right: '18px',
-    top: '11px',
+    // position: 'absolute',
+    // right: 2,
+    // top: 14,
+    marinLeft: 8,
   },
   menu_del_mess: {
-    position: 'absolute',
+    top: '13px',
     right: '0px',
-    top: '9px',
+    position: 'absolute',
   },
   menu_item_disabled: {
     '&.MuiListItem-root.Mui-disabled': {
@@ -132,6 +167,7 @@ const useStyles = makeStyles(() => ({
   },
   iconClass: {
     display: 'none',
+    // display: 'inline-flex',
     padding: '2px 0 0 0',
     '& .MuiIcon-fontSizeSmall': {
       fontSize: '0.82rem',
@@ -144,8 +180,8 @@ const useStyles = makeStyles(() => ({
   },
   accountInfo: {
     display: 'flex',
-    marginRight: '16px',
-    marginBottom: '13px',
+    marginRight: 8,
+    marginBottom: 8,
     flexDirection: 'column',
     backgroundColor: 'white',
     borderRadius: 4,
@@ -159,13 +195,13 @@ const useStyles = makeStyles(() => ({
   accountInfoHeader: {
     position: 'relative',
     display: 'flex',
-    paddingTop: 2,
-    paddingBottom: 2,
-    paddingLeft: 14,
-    paddingRight: 32,
+    padding: '5px 16px',
     flexDirection: 'row',
     backgroundColor: 'rgba(71,106,255, 0.75)',
     alignItems: 'baseline',
+    borderTopRightRadius: '4px',
+    borderTopLeftRadius: '4px',
+    height: '44px',
   },
   accountInfoContent: {
     paddingLeft: 14,
@@ -179,7 +215,8 @@ const useStyles = makeStyles(() => ({
   },
   accountInfoContentText: {
     fontSize: 14,
-    color: '#000',
+    color: '#fff',
+    display: 'flex',
   },
   accountName: {
     fontSize: 14,
@@ -190,6 +227,7 @@ const useStyles = makeStyles(() => ({
     textOverflow: 'ellipsis',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
+    fontWeight: 500,
   },
   accountRemain: {
     fontSize: 20,
@@ -198,9 +236,9 @@ const useStyles = makeStyles(() => ({
   },
   accountRemainUnit: {
     fontSize: 12,
-    fontWeight: 'bold',
+    fontWeight: 500,
     color: 'black',
-    marginLeft: 17,
+    marginLeft: 15,
     // marginBottom: 3,
     textOverflow: 'ellipsis',
     overflow: 'hidden',

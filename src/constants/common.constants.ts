@@ -365,6 +365,7 @@ export const INQUIRY_REQUEST_LABELS = [
 ]
 export const LIMIT_MESS = 100
 export const LIMIT_FETCH_NEXT = 500
+export const LIMIT_MESS_REWIND = 12
 export const LIMIT_MIN_MESS_PREV_REWIND = 5
 export const LIMIT_MAX_MESS_PREV_REWIND = 10
 // number of seconds repeat auto get mess
@@ -372,3 +373,34 @@ export const INTERVAL_AUTO_GET_MESS = 60
 export const SECOND_AUTO_GET_MESS_BEFORE = 10
 export const VIDEO_NORMAL_VIEW_MODE = 'NORMAL'
 export const VIDEO_THEATRE_VIEW_MODE = 'THEATRE'
+
+export const VIDEO_TABS = {
+  CHAT: 0,
+  RANKING: 1,
+  PROGRAM_INFO: 2,
+}
+
+export const VIDEO_INFO_TABS = {
+  PROGRAM_INFO: 2,
+  DISTRIBUTOR_INFO: 3,
+  RELATED_VIDEOS: 4,
+}
+
+export const SUB_TABS = {
+  MESS: {
+    ALL: 3,
+    TIP: 4,
+  },
+  RANKING: {
+    SEND: 5,
+    RECEIPT: 6,
+  },
+}
+
+export const GIVER_RANK_TYPE = 'GIVER'
+export const RECEIVER_RANK_TYPE = 'RECEIVER'
+
+export const STATUS_GET_MESS = {
+  SUCCESS: 'SUCCESS',
+  GETTING: 'GETTING',
+}

@@ -9,6 +9,7 @@ import _ from 'lodash'
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import useDetailVideo from '../useDetailVideo'
+import VideoPlayerContextProvider from '@containers/VideoLiveStreamContainer/VideoContext/VideoPlayerContext'
 import VideoPlayer from './VideoPlayer'
 
 interface LiveStreamContentProps {
@@ -27,6 +28,7 @@ interface LiveStreamContentProps {
   ticketPrice?: number
   clickButtonPurchaseTicket?: () => void
   onVideoEnd: () => void
+  handleOpenRelatedVideos: () => void
 }
 
 const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
@@ -40,6 +42,8 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
     onVideoEnd,
     isArchived,
     componentsSize,
+    video_id,
+    handleOpenRelatedVideos,
   } = props
 
   const { t } = useTranslation('common')
@@ -72,26 +76,32 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
             className={classes.thumb}
           />
         ) : (
-          <VideoPlayer
-            componentsSize={componentsSize}
-            isArchived={isArchived}
-            key={keyVideoPlayer}
-            videoType={videoType}
-            src={detailVideoResult?.archived_url}
-            thumbnail={
-              detailVideoResult?.thumbnail
-                ? detailVideoResult?.thumbnail
-                : !detailVideoResult?.thumbnail && detailVideoResult?.video_thumbnail
-                ? detailVideoResult?.video_thumbnail
-                : '/images/live_stream/thumbnail_default.png'
-            }
-            statusVideo={showOverlayOnMediaPlayer() ? true : null}
-            mediaOverlayIsShown={showOverlayOnMediaPlayer()}
-            onVideoEnd={onVideoEnd}
-            startLive={Date.parse(detailVideoResult?.live_stream_start_time)}
-            endLive={detailVideoResult?.live_stream_end_time}
-            type={detailVideoResult?.status}
-          />
+          <VideoPlayerContextProvider>
+            <VideoPlayer
+              componentsSize={componentsSize}
+              isArchived={isArchived}
+              key={keyVideoPlayer}
+              videoType={videoType}
+              src={detailVideoResult?.archived_url}
+              // src={'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8'}
+              thumbnail={
+                detailVideoResult?.thumbnail
+                  ? detailVideoResult?.thumbnail
+                  : !detailVideoResult?.thumbnail && detailVideoResult?.video_thumbnail
+                  ? detailVideoResult?.video_thumbnail
+                  : '/images/live_stream/thumbnail_default.png'
+              }
+              statusVideo={showOverlayOnMediaPlayer() ? true : null}
+              mediaOverlayIsShown={showOverlayOnMediaPlayer()}
+              onVideoEnd={onVideoEnd}
+              startLive={Date.parse(detailVideoResult?.live_stream_start_time)}
+              endLive={detailVideoResult?.live_stream_end_time}
+              type={detailVideoResult?.status}
+              qualities={detailVideoResult?.qualities}
+              video_id={video_id}
+              handleOpenRelatedVideos={handleOpenRelatedVideos}
+            />
+          </VideoPlayerContextProvider>
         )}
       </>
     )
@@ -185,13 +195,16 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
   }
 
   return (
-    <Box className={classes.container}>
+    <Box className={classes.videoPanel}>
       {_.isEmpty(detailVideoResult) ? (
         <Box className={classes.containerLoad} style={{ height: componentsSize.videoHeight }}>
           {renderReloadPlayer()}
         </Box>
       ) : (
-        <Box className={classes.mediaPlayerContainer} style={{ height: componentsSize.videoHeight }}>
+        <Box
+          className={classes.mediaPlayerContainer}
+          // style={{ height: componentsSize.videoHeight }}
+        >
           {mediaPlayer()}
           {showOverlayOnMediaPlayer() && mediaOverlayPurchaseTicketView()}
         </Box>
@@ -200,12 +213,12 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
   )
 }
 const useStyles = makeStyles(() => ({
-  container: {
+  videoPanel: {
     display: 'flex',
     width: '100%',
     flexWrap: 'wrap',
     background: '#000000',
-    // height: '100%',
+    height: '100%',
   },
   containerLoad: {
     display: 'flex',

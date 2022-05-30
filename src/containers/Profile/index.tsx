@@ -152,7 +152,14 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
           />
           {offset > 150 ? (
             <Box className={classes.backContainer}>
-              <IconButton onClick={() => router.back()} className={classes.iconButtonBg2}>
+              <IconButton
+                onClick={() => {
+                  // eslint-disable-next-line no-console
+                  console.log('backToTopVideo::back::4')
+                  router.back()
+                }}
+                className={classes.iconButtonBg2}
+              >
                 <Icon className="fa fa-arrow-left" fontSize="small" />
               </IconButton>
               <Typography variant="h2" className={classes.wrapOne}>
@@ -160,7 +167,14 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
               </Typography>
             </Box>
           ) : (
-            <IconButton onClick={() => router.back()} className={classes.iconButtonBg}>
+            <IconButton
+              onClick={() => {
+                // eslint-disable-next-line no-console
+                console.log('backToTopVideo::back::5')
+                router.back()
+              }}
+              className={classes.iconButtonBg}
+            >
               <Icon className="fa fa-arrow-left" fontSize="small" />
             </IconButton>
           )}

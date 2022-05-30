@@ -15,15 +15,28 @@ import { Box } from '@material-ui/core'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import { useTheme } from '@material-ui/core/styles'
 import useGetProfile from '@utils/hooks/useGetProfile'
+import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
+import { useRotateScreen } from '@utils/hooks/useRotateScreen'
+import { useFullscreenContext } from '@context/FullscreenContext'
 
 interface StreamLayoutProps {
   patternBg?: boolean
   footer?: boolean
   loginRequired?: boolean
   minimizeLayout?: boolean
+  paddedBottom?: boolean
+  isFullLayout?: boolean
 }
 
-const StreamLayout: React.FC<StreamLayoutProps> = ({ children, patternBg, footer, loginRequired, minimizeLayout }) => {
+const StreamLayout: React.FC<StreamLayoutProps> = ({
+  children,
+  patternBg,
+  footer,
+  loginRequired,
+  minimizeLayout,
+  paddedBottom = false,
+  isFullLayout,
+}) => {
   const [open, setOpen] = useState<boolean>(false)
   const isAuthenticated = useAppSelector(getIsAuthenticated)
   const dispatch = useAppDispatch()
@@ -37,9 +50,32 @@ const StreamLayout: React.FC<StreamLayoutProps> = ({ children, patternBg, footer
   const { userProfile } = useGetProfile()
   const isStreamer = userProfile?.attributes?.delivery_flag || false
 
+  const { isFullscreenMode, changeFullscreenMode, changeShowHeader } = useFullscreenContext()
+
+  // config layout for video detail page
+  const queryKey = 'vid'
+  const video_id = router.query[queryKey] || router.asPath.match(new RegExp(`[&?]${queryKey}=(.*)(&|$)`))
+  const { isLandscape } = useRotateScreen()
+  const { width: pageWidth } = useWindowDimensions(0)
+  const isMobile = pageWidth <= 768 || isLandscape
+
   const toggleDrawer = (open: boolean) => {
     setOpen(open)
   }
+
+  useEffect(() => {
+    return () => {
+      if (document.fullscreenElement || document['webkitFullscreenElement'] || document['mozFullScreenElement']) {
+        if (document.exitFullscreen) {
+          document.exitFullscreen()
+        } else {
+          document['webkitExitFullscreen']?.()
+        }
+      }
+      changeFullscreenMode(false)
+      changeShowHeader(true)
+    }
+  }, [])
 
   useEffect(() => {
     if (loginRequired && !isAuthenticated) {
@@ -64,12 +100,21 @@ const StreamLayout: React.FC<StreamLayoutProps> = ({ children, patternBg, footer
   }
 
   return (
-    <div className={`main_wrapper ${minimizeLayout ? 'minimize_main_wrapper' : ''}`}>
-      <Header open={open} toggleDrawer={toggleDrawer} />
+    <div
+      className={`main_wrapper ${minimizeLayout ? 'minimize_main_wrapper' : ''} ${isFullLayout ? 'full_layout_wrapper' : ''} ${
+        video_id && isLandscape ? 'landscape_video_page' : ''
+      }`}
+    >
+      <Header open={open} toggleDrawer={toggleDrawer} video_id={video_id} />
       {!minimizeLayout ? (
         <>
           <aside className="no_minimize_aside_left no_minimize_fixed_menu">
-            <StreamSideMenu minimizeLayout={minimizeLayout} isStreamer={isStreamer} toggleDrawer={toggleDrawer} />
+            <StreamSideMenu
+              minimizeLayout={minimizeLayout}
+              isStreamer={isStreamer}
+              toggleDrawer={toggleDrawer}
+              paddedBottom={paddedBottom}
+            />
           </aside>
           <main role="no_minimize_main" className={patternBg ? 'no_minimize_main' : 'no_minimize_main no-pattern'}>
             <div className="no_minimize_content_wrapper">
@@ -84,12 +129,17 @@ const StreamLayout: React.FC<StreamLayoutProps> = ({ children, patternBg, footer
           <aside className="minimize_aside_left">
             <Box onMouseOver={() => toggleDrawer(true)}>
               <Box style={{ visibility: open ? 'hidden' : 'visible' }}>
-                <StreamSideMenu minimizeLayout={minimizeLayout} isStreamer={isStreamer} toggleDrawer={toggleDrawer} />
+                <StreamSideMenu
+                  minimizeLayout={minimizeLayout}
+                  isStreamer={isStreamer}
+                  toggleDrawer={toggleDrawer}
+                  paddedBottom={paddedBottom}
+                />
               </Box>
             </Box>
           </aside>
-          <main role="minimize_main" className="minimize_main">
-            <div className="minimize_content_wrapper" style={{ paddingTop: 60 }}>
+          <main role="minimize_main" className={isFullscreenMode ? 'minimize_main_fullscreen' : 'minimize_main'}>
+            <div className="minimize_content_wrapper" style={{ paddingTop: (isMobile && video_id) || isFullscreenMode ? '0px' : '60px' }}>
               <div className="minimize_content">{renderContent()}</div>
               {footer ? <Footer /> : ''}
             </div>
@@ -104,9 +154,10 @@ const StreamLayout: React.FC<StreamLayoutProps> = ({ children, patternBg, footer
 
 StreamLayout.defaultProps = {
   patternBg: true,
-  footer: true,
+  footer: false,
   loginRequired: true,
   minimizeLayout: false,
+  isFullLayout: false,
 }
 
 export default StreamLayout

@@ -25,7 +25,15 @@ const HeaderWithButton: React.FC<HeaderWithButtonProps> = ({ title, withBackButt
       minHeight={60}
     >
       {withBackButton ? (
-        <IconButton className={classes.iconButton} disableRipple onClick={() => router.back()}>
+        <IconButton
+          className={classes.iconButton}
+          disableRipple
+          onClick={() => {
+            // eslint-disable-next-line no-console
+            console.log('backToTopVideo::back::3')
+            router.back()
+          }}
+        >
           <Icon className={`fa fa-arrow-left ${classes.icon}`} />
         </IconButton>
       ) : (

@@ -9,10 +9,18 @@ type Props = {
   label?: string
   required?: boolean
   size?: 'big' | 'small'
+  rootBgColor?: string
 }
 
-const ESSelect: React.FC<SelectProps & Props> = ({ size = 'big', helperText, label, required = false, ...rest }) => {
-  const classes = useStyles({ isBig: size === 'big' })
+const ESSelect: React.FC<SelectProps & Props> = ({
+  size = 'big',
+  rootBgColor = Colors.black,
+  helperText,
+  label,
+  required = false,
+  ...rest
+}) => {
+  const classes = useStyles({ isBig: size === 'big', rootBgColor })
   const { t } = useTranslation(['common'])
 
   return (
@@ -46,7 +54,6 @@ const ESSelect: React.FC<SelectProps & Props> = ({ size = 'big', helperText, lab
 const Input = withStyles(() =>
   createStyles({
     root: {
-      backgroundColor: Colors.black,
       '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
         borderWidth: 1,
         borderColor: Colors.white,
@@ -55,14 +62,20 @@ const Input = withStyles(() =>
   })
 )(OutlinedInput)
 
+interface StyleProps {
+  rootBgColor?: string
+  hasSecondary?: boolean
+  isBig?: boolean
+}
+
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    backgroundColor: Colors.black,
-  },
+  root: (props: StyleProps) => ({
+    backgroundColor: props.rootBgColor,
+  }),
   formPadding: {
     paddingTop: theme.spacing(1),
   },
-  labelMargin: (props: { hasSecondary?: boolean; isBig?: boolean }) => ({
+  labelMargin: (props: StyleProps) => ({
     fontWeight: props.isBig ? 'bold' : 'normal',
     fontSize: props.isBig ? theme.typography.h3.fontSize : theme.typography.body1.fontSize,
   }),

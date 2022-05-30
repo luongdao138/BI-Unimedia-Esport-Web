@@ -11,6 +11,7 @@ import useFinancialStatementDetail from './useFinancialStatementDetail'
 import { LIMIT_FINANCIAL_STATEMENT } from '@constants/common.constants'
 import { DateHelper } from '@utils/helpers/DateHelper'
 import ESLoader from '@components/FullScreenLoader'
+import { toNumber } from 'lodash'
 
 const PaymentInfoDetailContainer: React.FC = () => {
   const { t } = useTranslation('common')
@@ -75,7 +76,7 @@ const PaymentInfoDetailContainer: React.FC = () => {
                 )}
                 <Typography className={`${classes.rowText} ${classes.statusRow}`}>{item?.type}</Typography>
                 <Typography className={`${classes.rowText} ${classes.amountOfMoneyRow}`}>
-                  {`${FormatHelper.currencyFormat(item?.point.toString())} ${t('common.money')}`}
+                  {`${FormatHelper.currencyFormat(Math.floor(toNumber(item?.point)).toString())} ${t('common.money')}`}
                 </Typography>
               </Box>
               {isMobile && <Typography className={`${classes.rowText} ${classes.yearMonthRow}`}>{item?.title}</Typography>}

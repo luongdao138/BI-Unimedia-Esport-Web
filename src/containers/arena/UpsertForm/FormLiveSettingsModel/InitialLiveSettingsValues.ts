@@ -26,6 +26,15 @@ export const getInitialLiveSettingValues = (data?: LiveStreamSetting): FormLiveT
     step_setting: 1,
     arn: data && data.arn ? data.arn : '',
     uuid_clone: data && data.uuid_clone ? data.uuid_clone : '',
+    // use_gift: data && data.use_gift ? (data.use_gift== 1 ? true : false) : false,
+    // group_title: data && data.group_title ? data.group_title : '',
+    // gift_group_id: data && data.gift_group_id ? data.gift_group_id : null,
+    use_gift: data && data.use_gift?.toString() ? (data.use_gift?.toString() == '1' ? true : false) : true,
+    group_title: data && data.group_title ? data.group_title : '',
+    gift_group_id: data && data.gift_group_id ? data.gift_group_id : null,
+    ranking_flag: data && data.ranking_flag ? (data.ranking_flag == 1 ? true : false) : false,
+    //check group list does not exist
+    has_group_list: false,
   },
 })
 
@@ -66,6 +75,15 @@ export const getInitialScheduleValues = (data?: LiveStreamSetting): FormLiveType
     //check step
     step_setting: 1,
     arn: data && data.arn ? data.arn : '',
+    // use_gift: data && data.use_gift ? (data.use_gift== 1 ? true : false) : false,
+    // group_title: data && data.group_title ? data.group_title : '',
+    // gift_group_id: data && data.gift_group_id ? data.gift_group_id : null,
+    use_gift: data && data.use_gift?.toString() ? (data.use_gift?.toString() == '1' ? true : false) : true,
+    group_title: data && data.group_title ? data.group_title : '',
+    gift_group_id: data && data.gift_group_id ? data.gift_group_id : null,
+    ranking_flag: data && data.ranking_flag ? (data.ranking_flag == 1 ? true : false) : false,
+    //check group list does not exist
+    has_group_list: false,
   },
 })
 

@@ -1,13 +1,17 @@
 /* eslint-disable no-console */
+import useDetailVideo from '@containers/VideoLiveStreamContainer/useDetailVideo'
+import { VideoContext } from '@containers/VideoLiveStreamContainer/VideoContext'
+import { useControlBarContext } from '@containers/VideoLiveStreamContainer/VideoContext/ControlBarContext'
+import { useVideoPlayerContext } from '@containers/VideoLiveStreamContainer/VideoContext/VideoPlayerContext'
 import { Slider, SliderProps } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
-import React, { memo, useEffect, useState } from 'react'
-import useDetailVideo from '../../useDetailVideo'
+import { debounce } from 'lodash'
+import React, { memo, useCallback, useContext, useEffect, useState, useRef } from 'react'
+import { isMobile } from 'react-device-detect'
+import { FormatHelper } from '@utils/helpers/FormatHelper'
 interface Props {
-  currentTime?: number
-  durationsPlayer?: number
-  videoRef: any
-  changeStatusStreaming?: (status: boolean) => void
+  playedSeconds: number
+  durationPlayer: number
 }
 
 {
@@ -15,38 +19,112 @@ interface Props {
 timePlayed: time by 100*/
 }
 
-const SeekBar: React.FC<Props & SliderProps> = ({ currentTime, durationsPlayer, videoRef, changeStatusStreaming, ...rest }) => {
+const SeekBar: React.FC<Props & SliderProps> = ({ playedSeconds, durationPlayer, ...rest }) => {
   const classes = useStyles()
   // const [currentTimeState, setCurrentTime] = useState(0);
   // const [duration, setDuration] = useState(0)
   const [timePlayed, setTimePlayed] = useState(0)
-  const { changeSeekCount } = useDetailVideo()
+  const { changeSeekCount, changeIsHoveredVideoStatus } = useDetailVideo()
+  const thumbnailsRef = useRef<any>(null)
 
+  const { setIsStreaming, state } = useVideoPlayerContext()
+  const { videoRefInfo } = useContext(VideoContext)
+  const { canHideChatTimeoutRef, timeoutRef, isShowSettingPanel } = useControlBarContext()
+  // const secondTimePlay = useRef<any>(0)
   useEffect(() => {
-    setTimePlayed((currentTime / durationsPlayer) * 100)
-  }, [currentTime, durationsPlayer])
+    setTimePlayed((playedSeconds / durationPlayer) * 100)
+  }, [playedSeconds, durationPlayer])
 
   const handleChange = (_, value) => {
-    const newSecond = (value * durationsPlayer) / 100
+    const newSecond = (value * durationPlayer) / 100
     setTimePlayed(value)
+    // secondTimePlay.current = value
     if (value === 100) {
-      changeStatusStreaming(true)
+      setIsStreaming(true)
     } else {
-      changeStatusStreaming(false)
+      setIsStreaming(false)
     }
-    videoRef.current.currentTime = newSecond
+    videoRefInfo.current.currentTime = newSecond
+
+    if (isMobile) {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current)
+      }
+
+      timeoutRef.current = setTimeout(() => {
+        const canHideControlBar = !isShowSettingPanel && state.playing
+        // const canHideControlBar = true
+        if (canHideControlBar) {
+          changeIsHoveredVideoStatus(false)
+        }
+      }, 3500)
+    }
   }
 
-  const handleCommit = (_, value) => {
-    console.log('~~~VALUE SEEK TO ~~~~~', value, (value * durationsPlayer) / 100)
-    setTimePlayed(value)
-    const newSecond = (value * durationsPlayer) / 100
-    videoRef.current.currentTime = newSecond
-    changeSeekCount(Math.floor(newSecond))
+  const handleCommit = useCallback(
+    debounce((_, durationPlayer, timeHover) => {
+      // console.log('~~~VALUE SEEK TO ~~~~~', value, (value * durationPlayer) / 100, timeHover)
+      setTimePlayed((timeHover * 100) / durationPlayer)
+      // secondTimePlay.current = value
+      const newSecond = timeHover
+      videoRefInfo.current.currentTime = newSecond
+      changeSeekCount(Math.floor(newSecond))
+    }, 10),
+    []
+  )
+
+  const handleChangeCanHideControlBar = (value: boolean) => {
+    canHideChatTimeoutRef.current = value
   }
+
+  const [timeHover, setTimeHover] = useState<any>()
+
+  const handleOnMouseMove = (e) => {
+    const timePreview =
+      ((e.pageX - e.currentTarget.getBoundingClientRect().left) * durationPlayer) / e.currentTarget.getBoundingClientRect().width
+    if (timePreview < 0) {
+      setTimeHover(0)
+    } else if (timePreview > durationPlayer) {
+      setTimeHover(durationPlayer)
+    } else {
+      setTimeHover(timePreview)
+    }
+    console.log('ssss:', timeHover, durationPlayer)
+    // secondTimePlay.current = (timeHover*100/durationPlayer)
+    // console.log('sss:', e.target, e.currentTarget)
+    // console.log('timeeee 0', e.target, durationPlayer, e.pageX,
+    // e.target.getBoundingClientRect().left,
+    // e.target.getBoundingClientRect().width,
+    // FormatHelper.formatTime((e.pageX - e.target.getBoundingClientRect().left) * durationPlayer / e.target.getBoundingClientRect().width),
+    // (e.pageX - e.target.getBoundingClientRect().left) * durationPlayer / e.target.getBoundingClientRect().width,
+    // )
+
+    if (thumbnailsRef) {
+      thumbnailsRef.current.style.left = e.clientX - 75 + 'px'
+    }
+    // console.log('timeeee 1', (((e.clientX - e.target.offsetLeft) / e.target.clientWidth) * durationPlayer).toFixed(2))
+    handleChangeCanHideControlBar(true)
+  }
+
+  const handleOnMouseLeave = () => {
+    handleChangeCanHideControlBar(false)
+  }
+
+  // console.log('timeeee', durationPlayer, videoRefInfo.current.currentTime, timePlayed)
 
   return (
     <div className={classes.sliderSeek}>
+      <div ref={thumbnailsRef} className={`${classes.thumbnailsContainer} thumbnailsContainer`}>
+        <div className={classes.thumbnailsText}>{FormatHelper.formatTime(timeHover)}</div>
+      </div>
+      {/* <Slider
+        min={0}
+        max={100}
+        step={0.1}
+        value={secondTimePlay.current}
+        className={classes.secondSeekBar}
+        {...rest}
+      /> */}
       <Slider
         min={0}
         max={100}
@@ -54,7 +132,10 @@ const SeekBar: React.FC<Props & SliderProps> = ({ currentTime, durationsPlayer, 
         value={timePlayed}
         className={classes.seekBar}
         onChange={handleChange}
-        onChangeCommitted={handleCommit}
+        onMouseMove={handleOnMouseMove}
+        onMouseLeave={handleOnMouseLeave}
+        onMouseEnter={() => handleChangeCanHideControlBar(false)}
+        onChangeCommitted={(_) => handleCommit(_, durationPlayer, timeHover)}
         {...rest}
       />
     </div>
@@ -62,7 +143,33 @@ const SeekBar: React.FC<Props & SliderProps> = ({ currentTime, durationsPlayer, 
 }
 
 const useStyles = makeStyles(() => ({
+  thumbnailsContainer: {
+    position: 'absolute',
+    opacity: '0',
+    visibility: 'hidden',
+    display: 'flex',
+    zIndex: 1000,
+    background: 'rgba(0, 0, 0, 0.5)',
+    // width: '50px',
+    alignItems: 'center',
+    justifyContent: 'center',
+    // height: '30px',
+    bottom: '60px',
+    color: 'white',
+    // border: '1px solid white',
+  },
+  thumbnailsText: {
+    padding: '0 5px 0 5px',
+    alignItems: 'center',
+  },
+  secondSeekBar: {
+    display: 'none',
+  },
   sliderSeek: {
+    '&:hover .thumbnailsContainer': {
+      opacity: 1,
+      visibility: 'visible',
+    },
     // width: '100%',
     display: 'block',
     transition: 'width 0.4s ease-in',
@@ -72,24 +179,37 @@ const useStyles = makeStyles(() => ({
     // paddingBottom: 10,
     // height:20,
     margin: '0px 5px',
+    cursor: 'pointer',
+    '&:hover .MuiSlider-rail': {
+      transform: 'scaleY(1.5)',
+    },
+    '&:hover .MuiSlider-track': {
+      transform: 'scaleY(1.5)',
+    },
   },
   seekBar: {
     // width: 90,
     // marginLeft: 16,
     // marginRight: 8,
     borderRadius: 2,
-    padding: '3px 0px',
+    height: '3px',
+    padding: 0,
+    // '&:hover': {
+    //   transform: 'scaleY(1.5)',
+    // },
     '&:hover .MuiSlider-thumb': {
       visibility: 'visible',
     },
     '& .MuiSlider-rail': {
       color: '#C3C3C3',
-      height: 3,
+      height: '3px',
+      transition: 'transform 0.2s',
       // borderRadius: 2,
     },
     '& .MuiSlider-track': {
       color: '#FF4786',
-      height: 3,
+      height: '3px',
+      transition: 'transform 0.2s',
       // borderRadius: 2,
     },
     '& .MuiSlider-thumb': {
@@ -98,8 +218,8 @@ const useStyles = makeStyles(() => ({
       // height: 8,
       // borderRadius: 4,
       visibility: 'hidden',
+      marginTop: '-4.5px',
     },
-
     '& .MuiSlider-thumb.Mui-focusVisible, .MuiSlider-thumb:hover': {
       boxShadow: 'none',
     },

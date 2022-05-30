@@ -175,9 +175,13 @@ export const resetVideoDetailError = createAction(ACTION_VIDEO_TOP.RESET_VIDEO_D
 export const changeIsPausingLive = createAction<{ is_pausing_live: boolean }>(ACTION_VIDEO_TOP.CHANGE_IS_PAUSING_LIVE)
 export const changeIsStreamingEnd = createAction<{ is_streaming_end: boolean }>(ACTION_VIDEO_TOP.CHANGE_IS_STREAMING_END)
 export const resetState = createAction(ACTION_VIDEO_TOP.RESET_STATE)
-export const changeVideoViewMode = createAction<{ is_normal_view_mode: boolean }>(ACTION_VIDEO_TOP.CHANGE_VIDEO_VIEW_MODE)
 export const resetChatState = createAction(ACTION_VIDEO_TOP.RESET_CHAT_STATE)
+export const changeVideoViewMode = createAction<{ is_normal_view_mode: boolean }>(ACTION_VIDEO_TOP.CHANGE_VIDEO_VIEW_MODE)
+// export const setActiveTab = createAction<{ activeTab: number }>(ACTION_VIDEO_TOP.SET_ACTIVE_TAB)
+// export const setActiveSubTab = createAction<{ activeSubTab: number }>(ACTION_VIDEO_TOP.SET_ACTIVE_SUB_TAB)
+export const changeIsHoveredVideoStatus = createAction<{ isHoveredVideo: boolean }>(ACTION_VIDEO_TOP.CHANGE__HOVERED_VIDEO_STATUS)
 export const saveVideoRef = createAction<services.VideoRefType>(ACTION_VIDEO_TOP.VIDEO_REF)
+export const changeIsFullScreen = createAction<{ is_full_screen: boolean }>(ACTION_VIDEO_TOP.CHANG_IS_FULL_SCREEN)
 
 export const videoDetail = createAsyncThunk<services.VideoDetailResponse, services.VideoDetailParams>(
   ACTION_VIDEO_TOP.VIDEO_DETAIL,
@@ -198,3 +202,71 @@ export const videoDetail = createAsyncThunk<services.VideoDetailResponse, servic
     }
   }
 )
+
+export const getVideoGiftMaster = createAsyncThunk<services.VideoGiftMasterResponse, services.VideoDetailParams>(
+  ACTION_VIDEO_TOP.VIDEO_GIFT_MASTER,
+  async (params, { rejectWithValue }) => {
+    try {
+      const res = await services.getVideoGiftMasterList({ ...params, timezone: getTimeZone() })
+      if (res?.code === 200) {
+        return res
+      } else {
+        // throw res.message
+        return rejectWithValue(res.message)
+      }
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
+export const getRankingList = createAsyncThunk<services.RankingsResponse, services.RankingsParams>(
+  ACTION_VIDEO_TOP.GET_RANKINGS,
+  async (rankingParams, { rejectWithValue }) => {
+    try {
+      const res = await services.rankingList(rankingParams)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
+export const updateUseGiftFlag = createAction<{ isUseGift: number }>(ACTION_VIDEO_TOP.UPDATE_USE_GIFT_FLAG)
+
+export const getReportReason = createAsyncThunk<services.ReportReasonResponse>(
+  ACTION_VIDEO_TOP.GET_REPORT_REASON,
+  async (_, { rejectWithValue }) => {
+    try {
+      return await services.getReportReason()
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
+export const sendVideoReport = createAsyncThunk<services.SendVideoReportResponse, services.SendVideoReportRequestBody>(
+  ACTION_VIDEO_TOP.SEND_REPORT_REASON,
+  async (params, { rejectWithValue }) => {
+    try {
+      const res = await services.sendVideoReport(params)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
+export const updateTipFunctionVisibleState = createAction<{ isVisible: number }>(ACTION_VIDEO_TOP.UPDATE_TIP_FUNCTION_VISIBLE_STATE)

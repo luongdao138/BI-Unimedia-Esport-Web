@@ -57,7 +57,15 @@ const AccountSettingsConfirmContainer: React.FC = () => {
   return (
     <ESStickyFooter title={t('common.send')} disabled={!buttonActive()} onClick={handleSubmit} noScroll>
       <Box className={classes.header}>
-        <IconButton className={classes.iconButton} disableRipple onClick={() => router.back()}>
+        <IconButton
+          className={classes.iconButton}
+          disableRipple
+          onClick={() => {
+            // eslint-disable-next-line no-console
+            console.log('backToTopVideo::back::14')
+            router.back()
+          }}
+        >
           <Icon className={`fa fa-arrow-left ${classes.icon}`} />
         </IconButton>
         <Typography variant="body1" className={classes.headerTitle}>

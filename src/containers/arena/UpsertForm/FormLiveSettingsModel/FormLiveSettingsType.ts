@@ -18,6 +18,12 @@ export type FormLiveType = {
     step_setting?: number
     arn?: string
     uuid_clone?: string
+    use_gift?: boolean
+    gift_group_id?: number
+    group_title?: string
+    ranking_flag?: boolean
+    //check group list does not exist
+    has_group_list?: boolean
   }
   stepSettingTwo?: {
     uuid: string
@@ -50,6 +56,12 @@ export type FormLiveType = {
     //check step
     step_setting?: number
     arn?: string
+    use_gift?: boolean
+    gift_group_id?: number
+    group_title?: string
+    ranking_flag?: boolean
+    //check group list does not exist
+    has_group_list?: boolean
   }
   stepSettingThree?: {
     name?: string

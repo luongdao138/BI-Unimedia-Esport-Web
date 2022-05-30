@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Box, Typography, Theme, makeStyles } from '@material-ui/core'
 import { TypeVideo } from '@services/videoTop.services'
 import { useTranslation } from 'react-i18next'
@@ -22,6 +22,7 @@ const VideoPreviewItem: React.FC<VideoPreviewItemProps> = ({ data, containerStyl
   const IMG_PLACEHOLDER = '/images/live_stream/thumbnail_default.png'
   //status = 0-schedule|1-live|2-archive
   const router = useRouter()
+
   const onNavigateLive = (data) => {
     let vid = data?.uuid
     if (data.status === STATUS_VIDEO.LIVE_STREAM && data.scheduled_flag === LIVE_VIDEO_TYPE.LIVE) {
@@ -32,9 +33,36 @@ const VideoPreviewItem: React.FC<VideoPreviewItemProps> = ({ data, containerStyl
         pathname: ESRoutes.TOP,
         query: { vid: vid },
       },
-      `${ESRoutes.TOP}?vid=${vid}`
+      `${ESRoutes.TOP}?vid=${vid}`,
+      {
+        shallow: true,
+      }
     )
   }
+  useEffect(() => {
+    const handleRouteChange = (url) => {
+      // let vid = data?.uuid
+      // if (data.status === STATUS_VIDEO.LIVE_STREAM && data.scheduled_flag === LIVE_VIDEO_TYPE.LIVE) {
+      //   vid = data?.user_id
+      // }
+      // eslint-disable-next-line no-console
+      console.log('URL=>', url)
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+      const isRedirectVideoDetailSuccess = url.includes('/?vid=')
+      // eslint-disable-next-line no-console
+      console.log('redirectVideoDetailSuccess=>', isRedirectVideoDetailSuccess)
+      //   if (!isRedirectVideoDetailSuccess) {
+      //     router.push(
+      //       {
+      //         pathname: ESRoutes.TOP,
+      //         query: { vid: vid },
+      //       },
+      //       `${ESRoutes.TOP}?vid=${vid}`
+      //     )
+      //   }
+    }
+    router.events.on('routeChangeComplete', handleRouteChange)
+  }, [])
 
   return (
     <Box className={classes.container} key={data?.id} onClick={() => onNavigateLive(data)} style={containerStyle}>

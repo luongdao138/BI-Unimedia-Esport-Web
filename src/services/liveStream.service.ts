@@ -50,6 +50,10 @@ export type LiveStreamSetting = {
   channel_id?: number
   arn?: string
   uuid_clone?: string
+  use_gift?: number
+  gift_group_id?: number
+  group_title?: string
+  ranking_flag?: boolean | number
 }
 
 export type DistributorStepSetting = {
@@ -92,6 +96,9 @@ export type LiveStreamSettingResponse = {
     arn?: string
     live_stream_start_time?: string
     live_stream_end_time?: string
+    use_gift?: number
+    gift_group_id?: number
+    group_title?: string
   }
 }
 export type LiveStreamSettingParams = {
@@ -119,6 +126,10 @@ export type SetLiveStreamParams = {
   video_publish_end_time?: string
   timezone?: string
   uuid_clone?: string
+  use_gift?: number
+  gift_group_id?: number
+  group_title?: string
+  ranking_flag?: number
 }
 export type SetLiveStreamResponse = {
   code: number
@@ -214,6 +225,7 @@ export const CODE_ERROR_RENEW_SPECIAL = {
   CHA099: 'CHA099',
   SERVICE_BUSY: 503,
   STK01: 'STK01',
+  GROUP_LIST_DOES_NOT_EXIST: 410,
 }
 
 export const TAG_STATUS_RECORD = {
@@ -279,6 +291,13 @@ export const setChannel = async (params: SetChannelParams): Promise<SetChannelRe
   const { data } = await api.post<SetChannelResponse>(URI.SET_CHANNEL, params)
   return data
 }
+
+export type GiftIndividual = {
+  index?: number
+  name?: string
+  number_of_registration: number
+}
+
 export const liveStreamReport = async (params: LiveStreamReportParams): Promise<LiveStreamReportResponse> => {
   const { data } = await api.get<LiveStreamReportResponse>(URI.GET_LIVE_STREAM_REPORT, { params })
   return data

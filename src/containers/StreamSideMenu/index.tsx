@@ -16,8 +16,6 @@ import LoginRequired from '@containers/LoginRequired'
 import userProfileStore from '@store/userProfile'
 import ESAvatar from '@components/Avatar'
 import { useTranslation } from 'react-i18next'
-import useMediaQuery from '@material-ui/core/useMediaQuery'
-import { useTheme } from '@material-ui/core/styles'
 import SideFooter from '@containers/SideMenu/SideFooter'
 import AppDialog from '@containers/SideMenu/AppDialog'
 import usePointsManage from '@containers/PointManage/usePointsManage'
@@ -31,9 +29,16 @@ interface StreamSideMenuProps {
   isStreamer: boolean
   isExpandEffect?: boolean
   toggleDrawer?: (open: boolean) => void
+  paddedBottom?: boolean
 }
 
-const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStreamer, isExpandEffect, toggleDrawer }) => {
+const StreamSideMenu: React.FC<StreamSideMenuProps> = ({
+  minimizeLayout,
+  isStreamer,
+  isExpandEffect,
+  toggleDrawer,
+  paddedBottom = false,
+}) => {
   const [modal, setModal] = useState(false)
   const [appModal, setAppModal] = useState(false)
   const [content, setContent] = useState('')
@@ -47,8 +52,6 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
   const { getUserProfile } = useUserData()
 
   const totalMyPoints = myPointsData?.total_point
-  const theme = useTheme()
-  const downSm = useMediaQuery(theme.breakpoints.down('sm'))
   // const isSelected = (routeName: string): boolean => {
   //   return router.pathname && router.pathname.startsWith(routeName)
   // }
@@ -91,6 +94,7 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
   return (
     <>
       <Box
+        style={{ paddingBottom: paddedBottom ? '162px' : 0 }}
         className={
           classes.menu + (isExpandEffect ? ' ' + classes.expandEffectMenu : '') + getAddClass(classes.noMinimizeMenu, classes.minimizeMenu)
         }
@@ -265,7 +269,7 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
               {!minimizeLayout && <ListItemText className={classes.listText} primary={t('common:logout')} />}
             </ListItem>
           )}
-          {!downSm && !minimizeLayout && (
+          {!minimizeLayout && (
             <Box className={classes.wrap_footer}>
               <SideFooter handleAppModal={handleAppModal} />
             </Box>
@@ -373,6 +377,7 @@ const useStyles = makeStyles((theme) => ({
   expandEffectMenu: {
     background: 'none',
   },
+  paddedBottom: {},
   minimizeMenu: {
     background: Colors.black_card,
     flexDirection: 'column',

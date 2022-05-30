@@ -1,7 +1,14 @@
 import { createReducer } from '@reduxjs/toolkit'
-import * as actions from '../actions'
-import { ListMyPointsData, ListHistoryPointsData, ListUsedPointsData, ListUsagePointHistoryData } from '@services/points.service'
+import * as actions from '@store/pointsManage/actions'
+import {
+  ListMyPointsData,
+  ListHistoryPointsData,
+  ListUsedPointsData,
+  ListUsagePointHistoryData,
+  MultiPaymentPurchaseResponse,
+} from '@services/points.service'
 import * as authActions from '@store/auth/actions'
+
 type StateType = {
   list_my_points: {
     total: number
@@ -31,6 +38,8 @@ type StateType = {
     code?: number
     data?: Array<any>
   }
+  multi_payment: MultiPaymentPurchaseResponse
+  multi_payment_loading: boolean
 }
 const initialState: StateType = {
   list_my_points: null,
@@ -38,6 +47,8 @@ const initialState: StateType = {
   list_used_points: null,
   detail_usage_points_history: null,
   purchase_ticket_super_chat: null,
+  multi_payment: null,
+  multi_payment_loading: false,
 }
 
 export default createReducer(initialState, (builder) => {
@@ -83,11 +94,24 @@ export default createReducer(initialState, (builder) => {
       const purchaseTicket = action.payload
       state.purchase_ticket_super_chat = purchaseTicket
     })
+    .addCase(actions.requestMultiPaymentPurchase.pending, (state, _) => {
+      state.multi_payment_loading = true
+    })
+    .addCase(actions.requestMultiPaymentPurchase.fulfilled, (state, action) => {
+      state.multi_payment = action.payload
+      state.multi_payment_loading = false
+    })
+    .addCase(actions.requestMultiPaymentPurchase.rejected, (state, _) => {
+      state.multi_payment_loading = false
+    })
     // logout clear data point
     .addCase(authActions.logout.fulfilled, (state) => {
       state.list_my_points = null
       state.list_used_points = null
       state.list_history_points = null
       state.detail_usage_points_history = null
+    })
+    .addCase(actions.clearPurchaseTicket, (state) => {
+      state.purchase_ticket_super_chat = null
     })
 })

@@ -12,6 +12,7 @@ import { FORMAT_TIME_SAFARI, FORMAT_YEAR_MONTH } from '@constants/common.constan
 import ESLoader from '@components/FullScreenLoader'
 import { DateHelper } from '@utils/helpers/DateHelper'
 import moment from 'moment'
+import { toNumber } from 'lodash'
 
 const PaymentInfoContainer: React.FC = () => {
   const { t } = useTranslation('common')
@@ -80,7 +81,7 @@ const PaymentInfoContainer: React.FC = () => {
             //     ? FINANCIAL_STATUS_TITLE.SCHEDULE
             //     : FINANCIAL_STATUS_TITLE.CONFIRM
 
-            const displayAmount = `${FormatHelper.currencyFormat(item?.point.toString())} ${t('common.money')}`
+            const displayAmount = `${FormatHelper.currencyFormat(Math.floor(toNumber(item?.point)).toString())} ${t('common.money')}`
             return (
               <Box key={item?.date} onClick={navigateToDetail(item?.date)} style={{ backgroundColor }} className={classes.row}>
                 <Typography className={`${classes.yearMonthRow}`}>{displayDate}</Typography>
@@ -90,7 +91,7 @@ const PaymentInfoContainer: React.FC = () => {
             )
           })}
         {data?.length === 0 && (
-          <Box className={classes.tableContentContainer}>
+          <Box className={classes.tableContentContainerNoDeposit}>
             <Typography component="span">{t('payment_information_screen.no_deposit_information')}</Typography>
           </Box>
         )}
@@ -135,6 +136,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingBottom: '24px',
     marginLeft: '24px',
     marginRight: '24px',
+    border: '1px solid rgb(255 255 255 / 30%)',
   },
   headerContainer: {
     display: 'flex',

@@ -7,6 +7,7 @@ import pointsManage from '@store/pointsManage'
 import { ListPointsParams } from '@services/points.service'
 
 const actionsPointManage = pointsManage.actions
+const selectorsPointManage = pointsManage.selectors
 const { selectors, actions } = purchasePoint
 const getSavedCardsMeta = createMetaSelector(actions.getSavedCards)
 const getDeleteCardMeta = createMetaSelector(actions.deleteCard)
@@ -57,6 +58,20 @@ const usePurchasePointData = () => {
 
   const resetErrorMess = () => dispatch(actions.resetErrorMess())
 
+  const multiPaymentPurchaseData = useAppSelector(selectorsPointManage.multiPaymentPurchaseData)
+  const requestMultiPaymentPurchase = async (amount, type, successCallback) => {
+    const requestParams = {
+      point: amount,
+      payment_type: type,
+    }
+    const resultAction = await dispatch(actionsPointManage.requestMultiPaymentPurchase(requestParams))
+    if (actionsPointManage.requestMultiPaymentPurchase.fulfilled.match(resultAction)) {
+      successCallback(resultAction.payload)
+    }
+  }
+
+  const updateNewPurchaseMethodSuccessState = (success) => dispatch(actions.newPaymentMethodSuccessState({ success }))
+
   return {
     metaSavedCardsMeta,
     getSavedCards,
@@ -68,6 +83,9 @@ const usePurchasePointData = () => {
     purchasePointUseOldCard,
     metaPurchaseUseOldCardMeta,
     resetErrorMess,
+    requestMultiPaymentPurchase,
+    multiPaymentPurchaseData,
+    updateNewPurchaseMethodSuccessState,
   }
 }
 

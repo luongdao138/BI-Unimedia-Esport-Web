@@ -1,40 +1,57 @@
 /* eslint-disable no-console */
-import { Box } from '@material-ui/core'
+import useDetailVideo from '@containers/VideoLiveStreamContainer/useDetailVideo'
+import { Box, Theme } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
+import { STATUS_VIDEO } from '@services/videoTop.services'
 import React, { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import PlayerTooltip from './PlayerTooltip'
-import useDetailVideo from '../../useDetailVideo'
-import { STATUS_VIDEO } from '@services/videoTop.services'
 interface Props {
   videoRef?: any
   typeButton: 'reload' | 'previous' | 'next'
-  currentTime?: number
-  durationsPlayer?: number
   isLive?: boolean
   onPressCallback?: () => void
   videoStatus?: number
+  videoType?: any
+  isStreaming: boolean
+  isStreamingEnd: React.MutableRefObject<boolean>
+  onVideoEnd?: () => void
+  state: {
+    playing: boolean
+    muted: boolean
+    volume: number
+    ended: boolean
+  }
+  playedSeconds: number
+  durationPlayer: number
 }
 
-const ReloadButton: React.FC<Props> = ({ videoRef, typeButton, currentTime, isLive, onPressCallback, videoStatus, durationsPlayer }) => {
+const ReloadButton: React.FC<Props> = ({ videoRef, typeButton, isLive, onPressCallback, videoStatus, playedSeconds, durationPlayer }) => {
   const classes = useStyles({ isLive })
   const { t } = useTranslation('common')
   const { changeSeekCount } = useDetailVideo()
 
-  const onChangeTime = () => {
+  console.log('reload component render.')
+  const onChangeTime = (e) => {
+    e.stopPropagation()
     let newSecond = 0
     // if (!isLive) {
     switch (typeButton) {
       case 'reload':
-        videoRef.current.currentTime = videoStatus === STATUS_VIDEO.LIVE_STREAM ? durationsPlayer : 0
+        if (/iPhone/i.test(window.navigator.userAgent)) {
+          //ios safari duration in video live stream is Infinity
+          videoRef.current?.load()
+        } else {
+          videoRef.current.currentTime = videoStatus === STATUS_VIDEO.LIVE_STREAM ? durationPlayer : 0
+        }
         break
       case 'previous':
-        videoRef.current.currentTime = currentTime - 10
-        newSecond = currentTime - 10
+        videoRef.current.currentTime = playedSeconds - 10
+        newSecond = playedSeconds - 10
         break
       case 'next':
-        videoRef.current.currentTime = currentTime + 10
-        newSecond = currentTime + 10
+        videoRef.current.currentTime = playedSeconds + 10
+        newSecond = playedSeconds + 10
         break
     }
     // eslint-disable-next-line no-console
@@ -67,7 +84,7 @@ const ReloadButton: React.FC<Props> = ({ videoRef, typeButton, currentTime, isLi
     )
   }
 }
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   buttonNormal: (props: { isLive: boolean }) => {
     return {
       alignItems: 'center',
@@ -89,6 +106,12 @@ const useStyles = makeStyles(() => ({
   },
   imageReload: {
     filter: 'none',
+  },
+  [theme.breakpoints.down('xs')]: {
+    imageReload: {
+      width: 11.39,
+      height: 11.85,
+    },
   },
 }))
 

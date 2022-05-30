@@ -4,9 +4,10 @@ import { URI } from '@constants/uri.constants'
 export type PurchaseTicketParams = {
   user_id?: number
   point: number
-  type: number //1 : mua ticket, 2 : supper chat
+  type: number //1 : mua ticket, 2 : supper chat, 4: give gift to master
   video_id: string | string[]
   timezone?: string
+  master_id?: string
   handleError?: () => void
   handleSuccess?: () => void
 }
@@ -130,5 +131,30 @@ export const ListUsagePointsHistoryDetail = async (params: DetailUsagePointParam
 
 export const PurchaseTicketSuperChat = async (params: PurchaseTicketParams): Promise<PurchaseTicketResponse> => {
   const { data } = await api.post<PurchaseTicketResponse>(URI.PURCHASE_TICKET_SUPER_CHAT, params)
+  return data
+}
+
+export type MultiPaymentPurchaseRequestParams = {
+  point?: number
+  payment_type: string
+}
+
+export type MultiPaymentPurchaseResponse = {
+  access_id?: string
+  token?: string
+  start_url?: string
+  start_limit_date: string
+  point?: number
+  payment_type: string
+}
+
+export const GMO_PAYMENT_TYPE = {
+  PAY_PAY: 'paypay',
+  D_BARAI: 'docomo',
+  RAKUTEN: 'rakutenpay',
+}
+
+export const MultiPaymentPurchase = async (params: MultiPaymentPurchaseRequestParams): Promise<MultiPaymentPurchaseResponse> => {
+  const { data } = await api.post<MultiPaymentPurchaseResponse>(URI.MULTI_PAYMENT_PURCHASE, params)
   return data
 }

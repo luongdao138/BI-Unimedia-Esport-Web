@@ -7,6 +7,9 @@ import {
   TypeVideo,
   VideoDetailData,
   VideoRefType,
+  VideoGiftMasterData,
+  RankingsItem,
+  ReportReason,
 } from '@services/videoTop.services'
 import * as actions from '../actions'
 import { VIDEO_NORMAL_VIEW_MODE } from '@constants/common.constants'
@@ -14,6 +17,8 @@ import { VIDEO_NORMAL_VIEW_MODE } from '@constants/common.constants'
 const defaultChatState = {
   seek_count: 0,
   seeked_second: 0,
+  // activeTab: VIDEO_TABS.CHAT,
+  // activeSubTab: SUB_TABS.MESS.ALL,
 }
 
 type StateType = {
@@ -48,7 +53,23 @@ type StateType = {
   is_streaming_end?: boolean
   video_view_mode?: string
   is_normal_view_mode?: boolean
+  // activeTab?: number
+  // activeSubTab?: number
+  isHoveredVideo?: boolean
   videoEl?: VideoRefType
+  videoGiftMaster?: VideoGiftMasterData
+  videoGiftMasterLoading?: boolean
+  giver_rankings: Array<RankingsItem>
+  receiver_rankings: Array<RankingsItem>
+  streamer: {
+    uuid?: string
+    user_avatar?: string
+    user_nickname?: string
+  }
+  videoReportReasons: Array<ReportReason>
+  isLoadingVideoReportReasons: boolean
+  videoDetailTipFunctionVisible: number
+  isFullScreen: boolean
 }
 
 const initialState: StateType = {
@@ -87,16 +108,27 @@ const initialState: StateType = {
   streaming_second: 0,
   played_second: 0,
   is_end_live: false,
-  seek_count: 0,
-  seeked_second: 0,
+  ...defaultChatState,
   is_pausing_live: false,
   is_streaming_end: false,
   video_view_mode: VIDEO_NORMAL_VIEW_MODE,
   is_normal_view_mode: true,
+  // activeTab: VIDEO_TABS.CHAT,
+  // activeSubTab: SUB_TABS.MESS.ALL,
+  isHoveredVideo: false,
   videoEl: {
     videoQuery: null,
     videoElement: null,
   },
+  videoGiftMaster: null,
+  videoGiftMasterLoading: false,
+  giver_rankings: [],
+  receiver_rankings: [],
+  streamer: { uuid: '', user_avatar: '', user_nickname: '' },
+  videoReportReasons: [],
+  isLoadingVideoReportReasons: false,
+  videoDetailTipFunctionVisible: 1,
+  isFullScreen: false,
 }
 
 export default createReducer(initialState, (builder) => {
@@ -209,14 +241,66 @@ export default createReducer(initialState, (builder) => {
   builder.addCase(actions.resetState, () => {
     return { ...initialState }
   })
+  builder.addCase(actions.resetChatState, (state) => {
+    return { ...state, ...defaultChatState }
+  })
   builder.addCase(actions.changeVideoViewMode, (state, action) => {
     state.is_normal_view_mode = action.payload.is_normal_view_mode
   })
-  builder.addCase(actions.resetChatState, (state) => {
-    return { ...state, ...defaultChatState }
+
+  // builder.addCase(actions.setActiveTab, (state, action) => {
+  //   state.activeTab = action.payload.activeTab
+  // })
+  // builder.addCase(actions.setActiveSubTab, (state, action) => {
+  //   state.activeSubTab = action.payload.activeSubTab
+  // })
+  builder.addCase(actions.changeIsHoveredVideoStatus, (state, action) => {
+    state.isHoveredVideo = action.payload.isHoveredVideo
   })
   builder.addCase(actions.saveVideoRef, (state, action) => {
     state.videoEl.videoQuery = action.payload.videoQuery
     state.videoEl.videoElement = action.payload.videoElement
+  })
+  builder.addCase(actions.getVideoGiftMaster.pending, (state) => {
+    state.videoGiftMasterLoading = true
+    state.videoGiftMaster = null
+  })
+  builder.addCase(actions.getVideoGiftMaster.fulfilled, (state, action) => {
+    state.videoGiftMasterLoading = false
+    state.videoGiftMaster = action.payload.data
+  })
+  builder.addCase(actions.getVideoGiftMaster.rejected, (state) => {
+    state.videoGiftMasterLoading = false
+  })
+
+  // get ranking video
+  builder.addCase(actions.getRankingList.fulfilled, (state, action) => {
+    state.giver_rankings = action.payload.data.giver
+    state.receiver_rankings = action.payload.data.receive
+    state.streamer = action.payload.data.streamer
+  })
+
+  builder.addCase(actions.updateUseGiftFlag, (state, action) => {
+    state.videoDetailData = {
+      ...state.videoDetailData,
+      use_gift: action.payload.isUseGift,
+    }
+  })
+  builder.addCase(actions.getReportReason.fulfilled, (state, action) => {
+    state.isLoadingVideoReportReasons = false
+    state.videoReportReasons = action.payload.data
+  })
+  builder.addCase(actions.getReportReason.rejected, (state) => {
+    state.isLoadingVideoReportReasons = false
+    state.videoReportReasons = []
+  })
+  builder.addCase(actions.getReportReason.pending, (state) => {
+    state.isLoadingVideoReportReasons = true
+  })
+  builder.addCase(actions.updateTipFunctionVisibleState, (state, action) => {
+    state.videoDetailTipFunctionVisible = action.payload.isVisible
+  })
+  builder.addCase(actions.changeIsFullScreen, (state, action) => {
+    state.isFullScreen = action.payload.is_full_screen
   })
 })
