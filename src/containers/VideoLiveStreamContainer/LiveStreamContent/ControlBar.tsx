@@ -27,7 +27,6 @@ interface ControlProps {
   muted?: boolean
   onMute?: () => void
   onChangeVol?: (_, value) => void
-  onChangeVolDrag?: (_, value) => void
   volume?: number
   isLive?: boolean | null
   videoStatus?: number
@@ -69,7 +68,6 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
       muted,
       onMute,
       onChangeVol,
-      onChangeVolDrag,
       volume,
       isLive = null,
       videoStatus,
@@ -306,7 +304,7 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
                     step={0.1}
                     className={classes.volumeBar}
                     onChange={onChangeVol}
-                    onChangeCommitted={onChangeVolDrag}
+                    // onChangeCommitted={onChangeVolDrag}
                     onClick={() => {
                       changeRef.current = 'volume'
                     }}

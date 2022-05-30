@@ -17,7 +17,6 @@ interface Props {
   muted?: boolean
   onMute?: () => void
   onChangeVol?: (_, value) => void
-  onChangeVolDrag?: (_, value) => void
   volume?: number
   isLive?: boolean | null
   videoStatus?: number
