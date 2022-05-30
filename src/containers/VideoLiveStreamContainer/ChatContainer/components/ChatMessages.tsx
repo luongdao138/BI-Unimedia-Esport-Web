@@ -1,4 +1,4 @@
-import React, { memo, useEffect } from 'react'
+import React, { memo, useEffect, useMemo } from 'react'
 import { useMediaQuery, useTheme } from '@material-ui/core'
 import { AutoSizer, CellMeasurer, List, CellMeasurerCache } from 'react-virtualized'
 import useStyles from '@containers/VideoLiveStreamContainer/ChatContainer/styles'
@@ -58,6 +58,8 @@ const ChatMessages: React.FC<Props> = ({
   const isDown960 = useMediaQuery(theme.breakpoints.down(960), { noSsr: true })
   const matchMd = useMediaQuery(theme.breakpoints.down(1025))
   const { getMessageWithoutNgWords } = useCheckNgWord()
+
+  const undeletedMessages = useMemo(() => stateMessages.filter((m) => !m.delete_flag), [stateMessages])
 
   const chatBoardWidth = () => {
     if (!isDown1100) return 482
@@ -122,38 +124,36 @@ const ChatMessages: React.FC<Props> = ({
   }, [stateMessages])
 
   const rowRenderer = ({ index, key, style, parent }) => {
-    const msg = stateMessages[index]
+    const msg = isStreamer ? stateMessages[index] : undeletedMessages[index]
     const getContent = (measure: any, msg: any) => {
-      return !msg.delete_flag || isStreamer ? (
-        msg.is_premium ? (
-          <DonateMessage
-            key={index}
-            message={msg}
-            videoType={videoType}
-            deleteMess={deleteMsg}
-            getMessageWithoutNgWords={getMessageWithoutNgWords}
-            is_streamer={isStreamer}
-            resendMess={resendMess}
-            reDeleteMess={reDeleteMess}
-            measure={measure}
-            contentRect={contentRect}
-          />
-        ) : (
-          // no display normal mess on tab tip
-          <ChatTextMessage
-            key={index}
-            message={msg}
-            videoType={videoType}
-            getMessageWithoutNgWords={getMessageWithoutNgWords}
-            deleteMess={deleteMsg}
-            is_streamer={isStreamer}
-            resendMess={resendMess}
-            reDeleteMess={reDeleteMess}
-            measure={measure}
-            contentRect={contentRect}
-          />
-        )
-      ) : null
+      return msg.is_premium ? (
+        <DonateMessage
+          key={index}
+          message={msg}
+          videoType={videoType}
+          deleteMess={deleteMsg}
+          getMessageWithoutNgWords={getMessageWithoutNgWords}
+          is_streamer={isStreamer}
+          resendMess={resendMess}
+          reDeleteMess={reDeleteMess}
+          measure={measure}
+          contentRect={contentRect}
+        />
+      ) : (
+        // no display normal mess on tab tip
+        <ChatTextMessage
+          key={index}
+          message={msg}
+          videoType={videoType}
+          getMessageWithoutNgWords={getMessageWithoutNgWords}
+          deleteMess={deleteMsg}
+          is_streamer={isStreamer}
+          resendMess={resendMess}
+          reDeleteMess={reDeleteMess}
+          measure={measure}
+          contentRect={contentRect}
+        />
+      )
     }
 
     return (
@@ -194,7 +194,7 @@ const ChatMessages: React.FC<Props> = ({
               rowHeight={cache.rowHeight}
               // rowHeight={25}
               rowRenderer={rowRenderer}
-              rowCount={stateMessages.length}
+              rowCount={isStreamer ? stateMessages.length : undeletedMessages.length}
               className={classes.listContainer}
               id="list_mess"
               height={height}
