@@ -124,8 +124,9 @@ export const useChatHelpers = (props: IImportProps): IExportProps => {
   } = props
 
   // fetch messages prev when scroll to top when archived or when live stream
-  const fetchPrevMess = (sortOrder = APIt.ModelSortDirection.DESC) => {
+  const fetchPrevMess = (key_video_id) => {
     try {
+      const sortOrder = APIt.ModelSortDirection.DESC
       setIsGettingMess(true)
       if (isTokenBroken) {
         const nextToken = prevTokenRef.current

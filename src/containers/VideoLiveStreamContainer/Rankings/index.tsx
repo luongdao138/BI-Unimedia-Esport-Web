@@ -78,6 +78,23 @@ const useStyles = makeStyles((theme) => ({
   container: {
     borderCollapse: 'inherit',
     overflowX: 'auto',
+    '&::-webkit-scrollbar': {
+      width: 16,
+      opacity: 1,
+      padding: 2,
+      cursor: 'pointer',
+    },
+    '&::-webkit-scrollbar-track': {
+      background: '#4D4D4D',
+      border: 'solid 3px transparent',
+    },
+    '&::-webkit-scrollbar-thumb': {
+      backgroundColor: '#212121',
+      backgroundClip: 'padding-box',
+      border: '4px solid rgba(0, 0, 0, 0)',
+      width: '14px',
+      cursor: 'pointer',
+    },
   },
   table: (props: videoStyleProps) => {
     return {

@@ -547,10 +547,10 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
             refFetchPrevMessTip.current()
           }, DEBOUNCE_SECOND)
         } else {
-          fetchPrevMess && fetchPrevMess()
+          fetchPrevMess && fetchPrevMess(key_video_id)
         }
       }, 300),
-      [isTokenBroken, isTokenTipBroken]
+      [isTokenBroken, isTokenTipBroken, key_video_id]
     )
 
     const handleLoadMore = () => {
