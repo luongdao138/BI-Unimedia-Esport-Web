@@ -29,6 +29,7 @@ import { useControlBarContext } from '@containers/VideoLiveStreamContainer/Video
 import { isMobile as isMobileDevice } from 'react-device-detect'
 import { useRect } from '@utils/hooks/useRect'
 import { useFullscreenContext } from '@context/FullscreenContext'
+import { ArrowLeft, ArrowRight } from '@material-ui/icons'
 
 declare global {
   interface Document {
@@ -85,13 +86,18 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   const isOpenSettingPanel = refControlBar?.current && refControlBar?.current.settingPanel !== SettingPanelState.NONE ? true : false
 
   const playerContainerRef = useRef(null)
+  const videoPlayerRef = useRef(null)
   const videoEl = useRef(null)
   // const [durationPlayer, setDurationPlayer] = useState(0)
   // const [playedSeconds, setPlayedSeconds] = useState(0)
   const durationPlayerRef = useRef<number>(0)
   const playerSecondsRef = useRef<number>(0)
   const doubleTapRef = useRef<boolean>(false)
-  const { height: videoDisplayHeight } = useRect(playerContainerRef)
+  const { height: videoPlayerHeight, width: videoPlayerWidth } = useRect(videoPlayerRef)
+  const [isShowNext, setIsShowNext] = useState<boolean>(false)
+  const [isShowPrev, setIsShowPrev] = useState<boolean>(false)
+  const nextRef = useRef(null)
+  const prevRef = useRef(null)
   // const { videoEl } = useContext(VideoContext)
 
   const { t } = useTranslation('common')
@@ -466,12 +472,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     if (videoEl.current !== null) {
       videoEl.current.volume = val
     }
-    setState({ ...state, volume: val, muted: videoEl.current?.volume === 0 })
-  }
-  const handleChangeVolDrag = (_, val) => {
-    if (videoEl.current !== null) {
-      videoEl.current.volume = val
-    }
+    console.log('change video volume event fire: ', val)
     setState({ ...state, volume: val, muted: videoEl.current?.volume === 0 })
   }
 
@@ -895,8 +896,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     changeIsFullScreenMode(isFull)
   }, [isFull])
 
-  const toggleFullScreen1 = () => {
-    console.log('toggle full screen:', document['webkitCurrentFullScreenElement'])
+  const toggleFullScreen1 = (isDoubleClick = false) => {
     if (iPhonePl || androidPl) {
       isFullScreenModeRef.current = !isFullScreenModeRef.current
       setIsFull(!isFull)
@@ -933,6 +933,24 @@ const VideoPlayer: React.FC<PlayerProps> = ({
             document['webkitExitFullscreen']()
           }
         }
+      }
+
+      if (!isDoubleClick || isMobileDevice) return
+
+      if (state.playing) {
+        changeShowControlBar(true)
+        if (videoType === STATUS_VIDEO.LIVE_STREAM && videoEl.current !== null) {
+          videoEl.current.currentTime = Math.floor(durationPlayerRef.current)
+        }
+        // setState({ ...state, playing: true })
+        videoEl.current?.play()
+        setState((prev) => ({ ...prev, playing: !prev.playing }))
+        setVisible({ ...visible, loading: false, videoLoaded: false })
+      } else {
+        videoEl.current?.pause()
+        setState((prev) => ({ ...prev, playing: !prev.playing }))
+        setVisible({ ...visible, loading: true, videoLoaded: false })
+        setIsStreaming(false)
       }
     }
   }
@@ -1028,7 +1046,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
 
   const handleDoubleClickVideo = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!processControlRef.current.contains(e.target as Node) && !isMobileDevice) {
-      toggleFullScreen1()
+      toggleFullScreen1(true)
     }
   }
 
@@ -1113,6 +1131,28 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     }, 4500)
   }
 
+  const handleShowNextIcon = () => {
+    if (nextRef.current) {
+      clearTimeout(nextRef.current)
+    }
+    setIsShowNext(true)
+
+    nextRef.current = setTimeout(() => {
+      setIsShowNext(false)
+    }, 1000)
+  }
+
+  const handleShowPrevIcon = () => {
+    if (prevRef.current) {
+      clearTimeout(prevRef.current)
+    }
+    setIsShowPrev(true)
+
+    prevRef.current = setTimeout(() => {
+      setIsShowPrev(false)
+    }, 1000)
+  }
+
   const handleVideoTouch = (e: any) => {
     if (!isVideoArchive) {
       return
@@ -1129,13 +1169,15 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     const touchedX = e.touches?.[0]?.clientX
     const touchedY = e.touches?.[0]?.clientY
     e.preventDefault()
-    if (touchedY / videoDisplayHeight < 0.75) {
-      if (touchedX / videoDisplayWidth < 0.35) {
+    if (touchedY / videoPlayerHeight < 0.75) {
+      if (touchedX / videoPlayerWidth < 0.35) {
         handleChangeVideoTime('prev')
+        handleShowPrevIcon()
       }
 
-      if (touchedX / videoDisplayWidth > 0.65) {
+      if (touchedX / videoPlayerWidth > 0.65) {
         handleChangeVideoTime('next')
+        handleShowNextIcon()
       }
     }
   }
@@ -1217,6 +1259,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
         onClick={() => {
           enableChangeVolumeRef.current = true
         }}
+        ref={videoPlayerRef}
         onDoubleClick={handleDoubleClickVideo}
         onMouseEnter={handleVideoMouseEnter}
         onMouseLeave={handleVideoMouseLeave}
@@ -1259,7 +1302,14 @@ const VideoPlayer: React.FC<PlayerProps> = ({
           onTouchMove={handleSwipeTouchMove}
           onTouchStart={handleSwipeTouchStart}
         >
-          <div style={{ height: '100%', position: 'relative' }} onClick={() => handlePlayPauseOut('out')}>
+          <div
+            style={{ height: '100%', position: 'relative' }}
+            onClick={() => {
+              setTimeout(() => {
+                handlePlayPauseOut('out')
+              }, 300)
+            }}
+          >
             {Video}
             {getMiniPlayerState && (
               <Box id="exist-picture-in-picture" className={classes.existPictureInPicture}>
@@ -1267,6 +1317,27 @@ const VideoPlayer: React.FC<PlayerProps> = ({
                   <img src={'/images/ic_picture_in_picture.svg'} />
                   <Typography className={classes.textInPictureInPicture}>{t('videos_top_tab.mini_player_message')}</Typography>
                 </Box>
+              </Box>
+            )}
+
+            {isShowNext && (
+              <Box className={classes.iconWrapper}>
+                <Box className={classes.icons}>
+                  <ArrowRight />
+                  <ArrowRight />
+                  <ArrowRight />
+                </Box>
+                <Typography className={classes.iconText}>10s</Typography>
+              </Box>
+            )}
+            {isShowPrev && (
+              <Box className={classes.iconWrapper} style={{ left: '15%', right: 'unset' }}>
+                <Box className={classes.icons}>
+                  <ArrowLeft />
+                  <ArrowLeft />
+                  <ArrowLeft />
+                </Box>
+                <Typography className={classes.iconText}>10s</Typography>
               </Box>
             )}
 
@@ -1310,7 +1381,6 @@ const VideoPlayer: React.FC<PlayerProps> = ({
                 handleFullScreen={toggleFullScreen1}
                 onMute={toggleMute}
                 onChangeVol={handleChangeVol}
-                onChangeVolDrag={handleChangeVolDrag}
                 volume={volume}
                 isLive={isLive}
                 videoStatus={videoType}
@@ -1390,6 +1460,27 @@ interface StyleProps {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
+  iconWrapper: {
+    position: 'absolute',
+    zIndex: 20,
+    top: '50%',
+    transform: 'translateY(-50%)',
+    right: '15%',
+    display: 'flex',
+    alignItems: 'center',
+    flexDirection: 'column',
+  },
+  icons: {
+    '& svg': {
+      color: '#fff',
+      margin: '0 -12px',
+      fontSize: '36px',
+    },
+  },
+  iconText: {
+    color: '#fff',
+    marginTop: '-10px',
+  },
   existPictureInPicture: {
     position: 'absolute',
     top: 0,
