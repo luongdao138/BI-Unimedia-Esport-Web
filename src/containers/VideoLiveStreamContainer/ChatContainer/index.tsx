@@ -713,7 +713,7 @@ const ChatContainer: React.FC<ChatContainerProps> = forwardRef(
     const refOnCreateMess = useRef(null)
     const onCreateMess = (createdMessage: any) => {
       const canAddMess = checkAddMessage(createdMessage)
-      console.log('🚀 ~ onCreateMess ~ canAddMess', canAddMess)
+      console.log('🚀 ~ onCreateMess ~ canAddMess', createdMessage)
       if (createdMessage?.video_id === key_video_id && videoType === STATUS_VIDEO.LIVE_STREAM) {
         const created_at = createdMessage?.createdAt ? moment(createdMessage?.createdAt).utc().format('YYYY-MM-DD HH:mm:ss') : null
         if (createdMessage?.is_premium) {
