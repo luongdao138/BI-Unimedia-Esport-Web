@@ -29,7 +29,7 @@ const FullscreenContextProvider: React.FC = ({ children }: { children: React.Rea
   }, [isFullscreenMode])
 
   useEffect(() => {
-    if(!isSafariBrowser) {
+    if (!isSafariBrowser) {
       const handleFullscreenChange = () => {
         if (document.fullscreenElement) {
           setIsFullScreenMode(true)
@@ -37,13 +37,13 @@ const FullscreenContextProvider: React.FC = ({ children }: { children: React.Rea
           setIsFullScreenMode(false)
         }
       }
-  
+
       const handleScroll = () => {
         setIsShowHeader(scrollY > 0)
       }
       addEventListener('fullscreenchange', handleFullscreenChange)
       addEventListener('scroll', handleScroll)
-  
+
       return () => {
         removeEventListener('fullscreenchange', handleFullscreenChange)
         removeEventListener('scroll', handleScroll)
