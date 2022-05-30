@@ -24,3 +24,5 @@ export const getProfileDone = createSelector(getRoot, (state) => state.user && s
 export const getIsSocial = createSelector(getRoot, (state) => state.user?.is_social)
 
 export const getConfirmType = createSelector(getRoot, (state) => state.confirmType)
+
+export const registerLoading = createSelector(getRoot, (state) => state.registerLoading)
