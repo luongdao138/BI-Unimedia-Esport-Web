@@ -7,6 +7,7 @@ import { Box, ClickAwayListener, Icon, makeStyles, Slider, Theme, Typography, us
 import { Crop54 as TheatreViewMode, Crop75 as NormalViewMode } from '@material-ui/icons'
 import { VIDEO_RESOLUTION } from '@services/liveStreamDetail.service'
 import { QualitiesType } from '@services/videoTop.services'
+import { STATUS_VIDEO } from '@services/videoTop.services'
 import { Colors } from '@theme/colors'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
 import React, { forwardRef, memo, useEffect, useImperativeHandle, useRef, useState } from 'react'
@@ -326,7 +327,7 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
               {...commonProps}
             />
           </div>
-          {!isLive && isLive !== null && !isMobile && (
+          {videoStatus === STATUS_VIDEO.ARCHIVE && (
             <>
               <Reload
                 videoRef={videoRef}
