@@ -27,6 +27,10 @@ const VideoSearchContainer: React.FC = () => {
   const { width: itemWidthDownMdScreen } = useWindowDimensions(48)
 
   useEffect(() => {
+    document.body.style.overflow = 'overlay'
+  }, [])
+
+  useEffect(() => {
     setKeyword(searchKeyword)
     videoSearch({ page: 1, keyword: searchKeyword, limit: LIMIT, category_id: searchCategoryID })
 
