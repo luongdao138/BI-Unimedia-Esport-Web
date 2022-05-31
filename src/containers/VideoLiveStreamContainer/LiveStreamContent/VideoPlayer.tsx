@@ -456,7 +456,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     }
   }, [])
   const toggleFullScreen1 = () => {
-    if (!document.fullscreenElement) {
+    if (!document['webkitCurrentFullScreenElement']) {
       if (playerContainerRef.current.requestFullscreen) {
         playerContainerRef.current.requestFullscreen()
       } else if (playerContainerRef.current.mozRequestFullScreen) {
@@ -469,6 +469,8 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     } else {
       if (document.exitFullscreen) {
         document.exitFullscreen()
+      } else {
+        document['webkitExitFullscreen']()
       }
     }
   }
