@@ -1,5 +1,6 @@
 import { Box, Icon, makeStyles, Slider, Typography } from '@material-ui/core'
 import { Crop54 as TheatreViewMode, Crop75 as NormalViewMode } from '@material-ui/icons'
+import { STATUS_VIDEO } from '@services/videoTop.services'
 import { Colors } from '@theme/colors'
 import React, { forwardRef, memo, useEffect, useImperativeHandle, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -127,7 +128,7 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
           <div className={classes.time}>
             <TimeBar statusVideo={videoStatus} currentTime={currentTime} durationsPlayer={durationsPlayer} />
           </div>
-          {!isLive && isLive !== null && (
+          {videoStatus === STATUS_VIDEO.ARCHIVE && (
             <>
               <Reload
                 videoRef={videoRef}
