@@ -62,12 +62,21 @@ const SeekBar: React.FC<Props & SliderProps> = ({ playedSeconds, durationPlayer,
   }
 
   const handleCommit = useCallback(
-    debounce((_, durationPlayer, timeHover) => {
+    debounce((_, durationPlayer, value, timeHover) => {
       // console.log('~~~VALUE SEEK TO ~~~~~', value, (value * durationPlayer) / 100, timeHover)
-      setTimePlayed((timeHover * 100) / durationPlayer)
-      // secondTimePlay.current = value
-      const newSecond = timeHover
-      videoRefInfo.current.currentTime = newSecond
+      const newSecond = isMobile ? (value * durationPlayer) / 100 : timeHover
+      if (!isMobile) {
+        setTimePlayed((timeHover * 100) / durationPlayer)
+        // secondTimePlay.current = value
+        // const newSecond = timeHover
+      } else {
+        setTimePlayed(value)
+        // secondTimePlay.current = value
+        // const newSecond = value
+      }
+      if (videoRefInfo && videoRefInfo.current) {
+        videoRefInfo.current.currentTime = newSecond
+      }
       changeSeekCount(Math.floor(newSecond))
     }, 10),
     []
@@ -165,7 +174,7 @@ const SeekBar: React.FC<Props & SliderProps> = ({ playedSeconds, durationPlayer,
         onMouseMove={handleOnMouseMove}
         onMouseLeave={handleOnMouseLeave}
         onMouseEnter={() => handleChangeCanHideControlBar(false)}
-        onChangeCommitted={(_) => handleCommit(_, durationPlayer, timeHover)}
+        onChangeCommitted={(_, value) => handleCommit(_, durationPlayer, value, timeHover)}
         {...rest}
       />
       <div ref={thumbnailsRef} className={`${classes.thumbnailsContainer} thumbnailsContainer`}>
