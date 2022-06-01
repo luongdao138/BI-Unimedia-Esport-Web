@@ -89,7 +89,6 @@ const SeekBar: React.FC<Props & SliderProps> = ({ playedSeconds, durationPlayer,
     } else {
       setTimeHover(timePreview)
     }
-    console.log('ssss:', timeHover, durationPlayer)
     // secondTimePlay.current = (timeHover*100/durationPlayer)
     // console.log('sss:', e.target, e.currentTarget)
     // console.log('timeeee 0', e.target, durationPlayer, e.pageX,
@@ -100,7 +99,41 @@ const SeekBar: React.FC<Props & SliderProps> = ({ playedSeconds, durationPlayer,
     // )
 
     if (thumbnailsRef) {
-      thumbnailsRef.current.style.left = e.clientX - 75 + 'px'
+      const thumbnailsWidth = parseInt(getComputedStyle(thumbnailsRef.current).getPropertyValue('width'))
+      console.log(
+        'ssss:',
+        getComputedStyle(thumbnailsRef.current).getPropertyValue('width'),
+        e.pageX,
+        e.currentTarget.offsetLeft,
+        e.currentTarget.getBoundingClientRect().width
+      )
+      const endingGap = e.currentTarget.getBoundingClientRect().width - e.pageX + 5
+
+      if (document['webkitFullscreenElement']) {
+        if (e.pageX < thumbnailsWidth / 2) {
+          thumbnailsRef.current.style.left = 0 + 'px'
+        } else if (endingGap < thumbnailsWidth / 2) {
+          thumbnailsRef.current.style.left =
+            e.pageX -
+            e.currentTarget.getBoundingClientRect().left -
+            (thumbnailsWidth - (e.currentTarget.getBoundingClientRect().width - e.pageX + 10)) +
+            'px'
+        } else {
+          thumbnailsRef.current.style.left = e.pageX - e.currentTarget.getBoundingClientRect().left - thumbnailsWidth / 2 + 5 + 'px'
+        }
+      } else {
+        if (e.pageX - 60 < thumbnailsWidth / 2) {
+          thumbnailsRef.current.style.left = 0 + 'px'
+        } else if (e.pageX - e.currentTarget.getBoundingClientRect().width - 5 > thumbnailsWidth / 2) {
+          thumbnailsRef.current.style.left =
+            e.pageX -
+            e.currentTarget.getBoundingClientRect().left -
+            (e.pageX - e.currentTarget.getBoundingClientRect().width + 10 - thumbnailsWidth / 2) +
+            'px'
+        } else {
+          thumbnailsRef.current.style.left = e.pageX - e.currentTarget.getBoundingClientRect().left - thumbnailsWidth / 2 + 5 + 'px'
+        }
+      }
     }
     // console.log('timeeee 1', (((e.clientX - e.target.offsetLeft) / e.target.clientWidth) * durationPlayer).toFixed(2))
     handleChangeCanHideControlBar(true)
@@ -114,9 +147,6 @@ const SeekBar: React.FC<Props & SliderProps> = ({ playedSeconds, durationPlayer,
 
   return (
     <div className={classes.sliderSeek}>
-      <div ref={thumbnailsRef} className={`${classes.thumbnailsContainer} thumbnailsContainer`}>
-        <div className={classes.thumbnailsText}>{FormatHelper.formatTime(timeHover)}</div>
-      </div>
       {/* <Slider
         min={0}
         max={100}
@@ -138,6 +168,9 @@ const SeekBar: React.FC<Props & SliderProps> = ({ playedSeconds, durationPlayer,
         onChangeCommitted={(_) => handleCommit(_, durationPlayer, timeHover)}
         {...rest}
       />
+      <div ref={thumbnailsRef} className={`${classes.thumbnailsContainer} thumbnailsContainer`}>
+        <div className={classes.thumbnailsText}>{FormatHelper.formatTime(timeHover)}</div>
+      </div>
     </div>
   )
 }
@@ -166,10 +199,6 @@ const useStyles = makeStyles(() => ({
     display: 'none',
   },
   sliderSeek: {
-    '&:hover .thumbnailsContainer': {
-      opacity: 1,
-      visibility: 'visible',
-    },
     // width: '100%',
     display: 'block',
     transition: 'width 0.4s ease-in',
@@ -188,6 +217,10 @@ const useStyles = makeStyles(() => ({
     },
   },
   seekBar: {
+    '&:hover ~ $thumbnailsContainer': {
+      opacity: 1,
+      visibility: 'visible',
+    },
     // width: 90,
     // marginLeft: 16,
     // marginRight: 8,
