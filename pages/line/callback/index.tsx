@@ -36,6 +36,10 @@ export const getServerSideProps: GetServerSideProps<LineCallbackPage | {}, Parse
 const LineCallbackPage: React.FC<LineCallbackPage> = ({ access_token, redirectTo, loginType, errorServer }) => {
   const { login, meta, resetMeta } = useSocialLogin('')
   const router = useRouter()
+  // console.log('access_token', access_token)
+  // console.log('redirectTo', redirectTo)
+  // console.log('loginType', loginType)
+  // console.log('errorServer', errorServer)
   useEffect(() => {
     if (typeof errorServer !== 'undefined') {
       if (errorServer.name === 'Error') {
@@ -73,7 +77,7 @@ const LineCallbackPage: React.FC<LineCallbackPage> = ({ access_token, redirectTo
 
   const handleError = () => {
     // console.log('handle error -----------------')
-    // const isTypeRegister = errorServer.config.data.toString().split('type')[2].includes('register')
+    const isTypeRegister = errorServer.config.data.toString().split('type')[2].includes('register')
     // if (isTypeRegister) {
     //   router.push(ESRoutes.REGISTER)
     // } else {
@@ -82,10 +86,11 @@ const LineCallbackPage: React.FC<LineCallbackPage> = ({ access_token, redirectTo
     router.push(
       `https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=${
         process.env.NEXT_PUBLIC_LINE_CLIENT_ID
-      }&scope=profile%20openid%20email&state=${genRanHex(6)}&redirect_uri=${process.env.NEXT_PUBLIC_LINE_CALLBACK}`
+      }&scope=profile%20openid%20email&state=${genRanHex(6)}&redirect_uri=${
+        process.env.NEXT_PUBLIC_LINE_CALLBACK
+      }?redirectTo=${redirectTo}type${isTypeRegister ? 'register' : 'login'}`
     )
   }
-
   return <FullScreenLoader open />
 }
 
