@@ -11,15 +11,20 @@ import { useEffect } from 'react'
 interface LineCallbackPage extends GetLineAccessTokenResponse {
   loginType?: 'login' | 'register'
   redirectTo?: string
+  errorServer: any
 }
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export const getServerSideProps: GetServerSideProps<LineCallbackPage | {}, ParsedUrlQuery> = async (context) => {
   if (context.query.code) {
-    const { code, redirectTo } = context.query
-    const [redirect, type] = redirectTo.toString().split('type')
-    const res = await getLineAccessToken(code, redirectTo)
-    return { props: { ...res, loginType: type, redirectTo: redirect } }
+    try {
+      const { code, redirectTo } = context.query
+      const [redirect, type] = redirectTo.toString().split('type')
+      const res = await getLineAccessToken(code, redirectTo)
+      return { props: { ...res, loginType: type, redirectTo: redirect } }
+    } catch (error) {
+      return { props: { errorServer: JSON.parse(JSON.stringify(error)) } }
+    }
   }
   return {
     props: {},
@@ -27,9 +32,17 @@ export const getServerSideProps: GetServerSideProps<LineCallbackPage | {}, Parse
 }
 
 // eslint-disable-next-line @typescript-eslint/ban-types
-const LineCallbackPage: React.FC<LineCallbackPage> = ({ access_token, redirectTo, loginType }) => {
+const LineCallbackPage: React.FC<LineCallbackPage> = ({ access_token, redirectTo, loginType, errorServer }) => {
   const { login, meta, resetMeta } = useSocialLogin('')
   const router = useRouter()
+  useEffect(() => {
+    if (typeof errorServer !== 'undefined') {
+      if (errorServer.name === 'Error') {
+        handleError()
+      }
+    }
+  }, [errorServer])
+
   useEffect(() => {
     if (access_token) {
       const params: LoginSocialParams = {
@@ -56,6 +69,15 @@ const LineCallbackPage: React.FC<LineCallbackPage> = ({ access_token, redirectTo
       }
     }
   }, [meta])
+
+  const handleError = () => {
+    const isTypeRegister = errorServer.config.data.toString().split('type')[2].includes('register')
+    if (isTypeRegister) {
+      router.push(ESRoutes.REGISTER)
+    } else {
+      router.push(ESRoutes.LOGIN)
+    }
+  }
 
   return <FullScreenLoader open />
 }
