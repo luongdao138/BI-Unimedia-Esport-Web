@@ -3,8 +3,6 @@ import { Grid, Box, Icon, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
-import ESMenu from '@components/Menu'
-import ESMenuItem from '@components/Menu/MenuItem'
 import LoginRequired from '@containers/LoginRequired'
 import * as commonActions from '@store/common/actions'
 import { useAppDispatch } from '@store/hooks'
@@ -25,6 +23,7 @@ import { MEMBER_ROLE, TABS, COMMUNITY_DIALOGS } from '@constants/community.const
 import ESTwitterShareButton from '@components/TwitterShareButton'
 import * as actions from '@store/community/actions'
 import { useConfirm } from '@components/Confirm'
+import ReportToolTip from '@components/ReportToolTip'
 
 const ROLE_TYPES = {
   IS_ADMIN: 'setIsAdmin',
@@ -291,11 +290,16 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, showTopicListAndSearch
               {DetailInfoButton()}
               {!isOfficial && (
                 <Box className={classes.menuOuter}>
-                  <ESMenu>
-                    <LoginRequired>
-                      <ESMenuItem onClick={handleReportOpen}>{t('common:community.report')}</ESMenuItem>
-                    </LoginRequired>
-                  </ESMenu>
+                  {/* <ESMenu> */}
+                  <LoginRequired>
+                    <ReportToolTip
+                      handleReportOpen={handleReportOpen}
+                      reportText={t('common:community.report')}
+                      iconClassName={classes.dropDownMenu}
+                    />
+                    {/* <ESMenuItem onClick={handleReportOpen}>{t('common:community.report')}</ESMenuItem> */}
+                  </LoginRequired>
+                  {/* </ESMenu> */}
                 </Box>
               )}
             </Box>

@@ -2,8 +2,6 @@ import { useState } from 'react'
 import { Grid, Box, makeStyles, Typography, Theme, Icon, ButtonBase } from '@material-ui/core'
 import ESChip from '@components/Chip'
 import { Colors } from '@theme/colors'
-import ESMenu from '@components/Menu'
-import ESMenuItem from '@components/Menu/MenuItem'
 import { LobbyHelper } from '@utils/helpers/LobbyHelper'
 import { LobbyDetail } from '@services/lobby.service'
 import { useTranslation } from 'react-i18next'
@@ -22,6 +20,7 @@ import { useRouter } from 'next/router'
 import _ from 'lodash'
 import ESTwitterShareButton from '@components/TwitterShareButton'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
+import ReportToolTip from '@components/ReportToolTip'
 
 interface Props {
   detail: LobbyDetail
@@ -75,11 +74,16 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit }) => {
                   </ButtonPrimary>
                 </LoginRequired>
               )}
-              <ESMenu>
-                <LoginRequired>
-                  <ESMenuItem onClick={handleReportOpen}>{t('common:lobby.report')}</ESMenuItem>
-                </LoginRequired>
-              </ESMenu>
+              {/* <ESMenu> */}
+              <LoginRequired>
+                <ReportToolTip
+                  handleReportOpen={handleReportOpen}
+                  reportText={t('common:lobby.report')}
+                  iconClassName={classes.dropDownMenu}
+                />
+                {/* <ESMenuItem onClick={handleReportOpen}>{t('common:lobby.report')}</ESMenuItem> */}
+              </LoginRequired>
+              {/* </ESMenu> */}
             </Box>
           )}
         </Box>
