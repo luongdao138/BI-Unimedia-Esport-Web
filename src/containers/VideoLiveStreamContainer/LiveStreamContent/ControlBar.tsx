@@ -454,7 +454,7 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
 
               {/* Setting button */}
               <Box
-                className={classes.buttonNormal}
+                className={classes.settingButton}
                 onClick={handleOnSettingButtonClick}
                 data-tip
                 data-for="toggleSettingPanel"
@@ -505,14 +505,7 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
           </ClickAwayListener>
           {/* end setting panel area */}
 
-          <Box
-            className={classes.buttonNormal}
-            style={{ paddingLeft: 0 }}
-            onClick={toggleFullScreen}
-            data-tip
-            data-for="toggleFullScreen"
-            id={'fullscreenRef'}
-          >
+          <Box className={classes.fullScreenButton} onClick={toggleFullScreen} data-tip data-for="toggleFullScreen" id={'fullscreenRef'}>
             {(isMobile ? !isFull : isChrome ? !document.fullscreenElement : !document['webkitFullscreenElement']) ? (
               <img src={'/images/ic_full_screen.svg'} className={classes.sizeFullscreen} />
             ) : (
@@ -547,6 +540,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   controlRight: {
     display: 'flex',
     alignItems: 'center',
+    justifyContent: 'center',
   },
   wrapViewMode: {
     cursor: 'pointer',
@@ -574,6 +568,21 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   buttonNormal: {
     padding: '0 16px',
+    alignItems: 'center',
+    display: 'flex',
+    cursor: 'pointer',
+  },
+  fullScreenButton: {
+    padding: '0 24px 0 16px',
+    alignItems: 'center',
+    justifyContent: 'center',
+    display: 'flex',
+    cursor: 'pointer',
+    width: '32px',
+    height: '32px',
+  },
+  settingButton: {
+    padding: '0 8px',
     alignItems: 'center',
     display: 'flex',
     cursor: 'pointer',
@@ -715,6 +724,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '32px',
     height: '21px',
     alignItems: 'center',
+    marginRight: '8px',
     justifyContent: 'center',
     display: 'flex',
     cursor: 'pointer',
