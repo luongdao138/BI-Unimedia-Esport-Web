@@ -179,6 +179,7 @@ const useStyles = makeStyles((theme) => ({
     position: 'relative',
     overflow: 'hidden',
     height: '100%',
+    outline: 'none',
     display: 'flex',
     flexDirection: 'column',
     // marginTop: 16,
@@ -204,6 +205,7 @@ const useStyles = makeStyles((theme) => ({
   },
   listContainer: {
     scrollbarColor: '#222 transparent',
+    outline: 'none !important',
     '&::-webkit-scrollbar': {
       width: 16,
       opacity: 1,
