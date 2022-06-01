@@ -7,6 +7,7 @@ import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
 import { ParsedUrlQuery } from 'querystring'
 import { useEffect } from 'react'
+import { genRanHex } from '@utils/helpers/CommonHelper'
 
 interface LineCallbackPage extends GetLineAccessTokenResponse {
   loginType?: 'login' | 'register'
@@ -71,12 +72,18 @@ const LineCallbackPage: React.FC<LineCallbackPage> = ({ access_token, redirectTo
   }, [meta])
 
   const handleError = () => {
-    const isTypeRegister = errorServer.config.data.toString().split('type')[2].includes('register')
-    if (isTypeRegister) {
-      router.push(ESRoutes.REGISTER)
-    } else {
-      router.push(ESRoutes.LOGIN)
-    }
+    // console.log('handle error -----------------')
+    // const isTypeRegister = errorServer.config.data.toString().split('type')[2].includes('register')
+    // if (isTypeRegister) {
+    //   router.push(ESRoutes.REGISTER)
+    // } else {
+    //   router.push(ESRoutes.LOGIN)
+    // }
+    router.push(
+      `https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=${
+        process.env.NEXT_PUBLIC_LINE_CLIENT_ID
+      }&scope=profile%20openid%20email&state=${genRanHex(6)}&redirect_uri=${process.env.NEXT_PUBLIC_LINE_CALLBACK}`
+    )
   }
 
   return <FullScreenLoader open />
