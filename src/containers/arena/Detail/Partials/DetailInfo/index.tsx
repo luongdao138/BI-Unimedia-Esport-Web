@@ -3,8 +3,6 @@ import { Grid, Box, makeStyles, Theme, Icon, ButtonBase } from '@material-ui/cor
 import Typography from './Typography'
 import ESChip from '@components/Chip'
 import { Colors } from '@theme/colors'
-import ESMenu from '@components/Menu'
-import ESMenuItem from '@components/Menu/MenuItem'
 import { TournamentHelper } from '@utils/helpers/TournamentHelper'
 import { TournamentDetail } from '@services/arena.service'
 import { useTranslation } from 'react-i18next'
@@ -25,7 +23,7 @@ import { ESRoutes } from '@constants/route.constants'
 import { useRouter } from 'next/router'
 import ESTwitterShareButton from '@components/TwitterShareButton'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
-
+import ReportToolTip from '@components/ReportToolTip'
 interface Props {
   detail: TournamentDetail
   extended?: boolean
@@ -77,11 +75,16 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
                   </ButtonPrimary>
                 </LoginRequired>
               )}
-              <ESMenu>
-                <LoginRequired>
-                  <ESMenuItem onClick={handleReportOpen}>{t('common:tournament.report')}</ESMenuItem>
-                </LoginRequired>
-              </ESMenu>
+              {/* <ESMenu> */}
+              <LoginRequired>
+                <ReportToolTip
+                  handleReportOpen={handleReportOpen}
+                  reportText={t('common:tournament.report')}
+                  iconClassName={classes.dropDownMenu}
+                />
+                {/* <ESMenuItem onClick={handleReportOpen}>{t('common:tournament.report')}</ESMenuItem> */}
+              </LoginRequired>
+              {/* </ESMenu> */}
             </Box>
           )}
         </Box>
