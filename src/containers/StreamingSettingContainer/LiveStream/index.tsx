@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { Box } from '@material-ui/core'
 import SettingsCompleted from '@components/SettingsCompleted'
-import React, { useEffect, useState } from 'react'
+import React, { memo, useEffect, useState } from 'react'
 import Steps from './Steps'
 import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
@@ -378,4 +378,4 @@ const LiveStreamContainer: React.FC<Props> = ({ formik, validateField, handleUpd
   )
 }
 
-export default LiveStreamContainer
+export default memo(LiveStreamContainer)
