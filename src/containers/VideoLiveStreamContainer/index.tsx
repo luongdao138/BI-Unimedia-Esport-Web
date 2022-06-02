@@ -143,6 +143,7 @@ const VideoDetail: React.FC = () => {
   const [showRelatedVideos, setShowRelatedVideos] = useState<boolean>(false)
   const canDisplayRelatedVideos = isMobileDevice && isLandscape && isFull
   const { isFullscreenMode } = useFullscreenContext()
+  const isDoubleTapRef = useRef<boolean>(false)
 
   const {
     getVideoDetail,
@@ -715,6 +716,17 @@ const VideoDetail: React.FC = () => {
     setShowRelatedVideos(true)
   }, [])
 
+  const handleChangeVideoHoverStatus = useCallback(
+    _.debounce(() => {
+      if (isDoubleTapRef.current) {
+        isDoubleTapRef.current = false
+      } else {
+        changeIsHoveredVideoStatus(!isHoveredVideo)
+      }
+    }, 300),
+    [isHoveredVideo]
+  )
+
   const isLoadingVideo = _.isEmpty(detailVideoResult) && isVideoFreeToWatch === -1
 
   const renderVideoSubInfo = () => {
@@ -763,6 +775,7 @@ const VideoDetail: React.FC = () => {
         setIsFull,
         isFull,
         canDisplayRelatedVideos,
+        isDoubleTapRef,
       }}
     >
       <VideoTabContextProvider>
@@ -785,10 +798,7 @@ const VideoDetail: React.FC = () => {
                   width: isFullscreenMode ? '100vw' : !is_normal_view_mode || isMobile ? '100%' : componentsSize.videoWidth,
                   marginRight: !is_normal_view_mode && !isMobile ? '16px' : '0',
                 }}
-                onClick={() => {
-                  changeIsHoveredVideoStatus(!isHoveredVideo)
-                  console.log('🚀 ~ isHoveredVideo', isHoveredVideo)
-                }}
+                onClick={handleChangeVideoHoverStatus}
               >
                 {isLoadingVideo ? (
                   <Box

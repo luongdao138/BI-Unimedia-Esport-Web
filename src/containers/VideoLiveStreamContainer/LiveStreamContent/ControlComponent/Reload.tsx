@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 import useDetailVideo from '@containers/VideoLiveStreamContainer/useDetailVideo'
+import { useVideoPlayerContext } from '@containers/VideoLiveStreamContainer/VideoContext/VideoPlayerContext'
 import { Box, Theme } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
 import { STATUS_VIDEO } from '@services/videoTop.services'
@@ -30,6 +31,7 @@ const ReloadButton: React.FC<Props> = ({ videoRef, typeButton, isLive, onPressCa
   const classes = useStyles({ isLive })
   const { t } = useTranslation('common')
   const { changeSeekCount } = useDetailVideo()
+  const { handleSkipVideoTime } = useVideoPlayerContext()
 
   console.log('reload component render.')
   const onChangeTime = (e) => {
@@ -48,10 +50,12 @@ const ReloadButton: React.FC<Props> = ({ videoRef, typeButton, isLive, onPressCa
       case 'previous':
         videoRef.current.currentTime = playedSeconds - 10
         newSecond = playedSeconds - 10
+        handleSkipVideoTime('prev')
         break
       case 'next':
         videoRef.current.currentTime = playedSeconds + 10
         newSecond = playedSeconds + 10
+        handleSkipVideoTime('next')
         break
     }
     // eslint-disable-next-line no-console
