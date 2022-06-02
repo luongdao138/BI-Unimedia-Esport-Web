@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo } from 'react'
 import { Box, Icon, makeStyles, Typography } from '@material-ui/core'
 import ESAvatar from '@components/Avatar'
 import { Colors } from '@theme/colors'
@@ -108,4 +108,4 @@ const useStyles = makeStyles(() => ({
   },
 }))
 
-export default SelectMemberItem
+export default memo(SelectMemberItem)

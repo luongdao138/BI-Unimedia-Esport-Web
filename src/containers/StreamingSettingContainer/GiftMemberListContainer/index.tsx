@@ -1,5 +1,5 @@
 import { Box, makeStyles, Typography, useMediaQuery, useTheme } from '@material-ui/core'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { memo, useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import ESInput from '@components/Input'
 import { Colors } from '@theme/colors'
@@ -43,13 +43,11 @@ const GiftMemberListContainer: React.FC<Props> = ({ handleBackToListState, creat
   const getNumberItemSelected = () => {
     return newGiftGroupGiftMasterList.length
   }
-  // const dispatch = useAppDispatch()
   const initialValues = () => {
     return {
       title: '',
     }
   }
-
   const { changeIsHideFooter } = useStreamSettingContext()
 
   const handleOnSuccessCallback = () => {
@@ -94,11 +92,12 @@ const GiftMemberListContainer: React.FC<Props> = ({ handleBackToListState, creat
     }
   }, [giftGroupDetail])
 
-  const getData = () => newGiftGroupGiftMasterList
-
-  const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFieldValue('title', event.target.value.slice(0, 60))
-  }
+  const handleTitleChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setFieldValue('title', event.target.value.slice(0, 60))
+    },
+    [setFieldValue]
+  )
 
   const handleFocus = () => {
     if (isMobile) {
@@ -106,8 +105,19 @@ const GiftMemberListContainer: React.FC<Props> = ({ handleBackToListState, creat
     }
   }
 
-  const header = () => {
-    return (
+  const submitButtonDisabled = () => {
+    if (errors?.title) {
+      return true
+    }
+    if (createMode === CreateMode.EDIT) {
+      return false
+    }
+    return getNumberItemSelected() === 0
+  }
+
+  return (
+    <Box className={classes.container}>
+      {/* {header()} */}
       <Box className={classes.header}>
         <Box className={classes.nameListLabelContainer}>
           <Typography className={classes.nameListLabel}>{t('streaming_setting_screen.member_list.name_list')}</Typography>
@@ -131,45 +141,19 @@ const GiftMemberListContainer: React.FC<Props> = ({ handleBackToListState, creat
           onFocus={handleFocus}
         />
       </Box>
-    )
-  }
-
-  const emptyListView = () => {
-    return (
-      <Box className={classes.emptyView}>
-        <Typography className={classes.emptyViewMessage}>{t('streaming_setting_screen.member_list.empty_view_message')}</Typography>
+      <Box className={classes.listContainer}>
+        {newGiftGroupGiftMasterList.length > 0 ? (
+          <Box className={classes.listWithDataContainer}>
+            {newGiftGroupGiftMasterList.map((item, index) => {
+              return <SelectMemberItem key={`listWithData-${index}`} item={item} />
+            })}
+          </Box>
+        ) : (
+          <Box className={classes.emptyView}>
+            <Typography className={classes.emptyViewMessage}>{t('streaming_setting_screen.member_list.empty_view_message')}</Typography>
+          </Box>
+        )}
       </Box>
-    )
-  }
-
-  const listWithData = useCallback(() => {
-    return (
-      <Box className={classes.listWithDataContainer}>
-        {getData().map((item, index) => {
-          return <SelectMemberItem key={`listWithData-${index}`} item={item} />
-        })}
-      </Box>
-    )
-  }, [getData()])
-
-  const memberList = () => {
-    return <Box className={classes.listContainer}>{getData().length > 0 ? listWithData() : emptyListView()}</Box>
-  }
-
-  const submitButtonDisabled = () => {
-    if (errors?.title) {
-      return true
-    }
-    if (createMode === CreateMode.EDIT) {
-      return false
-    }
-    return getNumberItemSelected() === 0
-  }
-
-  return (
-    <Box className={classes.container}>
-      {header()}
-      {memberList()}
       <Footer
         onConfirm={handleSubmit}
         onCancel={handleBackToListState}
@@ -278,4 +262,4 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-export default GiftMemberListContainer
+export default memo(GiftMemberListContainer)
