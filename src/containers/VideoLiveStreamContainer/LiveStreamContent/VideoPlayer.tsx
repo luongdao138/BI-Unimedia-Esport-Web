@@ -29,8 +29,7 @@ import { useControlBarContext } from '@containers/VideoLiveStreamContainer/Video
 import { isMobile as isMobileDevice } from 'react-device-detect'
 import { useRect } from '@utils/hooks/useRect'
 import { useFullscreenContext } from '@context/FullscreenContext'
-import { ArrowLeft, ArrowRight } from '@material-ui/icons'
-
+import { ArrowLeft, ArrowRight, VolumeDown, VolumeUp, VolumeOff } from '@material-ui/icons'
 declare global {
   interface Document {
     readonly pictureInPictureEnabled: boolean
@@ -87,6 +86,11 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     playBackLeftRef,
     playBackRightRef,
     playbackBackdropRef,
+    volumeDownRef,
+    volumeUpRef,
+    volumeOffRef,
+    volumeLabelRef,
+    handleShowVolumeIndicator,
   } = useVideoPlayerContext()
   const { isShowControlBar, changeShowControlBar, isShowSettingPanel, timeoutRef, canHideChatTimeoutRef } = useControlBarContext()
   // const checkStatusVideo = 1
@@ -329,16 +333,43 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     // }
   }
 
+  const formatVolumeVal = (val: number) => Number(val.toFixed(1))
+
   const handleChangeVideoVolume = (type: 'inc' | 'decs', isEnabled = false) => {
+    console.log('Current video volume: ', currentVolumeRef.current)
+    if (changeRef.current === 'volume') {
+      if (type === 'inc') {
+        handleShowVolumeIndicator(currentVolumeRef.current, 'up')
+      } else {
+        handleShowVolumeIndicator(currentVolumeRef.current, currentVolumeRef.current === 0 ? 'off' : 'down')
+      }
+    }
     if (type === 'inc') {
       if (currentVolumeRef.current < 1) {
         enableDragVolumeRef.current = isEnabled
-        handleChangeVol(undefined, currentVolumeRef.current + 0.1)
+        if (changeRef.current === 'seek') {
+          handleShowVolumeIndicator(formatVolumeVal(currentVolumeRef.current + 0.1), 'up')
+        }
+        handleChangeVol(undefined, formatVolumeVal(currentVolumeRef.current + 0.1))
+      } else {
+        if (changeRef.current === 'seek') {
+          handleShowVolumeIndicator(1, 'up')
+        }
       }
     } else {
       if (currentVolumeRef.current > 0) {
         enableDragVolumeRef.current = isEnabled
-        handleChangeVol(undefined, currentVolumeRef.current - 0.1)
+        if (changeRef.current === 'seek') {
+          handleShowVolumeIndicator(
+            formatVolumeVal(currentVolumeRef.current - 0.1),
+            formatVolumeVal(currentVolumeRef.current - 0.1) === 0 ? 'off' : 'down'
+          )
+        }
+        handleChangeVol(undefined, formatVolumeVal(currentVolumeRef.current - 0.1))
+      } else {
+        if (changeRef.current === 'seek') {
+          handleShowVolumeIndicator(0, 'off')
+        }
       }
     }
   }
@@ -347,8 +378,10 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     if (currentVolumeRef.current > 0) {
       prevVolumeRef.current = currentVolumeRef.current
       handleChangeVol(undefined, 0)
+      handleShowVolumeIndicator(0, 'off')
       // setState({ ...state, muted: true, volume: 0 })
     } else {
+      handleShowVolumeIndicator(prevVolumeRef.current || 1, 'up')
       handleChangeVol(undefined, prevVolumeRef.current || 1)
     }
   }
@@ -473,13 +506,13 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     }
     if (val > 1) val = 1
     if (val < 0) val = 0
-    val = Number(val.toFixed(1))
+    val = formatVolumeVal(val)
     currentVolumeRef.current = val
     if (videoEl.current !== null) {
       videoEl.current.volume = val
     }
-    console.log('change video volume event fire: ', val)
-    setState({ ...state, volume: val, muted: videoEl.current?.volume === 0 })
+
+    setState((prev) => ({ ...prev, volume: val, muted: videoEl.current?.volume === 0 }))
   }
 
   //video
@@ -1292,7 +1325,10 @@ const VideoPlayer: React.FC<PlayerProps> = ({
           onTouchMove={handleSwipeTouchMove}
           onTouchStart={handleSwipeTouchStart}
         >
+          {/* Backdrop when skip video time */}
           {isMobileDevice && <div className={classes.playbackBackdrop} ref={playbackBackdropRef}></div>}
+
+          {/* Indicator when skip video time */}
           <div className={`${classes.playbackAnimation} ${classes.animationLeft}`} ref={playBackLeftRef}>
             <div className={classes.playbackIcons}>
               <ArrowLeft />
@@ -1300,6 +1336,22 @@ const VideoPlayer: React.FC<PlayerProps> = ({
               <ArrowLeft />
             </div>
             <Typography className={classes.playbackText}>{t('videos_top_tab.playback_time_text')}</Typography>
+          </div>
+
+          {/* Indicator when change video volume */}
+          <div>
+            <div className={classes.videoVolume} ref={volumeLabelRef}>
+              <span>100%</span>
+            </div>
+            <div ref={volumeUpRef} className={classes.volumeIcons}>
+              <VolumeUp />
+            </div>
+            <div ref={volumeDownRef} className={classes.volumeIcons}>
+              <VolumeDown />
+            </div>
+            <div ref={volumeOffRef} className={classes.volumeIcons}>
+              <VolumeOff />
+            </div>
           </div>
           <div className={`${classes.playbackAnimation} ${classes.animationRight}`} ref={playBackRightRef}>
             <div className={classes.playbackIcons}>
@@ -1453,6 +1505,43 @@ interface StyleProps {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
+  videoVolume: {
+    position: 'absolute',
+    left: '50%',
+    transform: 'translateX(-50%)',
+    top: '8%',
+    zIndex: 20,
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    padding: '0.6rem 1.35rem',
+    borderRadius: '3px',
+    pointerEvents: 'none',
+    opacity: 0,
+    '& span': {
+      color: '#fff',
+      fontSize: '18px',
+    },
+  },
+  volumeIcons: {
+    position: 'absolute',
+    pointerEvents: 'none',
+    left: '50%',
+    top: '50%',
+    transform: 'translate(-50%, -50%)',
+    zIndex: 20,
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    padding: '0.5rem 1rem',
+    borderRadius: '100%',
+    width: '90px',
+    height: '90px',
+    display: 'flex',
+    alignItems: 'center',
+    opacity: 0,
+    justifyContent: 'center',
+    '& svg': {
+      fontSize: '48px',
+      color: '#fff',
+    },
+  },
   playbackAnimation: {
     pointerEvents: 'none',
     position: 'absolute',
