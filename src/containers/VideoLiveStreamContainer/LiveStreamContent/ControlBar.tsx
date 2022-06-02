@@ -327,7 +327,7 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
               {...commonProps}
             />
           </div>
-          {videoStatus === STATUS_VIDEO.ARCHIVE && (
+          {videoStatus === STATUS_VIDEO.ARCHIVE && !isMobile && (
             <>
               <Reload
                 videoRef={videoRef}
