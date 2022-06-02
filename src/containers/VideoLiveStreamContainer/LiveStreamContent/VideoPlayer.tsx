@@ -133,7 +133,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   const isDownMd = useMediaQuery(theme.breakpoints.down(769), { noSsr: true })
   const isDown1100 = useMediaQuery(theme.breakpoints.down(1100), { noSsr: true })
   const isDown960 = useMediaQuery(theme.breakpoints.down(960), { noSsr: true })
-  const { width: videoDisplayWidth } = useWindowDimensions(0)
+  const { width: videoDisplayWidth, height: videoDisplayHeight } = useWindowDimensions(0)
   const androidPl = /Android/i.test(window.navigator.userAgent)
   const iPhonePl = /iPhone/i.test(window.navigator.userAgent)
 
@@ -1168,8 +1168,9 @@ const VideoPlayer: React.FC<PlayerProps> = ({
 
     const touchedX = e.touches?.[0]?.clientX
     const touchedY = e.touches?.[0]?.clientY
+    const actualHeight = isFull ? videoDisplayHeight : videoPlayerHeight
     e.preventDefault()
-    if (touchedY / videoPlayerHeight < 0.75) {
+    if (touchedY / actualHeight < 0.75) {
       if (touchedX / videoPlayerWidth < 0.35) {
         handleChangeVideoTime('prev')
         handleShowPrevIcon()
@@ -1303,7 +1304,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
           onTouchStart={handleSwipeTouchStart}
         >
           <div
-            style={{ height: '100%', position: 'relative' }}
+            className={classes.videoWrapper}
             onClick={() => {
               setTimeout(() => {
                 handlePlayPauseOut('out')
@@ -1466,6 +1467,12 @@ interface StyleProps {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
+  videoWrapper: {
+    height: '100%',
+    position: 'relative',
+    display: (props: StyleProps) => (props.isFull ? 'flex' : 'block'),
+    alignItems: 'center',
+  },
   iconWrapper: {
     position: 'absolute',
     zIndex: 20,
