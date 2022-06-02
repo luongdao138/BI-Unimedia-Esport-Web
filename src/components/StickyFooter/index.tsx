@@ -2,6 +2,8 @@ import { Theme, Box } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
 import ButtonPrimary from '@components/ButtonPrimary'
+import { useCallback } from 'react'
+import _ from 'lodash'
 
 export type Props = {
   disabled: boolean
@@ -32,6 +34,14 @@ const ESStickyFooter: React.FC<Props> = ({
 }) => {
   const classes = useStyles()
   const isNoBottmSpace = noBottomSpace === true
+
+  const debounceHandleButtonClick = useCallback(
+    _.debounce(() => {
+      onClick()
+    }, 300),
+    []
+  )
+
   return (
     <Box className={`${show ? classes.wrapper : classes.wrapper2} ${!noScroll && classes.scroll}`}>
       {children}
@@ -46,7 +56,7 @@ const ESStickyFooter: React.FC<Props> = ({
               content
             ) : (
               <Box maxWidth={280} className={classes.buttonContainer}>
-                <ButtonPrimary type="submit" round fullWidth disabled={disabled} onClick={() => onClick && onClick()}>
+                <ButtonPrimary type="submit" round fullWidth disabled={disabled} onClick={() => onClick && debounceHandleButtonClick()}>
                   {title || ''}
                 </ButtonPrimary>
               </Box>
