@@ -77,8 +77,17 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   qualities,
   handleOpenRelatedVideos,
 }) => {
-  const { setVideoRefInfo, isFull, setIsFull, canDisplayRelatedVideos } = useContext(VideoContext)
-  const { isStreaming, setIsStreaming, state, setState } = useVideoPlayerContext()
+  const { setVideoRefInfo, isFull, setIsFull, canDisplayRelatedVideos, isDoubleTapRef } = useContext(VideoContext)
+  const {
+    isStreaming,
+    setIsStreaming,
+    state,
+    setState,
+    handleSkipVideoTime,
+    playBackLeftRef,
+    playBackRightRef,
+    playbackBackdropRef,
+  } = useVideoPlayerContext()
   const { isShowControlBar, changeShowControlBar, isShowSettingPanel, timeoutRef, canHideChatTimeoutRef } = useControlBarContext()
   // const checkStatusVideo = 1
   const refControlBar = useRef<any>(null)
@@ -86,18 +95,14 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   const isOpenSettingPanel = refControlBar?.current && refControlBar?.current.settingPanel !== SettingPanelState.NONE ? true : false
 
   const playerContainerRef = useRef(null)
-  const videoPlayerRef = useRef(null)
   const videoEl = useRef(null)
   // const [durationPlayer, setDurationPlayer] = useState(0)
   // const [playedSeconds, setPlayedSeconds] = useState(0)
   const durationPlayerRef = useRef<number>(0)
   const playerSecondsRef = useRef<number>(0)
   const doubleTapRef = useRef<boolean>(false)
-  const { height: videoPlayerHeight, width: videoPlayerWidth } = useRect(videoPlayerRef)
-  const [isShowNext, setIsShowNext] = useState<boolean>(false)
-  const [isShowPrev, setIsShowPrev] = useState<boolean>(false)
-  const nextRef = useRef(null)
-  const prevRef = useRef(null)
+  const { height: videoPlayerHeight, width: videoPlayerWidth } = useRect(playerContainerRef)
+
   // const { videoEl } = useContext(VideoContext)
 
   const { t } = useTranslation('common')
@@ -166,7 +171,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   const [resolutionSelected, setResolutionSelected] = useState(VIDEO_RESOLUTION.AUTO)
   const [playRateReturn, setPlayRateReturn] = useState(1)
   const isSafari = CommonHelper.checkIsSafariBrowser()
-  const classes = useStyles({ checkStatusVideo: videoType, isFull, isShowControlBar })
+  const classes = useStyles({ checkStatusVideo: videoType, isFull, isShowControlBar, isMobile: isMobileDevice })
 
   const isVideoArchive = isArchived || videoType === VIDEO_TYPE.ARCHIVED
 
@@ -303,11 +308,14 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       case 'next':
         videoEl.current.currentTime = playerSecondsRef.current + 10
         newSecond = playerSecondsRef.current + 10
+        handleSkipVideoTime('next')
 
         break
       case 'prev':
         videoEl.current.currentTime = playerSecondsRef.current - 10
         newSecond = playerSecondsRef.current - 10
+        handleSkipVideoTime('prev')
+
         break
       case 'reload':
         videoEl.current.currentTime = videoType === STATUS_VIDEO.LIVE_STREAM ? durationPlayerRef.current : 0
@@ -315,7 +323,6 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     }
     // eslint-disable-next-line no-console
     changeSeekCount(Math.floor(newSecond))
-    console.log('handle change time fire: ', isHoveredVideo)
     if (type === 'reload') {
       handleOnRestart()
     }
@@ -323,7 +330,6 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   }
 
   const handleChangeVideoVolume = (type: 'inc' | 'decs', isEnabled = false) => {
-    console.log('handle change video volume - isArchived: ', isArchived)
     if (type === 'inc') {
       if (currentVolumeRef.current < 1) {
         enableDragVolumeRef.current = isEnabled
@@ -1102,7 +1108,11 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     // e.stopPropagation()
     videoEl.current.currentTime = playerSecondsRef.current + time
     changeSeekCount(Math.floor(playerSecondsRef.current + time))
-    handleHideControlBarMobile()
+    // handleHideControlBarMobile()
+    changeIsHoveredVideoStatus(false)
+    handleSkipVideoTime(time > 0 ? 'next' : 'prev', () => {
+      changeIsHoveredVideoStatus(true)
+    })
   }
 
   const handleVideoMouseEnter = () => {
@@ -1131,28 +1141,6 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     }, 4500)
   }
 
-  const handleShowNextIcon = () => {
-    if (nextRef.current) {
-      clearTimeout(nextRef.current)
-    }
-    setIsShowNext(true)
-
-    nextRef.current = setTimeout(() => {
-      setIsShowNext(false)
-    }, 1000)
-  }
-
-  const handleShowPrevIcon = () => {
-    if (prevRef.current) {
-      clearTimeout(prevRef.current)
-    }
-    setIsShowPrev(true)
-
-    prevRef.current = setTimeout(() => {
-      setIsShowPrev(false)
-    }, 1000)
-  }
-
   const handleVideoTouch = (e: any) => {
     if (!isVideoArchive) {
       return
@@ -1170,15 +1158,17 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     const touchedY = e.touches?.[0]?.clientY
     const actualHeight = isFull ? videoDisplayHeight : videoPlayerHeight
     e.preventDefault()
+    changeIsHoveredVideoStatus(false)
+    console.log('double touch event fire: ', { touchedX, touchedY, videoPlayerWidth, videoPlayerHeight: actualHeight })
     if (touchedY / actualHeight < 0.75) {
       if (touchedX / videoPlayerWidth < 0.35) {
+        isDoubleTapRef.current = true
         handleChangeVideoTime('prev')
-        handleShowPrevIcon()
       }
 
       if (touchedX / videoPlayerWidth > 0.65) {
+        isDoubleTapRef.current = true
         handleChangeVideoTime('next')
-        handleShowNextIcon()
       }
     }
   }
@@ -1260,7 +1250,6 @@ const VideoPlayer: React.FC<PlayerProps> = ({
         onClick={() => {
           enableChangeVolumeRef.current = true
         }}
-        ref={videoPlayerRef}
         onDoubleClick={handleDoubleClickVideo}
         onMouseEnter={handleVideoMouseEnter}
         onMouseLeave={handleVideoMouseLeave}
@@ -1303,6 +1292,23 @@ const VideoPlayer: React.FC<PlayerProps> = ({
           onTouchMove={handleSwipeTouchMove}
           onTouchStart={handleSwipeTouchStart}
         >
+          {isMobileDevice && <div className={classes.playbackBackdrop} ref={playbackBackdropRef}></div>}
+          <div className={`${classes.playbackAnimation} ${classes.animationLeft}`} ref={playBackLeftRef}>
+            <div className={classes.playbackIcons}>
+              <ArrowLeft />
+              <ArrowLeft />
+              <ArrowLeft />
+            </div>
+            <Typography className={classes.playbackText}>{t('videos_top_tab.playback_time_text')}</Typography>
+          </div>
+          <div className={`${classes.playbackAnimation} ${classes.animationRight}`} ref={playBackRightRef}>
+            <div className={classes.playbackIcons}>
+              <ArrowRight />
+              <ArrowRight />
+              <ArrowRight />
+            </div>
+            <Typography className={classes.playbackText}>{t('videos_top_tab.playback_time_text')}</Typography>
+          </div>
           <div
             className={classes.videoWrapper}
             onClick={() => {
@@ -1318,27 +1324,6 @@ const VideoPlayer: React.FC<PlayerProps> = ({
                   <img src={'/images/ic_picture_in_picture.svg'} />
                   <Typography className={classes.textInPictureInPicture}>{t('videos_top_tab.mini_player_message')}</Typography>
                 </Box>
-              </Box>
-            )}
-
-            {isShowNext && (
-              <Box className={classes.iconWrapper}>
-                <Box className={classes.icons}>
-                  <ArrowRight />
-                  <ArrowRight />
-                  <ArrowRight />
-                </Box>
-                <Typography className={classes.iconText}>10s</Typography>
-              </Box>
-            )}
-            {isShowPrev && (
-              <Box className={classes.iconWrapper} style={{ left: '15%', right: 'unset' }}>
-                <Box className={classes.icons}>
-                  <ArrowLeft />
-                  <ArrowLeft />
-                  <ArrowLeft />
-                </Box>
-                <Typography className={classes.iconText}>10s</Typography>
               </Box>
             )}
 
@@ -1464,35 +1449,78 @@ interface StyleProps {
   checkStatusVideo: number
   isFull?: boolean
   isShowNextPre?: boolean
+  isMobile?: boolean
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
+  playbackAnimation: {
+    pointerEvents: 'none',
+    position: 'absolute',
+    top: '50%',
+    transform: 'translateY(-50%)',
+    width: (props: StyleProps) => (props.isMobile ? '60px' : '100px'),
+    height: (props: StyleProps) => (props.isMobile ? '60px' : '100px'),
+    borderRadius: '100%',
+    backgroundColor: (props: StyleProps) => (props.isMobile ? 'transparent' : 'rgba(0, 0, 0, 0.6)'),
+    opacity: 0,
+    zIndex: 20,
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+
+    '& svg': {
+      color: '#fff',
+      margin: '0 -12px',
+
+      fontSize: '42px',
+      opacity: (props: StyleProps) => (props.isMobile ? 0.3 : 0.5),
+    },
+
+    [theme.breakpoints.down(1024)]: {
+      width: '60px',
+      height: '60px',
+      '& svg': {
+        margin: '0 -8px',
+        fontSize: '32px',
+      },
+    },
+  },
+  playbackIcons: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  playbackText: {
+    color: '#fff',
+    marginTop: '-4px',
+    [theme.breakpoints.down(1024)]: {
+      fontSize: '13px',
+    },
+  },
+  playbackBackdrop: {
+    position: 'absolute',
+    zIndex: 10,
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    opacity: 0,
+    pointerEvents: 'none',
+    backgroundColor: 'rgba(0,0,0,0.3)',
+    transition: 'all 0.2',
+  },
+  animationLeft: {
+    left: '15%',
+  },
+  animationRight: {
+    right: '15%',
+  },
   videoWrapper: {
     height: '100%',
     position: 'relative',
     display: (props: StyleProps) => (props.isFull ? 'flex' : 'block'),
     alignItems: 'center',
-  },
-  iconWrapper: {
-    position: 'absolute',
-    zIndex: 20,
-    top: '50%',
-    transform: 'translateY(-50%)',
-    right: '15%',
-    display: 'flex',
-    alignItems: 'center',
-    flexDirection: 'column',
-  },
-  icons: {
-    '& svg': {
-      color: '#fff',
-      margin: '0 -12px',
-      fontSize: '36px',
-    },
-  },
-  iconText: {
-    color: '#fff',
-    marginTop: '-10px',
   },
   existPictureInPicture: {
     position: 'absolute',

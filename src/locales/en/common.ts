@@ -1762,6 +1762,7 @@ export default {
     selectPaymentMethod: '決済方法',
   },
   videos_top_tab: {
+    playback_time_text: '10s',
     video_list: '動画一覧',
     live_stream_video: 'ライブ中',
     schedule_stream_video: '配信前',
