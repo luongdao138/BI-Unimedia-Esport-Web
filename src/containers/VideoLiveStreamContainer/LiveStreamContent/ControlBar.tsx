@@ -18,7 +18,6 @@ import PlayerTooltip from '@containers/VideoLiveStreamContainer/LiveStreamConten
 import Reload from '@containers/VideoLiveStreamContainer/LiveStreamContent/ControlComponent/Reload'
 import TimeBar from '@containers/VideoLiveStreamContainer/LiveStreamContent/ControlComponent/TimeBar'
 import { useControlBarContext } from '@containers/VideoLiveStreamContainer/VideoContext/ControlBarContext'
-
 interface ControlProps {
   ref: any
   videoRef?: any
@@ -94,6 +93,14 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
 
     // const classes = useStyles({ liveStreaming: durationPlayer === playedSeconds ? true : false })
     const { t } = useTranslation('common')
+
+    const volumeMap = {
+      0.5: '0.5',
+      1: t('videos_top_tab.standard'),
+      1.5: '1.5',
+      2: '2.0',
+    }
+
     // const [isFull, setFull] = useState<boolean>(false)
     const { changeVideoViewMode, liveStreamInfo } = useDetailVideo()
     const { changeShowSettingPanel, canHideChatTimeoutRef } = useControlBarContext()
@@ -114,6 +121,18 @@ const ControlBarPlayer: React.FC<ControlProps> = forwardRef(
     // console.log('------------- Controlbar rerender -------------');
 
     const commonProps = { durationPlayer, playedSeconds }
+
+    useEffect(() => {
+      if (videoRef.current && !isMobile) {
+        const handleVideoPlaybackRateChange = () => {
+          const currentVideoVolume = videoRef.current.playbackRate
+          setSpeed(volumeMap[currentVideoVolume])
+        }
+        videoRef.current.addEventListener('ratechange', handleVideoPlaybackRateChange)
+
+        return () => videoRef.current?.removeEventListener('ratechange', handleVideoPlaybackRateChange)
+      }
+    }, [isMobile])
 
     // useEffect(() => {
     //   videoRef.current.addEventListener('timeupdate', () => {

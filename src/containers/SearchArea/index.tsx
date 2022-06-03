@@ -10,6 +10,7 @@ import router from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
 import { searchTypes } from '@constants/common.constants'
 import FastSearchInput from '@containers/SearchArea/FastSearchInput'
+import { useFullscreenContext } from '@context/FullscreenContext'
 
 interface SearchAreaProps {
   selectData: dataItem[]
@@ -36,7 +37,7 @@ const SearchArea: React.FC<SearchAreaProps> = (props) => {
   const [option, setOption] = useState<number>(1)
   // const [value, setValue] = useState<string>('')
   const searchTermRef = useRef<string>(searchKeyword)
-  const inputRef = useRef<HTMLInputElement>(null)
+  const { inputHeaderRef: inputRef } = useFullscreenContext()
   const classes = useStyles()
 
   const [clearFlag, setClearFlag] = useState<boolean>(false)

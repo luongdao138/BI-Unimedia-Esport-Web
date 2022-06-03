@@ -1,11 +1,12 @@
 import { CommonHelper } from '@utils/helpers/CommonHelper'
-import React, { createContext, useCallback, useContext, useState, useEffect } from 'react'
+import React, { createContext, useCallback, useContext, useState, useEffect, useRef } from 'react'
 
 interface ContextState {
   isFullscreenMode: boolean
   isShowHeader: boolean
   changeFullscreenMode: (value: boolean) => void
   changeShowHeader: (value: boolean) => void
+  inputHeaderRef: React.MutableRefObject<HTMLInputElement>
 }
 
 const FullscreenContext = createContext<ContextState>({} as ContextState)
@@ -13,6 +14,7 @@ const FullscreenContext = createContext<ContextState>({} as ContextState)
 const FullscreenContextProvider: React.FC = ({ children }: { children: React.ReactNode }) => {
   const [isFullscreenMode, setIsFullScreenMode] = useState<boolean>(false)
   const [isShowHeader, setIsShowHeader] = useState<boolean>(false)
+  const inputHeaderRef = useRef<HTMLInputElement>(null)
 
   const isSafariBrowser = CommonHelper.checkIsSafariBrowser()
 
@@ -52,7 +54,7 @@ const FullscreenContextProvider: React.FC = ({ children }: { children: React.Rea
   }, [])
 
   return (
-    <FullscreenContext.Provider value={{ changeFullscreenMode, isFullscreenMode, changeShowHeader, isShowHeader }}>
+    <FullscreenContext.Provider value={{ changeFullscreenMode, isFullscreenMode, changeShowHeader, isShowHeader, inputHeaderRef }}>
       {children}
     </FullscreenContext.Provider>
   )

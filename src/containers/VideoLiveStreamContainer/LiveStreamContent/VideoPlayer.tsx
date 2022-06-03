@@ -29,8 +29,8 @@ import { useControlBarContext } from '@containers/VideoLiveStreamContainer/Video
 import { isMobile as isMobileDevice } from 'react-device-detect'
 import { useRect } from '@utils/hooks/useRect'
 import { useFullscreenContext } from '@context/FullscreenContext'
-import { ArrowLeft, ArrowRight } from '@material-ui/icons'
-
+import { ArrowLeft, ArrowRight, VolumeDown, VolumeUp, VolumeOff } from '@material-ui/icons'
+import { VIDEO_SPEEDS } from '@constants/video.constants'
 declare global {
   interface Document {
     readonly pictureInPictureEnabled: boolean
@@ -87,6 +87,15 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     playBackLeftRef,
     playBackRightRef,
     playbackBackdropRef,
+    volumeDownRef,
+    volumeUpRef,
+    volumeOffRef,
+    volumeLabelRef,
+    handleShowSpeedIndicator,
+    speedLabelRef,
+    speedUpRef,
+    speedDownRef,
+    handleShowVolumeIndicator,
   } = useVideoPlayerContext()
   const { isShowControlBar, changeShowControlBar, isShowSettingPanel, timeoutRef, canHideChatTimeoutRef } = useControlBarContext()
   // const checkStatusVideo = 1
@@ -101,6 +110,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   const durationPlayerRef = useRef<number>(0)
   const playerSecondsRef = useRef<number>(0)
   const doubleTapRef = useRef<boolean>(false)
+  const keystrokeMap = useRef<Map<string, boolean>>(new Map<string, boolean>())
   const { height: videoPlayerHeight, width: videoPlayerWidth } = useRect(playerContainerRef)
 
   // const { videoEl } = useContext(VideoContext)
@@ -146,7 +156,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   const touchEndRef = useRef(null)
   const touchStartRef = useRef(null)
   const minSwipeDistance = 50
-  const { changeFullscreenMode, isFullscreenMode } = useFullscreenContext()
+  const { changeFullscreenMode, isFullscreenMode, inputHeaderRef } = useFullscreenContext()
 
   const { videoWatchTimeReportRequest, getMiniPlayerState } = useLiveStreamDetail()
   const isStreamingEnd = useRef(liveStreamInfo.is_streaming_end)
@@ -329,16 +339,53 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     // }
   }
 
+  const handleChangeVideoTimeByKeyBoard = (value: number) => {
+    if (videoType !== STATUS_VIDEO.ARCHIVE) {
+      return
+    }
+
+    const newSeconds = (durationPlayerRef.current * value) / 100
+    videoEl.current.currentTime = newSeconds
+    changeSeekCount(Math.floor(newSeconds))
+  }
+
+  const formatVolumeVal = (val: number) => Number(val.toFixed(1))
+
   const handleChangeVideoVolume = (type: 'inc' | 'decs', isEnabled = false) => {
+    console.log('Current video volume: ', currentVolumeRef.current)
+    if (changeRef.current === 'volume') {
+      if (type === 'inc') {
+        handleShowVolumeIndicator(currentVolumeRef.current, 'up')
+      } else {
+        handleShowVolumeIndicator(currentVolumeRef.current, currentVolumeRef.current === 0 ? 'off' : 'down')
+      }
+    }
     if (type === 'inc') {
       if (currentVolumeRef.current < 1) {
         enableDragVolumeRef.current = isEnabled
-        handleChangeVol(undefined, currentVolumeRef.current + 0.1)
+        if (changeRef.current === 'seek') {
+          handleShowVolumeIndicator(formatVolumeVal(currentVolumeRef.current + 0.1), 'up')
+        }
+        handleChangeVol(undefined, formatVolumeVal(currentVolumeRef.current + 0.1))
+      } else {
+        if (changeRef.current === 'seek') {
+          handleShowVolumeIndicator(1, 'up')
+        }
       }
     } else {
       if (currentVolumeRef.current > 0) {
         enableDragVolumeRef.current = isEnabled
-        handleChangeVol(undefined, currentVolumeRef.current - 0.1)
+        if (changeRef.current === 'seek') {
+          handleShowVolumeIndicator(
+            formatVolumeVal(currentVolumeRef.current - 0.1),
+            formatVolumeVal(currentVolumeRef.current - 0.1) === 0 ? 'off' : 'down'
+          )
+        }
+        handleChangeVol(undefined, formatVolumeVal(currentVolumeRef.current - 0.1))
+      } else {
+        if (changeRef.current === 'seek') {
+          handleShowVolumeIndicator(0, 'off')
+        }
       }
     }
   }
@@ -347,10 +394,17 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     if (currentVolumeRef.current > 0) {
       prevVolumeRef.current = currentVolumeRef.current
       handleChangeVol(undefined, 0)
+      handleShowVolumeIndicator(0, 'off')
       // setState({ ...state, muted: true, volume: 0 })
     } else {
+      handleShowVolumeIndicator(prevVolumeRef.current || 1, 'up')
       handleChangeVol(undefined, prevVolumeRef.current || 1)
     }
+  }
+
+  function testKeys(...rest) {
+    const keyList = rest
+    return Array.from(keyList).every((key) => keystrokeMap.current.get(key))
   }
 
   useEffect(() => {
@@ -363,10 +417,14 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   // handle keyboard  event
   useEffect(() => {
     const handleVideoKeyboardEvent = (e: KeyboardEvent) => {
-      console.log('event target tagname: ', e.target['tagName'])
+      console.log('event target key: ', e.key, e.type)
       if (e.target['tagName'] === 'INPUT' || e.target['tagName'] === 'TEXTAREA') {
         return
       }
+
+      keystrokeMap.current.set(e.key, e.type === 'keydown')
+
+      // single keystroke event handler
       switch (e.key) {
         case ' ':
           handlePlayPause()
@@ -420,15 +478,54 @@ const VideoPlayer: React.FC<PlayerProps> = ({
         case 'r':
           handleChangeVideoTime('reload')
           break
+        case '0':
+          handleChangeVideoTimeByKeyBoard(0)
+          break
+        case '1':
+          handleChangeVideoTimeByKeyBoard(10)
+          break
+        case '2':
+          handleChangeVideoTimeByKeyBoard(20)
+          break
+        case '3':
+          handleChangeVideoTimeByKeyBoard(30)
+          break
+        case '4':
+          handleChangeVideoTimeByKeyBoard(40)
+          break
+        case '5':
+          handleChangeVideoTimeByKeyBoard(50)
+          break
+        case '6':
+          handleChangeVideoTimeByKeyBoard(60)
+          break
+        case '7':
+          handleChangeVideoTimeByKeyBoard(70)
+          break
+        case '8':
+          handleChangeVideoTimeByKeyBoard(80)
+          break
+        case '9':
+          handleChangeVideoTimeByKeyBoard(90)
+          break
+        case '/':
+          inputHeaderRef.current?.focus()
+          break
         default:
           break
       }
+
+      // mutiple keystrokes event handler
     }
 
     const handleKeyDown = (e: KeyboardEvent) => {
+      console.log('event target key: ', e.key, e.type)
       if (e.target['tagName'] === 'INPUT' || e.target['tagName'] === 'TEXTAREA') {
         return
       }
+
+      keystrokeMap.current.set(e.key, e.type === 'keydown')
+
       if (e.key == ' ') {
         e.preventDefault()
       }
@@ -436,6 +533,27 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
         if (enableChangeVolumeRef.current) {
           e.preventDefault()
+        }
+      }
+
+      // mutiple keystrokes event handler
+      if (testKeys('Shift', '<')) {
+        const currentSpeedIndex = VIDEO_SPEEDS.findIndex((x) => parseFloat(x) === parseFloat(videoEl.current.playbackRate))
+        if (currentSpeedIndex > 0) {
+          handleShowSpeedIndicator(parseFloat(VIDEO_SPEEDS[currentSpeedIndex - 1]), 'down')
+          videoEl.current.playbackRate = parseFloat(VIDEO_SPEEDS[currentSpeedIndex - 1])
+        } else {
+          handleShowSpeedIndicator(parseFloat(VIDEO_SPEEDS[0]), 'down')
+        }
+      }
+
+      if (testKeys('Shift', '>')) {
+        const currentSpeedIndex = VIDEO_SPEEDS.findIndex((x) => parseFloat(x) === parseFloat(videoEl.current.playbackRate))
+        if (currentSpeedIndex < VIDEO_SPEEDS.length - 1) {
+          handleShowSpeedIndicator(parseFloat(VIDEO_SPEEDS[currentSpeedIndex + 1]), 'up')
+          videoEl.current.playbackRate = parseFloat(VIDEO_SPEEDS[currentSpeedIndex + 1])
+        } else {
+          handleShowSpeedIndicator(parseFloat(VIDEO_SPEEDS[VIDEO_SPEEDS.length - 1]), 'up')
         }
       }
     }
@@ -448,24 +566,6 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     }
   }, [isVideoArchive])
 
-  // useEffect(() => {
-  //   if(Math.floor(playedSeconds) !== liveStreamInfo.played_second) {
-  //     changePlayedSecond(Math.floor(playedSeconds))
-  //   }
-  // }, [playedSeconds])
-
-  // useEffect(() => {
-  //   if(Math.floor(durationPlayer) !== liveStreamInfo.streaming_second) {
-  //     changeStreamingSecond(Math.floor(durationPlayer))
-  //   }
-  // }, [durationPlayer])
-
-  // const toggleFullScreen = () => {
-  //   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  //   //@ts-ignore
-  //   screenfull.toggle(playerContainerRef.current)
-  // }
-
   const handleChangeVol = (_, val) => {
     if (!enableDragVolumeRef.current) {
       enableDragVolumeRef.current = true
@@ -473,34 +573,14 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     }
     if (val > 1) val = 1
     if (val < 0) val = 0
-    val = Number(val.toFixed(1))
+    val = formatVolumeVal(val)
     currentVolumeRef.current = val
     if (videoEl.current !== null) {
       videoEl.current.volume = val
     }
-    console.log('change video volume event fire: ', val)
-    setState({ ...state, volume: val, muted: videoEl.current?.volume === 0 })
-  }
 
-  //video
-  // useEffect(() => {
-  //   if (isLive) {
-  //     const updTime = () => {
-  //       const diff = (Date.now() - startLive) / 1000
-  //       hhmmss(diff)
-  //       setDurationPlayer(diff)
-  //       setPlayedSeconds(diff)
-  //     }
-  //     const interval = setInterval(() => {
-  //       if (startLive && !state.ended && !endLive) {
-  //         updTime()
-  //       }
-  //     }, 1000)
-  //     return () => {
-  //       clearInterval(interval)
-  //     }
-  //   }
-  // }, [startLive, state.ended, endLive, isLive])
+    setState((prev) => ({ ...prev, volume: val, muted: videoEl.current?.volume === 0 }))
+  }
 
   const { playing, muted, volume, ended } = state
   const currentVolumeRef = useRef(0)
@@ -698,31 +778,6 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   }
   handleUpdateVideoDuration.current = onUpdateVideoduration
 
-  // const throttleUpdateTime = useCallback(
-  //   _.throttle((event) => {
-  //     const videoInfo = event.target
-  //     // console.log(
-  //     //   '->current->duration-> range',
-  //     //   videoInfo.currentTime,
-  //     //   videoInfo.duration,
-  //     //   videoInfo.duration - videoInfo.currentTime,
-  //     //   videoInfo.duration - DELAY_SECONDS
-  //     // )
-  //     videoInfo ? handleUpdateVideoTime.current(videoInfo) : ''
-  //   }, 1000),
-  //   []
-  // )
-
-  // const throttleUpdateDurationChange = useCallback(
-  //   _.throttle((event) => {
-  //     console.log('------->>durationchange<<<-----', event.target.duration, state.playing)
-  //     if (isStreamingEnd.current) {
-  //       onVideoEnd()
-  //     }
-  //     handleUpdateVideoDuration.current(event.target.duration)
-  //   }, 1000),
-  //   []
-  // )
   //archived
   useEffect(() => {
     console.log('videoEl.current?.paused==', videoEl.current?.paused, playing)
@@ -1292,7 +1347,10 @@ const VideoPlayer: React.FC<PlayerProps> = ({
           onTouchMove={handleSwipeTouchMove}
           onTouchStart={handleSwipeTouchStart}
         >
+          {/* Backdrop when skip video time */}
           {isMobileDevice && <div className={classes.playbackBackdrop} ref={playbackBackdropRef}></div>}
+
+          {/* Indicator when skip video time */}
           <div className={`${classes.playbackAnimation} ${classes.animationLeft}`} ref={playBackLeftRef}>
             <div className={classes.playbackIcons}>
               <ArrowLeft />
@@ -1309,6 +1367,38 @@ const VideoPlayer: React.FC<PlayerProps> = ({
             </div>
             <Typography className={classes.playbackText}>{t('videos_top_tab.playback_time_text')}</Typography>
           </div>
+
+          {/* Indicator when change video volume */}
+          <div>
+            <div className={classes.videoVolume} ref={volumeLabelRef}>
+              <span>100%</span>
+            </div>
+            <div ref={volumeUpRef} className={classes.volumeIcons}>
+              <VolumeUp />
+            </div>
+            <div ref={volumeDownRef} className={classes.volumeIcons}>
+              <VolumeDown />
+            </div>
+            <div ref={volumeOffRef} className={classes.volumeIcons}>
+              <VolumeOff />
+            </div>
+          </div>
+
+          {/* Indicator when chang video volume */}
+          <div>
+            <div className={classes.videoVolume} ref={speedLabelRef}>
+              <span>100%</span>
+            </div>
+            <div ref={speedUpRef} className={classes.speedIcons}>
+              <ArrowRight />
+              <ArrowRight />
+            </div>
+            <div ref={speedDownRef} className={classes.speedIcons}>
+              <ArrowLeft />
+              <ArrowLeft />
+            </div>
+          </div>
+
           <div
             className={classes.videoWrapper}
             onClick={() => {
@@ -1453,6 +1543,65 @@ interface StyleProps {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
+  videoVolume: {
+    position: 'absolute',
+    left: '50%',
+    transform: 'translateX(-50%)',
+    top: '8%',
+    zIndex: 20,
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    padding: '0.6rem 1.35rem',
+    borderRadius: '3px',
+    pointerEvents: 'none',
+    opacity: 0,
+    '& span': {
+      color: '#fff',
+      fontSize: '18px',
+    },
+  },
+  volumeIcons: {
+    position: 'absolute',
+    pointerEvents: 'none',
+    left: '50%',
+    top: '50%',
+    transform: 'translate(-50%, -50%)',
+    zIndex: 20,
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    padding: '0.5rem 1rem',
+    borderRadius: '100%',
+    width: '90px',
+    height: '90px',
+    display: 'flex',
+    alignItems: 'center',
+    opacity: 0,
+    justifyContent: 'center',
+    '& svg': {
+      fontSize: '48px',
+      color: '#fff',
+    },
+  },
+  speedIcons: {
+    position: 'absolute',
+    pointerEvents: 'none',
+    left: '50%',
+    top: '50%',
+    transform: 'translate(-50%, -50%)',
+    zIndex: 20,
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    padding: '0.5rem 1rem',
+    borderRadius: '100%',
+    width: '90px',
+    height: '90px',
+    display: 'flex',
+    alignItems: 'center',
+    opacity: 0,
+    justifyContent: 'center',
+    '& svg': {
+      fontSize: '60px',
+      color: '#fff',
+      margin: '0 -18px',
+    },
+  },
   playbackAnimation: {
     pointerEvents: 'none',
     position: 'absolute',
