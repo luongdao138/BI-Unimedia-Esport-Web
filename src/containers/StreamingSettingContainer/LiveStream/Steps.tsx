@@ -577,7 +577,7 @@ const Steps: React.FC<StepsProps> = ({
         )}
       </Box>
     )
-  }, [formik?.values?.stepSettingOne?.use_ticket, formik?.values?.stepSettingOne?.ticket_price, step])
+  }, [formik?.values?.stepSettingOne?.use_ticket, formik?.values?.stepSettingOne?.ticket_price, step, validateField])
 
   const publicTimeViewArchiveInputView = useMemo(() => {
     return (
@@ -829,7 +829,7 @@ const Steps: React.FC<StepsProps> = ({
         </Box>
       </Box>
     )
-  }, [formik?.values?.stepSettingOne?.thumbnail, step])
+  }, [formik?.values?.stepSettingOne?.thumbnail, step, isUploading])
 
   // const titleInputView = () => {
   //   return (
