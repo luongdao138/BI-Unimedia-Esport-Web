@@ -30,6 +30,7 @@ import { isMobile as isMobileDevice } from 'react-device-detect'
 import { useRect } from '@utils/hooks/useRect'
 import { useFullscreenContext } from '@context/FullscreenContext'
 import { ArrowLeft, ArrowRight, VolumeDown, VolumeUp, VolumeOff } from '@material-ui/icons'
+import { VIDEO_SPEEDS } from '@constants/video.constants'
 declare global {
   interface Document {
     readonly pictureInPictureEnabled: boolean
@@ -90,6 +91,10 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     volumeUpRef,
     volumeOffRef,
     volumeLabelRef,
+    handleShowSpeedIndicator,
+    speedLabelRef,
+    speedUpRef,
+    speedDownRef,
     handleShowVolumeIndicator,
   } = useVideoPlayerContext()
   const { isShowControlBar, changeShowControlBar, isShowSettingPanel, timeoutRef, canHideChatTimeoutRef } = useControlBarContext()
@@ -105,6 +110,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   const durationPlayerRef = useRef<number>(0)
   const playerSecondsRef = useRef<number>(0)
   const doubleTapRef = useRef<boolean>(false)
+  const keystrokeMap = useRef<Map<string, boolean>>(new Map<string, boolean>())
   const { height: videoPlayerHeight, width: videoPlayerWidth } = useRect(playerContainerRef)
 
   // const { videoEl } = useContext(VideoContext)
@@ -150,7 +156,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   const touchEndRef = useRef(null)
   const touchStartRef = useRef(null)
   const minSwipeDistance = 50
-  const { changeFullscreenMode, isFullscreenMode } = useFullscreenContext()
+  const { changeFullscreenMode, isFullscreenMode, inputHeaderRef } = useFullscreenContext()
 
   const { videoWatchTimeReportRequest, getMiniPlayerState } = useLiveStreamDetail()
   const isStreamingEnd = useRef(liveStreamInfo.is_streaming_end)
@@ -333,6 +339,16 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     // }
   }
 
+  const handleChangeVideoTimeByKeyBoard = (value: number) => {
+    if (videoType !== STATUS_VIDEO.ARCHIVE) {
+      return
+    }
+
+    const newSeconds = (durationPlayerRef.current * value) / 100
+    videoEl.current.currentTime = newSeconds
+    changeSeekCount(Math.floor(newSeconds))
+  }
+
   const formatVolumeVal = (val: number) => Number(val.toFixed(1))
 
   const handleChangeVideoVolume = (type: 'inc' | 'decs', isEnabled = false) => {
@@ -386,6 +402,11 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     }
   }
 
+  function testKeys(...rest) {
+    const keyList = rest
+    return Array.from(keyList).every((key) => keystrokeMap.current.get(key))
+  }
+
   useEffect(() => {
     if (state.playing) {
       videoEl.current?.play()
@@ -396,10 +417,14 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   // handle keyboard  event
   useEffect(() => {
     const handleVideoKeyboardEvent = (e: KeyboardEvent) => {
-      console.log('event target tagname: ', e.target['tagName'])
+      console.log('event target key: ', e.key, e.type)
       if (e.target['tagName'] === 'INPUT' || e.target['tagName'] === 'TEXTAREA') {
         return
       }
+
+      keystrokeMap.current.set(e.key, e.type === 'keydown')
+
+      // single keystroke event handler
       switch (e.key) {
         case ' ':
           handlePlayPause()
@@ -453,15 +478,54 @@ const VideoPlayer: React.FC<PlayerProps> = ({
         case 'r':
           handleChangeVideoTime('reload')
           break
+        case '0':
+          handleChangeVideoTimeByKeyBoard(0)
+          break
+        case '1':
+          handleChangeVideoTimeByKeyBoard(10)
+          break
+        case '2':
+          handleChangeVideoTimeByKeyBoard(20)
+          break
+        case '3':
+          handleChangeVideoTimeByKeyBoard(30)
+          break
+        case '4':
+          handleChangeVideoTimeByKeyBoard(40)
+          break
+        case '5':
+          handleChangeVideoTimeByKeyBoard(50)
+          break
+        case '6':
+          handleChangeVideoTimeByKeyBoard(60)
+          break
+        case '7':
+          handleChangeVideoTimeByKeyBoard(70)
+          break
+        case '8':
+          handleChangeVideoTimeByKeyBoard(80)
+          break
+        case '9':
+          handleChangeVideoTimeByKeyBoard(90)
+          break
+        case '/':
+          inputHeaderRef.current?.focus()
+          break
         default:
           break
       }
+
+      // mutiple keystrokes event handler
     }
 
     const handleKeyDown = (e: KeyboardEvent) => {
+      console.log('event target key: ', e.key, e.type)
       if (e.target['tagName'] === 'INPUT' || e.target['tagName'] === 'TEXTAREA') {
         return
       }
+
+      keystrokeMap.current.set(e.key, e.type === 'keydown')
+
       if (e.key == ' ') {
         e.preventDefault()
       }
@@ -469,6 +533,27 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
         if (enableChangeVolumeRef.current) {
           e.preventDefault()
+        }
+      }
+
+      // mutiple keystrokes event handler
+      if (testKeys('Shift', '<')) {
+        const currentSpeedIndex = VIDEO_SPEEDS.findIndex((x) => parseFloat(x) === parseFloat(videoEl.current.playbackRate))
+        if (currentSpeedIndex > 0) {
+          handleShowSpeedIndicator(parseFloat(VIDEO_SPEEDS[currentSpeedIndex - 1]), 'down')
+          videoEl.current.playbackRate = parseFloat(VIDEO_SPEEDS[currentSpeedIndex - 1])
+        } else {
+          handleShowSpeedIndicator(parseFloat(VIDEO_SPEEDS[0]), 'down')
+        }
+      }
+
+      if (testKeys('Shift', '>')) {
+        const currentSpeedIndex = VIDEO_SPEEDS.findIndex((x) => parseFloat(x) === parseFloat(videoEl.current.playbackRate))
+        if (currentSpeedIndex < VIDEO_SPEEDS.length - 1) {
+          handleShowSpeedIndicator(parseFloat(VIDEO_SPEEDS[currentSpeedIndex + 1]), 'up')
+          videoEl.current.playbackRate = parseFloat(VIDEO_SPEEDS[currentSpeedIndex + 1])
+        } else {
+          handleShowSpeedIndicator(parseFloat(VIDEO_SPEEDS[VIDEO_SPEEDS.length - 1]), 'up')
         }
       }
     }
@@ -480,24 +565,6 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       window.removeEventListener('keydown', handleKeyDown)
     }
   }, [isVideoArchive])
-
-  // useEffect(() => {
-  //   if(Math.floor(playedSeconds) !== liveStreamInfo.played_second) {
-  //     changePlayedSecond(Math.floor(playedSeconds))
-  //   }
-  // }, [playedSeconds])
-
-  // useEffect(() => {
-  //   if(Math.floor(durationPlayer) !== liveStreamInfo.streaming_second) {
-  //     changeStreamingSecond(Math.floor(durationPlayer))
-  //   }
-  // }, [durationPlayer])
-
-  // const toggleFullScreen = () => {
-  //   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  //   //@ts-ignore
-  //   screenfull.toggle(playerContainerRef.current)
-  // }
 
   const handleChangeVol = (_, val) => {
     if (!enableDragVolumeRef.current) {
@@ -514,26 +581,6 @@ const VideoPlayer: React.FC<PlayerProps> = ({
 
     setState((prev) => ({ ...prev, volume: val, muted: videoEl.current?.volume === 0 }))
   }
-
-  //video
-  // useEffect(() => {
-  //   if (isLive) {
-  //     const updTime = () => {
-  //       const diff = (Date.now() - startLive) / 1000
-  //       hhmmss(diff)
-  //       setDurationPlayer(diff)
-  //       setPlayedSeconds(diff)
-  //     }
-  //     const interval = setInterval(() => {
-  //       if (startLive && !state.ended && !endLive) {
-  //         updTime()
-  //       }
-  //     }, 1000)
-  //     return () => {
-  //       clearInterval(interval)
-  //     }
-  //   }
-  // }, [startLive, state.ended, endLive, isLive])
 
   const { playing, muted, volume, ended } = state
   const currentVolumeRef = useRef(0)
@@ -731,31 +778,6 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   }
   handleUpdateVideoDuration.current = onUpdateVideoduration
 
-  // const throttleUpdateTime = useCallback(
-  //   _.throttle((event) => {
-  //     const videoInfo = event.target
-  //     // console.log(
-  //     //   '->current->duration-> range',
-  //     //   videoInfo.currentTime,
-  //     //   videoInfo.duration,
-  //     //   videoInfo.duration - videoInfo.currentTime,
-  //     //   videoInfo.duration - DELAY_SECONDS
-  //     // )
-  //     videoInfo ? handleUpdateVideoTime.current(videoInfo) : ''
-  //   }, 1000),
-  //   []
-  // )
-
-  // const throttleUpdateDurationChange = useCallback(
-  //   _.throttle((event) => {
-  //     console.log('------->>durationchange<<<-----', event.target.duration, state.playing)
-  //     if (isStreamingEnd.current) {
-  //       onVideoEnd()
-  //     }
-  //     handleUpdateVideoDuration.current(event.target.duration)
-  //   }, 1000),
-  //   []
-  // )
   //archived
   useEffect(() => {
     console.log('videoEl.current?.paused==', videoEl.current?.paused, playing)
@@ -1337,6 +1359,14 @@ const VideoPlayer: React.FC<PlayerProps> = ({
             </div>
             <Typography className={classes.playbackText}>{t('videos_top_tab.playback_time_text')}</Typography>
           </div>
+          <div className={`${classes.playbackAnimation} ${classes.animationRight}`} ref={playBackRightRef}>
+            <div className={classes.playbackIcons}>
+              <ArrowRight />
+              <ArrowRight />
+              <ArrowRight />
+            </div>
+            <Typography className={classes.playbackText}>{t('videos_top_tab.playback_time_text')}</Typography>
+          </div>
 
           {/* Indicator when change video volume */}
           <div>
@@ -1353,14 +1383,22 @@ const VideoPlayer: React.FC<PlayerProps> = ({
               <VolumeOff />
             </div>
           </div>
-          <div className={`${classes.playbackAnimation} ${classes.animationRight}`} ref={playBackRightRef}>
-            <div className={classes.playbackIcons}>
-              <ArrowRight />
+
+          {/* Indicator when chang video volume */}
+          <div>
+            <div className={classes.videoVolume} ref={speedLabelRef}>
+              <span>100%</span>
+            </div>
+            <div ref={speedUpRef} className={classes.speedIcons}>
               <ArrowRight />
               <ArrowRight />
             </div>
-            <Typography className={classes.playbackText}>{t('videos_top_tab.playback_time_text')}</Typography>
+            <div ref={speedDownRef} className={classes.speedIcons}>
+              <ArrowLeft />
+              <ArrowLeft />
+            </div>
           </div>
+
           <div
             className={classes.videoWrapper}
             onClick={() => {
@@ -1540,6 +1578,28 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& svg': {
       fontSize: '48px',
       color: '#fff',
+    },
+  },
+  speedIcons: {
+    position: 'absolute',
+    pointerEvents: 'none',
+    left: '50%',
+    top: '50%',
+    transform: 'translate(-50%, -50%)',
+    zIndex: 20,
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    padding: '0.5rem 1rem',
+    borderRadius: '100%',
+    width: '90px',
+    height: '90px',
+    display: 'flex',
+    alignItems: 'center',
+    opacity: 0,
+    justifyContent: 'center',
+    '& svg': {
+      fontSize: '60px',
+      color: '#fff',
+      margin: '0 -18px',
     },
   },
   playbackAnimation: {

@@ -3,6 +3,7 @@ import React, { createContext, Dispatch, SetStateAction, useContext, useRef, use
 import { isMobile } from 'react-device-detect'
 
 type VolumeChange = 'off' | 'up' | 'down'
+type SpeedChange = 'up' | 'down'
 interface ContextState {
   isStreaming: boolean
   state: any
@@ -17,6 +18,10 @@ interface ContextState {
   volumeOffRef: React.MutableRefObject<HTMLDivElement>
   volumeLabelRef: React.MutableRefObject<HTMLDivElement>
   handleShowVolumeIndicator: (value: number, type: VolumeChange) => void
+  speedLabelRef: React.MutableRefObject<HTMLDivElement>
+  speedUpRef: React.MutableRefObject<HTMLDivElement>
+  speedDownRef: React.MutableRefObject<HTMLDivElement>
+  handleShowSpeedIndicator: (value: number, type: SpeedChange) => void
 }
 
 const VideoPlayerContext = createContext<ContextState>({} as ContextState)
@@ -42,6 +47,12 @@ const VideoPlayerContextProvider: React.FC = ({ children }: { children: React.Re
   const volumeOffRef = useRef<HTMLDivElement>(null)
   const volumeLabelRef = useRef<HTMLDivElement>(null)
   const volumeTimeoutRef = useRef<NodeJS.Timeout>(null)
+
+  // change video playbackrate
+  const speedLabelRef = useRef<HTMLDivElement>(null)
+  const speedUpRef = useRef<HTMLDivElement>(null)
+  const speedDownRef = useRef<HTMLDivElement>(null)
+  const speedTimeoutRef = useRef<NodeJS.Timeout>(null)
 
   const handleSkipVideoTime = (type: 'prev' | 'next', cb?: () => void) => {
     const parentRef = type === 'next' ? playBackRightRef : playBackLeftRef
@@ -181,6 +192,54 @@ const VideoPlayerContextProvider: React.FC = ({ children }: { children: React.Re
     }
   }
 
+  const handleShowSpeedIndicator = (value: number, type: SpeedChange) => {
+    if (speedLabelRef.current && speedDownRef.current && speedUpRef.current) {
+      const spanEl = speedLabelRef.current.getElementsByTagName('span')[0]
+      speedLabelRef.current.style.opacity = '0'
+      speedDownRef.current.style.opacity = '0'
+      speedUpRef.current.style.opacity = '0'
+      if (speedTimeoutRef.current) {
+        clearTimeout(speedTimeoutRef.current)
+      }
+      if (spanEl) spanEl.innerText = `${value}x`
+
+      speedLabelRef.current.style.opacity = '1'
+      if (type === 'down') {
+        speedDownRef.current.animate(
+          [
+            {
+              opacity: 1,
+              transform: 'translate(-50%, -50%) scale(0.6)',
+            },
+            {
+              opacity: 0,
+              transform: 'translate(-50%, -50%) scale(1)',
+            },
+          ],
+          { duration: VOLUME_TIMEOUT }
+        )
+      } else {
+        speedUpRef.current.animate(
+          [
+            {
+              opacity: 1,
+              transform: 'translate(-50%, -50%) scale(0.6)',
+            },
+            {
+              opacity: 0,
+              transform: 'translate(-50%, -50%) scale(1)',
+            },
+          ],
+          { duration: VOLUME_TIMEOUT }
+        )
+      }
+
+      speedTimeoutRef.current = setTimeout(() => {
+        speedLabelRef.current.style.opacity = '0'
+      }, VOLUME_TIMEOUT)
+    }
+  }
+
   return (
     <VideoPlayerContext.Provider
       value={{
@@ -197,6 +256,10 @@ const VideoPlayerContextProvider: React.FC = ({ children }: { children: React.Re
         volumeOffRef,
         volumeLabelRef,
         handleShowVolumeIndicator,
+        handleShowSpeedIndicator,
+        speedLabelRef,
+        speedUpRef,
+        speedDownRef,
       }}
     >
       {children}
