@@ -537,7 +537,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
       }
 
       // mutiple keystrokes event handler
-      if (testKeys('Shift', '<')) {
+      if (testKeys('Shift', '<') && isVideoArchive) {
         const currentSpeedIndex = VIDEO_SPEEDS.findIndex((x) => parseFloat(x) === parseFloat(videoEl.current.playbackRate))
         if (currentSpeedIndex > 0) {
           handleShowSpeedIndicator(parseFloat(VIDEO_SPEEDS[currentSpeedIndex - 1]), 'down')
@@ -547,7 +547,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
         }
       }
 
-      if (testKeys('Shift', '>')) {
+      if (testKeys('Shift', '>') && isVideoArchive) {
         const currentSpeedIndex = VIDEO_SPEEDS.findIndex((x) => parseFloat(x) === parseFloat(videoEl.current.playbackRate))
         if (currentSpeedIndex < VIDEO_SPEEDS.length - 1) {
           handleShowSpeedIndicator(parseFloat(VIDEO_SPEEDS[currentSpeedIndex + 1]), 'up')
