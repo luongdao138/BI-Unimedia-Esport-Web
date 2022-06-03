@@ -1185,7 +1185,6 @@ const Steps: React.FC<StepsProps> = ({
             )}
           </>
         )}
-        )
       </Box>
     )
   }, [
