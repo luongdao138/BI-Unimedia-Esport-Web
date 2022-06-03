@@ -1,5 +1,5 @@
 import { Box, Grid, Icon, IconButton, InputAdornment, makeStyles, Theme, Typography } from '@material-ui/core'
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import _ from 'lodash'
 import { FormikProps } from 'formik'
 import ESInput from '@components/Input'
@@ -481,6 +481,751 @@ const Steps: React.FC<StepsProps> = ({
       return i18n.t('common:streaming_setting_screen.ranking_flag.off')
     }
   }
+
+  const ticketPriceInputView = useMemo(() => {
+    return (
+      <Box>
+        {paid_delivery_flag && (
+          <>
+            {isFirstStep() ? (
+              <Box pb={2} className={classes.wrap_input_box_switch}>
+                <div className={classes.firstItem}>
+                  <ESLabelWithSwitch
+                    fullWidth
+                    labelPrimary={t('common:streaming_setting_screen.ticket_use')}
+                    valueSwitch={formik?.values?.stepSettingOne?.use_ticket}
+                    handleChangeSwitch={changeFieldUseTicket}
+                    disabled={isLive}
+                  />
+                </div>
+              </Box>
+            ) : (
+              <ESLabel label={i18n.t('common:streaming_setting_screen.ticket_use')} />
+            )}
+            {isFirstStep() ? (
+              <ESBoxftDashColumn isSelectedGift={formik?.values?.stepSettingOne?.use_ticket}>
+                {/* TODO: Apply component enter point eXeポイント */}
+                <div className={classes.boxRightTicket}>
+                  <Box pb={1} className={classes.box}>
+                    <div ref={formRef['video_publish_end_time']} className={classes.firstItemShort}>
+                      <ESNumberInputStream
+                        id="ticket_price"
+                        name="stepSettingOne.ticket_price"
+                        type="tel"
+                        fullWidth
+                        nameValue={'stepSettingOne.ticket_price'}
+                        // className={classes.input}
+                        placeholder={'0'}
+                        value={
+                          isFirstStep() &&
+                          (formik?.values?.stepSettingOne?.ticket_price === 0 || !formik?.values?.stepSettingOne?.use_ticket)
+                            ? ''
+                            : formik?.values?.stepSettingOne?.ticket_price
+                        }
+                        onChange={(e) => {
+                          formik.handleChange(e)
+                          handleUpdateValidateField('ticket_price')
+                        }}
+                        helperText={
+                          validateField !== 'all'
+                            ? validateField === 'ticket_price'
+                              ? formik?.errors?.stepSettingOne?.ticket_price
+                              : ''
+                            : checkLiveDisplayErrorOnSubmit(formik, 'ticket_price').helperText
+                        }
+                        error={
+                          validateField !== 'all'
+                            ? validateField === 'ticket_price'
+                              ? !!formik?.errors?.stepSettingOne?.ticket_price
+                              : false
+                            : checkLiveDisplayErrorOnSubmit(formik, 'ticket_price').error
+                        }
+                        size="big"
+                        isNumber={true}
+                        formik={formik}
+                        disabled={isLive}
+                        className={getAddClassByStep(classes.input_text_ticket)}
+                        readOnly={!formik?.values?.stepSettingOne?.use_ticket}
+                        nowrapHelperText
+                        endAdornment={
+                          isFirstStep() ? (
+                            <InputAdornment position="end" className={classes.inputContainer}>
+                              <Box className={classes.inputAdornment}>{t('common:common.eXe_points')}</Box>
+                            </InputAdornment>
+                          ) : (
+                            <></>
+                          )
+                        }
+                        classes={{ root: classes.root }}
+                      />
+                    </div>
+                  </Box>
+                </div>
+              </ESBoxftDashColumn>
+            ) : (
+              <Box pb={2} pt={2}>
+                <ESBoxftDashColumn colorLine="#767676" isSelectedGift={true}>
+                  <Typography className={`${classes.date} ${classes.newTextftDash}`}>
+                    {formik?.values?.stepSettingOne?.use_ticket
+                      ? `利用する（${formik?.values?.stepSettingOne?.ticket_price} ${t('common:common.eXe_points')}）`
+                      : '利用しない'}
+                  </Typography>
+                </ESBoxftDashColumn>
+              </Box>
+            )}
+          </>
+        )}
+      </Box>
+    )
+  }, [formik?.values?.stepSettingOne?.use_ticket, formik?.values?.stepSettingOne?.ticket_price, step])
+
+  const publicTimeViewArchiveInputView = useMemo(() => {
+    return (
+      // public time video archive
+      <Box pb={2} className={classes.wrap_input} flexDirection="row" display="flex" alignItems="flex-end">
+        <div ref={formRef['ticket_price']} className={classes.firstItem}>
+          <ESLabel label={i18n.t('common:streaming_setting_screen.public_time_title')} required={false} />
+          {isFirstStep() ? (
+            <ESInputDatePicker
+              name="stepSettingOne.video_publish_end_time"
+              placeholder={i18n.t('common:streaming_setting_screen.archived_end_time_pl')}
+              fullWidth
+              value={formik?.values?.stepSettingOne?.video_publish_end_time}
+              onChange={(e) => {
+                const temp = moment(e).add(5, 's')
+                formik.setFieldValue('stepSettingOne.video_publish_end_time', temp)
+                handleUpdateValidateField('video_publish_end_time')
+              }}
+              helperText={
+                validateField !== 'all'
+                  ? validateField === 'video_publish_end_time'
+                    ? formik?.errors?.stepSettingOne?.video_publish_end_time
+                    : ''
+                  : checkLiveDisplayErrorOnSubmit(formik, 'video_publish_end_time').helperText
+              }
+              error={
+                validateField !== 'all'
+                  ? validateField === 'video_publish_end_time'
+                    ? !!formik?.errors?.stepSettingOne?.video_publish_end_time
+                    : false
+                  : checkLiveDisplayErrorOnSubmit(formik, 'video_publish_end_time').error
+              }
+              minutesStep={1}
+            />
+          ) : (
+            <Box pt={1}>
+              <Typography className={classes.date}>
+                {formik?.values?.stepSettingOne?.video_publish_end_time !== null
+                  ? moment(formik?.values?.stepSettingOne?.video_publish_end_time).format(FORMAT_DATE_TIME_JP)
+                  : ''}
+              </Typography>
+              {/* {errPublicTime && <FormHelperText error>{errPublicTime}</FormHelperText>} */}
+            </Box>
+          )}
+        </div>
+        {isFirstStep() && (
+          <Box
+            flexDirection="row"
+            display="flex"
+            className={`${classes.lastItem}`}
+            marginBottom={
+              formik?.touched?.stepSettingOne?.video_publish_end_time && !!formik?.errors?.stepSettingOne?.video_publish_end_time
+                ? '22px'
+                : 0
+            }
+          >
+            <Box
+              py={1}
+              display="flex"
+              justifyContent="flex-end"
+              className={classes.urlCopy}
+              onClick={() => {
+                formik.setFieldValue('stepSettingOne.video_publish_end_time', null)
+              }}
+            >
+              <Typography className={formik?.values?.stepSettingOne?.video_publish_end_time ? classes.clearEnable : classes.clearDisable}>
+                <Icon className={`fas fa-times ${classes.clear}`} fontSize="small" />
+                {t('common:streaming_setting_screen.clear')}
+              </Typography>
+            </Box>
+          </Box>
+        )}
+      </Box>
+    )
+  }, [formik?.values?.stepSettingOne?.video_publish_end_time, validateField, step])
+
+  const descriptionInputView = useMemo(() => {
+    return (
+      <Box pb={2} className={classes.wrap_input}>
+        <div ref={formRef['description']} className={classes.firstItem}>
+          {isFirstStep() ? (
+            <ESFastInput
+              id="description"
+              name="stepSettingOne.description"
+              multiline={isFirstStep()}
+              rows={8}
+              required={true}
+              placeholder={i18n.t('common:streaming_setting_screen.placeholder_input_description')}
+              labelPrimary={i18n.t('common:streaming_setting_screen.label_input_description')}
+              fullWidth
+              value={formik?.values?.stepSettingOne?.description}
+              onChange={(e) => {
+                formik.handleChange(e)
+                handleUpdateValidateField('description')
+              }}
+              helperText={
+                validateField !== 'all'
+                  ? validateField === 'description'
+                    ? formik?.errors?.stepSettingOne?.description
+                    : ''
+                  : checkLiveDisplayErrorOnSubmit(formik, 'description').helperText
+              }
+              error={
+                validateField !== 'all'
+                  ? validateField === 'description'
+                    ? !!formik?.errors?.stepSettingOne?.description
+                    : false
+                  : checkLiveDisplayErrorOnSubmit(formik, 'description').error
+              }
+              size="big"
+              disabled={!isFirstStep()}
+              className={`${getAddClassByStep(classes.input_text)} ${
+                CommonHelper.hasScrollBar('description') ? 'hide-scroll-indicator' : null
+              }`}
+              endAdornment={
+                isFirstStep() && (
+                  <CharacterLimited
+                    value={formik.values.stepSettingOne.description}
+                    limit={5000}
+                    multiLines
+                    isScroll={CommonHelper.hasScrollBar('description')}
+                  />
+                )
+              }
+            />
+          ) : (
+            <>
+              <ESLabel label={i18n.t('common:streaming_setting_screen.label_input_description')} required={true} />
+              <Linkify
+                componentDecorator={(decoratedHref, decoratedText, key) => (
+                  <a target="blank" href={decoratedHref} key={key} className={classes.detectLink}>
+                    {' '}
+                    {decoratedText}
+                  </a>
+                )}
+              >
+                <span className={classes.detectLink}> {formik?.values?.stepSettingOne?.description.trim()}</span>
+              </Linkify>
+            </>
+          )}
+        </div>
+      </Box>
+    )
+  }, [formik.values.stepSettingOne.description, step, validateField])
+
+  const linkUrlView = useMemo(() => {
+    return (
+      <Box className={classes.wrap_input} display="flex" flexDirection="row" alignItems="flex-end">
+        <Box className={classes.firstItem}>
+          <ESInput
+            id="linkUrl"
+            name="stepSettingOne.linkUrl"
+            value={
+              formik?.values?.stepSettingOne?.linkUrl
+                ? `${baseViewingURL}${formik?.values?.stepSettingOne?.linkUrl}`
+                : formik?.values?.stepSettingOne?.linkUrl
+            }
+            placeholder={!formik?.values?.stepSettingOne?.linkUrl && i18n.t('common:streaming_setting_screen.placeholder_input_url')}
+            labelPrimary={i18n.t('common:streaming_setting_screen.label_input_url')}
+            fullWidth
+            rows={8}
+            readOnly={true}
+            size="big"
+            disabled={!isFirstStep()}
+            className={getAddClassByStep(classes.input_text)}
+          />
+        </Box>
+        {isFirstStep() && (
+          <Box
+            py={1}
+            display="flex"
+            justifyContent="flex-end"
+            className={`${classes.urlCopy} ${classes.lastItem}`}
+            onClick={() => handleCopy(KEY_TYPE.UUID)}
+          >
+            <Icon className={`fa fa-link ${classes.link}`} fontSize="small" />
+            <Typography className={classes.textLink}>{t('common:streaming_setting_screen.copy_url')}</Typography>
+          </Box>
+        )}
+      </Box>
+    )
+  }, [formik?.values?.stepSettingOne?.linkUrl, step])
+
+  const shareSnsFlagView = useMemo(() => {
+    return (
+      <Box>
+        {isFirstStep() ? (
+          <Box pb={2}>
+            <ESCheckboxBig
+              checked={formik?.values?.stepSettingOne?.share_sns_flag}
+              onChange={() => {
+                formik.setFieldValue('stepSettingOne.share_sns_flag', !formik?.values?.stepSettingOne?.share_sns_flag)
+              }}
+              label={t('common:streaming_setting_screen.share_SNS')}
+              name="share_sns_flag"
+              disabled={isLive}
+            />
+          </Box>
+        ) : (
+          <Box pb={2}>
+            <ESInput
+              id="title"
+              name="title"
+              value={
+                formik?.values?.stepSettingOne?.share_sns_flag
+                  ? t('common:streaming_setting_screen.shared_it')
+                  : t('common:streaming_setting_screen.dont_share')
+              }
+              fullWidth
+              labelPrimary={t('common:streaming_setting_screen.share_SNS')}
+              disabled={true}
+              size="big"
+              className={getAddClassByStep(classes.input_text)}
+            />
+          </Box>
+        )}
+      </Box>
+    )
+  }, [formik?.values?.stepSettingOne?.share_sns_flag, isLive, step])
+
+  const imagePickerInputView = useMemo(() => {
+    return (
+      <Box pb={2} className={classes.wrap_input}>
+        <Box className={classes.firstItem}>
+          <ESLabel label={i18n.t('common:streaming_setting_screen.thumbnail')} />
+          <Box pt={1} className={classes.box}>
+            {isFirstStep() ? (
+              <CoverUploaderStream
+                src={formik?.values?.stepSettingOne?.thumbnail}
+                onChange={handleUpload}
+                isUploading={isUploading}
+                disabled={false}
+                size="big"
+                onOpenStateChange={handleCoverDailogStateChange}
+              />
+            ) : !formik?.values?.stepSettingOne?.thumbnail ? (
+              <img src={'/images/default_card.png'} className={classes.coverImg} />
+            ) : (
+              <CoverUploaderStream
+                src={formik?.values?.stepSettingOne?.thumbnail}
+                onChange={handleUpload}
+                isUploading={isUploading}
+                disabled={!isFirstStep()}
+                size="big"
+                onOpenStateChange={handleCoverDailogStateChange}
+              />
+            )}
+          </Box>
+        </Box>
+      </Box>
+    )
+  }, [formik?.values?.stepSettingOne?.thumbnail, step])
+
+  // const titleInputView = () => {
+  //   return (
+  //     <ESInput
+  //       id='title'
+  //       name='stepSettingOne.title'
+  //       required={true}
+  //       placeholder={i18n.t('common:streaming_setting_screen.placeholder_input_title')}
+  //       labelPrimary={i18n.t('common:streaming_setting_screen.label_input_title')}
+  //       fullWidth
+  //       value={isFirstStep() ? formik?.values?.stepSettingOne?.title : formik?.values?.stepSettingOne?.title.trim()}
+  //       onChange={(e) => {
+  //         formik.handleChange(e)
+  //         handleUpdateValidateField('title')
+  //       }}
+  //       helperText={
+  //         validateField !== 'all'
+  //           ? validateField === 'title'
+  //             ? formik?.errors?.stepSettingOne?.title
+  //             : ''
+  //           : checkLiveDisplayErrorOnSubmit(formik, 'title').helperText
+  //       }
+  //       error={
+  //         validateField !== 'all'
+  //           ? validateField === 'title'
+  //             ? !!formik?.errors?.stepSettingOne?.title
+  //             : false
+  //           : checkLiveDisplayErrorOnSubmit(formik, 'title').error
+  //       }
+  //       size='big'
+  //       disabled={!isFirstStep()}
+  //       className={getAddClassByStep(classes.input_text)}
+  //       endAdornment={isFirstStep() &&
+  //         <CharacterLimited value={formik.values.stepSettingOne.title} limit={100} />}
+  //     />
+  //   )
+  // }
+
+  const giftInputView = useMemo(() => {
+    return (
+      <Box>
+        {isFirstStep() ? (
+          <Box pb={2} pt={2} className={classes.wrap_input_box_switch}>
+            <div className={classes.firstItem}>
+              <ESLabelWithSwitch
+                fullWidth
+                labelPrimary={i18n.t('common:streaming_setting_screen.title_gift')}
+                valueSwitch={formik?.values?.stepSettingOne?.use_gift}
+                handleChangeSwitch={changeFieldAndResetSelectedGift}
+              />
+            </div>
+          </Box>
+        ) : (
+          <ESLabel label={i18n.t('common:streaming_setting_screen.title_gift')} />
+        )}
+        {isFirstStep() ? (
+          <ESBoxftDashColumn isSelectedGift={formik?.values?.stepSettingOne?.use_gift}>
+            <Box className={classes.boxAboutGift}>
+              <Box className={classes.select_show_about_gift} pt={1}>
+                <label className={classes.labelNavigate} onClick={openGroupList}>
+                  {i18n.t('common:streaming_setting_screen.chooses_list_person_gift')}
+                </label>
+                <Typography className={classes.giftInfoList} variant="body2" onClick={handleListGiftInfo}>
+                  <Icon className={`fa fa-info-circle ${classes.iconMargin}`} fontSize="small" />{' '}
+                  {i18n.t('common:streaming_setting_screen.about_the_gift_list')}
+                </Typography>
+              </Box>
+              <Box pt={1} className={classes.nameList}>
+                <div className={classes.textAndClear}>
+                  <Typography className={classes.labelNameObject}>
+                    {`${i18n.t('common:streaming_setting_screen.list_gift_selected')} ${
+                      formik?.values?.stepSettingOne?.group_title
+                        ? formik?.values?.stepSettingOne?.group_title
+                        : i18n.t('common:streaming_setting_screen.unselected')
+                    }`}
+                  </Typography>
+                  <Box
+                    className={classes.iconClear}
+                    style={{ visibility: formik?.values?.stepSettingOne?.group_title ? 'visible' : 'hidden' }}
+                    onClick={onClearNameListChip}
+                  >
+                    <Icon className={`far fa-times-circle ${classes.sizeIconClear}`} />{' '}
+                  </Box>
+                </div>
+              </Box>
+              <Box className={classes.select_show_about_gift} pt={1.8} pb={1}>
+                <ESCheckboxBig
+                  checked={formik?.values?.stepSettingOne?.ranking_flag}
+                  onChange={() => formik.setFieldValue('stepSettingOne.ranking_flag', !formik?.values?.stepSettingOne?.ranking_flag)}
+                  label={t('common:streaming_setting_screen.individual_gift_ranking_display')}
+                  name="stepSettingOne.ranking_flag"
+                  classNameLabel={classes.esCheckBox}
+                />
+                <Typography className={classes.giftInfoList} variant="body2" onClick={handleRankingInfo}>
+                  <Icon className={`fa fa-info-circle ${classes.iconMargin}`} fontSize="small" />{' '}
+                  {i18n.t('common:streaming_setting_screen.about_individual_gift_ranking')}
+                </Typography>
+              </Box>
+            </Box>
+          </ESBoxftDashColumn>
+        ) : (
+          <Box pb={2} pt={2}>
+            <ESBoxftDashColumn colorLine="#767676" isSelectedGift={true}>
+              <Box className={classes.newTextftDash}>
+                <Box pt={1} className={classes.nameList}>
+                  <Typography className={`${classes.labelNameObject} ${classes.labelRank}`}>
+                    {`${i18n.t('common:streaming_setting_screen.list_gift_selected')} ${returnTextChip()}`}
+                  </Typography>
+                </Box>
+                <Box className={`${classes.nameList} ${classes.nameListRanking}`}>
+                  <Typography className={`${classes.labelNameObject} ${classes.labelRank}`}>
+                    {`${i18n.t('common:streaming_setting_screen.individual_gift_ranking_display')}： ${
+                      formik?.values?.stepSettingOne?.ranking_flag
+                        ? i18n.t('common:streaming_setting_screen.ranking_flag.on')
+                        : i18n.t('common:streaming_setting_screen.ranking_flag.off')
+                    }`}
+                  </Typography>
+                </Box>
+              </Box>
+            </ESBoxftDashColumn>
+          </Box>
+        )}
+      </Box>
+    )
+  }, [
+    formik?.values?.stepSettingOne?.use_gift,
+    formik?.values?.stepSettingOne?.group_title,
+    formik?.values?.stepSettingOne?.ranking_flag,
+    step,
+  ])
+
+  const streamUrlView = useMemo(() => {
+    return (
+      <Box>
+        <Box pt={isFirstStep() ? 2 : 0} className={classes.wrap_input} flexDirection="row" display="flex" alignItems="flex-end">
+          <Box className={classes.firstItem}>
+            <ESInput
+              id="stream_url"
+              name="stepSettingOne.stream_url"
+              labelPrimary={i18n.t('common:streaming_setting_screen.stream_url')}
+              placeholder={
+                isFirstStep()
+                  ? !formik?.values?.stepSettingOne?.stream_url && i18n.t('common:streaming_setting_screen.stream_mask')
+                  : !formik?.values?.stepSettingOne?.stream_url && t('common:streaming_setting_screen.issued_stream')
+              }
+              type={showStreamURL ? 'text' : 'password'}
+              endAdornment={
+                isFirstStep() ? (
+                  <InputAdornment position="end" className={classes.inputContainer}>
+                    <div className={classes.borderLeft}></div>
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      size="small"
+                      disableRipple
+                      color="inherit"
+                      onMouseDown={() => setShowStreamURL(!showStreamURL)}
+                    >
+                      {showStreamURL ? <img src="/images/password_show.svg" /> : <img src="/images/password_hide.svg" />}
+                    </IconButton>
+                  </InputAdornment>
+                ) : (
+                  <></>
+                )
+              }
+              fullWidth
+              value={formik?.values?.stepSettingOne?.stream_url}
+              readOnly={true}
+              size="big"
+              disabled={!isFirstStep()}
+              className={getAddClassByStep(classes.input_text)}
+            />
+          </Box>
+          {isFirstStep() && (
+            <Box flexDirection="row" display="flex" className={`${classes.lastItem}`}>
+              <Box py={1} display="flex" justifyContent="flex-end" className={classes.urlCopy} onClick={() => handleCopy(KEY_TYPE.URL)}>
+                <Icon className={`fa fa-link ${classes.link}`} fontSize="small" />
+                <Typography className={classes.textLink}>{t('common:streaming_setting_screen.copy_url')}</Typography>
+              </Box>
+              <Box
+                py={1}
+                display="flex"
+                justifyContent="flex-end"
+                className={!isLive ? classes.urlCopy : classes.linkDisable}
+                onClick={() => !isLive && onReNewUrlAndKey(TYPE_SECRET_KEY.URL, TYPE_SECRET_KEY.RE_NEW)}
+              >
+                <Typography className={classes.textLink}>{t('common:streaming_setting_screen.reissue')}</Typography>
+              </Box>
+            </Box>
+          )}
+        </Box>
+        {isFirstStep() && (
+          <>
+            <Typography className={`${classes.captionNote} ${classes.addPaddingNote}`}>
+              {i18n.t('common:streaming_setting_screen.note_stream_url')}
+            </Typography>
+            <Typography className={`${classes.captionNote} ${classes.addPaddingNote}`}>
+              {i18n.t('common:streaming_setting_screen.note_stream_url_bottom')}
+            </Typography>
+          </>
+        )}
+      </Box>
+    )
+  }, [formik?.values?.stepSettingOne?.stream_url, isLive, showStreamURL, step])
+
+  const streamKeyView = useMemo(() => {
+    return (
+      <Box pt={2} className={classes.wrap_input} flexDirection="row" display="flex" alignItems="flex-end">
+        <Box className={classes.firstItem}>
+          <ESInput
+            id="stream_key"
+            name="stepSettingOne.stream_key"
+            labelPrimary={i18n.t('common:streaming_setting_screen.stream_key')}
+            placeholder={
+              isFirstStep()
+                ? !formik?.values?.stepSettingOne?.stream_key && i18n.t('common:streaming_setting_screen.stream_mask')
+                : !formik?.values?.stepSettingOne?.stream_key && t('common:streaming_setting_screen.issued_stream')
+            }
+            type={showStreamKey ? 'text' : 'password'}
+            endAdornment={
+              isFirstStep() ? (
+                <InputAdornment position="end" className={classes.inputContainer}>
+                  <div className={classes.borderLeft}></div>
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    size="small"
+                    disableRipple
+                    color="inherit"
+                    onMouseDown={() => setShowStreamKey(!showStreamKey)}
+                  >
+                    {showStreamKey ? <img src="/images/password_show.svg" /> : <img src="/images/password_hide.svg" />}
+                  </IconButton>
+                </InputAdornment>
+              ) : (
+                <></>
+              )
+            }
+            fullWidth
+            value={formik?.values?.stepSettingOne?.stream_key}
+            readOnly={true}
+            size="big"
+            disabled={!isFirstStep()}
+            // className={isFirstStep()?getAddClassByStep(classes.input_text):classes.input_pl}
+            className={getAddClassByStep(classes.input_text)}
+          />
+        </Box>
+        {isFirstStep() && (
+          <Box flexDirection="row" display="flex" className={`${classes.lastItem}`}>
+            <Box py={1} display="flex" justifyContent="flex-end" className={classes.urlCopy} onClick={() => handleCopy(KEY_TYPE.KEY)}>
+              <Icon className={`fa fa-link ${classes.link}`} fontSize="small" />
+              <Typography className={classes.textLink}>{t('common:streaming_setting_screen.copy_url')}</Typography>
+            </Box>
+
+            {/* <Box
+                  py={1}
+                  display="flex"
+                  justifyContent="flex-end"
+                  className={showReNew && !isLive ? classes.urlCopy : classes.linkDisable}
+                  onClick={() => showReNew && !isLive && onReNewUrlAndKey(TYPE_SECRET_KEY.KEY, TYPE_SECRET_KEY.RE_NEW, true)}
+                >
+                  <Typography className={classes.textLink}>{t('common:streaming_setting_screen.reissue')}</Typography>
+                </Box> */}
+          </Box>
+        )}
+      </Box>
+    )
+  }, [formik?.values?.stepSettingOne?.stream_key, step, showStreamKey])
+
+  const publishDeliveryView = useMemo(() => {
+    return (
+      <Box>
+        {isFirstStep() ? (
+          <Box pb={3 / 8} pt={2}>
+            <ESCheckboxBig
+              checked={formik?.values?.stepSettingOne?.publish_flag}
+              onChange={() => formik.setFieldValue('stepSettingOne.publish_flag', !formik?.values?.stepSettingOne?.publish_flag)}
+              label={t('common:streaming_setting_screen.publish_delivery')}
+              name="stepSettingOne.publish_flag"
+            />
+          </Box>
+        ) : (
+          <Box pt={2} pb={1}>
+            <ESInput
+              id="title"
+              name="title"
+              value={!formik?.values?.stepSettingOne?.publish_flag ? t('common:profile.dont_show') : t('common:profile.show')}
+              fullWidth
+              labelPrimary={t('common:streaming_setting_screen.publish_delivery')}
+              disabled={true}
+              size="big"
+              className={getAddClassByStep(classes.input_text)}
+            />
+          </Box>
+        )}
+        <Typography className={classes.captionNote}>{i18n.t('common:streaming_setting_screen.note_for_publish_delivery_pt')}</Typography>
+        <Typography className={classes.captionNote}>{i18n.t('common:streaming_setting_screen.note_for_publish_delivery_pb')}</Typography>
+        <Box paddingBottom={3} />
+      </Box>
+    )
+  }, [formik?.values?.stepSettingOne?.publish_flag, step])
+
+  const submitButtonView = useMemo(() => {
+    return (
+      <Box>
+        {isFirstStep() ? (
+          <Grid item xs={12} md={9}>
+            <Box maxWidth={280} className={classes.buttonContainer}>
+              <ButtonPrimary type="submit" round fullWidth onClick={onValidateForm}>
+                {i18n.t('common:streaming_setting_screen.check_submit')}
+              </ButtonPrimary>
+            </Box>
+            <Typography
+              className={classes.textErrorGroupDelete}
+              style={{ display: formik?.values?.stepSettingOne?.has_group_list ? 'flex' : 'none' }}
+            >
+              {i18n.t('common:streaming_setting_screen.group_list_does_not_exist')}
+            </Typography>
+          </Grid>
+        ) : (
+          <Grid item xs={12}>
+            <Box className={classes.actionButtonContainer}>
+              <Box className={classes.actionButton}>
+                <ESButton className={classes.cancelBtn} variant="outlined" round fullWidth size="large" onClick={onClickPrev}>
+                  {t('common:common.cancel')}
+                </ESButton>
+              </Box>
+              <Box className={classes.actionButton}>
+                <ButtonPrimary round fullWidth onClick={onConfirm}>
+                  {obsNotEnable ? i18n.t('common:streaming_setting_screen.update') : t('common:streaming_setting_screen.start_live_stream')}
+                </ButtonPrimary>
+              </Box>
+            </Box>
+          </Grid>
+        )}
+      </Box>
+    )
+  }, [formik?.values?.stepSettingOne?.has_group_list, obsNotEnable, step])
+
+  const categoryView = useMemo(() => {
+    return (
+      <Box pb={2} className={classes.wrap_input}>
+        <div ref={formRef['category']} className={classes.firstItem}>
+          {isFirstStep() ? (
+            <ESSelect
+              fullWidth
+              id="category"
+              name="stepSettingOne.category"
+              value={formik?.values?.stepSettingOne?.category}
+              onChange={(e) => {
+                formik.handleChange(e)
+                handleUpdateValidateField('category')
+              }}
+              label={i18n.t('common:streaming_setting_screen.category')}
+              required={true}
+              size="big"
+              helperText={
+                validateField !== 'all'
+                  ? validateField === 'category'
+                    ? formik?.errors?.stepSettingOne?.category
+                    : ''
+                  : checkLiveDisplayErrorOnSubmit(formik, 'category').helperText
+              }
+              error={
+                validateField !== 'all'
+                  ? validateField === 'category'
+                    ? !!formik?.errors?.stepSettingOne?.category
+                    : false
+                  : checkLiveDisplayErrorOnSubmit(formik, 'category').error
+              }
+            >
+              <option disabled value={-1}>
+                {i18n.t('common:please_select')}
+              </option>
+              {(category?.data || []).map((item, index) => (
+                <option key={index} value={item.id}>
+                  {item.name}
+                </option>
+              ))}
+            </ESSelect>
+          ) : (
+            <ESInput
+              id="title"
+              name="title"
+              value={categoryName}
+              fullWidth
+              labelPrimary={i18n.t('common:streaming_setting_screen.category')}
+              required
+              disabled={!isFirstStep()}
+              className={getAddClassByStep(classes.input_text)}
+              size="big"
+            />
+          )}
+        </div>
+      </Box>
+    )
+  }, [formik?.values?.stepSettingOne?.category, categoryName, step])
+
   return (
     <Box py={4} className={classes.container}>
       <Box className={classes.formContainer}>
@@ -545,99 +1290,11 @@ const Steps: React.FC<StepsProps> = ({
           </Box>
         )}
         <form onSubmit={formik.handleSubmit}>
-          <Box className={classes.wrap_input} display="flex" flexDirection="row" alignItems="flex-end">
-            <Box className={classes.firstItem}>
-              <ESInput
-                id="linkUrl"
-                name="stepSettingOne.linkUrl"
-                value={
-                  formik?.values?.stepSettingOne?.linkUrl
-                    ? `${baseViewingURL}${formik?.values?.stepSettingOne?.linkUrl}`
-                    : formik?.values?.stepSettingOne?.linkUrl
-                }
-                placeholder={!formik?.values?.stepSettingOne?.linkUrl && i18n.t('common:streaming_setting_screen.placeholder_input_url')}
-                labelPrimary={i18n.t('common:streaming_setting_screen.label_input_url')}
-                fullWidth
-                rows={8}
-                readOnly={true}
-                size="big"
-                disabled={!isFirstStep()}
-                className={getAddClassByStep(classes.input_text)}
-              />
-            </Box>
-            {isFirstStep() && (
-              <Box
-                py={1}
-                display="flex"
-                justifyContent="flex-end"
-                className={`${classes.urlCopy} ${classes.lastItem}`}
-                onClick={() => handleCopy(KEY_TYPE.UUID)}
-              >
-                <Icon className={`fa fa-link ${classes.link}`} fontSize="small" />
-                <Typography className={classes.textLink}>{t('common:streaming_setting_screen.copy_url')}</Typography>
-              </Box>
-            )}
-          </Box>
+          {linkUrlView}
           <Box paddingBottom={2} />
           {/* TODO: V3.0 SNS */}
-          {isFirstStep() ? (
-            <Box pb={2}>
-              <ESCheckboxBig
-                checked={formik?.values?.stepSettingOne?.share_sns_flag}
-                onChange={() => {
-                  formik.setFieldValue('stepSettingOne.share_sns_flag', !formik?.values?.stepSettingOne?.share_sns_flag)
-                }}
-                label={t('common:streaming_setting_screen.share_SNS')}
-                name="share_sns_flag"
-                disabled={isLive}
-              />
-            </Box>
-          ) : (
-            <Box pb={2}>
-              <ESInput
-                id="title"
-                name="title"
-                value={
-                  formik?.values?.stepSettingOne?.share_sns_flag
-                    ? t('common:streaming_setting_screen.shared_it')
-                    : t('common:streaming_setting_screen.dont_share')
-                }
-                fullWidth
-                labelPrimary={t('common:streaming_setting_screen.share_SNS')}
-                disabled={true}
-                size="big"
-                className={getAddClassByStep(classes.input_text)}
-              />
-            </Box>
-          )}
-          <Box pb={2} className={classes.wrap_input}>
-            <Box className={classes.firstItem}>
-              <ESLabel label={i18n.t('common:streaming_setting_screen.thumbnail')} />
-              <Box pt={1} className={classes.box}>
-                {isFirstStep() ? (
-                  <CoverUploaderStream
-                    src={formik?.values?.stepSettingOne?.thumbnail}
-                    onChange={handleUpload}
-                    isUploading={isUploading}
-                    disabled={false}
-                    size="big"
-                    onOpenStateChange={handleCoverDailogStateChange}
-                  />
-                ) : !formik?.values?.stepSettingOne?.thumbnail ? (
-                  <img src={'/images/default_card.png'} className={classes.coverImg} />
-                ) : (
-                  <CoverUploaderStream
-                    src={formik?.values?.stepSettingOne?.thumbnail}
-                    onChange={handleUpload}
-                    isUploading={isUploading}
-                    disabled={!isFirstStep()}
-                    size="big"
-                    onOpenStateChange={handleCoverDailogStateChange}
-                  />
-                )}
-              </Box>
-            </Box>
-          </Box>
+          {shareSnsFlagView}
+          {imagePickerInputView}
           <Box pb={2} className={classes.wrap_input}>
             <div ref={formRef['title']} className={classes.firstItem}>
               <ESInput
@@ -673,553 +1330,19 @@ const Steps: React.FC<StepsProps> = ({
               />
             </div>
           </Box>
-          <Box pb={2} className={classes.wrap_input}>
-            <div ref={formRef['description']} className={classes.firstItem}>
-              {isFirstStep() ? (
-                <ESFastInput
-                  id="description"
-                  name="stepSettingOne.description"
-                  multiline={isFirstStep()}
-                  rows={8}
-                  required={true}
-                  placeholder={i18n.t('common:streaming_setting_screen.placeholder_input_description')}
-                  labelPrimary={i18n.t('common:streaming_setting_screen.label_input_description')}
-                  fullWidth
-                  value={formik?.values?.stepSettingOne?.description}
-                  onChange={(e) => {
-                    formik.handleChange(e)
-                    handleUpdateValidateField('description')
-                  }}
-                  helperText={
-                    validateField !== 'all'
-                      ? validateField === 'description'
-                        ? formik?.errors?.stepSettingOne?.description
-                        : ''
-                      : checkLiveDisplayErrorOnSubmit(formik, 'description').helperText
-                  }
-                  error={
-                    validateField !== 'all'
-                      ? validateField === 'description'
-                        ? !!formik?.errors?.stepSettingOne?.description
-                        : false
-                      : checkLiveDisplayErrorOnSubmit(formik, 'description').error
-                  }
-                  size="big"
-                  disabled={!isFirstStep()}
-                  className={`${getAddClassByStep(classes.input_text)} ${
-                    CommonHelper.hasScrollBar('description') ? 'hide-scroll-indicator' : null
-                  }`}
-                  endAdornment={
-                    isFirstStep() && (
-                      <CharacterLimited
-                        value={formik.values.stepSettingOne.description}
-                        limit={5000}
-                        multiLines
-                        isScroll={CommonHelper.hasScrollBar('description')}
-                      />
-                    )
-                  }
-                />
-              ) : (
-                <>
-                  <ESLabel label={i18n.t('common:streaming_setting_screen.label_input_description')} required={true} />
-                  <Linkify
-                    componentDecorator={(decoratedHref, decoratedText, key) => (
-                      <a target="blank" href={decoratedHref} key={key} className={classes.detectLink}>
-                        {' '}
-                        {decoratedText}
-                      </a>
-                    )}
-                  >
-                    <span className={classes.detectLink}> {formik?.values?.stepSettingOne?.description.trim()}</span>
-                  </Linkify>
-                </>
-              )}
-            </div>
-          </Box>
-          <Box pb={2} className={classes.wrap_input}>
-            <div ref={formRef['category']} className={classes.firstItem}>
-              {isFirstStep() ? (
-                <ESSelect
-                  fullWidth
-                  id="category"
-                  name="stepSettingOne.category"
-                  value={formik?.values?.stepSettingOne?.category}
-                  onChange={(e) => {
-                    formik.handleChange(e)
-                    handleUpdateValidateField('category')
-                  }}
-                  label={i18n.t('common:streaming_setting_screen.category')}
-                  required={true}
-                  size="big"
-                  helperText={
-                    validateField !== 'all'
-                      ? validateField === 'category'
-                        ? formik?.errors?.stepSettingOne?.category
-                        : ''
-                      : checkLiveDisplayErrorOnSubmit(formik, 'category').helperText
-                  }
-                  error={
-                    validateField !== 'all'
-                      ? validateField === 'category'
-                        ? !!formik?.errors?.stepSettingOne?.category
-                        : false
-                      : checkLiveDisplayErrorOnSubmit(formik, 'category').error
-                  }
-                >
-                  <option disabled value={-1}>
-                    {i18n.t('common:please_select')}
-                  </option>
-                  {(category?.data || []).map((item, index) => (
-                    <option key={index} value={item.id}>
-                      {item.name}
-                    </option>
-                  ))}
-                </ESSelect>
-              ) : (
-                <ESInput
-                  id="title"
-                  name="title"
-                  value={categoryName}
-                  fullWidth
-                  labelPrimary={i18n.t('common:streaming_setting_screen.category')}
-                  required
-                  disabled={!isFirstStep()}
-                  className={getAddClassByStep(classes.input_text)}
-                  size="big"
-                />
-              )}
-            </div>
-          </Box>
-          {/* public time video archive */}
-          <Box pb={2} className={classes.wrap_input} flexDirection="row" display="flex" alignItems="flex-end">
-            <div ref={formRef['ticket_price']} className={classes.firstItem}>
-              <ESLabel label={i18n.t('common:streaming_setting_screen.public_time_title')} required={false} />
-              {isFirstStep() ? (
-                <ESInputDatePicker
-                  name="stepSettingOne.video_publish_end_time"
-                  placeholder={i18n.t('common:streaming_setting_screen.archived_end_time_pl')}
-                  fullWidth
-                  value={formik?.values?.stepSettingOne?.video_publish_end_time}
-                  onChange={(e) => {
-                    const temp = moment(e).add(5, 's')
-                    formik.setFieldValue('stepSettingOne.video_publish_end_time', temp)
-                    handleUpdateValidateField('video_publish_end_time')
-                  }}
-                  helperText={
-                    validateField !== 'all'
-                      ? validateField === 'video_publish_end_time'
-                        ? formik?.errors?.stepSettingOne?.video_publish_end_time
-                        : ''
-                      : checkLiveDisplayErrorOnSubmit(formik, 'video_publish_end_time').helperText
-                  }
-                  error={
-                    validateField !== 'all'
-                      ? validateField === 'video_publish_end_time'
-                        ? !!formik?.errors?.stepSettingOne?.video_publish_end_time
-                        : false
-                      : checkLiveDisplayErrorOnSubmit(formik, 'video_publish_end_time').error
-                  }
-                  minutesStep={1}
-                />
-              ) : (
-                <Box pt={1}>
-                  <Typography className={classes.date}>
-                    {formik?.values?.stepSettingOne?.video_publish_end_time !== null
-                      ? moment(formik?.values?.stepSettingOne?.video_publish_end_time).format(FORMAT_DATE_TIME_JP)
-                      : ''}
-                  </Typography>
-                  {/* {errPublicTime && <FormHelperText error>{errPublicTime}</FormHelperText>} */}
-                </Box>
-              )}
-            </div>
-            {isFirstStep() && (
-              <Box
-                flexDirection="row"
-                display="flex"
-                className={`${classes.lastItem}`}
-                marginBottom={
-                  formik?.touched?.stepSettingOne?.video_publish_end_time && !!formik?.errors?.stepSettingOne?.video_publish_end_time
-                    ? '22px'
-                    : 0
-                }
-              >
-                <Box
-                  py={1}
-                  display="flex"
-                  justifyContent="flex-end"
-                  className={classes.urlCopy}
-                  onClick={() => {
-                    formik.setFieldValue('stepSettingOne.video_publish_end_time', null)
-                  }}
-                >
-                  <Typography
-                    className={formik?.values?.stepSettingOne?.video_publish_end_time ? classes.clearEnable : classes.clearDisable}
-                  >
-                    <Icon className={`fas fa-times ${classes.clear}`} fontSize="small" />
-                    {t('common:streaming_setting_screen.clear')}
-                  </Typography>
-                </Box>
-              </Box>
-            )}
-          </Box>
+          {descriptionInputView}
+          {categoryView}
+          {publicTimeViewArchiveInputView}
           {/*TODO: V3.0 form ticket new v3.0 */}
-          {paid_delivery_flag && (
-            <>
-              {isFirstStep() ? (
-                <Box pb={2} className={classes.wrap_input_box_switch}>
-                  <div className={classes.firstItem}>
-                    <ESLabelWithSwitch
-                      fullWidth
-                      labelPrimary={t('common:streaming_setting_screen.ticket_use')}
-                      valueSwitch={formik?.values?.stepSettingOne?.use_ticket}
-                      handleChangeSwitch={changeFieldUseTicket}
-                      disabled={isLive}
-                    />
-                  </div>
-                </Box>
-              ) : (
-                <ESLabel label={i18n.t('common:streaming_setting_screen.ticket_use')} />
-              )}
-              {isFirstStep() ? (
-                <ESBoxftDashColumn isSelectedGift={formik?.values?.stepSettingOne?.use_ticket}>
-                  {/* TODO: Apply component enter point eXeポイント */}
-                  <div className={classes.boxRightTicket}>
-                    <Box pb={1} className={classes.box}>
-                      <div ref={formRef['video_publish_end_time']} className={classes.firstItemShort}>
-                        <ESNumberInputStream
-                          id="ticket_price"
-                          name="stepSettingOne.ticket_price"
-                          type="tel"
-                          fullWidth
-                          nameValue={'stepSettingOne.ticket_price'}
-                          // className={classes.input}
-                          placeholder={'0'}
-                          value={
-                            isFirstStep() &&
-                            (formik?.values?.stepSettingOne?.ticket_price === 0 || !formik?.values?.stepSettingOne?.use_ticket)
-                              ? ''
-                              : formik?.values?.stepSettingOne?.ticket_price
-                          }
-                          onChange={(e) => {
-                            formik.handleChange(e)
-                            handleUpdateValidateField('ticket_price')
-                          }}
-                          helperText={
-                            validateField !== 'all'
-                              ? validateField === 'ticket_price'
-                                ? formik?.errors?.stepSettingOne?.ticket_price
-                                : ''
-                              : checkLiveDisplayErrorOnSubmit(formik, 'ticket_price').helperText
-                          }
-                          error={
-                            validateField !== 'all'
-                              ? validateField === 'ticket_price'
-                                ? !!formik?.errors?.stepSettingOne?.ticket_price
-                                : false
-                              : checkLiveDisplayErrorOnSubmit(formik, 'ticket_price').error
-                          }
-                          size="big"
-                          isNumber={true}
-                          formik={formik}
-                          disabled={isLive}
-                          className={getAddClassByStep(classes.input_text_ticket)}
-                          readOnly={!formik?.values?.stepSettingOne?.use_ticket}
-                          nowrapHelperText
-                          endAdornment={
-                            isFirstStep() ? (
-                              <InputAdornment position="end" className={classes.inputContainer}>
-                                <Box className={classes.inputAdornment}>{t('common:common.eXe_points')}</Box>
-                              </InputAdornment>
-                            ) : (
-                              <></>
-                            )
-                          }
-                          classes={{ root: classes.root }}
-                        />
-                      </div>
-                    </Box>
-                  </div>
-                </ESBoxftDashColumn>
-              ) : (
-                <Box pb={2} pt={2}>
-                  <ESBoxftDashColumn colorLine="#767676" isSelectedGift={true}>
-                    <Typography className={`${classes.date} ${classes.newTextftDash}`}>
-                      {formik?.values?.stepSettingOne?.use_ticket
-                        ? `利用する（${formik?.values?.stepSettingOne?.ticket_price} ${t('common:common.eXe_points')}）`
-                        : '利用しない'}
-                    </Typography>
-                  </ESBoxftDashColumn>
-                </Box>
-              )}
-            </>
-          )}
+          {ticketPriceInputView}
           {/* gift */}
-          {isFirstStep() ? (
-            <Box pb={2} pt={2} className={classes.wrap_input_box_switch}>
-              <div className={classes.firstItem}>
-                <ESLabelWithSwitch
-                  fullWidth
-                  labelPrimary={i18n.t('common:streaming_setting_screen.title_gift')}
-                  valueSwitch={formik?.values?.stepSettingOne?.use_gift}
-                  handleChangeSwitch={changeFieldAndResetSelectedGift}
-                />
-              </div>
-            </Box>
-          ) : (
-            <ESLabel label={i18n.t('common:streaming_setting_screen.title_gift')} />
-          )}
-          {isFirstStep() ? (
-            <ESBoxftDashColumn isSelectedGift={formik?.values?.stepSettingOne?.use_gift}>
-              <Box className={classes.boxAboutGift}>
-                <Box className={classes.select_show_about_gift} pt={1}>
-                  <label className={classes.labelNavigate} onClick={openGroupList}>
-                    {i18n.t('common:streaming_setting_screen.chooses_list_person_gift')}
-                  </label>
-                  <Typography className={classes.giftInfoList} variant="body2" onClick={handleListGiftInfo}>
-                    <Icon className={`fa fa-info-circle ${classes.iconMargin}`} fontSize="small" />{' '}
-                    {i18n.t('common:streaming_setting_screen.about_the_gift_list')}
-                  </Typography>
-                </Box>
-                <Box pt={1} className={classes.nameList}>
-                  <div className={classes.textAndClear}>
-                    <Typography className={classes.labelNameObject}>
-                      {`${i18n.t('common:streaming_setting_screen.list_gift_selected')} ${
-                        formik?.values?.stepSettingOne?.group_title
-                          ? formik?.values?.stepSettingOne?.group_title
-                          : i18n.t('common:streaming_setting_screen.unselected')
-                      }`}
-                    </Typography>
-                    <Box
-                      className={classes.iconClear}
-                      style={{ visibility: formik?.values?.stepSettingOne?.group_title ? 'visible' : 'hidden' }}
-                      onClick={onClearNameListChip}
-                    >
-                      <Icon className={`far fa-times-circle ${classes.sizeIconClear}`} />{' '}
-                    </Box>
-                  </div>
-                </Box>
-                <Box className={classes.select_show_about_gift} pt={1.8} pb={1}>
-                  <ESCheckboxBig
-                    checked={formik?.values?.stepSettingOne?.ranking_flag}
-                    onChange={() => formik.setFieldValue('stepSettingOne.ranking_flag', !formik?.values?.stepSettingOne?.ranking_flag)}
-                    label={t('common:streaming_setting_screen.individual_gift_ranking_display')}
-                    name="stepSettingOne.ranking_flag"
-                    classNameLabel={classes.esCheckBox}
-                  />
-                  <Typography className={classes.giftInfoList} variant="body2" onClick={handleRankingInfo}>
-                    <Icon className={`fa fa-info-circle ${classes.iconMargin}`} fontSize="small" />{' '}
-                    {i18n.t('common:streaming_setting_screen.about_individual_gift_ranking')}
-                  </Typography>
-                </Box>
-              </Box>
-            </ESBoxftDashColumn>
-          ) : (
-            <Box pb={2} pt={2}>
-              <ESBoxftDashColumn colorLine="#767676" isSelectedGift={true}>
-                <Box className={classes.newTextftDash}>
-                  <Box pt={1} className={classes.nameList}>
-                    <Typography className={`${classes.labelNameObject} ${classes.labelRank}`}>
-                      {`${i18n.t('common:streaming_setting_screen.list_gift_selected')} ${returnTextChip()}`}
-                    </Typography>
-                  </Box>
-                  <Box className={`${classes.nameList} ${classes.nameListRanking}`}>
-                    <Typography className={`${classes.labelNameObject} ${classes.labelRank}`}>
-                      {`${i18n.t('common:streaming_setting_screen.individual_gift_ranking_display')}： ${
-                        formik?.values?.stepSettingOne?.ranking_flag
-                          ? i18n.t('common:streaming_setting_screen.ranking_flag.on')
-                          : i18n.t('common:streaming_setting_screen.ranking_flag.off')
-                      }`}
-                    </Typography>
-                  </Box>
-                </Box>
-              </ESBoxftDashColumn>
-            </Box>
-          )}
+          {giftInputView}
           {/* stream URL */}
-          <Box pt={isFirstStep() ? 2 : 0} className={classes.wrap_input} flexDirection="row" display="flex" alignItems="flex-end">
-            <Box className={classes.firstItem}>
-              <ESInput
-                id="stream_url"
-                name="stepSettingOne.stream_url"
-                labelPrimary={i18n.t('common:streaming_setting_screen.stream_url')}
-                placeholder={
-                  isFirstStep()
-                    ? !formik?.values?.stepSettingOne?.stream_url && i18n.t('common:streaming_setting_screen.stream_mask')
-                    : !formik?.values?.stepSettingOne?.stream_url && t('common:streaming_setting_screen.issued_stream')
-                }
-                type={showStreamURL ? 'text' : 'password'}
-                endAdornment={
-                  isFirstStep() ? (
-                    <InputAdornment position="end" className={classes.inputContainer}>
-                      <div className={classes.borderLeft}></div>
-                      <IconButton
-                        aria-label="toggle password visibility"
-                        size="small"
-                        disableRipple
-                        color="inherit"
-                        onMouseDown={() => setShowStreamURL(!showStreamURL)}
-                      >
-                        {showStreamURL ? <img src="/images/password_show.svg" /> : <img src="/images/password_hide.svg" />}
-                      </IconButton>
-                    </InputAdornment>
-                  ) : (
-                    <></>
-                  )
-                }
-                fullWidth
-                value={formik?.values?.stepSettingOne?.stream_url}
-                readOnly={true}
-                size="big"
-                disabled={!isFirstStep()}
-                className={getAddClassByStep(classes.input_text)}
-              />
-            </Box>
-            {isFirstStep() && (
-              <Box flexDirection="row" display="flex" className={`${classes.lastItem}`}>
-                <Box py={1} display="flex" justifyContent="flex-end" className={classes.urlCopy} onClick={() => handleCopy(KEY_TYPE.URL)}>
-                  <Icon className={`fa fa-link ${classes.link}`} fontSize="small" />
-                  <Typography className={classes.textLink}>{t('common:streaming_setting_screen.copy_url')}</Typography>
-                </Box>
-                <Box
-                  py={1}
-                  display="flex"
-                  justifyContent="flex-end"
-                  className={!isLive ? classes.urlCopy : classes.linkDisable}
-                  onClick={() => !isLive && onReNewUrlAndKey(TYPE_SECRET_KEY.URL, TYPE_SECRET_KEY.RE_NEW)}
-                >
-                  <Typography className={classes.textLink}>{t('common:streaming_setting_screen.reissue')}</Typography>
-                </Box>
-              </Box>
-            )}
-          </Box>
-          {isFirstStep() && (
-            <>
-              <Typography className={`${classes.captionNote} ${classes.addPaddingNote}`}>
-                {i18n.t('common:streaming_setting_screen.note_stream_url')}
-              </Typography>
-              <Typography className={`${classes.captionNote} ${classes.addPaddingNote}`}>
-                {i18n.t('common:streaming_setting_screen.note_stream_url_bottom')}
-              </Typography>
-            </>
-          )}
+          {streamUrlView}
           {/* stream key */}
-          <Box pt={2} className={classes.wrap_input} flexDirection="row" display="flex" alignItems="flex-end">
-            <Box className={classes.firstItem}>
-              <ESInput
-                id="stream_key"
-                name="stepSettingOne.stream_key"
-                labelPrimary={i18n.t('common:streaming_setting_screen.stream_key')}
-                placeholder={
-                  isFirstStep()
-                    ? !formik?.values?.stepSettingOne?.stream_key && i18n.t('common:streaming_setting_screen.stream_mask')
-                    : !formik?.values?.stepSettingOne?.stream_key && t('common:streaming_setting_screen.issued_stream')
-                }
-                type={showStreamKey ? 'text' : 'password'}
-                endAdornment={
-                  isFirstStep() ? (
-                    <InputAdornment position="end" className={classes.inputContainer}>
-                      <div className={classes.borderLeft}></div>
-                      <IconButton
-                        aria-label="toggle password visibility"
-                        size="small"
-                        disableRipple
-                        color="inherit"
-                        onMouseDown={() => setShowStreamKey(!showStreamKey)}
-                      >
-                        {showStreamKey ? <img src="/images/password_show.svg" /> : <img src="/images/password_hide.svg" />}
-                      </IconButton>
-                    </InputAdornment>
-                  ) : (
-                    <></>
-                  )
-                }
-                fullWidth
-                value={formik?.values?.stepSettingOne?.stream_key}
-                readOnly={true}
-                size="big"
-                disabled={!isFirstStep()}
-                // className={isFirstStep()?getAddClassByStep(classes.input_text):classes.input_pl}
-                className={getAddClassByStep(classes.input_text)}
-              />
-            </Box>
-            {isFirstStep() && (
-              <Box flexDirection="row" display="flex" className={`${classes.lastItem}`}>
-                <Box py={1} display="flex" justifyContent="flex-end" className={classes.urlCopy} onClick={() => handleCopy(KEY_TYPE.KEY)}>
-                  <Icon className={`fa fa-link ${classes.link}`} fontSize="small" />
-                  <Typography className={classes.textLink}>{t('common:streaming_setting_screen.copy_url')}</Typography>
-                </Box>
-
-                {/* <Box
-                  py={1}
-                  display="flex"
-                  justifyContent="flex-end"
-                  className={showReNew && !isLive ? classes.urlCopy : classes.linkDisable}
-                  onClick={() => showReNew && !isLive && onReNewUrlAndKey(TYPE_SECRET_KEY.KEY, TYPE_SECRET_KEY.RE_NEW, true)}
-                >
-                  <Typography className={classes.textLink}>{t('common:streaming_setting_screen.reissue')}</Typography>
-                </Box> */}
-              </Box>
-            )}
-          </Box>
-          {isFirstStep() ? (
-            <Box pb={3 / 8} pt={2}>
-              <ESCheckboxBig
-                checked={formik?.values?.stepSettingOne?.publish_flag}
-                onChange={() => formik.setFieldValue('stepSettingOne.publish_flag', !formik?.values?.stepSettingOne?.publish_flag)}
-                label={t('common:streaming_setting_screen.publish_delivery')}
-                name="stepSettingOne.publish_flag"
-              />
-            </Box>
-          ) : (
-            <Box pt={2} pb={1}>
-              <ESInput
-                id="title"
-                name="title"
-                value={!formik?.values?.stepSettingOne?.publish_flag ? t('common:profile.dont_show') : t('common:profile.show')}
-                fullWidth
-                labelPrimary={t('common:streaming_setting_screen.publish_delivery')}
-                disabled={true}
-                size="big"
-                className={getAddClassByStep(classes.input_text)}
-              />
-            </Box>
-          )}
-          <Typography className={classes.captionNote}>{i18n.t('common:streaming_setting_screen.note_for_publish_delivery_pt')}</Typography>
-          <Typography className={classes.captionNote}>{i18n.t('common:streaming_setting_screen.note_for_publish_delivery_pb')}</Typography>
-          <Box paddingBottom={3} />
-          {isFirstStep() ? (
-            <Grid item xs={12} md={9}>
-              <Box maxWidth={280} className={classes.buttonContainer}>
-                <ButtonPrimary type="submit" round fullWidth onClick={onValidateForm}>
-                  {i18n.t('common:streaming_setting_screen.check_submit')}
-                </ButtonPrimary>
-              </Box>
-              <Typography
-                className={classes.textErrorGroupDelete}
-                style={{ display: formik?.values?.stepSettingOne?.has_group_list ? 'flex' : 'none' }}
-              >
-                {i18n.t('common:streaming_setting_screen.group_list_does_not_exist')}
-              </Typography>
-            </Grid>
-          ) : (
-            <Grid item xs={12}>
-              <Box className={classes.actionButtonContainer}>
-                <Box className={classes.actionButton}>
-                  <ESButton className={classes.cancelBtn} variant="outlined" round fullWidth size="large" onClick={onClickPrev}>
-                    {t('common:common.cancel')}
-                  </ESButton>
-                </Box>
-                <Box className={classes.actionButton}>
-                  <ButtonPrimary round fullWidth onClick={onConfirm}>
-                    {obsNotEnable
-                      ? i18n.t('common:streaming_setting_screen.update')
-                      : t('common:streaming_setting_screen.start_live_stream')}
-                  </ButtonPrimary>
-                </Box>
-              </Box>
-            </Grid>
-          )}
+          {streamKeyView}
+          {publishDeliveryView}
+          {submitButtonView}
         </form>
       </Box>
       <Box style={{ display: !visibleLoading && !disableLoader ? 'flex' : 'none' }}>
@@ -1229,7 +1352,8 @@ const Steps: React.FC<StepsProps> = ({
   )
 }
 
-export default Steps
+export default memo(Steps)
+
 const useStyles = makeStyles((theme: Theme) => ({
   input_text: {
     '&.Mui-disabled': {
@@ -1408,13 +1532,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: theme.typography.h3.fontSize,
     textDecoration: 'underline',
     textUnderlineOffset: '2px',
-    color: '#ffffff70',
+    color: '#FFFFFF70',
     cursor: 'pointer',
   },
   labelNameObject: {
     fontWeight: 'normal',
     fontSize: 14,
-    color: '#ffffff50',
+    color: '#FFFFFF50',
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
@@ -1433,7 +1557,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingLeft: 24,
   },
   esCheckBox: {
-    color: '#ffffff70',
+    color: '#FFFFFF70',
   },
   boxRightTicket: {
     marginLeft: 24,
