@@ -2,8 +2,7 @@ import { Box, Typography, Icon, ButtonBase } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import ESAvatar from '@components/Avatar'
 import { Colors } from '@theme/colors'
-import ESMenu from '@components/Menu'
-import ESMenuItem from '@components/Menu/MenuItem'
+import ReportToolTip from '@components/ReportToolTip'
 import LoginRequired from '@containers/LoginRequired'
 import { useTranslation } from 'react-i18next'
 import useCommunityDetail from '@containers/Community/Detail/useCommunityDetail'
@@ -126,12 +125,16 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({
 
                 {(isPublic || !isNotMember) && (
                   <Box className={classes.menuWrapper}>
-                    <ESMenu>
-                      {(isModerator || isOwner) && <ESMenuItem onClick={handleDeleteOpen}>{t('common:topic.delete.button')}</ESMenuItem>}
-                      <LoginRequired>
-                        <ESMenuItem onClick={handleReportOpen}>{t('common:topic.report.button')}</ESMenuItem>
-                      </LoginRequired>
-                    </ESMenu>
+                    {/* <ESMenu> */}
+                    {(isModerator || isOwner) && (
+                      // <ESMenuItem onClick={handleDeleteOpen}>{t('common:topic.delete.button')}</ESMenuItem>
+                      <ReportToolTip handleReportOpen={handleDeleteOpen} reportText={t('common:topic.delete.button')} />
+                    )}
+                    <LoginRequired>
+                      {/* <ESMenuItem onClick={handleReportOpen}>{t('common:topic.report.button')}</ESMenuItem> */}
+                      <ReportToolTip handleReportOpen={handleReportOpen} reportText={t('common:topic.report.button')} />
+                    </LoginRequired>
+                    {/* </ESMenu> */}
                   </Box>
                 )}
               </Box>

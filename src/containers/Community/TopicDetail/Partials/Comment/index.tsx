@@ -2,9 +2,7 @@ import { Box, Typography, Icon, IconButton, Link, ButtonBase } from '@material-u
 import { makeStyles } from '@material-ui/core/styles'
 import ESAvatar from '@components/Avatar'
 import { Colors } from '@theme/colors'
-import ESMenu from '@components/Menu'
 import ESLoader from '@components/Loader'
-import ESMenuItem from '@components/Menu/MenuItem'
 import LoginRequired from '@containers/LoginRequired'
 import { useTranslation } from 'react-i18next'
 import { Dispatch, SetStateAction, useState, useRef, useEffect } from 'react'
@@ -22,6 +20,7 @@ import useTopicDetail from '../../useTopicDetail'
 import styled from 'styled-components'
 import { REPLY_REGEX } from '@constants/community.constants'
 import moment from 'moment'
+import ReportToolTip from '@components/ReportToolTip'
 
 const StyledBox = styled(Box)``
 let currentReplyNumberRectX: number, currentReplyNumberRectY: number, maxHeight: number
@@ -311,16 +310,18 @@ const Comment: React.FC<CommunityHeaderProps> = ({
               <Typography className={classes.date}>{CommonHelper.staticSmartTime(commentData.created_at)}</Typography>
               {(isPublic || !isNotMember) && (
                 <Box className={classes.menuWrapper}>
-                  <ESMenu>
-                    {(isModerator || isOwner || isTopicOwner) && (
-                      <ESMenuItem onClick={handleDeleteOpen}>{t('common:topic_comment.delete.button')}</ESMenuItem>
-                    )}
-                    {!isOwner && (
-                      <LoginRequired>
-                        <ESMenuItem onClick={handleReport}>{t('common:topic_comment.report.button')}</ESMenuItem>
-                      </LoginRequired>
-                    )}
-                  </ESMenu>
+                  {/* <ESMenu> */}
+                  {(isModerator || isOwner || isTopicOwner) && (
+                    // <ESMenuItem onClick={handleDeleteOpen}>{t('common:topic_comment.delete.button')}</ESMenuItem>
+                    <ReportToolTip handleReportOpen={handleDeleteOpen} reportText={t('common:topic_comment.delete.button')} />
+                  )}
+                  {!isOwner && (
+                    <LoginRequired>
+                      {/* <ESMenuItem onClick={handleReport}>{t('common:topic_comment.report.button')}</ESMenuItem> */}
+                      <ReportToolTip handleReportOpen={handleReport} reportText={t('common:topic_comment.report.button')} />
+                    </LoginRequired>
+                  )}
+                  {/* </ESMenu> */}
                 </Box>
               )}
             </Box>

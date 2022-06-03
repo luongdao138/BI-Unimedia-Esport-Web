@@ -56,7 +56,15 @@ const ReportToolTip: React.FC<Props> = ({ iconClassName, handleReportOpen, repor
       >
         <Icon className="fa fa-ellipsis-v" fontSize="small" />
       </IconButton>
-      <Popper open={open} anchorEl={anchorRef.current} role={undefined} placement="bottom-end" transition disablePortal>
+      <Popper
+        style={{ zIndex: 1 }}
+        open={open}
+        anchorEl={anchorRef.current}
+        role={undefined}
+        placement="bottom-end"
+        transition
+        disablePortal
+      >
         {({ TransitionProps, placement }) => (
           <Grow
             {...TransitionProps}
