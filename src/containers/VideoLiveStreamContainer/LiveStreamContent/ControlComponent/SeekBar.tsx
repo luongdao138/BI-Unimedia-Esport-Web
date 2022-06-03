@@ -145,11 +145,11 @@ const SeekBar: React.FC<Props & SliderProps> = ({ playedSeconds, durationPlayer,
       }
     }
     // console.log('timeeee 1', (((e.clientX - e.target.offsetLeft) / e.target.clientWidth) * durationPlayer).toFixed(2))
-    handleChangeCanHideControlBar(true)
+    handleChangeCanHideControlBar(false)
   }
 
   const handleOnMouseLeave = () => {
-    handleChangeCanHideControlBar(false)
+    handleChangeCanHideControlBar(true)
   }
 
   // console.log('timeeee', durationPlayer, videoRefInfo.current.currentTime, timePlayed)
@@ -226,9 +226,11 @@ const useStyles = makeStyles(() => ({
     },
   },
   seekBar: {
-    '&:hover ~ $thumbnailsContainer': {
-      opacity: 1,
-      visibility: 'visible',
+    ['@media (hover: hover)']: {
+      '&:hover ~ $thumbnailsContainer': {
+        opacity: 1,
+        visibility: 'visible',
+      },
     },
     // width: 90,
     // marginLeft: 16,
