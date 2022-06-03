@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import SettingsCompleted from '@components/SettingsCompleted'
-import React, { useEffect, useState } from 'react'
+import React, { memo, useEffect, useState } from 'react'
 import Steps from './Steps'
 import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
@@ -410,4 +410,4 @@ const StreamingReservationContainer: React.FC<Props> = ({
     </>
   )
 }
-export default StreamingReservationContainer
+export default memo(StreamingReservationContainer)
