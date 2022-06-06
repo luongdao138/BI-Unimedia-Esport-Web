@@ -72,10 +72,9 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   // endLive,
   isArchived,
   // type,
-  videoType,
-  componentsSize,
   qualities,
   handleOpenRelatedVideos,
+  componentsSize,
 }) => {
   const { setVideoRefInfo, isFull, setIsFull, canDisplayRelatedVideos, isDoubleTapRef } = useContext(VideoContext)
   const {
@@ -156,6 +155,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   const touchEndRef = useRef(null)
   const touchStartRef = useRef(null)
   const minSwipeDistance = 50
+  const videoType = detailVideoResult.status
   const { changeFullscreenMode, isFullscreenMode, inputHeaderRef } = useFullscreenContext()
 
   const { videoWatchTimeReportRequest, getMiniPlayerState } = useLiveStreamDetail()
@@ -185,6 +185,8 @@ const VideoPlayer: React.FC<PlayerProps> = ({
 
   const isVideoArchive = isArchived || videoType === VIDEO_TYPE.ARCHIVED
 
+  console.log('Current video status: ', detailVideoResult)
+
   const {
     requestPIP,
     isCheckShowingPIP,
@@ -213,9 +215,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
   }, [])
 
   useEffect(() => {
-    // if (!isPortrait) {
-    //   toggleFullScreen1()
-    // }
+    // todo
   }, [isPortrait])
 
   useEffect(() => {
@@ -855,12 +855,16 @@ const VideoPlayer: React.FC<PlayerProps> = ({
     }
 
     const handleVideoLoadeddata = () => {
-      console.log('=================loadeddata===================', videoEl.current)
       // setVisible({ ...visible, loading: true, videoLoaded: true })
       // videoEl.current.currentTime = 40
       if (videoEl.current?.readyState >= 3) {
+        console.log('=================loadeddata===================', isVideoArchive)
         //your code goes here
         videoEl.current.play()
+        if (isVideoArchive) {
+          videoEl.current.currentTime = 0
+          playerSecondsRef.current = 0
+        }
         setState((prev) => ({ ...prev, playing: true }))
       }
     }
@@ -952,7 +956,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
         //TODO: remove event onscroll window
       }
     }
-  }, [resolution, canDisplayRelatedVideos])
+  }, [resolution, canDisplayRelatedVideos, isVideoArchive])
   useEffect(() => {
     changeIsFullScreenMode(isFull)
   }, [isFull])
@@ -1442,7 +1446,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
           </div>
 
           {/* {!isMobile && !androidPl && !iPhonePl && isLoadedMetaData && ( */}
-          {isLoadedMetaData && (
+          {isLoadedMetaData ? (
             <div
               ref={processControlRef}
               className={`${classes.processControl} ${isOpenSettingPanel && classes.showControl}`}
@@ -1473,7 +1477,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({
                 isFull={isFull}
               />
             </div>
-          )}
+          ) : null}
           {/* previous and next only in mobile */}
           {(isMobile || androidPl || iPhonePl) && videoType !== STATUS_VIDEO.LIVE_STREAM && (
             <div

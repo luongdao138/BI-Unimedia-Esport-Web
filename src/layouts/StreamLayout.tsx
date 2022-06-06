@@ -64,6 +64,12 @@ const StreamLayout: React.FC<StreamLayoutProps> = ({
   }
 
   useEffect(() => {
+    if (scrollY > 0) {
+      scrollTo({ top: 0, behavior: 'auto' })
+    }
+  }, [video_id])
+
+  useEffect(() => {
     return () => {
       if (document.fullscreenElement || document['webkitFullscreenElement'] || document['mozFullScreenElement']) {
         if (document.exitFullscreen) {

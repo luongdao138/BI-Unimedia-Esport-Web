@@ -74,10 +74,12 @@ const SeekBar: React.FC<Props & SliderProps> = ({ playedSeconds, durationPlayer,
         // secondTimePlay.current = value
         // const newSecond = value
       }
-      if (videoRefInfo && videoRefInfo.current) {
-        videoRefInfo.current.currentTime = newSecond
+      if (!isNaN(newSecond)) {
+        if (videoRefInfo && videoRefInfo.current) {
+          videoRefInfo.current.currentTime = newSecond
+        }
+        changeSeekCount(Math.floor(newSecond))
       }
-      changeSeekCount(Math.floor(newSecond))
     }, 10),
     []
   )
